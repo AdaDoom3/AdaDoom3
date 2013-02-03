@@ -123,7 +123,6 @@ private
       is record
         Localize : Access_Localize := Dummy_Localize'Access;
         Put      : Access_Put      := Ada.Wide_Text_IO.Put'Access;
-        Put_Line : Access_Put_Line := Ada.Wide_Text_IO.Put_Line'Access;
         Get_Line : Access_Get_Line := Ada.Wide_Text_IO.Get_Line'Access;
       end record;
   --------------
