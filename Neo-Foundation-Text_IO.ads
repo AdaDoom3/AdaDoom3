@@ -69,8 +69,6 @@ package Neo.Foundation.Text_IO
       Get_Line  : in Access_Get_Line);
     procedure Set_Localizer(
       Localizer : in Access_Localizer);
-    procedure Set_Line_Size(
-      New_Line_Size : in Integer_4_Positive);
     procedure Set_Put(
       New_Put : in Access_Put);
     procedure Set_Get_Line(
