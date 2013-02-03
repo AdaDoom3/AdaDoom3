@@ -1,3 +1,3 @@
 AdaDoom3
 ========
-jsquirek1 AT student.gsu.edu
+jsquirek1[at]student.gsu.edu
