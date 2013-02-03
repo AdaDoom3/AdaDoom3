@@ -505,8 +505,8 @@ package body Implementation
   -- Set_Rounding --
   ------------------
     function Set_Rounding(
-      Processor : in Record_Processor;
-      Rounding  : in Enumerated_Rounding)
+      Processor : in out Record_Processor;
+      Rounding  : in     Enumerated_Rounding)
       return Record_Processor
       is
       Data          : Integer_4_Unsigned := 0;
@@ -552,51 +552,14 @@ package body Implementation
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
-        return(
-          Rounding                                   => Rounding,
-          Vendor                                     => Processor.Vendor,
-          Precision                                  => Processor.Precision,
-          Has_3DNow                                  => Processor.Has_3DNow,
-          Has_Altivec                                => Processor.Has_Altivec,
-          Speed_In_Megahertz                         => Processor.Speed_In_Megahertz,
-          Number_Of_Processors                       => Processor.Number_Of_Processors,
-          Has_3DNow_Supplement                       => Processor.Has_3DNow_Supplement,
-          Has_Denormals_Are_Zero                     => Processor.Has_Denormals_Are_Zero,
-          Has_Multi_Media_Extensions                 => Processor.Has_Multi_Media_Extensions,
-          Has_Streaming_SIMD_Extensions_1            => Processor.Has_Streaming_SIMD_Extensions_1,
-          Has_Streaming_SIMD_Extensions_2            => Processor.Has_Streaming_SIMD_Extensions_2,
-          Has_Streaming_SIMD_Extensions_3            => Processor.Has_Streaming_SIMD_Extensions_3,
-          Has_Streaming_SIMD_Extensions_4_1          => Processor.Has_Streaming_SIMD_Extensions_4_1,
-          Has_Streaming_SIMD_Extensions_4_2          => Processor.Has_Streaming_SIMD_Extensions_4_2,
-          Has_Multi_Media_Extensions_Supplement      => Processor.Has_Multi_Media_Extensions_Supplement,
-          Has_Streaming_SIMD_Extensions_3_Supplement => Processor.Has_Streaming_SIMD_Extensions_3_Supplement,
-          Has_Streaming_SIMD_Extensions_4_Supplement => Processor.Has_Streaming_SIMD_Extensions_4_Supplement,
-          Has_Carryless_Multiplication_Of_Two_64_Bit => Processor.Has_Carryless_Multiplication_Of_Two_64_Bit,
-          Has_Half_Precision_Floating_Point_Convert  => Processor.Has_Half_Precision_Floating_Point_Convert,
-          Has_Advanced_Vector_Extensions_Enabled     => Processor.Has_Advanced_Vector_Extensions_Enabled,
-          Has_Processor_Extended_States_Enabled      => Processor.Has_Processor_Extended_States_Enabled,
-          Has_Bit_Manipulation_Extensions_1          => Processor.Has_Bit_Manipulation_Extensions_1,
-          Has_Bit_Manipulation_Extensions_2          => Processor.Has_Bit_Manipulation_Extensions_2,
-          Has_Advanced_Vector_Extensions_1           => Processor.Has_Advanced_Vector_Extensions_1,
-          Has_Advanced_Vector_Extensions_2           => Processor.Has_Advanced_Vector_Extensions_2,
-          Has_Advanced_Encryption_Service            => Processor.Has_Advanced_Encryption_Service,
-          Has_Extended_Operation_Support             => Processor.Has_Extended_Operation_Support,
-          Has_High_Precision_Convert                 => Processor.Has_High_Precision_Convert,
-          Has_Fused_Multiply_Add_4                   => Processor.Has_Fused_Multiply_Add_4,
-          Has_Fused_Multiply_Add_3                   => Processor.Has_Fused_Multiply_Add_3,
-          Has_Context_ID_Manager                     => Processor.Has_Context_ID_Manager,
-          Has_Leading_Zero_Count                     => Processor.Has_Leading_Zero_Count,
-          Has_Population_Count                       => Processor.Has_Population_Count,
-          Has_Conditional_Move                       => Processor.Has_Conditional_Move,
-          Has_Hyperthreading                         => Processor.Has_Hyperthreading,
-          Has_Flush_To_Zero                          => Processor.Has_Flush_To_Zero);
+        Processor.Rounding := Rounding;
       end Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
     function Set_Precision(
-      Processor : in Record_Processor;
-      Precision : in Enumerated_Precision)
+      Processor : in out Record_Processor;
+      Precision : in     Enumerated_Precision)
       return Record_Processor
       is
       Blank_Memory   : Integer_2_Unsigned := 0;
@@ -623,44 +586,7 @@ package body Implementation
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)));
-        return(
-          Precision                                  => Precision,
-          Vendor                                     => Processor.Vendor,
-          Rounding                                   => Processor.Rounding,
-          Has_3DNow                                  => Processor.Has_3DNow,
-          Has_Altivec                                => Processor.Has_Altivec,
-          Speed_In_Megahertz                         => Processor.Speed_In_Megahertz,
-          Number_Of_Processors                       => Processor.Number_Of_Processors,
-          Has_3DNow_Supplement                       => Processor.Has_3DNow_Supplement,
-          Has_Denormals_Are_Zero                     => Processor.Has_Denormals_Are_Zero,
-          Has_Multi_Media_Extensions                 => Processor.Has_Multi_Media_Extensions,
-          Has_Streaming_SIMD_Extensions_1            => Processor.Has_Streaming_SIMD_Extensions_1,
-          Has_Streaming_SIMD_Extensions_2            => Processor.Has_Streaming_SIMD_Extensions_2,
-          Has_Streaming_SIMD_Extensions_3            => Processor.Has_Streaming_SIMD_Extensions_3,
-          Has_Streaming_SIMD_Extensions_4_1          => Processor.Has_Streaming_SIMD_Extensions_4_1,
-          Has_Streaming_SIMD_Extensions_4_2          => Processor.Has_Streaming_SIMD_Extensions_4_2,
-          Has_Multi_Media_Extensions_Supplement      => Processor.Has_Multi_Media_Extensions_Supplement,
-          Has_Streaming_SIMD_Extensions_3_Supplement => Processor.Has_Streaming_SIMD_Extensions_3_Supplement,
-          Has_Streaming_SIMD_Extensions_4_Supplement => Processor.Has_Streaming_SIMD_Extensions_4_Supplement,
-          Has_Carryless_Multiplication_Of_Two_64_Bit => Processor.Has_Carryless_Multiplication_Of_Two_64_Bit,
-          Has_Half_Precision_Floating_Point_Convert  => Processor.Has_Half_Precision_Floating_Point_Convert,
-          Has_Advanced_Vector_Extensions_Enabled     => Processor.Has_Advanced_Vector_Extensions_Enabled,
-          Has_Processor_Extended_States_Enabled      => Processor.Has_Processor_Extended_States_Enabled,
-          Has_Bit_Manipulation_Extensions_1          => Processor.Has_Bit_Manipulation_Extensions_1,
-          Has_Bit_Manipulation_Extensions_2          => Processor.Has_Bit_Manipulation_Extensions_2,
-          Has_Advanced_Vector_Extensions_1           => Processor.Has_Advanced_Vector_Extensions_1,
-          Has_Advanced_Vector_Extensions_2           => Processor.Has_Advanced_Vector_Extensions_2,
-          Has_Advanced_Encryption_Service            => Processor.Has_Advanced_Encryption_Service,
-          Has_Extended_Operation_Support             => Processor.Has_Extended_Operation_Support,
-          Has_High_Precision_Convert                 => Processor.Has_High_Precision_Convert,
-          Has_Fused_Multiply_Add_4                   => Processor.Has_Fused_Multiply_Add_4,
-          Has_Fused_Multiply_Add_3                   => Processor.Has_Fused_Multiply_Add_3,
-          Has_Context_ID_Manager                     => Processor.Has_Context_ID_Manager,
-          Has_Leading_Zero_Count                     => Processor.Has_Leading_Zero_Count,
-          Has_Population_Count                       => Processor.Has_Population_Count,
-          Has_Conditional_Move                       => Processor.Has_Conditional_Move,
-          Has_Hyperthreading                         => Processor.Has_Hyperthreading,
-          Has_Flush_To_Zero                          => Processor.Has_Flush_To_Zero);
+        Processor.Precision := Precision;
       end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
