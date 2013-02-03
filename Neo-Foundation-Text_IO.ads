@@ -66,16 +66,13 @@ package Neo.Foundation.Text_IO
     procedure Set(
       Localize  : in Access_Localize;
       Put       : in Access_Put;
-      Get_Line  : in Access_Get_Line;
-      Localize  : in Access_Localizer);
+      Get_Line  : in Access_Get_Line);
     procedure Set_Localizer(
       Localizer : in Access_Localizer);
     procedure Set_Line_Size(
       New_Line_Size : in Integer_4_Positive);
     procedure Set_Put(
       New_Put : in Access_Put);
-    procedure Set_Put_Line(
-      New_Put_Line : in Access_Put_Line);
     procedure Set_Get_Line(
       New_Get_Line : in Access_Get_Line);
     function Get
