@@ -142,7 +142,7 @@ private
           return Integer_8_Natural;
         function Get_Number_Of_Processors
           return Integer_8_Positive;
-        function Get_Speed_In_Megahertz(
+        function Get_Speed_In_Megahertz
           return Integer_8_Positive;
       end Implementation_For_Operating_System;
     package Implementation_For_Compiler
@@ -158,7 +158,7 @@ private
         function Get_Number_Of_Processors
           return Integer_8_Positive;
       with
-        function Get_Speed_In_Megahertz(
+        function Get_Speed_In_Megahertz
           return Integer_8_Positive;
       with
         function Put_Call_Stack
