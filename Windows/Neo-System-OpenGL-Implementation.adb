@@ -949,4 +949,4 @@ package Implementation
         Set_Pixel_Format           := NULL_ADDRESS;
         Swap_Buffers              := NULL_ADDRESS;
       end Finalize;
-  end Implemented.OpenGL;
+  end Implementation;
