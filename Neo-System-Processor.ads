@@ -147,8 +147,7 @@ private
       end Implementation_For_Operating_System;
     package Implementation_For_Compiler
       is
-        function Put_Call_Stack
-          return Boolean;
+        procedure Put_Call_Stack;
       end Implementation_For_Compiler;
     generic
       with
@@ -161,9 +160,8 @@ private
         function Get_Speed_In_Megahertz
           return Integer_8_Positive;
       with
-        function Put_Call_Stack
-          return Boolean;
-    package Implementation
+        procedure Put_Call_Stack;
+    package Implementation_For_Architecture
       is
         function Initialize
           return Record_Processor;
@@ -190,10 +188,10 @@ private
       is separate;
     package body Implementation_For_Compiler
       is separate;
-    package body Implementation
+    package body Implementation_For_Architecture
       is separate;
-    package Instantiated_Implementation
-      is new Implementation(
+    package Implementation
+      is new Implementation_For_Architecture(
         Get_Clock_Ticks          => Implementation_For_Operating_System.Get_Clock_Ticks,
         Get_Number_Of_Processors => Implementation_For_Operating_System.Get_Number_Of_Processors,
         Get_Speed_In_Gigahertz   => Implementation_For_Operating_System.Get_Speed_In_Gigahertz,
