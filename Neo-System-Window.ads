@@ -250,7 +250,7 @@ private
         Resize_Location : in Enumerated_Resize;
         Current_Screen  : in Record_Window_Border)
         return Record_Window_Border;
-    package Implementation
+    package Implementation_For_Operating_System
       is
         procedure Initialize(
           Class_Name  : in String_2;
@@ -293,11 +293,11 @@ private
         procedure Set_Custom_Mouse(
           Do_Restore_System_Mouse : in Boolean := False);
         procedure Move_Topmost_Windows_Out_Of_The_Way;
-      end Generic_Implementation;
-    package body Implementation
+      end Implementation_For_Operating_System;
+    package body Implementation_For_Operating_System
       is separate;
-    package Instantiated_Implementation
-      is new Implementation(
+    package Implementation
+      is new Implementation_For_Operating_System(
         Handle_Finalization => Handle_Finalization,
         Handle_Activation   => Handle_Activation, 
         Handle_State_Change => Handle_State_Change,
