@@ -45,10 +45,6 @@ package Neo.Windows
     type Array_Array_Integer_1_Unsigned_C
       is array (Natural range <>)
       of Array_Integer_1_Unsigned_C(1..4);
-  ------------
-  -- Access --
-  ------------
-
   ------------------
   -- Enumerations --
   ------------------
@@ -101,12 +97,11 @@ package Neo.Windows
     GENERIC_CURSOR                             : constant Address              := To_Address(Integer_4_Unsigned(16#0000_7F8B#));--(16#0000_7F00#));
     GENERIC_ICON                               : constant Address              := To_Address(Integer_4_Unsigned(16#0000_7F00#));
     BRUSH_GRAY                                 : constant Address              := To_Address(Integer_4_Unsigned(16#0000_0011#));
-    --
-    SO_BROADCAST                                                  : constant Integer_4_Signed_C   := 16#0020#;
-    SOL_SOCKET                                                    : constant Integer_4_Signed_C   := 16#ffff#;
-    FIONREAD                                                      : constant Integer_4_Unsigned_C := 16#2000667F#;
-    FIONBIO                                                       : constant Integer_4_Unsigned_C := 16#8004667E#;
-    FIOASYNC                                                      : constant Integer_4_Unsigned_C := 16#8004667D#;
+    SO_BROADCAST                               : constant Integer_4_Signed_C   := 16#0000_0020#;
+    SOL_SOCKET                                 : constant Integer_4_Signed_C   := 16#0000_FFFF#;
+    FIONREAD                                   : constant Integer_4_Unsigned_C := 16#2000_667F#;
+    FIONBIO                                    : constant Integer_4_Unsigned_C := 16#8004_667E#;
+    FIOASYNC                                   : constant Integer_4_Unsigned_C := 16#8004_667D#;
     PORT_ANY                                                      : constant Integer_2_Unsigned_C := -1;
     INVALID_PORT                                                  : constant Integer_2_Unsigned_C := -1;
     INVALID_SOCKET                                                : constant Integer_4_Unsigned_C := Integer_4_Unsigned_C'Last;
@@ -184,101 +179,6 @@ package Neo.Windows
     INADDR_LOOPBACK                                               : constant Integer_4_Unsigned_C := 16#7f000001#;
     INADDR_BROADCAST                                              : constant Integer_4_Unsigned_C := 16#ffffffff#;
     INADDR_NONE                                                   : constant Integer_4_Unsigned_C := 16#ffffffff#;
-    WSABASEERR                                                    : constant Integer_4_Signed_C   := 1000;
-    WSAEINTR                                                      : constant Integer_4_Signed_C   := 10004;
-    WSAEBADF                                                      : constant Integer_4_Signed_C   := 10009;
-    WSAEACCES                                                     : constant Integer_4_Signed_C   := 10013;
-    WSAEFAULT                                                     : constant Integer_4_Signed_C   := 10014;
-    WSAEINVAL                                                     : constant Integer_4_Signed_C   := 10022;
-    WSAEMFILE                                                     : constant Integer_4_Signed_C   := 10024;
-    WSAEWOULDBLOCK                                                : constant Integer_4_Signed_C   := 10035;
-    WSAEINPROGRESS                                                : constant Integer_4_Signed_C   := 10036;
-    WSAEALREADY                                                   : constant Integer_4_Signed_C   := 10037;
-    WSAENOTSOCK                                                   : constant Integer_4_Signed_C   := 10038;
-    WSAEDESTADDRREQ                                               : constant Integer_4_Signed_C   := 10039;
-    WSAEMSGSIZE                                                   : constant Integer_4_Signed_C   := 10040;
-    WSAEPROTOTYPE                                                 : constant Integer_4_Signed_C   := 10041;
-    WSAENOPROTOOPT                                                : constant Integer_4_Signed_C   := 10042;
-    WSAEPROTONOSUPPORT                                            : constant Integer_4_Signed_C   := 10043;
-    WSAESOCKTNOSUPPORT                                            : constant Integer_4_Signed_C   := 10044;
-    WSAEOPNOTSUPP                                                 : constant Integer_4_Signed_C   := 10045;
-    WSAEPFNOSUPPORT                                               : constant Integer_4_Signed_C   := 10046;
-    WSAEAFNOSUPPORT                                               : constant Integer_4_Signed_C   := 10047;
-    WSAEADDRINUSE                                                 : constant Integer_4_Signed_C   := 10048;
-    WSAEADDRNOTAVAIL                                              : constant Integer_4_Signed_C   := 10049;
-    WSAENETDOWN                                                   : constant Integer_4_Signed_C   := 10050;
-    WSAENETUNREACH                                                : constant Integer_4_Signed_C   := 10051;
-    WSAENETRESET                                                  : constant Integer_4_Signed_C   := 10052;
-    WSAECONNABORTED                                               : constant Integer_4_Signed_C   := 10053;
-    WSAECONNRESET                                                 : constant Integer_4_Signed_C   := 10054;
-    WSAENOBUFS                                                    : constant Integer_4_Signed_C   := 10055;
-    WSAEISCONN                                                    : constant Integer_4_Signed_C   := 10056;
-    WSAENOTCONN                                                   : constant Integer_4_Signed_C   := 10057;
-    WSAESHUTDOWN                                                  : constant Integer_4_Signed_C   := 10058;
-    WSAETOOMANYREFS                                               : constant Integer_4_Signed_C   := 10059;
-    WSAETIMEDOUT                                                  : constant Integer_4_Signed_C   := 10060;
-    WSAECONNREFUSED                                               : constant Integer_4_Signed_C   := 10061;
-    WSAELOOP                                                      : constant Integer_4_Signed_C   := 10062;
-    WSAENAMETOOLONG                                               : constant Integer_4_Signed_C   := 10063;
-    WSAEHOSTDOWN                                                  : constant Integer_4_Signed_C   := 10064;
-    WSAEHOSTUNREACH                                               : constant Integer_4_Signed_C   := 10065;
-    WSAENOTEMPTY                                                  : constant Integer_4_Signed_C   := 10066;
-    WSAEPROCLIM                                                   : constant Integer_4_Signed_C   := 10067;
-    WSAEUSERS                                                     : constant Integer_4_Signed_C   := 10068;
-    WSAEDQUOT                                                     : constant Integer_4_Signed_C   := 10069;
-    WSAESTALE                                                     : constant Integer_4_Signed_C   := 10070;
-    WSAEREMOTE                                                    : constant Integer_4_Signed_C   := 10071;
-    WSASYSNOTREADY                                                : constant Integer_4_Signed_C   := 10091;
-    WSAVERNOTSUPPORTED                                            : constant Integer_4_Signed_C   := 10092;
-    WSANOTINITIALISED                                             : constant Integer_4_Signed_C   := 10093;
-    WSAEDISCON                                                    : constant Integer_4_Signed_C   := 10101;
-    WSAENOMORE                                                    : constant Integer_4_Signed_C   := 10102;
-    WSAECANCELLED                                                 : constant Integer_4_Signed_C   := 10103;
-    WSAEINVALIDPROCTABL                                           : constant Integer_4_Signed_C   := 10104;
-    WSAEINVALIDPROVIDER                                           : constant Integer_4_Signed_C   := 10105;
-    WSAEPROVIDERFAILEDINIT                                        : constant Integer_4_Signed_C   := 10106;
-    WSASYSCALLFAILURE                                             : constant Integer_4_Signed_C   := 10107;
-    WSASERVICE_NOT_FOUND                                          : constant Integer_4_Signed_C   := 10108;
-    WSATYPE_NOT_FOUND                                             : constant Integer_4_Signed_C   := 10109;
-    WSA_E_NO_MORE                                                 : constant Integer_4_Signed_C   := 10110;
-    WSA_E_CANCELLED                                               : constant Integer_4_Signed_C   := 10111;
-    WSAEREFUSED                                                   : constant Integer_4_Signed_C   := 10112;
-    WSAHOST_NOT_FOUND                                             : constant Integer_4_Signed_C   := 11001;
-    WSATRY_AGAIN                                                  : constant Integer_4_Signed_C   := 11002;
-    WSANO_RECOVERY                                                : constant Integer_4_Signed_C   := 11003;
-    WSANO_DATA                                                    : constant Integer_4_Signed_C   := 11004;
-    WSA_QOS_RECEIVERS                                             : constant Integer_4_Signed_C   := 11005;
-    WSA_QOS_SENDERS                                               : constant Integer_4_Signed_C   := 11006;
-    WSA_QOS_NO_SENDERS                                            : constant Integer_4_Signed_C   := 11007;
-    WSA_QOS_NO_RECEIVERS                                          : constant Integer_4_Signed_C   := 11008;
-    WSA_QOS_REQUEST_CONFIRMED                                     : constant Integer_4_Signed_C   := 11009;
-    WSA_QOS_ADMISSION_FAILURE                                     : constant Integer_4_Signed_C   := 11010;
-    WSA_QOS_POLICY_FAILURE                                        : constant Integer_4_Signed_C   := 11011;
-    WSA_QOS_BAD_STYLE                                             : constant Integer_4_Signed_C   := 11012;
-    WSA_QOS_BAD_OBJECT                                            : constant Integer_4_Signed_C   := 11013;
-    WSA_QOS_TRAFFIC_CTRL_ERROR                                    : constant Integer_4_Signed_C   := 11014;
-    WSA_QOS_GENERIC_ERROR                                         : constant Integer_4_Signed_C   := 11015;
-    WSA_QOS_ESERVICETYPE                                          : constant Integer_4_Signed_C   := 11016;
-    WSA_QOS_EFLOWSPEC                                             : constant Integer_4_Signed_C   := 11017;
-    WSA_QOS_EPROVSPECBUF                                          : constant Integer_4_Signed_C   := 11018;
-    WSA_QOS_EFILTERSTYLE                                          : constant Integer_4_Signed_C   := 11019;
-    WSA_QOS_EFILTERTYPE                                           : constant Integer_4_Signed_C   := 11020;
-    WSA_QOS_EFILTERCOUNT                                          : constant Integer_4_Signed_C   := 11021;
-    WSA_QOS_EOBJLENGTH                                            : constant Integer_4_Signed_C   := 11022;
-    WSA_QOS_EFLOWCOUNT                                            : constant Integer_4_Signed_C   := 11023;
-    WSA_QOS_EUNKOWNPSOBJ                                          : constant Integer_4_Signed_C   := 11024;
-    WSA_QOS_EPOLICYOBJ                                            : constant Integer_4_Signed_C   := 11025;
-    WSA_QOS_EFLOWDESC                                             : constant Integer_4_Signed_C   := 11026;
-    WSA_QOS_EPSFLOWSPEC                                           : constant Integer_4_Signed_C   := 11027;
-    WSA_QOS_EPSFILTERSPEC                                         : constant Integer_4_Signed_C   := 11028;
-    WSA_QOS_ESDMODEOBJ                                            : constant Integer_4_Signed_C   := 11029;
-    WSA_QOS_ESHAPERATEOBJ                                         : constant Integer_4_Signed_C   := 11030;
-    WSA_QOS_RESERVED_PETYPE                                       : constant Integer_4_Signed_C   := 11031;
-    WSA_SECURE_HOST_NOT_FOUND                                     : constant Integer_4_Signed_C   := 11032;
-    WSA_IPSEC_NAME_POLICY_ERROR                                   : constant Integer_4_Signed_C   := 11033;
-    NO_ERROR                                                      : constant                      := 0;
-    ERROR_BUFFER_OVERFLOW                                         : constant                      := 111;
-    --
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#_#;
     CODE_PAGE_UTF_8                            : constant Integer_4_Unsigned_C := 16#0000_FDE9#;
     KEY_READ                                   : constant Integer_4_Unsigned_C := 16#0002_0019#;
@@ -354,7 +254,7 @@ package Neo.Windows
     BUTTONS_CANCEL_OKAY                        : constant Integer_4_Unsigned_C := 16#0000_0001#;
     BUTTONS_CANCEL_RETRY                       : constant Integer_4_Unsigned_C := 16#0000_0005#;
     MEMORY_MOVEABLE                            : constant Integer_4_Unsigned_C := 16#0000_0002#;
-    MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Integer_4_Unsigned_C := 16#0000_2000#; -- "No longer supported"
+    MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Integer_4_Unsigned_C := 16#0000_2000#;
     MESSAGE_QUIT                               : constant Integer_4_Unsigned_C := 16#0000_0012#;
     CLIPBOARD_UNICODE_TEXT                     : constant Integer_4_Unsigned_C := 16#0000_000D#;
     REMOVE_MESSAGES_AFTER_PROCESSING           : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -891,21 +791,21 @@ typedef struct _OVERLAPPED {
       pragma Convention(C, Record_Point);
     type Record_Message
       is record
-        Window        : Address;
-        Data          : Integer_4_Unsigned_C;
-        Data_Unsigned : Integer_4_Unsigned_C;
-        Data_Signed   : Integer_4_Signed_C;
-        Time          : Integer_4_Unsigned_C;
-        Point         : Record_Point;
+        Window        : Address              := NULL_ADDRESS;
+        Data          : Integer_4_Unsigned_C := 0;
+        Data_Unsigned : Integer_4_Unsigned_C := 0;
+        Data_Signed   : Integer_4_Signed_C   := 0;
+        Time          : Integer_4_Unsigned_C := 0;
+        Point         : Record_Point         := <>;
       end record;
       pragma Convention(C, Record_Message);
     type Record_Key
       is record
-        Code        : Integer_4_Unsigned_C;
-        Scan_Code   : Integer_4_Unsigned_C;
-        Flags       : Integer_4_Unsigned_C;
-        Time        : Integer_4_Unsigned_C;
-        Information : Address; -- Changes on 64/32 bit systems
+        Code        : Integer_4_Unsigned_C := 0;
+        Scan_Code   : Integer_4_Unsigned_C := 0;
+        Flags       : Integer_4_Unsigned_C := 0;
+        Time        : Integer_4_Unsigned_C := 0;
+        Information : Address              := NULL_ADDRESS; -- Changes on 64/32 bit systems
       end record;
       pragma Convention(C, Record_Key);
     type Record_Memory_Status
