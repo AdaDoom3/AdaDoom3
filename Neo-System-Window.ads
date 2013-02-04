@@ -194,7 +194,7 @@ private
   -- Packages --
   --------------
     package Protected_Record_Window
-      is new Neo.Foundational.Generic_Protected(Record_Extended_Window);
+      is new Neo.Foundation.Generic_Protected(Record_Extended_Window);
   ---------------
   -- Variables --
   ---------------
