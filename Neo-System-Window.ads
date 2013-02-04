@@ -29,10 +29,10 @@ use
   Interfaces,
   Interfaces.C,
   Ada.Command_Line,
-  Neo.Foundational.Text_IO,
-  Neo.Foundational.Data_Types,
-  Neo.Foundational.Build_Options,
-  Neo.Foundational.Package_Testing;
+  Neo.Foundation.Text_IO,
+  Neo.Foundation.Data_Types,
+  Neo.Foundation.Build_Options,
+  Neo.Foundation.Package_Testing;
 package Neo.System.Window
   is
   ------------------
