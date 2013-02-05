@@ -545,7 +545,7 @@ package body Implementation
         Monitors       : in Access_Array_Record_Monitor))
         return Integer_4_Signed_C
         is
-        Monitor_Information : Record_Monitor_Information;
+        Monitor_Information : Record_Monitor_Information := <>;
         begin
           if
           Get_Monitor_Information(
@@ -894,18 +894,18 @@ package body Implementation
             raise System_Call_Failure;
           end if;
           if not Do_Clip then
-            if Original_Clip /= NULL_RECORD_RECTANGLE then
+            if Original_Clip /= <> then
               if Clip_Cursor(Original_Clip'Access) = FAILED then
                 raise System_Call_Failure;
               end if;
-              Original_Clip := NULL_RECORD_RECTANGLE;
+              Original_Clip := <>;
             end if;
           else
-            if Original_Clip = NULL_RECORD_RECTANGLE then
+            if Original_Clip = <> then
               if Get_Clip_Cursor_Area(Original_Clip'Access) = FAILED then
                 raise System_Call_Failure;
               end if;
-              if Original_Clip = NULL_RECORD_RECTANGLE then
+              if Original_Clip = <> then
                 raise System_Call_Failure;
               end if;
             end if;
@@ -954,7 +954,7 @@ package body Implementation
       is
       begin
         if Show_Window(Primary_Window, MAKE_WINDOW_GO_TO_ICONIC) = 0 then
-          null; -- It dosen't return an boolean, just some sort of index
+          null;
         end if;
       end Iconize;
   end Implementation;
