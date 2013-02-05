@@ -29,21 +29,16 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System.Processor
   is
-  ---------------
-  -- Constants --
-  ---------------
-    CALLSTACK_TRACE_LIMIT : constant Integer_4_Signed := 1_000;
   ----------------
   -- Exceptions --
   ----------------
-    Primary_Implementation_Failure : Exception;
-    Invalid_Operation              : Exception;
-    Denormalized_Operand           : Exception;
-    Divide_By_Zero                 : Exception;
-    Numeric_Overflow               : Exception;
-    Numeric_Underflow              : Exception;
-    Inexact_Result                 : Exception;
-    Stack_Fault                    : Exception;
+    Invalid_Operation    : Exception;
+    Denormalized_Operand : Exception;
+    Divide_By_Zero       : Exception;
+    Numeric_Overflow     : Exception;
+    Numeric_Underflow    : Exception;
+    Inexact_Result       : Exception;
+    Stack_Fault          : Exception;
   ------------------
   -- Enumerations --
   ------------------
@@ -133,6 +128,10 @@ package Neo.System.Processor
 -------
 private
 -------
+  ---------------
+  -- Constants --
+  ---------------
+    CALLSTACK_TRACE_LIMIT : constant Integer_4_Signed := 1_000;
   --------------------
   -- Implementation --
   --------------------
