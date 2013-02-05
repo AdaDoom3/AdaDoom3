@@ -46,7 +46,7 @@ package body Neo.System.Window
   ---------
   -- Run --
   ---------
-    procedure Run( -- Fuck this procedure
+    procedure Run( 
       Title                       : in String_2;
       Icon_Path                   : in String_2;
       Cursor_Path                 : in String_2;
