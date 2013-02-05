@@ -687,7 +687,6 @@ package body Implementation
           Find_Subprogram_Addresses_Via_Prologue_Signature_Traverse:
           ----------------------------------------------------------
             declare
-            Text_IO           : Record_Input_Output       := Protected_Text_IO.Get;
             Value_At_Position : Access_Integer_4_Unsigned := null;
             Data              : Integer_4_Unsigned        := 0;
             J                 : Integer_4_Signed          := 0;
