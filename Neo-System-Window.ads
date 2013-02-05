@@ -80,7 +80,7 @@ package Neo.System.Window
         Is_Done              : Boolean                 := False;
         Aspect_Wide          : Record_Aspect_Ratio     := (17, 9);
         Aspect_Narrow        : Record_Aspect_Ratio     := (1, 1);
-        Gamma                : Record_Gamma;
+        Gamma                : Record_Gamma            := <>;
       end record;
   -----------------
   -- Subprograms --
@@ -176,8 +176,8 @@ private
       end record;
     type Record_Monitor
       is Record
-        Work_Area : Record_Window_Border;
-        Desktop   : Record_Window_Border;
+        Work_Area : Record_Window_Border := <>;
+        Desktop   : Record_Window_Border := <>;
       end record;
   ------------
   -- Arrays --
@@ -194,7 +194,7 @@ private
   -- Packages --
   --------------
     package Protected_Record_Window
-      is new Neo.Foundation.Generic_Protected(Record_Extended_Window);
+      is new Neo.Foundation.Generic_Protected(Record_Window);
   ---------------
   -- Variables --
   ---------------
