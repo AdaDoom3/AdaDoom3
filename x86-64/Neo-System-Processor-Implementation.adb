@@ -15,7 +15,7 @@
 --
 --
 separate(Neo.System.Processor)
-package body Implementation
+package body Implementation_For_Architecture
   is
   -------------
   -- Numbers --
@@ -864,4 +864,4 @@ package body Implementation
         Put_Line("Operation code: "  & Binary_Image(Environment.Operation_Code,  True));
         Put_Line("Program counter: " & Binary_Image(Environment.Program_Counter, True));
       end Put_State;
-  end Implementation;
+  end Implementation_For_Architecture;
