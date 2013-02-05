@@ -24,6 +24,16 @@ package body Neo.Foundation.Text_IO
       begin
         null;
       end Test;
+  --------------------
+  -- Dummy_Localize --
+  --------------------
+    function Dummy_Localize(
+      Item : in String_2)
+      return String_2
+      is
+      begin
+        return Item;
+      end Dummy_Localize;
   ---------
   -- Set --
   ---------
@@ -47,8 +57,6 @@ package body Neo.Foundation.Text_IO
         Set(
           Line_Size => Intput_Output.Line_Size,
           Put       => New_Put,
-          Put_Line  => Intput_Output.Put_Line,
-          New_Line  => Intput_Output.New_Line,
           Get_Line  => Intput_Output.Get_Line);
       end Set_Put;
   ------------------
@@ -62,8 +70,6 @@ package body Neo.Foundation.Text_IO
         Set(
           Line_Size => Intput_Output.Line_Size,
           Put       => Intput_Output.Put,
-          Put_Line  => New_Put_Line,
-          New_Line  => Intput_Output.New_Line,
           Get_Line  => Intput_Output.Get_Line);
       end Set_Put_Line;
   ------------------
@@ -77,8 +83,6 @@ package body Neo.Foundation.Text_IO
         Set(
           Line_Size => Intput_Output.Line_Size,
           Put       => Intput_Output.Put,
-          Put_Line  => Intput_Output.Put_Line,
-          New_Line  => Intput_Output.New_Line,
           Get_Line  => New_Get_Line);
       end Set_Get_Line;
   ---------
