@@ -32,20 +32,19 @@ package Neo.Foundation.Text_IO
   ---------------
   -- Accessors --
   ---------------
-    type Access_Localize
+    type Access_Function_Localize
       is access function(
         Item : in String_2)
         return String_2;
-    type Access_Put
+    type Access_Procedure_Put
       is access procedure(
         Item : in String_2);
-    type Access_Get_Line
+    type Access_Function_Get_Line
       is access function
         return String_2;
   -----------------
   -- Subprograms --
   -----------------
-    -- REDO: Image function 
     procedure Test;
     procedure Put(
       Item : in Character_1);
@@ -64,11 +63,11 @@ package Neo.Foundation.Text_IO
     procedure Put_Line(
       Item : in String_2);
     procedure Set(
-      Localize  : in Access_Localize;
-      Put       : in Access_Put;
-      Get_Line  : in Access_Get_Line);
+      Localize  : in Access_Function_Localize;
+      Put       : in Access_Procedure_Put;
+      Get_Line  : in Access_Function_Get_Line);
     procedure Set_Localizer(
-      Localizer : in Access_Localizer);
+      Localizer : in Access_Function_Localizer);
     procedure Set_Put(
       New_Put : in Access_Put);
     procedure Set_Get_Line(
@@ -116,9 +115,9 @@ private
   -------------
     type Record_Input_Output
       is record
-        Localize : Access_Localize := Dummy_Localize'Access;
-        Put      : Access_Put      := Ada.Wide_Text_IO.Put'Access;
-        Get_Line : Access_Get_Line := Ada.Wide_Text_IO.Get_Line'Access;
+        Localize : Access_Function_Localize := Dummy_Localize'Access;
+        Put      : Access_Procedure_Put     := Ada.Wide_Text_IO.Put'Access;
+        Get_Line : Access_Function_Get_Line := Ada.Wide_Text_IO.Get_Line'Access;
       end record;
   --------------
   -- Packages --
