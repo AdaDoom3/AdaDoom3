@@ -36,16 +36,16 @@ package body Implementation
   -------------
     type Record_Feature
       is record
-        Function_ID : Integer_4_Unsigned;
-        Bit         : Integer_Bit_Field_Element;
-        Register    : Enumerated_Register;
+        Function_ID : Integer_4_Unsigned        := 0;
+        Bit         : Integer_Bit_Field_Element := 0;
+        Register    : Enumerated_Register       := EAX_Register;
       end record;
     type Record_Value
       is record
-        Function_ID : Integer_4_Unsigned;
-        Start_Bit   : Integer_Bit_Field_Element;
-        End_Bit     : Integer_Bit_Field_Element;
-        Register    : Enumerated_Register;
+        Function_ID : Integer_4_Unsigned        := 0;
+        Start_Bit   : Integer_Bit_Field_Element := 0;
+        End_Bit     : Integer_Bit_Field_Element := 0;
+        Register    : Enumerated_Register       := EAX_Regsiter;
       end record;
     type Record_x86_Environment
       is record
@@ -160,7 +160,7 @@ package body Implementation
         return Boolean
         is
         begin
-          return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
+          return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
         end Check_Feature;
       ---------------------
       function Check_Value(
@@ -196,7 +196,7 @@ package body Implementation
               Array_String_Segment'Asm_Output(FROM_EDX, D)));
           return String_1(B) & String_1(D) & String_1(C);
         end Get_Vendor;
-      Processor : Record_Processor   := NULL_RECORD_PROCESSOR;
+      Processor : Record_Processor   := <>;
       Data      : Integer_4_Unsigned := 0;
       Did_Fail  : Boolean            := False;
       -----
@@ -312,6 +312,7 @@ package body Implementation
           Processor.Has_Advanced_State_Operations              := Check_Feature(INTEL_FXSR);
           if
           Processor.Has_Streaming_SIMD_Extensions_4_2 and then(
+          Get_Operating_System_Version = Mach__Version or
           Get_Operating_System_Version = Windows_2_6_1_Version or
           Get_Operating_System_Version = Linux_2_7_Version)
           then
@@ -450,8 +451,8 @@ package body Implementation
           Clear_Exception_Bits:
           ---------------------
             declare
-            Data_From_SIMD  : Integer_4_Unsigned := 0;
-            x86_Environment : Record_x86_Environment;
+            Data_From_SIMD  : Integer_4_Unsigned     := 0;
+            x86_Environment : Record_x86_Environment := <>;
             begin
               if Processor.Has_Advanced_State_Operations then
                 Asm(
@@ -623,8 +624,8 @@ package body Implementation
     function Is_Stack_Empty
       return Boolean
       is
-      Result : Integer_4_Unsigned := 0;
-      Data   : Record_x86_Environment; 
+      Result : Integer_4_Unsigned     := 0;
+      Data   : Record_x86_Environment := <>; 
       begin
         Asm(
           ---------------------------------------------
@@ -651,7 +652,7 @@ package body Implementation
   -----------------
     procedure Clear_Stack
       is
-      Data : Record_x86_Environment;
+      Data : Record_x86_Environment := <>;
       begin
         Asm(
           ---------------------------------------------
@@ -755,7 +756,7 @@ package body Implementation
       Number_Of_Values     :         Integer_4_Unsigned           := 0;
       Data_From_Extensions :         Integer_4_Unsigned           := 0;
       Stack                : aliased array (1..8) of Float_8_Real := (others => 0.0);
-      Environment          : aliased Record_x86_Environment;
+      Environment          : aliased Record_x86_Environment       := <>;
       begin
         Asm(
           ---------------------------------------------
