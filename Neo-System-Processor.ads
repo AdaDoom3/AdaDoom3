@@ -20,7 +20,7 @@ with
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing,
-  Neo.Foundation.Package_Controller;
+  Neo.Foundation.Generic_Protected;
 use
   Interfaces,
   System.Machine_Code,
