@@ -678,9 +678,9 @@ package body Implementation_For_Architecture
         Put_Call_Stack;
       exception
         when System_Call_Failure => 
-          ----------------------------------------------------------
-          Find_Subprogram_Addresses_Via_Prologue_Signature_Traverse:
-          ----------------------------------------------------------
+          -----------------------------
+          Traverse_Prologue_Signatures:
+          -----------------------------
             declare
             Value_At_Position : Access_Integer_4_Unsigned := null;
             Data              : Integer_4_Unsigned        := 0;
@@ -739,7 +739,7 @@ package body Implementation_For_Architecture
                 Put(Integer_4_Signed'Wide_Image(I));
                 Put_Line(": " & To_Hex(To_Integer_4_Unsigned(Call_Stack.All(I))));
               end loop;
-            end Find_Subprogram_Addresses_Via_Prologue_Signature_Traverse;
+            end Traverse_Prologue_Signatures;
       end Put_Call_Stack;
   ---------------
   -- Put_State --
