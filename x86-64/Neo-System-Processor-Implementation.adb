@@ -36,16 +36,10 @@ package body Implementation_For_Architecture
   -------------
     type Record_Feature
       is record
-        Function_ID : Integer_4_Unsigned        := 0;
-        Bit         : Integer_Bit_Field_Element := 0;
-        Register    : Enumerated_Register       := EAX_Register;
-      end record;
-    type Record_Value
-      is record
-        Function_ID : Integer_4_Unsigned        := 0;
-        Start_Bit   : Integer_Bit_Field_Element := 0;
-        End_Bit     : Integer_Bit_Field_Element := 0;
-        Register    : Enumerated_Register       := EAX_Regsiter;
+        Function_ID    : Integer_4_Unsigned        := 0;
+        Register       : Enumerated_Register       := EAX_Register;
+        Start_Bit      : Integer_Bit_Field_Element := 0;
+        Bits_Afterward : Integer_Bit_Field_Element := 0;
       end record;
     type Record_x86_Environment
       is record
@@ -85,38 +79,38 @@ package body Implementation_For_Architecture
     FROM_EDX                         : constant String_1           := "=d";
     VENDOR_INTEL                     : constant String_1           := "GenuineIntel";
     VENDOR_ADVANCED_MICRO_DEVICES    : constant String_1           := "AuthenticAMD";
-    INTEL_SSE3                       : constant Record_Feature     := (16#0000_0001#,  0, ECX_Register);
-    INTEL_PCLMULQDQ                  : constant Record_Feature     := (16#0000_0001#,  1, ECX_Register);
-    INTEL_SSSE3                      : constant Record_Feature     := (16#0000_0001#,  9, ECX_Register);
-    INTEL_FMA3                       : constant Record_Feature     := (16#0000_0001#, 12, ECX_Register);
-    INTEL_SSE4_1                     : constant Record_Feature     := (16#0000_0001#, 19, ECX_Register);
-    INTEL_SSE4_2                     : constant Record_Feature     := (16#0000_0001#, 20, ECX_Register);
-    INTEL_POPCNT                     : constant Record_Feature     := (16#0000_0001#, 23, ECX_Register);
-    INTEL_AES                        : constant Record_Feature     := (16#0000_0001#, 25, ECX_Register);
-    INTEL_OSXSAVE                    : constant Record_Feature     := (16#0000_0001#, 27, ECX_Register);
-    INTEL_AVX                        : constant Record_Feature     := (16#0000_0001#, 28, ECX_Register);
-    INTEL_F16C                       : constant Record_Feature     := (16#0000_0001#, 29, ECX_Register);
-    INTEL_CMOV                       : constant Record_Feature     := (16#0000_0001#, 15, EDX_Register);
-    INTEL_MMX                        : constant Record_Feature     := (16#0000_0001#, 23, EDX_Register);
-    INTEL_FXSR                       : constant Record_Feature     := (16#0000_0001#, 24, EDX_Register);
-    INTEL_SSE                        : constant Record_Feature     := (16#0000_0001#, 25, EDX_Register);
-    INTEL_SSE2                       : constant Record_Feature     := (16#0000_0001#, 26, EDX_Register);
-    INTEL_HTT                        : constant Record_Feature     := (16#0000_0001#, 28, EDX_Register);
-    INTEL_BMI1                       : constant Record_Feature     := (16#0000_0007#,  3, EBX_Register);
-    INTEL_AVX2                       : constant Record_Feature     := (16#0000_0007#,  5, EBX_Register);
-    INTEL_BMI2                       : constant Record_Feature     := (16#0000_0007#,  8, EBX_Register);
-    INTEL_INVPCID                    : constant Record_Feature     := (16#0000_0007#, 10, EBX_Register);
-    AMD_ABM                          : constant Record_Feature     := (16#8000_0001#,  5, ECX_Register);
-    AMD_SSE4_A                       : constant Record_Feature     := (16#8000_0001#,  6, ECX_Register);
-    AMD_XOP                          : constant Record_Feature     := (16#8000_0001#, 11, ECX_Register);
-    AMD_FMA4                         : constant Record_Feature     := (16#8000_0001#, 16, ECX_Register);
-    AMD_CVT16                        : constant Record_Feature     := (16#8000_0001#, 19, ECX_Register);
-    AMD_MMX_PLUS                     : constant Record_Feature     := (16#8000_0001#, 22, EDX_Register);
-    AMD_3DNOW_PLUS                   : constant Record_Feature     := (16#8000_0001#, 30, EDX_Register);
-    AMD_3DNOW                        : constant Record_Feature     := (16#8000_0001#, 31, EDX_Register);
-    AMD_CPU_COUNT                    : constant Record_Value       := (16#8000_0008#,  0,  7, ECX_Register); -- One plus this value
-    INTEL_CPU_COUNT                  : constant Record_Value       := (16#0000_0001#, 16, 23, EBX_Register);
-    INTEL_APIC                       : constant Record_Value       := (16#0000_0001#, 24, 31, EBX_Register);
+    INTEL_SSE3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register,  0);
+    INTEL_PCLMULQDQ                  : constant Record_Feature     := (16#0000_0001#, ECX_Register,  1);
+    INTEL_SSSE3                      : constant Record_Feature     := (16#0000_0001#, ECX_Register,  9);
+    INTEL_FMA3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register, 12,  1);
+    INTEL_SSE4_1                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 19,  1);
+    INTEL_SSE4_2                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 20,  1);
+    INTEL_POPCNT                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 23,  1);
+    INTEL_AES                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 25,  1);
+    INTEL_OSXSAVE                    : constant Record_Feature     := (16#0000_0001#, ECX_Register, 27,  1);
+    INTEL_AVX                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 28,  1);
+    INTEL_F16C                       : constant Record_Feature     := (16#0000_0001#, ECX_Register, 29,  1);
+    INTEL_CMOV                       : constant Record_Feature     := (16#0000_0001#, EDX_Register, 15,  1);
+    INTEL_MMX                        : constant Record_Feature     := (16#0000_0001#, EDX_Register, 23,  1);
+    INTEL_FXSR                       : constant Record_Feature     := (16#0000_0001#, EDX_Register, 24,  1);
+    INTEL_SSE                        : constant Record_Feature     := (16#0000_0001#, EDX_Register, 25,  1);
+    INTEL_SSE2                       : constant Record_Feature     := (16#0000_0001#, EDX_Register, 26,  1);
+    INTEL_HTT                        : constant Record_Feature     := (16#0000_0001#, EDX_Register, 28,  1);
+    INTEL_BMI1                       : constant Record_Feature     := (16#0000_0007#, EBX_Register,  3,  1);
+    INTEL_AVX2                       : constant Record_Feature     := (16#0000_0007#, EBX_Register,  5,  1);
+    INTEL_BMI2                       : constant Record_Feature     := (16#0000_0007#, EBX_Register,  8,  1);
+    INTEL_INVPCID                    : constant Record_Feature     := (16#0000_0007#, EBX_Register, 10,  1);
+    AMD_ABM                          : constant Record_Feature     := (16#8000_0001#, ECX_Register,  5,  1);
+    AMD_SSE4_A                       : constant Record_Feature     := (16#8000_0001#, ECX_Register,  6,  1);
+    AMD_XOP                          : constant Record_Feature     := (16#8000_0001#, ECX_Register, 11,  1);
+    AMD_FMA4                         : constant Record_Feature     := (16#8000_0001#, ECX_Register, 16,  1);
+    AMD_CVT16                        : constant Record_Feature     := (16#8000_0001#, ECX_Register, 19,  1);
+    AMD_MMX_PLUS                     : constant Record_Feature     := (16#8000_0001#, EDX_Register, 22,  1);
+    AMD_3DNOW_PLUS                   : constant Record_Feature     := (16#8000_0001#, EDX_Register, 30,  1);
+    AMD_3DNOW                        : constant Record_Feature     := (16#8000_0001#, EDX_Register, 31,  1);
+    AMD_CPU_COUNT                    : constant Record_Value       := (16#8000_0008#, ECX_Register,  0,  7); -- One plus this value
+    INTEL_CPU_COUNT                  : constant Record_Value       := (16#0000_0001#, EBX_Register, 16, 23);
+    INTEL_APIC                       : constant Record_Value       := (16#0000_0001#, EBX_Register, 24, 31);
     PROLOGUE_SIGNATURE               : constant Integer_4_Unsigned := 16#00EC_8B55#;
   ----------------
   -- Initialize --
@@ -163,7 +157,8 @@ package body Implementation_For_Architecture
           return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
         end Check_Feature;
       ---------------------
-      function Check_Value(
+      function 
+(
       ---------------------
         Value : in Record_Value)
         return Integer_4_Signed
