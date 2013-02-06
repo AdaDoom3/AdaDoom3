@@ -68,7 +68,7 @@ package body Neo.System.Processor
       return Record_Processor
       is
       begin
-        return Instantiated_Implementation.Initialize;
+        return Implementation.Initialize;
       end Initialize;
   ---------
   -- Put --
@@ -223,10 +223,10 @@ package body Neo.System.Processor
       is
       begin
         Protected_Data.Set(
-          Instantiated_Implementation.Set_Precision(
+          Implementation.Set_Precision(
             Precision => Precision,
             Processor => Protected_Data.Get,
-              Instantiated_Implementation.Set_Rounding(
+              Implementation.Set_Rounding(
                 Processor => Protected_Data.Get,
                 Rounding  => Rounding)));
       end Set;
@@ -237,7 +237,7 @@ package body Neo.System.Processor
       Rounding : in Enumerated_Rounding)
       is
       begin
-        Protected_Data.Set(Instantiated_Implementation.Set_Rounding(Protected_Data.Get, Rounding));
+        Protected_Data.Set(Implementation.Set_Rounding(Protected_Data.Get, Rounding));
       end Set_Rounding;
   -------------------
   -- Set_Precision --
@@ -246,14 +246,14 @@ package body Neo.System.Processor
       Precision : in Enumerated_Precision)
       is
       begin
-        Protected_Data.Set(Instantiated_Implementation.Set_Precision(Protected_Data.Get, Precision));
+        Protected_Data.Set(Implementation.Set_Precision(Protected_Data.Get, Precision));
       end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
   --------------------
     function Get_Clock_Ticks
       return Integer_8_Unsigned
-      renames Instantiated_Implementation.Get_Clock_Ticks;
+      renames Implementation.Get_Clock_Ticks;
   ---------
   -- Get --
   ---------
@@ -269,15 +269,23 @@ package body Neo.System.Processor
     procedure Put
       is
       begin
-        Instantiated_Implementation.Put(Protected_Data.Get);
+        Implementation.Put(Protected_Data.Get);
       end Put_State;
+  --------------------
+  -- Put_Call_Stack --
+  --------------------
+    procedure Put_Call_Stack
+      is
+      begin
+        Implementation.Put_Call_Stack;
+      end Put_Call_Stack;
   ----------------------
   -- Check_Exceptions --
   ----------------------
     procedure Check_Exceptions
       is
       begin
-        Instantiated_Implementation.Check_Exceptions(Protected_Data.Get);
+        Implementation.Check_Exceptions(Protected_Data.Get);
       end Check_Exceptions;
   -----------------
   -- Clear_Stack --
@@ -285,7 +293,7 @@ package body Neo.System.Processor
     procedure Clear_Stack
       is
       begin
-        Instantiated_Implementation.Clear_Stack;
+        Implementation.Clear_Stack;
       end Clear_Stack;
   --------------------
   -- Is_Stack_Empty --
@@ -294,6 +302,6 @@ package body Neo.System.Processor
       return Boolean
       is 
       begin
-        return Instantiated_Implementation.Is_Stack_Empty;
+        return Implementation.Is_Stack_Empty;
       end Is_Stack_Empty;
   end Neo.System.Processor;
