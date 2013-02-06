@@ -599,9 +599,9 @@ package body Implementation_For_Architecture
         return Get_Clock_Ticks;
       exception
         when System_Call_Failure =>
-          --------------------------
-          Get_It_By_Way_Of_Assembly:
-          --------------------------
+          -------------
+          Use_Assembly:
+          -------------
             declare
             Low_Part  : Integer_4_Unsigned := 0;
             High_Part : Integer_4_Unsigned := 0;
@@ -616,7 +616,7 @@ package body Implementation_For_Architecture
                   Integer_4_Unsigned'Asm_Output(FROM_EAX, Low_Part),
                   Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
               return Shift_Left(Integer_8_Unsigned(High_Part), 32) + Integer_8_Unsigned(Low_Part);
-            end Get_It_By_Way_Of_Assembly;
+            end Use_Assembly;
       end Get_Clock_Ticks;
   --------------------
   -- Is_Stack_Empty --
