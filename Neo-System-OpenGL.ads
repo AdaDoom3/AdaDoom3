@@ -1,66 +1,70 @@
 --
---  GLenum            : Win32_UINT   Integer_4_Unsigned_C
---  GLboolean         : Win32_UCHAR  Integer_1_Unsigned_C
---  GLbitfield        : Win32_UINT   Integer_4_Unsigned_C
---  GLbyte            : Win32_CHAR   Character_1_C
---  GLshort           : Win32_SHORT  Integer_2_Signed_C
---  GLint             : Win32_LONG   Integer_4_Signed_C
---  GLsizei           : Win32_LONG   Integer_4_Signed_C  
---  GLubyte           : Win32_BYTE   Integer_1_Unsigned_C
---  GLushort          : Win32_USHORT Integer_2_Unsigned_C
---  GLuint            : Win32_UINT   Integer_4_Unsigned_C
---  GLfloat           : Win32_FLOAT  Float_4_Real_C
---  GLclampf          : Win32_FLOAT  Float_4_Real_C
---  GLdouble          : Win32_DOUBLE Float_8_Real_C
---  GLclampd          : Win32_DOUBLE Float_8_Real_C
---  GLvoid            : Win32_VOID   type VOID is null record
---  PGLvoid           : access all GLvoid
---  a_GLint           : access all GLint
---  a_GLuint          : access all GLuint
---  a_GLdouble        : access all GLdouble
---  a_GLshort         : access all GLshort
---  ac_GLint          : access constant GLint
---  ac_GLuint         : access constant GLuint
---  ac_GLfloat        : access constant GLfloat
---  ac_GLdouble       : access constant GLdouble
---  ac_GLshort        : access constant GLshort
---  Win32_PCBYTE      : access constant Integer_1_Unsigned_C
---  Win32_FLOAT       : Float_4_Real_C
---  Win32_DOUBLE      : Float_8_Real_C
---  WIN32_ATOM        : Integer_2_Unsigned_C
---  WIN32_BOOL        : Integer_4_Signed_C
---  WIN32_BYTE        : Integer_1_Unsigned_C
---  WIN32_CHAR        : Character_1_C
---  WIN32_DWORD       : Integer_4_Unsigned_C
---  WIN32_WORD        : Integer_2_Unsigned_C
---  WIN32_INT         : Integer_4_Signed_C
---  WIN32_LONG        : Integer_4_Signed_C
---  WIN32_SHORT       : Integer_2_Signed_C
---  WIN32_UINT        : Integer_4_Unsigned_C
---  WIN32_WPARAM      : Integer_4_Unsigned_C
---  WIN32_LPARAM      : Integer_4_Signed_C
---  WIN32_COLORREF    : Integer_4_Unsigned_C
---  WIN32_SIZE        : Integer_Size_C
---  WIN32_String      : String_1_C
---  WIN32_Wide_String : String_2_C
---  WIN32_LPCSTR      : Access_Constant_Character_1_C
---  WIN32_LPCWSTR     : Access_Constant_Character_2_C
---  WIN32_LPSTR       : Access_Character_1_C
---  WIN32_LPWSTR      : Access_Character_2_C
---  WIN32_LPVOID      : Address
---  WIN32_HANDLE      : Address
---  WIN32_HWND        : Address
---  WIN32_HBRUSH      : Address
---  WIN32_HBITMAP     : Address
---  WIN32_HDC         : Address
---  WIN32_HGDIOBJ     : Address
---  WIN32_HFONT       : Address
---  WIN32_HMENU       : Address
---  WIN32_HCURSOR     : Address
---  WIN32_HICON       : Address
---  WIN32_HPEN        : Address
---  WIN32_HINSTANCE   : Address
---  WIN32_HMODULE     : Address
+--
+--
+--  GLenum            Win32_UINT   Integer_4_Unsigned_C
+--  GLboolean         Win32_UCHAR  Integer_1_Unsigned_C
+--  GLbitfield        Win32_UINT   Integer_4_Unsigned_C
+--  GLbyte            Win32_CHAR   Character_1_C
+--  GLshort           Win32_SHORT  Integer_2_Signed_C
+--  GLint             Win32_LONG   Integer_4_Signed_C
+--  GLsizei           Win32_LONG   Integer_4_Signed_C  
+--  GLubyte           Win32_BYTE   Integer_1_Unsigned_C
+--  GLushort          Win32_USHORT Integer_2_Unsigned_C
+--  GLuint            Win32_UINT   Integer_4_Unsigned_C
+--  GLfloat           Win32_FLOAT  Float_4_Real_C
+--  GLclampf          Win32_FLOAT  Float_4_Real_C
+--  GLdouble          Win32_DOUBLE Float_8_Real_C
+--  GLclampd          Win32_DOUBLE Float_8_Real_C
+--  GLvoid            Win32_VOID   type VOID is null record
+--  PGLvoid           access all GLvoid
+--  a_GLint           access all GLint
+--  a_GLuint          access all GLuint
+--  a_GLdouble        access all GLdouble
+--  a_GLshort         access all GLshort
+--  ac_GLint          access constant GLint
+--  ac_GLuint         access constant GLuint
+--  ac_GLfloat        access constant GLfloat
+--  ac_GLdouble       access constant GLdouble
+--  ac_GLshort        access constant GLshort
+--  Win32_PCBYTE      access constant Integer_1_Unsigned_C
+--  Win32_FLOAT       Float_4_Real_C
+--  Win32_DOUBLE      Float_8_Real_C
+--  WIN32_ATOM        Integer_2_Unsigned_C
+--  WIN32_BOOL        Integer_4_Signed_C
+--  WIN32_BYTE        Integer_1_Unsigned_C
+--  WIN32_CHAR        Character_1_C
+--  WIN32_DWORD       Integer_4_Unsigned_C
+--  WIN32_WORD        Integer_2_Unsigned_C
+--  WIN32_INT         Integer_4_Signed_C
+--  WIN32_LONG        Integer_4_Signed_C
+--  WIN32_SHORT       Integer_2_Signed_C
+--  WIN32_UINT        Integer_4_Unsigned_C
+--  WIN32_WPARAM      Integer_4_Unsigned_C
+--  WIN32_LPARAM      Integer_4_Signed_C
+--  WIN32_COLORREF    Integer_4_Unsigned_C
+--  WIN32_SIZE        Integer_Size_C
+--  WIN32_String      String_1_C
+--  WIN32_Wide_String String_2_C
+--  WIN32_LPCSTR      Access_Constant_Character_1_C
+--  WIN32_LPCWSTR     Access_Constant_Character_2_C
+--  WIN32_LPSTR       Access_Character_1_C
+--  WIN32_LPWSTR      Access_Character_2_C
+--  WIN32_LPVOID      Address
+--  WIN32_HANDLE      Address
+--  WIN32_HWND        Address
+--  WIN32_HBRUSH      Address
+--  WIN32_HBITMAP     Address
+--  WIN32_HDC         Address
+--  WIN32_HGDIOBJ     Address
+--  WIN32_HFONT       Address
+--  WIN32_HMENU       Address
+--  WIN32_HCURSOR     Address
+--  WIN32_HICON       Address
+--  WIN32_HPEN        Address
+--  WIN32_HINSTANCE   Address
+--  WIN32_HMODULE     Address
+--
+--
 --
 with
   System,
@@ -167,73 +171,73 @@ package Neo.System.OpenGL
     GL_AUX2                            : constant Integer_4_Unsigned := 16#0000_040B#;
     GL_AUX3                            : constant Integer_4_Unsigned := 16#0000_040C#;
     GL_NO_ERROR                        : constant Integer_4_Unsigned := 16#0000_0000#;
-    GL_INVALID_ENUM                    : constant Integer_4_Unsigned := 16#0500#;
-    GL_INVALID_VALUE                   : constant Integer_4_Unsigned := 16#0501#;
-    GL_INVALID_OPERATION               : constant Integer_4_Unsigned := 16#0502#;
-    GL_STACK_OVERFLOW                  : constant Integer_4_Unsigned := 16#0503#;
-    GL_STACK_UNDERFLOW                 : constant Integer_4_Unsigned := 16#0504#;
-    GL_OUT_OF_MEMORY                   : constant Integer_4_Unsigned := 16#0505#;
-    GL_2D                              : constant Integer_4_Unsigned := 16#0600#;
-    GL_3D                              : constant Integer_4_Unsigned := 16#0601#;
-    GL_3D_COLOR                        : constant Integer_4_Unsigned := 16#0602#;
-    GL_3D_COLOR_TEXTURE                : constant Integer_4_Unsigned := 16#0603#;
-    GL_4D_COLOR_TEXTURE                : constant Integer_4_Unsigned := 16#0604#;
-    GL_PASS_THROUGH_TOKEN              : constant Integer_4_Unsigned := 16#0700#;
-    GL_POINT_TOKEN                     : constant Integer_4_Unsigned := 16#0701#;
-    GL_LINE_TOKEN                      : constant Integer_4_Unsigned := 16#0702#;
-    GL_POLYGON_TOKEN                   : constant Integer_4_Unsigned := 16#0703#;
-    GL_BITMAP_TOKEN                    : constant Integer_4_Unsigned := 16#0704#;
-    GL_DRAW_PIXEL_TOKEN                : constant Integer_4_Unsigned := 16#0705#;
-    GL_COPY_PIXEL_TOKEN                : constant Integer_4_Unsigned := 16#0706#;
-    GL_LINE_RESET_TOKEN                : constant Integer_4_Unsigned := 16#0707#;
-    GL_EXP                             : constant Integer_4_Unsigned := 16#0800#;
-    GL_EXP2                            : constant Integer_4_Unsigned := 16#0801#;
-    GL_CW                              : constant Integer_4_Unsigned := 16#0900#;
-    GL_CCW                             : constant Integer_4_Unsigned := 16#0901#;
-    GL_COEFF                           : constant Integer_4_Unsigned := 16#0A00#;
-    GL_ORDER                           : constant Integer_4_Unsigned := 16#0A01#;
-    GL_DOMAIN                          : constant Integer_4_Unsigned := 16#0A02#;
-    GL_CURRENT_COLOR                   : constant Integer_4_Unsigned := 16#0B00#;
-    GL_CURRENT_INDEX                   : constant Integer_4_Unsigned := 16#0B01#;
-    GL_CURRENT_NORMAL                  : constant Integer_4_Unsigned := 16#0B02#;
-    GL_CURRENT_TEXTURE_COORDS          : constant Integer_4_Unsigned := 16#0B03#;
-    GL_CURRENT_RASTER_COLOR            : constant Integer_4_Unsigned := 16#0B04#;
-    GL_CURRENT_RASTER_INDEX            : constant Integer_4_Unsigned := 16#0B05#;
-    GL_CURRENT_RASTER_TEXTURE_COORDS   : constant Integer_4_Unsigned := 16#0B06#;
-    GL_CURRENT_RASTER_POSITION         : constant Integer_4_Unsigned := 16#0B07#;
-    GL_CURRENT_RASTER_POSITION_VALID   : constant Integer_4_Unsigned := 16#0B08#;
-    GL_CURRENT_RASTER_DISTANCE         : constant Integer_4_Unsigned := 16#0B09#;
-    GL_POINT_SMOOTH                    : constant Integer_4_Unsigned := 16#0B10#;
-    GL_POINT_SIZE                      : constant Integer_4_Unsigned := 16#0B11#;
-    GL_POINT_SIZE_RANGE                : constant Integer_4_Unsigned := 16#0B12#;
-    GL_POINT_SIZE_GRANULARITY          : constant Integer_4_Unsigned := 16#0B13#;
-    GL_LINE_SMOOTH                     : constant Integer_4_Unsigned := 16#0B20#;
-    GL_LINE_WIDTH                      : constant Integer_4_Unsigned := 16#0B21#;
-    GL_LINE_WIDTH_RANGE                : constant Integer_4_Unsigned := 16#0B22#;
-    GL_LINE_WIDTH_GRANULARITY          : constant Integer_4_Unsigned := 16#0B23#;
-    GL_LINE_STIPPLE                    : constant Integer_4_Unsigned := 16#0B24#;
-    GL_LINE_STIPPLE_PATTERN            : constant Integer_4_Unsigned := 16#0B25#;
-    GL_LINE_STIPPLE_REPEAT             : constant Integer_4_Unsigned := 16#0B26#;
-    GL_LIST_MODE                       : constant Integer_4_Unsigned := 16#0B30#;
-    GL_MAX_LIST_NESTING                : constant Integer_4_Unsigned := 16#0B31#;
-    GL_LIST_BASE                       : constant Integer_4_Unsigned := 16#0B32#;
-    GL_LIST_INDEX                      : constant Integer_4_Unsigned := 16#0B33#;
-    GL_POLYGON_MODE                    : constant Integer_4_Unsigned := 16#0B40#;
-    GL_POLYGON_SMOOTH                  : constant Integer_4_Unsigned := 16#0B41#;
-    GL_POLYGON_STIPPLE                 : constant Integer_4_Unsigned := 16#0B42#;
-    GL_EDGE_FLAG                       : constant Integer_4_Unsigned := 16#0B43#;
-    GL_CULL_FACE                       : constant Integer_4_Unsigned := 16#0B44#;
-    GL_CULL_FACE_MODE                  : constant Integer_4_Unsigned := 16#0B45#;
-    GL_FRONT_FACE                      : constant Integer_4_Unsigned := 16#0B46#;
-    GL_LIGHTING                        : constant Integer_4_Unsigned := 16#0B50#;
-    GL_LIGHT_MODEL_LOCAL_VIEWER        : constant Integer_4_Unsigned := 16#0B51#;
-    GL_LIGHT_MODEL_TWO_SIDE            : constant Integer_4_Unsigned := 16#0B52#;
-    GL_LIGHT_MODEL_AMBIENT             : constant Integer_4_Unsigned := 16#0B53#;
-    GL_SHADE_MODEL                     : constant Integer_4_Unsigned := 16#0B54#;
-    GL_COLOR_MATERIAL_FACE             : constant Integer_4_Unsigned := 16#0B55#;
-    GL_COLOR_MATERIAL_PARAMETER        : constant Integer_4_Unsigned := 16#0B56#;
-    GL_COLOR_MATERIAL                  : constant Integer_4_Unsigned := 16#0B57#;
-    GL_FOG                             : constant Integer_4_Unsigned := 16#0B60#;
+    GL_INVALID_ENUM                    : constant Integer_4_Unsigned := 16#0000_0500#;
+    GL_INVALID_VALUE                   : constant Integer_4_Unsigned := 16#0000_0501#;
+    GL_INVALID_OPERATION               : constant Integer_4_Unsigned := 16#0000_0502#;
+    GL_STACK_OVERFLOW                  : constant Integer_4_Unsigned := 16#0000_0503#;
+    GL_STACK_UNDERFLOW                 : constant Integer_4_Unsigned := 16#0000_0504#;
+    GL_OUT_OF_MEMORY                   : constant Integer_4_Unsigned := 16#0000_0505#;
+    GL_2D                              : constant Integer_4_Unsigned := 16#0000_0600#;
+    GL_3D                              : constant Integer_4_Unsigned := 16#0000_0601#;
+    GL_3D_COLOR                        : constant Integer_4_Unsigned := 16#0000_0602#;
+    GL_3D_COLOR_TEXTURE                : constant Integer_4_Unsigned := 16#0000_0603#;
+    GL_4D_COLOR_TEXTURE                : constant Integer_4_Unsigned := 16#0000_0604#;
+    GL_PASS_THROUGH_TOKEN              : constant Integer_4_Unsigned := 16#0000_0700#;
+    GL_POINT_TOKEN                     : constant Integer_4_Unsigned := 16#0000_0701#;
+    GL_LINE_TOKEN                      : constant Integer_4_Unsigned := 16#0000_0702#;
+    GL_POLYGON_TOKEN                   : constant Integer_4_Unsigned := 16#0000_0703#;
+    GL_BITMAP_TOKEN                    : constant Integer_4_Unsigned := 16#0000_0704#;
+    GL_DRAW_PIXEL_TOKEN                : constant Integer_4_Unsigned := 16#0000_0705#;
+    GL_COPY_PIXEL_TOKEN                : constant Integer_4_Unsigned := 16#0000_0706#;
+    GL_LINE_RESET_TOKEN                : constant Integer_4_Unsigned := 16#0000_0707#;
+    GL_EXP                             : constant Integer_4_Unsigned := 16#0000_0800#;
+    GL_EXP2                            : constant Integer_4_Unsigned := 16#0000_0801#;
+    GL_CW                              : constant Integer_4_Unsigned := 16#0000_0900#;
+    GL_CCW                             : constant Integer_4_Unsigned := 16#0000_0901#;
+    GL_COEFF                           : constant Integer_4_Unsigned := 16#0000_0A00#;
+    GL_ORDER                           : constant Integer_4_Unsigned := 16#0000_0A01#;
+    GL_DOMAIN                          : constant Integer_4_Unsigned := 16#0000_0A02#;
+    GL_CURRENT_COLOR                   : constant Integer_4_Unsigned := 16#0000_0B00#;
+    GL_CURRENT_INDEX                   : constant Integer_4_Unsigned := 16#0000_0B01#;
+    GL_CURRENT_NORMAL                  : constant Integer_4_Unsigned := 16#0000_0B02#;
+    GL_CURRENT_TEXTURE_COORDS          : constant Integer_4_Unsigned := 16#0000_0B03#;
+    GL_CURRENT_RASTER_COLOR            : constant Integer_4_Unsigned := 16#0000_0B04#;
+    GL_CURRENT_RASTER_INDEX            : constant Integer_4_Unsigned := 16#0000_0B05#;
+    GL_CURRENT_RASTER_TEXTURE_COORDS   : constant Integer_4_Unsigned := 16#0000_0B06#;
+    GL_CURRENT_RASTER_POSITION         : constant Integer_4_Unsigned := 16#0000_0B07#;
+    GL_CURRENT_RASTER_POSITION_VALID   : constant Integer_4_Unsigned := 16#0000_0B08#;
+    GL_CURRENT_RASTER_DISTANCE         : constant Integer_4_Unsigned := 16#0000_0B09#;
+    GL_POINT_SMOOTH                    : constant Integer_4_Unsigned := 16#0000_0B10#;
+    GL_POINT_SIZE                      : constant Integer_4_Unsigned := 16#0000_0B11#;
+    GL_POINT_SIZE_RANGE                : constant Integer_4_Unsigned := 16#0000_0B12#;
+    GL_POINT_SIZE_GRANULARITY          : constant Integer_4_Unsigned := 16#0000_0B13#;
+    GL_LINE_SMOOTH                     : constant Integer_4_Unsigned := 16#0000_0B20#;
+    GL_LINE_WIDTH                      : constant Integer_4_Unsigned := 16#0000_0B21#;
+    GL_LINE_WIDTH_RANGE                : constant Integer_4_Unsigned := 16#0000_0B22#;
+    GL_LINE_WIDTH_GRANULARITY          : constant Integer_4_Unsigned := 16#0000_0B23#;
+    GL_LINE_STIPPLE                    : constant Integer_4_Unsigned := 16#0000_0B24#;
+    GL_LINE_STIPPLE_PATTERN            : constant Integer_4_Unsigned := 16#0000_0B25#;
+    GL_LINE_STIPPLE_REPEAT             : constant Integer_4_Unsigned := 16#0000_0B26#;
+    GL_LIST_MODE                       : constant Integer_4_Unsigned := 16#0000_0B30#;
+    GL_MAX_LIST_NESTING                : constant Integer_4_Unsigned := 16#0000_0B31#;
+    GL_LIST_BASE                       : constant Integer_4_Unsigned := 16#0000_0B32#;
+    GL_LIST_INDEX                      : constant Integer_4_Unsigned := 16#0000_0B33#;
+    GL_POLYGON_MODE                    : constant Integer_4_Unsigned := 16#0000_0B40#;
+    GL_POLYGON_SMOOTH                  : constant Integer_4_Unsigned := 16#0000_0B41#;
+    GL_POLYGON_STIPPLE                 : constant Integer_4_Unsigned := 16#0000_0B42#;
+    GL_EDGE_FLAG                       : constant Integer_4_Unsigned := 16#0000_0B43#;
+    GL_CULL_FACE                       : constant Integer_4_Unsigned := 16#0000_0B44#;
+    GL_CULL_FACE_MODE                  : constant Integer_4_Unsigned := 16#0000_0B45#;
+    GL_FRONT_FACE                      : constant Integer_4_Unsigned := 16#0000_0B46#;
+    GL_LIGHTING                        : constant Integer_4_Unsigned := 16#0000_0B50#;
+    GL_LIGHT_MODEL_LOCAL_VIEWER        : constant Integer_4_Unsigned := 16#0000_0B51#;
+    GL_LIGHT_MODEL_TWO_SIDE            : constant Integer_4_Unsigned := 16#0000_0B52#;
+    GL_LIGHT_MODEL_AMBIENT             : constant Integer_4_Unsigned := 16#0000_0B53#;
+    GL_SHADE_MODEL                     : constant Integer_4_Unsigned := 16#0000_0B54#;
+    GL_COLOR_MATERIAL_FACE             : constant Integer_4_Unsigned := 16#0000_0B55#;
+    GL_COLOR_MATERIAL_PARAMETER        : constant Integer_4_Unsigned := 16#0000_0B56#;
+    GL_COLOR_MATERIAL                  : constant Integer_4_Unsigned := 16#0000_0B57#;
+    GL_FOG                             : constant Integer_4_Unsigned := 16#0000_0B60#;
     GL_FOG_INDEX                       : constant Integer_4_Unsigned := 16#0B61#;
     GL_FOG_DENSITY                     : constant Integer_4_Unsigned := 16#0B62#;
     GL_FOG_START                       : constant Integer_4_Unsigned := 16#0B63#;
