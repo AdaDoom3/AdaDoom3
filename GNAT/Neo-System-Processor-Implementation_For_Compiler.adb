@@ -36,7 +36,7 @@ package body Implementation_For_Compiler
       Text_IO : Record_Input_Output                       := Protected_Text_IO.Get;
       begin
         Call_Chain(Trace, Length);
-        Text_IO.Put_Line.All(TAB & "Call stack:");
+        Put_Line("Call stack:");
         ----------------
         Sweep_Traceback:
         ----------------
@@ -53,7 +53,7 @@ package body Implementation_For_Compiler
                 exit;
               end if;
               if Index /= Length then
-                Text_IO.New_Line.All;
+                New_Line;
               end if;
               ----------------------
               Put_With_Padded_Index:
@@ -61,11 +61,11 @@ package body Implementation_For_Compiler
                 declare
                 Index_Image : String_2 := Trim(Integer_4_Signed'Wide_Image(Index), Both);
                 begin
-                  Text_IO.Put.All(TAB & TAB);
+                  Put_Tab(2);
                   for I in 2..Integer_4_Natural'Image(Length)'Length - Index_Image'Length loop
-                    Text_IO.Put.All(" ");
+                    Put(" ");
                   end loop;
-                  Text_IO.Put.All(Index_Image & ": " & Traceback(Current + 2..Current + 10));
+                  Put(Index_Image & ": " & Traceback(Current + 2..Current + 10));
                 end Put_With_Padded_Index;
               for I in Current + 11..Traceback'Last loop
                 if I = Traceback'Last then
@@ -77,14 +77,15 @@ package body Implementation_For_Compiler
                 if Traceback(Current + 11) /= ' ' then
                   if I + 2 <= Traceback'Last and then Traceback(I..I + 2) = "at " then
                     Skip_Next := True;
-                    Text_IO.Put.All(END_LINE_2 & TAB & TAB);
+                    New_Line;
+                    Put_Tab(2);
                     for I in 1..Integer_4_Natural'Image(Length)'Length loop
-                      Text_IO.Put.All(" ");
+                      Put(" ");
                     end loop;
-                    Text_IO.Put.All("       At ");
+                    Put("       At ");
                   end if;
                   if not Skip_Next then
-                    Text_IO.Put.All("" & Traceback(I));
+                    Put(Traceback(I));
                   else
                     if Skips = To_Skip then
                       Skip_Next := False;
@@ -97,7 +98,7 @@ package body Implementation_For_Compiler
               end loop;
               Index := Index - 1;
             end loop;
-            Text_IO.New_Line.All;
+            New_Line;
           end Sweep_Traceback;
         return True;
       end Put_Call_Stack;
