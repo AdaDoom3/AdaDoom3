@@ -163,22 +163,7 @@ package Neo.System.Input
         Player_Number : Integer_4_Positive;
       end record;
     type Record_Input
-      is record
-        Number_Of_Mice                 : Integer_4_Natural;
-        Number_Of_Keyboards            : Integer_4_Natural;
-        Number_Of_Xbox_360_Controllers : Integer_4_Natural;
-        Number_Of_Joysticks            : Integer_4_Natural;
-        Number_Of_Controllers          : Integer_4_Natural;
-        Number_Of_Touch_Screen         : Integer_4_Natural;
-        Number_Of_Accelerometers       : Integer_4_Natural;
-        Handle_Axis                    : Access_Procedure_Handle_Axis;
-        Handle_Movement                : Access_Procedure_Handle_Movement;
-        Handle_Pedal                   : Access_Procedure_Handle_Pedal;
-        Handle_Character               : Access_Procedure_Handle_Character;
-        Handle_Peripheral              : Access_Procedure_Handle_Peripheral;
-        Handle_Accelerometer           : Access_Procedure_Handle_Accelerometer;
-        Handle_Key                     : Access_Procedure_Handle_Key;
-      end record;
+      is private;
   ------------
   -- Arrays --
   ------------
@@ -225,6 +210,26 @@ private
     MICROSECOND_DELAY                                 : constant Integer_4_Natural  := 0;
     NUMBER_OF_PERIPHERALS_TO_CHECK_ON_TICK_FOR_LEGACY : constant Integer_4_Positive := 5;
     DO_CHECK_ALL_PERIPHERALS_ON_TICK_FOR_LEGACY       : constant Boolean            := False;
+  -------------
+  -- Records --
+  -------------
+    type Record_Input
+      is record
+        Number_Of_Mice                 : Integer_4_Natural;
+        Number_Of_Keyboards            : Integer_4_Natural;
+        Number_Of_Xbox_360_Controllers : Integer_4_Natural;
+        Number_Of_Joysticks            : Integer_4_Natural;
+        Number_Of_Controllers          : Integer_4_Natural;
+        Number_Of_Touch_Screen         : Integer_4_Natural;
+        Number_Of_Accelerometers       : Integer_4_Natural;
+        Handle_Axis                    : Access_Procedure_Handle_Axis;
+        Handle_Movement                : Access_Procedure_Handle_Movement;
+        Handle_Pedal                   : Access_Procedure_Handle_Pedal;
+        Handle_Character               : Access_Procedure_Handle_Character;
+        Handle_Peripheral              : Access_Procedure_Handle_Peripheral;
+        Handle_Accelerometer           : Access_Procedure_Handle_Accelerometer;
+        Handle_Key                     : Access_Procedure_Handle_Key;
+      end record;
   -----------
   -- Tasks --
   -----------
