@@ -32,7 +32,7 @@ package body Neo.System.Window
             Index          := I;
             --Render_Backend := Backend;
           end Initialize;
-        while Instantiated_Implementation.Handle_Events(Index) and not Do_Quit loop
+        while Implementation.Handle_Events(Index) and not Do_Quit loop
           select 
             accept Finalize
               do
@@ -63,10 +63,10 @@ package body Neo.System.Window
         if Protected_Data.Get.Title /= null then
           return;
         end if;
-        if not Do_Allow_Multiple_Instances and then not Instantiated_Implementation.Is_Only_Instance(Title) then
+        if not Do_Allow_Multiple_Instances and then not Implementation.Is_Only_Instance(Title) then
           raise System_Call_Failure;
         end if;
-        Instantiated_Implementation.Initialize(Title, Icon_Path, Cursor_Path);
+        Implementation.Initialize(Title, Icon_Path, Cursor_Path);
         -------------
         Setup_Window:
         -------------
@@ -86,7 +86,7 @@ package body Neo.System.Window
           -- Check if monitor native resolution violates the minimum/maximum aspect requirements
           case Protected_Data.Get.State is
             when Fullscreen_State | Multi_Monitor_State =>
-              Instantiated_Implementation.Adjust(
+              Implementation.Adjust(
                 Title         => Title,
                 Do_Fullscreen => True,
                 X             => 0,
@@ -94,15 +94,15 @@ package body Neo.System.Window
                 Width         => Native_Width,
                 Height        => Native_Height);
               if Protected_Data.Get.State = Multi_Monitor_State then
-                Instantiated_Implementation.Initialize_Multi_Monitor(
-                  Monitors => Instantiated_Implementation.Get_Monitors);
+                Implementation.Initialize_Multi_Monitor(
+                  Monitors => Implementation.Get_Monitors);
                 -- Detect number of graphics cards
                 -- Spawn_Tasks_For_Auxiliarary_Video_Cards:
               end if;
               Center := (Native_Width / 2, Native_Height / 2);
             when Windowed_State =>
               -- If the current width and height are greater than native, then accomications must be made
-              Instantiated_Implementation.Adjust(
+              Implementation.Adjust(
                 Title         => Title,
                 Do_Fullscreen => False,
                 X             => X,
@@ -115,8 +115,8 @@ package body Neo.System.Window
           Inner:loop
             if Protected_Data.Get.Is_Changing_Mode then
               if Protected_Data.Get.Is_In_Menu_Mode then
-                Instantiated_Implementation.Hide_Mouse(False, False);
-                Instantiated_Implementation.Set_Custom_Mouse(False);
+                Implementation.Hide_Mouse(False, False);
+                Implementation.Set_Custom_Mouse(False);
               else
                 Take_Control;
               end if;
@@ -131,7 +131,7 @@ package body Neo.System.Window
                 end Unset_Mode_Change;
             end if;
             --Render_Backend.All;
-            exit Outter when or Protected_Data.Get.Is_Done or not Instantiated_Implementation.Handle_Events;
+            exit Outter when or Protected_Data.Get.Is_Done or not Implementation.Handle_Events;
             exit Inner when not Protected_Data.Is_Initialized;
           end loop Inner;
           case Previous_State is
@@ -139,12 +139,12 @@ package body Neo.System.Window
               X := Protected_Data.Get.X;
               Y := Protected_Data.Get.Y;
             when Multi_Monitor_State =>
-              Instantiated_Implementation.Finalize_Multi_Monitor;
+              Implementation.Finalize_Multi_Monitor;
             when others =>
               null;
           end case;
         end loop Outter;
-        Instantiated_Implementation.Finalize;
+        Implementation.Finalize;
         Protected_Data.Set(DEFAULT_RECORD_WINDOW);
       end Run;
   --------------
@@ -393,10 +393,10 @@ package body Neo.System.Window
                 raise System_Call_Failure;
               end if;
             end Move_From_Hiding;
-          Instantiated_Implementation.Move_Topmost_Windows_Out_Of_The_Way;
-          Instantiated_Implementation.Hide_Mouse(True, False);
+          Implementation.Move_Topmost_Windows_Out_Of_The_Way;
+          Implementation.Hide_Mouse(True, False);
         else
-          Instantiated_Implementation.Hide_Mouse(True, True);
+          Implementation.Hide_Mouse(True, True);
         end if;
         Protected_Data.Set_Busy(True);
       end Take_Control;
@@ -408,9 +408,12 @@ package body Neo.System.Window
       Y : in Integer_4_Signed)
       return Boolean
       is
-      Border : Record_Window_Border := Instantiated_Implementation.Get_Screen_Border;
+      Border : Record_Window_Border := Implementation.Get_Screen_Border;
       begin
-        if X > Border.Left and X < Border.Right and Y > Border.Top and Y < Border.Bottom then
+        if
+        X > Border.Left and X < Border.Right and
+        Y > Border.Top  and Y < Border.Bottom
+        then
           return True;
         end if;
         return False;
@@ -481,9 +484,9 @@ package body Neo.System.Window
         if Protected_Data.Is_Initialized then
           if Do_Activate then
             if Protected_Data.Get.Is_In_Menu_Mode then
-              Instantiated_Implementation.Set_Custom_Mouse(False);
+              Implementation.Set_Custom_Mouse(False);
             else
-              Instantiated_Implementation.Set_Custom_Mouse(True);
+              Implementation.Set_Custom_Mouse(True);
               if Is_In_Border(X, Y) then
                 Take_Control;
               end if;
@@ -492,13 +495,13 @@ package body Neo.System.Window
             Protected_Data.Set_Busy(False);
             if Protected_Data.Get.State /= Windowed_State then
               if Protected_Data.Get.State = Multi_Monitor_State then
-                Instantiated_Implementation.Finalize_Multi_Monitor;
+                Implementation.Finalize_Multi_Monitor;
               end if;
-              Instantiated_Implementation.Iconize;
+              Implementation.Iconize;
               Window.Is_Iconized := True;
             end if;
-            Instantiated_Implementation.Hide_Mouse(False);
-            Instantiated_Implementation.Set_Custom_Mouse(True);
+            Implementation.Hide_Mouse(False);
+            Implementation.Set_Custom_Mouse(True);
             Keys_Down := (others => False);
           end if;
           Protected_Data.Set(Window);
