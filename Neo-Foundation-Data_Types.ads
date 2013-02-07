@@ -347,7 +347,7 @@ package Neo.Foundation.Data_Types
     type Access_Array_Integer_4_Unsigned
       is access all Array_Integer_4_Unsigned;
     type Access_Array_Integer_4_Signed_C 
-      is access all Array_Integer_4_Signed_C ;
+      is access all Array_Integer_4_Signed_C;
     type Access_Array_Integer_4_Signed
       is access all Array_Integer_4_Signed;
     type Access_Array_Integer_4_Natural
@@ -688,13 +688,9 @@ private
       for Record_Endian_Test'Size
         use 2*8;
   ---------------
-  -- Variables --
-  ---------------
-    Endian_Test : Record_Endian_Test;
-  ---------------
   -- Constants --
   ---------------
-    DOES_MACHINE_ORDER_LOW_BYTE_FIRST : constant Boolean            := Endian_Test.Unsplit = 1;
+    DOES_MACHINE_ORDER_LOW_BYTE_FIRST : constant Boolean            := new Record_Endian_Test.Unsplit = 1;
     FLOAT_2_REAL_MANTISSA_BITS        : constant Integer_4_Positive := 10;
     FLOAT_2_REAL_EXPONENT_BITS        : constant Integer_4_Positive := 5;
     FLOAT_2_REAL_EXPONENT_BIAS        : constant Integer_4_Positive := 15;
