@@ -33,12 +33,6 @@ use
   Neo.Foundation.Build_Options;
 package Neo.System.Input
   is
-  ---------------
-  -- Constants --
-  ---------------
-    MICROSECOND_DELAY                                 : constant Integer_4_Natural  := 0;
-    NUMBER_OF_PERIPHERALS_TO_CHECK_ON_TICK_FOR_LEGACY : constant Integer_4_Positive := 5;
-    DO_CHECK_ALL_PERIPHERALS_ON_TICK_FOR_LEGACY       : constant Boolean            := False;
   ------------------
   -- Enumerations --
   ------------------
@@ -225,6 +219,12 @@ package Neo.System.Input
 -------
 private
 -------
+  ---------------
+  -- Constants --
+  ---------------
+    MICROSECOND_DELAY                                 : constant Integer_4_Natural  := 0;
+    NUMBER_OF_PERIPHERALS_TO_CHECK_ON_TICK_FOR_LEGACY : constant Integer_4_Positive := 5;
+    DO_CHECK_ALL_PERIPHERALS_ON_TICK_FOR_LEGACY       : constant Boolean            := False;
   -----------
   -- Tasks --
   -----------
@@ -237,7 +237,7 @@ private
   -- Packages --
   --------------
     package Protected_Record_Input
-      is new Foundational.Generic_Protected(Record_Input, NULL_RECORD_INPUT);
+      is new Neo.Foundation.Generic_Protected(Record_Input);
   ---------------
   -- Variables --
   ---------------
