@@ -86,12 +86,17 @@ package Neo.System.Window
   -----------------
   -- Subprograms --
   -----------------
+    generic
+      with
+        procedure Handle_Character(
+          Item : in Character_2);
+      with
+        procedure 
     procedure Run(
       Title                       : in String_2;
       Icon_Path                   : in String_2;
       Cursor_Path                 : in String_2;
-      Do_Allow_Multiple_Instances : in Boolean                           := False;
-      Handle_Character            : in Access_Procedure_Handle_Character := null);
+      Do_Allow_Multiple_Instances : in Boolean := False;);
     procedure Finalize;
     procedure Test;
     procedure Put;
