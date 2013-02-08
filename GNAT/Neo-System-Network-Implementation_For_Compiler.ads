@@ -15,11 +15,9 @@
 --
 --
 with
-  GNAT.Sockets,
-  Neo.Foundation.Data_Types;
+  GNAT.Sockets;
 use
-  GNAT.Sockets,
-  Neo.Foundation.Data_Types;
+  GNAT.Sockets;
 separate(Neo.System.Network)
 package Implementation_For_Compiler
   is
