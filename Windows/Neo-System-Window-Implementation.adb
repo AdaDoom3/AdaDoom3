@@ -237,7 +237,7 @@ package body Implementation
                       Resize_Location := Bottom_Right_Resize;
                     when SUBEVENT_RESIZE_BOTTOM_LEFT =>
                       Resize_Location := Bottom_Left_Resize;
-                    when SUBEVENT_RESIZE_SNAPBACK => -- Not documented
+                    when SUBEVENT_RESIZE_SNAPBACK => -- Not documented in MSDN
                       null;
                     when others =>
                       raise System_Call_Failure;
