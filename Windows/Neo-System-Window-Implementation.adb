@@ -87,7 +87,7 @@ package body Implementation
     Hook_Mouse                   : Address              := NULL_ADDRESS;
     Mouse                        : Address              := NULL_ADDRESS;
     Icon                         : Address              := NULL_ADDRESS;
-    Original_Clip                : Record_Rectangle;
+    Original_Clip                : Record_Rectangle     := <>;
   ----------------
   -- Initialize --
   ----------------
