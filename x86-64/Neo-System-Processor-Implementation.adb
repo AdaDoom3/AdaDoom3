@@ -155,15 +155,6 @@ package body Implementation_For_Architecture
         is
         begin
           return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
-        end Check_Feature;
-      ---------------------
-      function 
-(
-      ---------------------
-        Value : in Record_Value)
-        return Integer_4_Signed
-        is
-        begin
           return
             Integer(
               Shift_Right(
