@@ -36,10 +36,10 @@ package body Implementation_For_Architecture
   -------------
     type Record_Feature
       is record
-        Function_ID    : Integer_4_Unsigned        := 0;
-        Register       : Enumerated_Register       := EAX_Register;
-        Start_Bit      : Integer_Bit_Field_Element := 0;
-        Bits_Afterward : Integer_Bit_Field_Element := 0;
+        Function_ID : Integer_4_Unsigned        := 0;
+        Register    : Enumerated_Register       := EAX_Register;
+        Bit_A       : Integer_Bit_Field_Element := 0;
+        Bit_B       : Integer_Bit_Field_Element := 0;
       end record;
     type Record_x86_Environment
       is record
@@ -79,16 +79,16 @@ package body Implementation_For_Architecture
     FROM_EDX                         : constant String_1           := "=d";
     VENDOR_INTEL                     : constant String_1           := "GenuineIntel";
     VENDOR_ADVANCED_MICRO_DEVICES    : constant String_1           := "AuthenticAMD";
-    INTEL_SSE3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register,  0);
-    INTEL_PCLMULQDQ                  : constant Record_Feature     := (16#0000_0001#, ECX_Register,  1);
-    INTEL_SSSE3                      : constant Record_Feature     := (16#0000_0001#, ECX_Register,  9);
-    INTEL_FMA3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register, 12,  1);
-    INTEL_SSE4_1                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 19,  1);
-    INTEL_SSE4_2                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 20,  1);
-    INTEL_POPCNT                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 23,  1);
-    INTEL_AES                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 25,  1);
-    INTEL_OSXSAVE                    : constant Record_Feature     := (16#0000_0001#, ECX_Register, 27,  1);
-    INTEL_AVX                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 28,  1);
+    INTEL_SSE3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register,  0,  0);
+    INTEL_PCLMULQDQ                  : constant Record_Feature     := (16#0000_0001#, ECX_Register,  1,  1);
+    INTEL_SSSE3                      : constant Record_Feature     := (16#0000_0001#, ECX_Register,  9,  9);
+    INTEL_FMA3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register, 12, 12);
+    INTEL_SSE4_1                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 19, 19);
+    INTEL_SSE4_2                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 20, 20);
+    INTEL_POPCNT                     : constant Record_Feature     := (16#0000_0001#, ECX_Register, 23, 23);
+    INTEL_AES                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 25, 25);
+    INTEL_OSXSAVE                    : constant Record_Feature     := (16#0000_0001#, ECX_Register, 27, 27);
+    INTEL_AVX                        : constant Record_Feature     := (16#0000_0001#, ECX_Register, 28, 28);
     INTEL_F16C                       : constant Record_Feature     := (16#0000_0001#, ECX_Register, 29,  1);
     INTEL_CMOV                       : constant Record_Feature     := (16#0000_0001#, EDX_Register, 15,  1);
     INTEL_MMX                        : constant Record_Feature     := (16#0000_0001#, EDX_Register, 23,  1);
@@ -151,17 +151,26 @@ package body Implementation_For_Architecture
       function Check_Feature(
       -----------------------
         Feature : in Record_Feature)
+        return Integer_4_Unsigned
+        is
+        begin
+          --return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
+          --return
+          --  Integer(
+          --    Shift_Right(
+          --      Shift_Left(
+          --        Value  => Execute_CPUID(Value.Function_ID, Value.Register),
+          --        Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
+          --      Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
+        end Check_Feature;
+      -----------------------
+      function Check_Feature(
+      -----------------------
+        Feature : in Record_Feature)
         return Boolean
         is
         begin
-          return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
-          return
-            Integer(
-              Shift_Right(
-                Shift_Left(
-                  Value  => Execute_CPUID(Value.Function_ID, Value.Register),
-                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
-                Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
+          return 1 = Check_Feature;
         end Check_Value;
       -------------------
       function Get_Vendor
@@ -739,7 +748,7 @@ package body Implementation_For_Architecture
       Processor : in Record_Processor)
       is
       Number_Of_Values     :         Integer_4_Unsigned           := 0;
-      Data_From_Extensions :         Integer_4_Unsigned           := 0;
+      Data_From_Extensions : aliased Integer_4_Unsigned           := 0;
       Stack                : aliased array (1..8) of Float_8_Real := (others => 0.0);
       Environment          : aliased Record_x86_Environment       := <>;
       begin
