@@ -258,8 +258,8 @@ package body Implementation
           end case;
           return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed);
         end Window_Callback;
-      Operating_System : String_2 := Get_Operating_System_Name; 
-      Class            : Record_Window_Class;
+      Operating_System : String_2            := Get_Operating_System_Name; 
+      Class            : Record_Window_Class := <>;
       -----
       begin
       -----
@@ -603,7 +603,7 @@ package body Implementation
     function Get_Window_Border
       return Record_Window_Border
       is
-      Screen : Record_Rectangle;
+      Screen : Record_Rectangle := <>;
       begin
         if Get_Window_Rectangle(Primary_Window, Screen'Access) = FAILED then
           raise System_Call_Failure;
@@ -620,8 +620,8 @@ package body Implementation
     function Get_Screen_Border
       return Record_Window_Border
       is
-      Decoration : Record_Rectangle;
-      Screen     : Record_Rectangle;
+      Decoration : Record_Rectangle   := <>;
+      Screen     : Record_Rectangle   := <>;
       Border     : Integer_4_Signed_C := 0;
       Top        : Integer_4_Signed_C := 0;
       begin
@@ -681,8 +681,8 @@ package body Implementation
       Index : in Integer_4_Natural := 0)
       return Boolean
       is
-      Message : Record_Message;
-      Window  : Address := Primary_Window;
+      Message : Record_Message := <>;
+      Window  : Address        := Primary_Window;
       begin
         if Index /= 0 then
           if Multi_Monitor_Windows = null or Index > Multi_Monitor_Windows'Size then
