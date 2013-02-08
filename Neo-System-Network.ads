@@ -44,37 +44,10 @@ package Neo.System.Network
       Port              : in Integer_2_Unsigned_C;
       Bound_To          : in Access_Network_Address)
       return Integer_4_Unsigned_C;
-    function Extract_IP(
-      Item : in String_1_C)
-      return String_1_C;
-    function Extract_Port(
-      Item : in String_1_C)
-      return Integer_2_Unsigned_C;
     procedure Open_Connection(
       Port : in Integer_4_signed)
-    function To_String(
-      Address : in Record_Network_Address)
-      return String_1;
-    function To_Network_Address(
-      Socket : in Record_Socket_Address)
-      return Record_Network_Address;
-    function To_Network_Address(
-      Item           : in String_1;
-      Do_Resolve_DNS : in Boolean)
-      return Record_Network_Address;
-    function To_Socket_Address(
-      Network_Address : in Record_Network_Address)
-      return Record_Socket_Address;
-    function To_Socket_Address(
-      Item           : in String_1_C;
-      Do_Resolve_DNS : in Boolean := True)
-      return Record_Socket_Address;
     function Is_Local_Address(
       Address : in Record_Network_Address) 
-      return Boolean;
-    function "="(
-      Left  : in Record_Network_Address;
-      Right : in Record_Network_Address)
       return Boolean;
 -------
 private
