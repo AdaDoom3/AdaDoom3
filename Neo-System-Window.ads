@@ -63,24 +63,25 @@ package Neo.System.Window
       end record;
     type Record_Window
       is record
-        Title                : Access_String_2         := null;
-        Icon_Path            : Access_String_2         := null;
-        Cursor_Path          : Access_String_2         := null;
-        Renderer             : Enumerated_Renderer     := OpenGL;
-        State                : Enumerated_Window_State := Windowed_State;
-        Refreshes_Per_Second : Integer_4_Positive      := 15;
-        Multi_Samples        : Integer_4_Positive      := 1;
-        Height               : Integer_4_Positive      := 480;
-        Width                : Integer_4_Positive      := 640;
-        X                    : Integer_4_Signed        := 0;
-        Y                    : Integer_4_Signed        := 0;
-        Is_In_Menu_Mode      : Boolean                 := True;
-        Is_Changing_Mode     : Boolean                 := False;
-        Is_Iconized          : Boolean                 := False;
-        Is_Done              : Boolean                 := False;
-        Aspect_Wide          : Record_Aspect_Ratio     := (17, 9);
-        Aspect_Narrow        : Record_Aspect_Ratio     := (1, 1);
-        Gamma                : Record_Gamma            := <>;
+        Title                  : Access_String_2         := null;
+        Icon_Path              : Access_String_2         := null;
+        Cursor_Path            : Access_String_2         := null;
+        Renderer               : Enumerated_Renderer     := OpenGL;
+        State                  : Enumerated_Window_State := Windowed_State;
+        Refreshes_Per_Second   : Integer_4_Positive      := 15;
+        Multi_Samples          : Integer_4_Positive      := 1;
+        Height                 : Integer_4_Positive      := 480;
+        Width                  : Integer_4_Positive      := 640;
+        X                      : Integer_4_Signed        := 0;
+        Y                      : Integer_4_Signed        := 0;
+        Is_In_Menu_Mode        : Boolean                 := True;
+        Is_Changing_Mode       : Boolean                 := False;
+        Is_Iconized            : Boolean                 := False;
+        Is_Done                : Boolean                 := False;
+        Is_Handling_Characters : Boolean                 := False;
+        Aspect_Wide            : Record_Aspect_Ratio     := (17, 9);
+        Aspect_Narrow          : Record_Aspect_Ratio     := (1, 1);
+        Gamma                  : Record_Gamma            := <>;
       end record;
   -----------------
   -- Subprograms --
@@ -89,7 +90,8 @@ package Neo.System.Window
       Title                       : in String_2;
       Icon_Path                   : in String_2;
       Cursor_Path                 : in String_2;
-      Do_Allow_Multiple_Instances : in Boolean := False);
+      Do_Allow_Multiple_Instances : in Boolean                           := False;
+      Handle_Character            : in Access_Procedure_Handle_Character := null);
     procedure Finalize;
     procedure Test;
     procedure Put;
@@ -132,13 +134,13 @@ package Neo.System.Window
     procedure Set_Dimensions(
       Height : in Integer_4_Positive;
       Width  : in Integer_4_Positive);
-    procedure Set_Dimensions(
-      Dimension : in Array_1x2_Integer_4_Positive);
     procedure Set_Narrow_Aspect_Ratio(
       Aspect_Narrow : in Record_Aspect_Ratio);
     procedure Set_Wide_Aspect_Ratio(
       Aspect_Wide : in Record_Aspect_Ratio);
     procedure Take_Control;
+    procedure Enable_Character_Handling;
+    procedure Disable_Character_Handling;
 -------
 private
 -------
