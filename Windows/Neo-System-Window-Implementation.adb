@@ -205,8 +205,6 @@ package body Implementation
                   Handle_State_Change(Iconic_Change);
                 when SUBEVENT_FULLSCREENED =>
                   Handle_State_Change(Fullscreen_Change);
-                when SUBEVENT_RESTORED =>
-                  null;
                 when others =>
                   null;
               end case;
@@ -258,9 +256,6 @@ package body Implementation
             when others =>
               null;
           end case;
-          if not DO_USE_LOW_LEVEL_MOUSE then
-            Check_Mouse(Message, Data_Unsigned, Point.X, Point.Y);
-          end if;
           return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed);
         end Window_Callback;
       Operating_System : String_2 := Get_Operating_System_Name; 
