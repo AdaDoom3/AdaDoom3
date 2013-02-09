@@ -527,7 +527,9 @@ package Neo.Foundation.Data_Types
     function "="(
       Left  : in Character_1;
       Right : in String_1)
-      return Boolean;
+      return Boolean
+      with
+        Pre => Right'Length > 0;
     function "="(
       Left  : in String_1;
       Right : in Character_1)
@@ -535,7 +537,9 @@ package Neo.Foundation.Data_Types
     function "="(
       Left  : in Character_1;
       Right : in String_2)
-      return Boolean;
+      return Boolean
+      with
+        Pre => Right'Length > 0;
     function "="(
       Left  : in String_2;
       Right : in Character_1)
@@ -543,7 +547,9 @@ package Neo.Foundation.Data_Types
     function "="(
       Left  : in Character_2;
       Right : in String_1)
-      return Boolean;
+      return Boolean
+      with
+        Pre => Right'Length > 0;
     function "="(
       Left  : in String_1;
       Right : in Character_2)
@@ -607,10 +613,6 @@ package Neo.Foundation.Data_Types
     function "&"(
       Left  : in String_2;
       Right : in String_2)
-      return String_1;
-    function "&"(
-      Left  : in String_1;
-      Right : in String_1)
       return String_1;
     function "&"(
       Left  : in Character_1;
@@ -688,35 +690,12 @@ private
       for Record_Endian_Test'Size
         use 2*8;
   ---------------
+  -- Variables --
+  ---------------
+    Endian_Test : Record_Endian_Test;
+  ---------------
   -- Constants --
   ---------------
-    DOES_MACHINE_ORDER_LOW_BYTE_FIRST : constant Boolean            := new Record_Endian_Test.Unsplit = 1;
-    FLOAT_2_REAL_MANTISSA_BITS        : constant Integer_4_Positive := 10;
-    FLOAT_2_REAL_EXPONENT_BITS        : constant Integer_4_Positive := 5;
-    FLOAT_2_REAL_EXPONENT_BIAS        : constant Integer_4_Positive := 15;
-    FLOAT_2_REAL_SIGN_BIT             : constant Integer_4_Positive := 15;
-    FLOAT_2_REAL_SIGN_MASK            : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_2_Unsigned(16#0001#), FLOAT_2_REAL_SIGN_BIT));
-    FLOAT_4_REAL_MANTISSA_BITS        : constant Integer_4_Positive := 23;
-    FLOAT_4_REAL_EXPONENT_BITS        : constant Integer_4_Positive := 8;
-    FLOAT_4_REAL_EXPONENT_BIAS        : constant Integer_4_Positive := 127;
-    FLOAT_4_REAL_SIGN_BIT             : constant Integer_4_Positive := 31;
-    FLOAT_4_REAL_SIGN_MASK            : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_4_Unsigned(16#0000_0001#), FLOAT_4_REAL_SIGN_BIT));
-    FLOAT_8_REAL_MANTISSA_BITS        : constant Integer_4_Positive := 52;
-    FLOAT_8_REAL_EXPONENT_BITS        : constant Integer_4_Positive := 11;
-    FLOAT_8_REAL_EXPONENT_BIAS        : constant Integer_4_Positive := 1023;
-    FLOAT_8_REAL_SIGN_BIT             : constant Integer_4_Positive := 63;
-    FLOAT_8_REAL_SIGN_MASK            : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_8_Unsigned(16#0000_0000_0000_0001#), FLOAT_8_REAL_SIGN_BIT));
-    FLOAT_10_REAL_MANTISSA_BITS       : constant Integer_4_Positive := 63;
-    FLOAT_10_REAL_EXPONENT_BITS       : constant Integer_4_Positive := 15;
-    FLOAT_10_REAL_EXPONENT_BIAS       : constant Integer_4_Positive := 1;--0;
-    FLOAT_10_REAL_SIGN_BIT            : constant Integer_4_Positive := 79;
-    INTEGER_1_SIGNED_SIGN_BIT         : constant Integer_4_Positive := 7;
-    INTEGER_1_SIGNED_SIGN_MASK        : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_1_Unsigned(16#01#), INTEGER_1_SIGNED_SIGN_BIT));
-    INTEGER_2_SIGNED_SIGN_BIT         : constant Integer_4_Positive := 15;
-    INTEGER_2_SIGNED_SIGN_MASK        : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_2_Unsigned(16#0001#), INTEGER_2_SIGNED_SIGN_BIT));
-    INTEGER_4_SIGNED_SIGN_BIT         : constant Integer_4_Positive := 31;
-    INTEGER_4_SIGNED_SIGN_MASK        : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_4_Unsigned(16#0000_0001#), INTEGER_4_SIGNED_SIGN_BIT));
-    INTEGER_8_SIGNED_SIGN_BIT         : constant Integer_4_Positive := 63;
-    INTEGER_8_SIGNED_SIGN_MASK        : constant Integer_4_Positive := Integer_4_Positive(Shift_Left(Integer_8_Unsigned(16#0000_0000_0000_0001#), INTEGER_8_SIGNED_SIGN_BIT));
+    DOES_MACHINE_ORDER_LOW_BYTE_FIRST : constant Boolean := Endian_Test.Unsplit = 1;
   end Neo.Foundation.Data_Types;
 
