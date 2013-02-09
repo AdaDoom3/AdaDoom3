@@ -42,7 +42,7 @@ package body Neo.Foundation.Data_Types
       return Access_Character_1_C
       is
       begin
-        return To_Access_Character_1_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Character_1_C(Item(Item'First)'Address);
       end To_Access_Character_1_C;
   -----------------------------
   -- To_Access_Character_2_C --
@@ -52,7 +52,7 @@ package body Neo.Foundation.Data_Types
       return Access_Character_2_C
       is
       begin
-        return To_Access_Character_2_C(To_String_2_C(Item)'Address);
+        return To_Unchecked_Access_Character_2_C(To_String_2_C(Item)'Address);
       end To_Access_Character_2_C;
   --------------------------------------
   -- To_Access_Constant_Character_2_C --
@@ -62,7 +62,7 @@ package body Neo.Foundation.Data_Types
       return Access_Constant_Character_2_C
       is
       begin
-        return To_Access_Constant_Character_2_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Constant_Character_2_C(Item(Item'First)'Address);
       end To_Access_Constant_Character_2_C;
     function To_Access_Constant_Character_2_C(
       Item : in String_2)
@@ -76,7 +76,7 @@ package body Neo.Foundation.Data_Types
       return Access_Constant_Character_1_C
       is
       begin
-        return To_Access_Constant_Character_1_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Constant_Character_1_C(Item(Item'First)'Address);
       end To_Access_Constant_Character_1_C;
   ---------------------------
   -- To_Integer_4_Signed_C --
@@ -86,7 +86,7 @@ package body Neo.Foundation.Data_Types
       return Integer_4_Signed_C
       is
       begin
-        return To_Integer_4_Signed_C(Item(Item'First)'Address);
+        return To_Unchecked_Integer_4_Signed_C(Item(Item'First)'Address);
       end To_Integer_4_Signed_C;
   -------------------
   -- To_String_1_C --
@@ -176,7 +176,9 @@ package body Neo.Foundation.Data_Types
       begin
         while Pointer.All /= WChar_T'Val(0) loop
           Length  := Length + 1;
-          Pointer := To_Access_Constant_Character_2_C(To_Integer_4_Unsigned(Pointer) + 2);
+          Pointer :=
+            To_Unchecked_Access_Constant_Character_2_C(
+              To_Unchecked_Integer_4_Unsigned(Pointer) + Character_2_C'Size / 8);
         end loop;
         --------------
         Create_Result:
@@ -187,7 +189,9 @@ package body Neo.Foundation.Data_Types
             Pointer := Item;
             for I in 1..Result'Length loop
               Result(I) := Character_2(Pointer.All);
-              Pointer   := To_Access_Constant_Character_2_C(To_Integer_4_Unsigned(Pointer) + 2);
+              Pointer   :=
+               To_Unchecked_Access_Constant_Character_2_C(
+                 To_Unchecked_Integer_4_Unsigned(Pointer) + Character_2_C'Size / 8);
             end loop;
             return Result;
           end Create_Result;
@@ -233,7 +237,7 @@ package body Neo.Foundation.Data_Types
       return Boolean
       is
       begin
-        return Right(1) = Left;
+        return Right(Right'First) = Left;
       end "=";
     function "="(
       Left  : in String_1;
@@ -249,7 +253,7 @@ package body Neo.Foundation.Data_Types
       return Boolean
       is
       begin
-        return Character_1'Val(Left) = Character_2'Val(Right(1));
+        return Character_1'Pos(Left) = Character_2'Pos(Right(Right'First));
       end "=";
     function "="(
       Left  : in String_2;
@@ -265,7 +269,7 @@ package body Neo.Foundation.Data_Types
       return Boolean
       is
       begin
-        return Character_2'Val(Left) = Character_1'Val(Right(1));
+        return Character_2'Pos(Left) = Character_1'Pos(Right(Right'First));
       end "=";
     function "="(
       Left  : in String_1;
@@ -281,7 +285,7 @@ package body Neo.Foundation.Data_Types
       return Boolean
       is
       begin
-        return Left = Right(1);
+        return Left = Right(Right'First);
       end "=";
     function "="(
       Left  : in String_2;
@@ -291,6 +295,233 @@ package body Neo.Foundation.Data_Types
       begin
         return Right = Left;
       end "=";
+  ---------
+  -- "&" --
+  ---------
+    function "&"(
+      Left  : in Character_1;
+      Right : in Character_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in Character_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in Character_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in Character_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in Character_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in String_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in Character_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in String_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in Character_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in String_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in Character_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in String_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in String_2)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in String_1)
+      return String_1
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in Character_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in Character_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in Character_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in Character_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in Character_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in String_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in Character_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in String_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in Character_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_1;
+      Right : in String_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in Character_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in Character_2;
+      Right : in String_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_2;
+      Right : in String_2)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
+    function "&"(
+      Left  : in String_1;
+      Right : in String_1)
+      return String_2
+      is
+      begin
+        return "";
+      end "&";
   -------------
   -- To_Bits --
   -------------
@@ -307,69 +538,4 @@ package body Neo.Foundation.Data_Types
     --   Maximum_Bits : Integer_4_Unsigned := Shift_Left(Shift_Left(1, Exponent_Bits - 1) - 1, Mantissa_Bits) or (Shift_Left(1, Mantissa_Bits) - 1);
     --   Minimum_Bits : Integer_4_Unsigned := Shift_Left(Shift_Left(1, Exponent_Bits)     - 2, Mantissa_Bits) or 1;
     --   begin
-
-
-
--- /*
--- ================
--- idMath::FloatToBits
--- ================
--- */
--- int idMath::FloatToBits( float f, int exponentBits, int mantissaBits ) {
---   int i, sign, exponent, mantissa, value;
-
---   assert( exponentBits >= 2 && exponentBits <= 8 );
---   assert( mantissaBits >= 2 && mantissaBits <= 23 );
-
---   int maxBits = ( ( ( 1 << ( exponentBits - 1 ) ) - 1 ) << mantissaBits ) | ( ( 1 << mantissaBits ) - 1 );
---   int minBits = ( ( ( 1 <<   exponentBits       ) - 2 ) << mantissaBits ) | 1;
-
---   float max = BitsToFloat( maxBits, exponentBits, mantissaBits );
---   float min = BitsToFloat( minBits, exponentBits, mantissaBits );
-
---   if ( f >= 0.0f ) {
---     if ( f >= max ) {
---       return maxBits;
---     } else if ( f <= min ) {
---       return minBits;
---     }
---   } else {
---     if ( f <= -max ) {
---       return ( maxBits | ( 1 << ( exponentBits + mantissaBits ) ) );
---     } else if ( f >= -min ) {
---       return ( minBits | ( 1 << ( exponentBits + mantissaBits ) ) );
---     }
---   }
-
---   exponentBits--;
---   i = *reinterpret_cast<int *>(&f);
---   sign = ( i >> IEEE_FLT_SIGN_BIT ) & 1;
---   exponent = ( ( i >> IEEE_FLT_MANTISSA_BITS ) & ( ( 1 << IEEE_FLT_EXPONENT_BITS ) - 1 ) ) - IEEE_FLT_EXPONENT_BIAS;
---   mantissa = i & ( ( 1 << IEEE_FLT_MANTISSA_BITS ) - 1 );
---   value = sign << ( 1 + exponentBits + mantissaBits );
---   value |= ( ( INT32_SIGNBITSET( exponent ) << exponentBits ) | ( abs( exponent ) & ( ( 1 << exponentBits ) - 1 ) ) ) << mantissaBits;
---   value |= mantissa >> ( IEEE_FLT_MANTISSA_BITS - mantissaBits );
---   return value;
--- }
-
--- /*
--- ================
--- idMath::BitsToFloat
--- ================
--- */
--- float idMath::BitsToFloat( int i, int exponentBits, int mantissaBits ) {
---   static int exponentSign[2] = { 1, -1 };
---   int sign, exponent, mantissa, value;
-
---   assert( exponentBits >= 2 && exponentBits <= 8 );
---   assert( mantissaBits >= 2 && mantissaBits <= 23 );
-
---   exponentBits--;
---   sign = i >> ( 1 + exponentBits + mantissaBits );
---   exponent = ( ( i >> mantissaBits ) & ( ( 1 << exponentBits ) - 1 ) ) * exponentSign[( i >> ( exponentBits + mantissaBits ) ) & 1];
---   mantissa = ( i & ( ( 1 << mantissaBits ) - 1 ) ) << ( IEEE_FLT_MANTISSA_BITS - mantissaBits );
---   value = sign << IEEE_FLT_SIGN_BIT | ( exponent + IEEE_FLT_EXPONENT_BIAS ) << IEEE_FLT_MANTISSA_BITS | mantissa;
---   return *reinterpret_cast<float *>(&value);
--- }
   end Neo.Foundation.Data_Types;
-  
