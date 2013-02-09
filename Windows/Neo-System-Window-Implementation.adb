@@ -47,14 +47,13 @@ package body Implementation
   ---------------
   -- Constants --
   ---------------
-    SEPORATOR_LEFT                             : constant String_2             := "(";
-    SEPORATOR_RIGHT                            : constant String_2             := ")";
-    MULTI_MONITOR_NAME                         : constant String_2             := "Multi Monitor";
-    BLANK_MOUSE_PATH                           : constant String_2             := "Blank.cur";
     -- Use of the 'window style' that allows for fullscreen boxes on the windowed application also
     -- enables the Aero-Snap™ feature in newer versions of Windows, which breaks resizing higher up in the System.
     DO_DISABLE_FULLSCREEN_BOX_IN_NEWER_THAN_XP : constant Boolean              := True;
     DO_SET_BLANK_MOUSE                         : constant Boolean              := False; -- Removes possibility of a cursor flicker
+    SEPORATOR_LEFT                             : constant String_2             := "(";
+    SEPORATOR_RIGHT                            : constant String_2             := ")";
+    MULTI_MONITOR_NAME                         : constant String_2             := "Multi Monitor";
     FULLSCREEN_STYLE_POSITION                  : constant Integer_4_Unsigned_C := STYLE_EXTRA_ALWAYS_ON_TOP;
     FULLSCREEN_STYLE:
       constant Integer_4_Unsigned_C :=
