@@ -29,156 +29,9 @@ use
   Neo.Foundation.Data_Types;
 package Neo.Windows
   is
-  -----------
-  -- Types --
-  -----------
-    type Record_Network_Interface;
-    type Record_Network_Address;
-    type Record_Winsock_Data_Thirty_Two_Bit;
-    type Record_Winsock_Data_Sixty_Four_Bit;
-    type Record_Socket_Address;
-    type Record_IP_Address_String;
-    type Record_IP_Address;
-    type Record_Adapter_Info_Thirty_Two_Bit;
-    type Record_Adapter_Info_Sixty_Four_Bit;
-    type Record_Host_Entity;
-    type Array_Array_Integer_1_Unsigned_C
-      is array (Natural range <>)
-      of Array_Integer_1_Unsigned_C(1..4);
-  ------------------
-  -- Enumerations --
-  ------------------
-    type Enumerated_Address_Types
-      is(
-      Loopback_Address_Type,
-      Broadcast_Address_Type,
-      IP_Address_Type);
   ---------------
   -- Constants --
   ---------------
-    WINSOCK_DESCRIPTION_LENGTH     : constant Integer_Size_C := 256;
-    WINSOCK_SYSTEM_STATUS_LENGTH   : constant Integer_Size_C := 128;
-    MAX_ADAPTER_DESCRIPTION_LENGTH : constant Integer_Size_C := 128;
-    MAX_ADAPTER_NAME_LENGTH        : constant Integer_Size_C := 256;
-    MAX_ADAPTER_ADDRESS_LENGTH     : constant Integer        := 8;
-    NULL_WSADATA_DESCRIPTION                                      : constant String_1_C(1..WINSOCK_DESCRIPTION_LENGTH + 1)             := (others => Character_1_C'First);
-    NULL_WSADATA_SYSTEM_STATUS                                    : constant String_1_C(1..WINSOCK_SYSTEM_STATUS_LENGTH + 1)           := (others => Character_1_C'First);
-    NULL_SOCKET_ADDRESS_DATA                                      : constant Array_Integer_1_Unsigned_C(1..14)                         := (others => 0);
-    NULL_IP_ADDRESS_STRING_STRING                                 : constant String_1_C(1..16)                                         := (others => Character_1_C'First);
-    NULL_ADAPTER_INFO_NAME                                        : constant String_1_C(1..MAX_ADAPTER_NAME_LENGTH + 4)                := (others => Character_1_C'First);
-    NULL_ADAPTER_INFO_DESCRIPTION                                 : constant String_1_C(1..MAX_ADAPTER_DESCRIPTION_LENGTH + 4)         := (others => Character_1_C'First);
-    NULL_ADAPTER_INFO_ADDRESS                                     : constant Array_Integer_1_Unsigned_C(1..MAX_ADAPTER_ADDRESS_LENGTH) := (others => 0);
-    NULL_IP_ADDRESS                                               : constant Array_Integer_1_Unsigned_C(1..4)                          := (others => 0);
-    NULL_PADDING                                                  : constant Array_Integer_1_Unsigned_C(1..8)                          := (others => 0);
-  -----------------
-  -- Array_Types --
-  -----------------
-    type Array_Adapter_Info_Thirty_Two_Bit
-      is array (Natural range <>)
-      of aliased Record_Adapter_Info_Thirty_Two_Bit;
-    type Access_Array_Adapter_Info_Thirty_Two_Bit
-      is access all Array_Adapter_Info_Thirty_Two_Bit;
-    type Array_Network_Interfaces
-      is array (Natural range <>)
-      of Record_Network_Interface;
-  -----------------
-  -- Subprograms --
-  -----------------
-
-  ----------------
-  -- Directives --
-  ----------------
-
-  ---------------
-  -- Constants --
-  ---------------
-    INSERT_ON_TOP_OF_EVERYTHING                : constant Address              := To_Address(Integer_4_Signed(-2));
-    INSERT_ON_TOP_OF_APPLICATIONS              : constant Address              := To_Address(Integer_4_Unsigned(16#0000_0000#));
-    GENERIC_CURSOR                             : constant Address              := To_Address(Integer_4_Unsigned(16#0000_7F8B#));--(16#0000_7F00#));
-    GENERIC_ICON                               : constant Address              := To_Address(Integer_4_Unsigned(16#0000_7F00#));
-    BRUSH_GRAY                                 : constant Address              := To_Address(Integer_4_Unsigned(16#0000_0011#));
-    SO_BROADCAST                               : constant Integer_4_Signed_C   := 16#0000_0020#;
-    SOL_SOCKET                                 : constant Integer_4_Signed_C   := 16#0000_FFFF#;
-    FIONREAD                                   : constant Integer_4_Unsigned_C := 16#2000_667F#;
-    FIONBIO                                    : constant Integer_4_Unsigned_C := 16#8004_667E#;
-    FIOASYNC                                   : constant Integer_4_Unsigned_C := 16#8004_667D#;
-    PORT_ANY                                                      : constant Integer_2_Unsigned_C := -1;
-    INVALID_PORT                                                  : constant Integer_2_Unsigned_C := -1;
-    INVALID_SOCKET                                                : constant Integer_4_Unsigned_C := Integer_4_Unsigned_C'Last;
-    SOCKET_ERROR                                                  : constant Integer_4_Signed_C   := -1;
-    SOCK_STREAM                                                   : constant Integer_4_Signed_C   := 1;
-    SOCK_DGRAM                                                    : constant Integer_4_Signed_C   := 2;
-    SOCK_RAW                                                      : constant Integer_4_Signed_C   := 3;
-    SOCK_RDM                                                      : constant Integer_4_Signed_C   := 4;
-    SOCK_SEQPACKET                                                : constant Integer_4_Signed_C   := 5;
-    IPPROTO_HOPOPTS                                               : constant Integer_4_Signed_C   := 0;
-    IPPROTO_ICMP                                                  : constant Integer_4_Signed_C   := 1;
-    IPPROTO_IGMP                                                  : constant Integer_4_Signed_C   := 2;
-    IPPROTO_GGP                                                   : constant Integer_4_Signed_C   := 3;
-    IPPROTO_IPV4                                                  : constant Integer_4_Signed_C   := 4;
-    IPPROTO_ST                                                    : constant Integer_4_Signed_C   := 5;
-    IPPROTO_TCP                                                   : constant Integer_4_Signed_C   := 6;
-    IPPROTO_CBT                                                   : constant Integer_4_Signed_C   := 7;
-    IPPROTO_EGP                                                   : constant Integer_4_Signed_C   := 8;
-    IPPROTO_IGP                                                   : constant Integer_4_Signed_C   := 9;
-    IPPROTO_PUP                                                   : constant Integer_4_Signed_C   := 12;
-    IPPROTO_UDP                                                   : constant Integer_4_Signed_C   := 17;
-    IPPROTO_IDP                                                   : constant Integer_4_Signed_C   := 22;
-    IPPROTO_RDP                                                   : constant Integer_4_Signed_C   := 27;
-    IPPROTO_IPV6                                                  : constant Integer_4_Signed_C   := 41;
-    IPPROTO_ROUTING                                               : constant Integer_4_Signed_C   := 43;
-    IPPROTO_FRAGMENT                                              : constant Integer_4_Signed_C   := 44;
-    IPPROTO_ESP                                                   : constant Integer_4_Signed_C   := 50;
-    IPPROTO_AH                                                    : constant Integer_4_Signed_C   := 51;
-    IPPROTO_ICMPV6                                                : constant Integer_4_Signed_C   := 58;
-    IPPROTO_NONE                                                  : constant Integer_4_Signed_C   := 59;
-    IPPROTO_DSTOPTS                                               : constant Integer_4_Signed_C   := 60;
-    IPPROTO_ND                                                    : constant Integer_4_Signed_C   := 77;
-    IPPROTO_ICLFXBM                                               : constant Integer_4_Signed_C   := 78;
-    IPPROTO_PIM                                                   : constant Integer_4_Signed_C   := 103;
-    IPPROTO_PGM                                                   : constant Integer_4_Signed_C   := 113;
-    IPPROTO_L2TP                                                  : constant Integer_4_Signed_C   := 115;
-    IPPROTO_SCTP                                                  : constant Integer_4_Signed_C   := 132;
-    IPPROTO_RAW                                                   : constant Integer_4_Signed_C   := 255;
-    IPPROTO_MAX                                                   : constant Integer_4_Signed_C   := 256;
-    IPPROTO_RESERVED_RAW                                          : constant Integer_4_Signed_C   := 257;
-    IPPROTO_RESERVED_IPSEC                                        : constant Integer_4_Signed_C   := 258;
-    IPPROTO_RESERVED_IPSECOFFLOAD                                 : constant Integer_4_Signed_C   := 259;
-    IPPROTO_RESERVED_MAX                                          : constant Integer_4_Signed_C   := 260;
-    AF_UNSPEC                                                     : constant Integer_2_Unsigned_C := 0;
-    AF_UNIX                                                       : constant Integer_2_Unsigned_C := 1;
-    AF_INET                                                       : constant Integer_2_Unsigned_C := 2;
-    AF_IMPLINK                                                    : constant Integer_2_Unsigned_C := 3;
-    AF_PUP                                                        : constant Integer_2_Unsigned_C := 4;
-    AF_CHAOS                                                      : constant Integer_2_Unsigned_C := 5;
-    AF_NS                                                         : constant Integer_2_Unsigned_C := 6;
-    AF_IPX                                                        : constant Integer_2_Unsigned_C := AF_NS;
-    AF_ISO                                                        : constant Integer_2_Unsigned_C := 7;
-    AF_OSI                                                        : constant Integer_2_Unsigned_C := AF_ISO;
-    AF_ECMA                                                       : constant Integer_2_Unsigned_C := 8;
-    AF_DATAKIT                                                    : constant Integer_2_Unsigned_C := 9;
-    AF_CCITT                                                      : constant Integer_2_Unsigned_C := 10;
-    AF_SNA                                                        : constant Integer_2_Unsigned_C := 11;
-    AF_DECnet                                                     : constant Integer_2_Unsigned_C := 12;
-    AF_DLI                                                        : constant Integer_2_Unsigned_C := 13;
-    AF_LAT                                                        : constant Integer_2_Unsigned_C := 14;
-    AF_HYLINK                                                     : constant Integer_2_Unsigned_C := 15;
-    AF_APPLETALK                                                  : constant Integer_2_Unsigned_C := 16;
-    AF_NETBIOS                                                    : constant Integer_2_Unsigned_C := 17;
-    AF_VOICEVIEW                                                  : constant Integer_2_Unsigned_C := 18;
-    AF_FIREFOX                                                    : constant Integer_2_Unsigned_C := 19;
-    AF_UNKNOWN1                                                   : constant Integer_2_Unsigned_C := 20;
-    AF_BAN                                                        : constant Integer_2_Unsigned_C := 21;
-    AF_ATM                                                        : constant Integer_2_Unsigned_C := 22;
-    AF_INET6                                                      : constant Integer_2_Unsigned_C := 23;
-    AF_CLUSTER                                                    : constant Integer_2_Unsigned_C := 24;
-    AF_12844                                                      : constant Integer_2_Unsigned_C := 25;
-    AF_IRDA                                                       : constant Integer_2_Unsigned_C := 26;
-    AF_NETDES                                                     : constant Integer_2_Unsigned_C := 28;
-    INADDR_ANY                                                    : constant Integer_4_Unsigned_C := 16#00000000#;
-    INADDR_LOOPBACK                                               : constant Integer_4_Unsigned_C := 16#7f000001#;
-    INADDR_BROADCAST                                              : constant Integer_4_Unsigned_C := 16#ffffffff#;
-    INADDR_NONE                                                   : constant Integer_4_Unsigned_C := 16#ffffffff#;
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#_#;
     CODE_PAGE_UTF_8                            : constant Integer_4_Unsigned_C := 16#0000_FDE9#;
     KEY_READ                                   : constant Integer_4_Unsigned_C := 16#0002_0019#;
@@ -395,208 +248,19 @@ package Neo.Windows
   -------------
   -- Records --
   -------------
-    NULL_NETWORK_INTERFACE : constant Record_Network_Interface := (
-      IP   => 0,
-      Mask => 0);
-    NULL_RECORD_NETWORK_ADDRESS : constant Record_Network_Address   := (
-      Kind => IP_Address_Type,
-      IP   => NULL_IP_ADDRESS,
-      Port => 0);
-    NULL_RECORD_WINSOCK_DATA_THIRTY_TWO_BIT : constant Record_Winsock_Data_Thirty_Two_Bit := (
-      Version       => 0,
-      High_Version  => 0,
-      Description   => NULL_WSADATA_DESCRIPTION,
-      System_Status => NULL_WSADATA_SYSTEM_STATUS,
-      Max_Sockets   => 0,
-      Max_Udp_Dg    => 0,
-      Vendor_Info   => null);
-    NULL_RECORD_WINSOCK_DATA_SIXTY_FOUR_BIT : constant Record_Winsock_Data_Sixty_Four_Bit := (
-      Version       => 0,
-      High_Version  => 0,
-      Max_Sockets   => 0,
-      Max_Udp_Dg    => 0,
-      Vendor_Info   => null,
-      Description   => NULL_WSADATA_DESCRIPTION,
-      System_Status => NULL_WSADATA_SYSTEM_STATUS);
-    NULL_RECORD_SOCKET_ADDRESS : constant Record_Socket_Address := (
-      Family  => 0,
-      Port    => 0,
-      Address => 0,
-      Padding => NULL_PADDING);
-    NULL_RECORD_IP_ADDRESS_STRING : constant Record_IP_Address_String := (
-      String => NULL_IP_ADDRESS_STRING_STRING);
-    NULL_RECORD_IP_ADDRESS : constant Record_IP_Address := (
-      Next       => null,
-      IP_Address => NULL_RECORD_IP_ADDRESS_STRING,
-      IP_Mask    => NULL_RECORD_IP_ADDRESS_STRING,
-      Context    => 0);
-    NULL_RECORD_ADAPTER_INFO_THIRTY_TWO_BIT : constant Record_Adapter_Info_Thirty_Two_Bit := (
-      Next                  => null,
-      Combo_Index           => 0,
-      Name                  => NULL_ADAPTER_INFO_NAME,
-      Description           => NULL_ADAPTER_INFO_DESCRIPTION,
-      Address_Length        => 0,
-      Address               => NULL_ADAPTER_INFO_ADDRESS,
-      Index                 => 0,
-      Address_Type          => 0,
-      DHCP_Enabled          => 0,
-      Current_Ip_Address    => null,
-      Ip_Address_List       => NULL_RECORD_IP_ADDRESS,
-      Gateway_List          => NULL_RECORD_IP_ADDRESS,
-      DHCP_Server           => NULL_RECORD_IP_ADDRESS,
-      Have_Wins             => 0,
-      Primary_Wins_Server   => NULL_RECORD_IP_ADDRESS,
-      Secondary_Wins_Server => NULL_RECORD_IP_ADDRESS,
-      Lease_Obtained        => 0, 
-      Lease_Expires         => 0);
-    NULL_RECORD_ADAPTER_INFO_SIXTY_FOUR_BIT : constant Record_Adapter_Info_Sixty_Four_Bit := (
-      Next                  => null,
-      Combo_Index           => 0,
-      Name                  => NULL_ADAPTER_INFO_NAME,
-      Description           => NULL_ADAPTER_INFO_DESCRIPTION,
-      Address_Length        => 0,
-      Address               => NULL_ADAPTER_INFO_ADDRESS,
-      Index                 => 0,
-      Address_Type          => 0,
-      DHCP_Enabled          => 0,
-      Current_Ip_Address    => null,
-      Ip_Address_List       => NULL_RECORD_IP_ADDRESS,
-      Gateway_List          => NULL_RECORD_IP_ADDRESS,
-      DHCP_Server           => NULL_RECORD_IP_ADDRESS,
-      Have_Wins             => 0,
-      Primary_Wins_Server   => NULL_RECORD_IP_ADDRESS,
-      Secondary_Wins_Server => NULL_RECORD_IP_ADDRESS,
-      Lease_Obtained        => 0, 
-      Lease_Expires         => 0);
-    NULL_RECORD_HOST_ENTITY : constant Record_Host_Entity := (
-      Name      => null,
-      Aliases   => null,
-      Kind      => 0,
-      Length    => 0,
-      Addr_List => null);
-    --
-    type Record_Network_Interface
-      is record
-        IP   : Integer_4_Unsigned_C;
-        Mask : Integer_4_Unsigned_C;
-      end record;
-      pragma Convention(C, Record_Network_Interface);
-    type Record_Network_Address
-      is record
-        Kind : Enumerated_Address_Types;
-        IP   : Array_Integer_1_Unsigned_C(1..4);
-        Port : Integer_2_Unsigned_C;
-      end record;
-    type Record_Winsock_Data_Thirty_Two_Bit
-      is record
-        Version       : Integer_2_Unsigned_C;
-        High_Version  : Integer_2_Unsigned_C;
-        Description   : String_1_C(1..WINSOCK_DESCRIPTION_LENGTH + 1);
-        System_Status : String_1_C(1..WINSOCK_SYSTEM_STATUS_LENGTH + 1);
-        Max_Sockets   : Integer_8_Unsigned_C;
-        Max_Udp_Dg    : Integer_8_Unsigned_C;
-        Vendor_Info   : Access_Character_2_C;
-      end record;
-      pragma Convention(C, Record_Winsock_Data_Thirty_Two_Bit);
-    type Record_Winsock_Data_Sixty_Four_Bit
-      is record
-        Version       : Integer_2_Unsigned_C;
-        High_Version  : Integer_2_Unsigned_C;
-        Max_Sockets   : Integer_2_Unsigned_C;
-        Max_Udp_Dg    : Integer_2_Unsigned_C;
-        Vendor_Info   : Access_Character_1_C;
-        Description   : String_1_C(1..WINSOCK_DESCRIPTION_LENGTH + 1);
-        System_Status : String_1_C(1..WINSOCK_SYSTEM_STATUS_LENGTH + 1);
-      end record;
-      pragma Convention(C, Record_Winsock_Data_Sixty_Four_Bit);
-    type Record_Socket_Address
-      is record
-        Family  : Integer_2_Unsigned_C;
-        Port    : Integer_2_Unsigned_C;
-        Address : Integer_4_Unsigned_C;
-        Padding : Array_Integer_1_Unsigned_C(1..8);
-      end record;
-      pragma Convention(C, Record_Socket_Address);
-    type Record_IP_Address_String
-      is record
-        String : String_1_C(1..16);
-      end record;
-      pragma Convention(C, Record_IP_Address_String);
-    type Record_IP_Address
-      is record
-        Next       : Access_IP_Address;
-        IP_Address : Record_IP_Address_String;
-        IP_Mask    : Record_IP_Address_String;
-        Context    : Integer_4_Unsigned_C;
-      end record;
-      pragma Convention(C, Record_IP_Address);
-    type Record_Adapter_Info_Thirty_Two_Bit
-      is record
-        Next                  : Access_Adapter_Info_Thirty_Two_Bit;
-        Combo_Index           : Integer_4_Unsigned_C;
-        Name                  : String_1_C(1..MAX_ADAPTER_NAME_LENGTH + 4);
-        Description           : String_1_C(1..MAX_ADAPTER_DESCRIPTION_LENGTH + 4);
-        Address_Length        : Integer_4_Unsigned_C;
-        Address               : Array_Integer_1_Unsigned_C(1..MAX_ADAPTER_ADDRESS_LENGTH);
-        Index                 : Integer_4_Unsigned_C;
-        Address_Type          : Integer_4_Unsigned_C;
-        DHCP_Enabled          : Integer_4_Unsigned_C;
-        Current_Ip_Address    : Access_IP_Address;
-        Ip_Address_List       : aliased Record_IP_Address;
-        Gateway_List          : Record_IP_Address;
-        DHCP_Server           : Record_IP_Address;
-        Have_Wins             : Integer_4_Signed_C;
-        Primary_Wins_Server   : Record_IP_Address;
-        Secondary_Wins_Server : Record_IP_Address;
-        Lease_Obtained        : Integer_4_Unsigned_C;
-        Lease_Expires         : Integer_4_Unsigned_C;
-      end record;
-      pragma Convention(C, Record_Adapter_Info_Thirty_Two_Bit);
-    type Record_Adapter_Info_Sixty_Four_Bit
-      is record
-        Next                  : Access_Adapter_Info_Sixty_Four_Bit;
-        Combo_Index           : Integer_4_Unsigned_C;
-        Name                  : String_1_C(1..MAX_ADAPTER_NAME_LENGTH + 4);
-        Description           : String_1_C(1..MAX_ADAPTER_DESCRIPTION_LENGTH + 4);
-        Address_Length        : Integer_4_Unsigned_C;
-        Address               : Array_Integer_1_Unsigned_C(1..MAX_ADAPTER_ADDRESS_LENGTH);
-        Index                 : Integer_4_Unsigned_C;
-        Address_Type          : Integer_4_Unsigned_C;
-        DHCP_Enabled          : Integer_4_Unsigned_C;
-        Current_Ip_Address    : Access_IP_Address;
-        Ip_Address_List       : aliased Record_IP_Address;
-        Gateway_List          : Record_IP_Address;
-        DHCP_Server           : Record_IP_Address;
-        Have_Wins             : Integer_4_Signed_C;
-        Primary_Wins_Server   : Record_IP_Address;
-        Secondary_Wins_Server : Record_IP_Address;
-        Lease_Obtained        : Integer_8_Unsigned_C;
-        Lease_Expires         : Integer_8_Unsigned_C;
-      end record;
-      pragma Convention(C, Record_Adapter_Info_Sixty_Four_Bit);
-    type Record_Host_Entity
-      is record
-        Name      : Access_Character_2_C;
-        Aliases   : Access_String_1_C;
-        Kind      : Integer_2_Signed_C;
-        Length    : Integer_2_Signed_C;
-        Addr_List : Access_Array_Array_Integer_1_Unsigned_C;
-      end record;
-      pragma Convention(C, Record_Host_Entity);
-    --
-typedef struct _OVERLAPPED {
-  ULONG_PTR Internal;
-  ULONG_PTR InternalHigh;
-  union {
-    struct {
-      DWORD Offset;
-      DWORD OffsetHigh;
-    };
-    PVOID  Pointer;
-  };
-  HANDLE    hEvent;
-} OVERLAPPED, *LPOVERLAPPED;
-    type Record_Overlapped_Something
+    -- typedef struct _OVERLAPPED {
+    --   ULONG_PTR Internal;
+    --   ULONG_PTR InternalHigh;
+    --   union {
+    --     struct {
+    --       DWORD Offset;
+    --       DWORD OffsetHigh;
+    --     };
+    --     PVOID  Pointer;
+    --   };
+    --   HANDLE    hEvent;
+    -- } OVERLAPPED, *LPOVERLAPPED;
+    type Record_Overlapped_
       is record
         Internal : ;
         Internal_High : ;
@@ -604,101 +268,101 @@ typedef struct _OVERLAPPED {
       end record;
     type Record_Device_Attributes
       is record
-        Size    : Integer_4_Unsigned_C := ;
-        Vendor  : Integer_2_Unsigned_C := ;
-        Product : Integer_2_Unsigned_C := ;
-        Version : Integer_2_Unsigned_C := ;
+        Size    : Integer_4_Unsigned_C := 0;
+        Vendor  : Integer_2_Unsigned_C := 0;
+        Product : Integer_2_Unsigned_C := 0;
+        Version : Integer_2_Unsigned_C := 0;
       end record;
     type Record_Device_Header
       is record
-        Kind        : Integer_4_Unsigned_C := ;
-        Size        : Integer_4_Unsigned_C := ;
-        Device      : Address              := ;
-        Data_Signed : Integer_4_Signed_C   := ;
+        Kind        : Integer_4_Unsigned_C := 0;
+        Size        : Integer_4_Unsigned_C := 0;
+        Device      : Address              := NULL_ADDRESS;
+        Data_Signed : Integer_4_Signed_C   := 0;
       end record;
       pragma Convention(C, Record_Device_Header);
     type Record_Device_Capabilities
       is record
-        Usage                                 : Integer_2_Unsigned_C  := ;
-        Page                                  : Integer_2_Unsigned_C  := ;
-        Input_Report_Byte_Length              : Integer_2_Unsigned_C  := ;
-        Output_Report_Byte_Length             : Integer_2_Unsigned_C  := ;
-        Feature_Report_Byte_Length            : Integer_2_Unsigned_C  := ;
+        Usage                                 : Integer_2_Unsigned_C  := 0;
+        Page                                  : Integer_2_Unsigned_C  := 0;
+        Input_Report_Byte_Length              : Integer_2_Unsigned_C  := 0;
+        Output_Report_Byte_Length             : Integer_2_Unsigned_C  := 0;
+        Feature_Report_Byte_Length            : Integer_2_Unsigned_C  := 0;
         Reserved                              : Reserved_Capabilities := ;
-        Number_Of_Link_Collection_Nodes       : Integer_2_Unsigned_C  := ;
-        Number_Of_Input_Button_Capabilities   : Integer_2_Unsigned_C  := ;
-        Number_Of_Input_Value_Capabilities    : Integer_2_Unsigned_C  := ;
-        Number_Of_Input_Data_Indices          : Integer_2_Unsigned_C  := ;
-        Number_Of_Output_Button_Capabilities  : Integer_2_Unsigned_C  := ;
-        Number_Of_Output_Value_Capabilities   : Integer_2_Unsigned_C  := ;
-        Number_Of_Output_Data_Indices         : Integer_2_Unsigned_C  := ;
-        Number_Of_Feature_Button_Capabilities : Integer_2_Unsigned_C  := ;
-        Number_Of_Feature_Value_Capabilities  : Integer_2_Unsigned_C  := ;
-        Number_Of_Feature_Data_Indices        : Integer_2_Unsigned_C  := ;
+        Number_Of_Link_Collection_Nodes       : Integer_2_Unsigned_C  := 0;
+        Number_Of_Input_Button_Capabilities   : Integer_2_Unsigned_C  := 0;
+        Number_Of_Input_Value_Capabilities    : Integer_2_Unsigned_C  := 0;
+        Number_Of_Input_Data_Indices          : Integer_2_Unsigned_C  := 0;
+        Number_Of_Output_Button_Capabilities  : Integer_2_Unsigned_C  := 0;
+        Number_Of_Output_Value_Capabilities   : Integer_2_Unsigned_C  := 0;
+        Number_Of_Output_Data_Indices         : Integer_2_Unsigned_C  := 0;
+        Number_Of_Feature_Button_Capabilities : Integer_2_Unsigned_C  := 0;
+        Number_Of_Feature_Value_Capabilities  : Integer_2_Unsigned_C  := 0;
+        Number_Of_Feature_Data_Indices        : Integer_2_Unsigned_C  := 0;
       end record;
       pragma Convention(C, Record_Device_Capabilities);
     type Record_Device_Button_Capabilities
       is record
-        Page                : Integer_2_Unsigned_C         := ;
-        Report_Identifier   : Integer_1_Unsigned_C         := ;
-        Is_Alias            : Integer_4_Signed_C           := ;
-        Bit_Field           : Integer_2_Unsigned_C         := ;
-        Link_Usage          : Integer_2_Unsigned_C         := ;
-        Link_Page           : Integer_2_Unsigned_C         := ;
-        Is_Range            : Integer_4_Signed_C           := ;
-        Is_String_Range     : Integer_4_Signed_C           := ;
-        Is_Designator_Range : Integer_4_Signed_C           := ;
-        Is_Absolute         : Integer_4_Signed_C           := ;
+        Page                : Integer_2_Unsigned_C         := 0;
+        Report_Identifier   : Integer_1_Unsigned_C         := 0;
+        Is_Alias            : Integer_4_Signed_C           := 0;
+        Bit_Field           : Integer_2_Unsigned_C         := 0;
+        Link_Usage          : Integer_2_Unsigned_C         := 0;
+        Link_Page           : Integer_2_Unsigned_C         := 0;
+        Is_Range            : Integer_4_Signed_C           := 0;
+        Is_String_Range     : Integer_4_Signed_C           := 0;
+        Is_Designator_Range : Integer_4_Signed_C           := 0;
+        Is_Absolute         : Integer_4_Signed_C           := 0;
         Reserved            : Reserved_Button_Capabilities := ;
-        Usage_Minimum       : Integer_2_Unsigned_C         := ;
-        String_Minimum      : Integer_2_Unsigned_C         := ;
-        String_Maximum      : Integer_2_Unsigned_C         := ;
-        Designator_Minimum  : Integer_2_Unsigned_C         := ;
-        Designator_Maximum  : Integer_2_Unsigned_C         := ;
-        Data_Index_Minimum  : Integer_2_Unsigned_C         := ;
-        Data_Index_Maximum  : Integer_2_Unsigned_C         := ;
+        Usage_Minimum       : Integer_2_Unsigned_C         := 0;
+        String_Minimum      : Integer_2_Unsigned_C         := 0;
+        String_Maximum      : Integer_2_Unsigned_C         := 0;
+        Designator_Minimum  : Integer_2_Unsigned_C         := 0;
+        Designator_Maximum  : Integer_2_Unsigned_C         := 0;
+        Data_Index_Minimum  : Integer_2_Unsigned_C         := 0;
+        Data_Index_Maximum  : Integer_2_Unsigned_C         := 0;
       end record;
       pragma Convention(C, Record_Device_Button_Capabilities);
     type Record_Device_Capability_Values
       is record
-        Page                : Integer_2_Unsigned_C := ;
-        Report_Identifier   : Integer_1_Unsigned_C := ;
-        Is_Alias            : Integer_4_Signed_C   := ;
-        Bit_Field           : Integer_2_Unsigned_C := ;
-        Link_Collection     : Integer_2_Unsigned_C := ;
-        Link_Usage          : Integer_2_Unsigned_C := ;
-        Link_Page           : Integer_2_Unsigned_C := ;
-        Is_Range            : Integer_4_Signed_C   := ;
-        Is_String_Range     : Integer_4_Signed_C   := ;
-        Is_Designator_Range : Integer_4_Signed_C   := ;
-        Is_Absolute         : Integer_4_Signed_C   := ;
-        Has_Null            : Integer_4_Signed_C   := ;
-        Reserved_A          : Integer_1_Unsigned_C := ;
-        Bit_Size            : Integer_2_Unsigned_C := ;
-        Report_Count        : Integer_2_Unsigned_C := ;
-        Reserved_B          : Reserved_Shit        := ;
-        Units_Exponent      : Integer_4_Signed_C   := ;
-        Logical_Minimum     : Integer_4_Signed_C   := ;
-        Logical_Maximum     : Integer_4_Signed_C   := ;
-        Physical_Minimum    : Integer_4_Signed_C   := ;
-        Physical_Maximum    : Integer_4_Signed_C   := ;
-        Usage_Minimum       : Integer_2_Unsigned_C := ;
-        Usage_Maximum       : Integer_2_Unsigned_C := ;
-        String_Minimum      : Integer_2_Unsigned_C := ;
-        String_Maximum      : Integer_2_Unsigned_C := ;
-        Designator_Minimum  : Integer_2_Unsigned_C := ;
-        Designator_Maximum  : Integer_2_Unsigned_C := ;
+        Page                : Integer_2_Unsigned_C := 0;
+        Report_Identifier   : Integer_1_Unsigned_C := 0;
+        Is_Alias            : Integer_4_Signed_C   := 0;
+        Bit_Field           : Integer_2_Unsigned_C := 0;
+        Link_Collection     : Integer_2_Unsigned_C := 0;
+        Link_Usage          : Integer_2_Unsigned_C := 0;
+        Link_Page           : Integer_2_Unsigned_C := 0;
+        Is_Range            : Integer_4_Signed_C   := 0;
+        Is_String_Range     : Integer_4_Signed_C   := 0;
+        Is_Designator_Range : Integer_4_Signed_C   := 0;
+        Is_Absolute         : Integer_4_Signed_C   := 0;
+        Has_Null            : Integer_4_Signed_C   := 0;
+        Reserved_A          : Integer_1_Unsigned_C := 0;
+        Bit_Size            : Integer_2_Unsigned_C := 0;
+        Report_Count        : Integer_2_Unsigned_C := 0;
+        Reserved_B          : Reserved_        := ;
+        Units_Exponent      : Integer_4_Signed_C   := 0;
+        Logical_Minimum     : Integer_4_Signed_C   := 0;
+        Logical_Maximum     : Integer_4_Signed_C   := 0;
+        Physical_Minimum    : Integer_4_Signed_C   := 0;
+        Physical_Maximum    : Integer_4_Signed_C   := 0;
+        Usage_Minimum       : Integer_2_Unsigned_C := 0;
+        Usage_Maximum       : Integer_2_Unsigned_C := 0;
+        String_Minimum      : Integer_2_Unsigned_C := 0;
+        String_Maximum      : Integer_2_Unsigned_C := 0;
+        Designator_Minimum  : Integer_2_Unsigned_C := 0;
+        Designator_Maximum  : Integer_2_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Device_Capability_Values);
     type Record_Mouse
       is record
-        Flags             : Integer_2_Unsigned_C := ;
-        Button_Flags      : Integer_2_Unsigned_C := ;
-        Button_Data       : Integer_2_Unsigned_C := ;
-        Buttons           : Integer_4_Unsigned_C := ;
-        Last_X            : Integer_4_Signed_C   := ;
-        Last_Y            : Integer_4_Signed_C   := ;
-        Extra_Information : Integer_4_Unsigned_C := ;
+        Flags             : Integer_2_Unsigned_C := 0;
+        Button_Flags      : Integer_2_Unsigned_C := 0;
+        Button_Data       : Integer_2_Unsigned_C := 0;
+        Buttons           : Integer_4_Unsigned_C := 0;
+        Last_X            : Integer_4_Signed_C   := 0;
+        Last_Y            : Integer_4_Signed_C   := 0;
+        Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Mouse);
     -- type Record_Mouse
@@ -712,81 +376,81 @@ typedef struct _OVERLAPPED {
     --   pragma Convention(C, Record_Mouse);
     type Record_Keyboard
       is record
-        Make_Code         : Integer_2_Unsigned_C := ;
-        Flags             : Integer_2_Unsigned_C := ;
-        Reserved          : Integer_2_Unsigned_C := ;
-        Key               : Integer_2_Unsigned_C := ;
-        Message           : Integer_4_Unsigned_C := ;
-        Extra_Information : Integer_4_Unsigned_C := ;
+        Make_Code         : Integer_2_Unsigned_C := 0;
+        Flags             : Integer_2_Unsigned_C := 0;
+        Reserved          : Integer_2_Unsigned_C := 0;
+        Key               : Integer_2_Unsigned_C := 0;
+        Message           : Integer_4_Unsigned_C := 0;
+        Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Keyboard);
     type Record_Version_Information
       is record
-        Size                : Integer_4_Unsigned_C := ;
-        Major               : Integer_4_Unsigned_C := ;
-        Minor               : Integer_4_Unsigned_C := ;
-        Build_Number        : Integer_4_Unsigned_C := ;
-        Platform_Identifier : Integer_4_Unsigned_C := ;
-        Service_Pack        : String_2(1..128)     := ;
-        Service_Pack_Major  : Integer_2_Unsigned_C := ;
-        Service_Pack_Minor  : Integer_2_Unsigned_C := ;
-        Suite_Mask          : Integer_2_Unsigned_C := ;
-        Product_Type        : Integer_1_Unsigned_C := ;
-        Reserved            : Integer_1_Unsigned_C := ;
+        Size                : Integer_4_Unsigned_C := 0;
+        Major               : Integer_4_Unsigned_C := 0;
+        Minor               : Integer_4_Unsigned_C := 0;
+        Build_Number        : Integer_4_Unsigned_C := 0;
+        Platform_Identifier : Integer_4_Unsigned_C := 0;
+        Service_Pack        : String_2(1..128)     := (others => ' ');
+        Service_Pack_Major  : Integer_2_Unsigned_C := 0;
+        Service_Pack_Minor  : Integer_2_Unsigned_C := 0;
+        Suite_Mask          : Integer_2_Unsigned_C := 0;
+        Product_Type        : Integer_1_Unsigned_C := 0;
+        Reserved            : Integer_1_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Version_Information);
     type Record_Device_Interface
       is record
-        Size     : Integer_4_Unsigned_C        := ;
-        Class_ID : Integer_4_Unsigned_C        := ;
-        Flags    : Integer_4_Unsigned_C        := ;
-        Reserved : Access_Integer_4_Unsigned_C := ; -- ULONG_PTR
+        Size     : Integer_4_Unsigned_C        := 0;
+        Class_ID : Integer_4_Unsigned_C        := 0;
+        Flags    : Integer_4_Unsigned_C        := 0;
+        Reserved : Access_Integer_4_Unsigned_C := null; -- ULONG_PTR
       end record;
     type Record_Flash_Information
       is record
-        Size     : Integer_4_Unsigned_C := ;
-        Window   : Address              := ;
-        Flags    : Integer_4_Unsigned_C := ;
-        Count    : Integer_4_Unsigned_C := ;
-        Time_Out : Integer_4_Unsigned_C := ;
+        Size     : Integer_4_Unsigned_C := 0;
+        Window   : Address              := NULL_ADDRESS;
+        Flags    : Integer_4_Unsigned_C := 0;
+        Count    : Integer_4_Unsigned_C := 0;
+        Time_Out : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Flash_Information);
     type Record_Rectangle
       is record
-        Left   : Integer_4_Signed_C := ;
-        Top    : Integer_4_Signed_C := ;
-        Right  : Integer_4_Signed_C := ;
-        Bottom : Integer_4_Signed_C := ;
+        Left   : Integer_4_Signed_C := 0;
+        Top    : Integer_4_Signed_C := 0;
+        Right  : Integer_4_Signed_C := 0;
+        Bottom : Integer_4_Signed_C := 0;
       end record;
       pragma Convention(C, Record_Rectangle); 
     type Record_Monitor_Information
       is record
-        Size      : Integer_4_Unsigned_C := ;
-        Monitor   : Record_Rectangle     := ;
-        Work_Area : Record_Rectangle     := ;
-        Flags     : Integer_4_Unsigned_C := ;
+        Size      : Integer_4_Unsigned_C := Record_Monitor_Information'Size / 8;
+        Monitor   : Record_Rectangle     := <>;
+        Work_Area : Record_Rectangle     := <>;
+        Flags     : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Monitor_Information);
     type Record_Window_Class
       is record
-        Size       : Integer_4_Unsigned_C;
-        Style      : Integer_4_Unsigned_C;
-        Callback   : Address;
-        Extra_A    : Integer_4_Signed_C;
-        Extra_B    : Integer_4_Signed_C;
-        Instance   : Address;
-        Icon_Large : Address;
-        Cursor     : Address;
-        Background : Address;
-        Menu_Name  : Access_Constant_Character_2_C;
-        Class_Name : Access_Constant_Character_2_C;
-        Icon_Small : Address;
+        Size       : Integer_4_Unsigned_C          := 0;
+        Style      : Integer_4_Unsigned_C          := 0;
+        Callback   : Address                       := NULL_ADDRESS
+        Extra_A    : Integer_4_Signed_C            := 0;
+        Extra_B    : Integer_4_Signed_C            := 0;
+        Instance   : Address                       := NULL_ADDRESS;
+        Icon_Large : Address                       := NULL_ADDRESS;
+        Cursor     : Address                       := NULL_ADDRESS;
+        Background : Address                       := NULL_ADDRESS;
+        Menu_Name  : Access_Constant_Character_2_C := null;
+        Class_Name : Access_Constant_Character_2_C := null;
+        Icon_Small : Address                       := NULL_ADDRESS;
       end record;
       pragma Convention(C, Record_Window_Class); 
     type Record_Point
       is record
-        X : Integer_4_Signed_C;
-        Y : Integer_4_Signed_C;
+        X : Integer_4_Signed_C := 0;
+        Y : Integer_4_Signed_C := 0;
       end record;
       pragma Convention(C, Record_Point);
     type Record_Message
@@ -810,45 +474,45 @@ typedef struct _OVERLAPPED {
       pragma Convention(C, Record_Key);
     type Record_Memory_Status
       is record
-        Length                     : Integer_4_Unsigned_C;
-        Memory_Load                : Integer_4_Unsigned_C;
-        Total_Physical             : Integer_8_Unsigned_C;
-        Available_Physical         : Integer_8_Unsigned_C;
-        Total_Page_File            : Integer_8_Unsigned_C;
-        Available_Page_File        : Integer_8_Unsigned_C;
-        Total_Virtual              : Integer_8_Unsigned_C;
-        Available_Virtual          : Integer_8_Unsigned_C;
-        Available_Extended_Virtual : Integer_8_Unsigned_C;
+        Length                     : Integer_4_Unsigned_C := 0;
+        Memory_Load                : Integer_4_Unsigned_C := 0;
+        Total_Physical             : Integer_8_Unsigned_C := 0;
+        Available_Physical         : Integer_8_Unsigned_C := 0;
+        Total_Page_File            : Integer_8_Unsigned_C := 0;
+        Available_Page_File        : Integer_8_Unsigned_C := 0;
+        Total_Virtual              : Integer_8_Unsigned_C := 0;
+        Available_Virtual          : Integer_8_Unsigned_C := 0;
+        Available_Extended_Virtual : Integer_8_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Memory_Status);
     type Record_GUID
       is record
-        First_Eight_Hex   : Integer_4_Unsigned_C;
-        Second_Four_Hex   : Integer_2_Unsigned_C;
-        Third_Four_Hex    : Integer_2_Unsigned_C;
-        Final_Sixteen_Hex : Array_Integer_1_Unsigned_C(1..8);
+        First_Eight_Hex   : Integer_4_Unsigned_C             := 0;
+        Second_Four_Hex   : Integer_2_Unsigned_C             := 0;
+        Third_Four_Hex    : Integer_2_Unsigned_C             := 0;
+        Final_Sixteen_Hex : Array_Integer_1_Unsigned_C(1..8) := (others => 0);
       end record;
       pragma Convention(C, Record_GUID);
     type Record_Device_Information
       is record
-        Size       : Integer_4_Unsigned_C;
-        Class_GUID : Record_GUID;
-        Instance   : Integer_4_Unsigned_C;
-        Reserved   : Address; -- ULONG_PTR!!!
+        Size       : Integer_4_Unsigned_C := Record_Device_Information'Size / 8;
+        Class_GUID : Record_GUID          := <>;
+        Instance   : Integer_4_Unsigned_C := 0;
+        Reserved   : Address              := NULL_ADDRESS; -- ULONG_PTR!!!
       end record;
       pragma Convention(C, Record_Device_Information);
     type Record_Device
       is record
-        Page   : Integer_2_Unsigned_C;
-        Usage  : Integer_2_Unsigned_C;
-        Flags  : Integer_4_Unsigned_C;
-        Target : Address;
+        Page   : Integer_2_Unsigned_C := 0;
+        Usage  : Integer_2_Unsigned_C := 0;
+        Flags  : Integer_4_Unsigned_C := 0;
+        Target : Address              := NULL_ADDRESS;
       end record;
       pragma Convention(C, Record_Device);
     type Record_Device_List_Element
       is record
-        Handle : Address;
-        Kind   : Integer_4_Unsigned_C;
+        Handle : Address              := NULL_ADDRESS;
+        Kind   : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Device_List_Element);
   ------------
@@ -857,154 +521,6 @@ typedef struct _OVERLAPPED {
     type Array_Record_Device_List_Element
       is array (Positive range <>)
       of Record_Device_List_Element;
-  --------------------
-  -- Type Constants --
-  --------------------
-    NULL_RECORD_DEVICE_ATTRIBUTES:
-      constant Record_Device_Attributes :=(
-        );
-    NULL_RECORD_DEVICE_INTERFACE: 
-      constant Record_Device_Interface :=(
-        Size     => Record_Device_Interface'Size / 8,
-        Class_ID => 0,
-        Flags    => 0,
-        Reserved => NULL_ADDRESS);
-    NULL_RECORD_DEVICE_CAPABILITIES:
-      constant Record_Device_Capabilities :=(
-        Usage                                 => 0,
-        Page                                  => 0,
-        Input_Report_Byte_Length              => 0,
-        Output_Report_Byte_Length             => 0,
-        Feature_Report_Byte_Length            => 0,
-        Reserved                              => (others => 0),
-        Number_Of_Link_Collection_Nodes       => 0,
-        Number_Of_Input_Button_Capabilities   => 0,
-        Number_Of_Input_Value_Capabilities    => 0,
-        Number_Of_Input_Data_Indices          => 0,
-        Number_Of_Output_Button_Capabilities  => 0,
-        Number_Of_Output_Value_Capabilities   => 0,
-        Number_Of_Output_Data_Indices         => 0,
-        Number_Of_Feature_Button_Capabilities => 0,
-        Number_Of_Feature_Value_Capabilities  => 0,
-        Number_Of_Feature_Data_Indices        => 0);
-    NULL_RECORD_DEVICE_BUTTON_CAPABILITIES:
-      constant Record_Device_Button_Capabilities :=(
-        Page                => 0,
-        Report_Identifier   => 0,
-        Is_Alias            => 0,
-        Bit_Field           => 0,
-        Link_Usage          => 0,
-        Link_Page           => 0,
-        Is_Range            => 0,
-        Is_String_Range     => 0,
-        Is_Designator_Range => 0,
-        Is_Absolute         => 0,
-        Reserved            => (others => 0),
-        Usage_Minimum       => 0,
-        String_Minimum      => 0,
-        String_Maximum      => 0,
-        Designator_Minimum  => 0,
-        Designator_Maximum  => 0,
-        Data_Index_Minimum  => 0,
-        Data_Index_Maximum  => 0);
-    NULL_RECORD_GUID:
-      constant Record_GUID :=(
-        First_Eight_Hex   => 0,
-        Second_Four_Hex   => 0,
-        Third_Four_Hex    => 0,
-        Final_Sixteen_Hex => (others => 0));
-    NULL_RECORD_DEVICE_INFORMATION:
-      constant Record_Device_Information :=(
-        Size       => Record_Device_Information'Size / 8,
-        Class_GUID => NULL_RECORD_GUID,
-        Instance   => 0,
-        Reserved   => NULL_ADDRESS);
-    NULL_RECORD_DEVICE_LIST_ELEMENT:
-      constant Record_Device_List_Element :=(
-        Handle => NULL_ADDRESS,
-        Kind   => 0);
-    NULL_RECORD_DEVICE:
-      constant Record_Device :=(
-        Page   => 0,
-        Usage  => 0,
-        Flags  => 0,
-        Target => NULL_ADDRESS);
-    NULL_RECORD_VERSION_INFORMATION:
-      constant Record_Version_Information :=(
-        Size                => Record_Version_Information'Size / 8,
-        Major               => 0,
-        Minor               => 0,
-        Build_Number        => 0,
-        Platform_Identifier => 0,
-        Service_Pack        => (others => ' '),
-        Service_Pack_Major  => 0,
-        Service_Pack_Minor  => 0,
-        Suite_Mask          => 0,
-        Product_Type        => 0,
-        Reserved            => 0);
-    NULL_RECORD_FLASH_INFORMATION:
-      constant Record_Flash_Information :=(
-        Size     => Record_Flash_Information'Size / 8,
-        Window   => NULL_ADDRESS,
-        Flags    => 0,
-        Count    => 0,
-        Time_Out => 0);
-    NULL_RECORD_MEMORY_STATUS:
-      constant Record_Memory_Status :=(
-        Length                     => Record_Memory_Status'Size / 8,
-        Memory_Load                => 0,
-        Total_Physical             => 0,
-        Available_Physical         => 0,
-        Total_Page_File            => 0,
-        Available_Page_File        => 0,
-        Total_Virtual              => 0,
-        Available_Virtual          => 0,
-        Available_Extended_Virtual => 0);
-    NULL_RECORD_WINDOW_CLASS:
-      constant Record_Window_Class :=(
-        Size       => Record_Window_Class'Size / 8,
-        Style      => 0,
-        Callback   => NULL_ADDRESS,
-        Extra_A    => 0,
-        Extra_B    => 0,
-        Instance   => NULL_ADDRESS,
-        Icon_Small => NULL_ADDRESS,
-        Icon_Large => NULL_ADDRESS,
-        Cursor     => NULL_ADDRESS,
-        Background => NULL_ADDRESS,
-        Menu_Name  => null,
-        Class_Name => null);
-    NULL_RECORD_RECTANGLE:
-      constant Record_Rectangle :=(
-        Left   => 0,
-        Top    => 0,
-        Right  => 0, 
-        Bottom => 0);
-    NULL_RECORD_MONITOR_INFORMATION:
-      constant Record_Monitor_Information :=(
-        Size      => Record_Monitor_Information'Size / 8,
-        Monitor   => NULL_RECORD_RECTANGLE,
-        Work_Area => NULL_RECORD_RECTANGLE,
-        Flags     => 0);
-    NULL_RECORD_POINT:
-      constant Record_Point :=(
-        X => 0,
-        Y => 0);
-    NULL_RECORD_MESSAGE:
-      constant Record_Message :=(
-        Window        => NULL_ADDRESS,
-        Data          => 0,
-        Data_Unsigned => 0,
-        Data_Signed   => 0,
-        Time          => 0,
-        Point         => NULL_RECORD_POINT);
-    NULL_RECORD_KEY:
-      constant Record_Key :=(
-        Code        => 0,
-        Scan_Code   => 0,
-        Flags       => 0,
-        Time        => 0,
-        Information => NULL_ADDRESS); 
   ---------------
   -- Accessors --
   ---------------
@@ -1662,22 +1178,6 @@ private
   ----------------
   -- Directives --
   ----------------
-    pragma Import(Stdcall, Get_Last_Error,           "WSAGetLastError");
-    pragma Import(Stdcall, Winsock_Startup,          "WSAStartup");
-    pragma Import(Stdcall, Get_Adapters_Information, "GetAdaptersInfo");
-    pragma Import(Stdcall, To_Host_Byte_Order,       "ntohl");
-    pragma Import(Stdcall, To_Integer_4_Unsigned_C,  "inet_addr");
-    pragma Import(Stdcall, Winsock_Cleanup,          "WSACleanup");
-    pragma Import(Stdcall, Host_To_Networking_Short, "htons");
-    pragma Import(Stdcall, Send_To,                  "sendto");
-    pragma Import(Stdcall, Make_Socket,              "socket");
-    pragma Import(Stdcall, Control_Socket_IO,        "ioctlsocket");
-    pragma Import(Stdcall, Set_Socket_Options,       "setsockopt");
-    pragma Import(Stdcall, Get_Socket_Name,          "getsockname");
-    pragma Import(Stdcall, Bind_Socket,              "bind");
-    pragma Import(Stdcall, Close_Socket,             "closesocket");
-    pragma Import(Stdcall, Get_Host_By_Name,         "gethostbyname");
-    pragma Linker_Options("C:\MinGW\lib\libwsock32.a");
     pragma Linker_Options("C:\Windows\System32\IPHLPAPI.DLL");
     pragma Linker_Options("-lgdi32");
     pragma Linker_Options("-lhid");
