@@ -92,11 +92,11 @@ package Neo.Foundation.Build_Options
       Macintosh_10_8_Version);
     subtype Enumerated_Linux_Version
       is Enumerated_Operating_System_Version
-      Linux_Version..Linux_3_6_Version;
+      range Linux_Version..Linux_3_6_Version;
     subtype Enumerated_Windows_Version
       is Enumerated_Operating_System_Version
-      Windows_Version..Windows_2_6_2_Version;
+      range Windows_Version..Windows_2_6_2_Version;
     subtype Enumerated_Macintosh_Version
       is Enumerated_Operating_System_Version
-      Macintosh_Version..Macintosh_10_8_Version;
+      range Macintosh_Version..Macintosh_10_8_Version;
   end Neo.Foundation.Build_Options;
