@@ -38,8 +38,8 @@ package body Implementation_For_Architecture
       is record
         Function_ID : Integer_4_Unsigned        := 0;
         Register    : Enumerated_Register       := EAX_Register;
-        Bit_A       : Integer_Bit_Field_Element := 0;
-        Bit_B       : Integer_Bit_Field_Element := 0;
+        Start_Bit   : Integer_Bit_Field_Element := 0;
+        End_Bit     : Integer_Bit_Field_Element := 0;
       end record;
     type Record_Feature
       is record
@@ -160,23 +160,23 @@ package body Implementation_For_Architecture
         return Integer_4_Unsigned
         is
         begin
-          --return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
-          --return
-          --  Integer(
-          --    Shift_Right(
-          --      Shift_Left(
-          --        Value  => Execute_CPUID(Value.Function_ID, Value.Register),
-          --        Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
-          --      Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
+          return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
         end Check_Feature;
-      -----------------------
-      function Check_Feature(
-      -----------------------
-        Feature : in Record_Feature)
+      ---------------------
+      function Check_Value(
+      ---------------------
+        Feature : in Record_Value)
         return Boolean
+        with Feature.End_Bit >= Feature.Start_Bit;
         is
         begin
-          return 1 = Check_Feature;
+          return
+            Integer(
+              Shift_Right(
+                Shift_Left(
+                  Value  => Execute_CPUID(Value.Function_ID, Value.Register),
+                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
+                Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
         end Check_Value;
       -------------------
       function Get_Vendor
