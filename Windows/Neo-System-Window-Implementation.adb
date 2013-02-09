@@ -235,10 +235,8 @@ package body Implementation
                       Resize_Location := Bottom_Right_Resize;
                     when SUBEVENT_RESIZE_BOTTOM_LEFT =>
                       Resize_Location := Bottom_Left_Resize;
-                    when SUBEVENT_RESIZE_SNAPBACK => -- Not documented in MSDN
-                      null;
                     when others =>
-                      raise System_Call_Failure;
+                      goto Ignore_Resize;
                   end case;
                   Result := Handle_Resize(
                     Resize_Location => Resize_Location,
@@ -252,6 +250,7 @@ package body Implementation
                     Right  => Integer_4_Signed_C(Result.Right),
                     Top    => Integer_4_Signed_C(Result.Top),
                     Bottom => Integer_4_Signed_C(Result.Bottom));
+<<Ignore_Resize>>
                 end Handle_Sizing;
             when others =>
               null;
