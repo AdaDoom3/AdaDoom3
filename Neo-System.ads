@@ -26,10 +26,6 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System
   is
-  ---------------
-  -- Constants --
-  ---------------
-    DO_RETURN_NEWER_THAN_INCOMPATIBLE_VERSION : constant Boolean := False;
   ----------------
   -- Exceptions --
   ----------------
@@ -92,6 +88,10 @@ package Neo.System
 -------
 private
 -------
+  ---------------
+  -- Constants --
+  ---------------
+    DO_RETURN_NEWER_THAN_INCOMPATIBLE_VERSION : constant Boolean := False;
   --------------------
   -- Implementation --
   --------------------
