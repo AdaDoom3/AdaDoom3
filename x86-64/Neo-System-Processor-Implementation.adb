@@ -167,7 +167,7 @@ package body Implementation_For_Architecture
       ---------------------
         Feature : in Record_Value)
         return Boolean
-        with Feature.End_Bit >= Feature.Start_Bit;
+        with Pre => Feature.End_Bit >= Feature.Start_Bit;
         is
         begin
           return
