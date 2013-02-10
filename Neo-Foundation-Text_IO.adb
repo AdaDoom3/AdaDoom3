@@ -42,11 +42,11 @@ package body Neo.Foundation.Text_IO
         Set_Put(Ada.Wide_Text_IO.Put'Access);
         Set_Get_Line(Ada.Wide_Text_IO.Get_Line'Access);
         Set(
-          New_Line_Size => DEFAULT_LINE_SIZE,
-          New_Localize  => Dummy_Localize'Access,
-          New_Put       => Ada.Wide_Text_IO.Put'Access,
-          New_Get_Line  => Ada.Wide_Text_IO.Get_Line'Access,
-          New_Skip_Line => Ada.Wide_Text_IO.Skip_Line'Access);
+          Line_Size => DEFAULT_LINE_SIZE,
+          Localize  => Dummy_Localize'Access,
+          Put       => Ada.Wide_Text_IO.Put'Access,
+          Get_Line  => Ada.Wide_Text_IO.Get_Line'Access,
+          Skip_Line => Ada.Wide_Text_IO.Skip_Line'Access);
         Put("Test of ");
         Put("Put");
         Put('.');
@@ -70,30 +70,30 @@ package body Neo.Foundation.Text_IO
   -- Set --
   ---------
     procedure Set(
-      New_Line_Size : in Integer_4_Positive;
-      New_Localize  : in Access_Subprogram_Localize;
-      New_Put       : in Access_Subprogram_Put;
-      New_Get_Line  : in Access_Subprogram_Get_Line;
-      New_Skip_Line : in Access_Subprogram_Skip_Line)
+      Line_Size : in Integer_4_Positive;
+      Localize  : in Access_Subprogram_Localize;
+      Put       : in Access_Subprogram_Put;
+      Get_Line  : in Access_Subprogram_Get_Line;
+      Skip_Line : in Access_Subprogram_Skip_Line)
       is
       begin
         Protected_Data.Set((
-          Line_Size => New_Line_Size,
-          Localize  => New_Localize,
-          Put       => New_Put,
-          Get_Line  => New_Get_Line,
-          Skip_Line => New_Skip_Line));
+          Line_Size => Line_Size,
+          Localize  => Localize,
+          Put       => Put,
+          Get_Line  => Get_Line,
+          Skip_Line => Skip_Line));
       end Set;
   -------------------
   -- Set_Line_Size --
   -------------------
     procedure Set_Line_Size(
-      New_Line_Size : in Integer_4_Positive)
+      Line_Size : in Integer_4_Positive)
       is
       Input_Output : Record_Input_Output := Protected_Data.Get;
       begin
         Protected_Data.Set((
-          Line_Size => New_Line_Size,
+          Line_Size => Line_Size,
           Localize  => Input_Output.Localize,
           Put       => Input_Output.Put,
           Get_Line  => Input_Output.Get_Line,
@@ -103,14 +103,14 @@ package body Neo.Foundation.Text_IO
   -- Set_Put --
   -------------
     procedure Set_Put(
-      New_Put : in Access_Subprogram_Put)
+      Put : in Access_Subprogram_Put)
       is
       Input_Output : Record_Input_Output := Protected_Data.Get;
       begin
         Protected_Data.Set((
           Line_Size => Input_Output.Line_Size,
           Localize  => Input_Output.Localize,
-          Put       => New_Put,
+          Put       => Put,
           Get_Line  => Input_Output.Get_Line,
           Skip_Line => Input_Output.Skip_Line));
       end Set_Put;
@@ -118,7 +118,7 @@ package body Neo.Foundation.Text_IO
   -- Set_Get_Line --
   ------------------
     procedure Set_Get_Line(
-      New_Get_Line : in Access_Subprogram_Get_Line)
+      Get_Line : in Access_Subprogram_Get_Line)
       is
       Input_Output : Record_Input_Output := Protected_Data.Get;
       begin
@@ -126,20 +126,20 @@ package body Neo.Foundation.Text_IO
           Line_Size => Input_Output.Line_Size,
           Localize  => Input_Output.Localize,
           Put       => Input_Output.Put,
-          Get_Line  => New_Get_Line,
+          Get_Line  => Get_Line,
           Skip_Line => Input_Output.Skip_Line));
       end Set_Get_Line;
   ------------------
   -- Set_Localize --
   ------------------
     procedure Set_Localize(
-      New_Localize : in Access_Subprogram_Localize)
+      Localize : in Access_Subprogram_Localize)
       is
       Input_Output : Record_Input_Output := Protected_Data.Get;
       begin
         Protected_Data.Set((
           Line_Size => Input_Output.Line_Size,
-          Localize  => New_Localize,
+          Localize  => Localize,
           Put       => Input_Output.Put,
           Get_Line  => Input_Output.Get_Line,
           Skip_Line => Input_Output.Skip_Line));
@@ -148,7 +148,7 @@ package body Neo.Foundation.Text_IO
   -- Set_Skip_Line --
   -------------------
     procedure Set_Skip_Line(
-      New_Skip_Line : in Access_Subprogram_Skip_Line)
+      Skip_Line : in Access_Subprogram_Skip_Line)
       is
       Input_Output : Record_Input_Output := Protected_Data.Get;
       begin
@@ -157,7 +157,7 @@ package body Neo.Foundation.Text_IO
           Localize  => Input_Output.Localize,
           Put       => Input_Output.Put,
           Get_Line  => Input_Output.Get_Line,
-          Skip_Line => New_Skip_Line));
+          Skip_Line => Skip_Line));
       end Set_Skip_Line;
   ---------
   -- Put --
@@ -273,3 +273,4 @@ package body Neo.Foundation.Text_IO
           end Remove_Notation;
       end Wide_Image;
   end Neo.Foundation.Text_IO;
+
