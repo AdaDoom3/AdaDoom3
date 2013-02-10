@@ -56,21 +56,21 @@ package Neo.Foundation.Text_IO
   -----------------
     procedure Test;
     procedure Set(
-      New_Line_Size : in Integer_4_Positive;
-      New_Localize  : in Access_Subprogram_Localize;
-      New_Put       : in Access_Subprogram_Put;
-      New_Get_Line  : in Access_Subprogram_Get_Line;
-      New_Skip_Line : in Access_Subprogram_Skip_Line);
+      Line_Size : in Integer_4_Positive;
+      Localize  : in Access_Subprogram_Localize;
+      Put       : in Access_Subprogram_Put;
+      Get_Line  : in Access_Subprogram_Get_Line;
+      Skip_Line : in Access_Subprogram_Skip_Line);
     procedure Set_Line_Size(
-      New_Line_Size : in Integer_4_Positive);
+      Line_Size : in Integer_4_Positive);
     procedure Set_Localize(
-      New_Localize : in Access_Subprogram_Localize);
+      Localize : in Access_Subprogram_Localize);
     procedure Set_Put(
-      New_Put : in Access_Subprogram_Put);
+      Put : in Access_Subprogram_Put);
     procedure Set_Get_Line(
-      New_Get_Line : in Access_Subprogram_Get_Line);
+      Get_Line : in Access_Subprogram_Get_Line);
     procedure Set_Skip_Line(
-      New_Skip_Line : in Access_Subprogram_Skip_Line);
+      Skip_Line : in Access_Subprogram_Skip_Line);
     procedure Put(
       Item        : in Character_2;
       Do_Localize : in Boolean := False);
@@ -132,3 +132,4 @@ private
   ---------------
     Protected_Data : Protected_Record_Input_Output.Data;
   end Neo.Foundation.Text_IO;
+
