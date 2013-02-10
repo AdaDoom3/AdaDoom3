@@ -96,14 +96,14 @@ package body Neo.Foundation.Data_Types
       return String_1_C
       is
       begin
-        return To_C("A");
+        return To_C(Item);
       end To_String_1_C;
     function To_String_1_C(
       Item : in String_2) 
       return String_1_C
       is
       begin
-        return To_C("A");
+        return To_C("");--To_String_1(Item));
       end To_String_1_C;
   -----------------
   -- To_String_1 --
@@ -199,38 +199,6 @@ package body Neo.Foundation.Data_Types
   ---------
   -- "=" --
   ---------
-    function "="(
-      Left  : in Character_1;
-      Right : in Character_2)
-      return Boolean
-      is
-      begin
-        return Character_2'Val(Character_1'Pos(Left)) = Right;
-      end "=";
-    function "="(
-      Left  : in Character_2;
-      Right : in Character_1)
-      return Boolean
-      is
-      begin
-        return Right = Left;
-      end "=";
-    function "="(
-      Left  : in String_1;
-      Right : in String_2)
-      return Boolean
-      is
-      begin
-        return To_String_2(Left) = Right;
-      end "=";
-    function "="(
-      Left  : in String_2;
-      Right : in String_1)
-      return Boolean
-      is
-      begin
-        return Right = Left;
-      end "=";
     function "="(
       Left  : in Character_1;
       Right : in String_1)
@@ -330,198 +298,198 @@ package body Neo.Foundation.Data_Types
       begin
         return "";
       end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_1)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_1)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_2)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_1)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_1)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_2)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_2)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_2)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in String_2)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in String_1)
-      return String_1
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_2;
-      Right : in String_2)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
-    function "&"(
-      Left  : in String_1;
-      Right : in String_1)
-      return String_2
-      is
-      begin
-        return "";
-      end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_1)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_1)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_2)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_1)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_1)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_2)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_2)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_2)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- -- function "&"(
+    -- --   Left  : in String_2;
+    -- --   Right : in String_2)
+    -- --   return String_1
+    -- --   is
+    -- --   begin
+    -- --     return "";
+    -- --   end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in String_1)
+    --   return String_1
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in Character_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in Character_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in Character_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- -- function "&"(
+    -- --   Left  : in Character_2;
+    -- --   Right : in Character_2)
+    -- --   return String_2
+    -- --   is
+    -- --   begin
+    -- --     return "";
+    -- --   end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in String_2)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in String_1)
+    --   return String_2
+    --   is
+    --   begin
+    --     return "";
+    --   end "&";
   -------------
   -- To_Bits --
   -------------
@@ -539,3 +507,4 @@ package body Neo.Foundation.Data_Types
     --   Minimum_Bits : Integer_4_Unsigned := Shift_Left(Shift_Left(1, Exponent_Bits)     - 2, Mantissa_Bits) or 1;
     --   begin
   end Neo.Foundation.Data_Types;
+  
