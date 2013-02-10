@@ -13,11 +13,12 @@
 --
 --
 --
---                                                                                                                      
+--
 with
   System,
   Interfaces,
   Interfaces.C,
+  Ada.Text_IO,
   Ada.Strings.Fixed,
   Ada.Strings.Wide_Fixed,
   Ada.Unchecked_Conversion,
@@ -510,22 +511,6 @@ package Neo.Foundation.Data_Types
       renames Is_Low_Order_Byte_First;
     function "="(
       Left  : in Character_1;
-      Right : in Character_2)
-      return Boolean;
-    function "="(
-      Left  : in Character_2;
-      Right : in Character_1)
-      return Boolean;
-    function "="(
-      Left  : in String_1;
-      Right : in String_2)
-      return Boolean;
-    function "="(
-      Left  : in String_2;
-      Right : in String_1)
-      return Boolean;
-    function "="(
-      Left  : in Character_1;
       Right : in String_1)
       return Boolean
       with
@@ -578,98 +563,98 @@ package Neo.Foundation.Data_Types
       Left  : in Character_2;
       Right : in Character_2)
       return String_1;
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_1)
-      return String_1;
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_1)
-      return String_1;
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_2)
-      return String_1;
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_1)
-      return String_1;
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_1)
-      return String_1;
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_2)
-      return String_1;
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_2)
-      return String_1;
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_2)
-      return String_1;
-    function "&"(
-      Left  : in String_2;
-      Right : in String_2)
-      return String_1;
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_1)
-      return String_2;
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_2)
-      return String_2;
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_1)
-      return String_2;
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_2)
-      return String_2;
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_1)
-      return String_2;
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_1)
-      return String_2;
-    function "&"(
-      Left  : in String_1;
-      Right : in Character_2)
-      return String_2;
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_1)
-      return String_2;
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_1)
-      return String_2;
-    function "&"(
-      Left  : in Character_1;
-      Right : in String_2)
-      return String_2;
-    function "&"(
-      Left  : in String_2;
-      Right : in Character_2)
-      return String_2;
-    function "&"(
-      Left  : in Character_2;
-      Right : in String_2)
-      return String_2;
-    function "&"(
-      Left  : in String_2;
-      Right : in String_2)
-      return String_2;
-    function "&"(
-      Left  : in String_1;
-      Right : in String_1)
-      return String_2;
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_1)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_1)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_2)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_1)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_1)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_2)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_2)
+    --   return String_1;
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_2)
+    --   return String_1;
+    -- -- function "&"(
+    -- --   Left  : in String_2;
+    -- --   Right : in String_2)
+    -- --   return String_1;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in Character_1)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in Character_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in Character_1)
+    --   return String_2;
+    -- -- function "&"(
+    -- --   Left  : in Character_2;
+    -- --   Right : in Character_2)
+    -- --   return String_2;
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_1)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_1)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in Character_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_1)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_1)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_1;
+    --   Right : in String_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in Character_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in Character_2;
+    --   Right : in String_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in String_2;
+    --   Right : in String_2)
+    --   return String_2;
+    -- function "&"(
+    --   Left  : in String_1;
+    --   Right : in String_1)
+    --   return String_2;
 -------
 private
 -------
@@ -698,4 +683,3 @@ private
   ---------------
     DOES_MACHINE_ORDER_LOW_BYTE_FIRST : constant Boolean := Endian_Test.Unsplit = 1;
   end Neo.Foundation.Data_Types;
-
