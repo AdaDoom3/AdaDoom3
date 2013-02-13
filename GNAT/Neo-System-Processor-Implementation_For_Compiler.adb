@@ -4,9 +4,9 @@
 --
 --
 --
---
--- The -g compile flag must be used to include debug information. Otherwise, only
--- addresses are printed with no file/subprogram/line information in the procedure Put_Trace.
+-- 
+-- Put_Trace will only print addresses with no file/subprogram/line information if The -g flag
+-- is not used at compile time.
 --
 --
 --
