@@ -16,69 +16,71 @@
 --
 package body Neo.System
   is
+  --------------------
+  -- Implementation --
+  --------------------
+    package body Implementation
+      is separate;
   ----------
   -- Test --
   ----------
     procedure Test
       is
       begin
-        Display_Title("SYSTEM TEST");
-        Put;
+        Put_Title("SYSTEM TEST");
+        Put_Line("Language " & Enumerated_Language'Wide_Image(Get_Language));
+        Put_Line("Version "  & Enumerated_Operating_System'Wide_Image(Get_Operating_System));
+        Put_Line("Username """ & Get_Username & """");
+        Open_Webpage("http://www.google.com");
+        Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
+        Put_Line("Newer than Windows XP is " & Boolean'Wide_Image(Is_Newer_Than(Windows_2_5_1_System)));
         Hang_Window;
       end Test;
-  ---------
-  -- Put --
-  ---------
-    procedure Put
-      is
-      System : Record_System := Get;
-      begin
-        Put_Line("Username: " & System.Username.All);
-        Put_Line("Version: "  & System.Version'Image);
-        Put_Line("Language: " & System.Language'Image);
-      end Put;
-  ---------
-  -- Get --
-  ---------
-    function Get
-      return Record_System
-      renames Implementation.Get;
+  ------------------
+  -- Get_Language --
+  ------------------
+    function Get_Language
+      return Enumerated_Language
+      renames Implementation.Get_Language;
+  --------------------------
+  -- Get_Operating_System --
+  --------------------------
+    function Get_Operating_System
+      return Enumerated_Operating_System
+      renames Implementation.Get_Operating_System;
+  ------------------
+  -- Get_Username --
+  ------------------
+    function Get_Username
+      return String_2
+      renames Implementation.Get_Username;
   ------------------
   -- Open_Webpage --
   ------------------
     procedure Open_Webpage(
       Path : in String_2)
       renames Implementation.Open_Webpage;
-  -------------
-  -- Process --
-  -------------
-    procedure Process(
+  -------------------------
+  -- Execute_Application --
+  -------------------------
+    procedure Execute_Application(
       Do_Quit         : in Boolean;
       Executable_Path : in String_2)
-      renames Implementation.Process;
+      renames Implementation.Execute_Application;
   -------------------
   -- Is_Newer_Than --
   -------------------
     function Is_Newer_Than(
-      Version : in Enumerated_Operating_System_Version)
+      Operating_System : in Enumerated_Operating_System)
       return Boolean
       is
+      Current_System : Enumerated_Operating_System := Get_Operating_System;
       begin
-        
-      end Is_Newer_Than;
-    function Is_Newer_Than(
-      Possible_Version : in String_2)
-      return Boolean
-      is
-      begin
-        for Version in Enumerated_Operating_System_Version loop
-          if Version'Image = Possible_Version then
-            exit;
-          end if;
-          if Version = Enumerated_Operating_System_Version'Last loop
-            raise Invalid_Compatibility_Check;
-          end loop;
-        end loop;
-        return Is_Newer_Than(Version);
+        -- if Operating_System in Enumerated_Linux_System'Range then
+        -- elsif Operating_System in Enumerated_Windows_System'Range then
+        -- elsif Operating_System in Enumerated_Macintosh_System'Range then
+
+        -- end if;
+        return False;
       end Is_Newer_Than;
   end Neo.System;
