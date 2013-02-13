@@ -15,8 +15,16 @@
 --
 --
 with
+  System,
+  Interfaces.C,
+  Ada.Strings,
+  Ada.Strings.Wide_Fixed,
   Neo.Windows;
 use
+  System,
+  Interfaces.C,
+  Ada.Strings,
+  Ada.Strings.Wide_Fixed,
   Neo.Windows;
 separate(Neo.System)
 package body Implementation
