@@ -19,6 +19,7 @@ with
   Ada.Text_IO,
   Ada.Wide_Text_IO,
   Ada.Strings.Fixed,
+  Ada.Unchecked_Conversion,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Generic_Protected;
 use
@@ -55,7 +56,7 @@ package Neo.Foundation.Text_IO
   -- Subprograms --
   -----------------
     procedure Test;
-    procedure Set(
+    procedure Set_Data(
       Line_Size : in Integer_4_Positive;
       Localize  : in Access_Subprogram_Localize;
       Put       : in Access_Subprogram_Put;
@@ -91,8 +92,11 @@ package Neo.Foundation.Text_IO
       Spacing : in Integer_4_Positive := 1);
     procedure New_Line(
       Lines : in Integer_4_Positive := 1);
-    function Wide_Image(
-      Item : in Integer_8_Unsigned;
+    generic -- TODO Add spacing
+      type Type_Number
+        is mod <>;
+    function To_Radian_Image(
+      Item : in Type_Number;
       Base : in Integer_Base)
       return String_2;
 -------
@@ -103,12 +107,6 @@ private
   ---------------
     WIDE_IMAGE_BUFFER_SIZE : constant Integer_4_Positive := 256;
     DEFAULT_LINE_SIZE      : constant Integer_4_Positive := 80;
-  -----------------
-  -- Subprograms --
-  -----------------
-    function Dummy_Localize(
-      Item : in String_2)
-      return String_2;
   -------------
   -- Records --
   -------------
@@ -125,13 +123,10 @@ private
   --------------
     package Protected_Record_Input_Output
       is new Neo.Foundation.Generic_Protected(Record_Input_Output);
-    package Integer_8_Unsigned_Text_IO
-      is new Ada.Text_IO.Modular_IO(Integer_8_Unsigned);
   ---------------
   -- Variables --
   ---------------
     Protected_Data : Protected_Record_Input_Output.Data;
   end Neo.Foundation.Text_IO;
-
 
 
