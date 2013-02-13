@@ -72,11 +72,11 @@ package body Neo.System.Processor
         Put_Line("Sleep...");
         delay 1.0;
         Put_Line("Clock ticks: "          & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
-        Put_Line("Number of Extensionss:" & Integer_8_Unsigned'Wide_Image(Get_Number_Of_Cores));
+        Put_Line("Number of cores:" & Integer_8_Unsigned'Wide_Image(Get_Number_Of_Cores));
         Put_Line("Speed in megahertz:"    & Integer_8_Unsigned'Wide_Image(Get_Speed_In_Megahertz));
         case Get_Vendor is
           when Apple_IBM_Motorola_Vendor =>
-            Put_Line("A PowerPC processor was detected for some reason, are you using a debugger?");
+            raise System_Call_Failure;
           when Generic_Vendor =>
             Put_Line("Unrecognized CPU, but apperently x86-64");
           when Advanced_Micro_Devices_Vendor =>
