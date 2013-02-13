@@ -5,7 +5,7 @@
 --
 --
 -- 
--- Put_Trace will only print addresses with no file/subprogram/line information if The -g flag
+-- Put_Trace will not print file/subprogram/line information if the -g flag
 -- is not used at compile time.
 --
 --
@@ -16,10 +16,12 @@
 -- 
 with
   GNAT.Traceback,
-  GNAT.Traceback.Symbolic;
+  GNAT.Traceback.Symbolic,
+  Ada.Strings.Wide_Fixed;
 use
   GNAT.Traceback,
-  GNAT.Traceback.Symbolic;
+  GNAT.Traceback.Symbolic,
+  Ada.Strings.Wide_Fixed;
 separate(Neo.System.Processor)
 package body Implementation_For_Compiler
   is
