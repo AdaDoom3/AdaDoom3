@@ -17,6 +17,10 @@
 separate(Neo.System.Processor)
 package body Implementation_For_Architecture
   is
+  ----------------
+  -- Exceptions --
+  ----------------
+    CPUID_Is_Not_Supported : Exception;
   -------------
   -- Numbers --
   -------------
@@ -118,93 +122,118 @@ package body Implementation_For_Architecture
     INTEL_CPU_COUNT                  : constant Record_Value       := (16#0000_0001#, EBX_Register, 16, 23);
     INTEL_APIC                       : constant Record_Value       := (16#0000_0001#, EBX_Register, 24, 31);
     PROLOGUE_SIGNATURE               : constant Integer_4_Unsigned := 16#00EC_8B55#;
+  -------------------
+  -- Execute_CPUID --
+  -------------------
+    function Execute_CPUID(
+      Function_ID : in Integer_4_Unsigned;
+      Register    : in Enumerated_Register)
+      return Integer_4_Unsigned
+      is
+      A, B, C, D : Integer_4_Unsigned := 0;
+      begin
+        Asm(
+          Template => "cpuid",
+          Volatile => True,
+          Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, Function_ID),
+          Outputs  =>(
+            Integer_4_Unsigned'Asm_Output(FROM_EAX, A),
+            Integer_4_Unsigned'Asm_Output(FROM_EBX, B),
+            Integer_4_Unsigned'Asm_Output(FROM_ECX, C),
+            Integer_4_Unsigned'Asm_Output(FROM_EDX, D)));
+        case Register is
+          when EAX_Register =>
+            return A;
+          when EBX_Register =>
+            return B;
+          when ECX_Register =>
+            return C;
+          when EDX_Register =>
+            return D;
+        end case;
+      end Execute_CPUID;
+  ----------------
+  -- Is_Enabled --
+  ----------------
+    function Is_Enabled(
+      Feature : in Record_Feature)
+      return Boolean
+      is
+      begin
+        return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
+      end Is_Enabled;
+  ---------------
+  -- Get_Value --
+  ---------------
+    function Get_Value(
+      Value : in Record_Value)
+      return Integer_8_Unsigned
+      is
+      begin
+        return
+          Integer_8_Unsigned(
+            Shift_Right(
+              Shift_Left(
+                Value  => Execute_CPUID(Value.Function_ID, Value.Register),
+                Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
+              Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
+      end Get_Value;
+  ----------------
+  -- Get_Vendor --
+  ----------------
+    function Get_Vendor
+      return Enumerated_Vendor
+      is
+      type Array_String_Segment
+        is array (1..4) of Character;
+      B, D, C : Array_String_Segment := (others => Ascii.Nul);
+      begin
+        Asm(
+          Template => "cpuid",
+          Volatile => True,
+          Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, 0),
+          Outputs  =>(
+            Array_String_Segment'Asm_Output(FROM_EBX, B),
+            Array_String_Segment'Asm_Output(FROM_ECX, C),
+            Array_String_Segment'Asm_Output(FROM_EDX, D)));
+        if String_1(B) & String_1(D) & String_1(C) = VENDOR_INTEL then
+          return Intel_Vendor;
+        end if;
+        return Advanced_Micro_Devices_Vendor;
+      end Get_Vendor;
+  -------------------------
+  -- Get_Number_Of_Cores --
+  -------------------------
+    function Get_Number_Of_Cores
+      return Integer_8_Unsigned
+      is
+      begin
+        if Get_Vendor = Intel_Vendor then
+          return Get_Value(INTEL_CPU_COUNT); -- Inaccurate
+        end if;
+        return Get_Value(AMD_CPU_COUNT) + 1;
+      end Get_Number_Of_Cores;
+  ----------------------------
+  -- Get_Speed_In_Megahertz --
+  ----------------------------
+    function Get_Speed_In_Megahertz
+      return Integer_8_Unsigned
+      is
+      Start : Integer_8_Unsigned := 0;
+      begin
+        Start := Get_Clock_Ticks;
+        delay 1.0;
+        return Get_Clock_Ticks - Start;
+      end Get_Speed_In_Megahertz;
   ----------------
   -- Initialize --
   ----------------
-    function Initialize
-      return Record_Processor
+    procedure Initialize
       is
-      -----------------------
-      function Execute_CPUID(
-      -----------------------
-        Function_ID : in Integer_4_Unsigned;
-        Register    : in Enumerated_Register)
-        return Integer_4_Unsigned
-        is
-        A, B, C, D : Integer_4_Unsigned := 0;
-        begin
-          Asm(
-            Template => "cpuid",
-            Volatile => True,
-            Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, Function_ID),
-            Outputs  =>(
-              Integer_4_Unsigned'Asm_Output(FROM_EAX, A),
-              Integer_4_Unsigned'Asm_Output(FROM_EBX, B),
-              Integer_4_Unsigned'Asm_Output(FROM_ECX, C),
-              Integer_4_Unsigned'Asm_Output(FROM_EDX, D)));
-          case Register is
-            when EAX_Register =>
-              return A;
-            when EBX_Register =>
-              return B;
-            when ECX_Register =>
-              return C;
-            when EDX_Register =>
-              return D;
-          end case;
-        end Execute_CPUID;
-      -----------------------
-      function Check_Feature(
-      -----------------------
-        Feature : in Record_Feature)
-        return Integer_4_Unsigned
-        is
-        begin
-          return(Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
-        end Check_Feature;
-      ---------------------
-      function Check_Value(
-      ---------------------
-        Feature : in Record_Value)
-        return Boolean
-        with Pre => Feature.End_Bit > Feature.Start_Bit;
-        is
-        begin
-          return
-            Integer(
-              Shift_Right(
-                Shift_Left(
-                  Value  => Execute_CPUID(Value.Function_ID, Value.Register),
-                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
-                Integer(Integer_Bit_Field_Element'Last - Value.End_Bit - Value.Start_Bit)));
-        end Check_Value;
-      -------------------
-      function Get_Vendor
-      -------------------
-        return String_1
-        is
-        type Array_String_Segment
-          is array (1..4) of Character;
-        B, D, C : Array_String_Segment := (others => Ascii.Nul);
-        begin
-          Asm(
-            Template => "cpuid",
-            Volatile => True,
-            Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, 0),
-            Outputs  =>(
-              Array_String_Segment'Asm_Output(FROM_EBX, B),
-              Array_String_Segment'Asm_Output(FROM_ECX, C),
-              Array_String_Segment'Asm_Output(FROM_EDX, D)));
-          return String_1(B) & String_1(D) & String_1(C);
-        end Get_Vendor;
-      Processor : Record_Processor   := <>;
-      Data      : Integer_4_Unsigned := 0;
-      Did_Fail  : Boolean            := False;
-      -----
+      Data : aliased Integer_4_Unsigned := 0;
       begin
-      -----
         if not USE_64_BIT then
-          Asm(
+          Asm( -- Check for cpuid
             --------------------------------------------
             "   pushfl                    " & END_LINE &
             "   popl   %%eax              " & END_LINE &
@@ -240,162 +269,79 @@ package body Implementation_For_Architecture
             --------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
+          if Data = 0 then
+            raise CPUID_Is_Not_Supported;
+          end if;
         end if;
-        if USE_64_BIT or Data /= 0 then
-          ---------------------
-          Find_Processor_Speed:
-          ---------------------
-            declare
-            begin
-              Processor.Speed_In_Megahertz := Get_Speed_In_Megahertz;
-            exception
-              when System_Call_Failure =>
-                ---------------
-                Time_Processor:
-                ---------------
-                  declare
-                  Start : Integer_8_Unsigned := 0;
-                  begin
-                    Start := Get_Clock_Ticks;
-                    Sleep(1_000);
-                    Processor.Speed_In_Megahertz := (Get_Clock_Ticks - Start) / 1_000;
-                  end Time_Processor;
-            end Find_Processor_Speed;
-          end if;
+        if Is_Enabled(INTEL_FXSR) then
           --------------------------
-          Find_Number_Of_Processors:
+          Enable_Denormals_Are_Zero:
           --------------------------
             declare
+            type Array_Save_Area
+              is array (1..512)
+              of Integer_1_Unsigned;
+              for Array_Save_Area'Alignment use 16;
+            Save_Area : aliased Array_Save_Area := (others => 0);
             begin
-              Processor.Number_Of_Processors := Get_Number_Of_Processors;
-            exception
-              when System_Call_Failure =>
-                Did_Fail := True;
-            end Find_Number_Of_Processors;
-          if Get_Vendor = VENDOR_ADVANCED_MICRO_DEVICES then
-            Processor.Vendor                                     := Advanced_Micro_Devices_Vendor;
-            Processor.Has_3DNow                                  := Check_Feature(AMD_3DNOW);
-            Processor.Has_3DNow_Supplement                       := Check_Feature(AMD_3DNOW_PLUS);
-            Processor.Has_Multi_Media_Extensions_Supplement      := Check_Feature(AMD_MMX_PLUS);
-            Processor.Has_Streaming_SIMD_Extensions_4_Supplement := Check_Feature(AMD_SSE4_A);
-            if Did_Fail then
-              Processor.Number_Of_Processors := Check_Value(AMD_CPU_COUNT) + 1;
-            end if;
-          else
-            Processor.Vendor := Intel_Vendor;
-            if Did_Fail then
-              Processor.Number_Of_Processors := Check_Value(INTEL_CPU_COUNT); -- Inaccurate
-            end if;
-          end if;
-          Processor.Has_Leading_Zero_Count                     := Check_Feature(AMD_ABM);
-          Processor.Has_Extended_Operation_Support             := Check_Feature(AMD_XOP);
-          Processor.Has_High_Precision_Convert                 := Check_Feature(AMD_CVT16);
-          Processor.Has_Fused_Multiply_Add_4                   := Check_Feature(AMD_FMA4);
-          Processor.Has_Fused_Multiply_Add_3                   := Check_Feature(INTEL_FMA3);
-          Processor.Has_Population_Count                       := Check_Feature(INTEL_POPCNT);
-          Processor.Has_Processor_Extended_States_Enabled      := Check_Feature(INTEL_OSXSAVE);
-          Processor.Has_Multi_Media_Extensions                 := Check_Feature(INTEL_MMX);
-          Processor.Has_Streaming_SIMD_Extensions_1            := Check_Feature(INTEL_SSE);
-          Processor.Has_Streaming_SIMD_Extensions_2            := Check_Feature(INTEL_SSE2);
-          Processor.Has_Streaming_SIMD_Extensions_3            := Check_Feature(INTEL_SSE3);
-          Processor.Has_Streaming_SIMD_Extensions_3_Supplement := Check_Feature(INTEL_SSSE3);
-          Processor.Has_Streaming_SIMD_Extensions_4_1          := Check_Feature(INTEL_SSE4_1);
-          Processor.Has_Streaming_SIMD_Extensions_4_2          := Check_Feature(INTEL_SSE4_2);
-          Processor.Has_Carryless_Multiplication_Of_Two_64_Bit := Check_Feature(INTEL_PCLMULQDQ);
-          Processor.Has_Bit_Manipulation_Extensions_1          := Check_Feature(INTEL_BMI1);
-          Processor.Has_Bit_Manipulation_Extensions_2          := Check_Feature(INTEL_BMI2);
-          Processor.Has_Advanced_Vector_Extensions_1           := Check_Feature(INTEL_AVX);
-          Processor.Has_Advanced_Vector_Extensions_2           := Check_Feature(INTEL_AVX2);
-          Processor.Has_Advanced_Encryption_Service            := Check_Feature(INTEL_AES);
-          Processor.Has_Half_Precision_Floating_Point_Convert  := Check_Feature(INTEL_F16C);
-          Processor.Has_Conditional_Move                       := Check_Feature(INTEL_CMOV);
-          Processor.Has_Hyperthreading                         := Check_Feature(INTEL_HTT);
-          Processor.Has_Advanced_State_Operations              := Check_Feature(INTEL_FXSR);
-          if
-          Processor.Has_Streaming_SIMD_Extensions_4_2 and then(
-          Get_Operating_System_Version = Mach__Version or
-          Get_Operating_System_Version = Windows_2_6_1_Version or
-          Get_Operating_System_Version = Linux_2_7_Version)
-          then
-            Asm(
-              Template => "xgetbv",
-              Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),
-              Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data),
-              Volatile => True);
-            Processor.Has_Advanced_Vector_Extensions_Enabled := (Data and 16#0000_0006#) /= 16#0000_0006#;
-          end if;
-          if Processor.Has_Advanced_State_Operations then
-            --------------------------
-            Enable_Denormals_Are_Zero:
-            --------------------------
-              declare
-              type Array_Save_Area
-                is array (1..512)
-                of Integer_1_Unsigned;
-                for Array_Save_Area'Alignment use 16;
-              Save_Area : aliased Array_Save_Area := (others => 0);
-              begin
+              Asm(
+                ----------------------------------------
+                " fxsave (%%eax)          " & END_LINE &
+                " movl   28(%%eax), %%ebx " & END_LINE ,
+                ----------------------------------------
+                Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
+                Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data),
+                Volatile => True);
+              if (Data and 16#20#) /= 0 then
                 Asm(
-                  ----------------------------------------
-                  " fxsave (%%eax)          " & END_LINE &
-                  " movl   28(%%eax), %%ebx " & END_LINE ,
-                  ----------------------------------------
-                  Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
-                  Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data),
+                  -----------------------------------------
+                  " stmxcsr (%%eax)          " & END_LINE &
+                  " movl    (%%eax), %%ebx   " & END_LINE &
+                  " or      $0x40,   %%bx    " & END_LINE &
+                  " movl    %%ebx,   (%%eax) " & END_LINE &
+                  " ldmxcsr (%%eax)          " & END_LINE ,
+                  -----------------------------------------
+                  Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
                   Volatile => True);
-                if (Data and 16#20#) /= 0 then
-                  Asm(
-                    -----------------------------------------
-                    " stmxcsr (%%eax)          " & END_LINE &
-                    " movl    (%%eax), %%ebx   " & END_LINE &
-                    " or      $0x40,   %%bx    " & END_LINE &
-                    " movl    %%ebx,   (%%eax) " & END_LINE &
-                    " ldmxcsr (%%eax)          " & END_LINE ,
-                    -----------------------------------------
-                    Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-                    Volatile => True);
-                  Processor.Has_Denormals_Are_Zero := True;
-                end if;
-              end Enable_Denormals_Are_Zero;
-            Asm(
-              -----------------------------------------
-              " stmxcsr (%%eax)          " & END_LINE &
-              " movl    (%%eax), %%ebx   " & END_LINE &
-              " or      $0x8000, %%ebx   " & END_LINE &
-              " movl    %%ebx,   (%%eax) " & END_LINE &
-              " ldmxcsr (%%eax)          " & END_LINE ,
-              -----------------------------------------
-              Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-              Volatile => True);
-            Processor.Has_Flush_To_Zero := True;
-          end if;
+              end if;
+            end Enable_Denormals_Are_Zero;
+          Asm(
+            -----------------------------------------
+            " stmxcsr (%%eax)          " & END_LINE &
+            " movl    (%%eax), %%ebx   " & END_LINE &
+            " or      $0x8000, %%ebx   " & END_LINE &
+            " movl    %%ebx,   (%%eax) " & END_LINE &
+            " ldmxcsr (%%eax)          " & END_LINE ,
+            -----------------------------------------
+            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+            Volatile => True);
         end if;
         ---------------
         Set_Exceptions:
         ---------------
           declare
-          Other_Data     : aliased Integer_2_Unsigned := 0;
           Exception_Mask :         Integer_4_Unsigned := 0;
+          Other_Data     : aliased Integer_2_Unsigned := 0;
           begin
             if not DO_CRASH_ON_INEXACT_RESULT then
-              Exception_Mask := Exception_Mask or 16#1000#;
+              Exception_Mask := 16#0000_1000#;
             end if;
             if not DO_CRASH_ON_NUMERIC_UNDERFLOW then
-              Exception_Mask := Exception_Mask or 16#0800#;
+              Exception_Mask := Exception_Mask or 16#0000_0800#;
             end if;
             if NOT DO_CRASH_ON_NUMERIC_OVERFLOW then
-              Exception_Mask := Exception_Mask or 16#0400#;
+              Exception_Mask := Exception_Mask or 16#0000_0400#;
             end if;
             if not DO_CRASH_ON_DIVIDE_BY_ZERO then
-              Exception_Mask := Exception_Mask or 16#0200#;
+              Exception_Mask := Exception_Mask or 16#0000_0200#;
             end if;
             if not DO_CRASH_ON_DENORMALIZED_OPERAND then
-              Exception_Mask := Exception_Mask or 16#0100#;
+              Exception_Mask := Exception_Mask or 16#0000_0100#;
             end if;
             if not DO_CRASH_ON_INVALID_OPERATION then
-              Exception_Mask := Exception_Mask or 16#0080#;
+              Exception_Mask := Exception_Mask or 16#0000_0080#;
             end if;
-            if Processor.Has_Advanced_State_Operations then
+            if Is_Enabled(INTEL_FXSR) then
               Asm(
                 ---------------------------------------------
                 " stmxcsr (%%eax)              " & END_LINE &
@@ -425,37 +371,89 @@ package body Implementation_For_Architecture
                 Address           'Asm_Input(TO_EAX, Other_Data'Address),
                 Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)));
           end Set_Exceptions;
-        return Processor;
       end Initialize;
+  --------------------
+  -- Get_Extensions --
+  --------------------
+    function Get_Extensions
+      return Record_Extensions
+      is
+      Extensions :         Record_Extensions  := (others => <>);
+      Data       : aliased Integer_4_Unsigned := 0;
+      begin
+        if Get_Vendor = Advanced_Micro_Devices_Vendor then
+          Extensions.Has_3DNow                                  := Is_Enabled(AMD_3DNOW);
+          Extensions.Has_3DNow_Supplement                       := Is_Enabled(AMD_3DNOW_PLUS);
+          Extensions.Has_Multi_Media_Extensions_Supplement      := Is_Enabled(AMD_MMX_PLUS);
+          Extensions.Has_Streaming_SIMD_Extensions_4_Supplement := Is_Enabled(AMD_SSE4_A);
+        end if;
+        Extensions.Has_Extended_States_Enabled                := Is_Enabled(INTEL_OSXSAVE);
+        Extensions.Has_Population_Count                       := Is_Enabled(INTEL_POPCNT);
+        Extensions.Has_Multi_Media_Extensions                 := Is_Enabled(INTEL_MMX);
+        Extensions.Has_Streaming_SIMD_Extensions_1            := Is_Enabled(INTEL_SSE);
+        Extensions.Has_Streaming_SIMD_Extensions_2            := Is_Enabled(INTEL_SSE2);
+        Extensions.Has_Streaming_SIMD_Extensions_3            := Is_Enabled(INTEL_SSE3);
+        Extensions.Has_Streaming_SIMD_Extensions_3_Supplement := Is_Enabled(INTEL_SSSE3);
+        Extensions.Has_Streaming_SIMD_Extensions_4_1          := Is_Enabled(INTEL_SSE4_1);
+        Extensions.Has_Streaming_SIMD_Extensions_4_2          := Is_Enabled(INTEL_SSE4_2);
+        Extensions.Has_Carryless_Multiplication_Of_Two_64_Bit := Is_Enabled(INTEL_PCLMULQDQ);
+        Extensions.Has_Bit_Manipulation_Extensions_1          := Is_Enabled(INTEL_BMI1);
+        Extensions.Has_Bit_Manipulation_Extensions_2          := Is_Enabled(INTEL_BMI2);
+        Extensions.Has_Advanced_Vector_Extensions_1           := Is_Enabled(INTEL_AVX);
+        Extensions.Has_Advanced_Vector_Extensions_2           := Is_Enabled(INTEL_AVX2);
+        Extensions.Has_Advanced_Encryption_Service            := Is_Enabled(INTEL_AES);
+        Extensions.Has_Half_Precision_Floating_Point_Convert  := Is_Enabled(INTEL_F16C);
+        Extensions.Has_Conditional_Move                       := Is_Enabled(INTEL_CMOV);
+        Extensions.Has_Hyperthreading                         := Is_Enabled(INTEL_HTT);
+        Extensions.Has_Advanced_State_Operations              := Is_Enabled(INTEL_FXSR);
+        Extensions.Has_Fused_Multiply_Add_3                   := Is_Enabled(INTEL_FMA3);
+        Extensions.Has_Fused_Multiply_Add_4                   := Is_Enabled(AMD_FMA4);
+        Extensions.Has_High_Precision_Convert                 := Is_Enabled(AMD_CVT16);
+        Extensions.Has_Extended_Operation_Support             := Is_Enabled(AMD_XOP);
+        Extensions.Has_Leading_Zero_Count                     := Is_Enabled(AMD_ABM);
+        if
+        Extensions.Has_Streaming_SIMD_Extensions_4_2 and then(
+        Get_Operating_System = Macintosh_10_6_System or
+        Get_Operating_System = Windows_2_6_1_System  or
+        Get_Operating_System = Linux_2_7_System)
+        then
+          Asm(
+            Template => "xgetbv",
+            Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),
+            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data),
+            Volatile => True);
+          Extensions.Has_Advanced_Vector_Extensions_Enabled := (Data and 16#0000_0006#) /= 16#0000_0006#;
+        end if;
+        return Extensions;
+      end Get_Extensions;
   ----------------------
   -- Check_Exceptions --
   ----------------------
-    procedure Check_Exceptions(
-      Processor : in Record_Processor)
+    procedure Check_Exceptions
       is
       Data          : Integer_4_Unsigned := 0;
       Data_From_x87 : Integer_2_Unsigned := 0;
       begin
-        if Processor.Has_Advanced_State_Operations then
+        if Is_Enabled(INTEL_FXSR) then
           Asm(
             Template => "stmxcsr (%%eax)",
-            Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(Data'Address)),
+            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
             Volatile => True);
         end if;
         Asm(
           Template => "fnstsw (%%eax)",
-          Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(Data_From_x87'Address)),
+          Inputs   => Address'Asm_Input(TO_EAX, Data_From_x87'Address),
           Volatile => True);
-        Data := (Data and 16#3F#) and Integer_4_Unsigned(Data_From_x87);
+        Data := (Data and 16#0000_003F#) and Integer_4_Unsigned(Data_From_x87);
         if Data /= 0 then -- Raise the first error found
           ---------------------
           Clear_Exception_Bits:
           ---------------------
             declare
-            Data_From_SIMD  : Integer_4_Unsigned     := 0;
-            x86_Environment : Record_x86_Environment := <>;
+            Data_From_SIMD  :         Integer_4_Unsigned     := 0;
+            x86_Environment : aliased Record_x86_Environment := (others => <>);
             begin
-              if Processor.Has_Advanced_State_Operations then
+              if Is_Enabled(INTEL_FXSR) then
                 Asm(
                   ---------------------------------------------
                   " stmxcsr (%%eax)              " & END_LINE &
@@ -470,35 +468,35 @@ package body Implementation_For_Architecture
               Asm(
                 Template => "fnstenv (%%eax)",
                 Volatile => True,
-                Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(x86_Environment'Address)));
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
               x86_Environment.Status_Word := x86_Environment.Status_Word and 16#FF80#; -- Clear 6 exception bits plus stack fault
               Asm(
                 Template => "fldenv (%%eax)",
                 Volatile => True,
-                Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(x86_Environment'Address)));
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
               Asm(
                 Template => "fnclex",
                 Volatile => True); 
             end Clear_Exception_Bits;
-          if (Data and 16#01#) /= 0 then
+          if (Data and 16#0000_0001#) /= 0 then
             raise Invalid_Operation;
           end if;
-          if (Data and 16#02#) /= 0 then
+          if (Data and 16#0000_0002#) /= 0 then
             raise Denormalized_Operand;
           end if;
-          if (Data and 16#04#) /= 0 then
+          if (Data and 16#0000_0004#) /= 0 then
             raise Divide_By_Zero;
           end if;
-          if (Data and 16#08#) /= 0 then
+          if (Data and 16#0000_0008#) /= 0 then
             raise Numeric_Overflow;
           end if;
-          if (Data and 16#10#) /= 0 then
+          if (Data and 16#0000_0010#) /= 0 then
             raise Numeric_Underflow;
           end if;
-          if (Data and 16#20#) /= 0 then
+          if (Data and 16#0000_0020#) /= 0 then
             raise Inexact_Result;
           end if;
-          if (Data and 16#40#) /= 0 then
+          if (Data and 16#0000_0040#) /= 0 then
             raise Stack_Fault;
           end if;
         end if;
@@ -506,14 +504,12 @@ package body Implementation_For_Architecture
   ------------------
   -- Set_Rounding --
   ------------------
-    function Set_Rounding(
-      Processor : in out Record_Processor;
-      Rounding  : in     Enumerated_Rounding)
-      return Record_Processor
+    procedure Set_Rounding(
+      Rounding  : in Enumerated_Rounding)
       is
-      Data          : Integer_4_Unsigned := 0;
-      Rounding_Mask : Integer_4_Unsigned := 0;
-      Other_Data    : Integer_2_Unsigned := 0;
+      Other_Data    : aliased Integer_2_Unsigned := 0;
+      Data          : aliased Integer_4_Unsigned := 0;
+      Rounding_Mask :         Integer_4_Unsigned := 0;
       begin
         case Rounding is
           when Nearest_Rounding =>
@@ -525,7 +521,7 @@ package body Implementation_For_Architecture
           when Truncate_Rounding =>
             Rounding_Mask := 16#6000#;
         end case;
-        if Processor.Has_Advanced_State_Operations then
+        if Is_Enabled(INTEL_FXSR) then
           Asm(
             ---------------------------------------------
             " stmxcsr (%%eax)              " & END_LINE &
@@ -554,18 +550,15 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
-        Processor.Rounding := Rounding;
       end Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
-    function Set_Precision(
-      Processor : in out Record_Processor;
-      Precision : in     Enumerated_Precision)
-      return Record_Processor
+    procedure Set_Precision(
+      Precision : in Enumerated_Precision)
       is
-      Blank_Memory   : Integer_2_Unsigned := 0;
-      Precision_Mask : Integer_4_Unsigned := 0;
+      Blank_Memory   : aliased Integer_2_Unsigned := 0;
+      Precision_Mask :         Integer_4_Unsigned := 0;
       begin
         case Precision is
           when Single_Precision =>
@@ -588,7 +581,6 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)));
-        Processor.Precision := Precision;
       end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
@@ -596,28 +588,19 @@ package body Implementation_For_Architecture
     function Get_Clock_Ticks
       return Integer_8_Unsigned
       is
+      Low_Part  : Integer_4_Unsigned := 0;
+      High_Part : Integer_4_Unsigned := 0;
       begin
-        return Get_Clock_Ticks;
-      exception
-        when System_Call_Failure =>
-          -------------
-          Use_Assembly:
-          -------------
-            declare
-            Low_Part  : Integer_4_Unsigned := 0;
-            High_Part : Integer_4_Unsigned := 0;
-            begin
-              Asm(
-                ----------------------
-                " cpuid " & END_LINE &
-                " rdtsc " & END_LINE ,
-                ----------------------
-                Volatile => True,
-                Outputs  =>(
-                  Integer_4_Unsigned'Asm_Output(FROM_EAX, Low_Part),
-                  Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
-              return Shift_Left(Integer_8_Unsigned(High_Part), 32) + Integer_8_Unsigned(Low_Part);
-            end Use_Assembly;
+        Asm(
+          ----------------------
+          " cpuid " & END_LINE &
+          " rdtsc " & END_LINE ,
+          ----------------------
+          Volatile => True,
+          Outputs  =>(
+            Integer_4_Unsigned'Asm_Output(FROM_EAX, Low_Part),
+            Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
+        return Shift_Left(Integer_8_Unsigned(High_Part), 32) + Integer_8_Unsigned(Low_Part);
       end Get_Clock_Ticks;
   --------------------
   -- Is_Stack_Empty --
@@ -625,8 +608,8 @@ package body Implementation_For_Architecture
     function Is_Stack_Empty
       return Boolean
       is
-      Result : Integer_4_Unsigned     := 0;
-      Data   : Record_x86_Environment := <>; 
+      Result :         Integer_4_Unsigned     := 0;
+      Data   : aliased Record_x86_Environment := (others => <>); 
       begin
         Asm(
           ---------------------------------------------
@@ -644,7 +627,7 @@ package body Implementation_For_Architecture
           " finished:                    " & END_LINE ,
           ---------------------------------------------
           Volatile => True,
-          Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(Data'Address)),
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
         return Result /= 0;
       end Is_Stack_Empty;
@@ -653,7 +636,7 @@ package body Implementation_For_Architecture
   -----------------
     procedure Clear_Stack
       is
-      Data : Record_x86_Environment := <>;
+      Data : aliased Record_x86_Environment := (others => <>);
       begin
         Asm(
           ---------------------------------------------
@@ -673,90 +656,85 @@ package body Implementation_For_Architecture
           " cease:                       " & END_LINE ,
           ---------------------------------------------
           Volatile => True,
-          Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, To_Integer_4_Unsigned(Data'Address)));
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
       end Clear_Stack;
-  --------------------
-  -- Put_Call_Stack --
-  --------------------
-    procedure Put_Call_Stack
+  ---------------
+  -- Put_Trace --
+  ---------------
+    procedure Put_Trace
       is
+      Value_At_Position : Access_Integer_4_Unsigned := null;
+      Data              : Integer_4_Unsigned        := 0;
+      J                 : Integer_4_Signed          := 0;
+      Base_Pointer      : Address                   := NULL_ADDRESS;
+      Mid_Point         : Address                   := NULL_ADDRESS;
+      Traces:
+        array(1..TRACE_LIMIT)
+        of Address := (others => NULL_ADDRESS);
       begin
-        Put_Call_Stack;
-      exception
-        when System_Call_Failure => 
-          -----------------------------
-          Traverse_Prologue_Signatures:
-          -----------------------------
-            declare
-            Value_At_Position : Access_Integer_4_Unsigned := null;
-            Data              : Integer_4_Unsigned        := 0;
-            J                 : Integer_4_Signed          := 0;
-            Base_Pointer      : Address                   := NULL_ADDRESS;
-            Mid_Point         : Address                   := NULL_ADDRESS;
-            Call_Stack:
-              array(1..CALLBACK_TRACE_LIMIT)
-              of Address := (others => NULL_ADDRESS);
-            begin
-              Put_Line("Call stack:");
-              Asm(
-                Template => "movl %%ebp, %%eax",
-                Volatile => True,
-                Outputs  => Address'Asm_Output(FROM_EAX, Base_Pointer));
-              Base_Pointer := NULL_ADDRESS;-- *(long*) *(long*) Base_Pointer;
-              for I in Call_Stack'Range loop
-                Asm(
-                  ----------------------------------------
-                  "   movl  (%%eax), %%ecx  " & END_LINE &
-                  "   test  %%ecx,   %%ecx  " & END_LINE &
-                  "   jz    terminus        " & END_LINE &
-                  ----------------------------------------
-                  "   movl  4(%%eax), %%eax " & END_LINE &
-                  "   test  %%eax,    %%eax " & END_LINE &
-                  "   jz    terminus        " & END_LINE &
-                  ----------------------------------------
-                  "   movl  $0x1,     %%ebx " & END_LINE &
-                  ----------------------------------------
-                  " terminus:               " & END_LINE ,
-                  ----------------------------------------
-                  Volatile => True,
-                  Inputs   => Address'Asm_Input(TO_EAX, Base_Pointer),
-                  Outputs  =>(
-                    Address           'Asm_Output(FROM_EAX, Mid_Point),
-                    Integer_4_Unsigned'Asm_Output(FROM_EBX, Data)));
-                if Data = C_TRUE then
-                  Data := To_Integer_4_Unsigned(Mid_Point); -- Becomes index
-                  loop
-                    Value_At_Position := To_Access_Integer_4_Unsigned(To_Address(Data));
-                    exit when (Value_At_Position.All and PROLOGUE_MASK) = PROLOGUE_SIGNATURE;
-                    Data := Data - 1;
-                  end loop;
-                  Call_Stack(I) := To_Address(Data);
-                else
-                  J := I;
-                  exit;
-                end if;
-              end loop;
-              Base_Pointer := NULL_ADDRESS;-- *(long*) Base_Pointer;
-              while J < Call_Stack'Length loop
-                Call_Stack(J) := 0;
-                J := J + 1;
-              end loop;
-              for I in reverse 1..Call_Stack'Size loop
-                Put(Integer_4_Signed'Wide_Image(I));
-                Put_Line(": " & To_Hex(To_Integer_4_Unsigned(Call_Stack.All(I))));
-              end loop;
-            end Traverse_Prologue_Signatures;
-      end Put_Call_Stack;
+         Put_Line("Call stack:");
+      --   Asm(
+      --     Template => "movl %%ebp, %%eax",
+      --     Volatile => True,
+      --     Outputs  => Address'Asm_Output(FROM_EAX, Base_Pointer));
+      --   Base_Pointer := NULL_ADDRESS;-- *(long*) *(long*) Base_Pointer;
+      --   for I in Traces'Range loop
+      --     Asm(
+      --       ----------------------------------------
+      --       "   movl  (%%eax), %%ecx  " & END_LINE &
+      --       "   test  %%ecx,   %%ecx  " & END_LINE &
+      --       "   jz    terminus        " & END_LINE &
+      --       ----------------------------------------
+      --       "   movl  4(%%eax), %%eax " & END_LINE &
+      --       "   test  %%eax,    %%eax " & END_LINE &
+      --       "   jz    terminus        " & END_LINE &
+      --       ----------------------------------------
+      --       "   movl  $0x1,     %%ebx " & END_LINE &
+      --       ----------------------------------------
+      --       " terminus:               " & END_LINE ,
+      --       ----------------------------------------
+      --       Volatile => True,
+      --       Inputs   => Address'Asm_Input(TO_EAX, Base_Pointer),
+      --       Outputs  =>(
+      --         Address           'Asm_Output(FROM_EAX, Mid_Point),
+      --         Integer_4_Unsigned'Asm_Output(FROM_EBX, Data)));
+      --     if Data = C_TRUE then
+      --       Data := To_Integer_4_Unsigned(Mid_Point); -- Becomes index
+      --       loop
+      --         Value_At_Position := To_Access_Integer_4_Unsigned(To_Address(Data));
+      --         exit when (Value_At_Position.All and PROLOGUE_MASK) = PROLOGUE_SIGNATURE;
+      --         Data := Data - 1;
+      --       end loop;
+      --       Traces(I) := To_Address(Data);
+      --     else
+      --       J := I;
+      --       exit;
+      --     end if;
+      --   end loop;
+      --   Base_Pointer := NULL_ADDRESS;-- *(long*) Base_Pointer;
+      --   while J < Traces'Length loop
+      --     Traces(J) := 0;
+      --     J := J + 1;
+      --   end loop;
+      --   for I in reverse 1..Traces'Size loop
+      --     Put(Integer_4_Signed'Wide_Image(I));
+      --     Put_Line(": " & To_Hex(To_Integer_4_Unsigned(Traces.All(I))));
+      --   end loop;
+      -- end Traverse_Prologue_Signatures;
+      end Put_Trace;
   ---------------
-  -- Put_State --
+  -- Put_Stack --
   ---------------
-    procedure Put_State(
-      Processor : in Record_Processor)
+    procedure Put_Stack
       is
+      function To_Image
+        is new To_Radian_Image(Integer_4_Unsigned);
+      function To_Image
+        is new To_Radian_Image(Integer_2_Unsigned);
       Number_Of_Values     :         Integer_4_Unsigned           := 0;
       Data_From_Extensions : aliased Integer_4_Unsigned           := 0;
       Stack                : aliased array (1..8) of Float_8_Real := (others => 0.0);
-      Environment          : aliased Record_x86_Environment       := <>;
+      Environment          : aliased Record_x86_Environment       := (others => <>);
       begin
         Asm(
           ---------------------------------------------
@@ -849,20 +827,20 @@ package body Implementation_For_Architecture
             Put_Line("Stack" & Integer'Wide_Image(I) & ": " & Float_8_Real'Wide_Image(Stack(I)));
           end loop;
         end if;
-        if Processor.Has_Advanced_State_Operations then
+        if Is_Enabled(INTEL_FXSR) then
           Asm(
             Template => "stmxcsr (%%eax)",
             Volatile => True,
             Inputs   => Address'Asm_Input(TO_EAX, Data_From_Extensions'Address));
-          Put_Line("Extensions: " & Binary_Image(Data_From_Extensions, True));
+          Put_Line("Extensions: " & To_Image(Data_From_Extensions, 2));
         end if;
-        Put_Line("Control word: "    & Hexadecimal_Image(Environment.Control_Word));
-        Put_Line("Status word: "     & Binary_Image(Environment.Status_Word,     True));
-        Put_Line("Selector: "        & Binary_Image(Environment.CS_Selector,     True));
-        Put_Line("Tags: "            & Binary_Image(Environment.Tags,            True));
-        Put_Line("Data offset: "     & Binary_Image(Environment.Data_Offset,     True));
-        Put_Line("Data selector: "   & Binary_Image(Environment.Data_Selector,   True));
-        Put_Line("Operation code: "  & Binary_Image(Environment.Operation_Code,  True));
-        Put_Line("Program counter: " & Binary_Image(Environment.Program_Counter, True));
-      end Put_State;
+        Put_Line("Control word: "    & To_Image(Environment.Control_Word,   16));
+        Put_Line("Status word: "     & To_Image(Environment.Status_Word,     2));
+        Put_Line("Selector: "        & To_Image(Environment.CS_Selector,     2));
+        Put_Line("Tags: "            & To_Image(Environment.Tags,            2));
+        Put_Line("Data offset: "     & To_Image(Environment.Data_Offset,     2));
+        Put_Line("Data selector: "   & To_Image(Environment.Data_Selector,   2));
+        Put_Line("Operation code: "  & To_Image(Environment.Operation_Code,  2));
+        Put_Line("Program counter: " & To_Image(Environment.Program_Counter, 2));
+      end Put_Stack;
   end Implementation_For_Architecture;
