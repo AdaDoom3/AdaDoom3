@@ -15,11 +15,19 @@
 --
 --
 with
+  System,
+  Interfaces.C,
+  Ada.Strings,
+  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 use
+  System,
+  Interfaces.C,
+  Ada.Strings,
+  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
@@ -63,50 +71,43 @@ package Neo.System
       Spanish_Language,
       Swedish_Language,
       Turkish_Language);
-  -------------
-  -- Records --
-  -------------
-    type Record_System
-      is record
-        System   : Enumerated_System                   := Unknown_System;
-        Language : Enumerated_Language                 := English_Language;
-        Version  : Enumerated_Operating_System_Version := Unknown_Version;
-        Username : Access_String_2                     := null;
-      end record;
   -----------------
   -- Subprograms --
   -----------------
     procedure Test;
-    procedure Put;
-    function Get
-      return Record_System;
+    function Get_Language
+      return Enumerated_Language;
+    function Get_Operating_System
+      return Enumerated_Operating_System;
+    function Get_Username
+      return String_2;
     procedure Open_Webpage(
       Path : in String_2);
     procedure Execute_Application(
       Do_Quit         : in Boolean;
       Executable_Path : in String_2);
+    function Is_Newer_Than(
+      Operating_System : in Enumerated_Operating_System)
+      return Boolean;
 -------
 private
 -------
-  ---------------
-  -- Constants --
-  ---------------
-    DO_RETURN_NEWER_THAN_INCOMPATIBLE_VERSION : constant Boolean := False;
   --------------------
   -- Implementation --
   --------------------
-    package Implementation_For_Operating_System
+    package Implementation
       is
-        function Get
-          return Record_System;
+        function Get_Language
+          return Enumerated_Language;
+        function Get_Operating_System
+          return Enumerated_Operating_System;
+        function Get_Username
+          return String_2;
         procedure Open_Webpage(
           Path : in String_2);
         procedure Execute_Application(
           Do_Quit         : in Boolean;
           Executable_Path : in String_2);
       end Implementation;
-    package body Implementation_For_Operating_System
-      is separate;
-    package Implementation
-      renames Implementation_For_Operating_System;
   end Neo.System;
+
