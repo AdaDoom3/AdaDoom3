@@ -219,11 +219,6 @@ package body Neo.System.Processor
     function Is_Stack_Empty
       return Boolean
       renames Implementation_For_Architecture.Is_Stack_Empty;
-  ---------------
-  -- Put_Stack --
-  ---------------
-    procedure Put_Stack
-      renames Implementation_For_Architecture.Put_Stack;
   ------------------
   -- Set_Rounding --
   ------------------
@@ -285,11 +280,21 @@ package body Neo.System.Processor
           return Implementation_For_Architecture.Get_Speed_In_Megahertz;
       end Get_Speed_In_Megahertz;
   ---------------
+  -- Put_Stack --
+  ---------------
+    procedure Put_Stack
+      is
+      begin
+        Put_Line("Stack:");
+        Implementation_For_Architecture.Put_Stack;
+      end Put_Stack;
+  ---------------
   -- Put_Trace --
   ---------------
     procedure Put_Trace
       is
       begin
+        Put_Line("Trace:");
         Implementation_For_Compiler.Put_Trace;
       exception
         when System_Call_Failure =>
