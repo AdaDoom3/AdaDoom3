@@ -38,33 +38,16 @@ package Implementation
         is
         Device_Context    : Record_Device_Context    := 0;
         Rendering_Context : Record_Rendering_Context := hGLRC;
-        Pixel_Format      : Record_Pixel_Format      := (
-          Size                   => Integer_2_Unsigned_C(Record_Pixel_Formal'Size / 8),
-          Version                => Integer_2_Unsigned_C(PIXEL_VERSION), --1
-          Flags                  => Integer_4_Unsigned_C(PIXEL_FLAGS), --
-          Pixel_Type             => Integer_1_Unsigned_C(PIXEL_TYPE), --
-          Color_Bits             => Integer_1_Unsigned_C(COLOR_DEPTH), --32
-          Red_Bits               => 0,
-          Red_Shift              => 0,
-          Green_Bits             => 0,
-          Green_Shift            => 0,
-          Blue_Bits              => 0,
-          Blue_Shift             => 0,
-          Alpha_Bits             => Integer_1_Unsigned_C(DESTINATION_ALPHA), --8
-          Alpha_Shift            => 0,
-          Accumulated_Bits       => 0,
-          Accumulated_Red_Bits   => 0,
-          Accumulated_Green_Bits => 0,
-          Accumulated_Blue_Bits  => 0,
-          Accumulated_Alpha_Bits => 0,
-          Depth_Bits             => Integer_1_Unsigned_C(Z_BUFFER), --24
-          Stencil_Bits           => Integer_1_Unsigned_C(STENCIL_BUFFER), -- 8
-          Aux_Buffers            => 0,
-          Layer_Type             => Integer_1_Unsigned_C(PIXEL_LAYER), -- PFD_MAIN_PLANE
-          Reserved               => 0,
-          Layer_Mask             => 0,
-          Visible_Mask           => 0,
-          Damage_Mask            => 0);
+        Pixel_Format      : Record_Pixel_Format      :=(
+          Version      => Integer_2_Unsigned_C(PIXEL_VERSION), --1
+          Flags        => Integer_4_Unsigned_C(PIXEL_FLAGS), --
+          Pixel_Type   => Integer_1_Unsigned_C(PIXEL_TYPE), --
+          Color_Bits   => Integer_1_Unsigned_C(COLOR_DEPTH), --32
+          Alpha_Bits   => Integer_1_Unsigned_C(DESTINATION_ALPHA), --8
+          Depth_Bits   => Integer_1_Unsigned_C(Z_BUFFER), --24
+          Stencil_Bits => Integer_1_Unsigned_C(STENCIL_BUFFER), -- 8
+          Layer_Type   => Integer_1_Unsigned_C(PIXEL_LAYER), -- PFD_MAIN_PLANE
+          others       => <>);
         begin
           if Message = EVENT_DESTROY then
             Post_Quit_Message(0);
