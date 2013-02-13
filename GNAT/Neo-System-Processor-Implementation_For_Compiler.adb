@@ -5,8 +5,8 @@
 --
 --
 -- 
--- Put_Trace will not print file/subprogram/line information if the -g flag
--- is not used at compile time.
+-- The -g compile flag is required for Put_Trace to print file/subprogram/line 
+-- information. Otherwise, Put_Trace will only print the subprogram addresses.
 --
 --
 --
