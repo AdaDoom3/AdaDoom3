@@ -15,12 +15,10 @@
 --
 --
 with
-  Interfaces,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 use
-  Interfaces,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
