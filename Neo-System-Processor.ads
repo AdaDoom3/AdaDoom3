@@ -50,10 +50,10 @@ package Neo.System.Processor
       Double_Extended_Precision); -- 64 bits
     type Enumerated_Rounding
       is(
-      Nearest_Rounding,
-      Truncate_Rounding,
+      Up_Rounding,
       Down_Rounding,
-      Up_Rounding);
+      Nearest_Rounding,
+      Truncate_Rounding);
   -------------
   -- Records --
   -------------
