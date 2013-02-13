@@ -14,6 +14,12 @@
 --
 --
 --
+with
+  Interfaces,
+  System.Machine_Code;
+use
+  Interfaces,
+  System.Machine_Code;
 separate(Neo.System.Processor)
 package body Implementation_For_Architecture
   is
