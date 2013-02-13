@@ -6,7 +6,7 @@
 --
 --
 -- The -g compile flag must be used to include debug information. Otherwise, only
--- addresses are printed with no file/subprogram/line information.
+-- addresses are printed with no file/subprogram/line information in the procedure Put_Trace.
 --
 --
 --
