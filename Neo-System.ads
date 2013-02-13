@@ -15,19 +15,11 @@
 --
 --
 with
-  System,
-  Interfaces.C,
-  Ada.Strings,
-  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 use
-  System,
-  Interfaces.C,
-  Ada.Strings,
-  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
