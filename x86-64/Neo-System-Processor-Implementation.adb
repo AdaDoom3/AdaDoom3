@@ -672,7 +672,7 @@ package body Implementation_For_Architecture
         array(1..TRACE_LIMIT)
         of Address := (others => NULL_ADDRESS);
       begin
-         Put_Line("Trace:");
+        null;
       --   Asm(
       --     Template => "movl %%ebp, %%eax",
       --     Volatile => True,
@@ -736,7 +736,6 @@ package body Implementation_For_Architecture
       Stack                : aliased array (1..8) of Float_8_Real := (others => 0.0);
       Environment          : aliased Record_x86_Environment       := (others => <>);
       begin
-        Put_Line("Stack:");
         Asm(
           ---------------------------------------------
           "   movl    %%eax,       %%esi " & END_LINE &
