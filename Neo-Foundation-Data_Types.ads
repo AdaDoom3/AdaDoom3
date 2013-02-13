@@ -482,14 +482,11 @@ package Neo.Foundation.Data_Types
       Item : in String_2) 
       return String_1;
     function To_String_2_C(
-      Item : in String_1)
-      return String_2_C;
-    function To_String_2_C(
       Item : in String_2)
       return String_2_C;
     function To_String_2(
       Item : in String_1_C)
-      return String_2;
+      return String_2;      
     function To_String_2(
       Item : in String_1)
       return String_2;
@@ -509,152 +506,6 @@ package Neo.Foundation.Data_Types
     function Is_Little_Endian
       return Boolean
       renames Is_Low_Order_Byte_First;
-    function "="(
-      Left  : in Character_1;
-      Right : in String_1)
-      return Boolean
-      with
-        Pre => Right'Length > 0;
-    function "="(
-      Left  : in String_1;
-      Right : in Character_1)
-      return Boolean;
-    function "="(
-      Left  : in Character_1;
-      Right : in String_2)
-      return Boolean
-      with
-        Pre => Right'Length > 0;
-    function "="(
-      Left  : in String_2;
-      Right : in Character_1)
-      return Boolean;
-    function "="(
-      Left  : in Character_2;
-      Right : in String_1)
-      return Boolean
-      with
-        Pre => Right'Length > 0;
-    function "="(
-      Left  : in String_1;
-      Right : in Character_2)
-      return Boolean;
-    function "="(
-      Left  : in Character_2;
-      Right : in String_2)
-      return Boolean;
-    function "="(
-      Left  : in String_2;
-      Right : in Character_2)
-      return Boolean;
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_1)
-      return String_1;
-    function "&"(
-      Left  : in Character_1;
-      Right : in Character_2)
-      return String_1;
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_1)
-      return String_1;
-    function "&"(
-      Left  : in Character_2;
-      Right : in Character_2)
-      return String_1;
-    -- function "&"(
-    --   Left  : in String_1;
-    --   Right : in Character_1)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in String_1)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in String_1;
-    --   Right : in Character_2)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in Character_2;
-    --   Right : in String_1)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in String_2;
-    --   Right : in Character_1)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in String_2)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in String_2;
-    --   Right : in Character_2)
-    --   return String_1;
-    -- function "&"(
-    --   Left  : in Character_2;
-    --   Right : in String_2)
-    --   return String_1;
-    -- -- function "&"(
-    -- --   Left  : in String_2;
-    -- --   Right : in String_2)
-    -- --   return String_1;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in Character_1)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in Character_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_2;
-    --   Right : in Character_1)
-    --   return String_2;
-    -- -- function "&"(
-    -- --   Left  : in Character_2;
-    -- --   Right : in Character_2)
-    -- --   return String_2;
-    -- function "&"(
-    --   Left  : in String_1;
-    --   Right : in Character_1)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in String_1)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in String_1;
-    --   Right : in Character_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_2;
-    --   Right : in String_1)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in String_2;
-    --   Right : in Character_1)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_1;
-    --   Right : in String_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in String_2;
-    --   Right : in Character_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in Character_2;
-    --   Right : in String_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in String_2;
-    --   Right : in String_2)
-    --   return String_2;
-    -- function "&"(
-    --   Left  : in String_1;
-    --   Right : in String_1)
-    --   return String_2;
 -------
 private
 -------
