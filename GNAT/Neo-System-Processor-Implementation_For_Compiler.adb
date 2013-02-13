@@ -15,7 +15,6 @@
 --
 -- 
 with
-  Ada.Text_IO,
   GNAT.Traceback,
   GNAT.Traceback.Symbolic;
 use
@@ -33,7 +32,6 @@ package body Implementation_For_Compiler
       Length : Integer_4_Natural                := 0;
       begin
         Call_Chain(Trace, Length);
-        Put_Line("Call stack:");
         ----------------
         Sweep_Traceback:
         ----------------
