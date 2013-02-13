@@ -83,5 +83,6 @@ package body Neo.Foundation.Package_Testing
           New_Line;
           Put(TESTING_INPUT_CURSOR);
           Get_Line(Item, Last);
+          Skip_Line;
         end Hang_Window;
   end Neo.Foundation.Package_Testing;
