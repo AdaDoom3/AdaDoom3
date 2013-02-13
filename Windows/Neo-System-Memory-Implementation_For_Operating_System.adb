@@ -27,7 +27,7 @@ package body Implementation
     function Get
       return Record_Memory
       is
-      Status : Record_Memory_Status;-- := <>;
+      Status : Record_Memory_Status := (others => <>);
       begin
         if Global_Memory_Status(Status'Address) = FAILED then
           raise System_Call_Failure;
