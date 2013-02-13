@@ -16,15 +16,11 @@
 --
 with
   Interfaces,
-  System.Machine_Code,
-  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 use
   Interfaces,
-  System.Machine_Code,
-  Ada.Strings.Wide_Fixed,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
