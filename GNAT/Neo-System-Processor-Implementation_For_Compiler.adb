@@ -5,35 +5,32 @@
 --
 --
 --
+-- The -g compile flag must be used to include debug information. Otherwise, only
+-- addresses are printed with no file/subprogram/line information.
 --
 --
 --
 --
 --
 --
---
---
---
+-- 
 with
+  Ada.Text_IO,
   GNAT.Traceback,
-  GNAT.Traceback.Symbolic,
-  Ada.Strings.Wide_Fixed;
+  GNAT.Traceback.Symbolic;
 use
   GNAT.Traceback,
-  GNAT.Traceback.Symbolic,
-  Ada.Strings.Wide_Fixed;
+  GNAT.Traceback.Symbolic;
 separate(Neo.System.Processor)
 package body Implementation_For_Compiler
   is
-  --------------------
-  -- Put_Call_Stack --
-  --------------------
-    function Put_Call_Stack
-      return Boolean
+  ---------------
+  -- Put_Trace --
+  ---------------
+    procedure Put_Trace
       is
-      Trace   : Tracebacks_Array(1..CALLBACK_TRACE_LIMIT) := (others => NULL_ADDRESS);
-      Length  : Integer_4_Natural                         := 0;
-      Text_IO : Record_Input_Output                       := Protected_Text_IO.Get;
+      Trace  : Tracebacks_Array(1..TRACE_LIMIT) := (others => NULL_ADDRESS);
+      Length : Integer_4_Natural                := 0;
       begin
         Call_Chain(Trace, Length);
         Put_Line("Call stack:");
@@ -61,7 +58,7 @@ package body Implementation_For_Compiler
                 declare
                 Index_Image : String_2 := Trim(Integer_4_Signed'Wide_Image(Index), Both);
                 begin
-                  Put_Tab(2);
+                  Put("    ");
                   for I in 2..Integer_4_Natural'Image(Length)'Length - Index_Image'Length loop
                     Put(" ");
                   end loop;
@@ -78,7 +75,7 @@ package body Implementation_For_Compiler
                   if I + 2 <= Traceback'Last and then Traceback(I..I + 2) = "at " then
                     Skip_Next := True;
                     New_Line;
-                    Put_Tab(2);
+                    Put("    ");
                     for I in 1..Integer_4_Natural'Image(Length)'Length loop
                       Put(" ");
                     end loop;
@@ -96,10 +93,9 @@ package body Implementation_For_Compiler
                   end if;
                 end if;
               end loop;
-              Index := Index - 1;
+              Index := Index + 1;
             end loop;
             New_Line;
           end Sweep_Traceback;
-        return True;
-      end Put_Call_Stack;
+      end Put_Trace;
   end Implementation_For_Compiler;
