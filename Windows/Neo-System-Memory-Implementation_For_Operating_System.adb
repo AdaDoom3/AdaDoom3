@@ -18,8 +18,8 @@ with
   Neo.Windows;
 use
   Neo.Windows;
-separate(Neo.Systemic.Memory)
-package body Implementation_For_Operating_System
+separate(Neo.System.Memory)
+package body Implementation
   is
   ---------
   -- Get --
@@ -27,9 +27,11 @@ package body Implementation_For_Operating_System
     function Get
       return Record_Memory
       is
-      Status : Record_Memory_Status := NULL_RECORD_MEMORY_STATUS;
+      Status : Record_Memory_Status;-- := <>;
       begin
-        Global_Memory_Status(Status'Address);
+        if Global_Memory_Status(Status'Address) = FAILED then
+          raise System_Call_Failure;
+        end if;
         return(
           -- For some reason, Total_Physical is sometimes off by a meg or two, so round up to the nearest 16 megs
           Physical_Total             => Integer_8_Natural((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
@@ -39,20 +41,25 @@ package body Implementation_For_Operating_System
           Virtual_Total              => Integer_8_Natural(Status.Total_Virtual),
           Virtual_Available          => Integer_8_Natural(Status.Available_Virtual),
           Virtual_Available_Extended => Integer_8_Natural(Status.Available_Extended_Virtual),
-          Load                       => Float_Percent(Status.Memory_Load));
+          Load                       => Float_4_Percent(Status.Memory_Load));
       end Get;
-  ---------
-  -- Set --
-  ---------
-    procedure Set_Work_Memory(
-      Minimum_Number_Of_Bytes : in Integer_4_Natural;
-      Maximum_Number_Of_Bytes : in Integer_4_Natural)
+  ---------------------
+  -- Set_Byte_Limits --
+  ---------------------
+    procedure Set_Byte_Limits(
+      Minimum : in Integer_4_Unsigned;
+      Maximum : in Integer_4_Unsigned)
       is
       begin
-        if Set_Process_Working_Set_Size(Get_Current_Process, Integer_Size_C(Minimum), Integer_Size_C(Maximum)) = FAILED then
+        if
+        Set_Process_Working_Set_Size(
+          Process => Get_Current_Process,
+          Minimum => Integer_Size_C(Minimum),
+          Maximum => Integer_Size_C(Maximum)) = FAILED
+        then
           raise System_Call_Failure;
         end if;
-      end Set_Work_Memory;
+      end Set_Byte_Limits;
   ----------
   -- Lock --
   ----------
@@ -63,7 +70,7 @@ package body Implementation_For_Operating_System
       is
       begin
         return Virtual_Lock(Location, Integer_Size_C(Number_Of_Bytes)) /= FAILED;
-      end Lock_Memory;
+      end Lock;
   ------------
   -- Unlock --
   ------------
@@ -79,9 +86,9 @@ package body Implementation_For_Operating_System
   -- Clear --
   -----------
     function Clear(
-      Location      : in ;=> Allocate_Dirty(Number_Of_Bits, Memory_Identifier),
-      Initial_Value : in ;=> CLEARED_MEMORY_VALUE,
-      Size          : in ;=> Number_Of_Bits)
+      Location      : in Address;
+      Size          : in Integer_4_Unsigned;
+      Initial_Value : in Boolean := CLEARED_MEMORY_VALUE)
       return Address
       is
       begin
@@ -91,8 +98,8 @@ package body Implementation_For_Operating_System
   -- Allocate --
   --------------
     function Allocate(
-      Size      : in Integer_4_Positive;
-      Alignment : in Integer_4_Positive)
+      Size      : in Integer_4_Unsigned;
+      Alignment : in Integer_4_Unsigned)
       return Address
       is
       begin
@@ -107,4 +114,5 @@ package body Implementation_For_Operating_System
       begin
         null;
       end Free;
-  end Implementation_For_Operating_System;
+  end Implementation;
+
