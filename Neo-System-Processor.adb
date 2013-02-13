@@ -71,9 +71,9 @@ package body Neo.System.Processor
         Put_Line("Clock ticks: " & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
         Put_Line("Sleep...");
         delay 1.0;
-        Put_Line("Clock ticks: "          & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
-        Put_Line("Number of cores:" & Integer_8_Unsigned'Wide_Image(Get_Number_Of_Cores));
-        Put_Line("Speed in megahertz:"    & Integer_8_Unsigned'Wide_Image(Get_Speed_In_Megahertz));
+        Put_Line("Clock ticks: "       & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
+        Put_Line("Number of cores:"    & Integer_8_Unsigned'Wide_Image(Get_Number_Of_Cores));
+        Put_Line("Speed in megahertz:" & Integer_8_Unsigned'Wide_Image(Get_Speed_In_Megahertz));
         case Get_Vendor is
           when Apple_IBM_Motorola_Vendor =>
             raise System_Call_Failure;
