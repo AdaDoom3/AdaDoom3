@@ -36,12 +36,12 @@ package body Implementation_For_Compiler
         Sweep_Traceback:
         ----------------
           declare
-          Traceback  : String_2         := To_String_2(Symbolic_Traceback(Trace(1..Length)));
-          Skip_Next  : Boolean          := False;
-          To_Skip    : Integer_4_Signed := 3;
-          Skips      : Integer_4_Signed := 1;
-          Current    : Integer_4_Signed := 1;
-          Index      : Integer_4_Signed := 1;
+          Traceback : String_2         := To_String_2(Symbolic_Traceback(Trace(1..Length)));
+          Skip_Next : Boolean          := False;
+          To_Skip   : Integer_4_Signed := 3;
+          Skips     : Integer_4_Signed := 1;
+          Current   : Integer_4_Signed := 1;
+          Index     : Integer_4_Signed := 1;
           begin
             while Traceback(Current) /= Character_2'Val(Character_1'Pos(Ascii.LF)) loop
               if Current = Traceback'Last then
