@@ -32,71 +32,71 @@ package Neo.Foundation.Build_Options
   ------------------
   -- Enumerations --
   ------------------
-    type Enumerated_Operating_System_Version
+    type Enumerated_System
       is(
-      Unknown_Version,
-      Linux_Version, -- PowerPC?, x86-64?
-      Linux_2_Version,
-      Linux_2_1_Version,
-      Linux_2_2_Version,
-      Linux_2_3_Version,
-      Linux_2_4_Version,
-      Linux_2_5_Version,
-      Linux_2_6_Version,
-      Linux_2_7_Version, -- AVX
-      Linux_2_8_Version,
-      Linux_2_9_Version,
-      Linux_3_Version,
-      Linux_3_1_Version,
-      Linux_3_2_Version,
-      Linux_3_3_Version,
-      Linux_3_4_Version,
-      Linux_3_5_Version,
-      Linux_3_6_Version,
-      Windows_Version, -- x86-64
-      Windows_1_4_A_Version,
-      Windows_1_4_B_Version,
-      Windows_1_4_10_A_Version,
-      Windows_1_4_10_B_Version,
-      Windows_1_4_90_Version,
-      Windows_2_Version,
-      Windows_2_5_Version,
-      Windows_2_5_1_Version,
-      Windows_2_6_Version, -- Aero™
-      Windows_2_6_1_Version, -- AVX
-      Windows_2_6_2_Version,
-      Macintosh_Version, -- PowerPC
-      Macintosh_8_5_Version,
-      Macintosh_8_5_1_Version,
-      Macintosh_8_6_Version,
-      Macintosh_9_Version,
-      Macintosh_9_0_1_Version,
-      Macintosh_9_0_2_Version,
-      Macintosh_9_0_3_Version,
-      Macintosh_9_0_4_Version,
-      Macintosh_9_1_Version,
-      Macintosh_9_2_Version,
-      Macintosh_9_2_1_Version,
-      Macintosh_9_2_2_Version,
-      Macintosh_10_Version,
-      Macintosh_10_1_Version,
-      Macintosh_10_2_Version,
-      Macintosh_10_3_Version,
-      Macintosh_10_4_Version,
-      Macintosh_10_4_7_Version, -- x86-64
-      Macintosh_10_5_Version,
-      Macintosh_10_5_8_Version, -- PPC RIP
-      Macintosh_10_6_Version,
-      Macintosh_10_6_8_Version, -- AVX
-      Macintosh_10_7_Version,
-      Macintosh_10_8_Version);
-    subtype Enumerated_Linux_Version
-      is Enumerated_Operating_System_Version
-      range Linux_Version..Linux_3_6_Version;
-    subtype Enumerated_Windows_Version
-      is Enumerated_Operating_System_Version
-      range Windows_Version..Windows_2_6_2_Version;
-    subtype Enumerated_Macintosh_Version
-      is Enumerated_Operating_System_Version
-      range Macintosh_Version..Macintosh_10_8_Version;
+      Unknown_System,
+      Linux_System, -- PowerPC?, x86-64?
+      Linux_2_System,
+      Linux_2_1_System,
+      Linux_2_2_System,
+      Linux_2_3_System,
+      Linux_2_4_System,
+      Linux_2_5_System,
+      Linux_2_6_System,
+      Linux_2_7_System, -- AVX
+      Linux_2_8_System,
+      Linux_2_9_System,
+      Linux_3_System,
+      Linux_3_1_System,
+      Linux_3_2_System,
+      Linux_3_3_System,
+      Linux_3_4_System,
+      Linux_3_5_System,
+      Linux_3_6_System,
+      Windows_System, -- x86-64
+      Windows_1_4_A_System,
+      Windows_1_4_B_System,
+      Windows_1_4_10_A_System,
+      Windows_1_4_10_B_System,
+      Windows_1_4_90_System,
+      Windows_2_System,
+      Windows_2_5_System,
+      Windows_2_5_1_System,
+      Windows_2_6_System, -- Aero™
+      Windows_2_6_1_System, -- AVX
+      Windows_2_6_2_System,
+      Macintosh_System, -- PowerPC
+      Macintosh_8_5_System,
+      Macintosh_8_5_1_System,
+      Macintosh_8_6_System,
+      Macintosh_9_System,
+      Macintosh_9_0_1_System,
+      Macintosh_9_0_2_System,
+      Macintosh_9_0_3_System,
+      Macintosh_9_0_4_System,
+      Macintosh_9_1_System,
+      Macintosh_9_2_System,
+      Macintosh_9_2_1_System,
+      Macintosh_9_2_2_System,
+      Macintosh_10_System,
+      Macintosh_10_1_System,
+      Macintosh_10_2_System,
+      Macintosh_10_3_System,
+      Macintosh_10_4_System,
+      Macintosh_10_4_7_System, -- x86-64
+      Macintosh_10_5_System,
+      Macintosh_10_5_8_System, -- PPC RIP
+      Macintosh_10_6_System,
+      Macintosh_10_6_8_System, -- AVX
+      Macintosh_10_7_System,
+      Macintosh_10_8_System);
+    subtype Enumerated_Linux_System
+      is Enumerated_Operating_System
+      range Linux_System..Linux_3_6_System;
+    subtype Enumerated_Windows_System
+      is Enumerated_Operating_System
+      range Windows_System..Windows_2_6_2_System;
+    subtype Enumerated_Macintosh_System
+      is Enumerated_Operating_System
+      range Macintosh_System..Macintosh_10_8_System;
   end Neo.Foundation.Build_Options;
