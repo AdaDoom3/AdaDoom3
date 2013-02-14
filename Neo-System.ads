@@ -69,8 +69,8 @@ package Neo.System
     procedure Test;
     function Get_Language
       return Enumerated_Language;
-    function Get_Operating_System
-      return Enumerated_Operating_System;
+    function Get_Version
+      return Enumerated_System;
     function Get_Username
       return String_2;
     procedure Open_Webpage(
@@ -79,7 +79,9 @@ package Neo.System
       Do_Quit         : in Boolean;
       Executable_Path : in String_2);
     function Is_Newer_Than(
-      Operating_System : in Enumerated_Operating_System)
+      Linux     : in Enumerated_Linux_System;
+      Macintosh : in Enumerated_Macintosh_System;
+      Windows   : in Enumerated_Windows_System)
       return Boolean;
 -------
 private
@@ -91,8 +93,8 @@ private
       is
         function Get_Language
           return Enumerated_Language;
-        function Get_Operating_System
-          return Enumerated_Operating_System;
+        function Get_Version
+          return Enumerated_System;
         function Get_Username
           return String_2;
         procedure Open_Webpage(
