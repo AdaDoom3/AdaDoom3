@@ -42,12 +42,12 @@ package body Neo.System
     function Get_Language
       return Enumerated_Language
       renames Implementation.Get_Language;
-  --------------------------
-  -- Get_Operating_System --
-  --------------------------
-    function Get_Operating_System
-      return Enumerated_Operating_System
-      renames Implementation.Get_Operating_System;
+  -----------------
+  -- Get_Version --
+  -----------------
+    function Get_Version
+      return Enumerated_System
+      renames Implementation.Get_Version;
   ------------------
   -- Get_Username --
   ------------------
@@ -71,7 +71,9 @@ package body Neo.System
   -- Is_Newer_Than --
   -------------------
     function Is_Newer_Than(
-      Operating_System : in Enumerated_Operating_System)
+      Linux     : in Enumerated_Linux_System;
+      Macintosh : in Enumerated_Macintosh_System;
+      Windows   : in Enumerated_Windows_System)
       return Boolean
       is
       Current_System : Enumerated_Operating_System := Get_Operating_System;
