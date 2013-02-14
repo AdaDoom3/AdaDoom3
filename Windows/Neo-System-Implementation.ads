@@ -33,13 +33,13 @@ package body Implementation
   -- Constants --
   ---------------
     STRING_BUFFER_SIZE_FOR_GET_USERNAME : constant Integer_4_Signed := 1024;
-  --------------------------
-  -- Get_Operating_System --
-  --------------------------
+  -----------------
+  -- Get_Version --
+  -----------------
     function Get_Operating_System
-      return Enumerated_Operating_System
+      return Enumerated_System
       is
-      Version_Information : Record_Version_Information;--:= <>;
+      Version_Information : Record_Version_Information := (others => <>);
       begin
         if Get_Version(Version_Information'Address) = FAILED then
           Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
@@ -103,7 +103,7 @@ package body Implementation
             null;
         end case;
         return Windows_System;
-      end Get_Operating_System;
+      end Get_Version;
   ------------------
   -- Get_Language --
   ------------------
