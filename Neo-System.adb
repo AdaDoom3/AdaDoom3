@@ -45,7 +45,7 @@ package body Neo.System
       Windows   : in Enumerated_Windows_System)
       return Boolean
       is
-      Current_System : Enumerated_Operating_System := Get_Operating_System;
+      Current_System : Enumerated_System := Get_Version;
       begin
         -- if Operating_System in Enumerated_Linux_System'Range then
         -- elsif Operating_System in Enumerated_Windows_System'Range then
