@@ -36,6 +36,24 @@ package body Neo.System
         Put_Line("Newer than Windows XP is " & Boolean'Wide_Image(Is_Newer_Than(Windows_2_5_1_System)));
         Hang_Window;
       end Test;
+  -------------------
+  -- Is_Newer_Than --
+  -------------------
+    function Is_Newer_Than(
+      Linux     : in Enumerated_Linux_System;
+      Macintosh : in Enumerated_Macintosh_System;
+      Windows   : in Enumerated_Windows_System)
+      return Boolean
+      is
+      Current_System : Enumerated_Operating_System := Get_Operating_System;
+      begin
+        -- if Operating_System in Enumerated_Linux_System'Range then
+        -- elsif Operating_System in Enumerated_Windows_System'Range then
+        -- elsif Operating_System in Enumerated_Macintosh_System'Range then
+
+        -- end if;
+        return False;
+      end Is_Newer_Than;
   ------------------
   -- Get_Language --
   ------------------
@@ -67,22 +85,4 @@ package body Neo.System
       Do_Quit         : in Boolean;
       Executable_Path : in String_2)
       renames Implementation.Execute_Application;
-  -------------------
-  -- Is_Newer_Than --
-  -------------------
-    function Is_Newer_Than(
-      Linux     : in Enumerated_Linux_System;
-      Macintosh : in Enumerated_Macintosh_System;
-      Windows   : in Enumerated_Windows_System)
-      return Boolean
-      is
-      Current_System : Enumerated_Operating_System := Get_Operating_System;
-      begin
-        -- if Operating_System in Enumerated_Linux_System'Range then
-        -- elsif Operating_System in Enumerated_Windows_System'Range then
-        -- elsif Operating_System in Enumerated_Macintosh_System'Range then
-
-        -- end if;
-        return False;
-      end Is_Newer_Than;
   end Neo.System;
