@@ -426,8 +426,8 @@ package Neo.Windows
     type Record_Monitor_Information
       is record
         Size      : Integer_4_Unsigned_C := Record_Monitor_Information'Size / 8;
-        Monitor   : Record_Rectangle;--     := <>;
-        Work_Area : Record_Rectangle;--     := <>;
+        Monitor   : Record_Rectangle     := (others => <>);
+        Work_Area : Record_Rectangle     := (others => <>);
         Flags     : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Monitor_Information);
@@ -460,7 +460,7 @@ package Neo.Windows
         Data_Unsigned : Integer_4_Unsigned_C := 0;
         Data_Signed   : Integer_4_Signed_C   := 0;
         Time          : Integer_4_Unsigned_C := 0;
-        Point         : Record_Point;--         := <>;
+        Point         : Record_Point         := (others => <>);
       end record;
       pragma Convention(C, Record_Message);
     type Record_Key
@@ -496,7 +496,7 @@ package Neo.Windows
     type Record_Device_Information
       is record
         Size       : Integer_4_Unsigned_C := Record_Device_Information'Size / 8;
-        Class_GUID : Record_GUID;--          := <>;
+        Class_GUID : Record_GUID          := (others => <>);
         Instance   : Integer_4_Unsigned_C := 0;
         Reserved   : Address              := NULL_ADDRESS; -- ULONG_PTR
       end record;
