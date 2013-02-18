@@ -197,7 +197,7 @@ package body Neo.Foundation.Text_IO
         while Last = 0 loop
           Get_Line(Line_Of_Text, Last);
         end loop;
-        Ada.Wide_Text_IO.Skip_Line;
+        Skip_Line;
         Item := Line_Of_Text(Line_Of_Text'First);
       end Get;
   --------------
