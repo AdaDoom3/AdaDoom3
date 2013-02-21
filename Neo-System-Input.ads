@@ -25,6 +25,10 @@ use
   Neo.Foundation.Build_Options;
 package Neo.System.Input
   is
+  ----------------
+  -- Exceptions --
+  ----------------
+    Gamepad_Not_Connected : Exception;
   ---------------
   -- Constants --
   ---------------
