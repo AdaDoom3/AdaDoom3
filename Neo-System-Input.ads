@@ -15,24 +15,20 @@
 --
 --
 with
-  System,
-  Interfaces,
-  Interfaces.C,
-  Ada.Command_Line,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Generic_Protected;
 use
-  System,
-  Interfaces,
-  Interfaces.C,
-  Ada.Command_Line,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options;
 package Neo.System.Input
   is
+  ---------------
+  -- Constants --
+  ---------------
+    MAXIMUM_NUMBER_OF_GAMEPADS : constant Integer_4_Positive := 4; -- Limited for console compatibility
   ------------------
   -- Enumerations --
   ------------------
@@ -101,69 +97,57 @@ package Neo.System.Input
     type Enumerated_Stick
       is(
       Left_Stick, Right_Stick, Generic_Stick);
-    type Enumerated_Pedal
+    type Enumerated_Trigger
       is(
-      Left_Trigger, Right_Trigger, Generic_Pedal);
-    type Enumerated_Wheel
+      Left_Trigger, Right_Trigger, Generic_Trigger);
+    type Enumerated_Button_Event
       is(
-      Generic_Wheel);
-  --------------
-  -- Accessors --
-  ---------------
-    type Access_Procedure_Handle_Axis
-      is access procedure(
-        Information  : in Event_Information;
-        Player       : in Integer_4_Positive;
-        Identifier   : in Integer_4_Positive;
-        Axis         : in Enumerated_Axis;
-        Degree       : in Float_Degree;
-        Displacement : in Float_Percent);
-    type Access_Procedure_Handle_Movement
-      is access procedure(
-        Information    : in Event_Information;
-        Player         : in Integer_4_Positive;
-        X              : in Integer_4_Signed;
-        Y              : in Integer_4_Signed);
-    type Access_Procedure_Handle_Key
-      is access procedure(
-        Information  : in Event_Information;
-        Player       : in Integer_4_Positive;
-        Identifier   : in Integer_4_Positive;
-        Is_Press     : in Boolean;
-        Key          : in Enumerated_Key);
-    type Access_Procedure_Handle_Accelerometer
-      is access procedure(
-        Information  : in Event_Information;
-        Player       : in Integer_4_Positive;
-        Identifier   : in Integer_4_Positive);
-    type Access_Procedure_Handle_Character
-      is access procedure(
-        Information  : in Event_Information;
-        Player       : in Integer_4_Positive;
-        Item         : in Character_2);
-    type Access_Procedure_Handle_Pedal
-      is access procedure(
-        Information  : in Event_Information;
-        Player       : in Integer_4_Positive;
-        Identifier   : in Integer_4_Positive;
-        Pedal        : in Enumerated_Pedal;
-        Displacement : in Float_Percent);
-    type Access_Procedure_Handle_Peripheral
-      is access procedure(
-        Information         : in Event_Information;
-        Is_Being_Plugged_In : in Boolean;
-        Player              : in Integer_4_Positive;
-        Peripheral          : in Record_Peripheral);
+      Pressed_Event, Released_Event);
+    type Enumerated_Peripheral_Event
+      is(
+      Removed_Event, Connected_Event);
   -------------
   -- Records --
   -------------
-    type Record_Peripheral
-      is record
-        Identifier    : Access_String_2;
-        Player_Number : Integer_4_Positive;
-      end record;
     type Record_Input
       is private;
+    type Record_Peripheral
+      is record
+        Name       : String_2(1..128)   := (others => NULL_CHARACTER_2);
+        Player     : Integer_4_Positive := 1;
+        Identifier : Integer_4_Positive := 1;
+      end record;
+  ---------------
+  -- Accessors --
+  ---------------
+    type Access_Procedure_Handle_Stick
+      is access procedure(
+        Player : in Integer_4_Positive;
+        Stick  : in Enumerated_Stick;
+        X      : in Integer_4_Signed;
+        Y      : in Integer_4_Signed);
+    type Access_Procedure_Handle_Mouse
+      is access procedure(
+        Player : in Integer_4_Positive;
+        X      : in Integer_4_Signed;
+        Y      : in Integer_4_Signed);
+    type Access_Procedure_Handle_Key
+      is access procedure(
+        Player : in Integer_4_Positive;
+        Event  : in Enumerated_Button_Event;
+        Key    : in Enumerated_Key);
+    type Access_Procedure_Handle_Character
+      is access procedure(
+        Player : in Integer_4_Positive;
+        Item   : in Character_2);
+    type Access_Procedure_Handle_Trigger
+      is access procedure(
+        Peripheral   : in Record_Peripheral;
+        Pedal        : in Enumerated_Pedal;
+        Displacement : in Float_Percent);
+    type Access_Procedure_Handle_Addition_Or_Removal(
+      is access procedure(
+        Peripheral : in Record_Peripheral);
   ------------
   -- Arrays --
   ------------
@@ -173,33 +157,30 @@ package Neo.System.Input
   -----------------
   -- Subprograms --
   -----------------
+    procedure Test;
     procedure Initalize;
     procedure Finalize;
     procedure Disable;
     procedure Enable;
-    function Get_State
-      return Record_Input;
     function Get_Peripherals
       return Array_Record_Peripheral;
     procedure Update_Vibration(
       Player  : in Integer_4_Positive;
       Percent : in Float_Percent);
     procedure Set_Player(
-      Peripheral : in Record_Peripheral;
+      Identifier : in Integer_4_Positive;
       Player     : in Integer_4_Positive);
-    procedure Set_Axis_Handler(
+    procedure Set_Handle_Stick(
       Handler : in Access_Procedure_Handle_Axis);
-    procedure Set_Movement_Handler(
+    procedure Set_Handle_Mouse(
       Handler : in Access_Procedure_Handle_Movement);
-    procedure Set_Pedal_Handler(
+    procedure Set_Handle_Trigger(
       Handler : in Access_Procedure_Handle_Pedal);
-    procedure Set_Character_Handler(
+    procedure Set_Handle_Character(
       Handler : in Access_Procedure_Handle_Character);
-    procedure Set_Peripheral_Handler(
+    procedure Set_Handle_Peripheral(
       Handler : in Access_Procedure_Handle_Peripheral);
-    procedure Set_Accelerometer_Handler(
-      Handler : in Access_Procedure_Handle_Accelerometer);
-    procedure Set_Key_Handler(
+    procedure Set_Handle_Key(
       Handler : in Access_Procedure_Handle_Key);
 -------
 private
@@ -207,9 +188,8 @@ private
   ---------------
   -- Constants --
   ---------------
-    MICROSECOND_DELAY                                 : constant Integer_4_Natural  := 0;
-    NUMBER_OF_PERIPHERALS_TO_CHECK_ON_TICK_FOR_LEGACY : constant Integer_4_Positive := 5;
-    DO_CHECK_ALL_PERIPHERALS_ON_TICK_FOR_LEGACY       : constant Boolean            := False;
+    NUMBER_OF_SECONDS_TO_WAIT_FOR_PERIPHERAL_CHECK : constant Float_4_Real := 5.0;
+    DO_CHECK_ALL_PERIPHERALS_ON_TICK_FOR_LEGACY    : constant Boolean      := False;
   -------------
   -- Records --
   -------------
@@ -218,16 +198,13 @@ private
         Number_Of_Mice                 : Integer_4_Natural;
         Number_Of_Keyboards            : Integer_4_Natural;
         Number_Of_Xbox_360_Controllers : Integer_4_Natural;
-        Number_Of_Joysticks            : Integer_4_Natural;
-        Number_Of_Controllers          : Integer_4_Natural;
-        Number_Of_Touch_Screen         : Integer_4_Natural;
-        Number_Of_Accelerometers       : Integer_4_Natural;
+        Peripheral_List_Head           : Access_;
         Handle_Axis                    : Access_Procedure_Handle_Axis;
-        Handle_Movement                : Access_Procedure_Handle_Movement;
-        Handle_Pedal                   : Access_Procedure_Handle_Pedal;
+        Handle_Mouse                   : Access_Procedure_Handle_Movement;
+        Handle_Trigger                 : Access_Procedure_Handle_Pedal;
         Handle_Character               : Access_Procedure_Handle_Character;
-        Handle_Peripheral              : Access_Procedure_Handle_Peripheral;
-        Handle_Accelerometer           : Access_Procedure_Handle_Accelerometer;
+        Handle_Addition                : Access_Procedure_Handle_Peripheral;
+        Handle_Removal                 : Access_Procedure_Handle_Peripheral;
         Handle_Key                     : Access_Procedure_Handle_Key;
       end record;
   -----------
@@ -236,6 +213,8 @@ private
     task type Task_Input
       is
       entry Initialize;
+      entry Disable;
+      entry Enable;
       entry Finalize;
       end Task_Input;
   --------------
@@ -249,3 +228,4 @@ private
     Input          : Task_Input;
     Protected_Data : Protected_Record_Input.Data;
   end Neo.System.Input;
+
