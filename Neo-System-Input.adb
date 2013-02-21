@@ -52,18 +52,18 @@ package Neo.System.Input
             XINPUT_STATE  joyData[MAX_JOYSTICKS];
             bool      validData[MAX_JOYSTICKS];
             for I in 1..MAXIMUM_NUMBER_OF_GAMEPADS loop
-              if now >= nextCheck[i] then
-                -- XInputGetState might block... for a _really_ long time..
-                validData[i] = XInputGetState( i, &joyData[i] ) == ERROR_SUCCESS;
-                -- allow an immediate data poll if the input device is connected else 
-                -- wait for some time to see if another device was reconnected.
-                -- Checking input state infrequently for newly connected devices prevents 
-                -- severe slowdowns on PC, especially on WinXP64.
-                if validData[i] then
-                  nextCheck[i] = 0;
-                else
-                  nextCheck[i] = now + waitTime;
-                end if;
+              if now >= nextCheck(I) then
+                -------------
+                Poll_Gamepad:
+                -------------
+                  declare
+                  begin
+                    Implementation.Get_Gamepad_State(I); -- Might block... for a excessive amount of time
+                    nextCheck(I) := now + waitTime;
+                  exception
+                    when Non_Valid_Data_Retrieved_From_Gamepad =>
+                      nextCheck(I) := 0;
+                  end Poll_Gamepad;
               end if;
             end loop;
             -- do this short amount of processing inside a critical section
