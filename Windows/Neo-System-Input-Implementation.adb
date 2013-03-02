@@ -16,6 +16,7 @@
 --
 with
   System,
+  Ada.Calendar,
   Ada.Strings,
   Ada.Strings.Wide_Fixed,
   Ada.Unchecked_Deallocation,
@@ -26,12 +27,12 @@ with
   Neo.System,
   Neo.System.Text,
   Neo.System.Input,
-  Neo.System.Processor,
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types;
 use
   System,
+  Ada.Calendar,
   Ada.Strings,
   Ada.Strings.Wide_Fixed,
   Interfaces,
@@ -40,7 +41,6 @@ use
   Neo.System,
   Neo.System.Text,
   Neo.System.Input,
-  Neo.System.Processor,
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types;
@@ -55,8 +55,8 @@ procedure Test_Input
       Left_Mouse_Key,        Right_Mouse_Key,       Cancel_Key,            Middle_Mouse_Key,
       Auxiliary_1_Mouse_Key, Auxiliary_2_Mouse_Key, Null_Key,              Backspace_Key,
       Tab_Key,               Null_Key,              Null_Key,              Clear_Key,
-      Enter_Key,             Null_Key,              Null_Key,              Null_Key,
-      Null_Key,              Null_Key,              Pause_Break_Key,       Capital_Lock_Key, 
+      Enter_Key,             Null_Key,              Null_Key,              Shift_Key,
+      Control_Key,           Alternative_Key,       Pause_Break_Key,       Capital_Lock_Key, 
       Kana_Key,              Null_Key,              Junja_Key,             Final_Key,
       Hanja_Key,             Kanji_Key,             Escape_Key,            Convert_Key,
       No_Convert_Key,        Accept_Key,            Mode_Change_Key,       Space_Key, 
@@ -120,9 +120,8 @@ procedure Test_Input
   -- Variables --
   ---------------
     Devices           : Array_Record_Device(1..MAXIMUM_NUMBER_OF_DEVICES) := (others => <>);
-    Number_Of_Devices : Integer_4_Natural := 0;
-    Error     :         Integer_4_Unsigned_C := 0;
-    Window            : Address            := NULL_ADDRESS;
+    Number_Of_Devices : Integer_4_Natural                                 := 0;
+    Window            : Address                                           := NULL_ADDRESS;
   --------------------
   -- Update_Devices --
   --------------------
@@ -134,10 +133,10 @@ procedure Test_Input
         Handle : in Address)
         return Record_Device
         is
-        Result : Record_Device :=(
-          Identifier => To_Unchecked_Integer_8_Unsigned(Handle),
-          others     => <>);
-        Number_Of_Characters : Integer_4_Unsigned_C := 0;
+        Number_Of_Characters : Integer_4_Unsigned_C                          := 0;
+        Result               : Record_Device                                 := (Identifier => To_Unchecked_Integer_8_Unsigned(Handle), others => <>);
+        Buffer               : String_2(Result.Name'First..Result.Name'Last) := (others => NULL_CHARACTER_2);
+        File                 : Address                                       := NULL_ADDRESS;
         begin
           if 
           Get_Device_Information(
@@ -155,9 +154,7 @@ procedure Test_Input
           Get_Identifier:
           ---------------
             declare
-            Identifier : String_2(1..Integer_4_Signed(Number_Of_Characters)) :=
-              (Others => NULL_CHARACTER_2);
-            Number_Of_Bytes : Integer_4_Unsigned_C := 0;
+            Identifier : String_2(1..Integer_4_Signed(Number_Of_Characters)) := (Others => NULL_CHARACTER_2);
             begin
               if 
               Get_Device_Information(
@@ -168,87 +165,47 @@ procedure Test_Input
               then
                 raise System_Call_Failure;
               end if;
-              for I in Identifier'Range loop
-                if(
-                Identifier(I) /= '?' and Identifier(I) /= '\') and then(
-                Identifier'Last > I + 3 and then(
-                Identifier(I..I + 3) = "Root" or
-                Identifier(I..I + 3) = "ROOT" or
-                Identifier(I..I + 3) = "root"))
-                then
-                  Result.Name(1..SYSTEM_DEVICE_NAME'Length) := SYSTEM_DEVICE_NAME;
-                  return Result;
-                end if;
-              end loop;
-              if
-              Get_Device_Information(
-                Device  => Handle, 
-                Command => GET_DEVICE_PREPARSED_DATA,
-                Data    => NULL_ADDRESS,
-                Size    => Number_Of_Bytes'Address) /= 0
-              then 
+              File :=
+                Create_File(
+                  Name                 => Identifier(Identifier'First)'Address,
+                  Desired_Access       => GENERIC_READ or GENERIC_WRITE,
+                  Share_Mode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
+                  Security_Attributes  => NULL_ADDRESS,
+                  Creation_Desposition => OPEN_EXISTING,
+                  Flags_And_Attributes => 0,
+                  Template_File        => NULL_ADDRESS);
+              if File = NULL_ADDRESS then
                 raise System_Call_Failure;
               end if;
-              ---------------------
-              Get_Device_Specifics:
-              ---------------------
-                declare
-                Data   : Array_Integer_1_Unsigned_C(1..Integer_4_Signed(Number_Of_Bytes)) := (others => 0);
-                Buffer : String_2(Result.Name'First..Result.Name'Last) := (others => NULL_CHARACTER_2);
-                File   : Address                                       := NULL_ADDRESS;
-                begin
-                  File :=
-                    Create_File(
-                      Name                 => Identifier(Identifier'First)'Address,
-                      Desired_Access       => GENERIC_READ or GENERIC_WRITE,
-                      Share_Mode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
-                      Security_Attributes  => NULL_ADDRESS,
-                      Creation_Desposition => OPEN_EXISTING,
-                      Flags_And_Attributes => 0,
-                      Template_File        => NULL_ADDRESS);
-                  if File = NULL_ADDRESS or Data'Size < Integer_1_Unsigned'Size then
-                    Result.Name(1..SYSTEM_DEVICE_NAME'Length) := SYSTEM_DEVICE_NAME;
-                    return Result;
-                  end if;
-                  if
-                  Get_Device_Information(
-                    Device  => Handle, 
-                    Command => GET_DEVICE_PREPARSED_DATA,
-                    Data    => Data(Data'First)'Address,
-                    Size    => Number_Of_Bytes'Address) < 0
-                  then 
-                    raise System_Call_Failure;
-                  end if;
-                  if
-                  Get_Device_Product(
-                    File   => File,
-                    Buffer => Buffer(Buffer'First)'Address,
-                    Size   => Buffer'Size / Integer_1_Unsigned'Size) /= FAILED
-                  then
-                    Result.Name := Buffer;
-                  end if;
-                  Buffer := (others => NULL_CHARACTER_2);
-                  if
-                  Get_Device_Manufacturer(
-                    File   => File,
-                    Buffer => Buffer(Buffer'First)'Address,
-                    Size   => Buffer'Size / Integer_1_Unsigned'Size) /= FAILED
-                  then
-                    --------------------------
-                    Because_Of_Strings_In_Ada:
-                    --------------------------
-                      declare
-                      Name : String_2 := Trim_Null(Buffer) & " " & Trim_Null(Result.Name);
-                      begin
-                        Result.Name(1..Name'Length) := Name;
-                      end Because_Of_Strings_In_Ada;
-                  else
-                    return Result;
-                  end if;
-                  if Close_Handle(File) = FAILED then
-                    raise System_Call_Failure;
-                  end if;
-                end Get_Device_Specifics;
+              if
+              Get_Device_Product(
+                File   => File,
+                Buffer => Buffer(Buffer'First)'Address,
+                Size   => Buffer'Size / Integer_1_Unsigned'Size) /= FAILED
+              then
+                Result.Name := Buffer;
+              end if;
+              Buffer := (others => NULL_CHARACTER_2);
+              if
+              Get_Device_Manufacturer(
+                File   => File,
+                Buffer => Buffer(Buffer'First)'Address,
+                Size   => Buffer'Size / Integer_1_Unsigned'Size) /= FAILED
+              then
+                ---------------
+                Prepare_Result:
+                ---------------
+                  declare
+                  Name : String_2 := Trim_Null(Buffer) & " " & Trim_Null(Result.Name);
+                  begin
+                    Result.Name(1..Name'Length) := Name;
+                  end Prepare_Result;
+              else
+                return Result;
+              end if;
+              if Close_Handle(File) = FAILED then
+                raise System_Call_Failure;
+              end if;
             end Get_Identifier;
           return Result;
         end Create_Device;
@@ -266,12 +223,12 @@ procedure Test_Input
           raise No_Input_Devices_Detected;
         end if;
         -----------
-        Fetch_List:
+        Build_List:
         -----------
           declare
           Something_Has_Changed : Boolean                                                                      := False;
-          Have_Checked_Device   : array(1..Integer_4_Signed(Number_Of_New_Devices)) of Boolean                 := (others => False);
           List                  : Array_Record_Device_List_Element(1..Integer_4_Signed(Number_Of_New_Devices)) := (others => <>);
+          Have_Checked_Device   : array(List'Range) of Boolean                                                 := (others => False);
           begin
             if
             Get_Device_List(
@@ -279,6 +236,7 @@ procedure Test_Input
               Count => Number_Of_New_Devices'Address,
               Size  => Record_Device_List_Element'Size / Integer_1_Unsigned'Size) = -1
             then
+              Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
               raise System_Call_Failure;
             end if;  
             for I in Devices'First..Devices'First - 1 + Integer_4_Signed(Number_Of_Devices) loop
@@ -289,16 +247,7 @@ procedure Test_Input
                 end if;
                 if J = List'Last then
                   Something_Has_Changed := True;
-                  case List(J).Kind is
-                    when KIND_IS_KEYBOARD =>
-                      Put_Line("Keyboard");
-                    when KIND_IS_MOUSE =>
-                      Put_Line("Mouse");
-                    when KIND_IS_HUMAN_INTERFACE_DEVICE =>
-                      Put_Line(Create_Device(List(J).Handle).Name);
-                    when others =>
-                      raise System_Call_Failure;
-                  end case;
+                  Put_Line(Devices(I).Name);
                   Put_Line("Removed");
                   New_Line;
                 end if;
@@ -327,7 +276,7 @@ procedure Test_Input
               end loop;
               Number_Of_Devices := Integer_4_Natural(Number_Of_New_Devices);
             end if;
-          end Fetch_List;
+          end Build_List;
       end Update_Devices;
   ----------------
   -- Initialize --
@@ -365,8 +314,7 @@ procedure Test_Input
                 Command     => GET_DEVICE_HEADER,
                 Data        => Header'Address,
                 Size        => Number_Of_Bytes'Address,
-                Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
-                  /= Record_Device_Header'Size / Integer_1_Unsigned'Size
+                Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size) /= Record_Device_Header'Size / Integer_1_Unsigned'Size
               then
                 Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
                 raise System_Call_Failure;
@@ -379,6 +327,11 @@ procedure Test_Input
                     declare
                     Keyboard : Record_Device_Keyboard := (others => <>);
                     begin
+                      if
+                      (Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN) and
+                      Keyboard.Data.Flags = 0 then
+                        Put_Line("WTF");
+                      end if;
                       Number_Of_Bytes := Integer_4_Unsigned_C(Record_Device_Keyboard'Size / Integer_1_Unsigned'Size);
                       if 
                       Get_Device_Input_Data(
@@ -391,29 +344,63 @@ procedure Test_Input
                       then
                         raise System_Call_Failure;
                       end if;
-                      if Keyboard.Data.Message = EVENT_KEY_DOWN then
-                        Put_Line("Pressed " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
-                      else
-                        Put_Line("Released " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
-                      end if;
+                      Put_Line(Integer_2_Unsigned_C'Wide_Image(Keyboard.Data.Key));
+                      case MAP_KEY(Keyboard.Data.Key) is
+                        when Shift_Key =>
+                          if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Left_Shift_Key));
+                            else
+                              Put_Line("Released " & Enumerated_Key'Wide_Image(Left_Shift_Key));
+                            end if;
+                          else
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Right_Shift_Key));
+                            else
+                              Put_Line("Released " & Enumerated_Key'Wide_Image(Right_Shift_Key));
+                            end if;
+                          end if;
+                        when Control_Key =>
+                          if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0 then
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Right_Control_Key));
+                            else
+                              Put_Line("Released " & Enumerated_Key'Wide_Image(Right_Control_Key));
+                            end if;
+                          else
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Left_Control_Key));
+                            else
+                              Put_Line("Released " & Enumerated_Key'Wide_Image(Left_Control_Key));
+                            end if;
+                          end if;
+                        when Alternative_Key =>
+                          if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0  then
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Right_Alternative_Key));
+                            else
+                              Put_Line("Pressed " & Enumerated_Key'Wide_Image(Right_Alternative_Key));
+                            end if;
+                          else
+                            if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                              Put_Line("Released" & Enumerated_Key'Wide_Image(Left_Alternative_Key));
+                            else
+                              Put_Line("Released " & Enumerated_Key'Wide_Image(Left_Alternative_Key));
+                            end if;
+                          end if;
+                        when others =>
+                          if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
+                            Put_Line("Pressed " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
+                          else
+                            Put_Line("Released " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
+                          end if;
+                      end case;
                       New_Line;
                     end Handle_Keyboard;
                 when KIND_IS_MOUSE =>
                   null;
                 when KIND_IS_HUMAN_INTERFACE_DEVICE =>
                   null;
-                  -- loop
-                  --   int count = GetRawInputBuffer((PRAWINPUT)buffer, &bufSize, RIH_SIZE);
-                  --   if count <= 0 then
-                  --     exit;
-                  --   end if;
-                  --   const RAWINPUT* raw = (const RAWINPUT*)buffer;
-                  --   while count > 0 loop
-                  --     processRawInput(*raw, background);
-                  --     raw = NEXTRAWINPUTBLOCK(raw);
-                  --     Count := Count - 1;
-                  --   end loop;
-                  -- end loop;
                 when others =>
                   null;
               end case;
@@ -448,16 +435,6 @@ procedure Test_Input
         Background => BRUSH_GRAY,
         Menu_Name  => null,
         Class_Name => To_Access_Constant_Character_2_C(Class_Name)); 
-        -- 3 =>(
-        --   Page   => GENERIC_DESKTOP_CONTROL,
-        --   Usage  => USE_RAW_JOYSTICK,
-        --   Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        --   Target => Window));
-        -- 4 =>(
-        --   Page   => GENERIC_DESKTOP_CONTROL,
-        --   Usage  => USE_RAW_HUMAN_INTERFACE_DEVICE,
-        --   Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        --   Target => Window));
       begin
         if Register_Class(Class'Address) = Integer_2_Unsigned_C(FAILED) then
           raise System_Call_Failure;
@@ -466,7 +443,7 @@ procedure Test_Input
           Create_Window(
             Style_Extra => 0,
             Class_Name  => To_String_2_C(Class_Name),
-            Window_Name => To_String_2_C(Class_Name & "???"), 
+            Window_Name => To_String_2_C(Class_Name), 
             Style       => INPUT_WINDOW_STYLE,
             X           => 0,
             Y           => 0,
@@ -479,12 +456,9 @@ procedure Test_Input
         if Window = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        if Update_Window(Window) = FAILED then
-          raise System_Call_Failure;
-        end if;
-        ---------------
-        Create_Devices:
-        ---------------
+        --------------------------------------
+        Set_Message_Loop_To_Recieve_Raw_Input:
+        --------------------------------------
           declare
           Device_Setups:
             Array_Record_Device_Setup :=(
@@ -505,10 +479,9 @@ procedure Test_Input
               Number  => Device_Setups'Length,
               Size    => Record_Device_Setup'Size / Integer_1_Unsigned'Size) = FAILED
             then
-              Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
               raise System_Call_Failure;
             end if;
-          end Create_Devices;
+          end Set_Message_Loop_To_Recieve_Raw_Input;
       end Initialize;
   --------------
   -- Finalize --
@@ -540,7 +513,7 @@ procedure Test_Input
   -- Main --
   ----------
     Message   : aliased Record_Message     := (others => <>);
-    Last_Time :         Integer_8_Unsigned := 0;
+    Last_Time : Time := Clock;
     begin
       Put_Title("INPUT TEST");
       Initialize("Input Test");
@@ -563,15 +536,16 @@ procedure Test_Input
           end if;
         end if;
         if
-        Get_Clock_Ticks - Last_Time >= Integer_8_Unsigned(
-        SECONDS_TO_TEST_FOR_REMOVAL_AND_ADDITION_OF_DEVICES * 1000.0)
+        Clock >= Duration(
+        SECONDS_TO_TEST_FOR_REMOVAL_AND_ADDITION_OF_DEVICES * 1000.0) + Last_Time
         then
           Update_Devices;
-          Last_Time := Get_Clock_Ticks;
+          Last_Time := Clock;
         end if;
       end loop;
       Finalize;
       Hang_Window;
   end Test_Input;
+
 
 
