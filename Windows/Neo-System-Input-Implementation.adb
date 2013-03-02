@@ -120,14 +120,14 @@ procedure Test_Input
   -- Variables --
   ---------------
     Devices           : Array_Record_Device(1..MAXIMUM_NUMBER_OF_DEVICES) := (others => <>);
-    Number_Of_Devices : Integer_4_Positive := 1;
+    Number_Of_Devices : Integer_4_Natural := 0;
+    Error     :         Integer_4_Unsigned_C := 0;
     Window            : Address            := NULL_ADDRESS;
   --------------------
   -- Update_Devices --
   --------------------
     procedure Update_Devices
       is
-      Number_Of_Devices : Integer_4_Unsigned_C := 0;
       -----------------------
       function Create_Device(
       -----------------------
@@ -155,7 +155,8 @@ procedure Test_Input
           Get_Identifier:
           ---------------
             declare
-            Identifier : String_2(1..Integer_4_Signed(Number_Of_Characters)) := (Others => NULL_CHARACTER_2);
+            Identifier : String_2(1..Integer_4_Signed(Number_Of_Characters)) :=
+              (Others => NULL_CHARACTER_2);
             Number_Of_Bytes : Integer_4_Unsigned_C := 0;
             begin
               if 
@@ -168,8 +169,8 @@ procedure Test_Input
                 raise System_Call_Failure;
               end if;
               for I in Identifier'Range loop
-                if
-                (Identifier(I) /= '?' and Identifier(I) /= '\') and then(
+                if(
+                Identifier(I) /= '?' and Identifier(I) /= '\') and then(
                 Identifier'Last > I + 3 and then(
                 Identifier(I..I + 3) = "Root" or
                 Identifier(I..I + 3) = "ROOT" or
@@ -192,14 +193,10 @@ procedure Test_Input
               Get_Device_Specifics:
               ---------------------
                 declare
-                Data: Array_Integer_1_Unsigned_C
-                  (1..Integer_4_Signed(Number_Of_Bytes)) := (others => 0);
-                Buffer:
-                  String_2(Result.Name'First..Result.Name'Last) := (others => NULL_CHARACTER_2);
-                File : Address := NULL_ADDRESS;
-                -----
+                Data   : Array_Integer_1_Unsigned_C(1..Integer_4_Signed(Number_Of_Bytes)) := (others => 0);
+                Buffer : String_2(Result.Name'First..Result.Name'Last) := (others => NULL_CHARACTER_2);
+                File   : Address                                       := NULL_ADDRESS;
                 begin
-                -----
                   File :=
                     Create_File(
                       Name                 => Identifier(Identifier'First)'Address,
@@ -210,8 +207,8 @@ procedure Test_Input
                       Flags_And_Attributes => 0,
                       Template_File        => NULL_ADDRESS);
                   if File = NULL_ADDRESS or Data'Size < Integer_1_Unsigned'Size then
+                    Result.Name(1..SYSTEM_DEVICE_NAME'Length) := SYSTEM_DEVICE_NAME;
                     return Result;
-                    --raise System_Call_Failure;
                   end if;
                   if
                   Get_Device_Information(
@@ -245,42 +242,46 @@ procedure Test_Input
                       begin
                         Result.Name(1..Name'Length) := Name;
                       end Because_Of_Strings_In_Ada;
+                  else
+                    return Result;
+                  end if;
+                  if Close_Handle(File) = FAILED then
+                    raise System_Call_Failure;
                   end if;
                 end Get_Device_Specifics;
             end Get_Identifier;
           return Result;
         end Create_Device;
+      Number_Of_New_Devices : Integer_4_Unsigned_C := 0;
       begin
         if
         Get_Device_List(
           List  => NULL_ADDRESS,
-          Count => Number_Of_Devices'Address,
+          Count => Number_Of_New_Devices'Address,
           Size  => Record_Device_List_Element'Size / Integer_1_Unsigned'Size) = -1
         then
           raise System_Call_Failure;
         end if;
-        if Number_Of_Devices = 0 then
+        if Number_Of_New_Devices = 0 then
           raise No_Input_Devices_Detected;
         end if;
         -----------
         Fetch_List:
         -----------
           declare
-          Have_Checked_Device:
-            array (1..Integer_4_Signed(Number_Of_Devices)) of boolean := (others => False);
-          Something_Has_Changed : Boolean := False;
-          List:
-            Array_Record_Device_List_Element(1..Integer_4_Signed(Number_Of_Devices)) := (others => <>);
+          Something_Has_Changed : Boolean                                                                      := False;
+          Have_Checked_Device   : array(1..Integer_4_Signed(Number_Of_New_Devices)) of Boolean                 := (others => False);
+          List                  : Array_Record_Device_List_Element(1..Integer_4_Signed(Number_Of_New_Devices)) := (others => <>);
           begin
             if
             Get_Device_List(
               List  => List(List'First)'Address,
-              Count => Number_Of_Devices'Address,
+              Count => Number_Of_New_Devices'Address,
               Size  => Record_Device_List_Element'Size / Integer_1_Unsigned'Size) = -1
             then
               raise System_Call_Failure;
-            end if;
-            for I in Devices'Range loop
+            end if;  
+            for I in Devices'First..Devices'First - 1 + Integer_4_Signed(Number_Of_Devices) loop
               for J in List'Range loop
                 if To_Unchecked_Integer_8_Unsigned(List(J).Handle) = Devices(I).Identifier then
                   Have_Checked_Device(J) := True;
@@ -288,7 +289,16 @@ procedure Test_Input
                 end if;
                 if J = List'Last then
                   Something_Has_Changed := True;
-                  Put_Line("Name " & Create_Device(List(I).Handle).Name);
+                  case List(J).Kind is
+                    when KIND_IS_KEYBOARD =>
+                      Put_Line("Keyboard");
+                    when KIND_IS_MOUSE =>
+                      Put_Line("Mouse");
+                    when KIND_IS_HUMAN_INTERFACE_DEVICE =>
+                      Put_Line(Create_Device(List(J).Handle).Name);
+                    when others =>
+                      raise System_Call_Failure;
+                  end case;
                   Put_Line("Removed");
                   New_Line;
                 end if;
@@ -297,16 +307,25 @@ procedure Test_Input
             for I in Have_Checked_Device'Range loop
               if not Have_Checked_Device(I) then
                 Something_Has_Changed := True;
-                Put_Line("Name " & Create_Device(List(I).Handle).Name);
+                case List(I).Kind is
+                  when KIND_IS_KEYBOARD =>
+                    Put_Line("Keyboard");
+                  when KIND_IS_MOUSE =>
+                    Put_Line("Mouse");
+                  when KIND_IS_HUMAN_INTERFACE_DEVICE =>
+                    Put_Line(Create_Device(List(I).Handle).Name);
+                  when others =>
+                    raise System_Call_Failure;
+                end case;
                 Put_Line("Added");
                 New_Line;
               end if;
             end loop;
             if Something_Has_Changed then
               for I in List'Range loop
-                Devices(I) := Create_Device(List(I).Handle);
+                Devices(Devices'First + I - List'First) := Create_Device(List(I).Handle);
               end loop;
-              Number_Of_Devices := List'Length;
+              Number_Of_Devices := Integer_4_Natural(Number_Of_New_Devices);
             end if;
           end Fetch_List;
       end Update_Devices;
@@ -319,20 +338,21 @@ procedure Test_Input
       -------------------------
       function Window_Callback(
       -------------------------
-        Window        : Address;
-        Message       : Integer_4_Unsigned_C;
-        Data_Unsigned : Integer_4_Unsigned_C;
-        Data_Signed   : Integer_4_Signed_C)
+        Window        : in Address;
+        Message       : in Integer_4_Unsigned_C;
+        Data_Unsigned : in Integer_4_Unsigned_C;
+        Data_Signed   : in Integer_4_Signed_C)
         return Integer_4_Signed_C;
         pragma Convention(Stdcall, Window_Callback);
       function Window_Callback(
-        Window        : Address;
-        Message       : Integer_4_Unsigned_C;
-        Data_Unsigned : Integer_4_Unsigned_C;
-        Data_Signed   : Integer_4_Signed_C)
+        Window        : in Address;
+        Message       : in Integer_4_Unsigned_C;
+        Data_Unsigned : in Integer_4_Unsigned_C;
+        Data_Signed   : in Integer_4_Signed_C)
         return Integer_4_Signed_C
         is
         Number_Of_Bytes : Integer_4_Unsigned_C := 0;
+        Header : Record_Device_Header := (others => <>);
         begin
           case Message is
             when EVENT_CLOSE =>
@@ -342,83 +362,73 @@ procedure Test_Input
               if
               Get_Device_Input_Data(
                 Device      => To_Unchecked_Address(Data_Signed),
-                Command     => GET_DEVICE_PREPARSED_DATA,
-                Data        => NULL_ADDRESS,
+                Command     => GET_DEVICE_HEADER,
+                Data        => Header'Address,
                 Size        => Number_Of_Bytes'Address,
-                Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size) /= 0
+                Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
+                  /= Record_Device_Header'Size / Integer_1_Unsigned'Size
               then
+                Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
                 raise System_Call_Failure;
               end if;
-              if Number_Of_Bytes < Record_Device'Size / Integer_1_Unsigned'Size then
-                raise System_Call_Failure;
-                --return; -- Unexpected packet
-              end if;
-              ----------------
-              Interpret_Input:
-              ----------------
-                declare
-                Data   : array (1..Number_Of_Bytes) of Integer_1_Unsigned_C := (others => 0);
-                Header : Record_Device_Header                               := (others => <>);
-                for Header'Address
-                  use Data'Address;
-                begin
-                  if 
-                  Get_Device_Input_Data(
-                    Device      => Data'Address,
-                    Command     => GET_DEVICE_PREPARSED_DATA,
-                    Data        => Data'Address,
-                    Size        => Number_Of_Bytes'Address,
-                    Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size) /= Number_Of_Bytes
-                  then
-                    raise System_Call_Failure;
-                  end if;
-                  case Header.Kind is
-                    when KIND_IS_RAW_KEYBOARD =>
-                      ----------------
-                      Handle_Keyboard:
-                      ----------------
-                        declare
-                        Keyboard : Record_Device_Keyboard := (others => <>);
-                        for Keyboard'Address
-                          use Data'Address;
-                        begin
-                          if Keyboard.Data.Message = EVENT_KEY_DOWN then
-                            Put_Line("Pressed " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
-                          else
-                            Put_Line("Released " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
-                          end if;
-                          New_Line;
-                        end Handle_Keyboard;
-                    when KIND_IS_RAW_MOUSE =>
-                      null;
-                    when KIND_IS_RAW_HUMAN_INTERFACE_DEVICE =>
-                      null;
-                      -- loop
-                      --   int count = GetRawInputBuffer((PRAWINPUT)buffer, &bufSize, RIH_SIZE);
-                      --   if count <= 0 then
-                      --     exit;
-                      --   end if;
-                      --   const RAWINPUT* raw = (const RAWINPUT*)buffer;
-                      --   while count > 0 loop
-                      --     processRawInput(*raw, background);
-                      --     raw = NEXTRAWINPUTBLOCK(raw);
-                      --     Count := Count - 1;
-                      --   end loop;
-                      -- end loop;
-                    when others =>
-                      null;
-                  end case;
-                  for I in Devices'First..Devices'First + Number_Of_Devices loop
-                    if Devices(I).Identifier = To_Unchecked_Integer_8_Unsigned(Header.Device) then
-                      Put_Line("Identifier " & Integer_8_Unsigned'Wide_Image(Devices(I).Identifier));
-                      Put_Line("Name " & Devices(I).Name);
-                      exit;
-                    end if;
-                    if I = Devices'First + Number_Of_Devices then
-                      Update_Devices;
-                    end if;
-                  end loop;
-                end Interpret_Input;
+              case Header.Kind is
+                when KIND_IS_KEYBOARD =>
+                  ----------------
+                  Handle_Keyboard:
+                  ----------------
+                    declare
+                    Keyboard : Record_Device_Keyboard := (others => <>);
+                    begin
+                      Number_Of_Bytes := Integer_4_Unsigned_C(Record_Device_Keyboard'Size / Integer_1_Unsigned'Size);
+                      if 
+                      Get_Device_Input_Data(
+                        Device      => To_Unchecked_Address(Data_Signed),
+                        Command     => GET_DEVICE_DATA,
+                        Data        => Keyboard'Address,
+                        Size        => Number_Of_Bytes'Address,
+                        Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
+                          /= Record_Device_Keyboard'Size / Integer_1_Unsigned'Size 
+                      then
+                        raise System_Call_Failure;
+                      end if;
+                      if Keyboard.Data.Message = EVENT_KEY_DOWN then
+                        Put_Line("Pressed " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
+                      else
+                        Put_Line("Released " & Enumerated_Key'Wide_Image(MAP_KEY(Keyboard.Data.Key)));
+                      end if;
+                      New_Line;
+                    end Handle_Keyboard;
+                when KIND_IS_MOUSE =>
+                  null;
+                when KIND_IS_HUMAN_INTERFACE_DEVICE =>
+                  null;
+                  -- loop
+                  --   int count = GetRawInputBuffer((PRAWINPUT)buffer, &bufSize, RIH_SIZE);
+                  --   if count <= 0 then
+                  --     exit;
+                  --   end if;
+                  --   const RAWINPUT* raw = (const RAWINPUT*)buffer;
+                  --   while count > 0 loop
+                  --     processRawInput(*raw, background);
+                  --     raw = NEXTRAWINPUTBLOCK(raw);
+                  --     Count := Count - 1;
+                  --   end loop;
+                  -- end loop;
+                when others =>
+                  null;
+              end case;
+              --Put_Line(Integer_4_Natural'Wide_Image(Number_Of_Devices));
+              -- for I in Devices'First..Devices'First + Number_Of_Devices loop
+              --   null;
+              --   -- if Devices(I).Identifier = To_Unchecked_Integer_8_Unsigned(Header.Device) then
+              --   --   Put_Line("Identifier " & Integer_8_Unsigned'Wide_Image(Devices(I).Identifier));
+              --   --   --Put_Line("Name " & Devices(I).Name);
+              --   --   exit;
+              --   -- end if;
+              --   -- if I = Devices'First + Number_Of_Devices then
+              --   --   Update_Devices;
+              --   -- end if;
+              -- end loop;
             when others =>
               null;
           end case;
@@ -438,26 +448,14 @@ procedure Test_Input
         Background => BRUSH_GRAY,
         Menu_Name  => null,
         Class_Name => To_Access_Constant_Character_2_C(Class_Name)); 
-      Device_Setups:
-        Array_Record_Device_Setup :=(
-        1 =>(
-          Page   => GENERIC_DESKTOP_CONTROL,
-          Usage  => USE_RAW_KEYBOARD,
-          Flags  => TAKE_INPUT_ON_NON_ACTIVE and IGNORE_LEGACY_INPUT_MESSAGES,
-          Target => Window),
-        2 =>(
-          Page   => GENERIC_DESKTOP_CONTROL,
-          Usage  => USE_RAW_MOUSE,
-          Flags  => TAKE_INPUT_ON_NON_ACTIVE and IGNORE_LEGACY_INPUT_MESSAGES,
-          Target => Window));
         -- 3 =>(
         --   Page   => GENERIC_DESKTOP_CONTROL,
         --   Usage  => USE_RAW_JOYSTICK,
         --   Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        --   Target => Window),
+        --   Target => Window));
         -- 4 =>(
         --   Page   => GENERIC_DESKTOP_CONTROL,
-        --   Usage  => USE_RAW_GAMEPAD,
+        --   Usage  => USE_RAW_HUMAN_INTERFACE_DEVICE,
         --   Flags  => TAKE_INPUT_ON_NON_ACTIVE,
         --   Target => Window));
       begin
@@ -468,8 +466,8 @@ procedure Test_Input
           Create_Window(
             Style_Extra => 0,
             Class_Name  => To_String_2_C(Class_Name),
-            Window_Name => To_String_2_C(Class_Name), 
-            Style       => 0,
+            Window_Name => To_String_2_C(Class_Name & "???"), 
+            Style       => INPUT_WINDOW_STYLE,
             X           => 0,
             Y           => 0,
             Width       => 0,
@@ -481,14 +479,36 @@ procedure Test_Input
         if Window = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        if
-        Register_Devices(
-          Devices => Device_Setups'Address,
-          Number  => Device_Setups'Length,
-          Size    => Device_Setups'Size / Integer_1_Unsigned'Size) = FAILED
-        then
+        if Update_Window(Window) = FAILED then
           raise System_Call_Failure;
         end if;
+        ---------------
+        Create_Devices:
+        ---------------
+          declare
+          Device_Setups:
+            Array_Record_Device_Setup :=(
+            1 =>(
+              Page   => GENERIC_DESKTOP_CONTROL,
+              Usage  => USE_RAW_KEYBOARD,
+              Flags  => TAKE_INPUT_ON_NON_ACTIVE,
+              Target => Window),
+            2 =>(
+              Page   => GENERIC_DESKTOP_CONTROL,
+              Usage  => USE_RAW_MOUSE,
+              Flags  => TAKE_INPUT_ON_NON_ACTIVE,
+              Target => Window));
+          begin
+            if
+            Register_Devices(
+              Devices => Device_Setups'Address,
+              Number  => Device_Setups'Length,
+              Size    => Record_Device_Setup'Size / Integer_1_Unsigned'Size) = FAILED
+            then
+              Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
+              raise System_Call_Failure;
+            end if;
+          end Create_Devices;
       end Initialize;
   --------------
   -- Finalize --
@@ -501,7 +521,6 @@ procedure Test_Input
         Flags  => STOP_READING_TOP_LEVEL_DEVICES,
         Target => NULL_ADDRESS);
       begin
-        null;
         if
         Register_Devices(
           Devices => Empty_Device_Setup'Address,
@@ -524,7 +543,7 @@ procedure Test_Input
     Last_Time :         Integer_8_Unsigned := 0;
     begin
       Put_Title("INPUT TEST");
-      Initialize;
+      Initialize("Input Test");
       loop
         if
         Peek_Message(
@@ -545,7 +564,8 @@ procedure Test_Input
         end if;
         if
         Get_Clock_Ticks - Last_Time >= Integer_8_Unsigned(
-        SECONDS_TO_TEST_FOR_REMOVAL_AND_ADDITION_OF_DEVICES * 1000.0) then
+        SECONDS_TO_TEST_FOR_REMOVAL_AND_ADDITION_OF_DEVICES * 1000.0)
+        then
           Update_Devices;
           Last_Time := Get_Clock_Ticks;
         end if;
@@ -553,4 +573,5 @@ procedure Test_Input
       Finalize;
       Hang_Window;
   end Test_Input;
+
 
