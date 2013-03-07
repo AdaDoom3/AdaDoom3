@@ -35,9 +35,8 @@ package body Implementation
   ---------------
   -- Constants --
   ---------------
-    INPUT_WINDOW_STYLE : constant Integer_4_Unsigned_C := STYLE_NO_ACTIVATE;
     MAP_KEY:
-      constant array (SUBEVENT_KEY_LEFT_MOUSE..SUBEVENT_KEY_CLEAR) of Enumerated_Key :=(
+      constant Array(VIRTUAL_KEY_LEFT_MOUSE..VIRTUAL_KEY_CLEAR) of Enumerated_Key :=(
       Left_Mouse_Key,        Right_Mouse_Key,       Cancel_Key,            Middle_Mouse_Key,
       Auxiliary_1_Mouse_Key, Auxiliary_2_Mouse_Key, Null_Key,              Backspace_Key,
       Tab_Key,               Null_Key,              Null_Key,              Clear_Key,
@@ -102,148 +101,352 @@ package body Implementation
       OEM_Specific_24_Key,   Attention_Key,         Clear_Selection_Key,   Exsel_Key,
       Erase_EOF_Key,         Play_Key,              Zoom_Key,              Null_Key,
       PA1_Key,               Clear_Key);
+  -------------
+  -- Records --
+  -------------
+    type Record_Lookup_Character_Internals
+      is record
+        Map_Key_Back : Array(Enumerated_Key'Range) of Integer_2_Unsigned_C := (others => 0);
+      end record;
+  --------------
+  -- Packages --
+  --------------
+    package Protected_Lookup_Character_Internals
+      is new Protected_Data(Record_Lookup_Character_Internals, (others => <>));
+    package Protected_Array_Map_Key_Back
+      is new Protected_Data(Array_Map_Key_Back, (others => <>));
+  ---------------
+  -- Protected --
+  ---------------
+    protected type Map_Key_Back
+      is
+        procedure Set(
+        function Get(
+          Key : in Enumerated_Key
+          return Integer_2_Unsigned;
+      private
+        Data   : Type_To_Protect := Initial_Type_To_Protect;
+        Status : Boolean         := False;
+      end Data;
   ---------------
   -- Variables --
   ---------------
-    Window : Address := NULL_ADDRESS;
-  -------
-  -- ¢ --
-  -------
-    procedure ¢
-      renames To_Unchecked_Integer_8_Unsigned;
+    Lookup_Character_Data : Protected_Lookup_Character_Internals.Data;
+    Window                : Address := NULL_ADDRESS;
+  -------------------
+  -- Set_Vibration --
+  -------------------
+    procedure Set_Vibration(
+      Player                 : in Integer_4_Positive;
+      Percent_Frequency_High : in Float_4_Percent;
+      Percent_Frequency_Low  : in Float_4_Percent;
+      Seconds                : in Duration)
+      is
+      begin
+
+      end Set_Vibration;
+  ------------------------------------
+  -- Finalize_Lookup_Character_Data --
+  ------------------------------------
+    procedure Finalize_Lookup_Character_Data
+      is
+      begin
+      end Finalize_Lookup_Character_Data;
+  ----------------------
+  -- Lookup_Character --
+  ----------------------
+    function Lookup_Character(
+      Key                                : in Enumerated_Key;
+      Is_Capital_Lock_Enabled            : in Boolean;
+      Is_Number_Lock_Enabled             : in Boolean;
+      Is_Left_Shift_Key_Pressed          : in Boolean;
+      Is_Right_Shift_Key_Pressed         : in Boolean;
+      Is_Left_Control_Key_Pressed        : in Boolean;
+      Is_Right_Control_Key_Pressed       : in Boolean;
+      Is_Left_Alternative_Key_Pressed    : in Boolean;
+      Is_Right_Alternative_Key_Pressed   : in Boolean;
+      Is_Left_System_Key_Pressed         : in Boolean;
+      Is_Right_System_Key_Pressed        : in Boolean;
+      Is_Application_Menu_Key_Pressed    : in Boolean)
+      return Character_2
+      is
+      int charCount = 0;
+      *outputChar = 0;
+      *deadChar = 0;
+      short state = 0;
+      int shift = -1;
+      int mod = 0;
+      WCHAR baseChar;
+      WCHAR diacritic;
+      KbdLayerDescriptor pKbdLayerDescriptor
+      int capsLock = (GetKeyState(VK_CAPITAL) & 0x01);
+      Current_Data : Record_Lookup_Character_Internals := Lookup_Character_Data.Get
+      begin
+        if Get_Keyboard_Layout_Name() = FAILED then
+          raise System_Call_Failure;
+        end if;
+        if Current_Data.Layout /= Layout then
+          if not Current_Data.Is_Initialized then
+            -- Create Key to VK table
+          end if;
+          if not USE_64_BIT and then  then
+            ptrPadding := sizeof(void *);
+          end if;
+          if GetSystemDirectory(systemDirectory, MAX_PATH) = FAILED then
+            raise System_Call_Failure;
+          end if;
+          kbdLibrary          := Load_Library(layoutFile);
+          pKbdLayerDescriptor := (KbdLayerDescriptor)GetProcAddress(kbdLibrary, "KbdLayerDescriptor");
+          if pKbdLayerDescriptor = null then
+            Finalize_
+            raise System_Call_Failure;
+          end if;
+          PKBDTABLES pKbd := pKbdLayerDescriptor.All;
+          -- Store the memory address of the following 3 structures.
+          BYTE *base = (BYTE *) pKbd;
+          -- First element of each structure, no offset adjustment needed.
+          pVkToBit = pKbd->pCharModifiers->pVkToBit;
+          -- Second element of pKbd, +4 byte offset on wow64.
+          pVkToWcharTable = *((PVK_TO_WCHAR_TABLE *) (base + offsetof(KBDTABLES, pVkToWcharTable) + ptrPadding));
+          -- Third element of pKbd, +8 byte offset on wow64.
+          pDeadKey = *((PDEADKEY *) (base + offsetof(KBDTABLES, pDeadKey) + (ptrPadding * 2)));
+          Lookup_Character_Data.Set(Current_Data);
+        end if;
+        -- Because this is only a structure of two bytes, we don't need to worry 
+        -- about the structure padding of __ptr64 offsets on Wow64.
+        for I in 1.. loop
+          exit when pVkToBit[i].Vk /= 0;
+          state = GetAsyncKeyState(pVkToBit[i].Vk);
+          if pVkToBit[i].Vk = VK_SHIFT then
+            shift = i + 1; -- Get modification number for Shift key
+          end if;
+          if (state and not SHRT_MAX) /= 0 then
+            if mod = 0 then
+              mod = i + 1;
+            else
+              mod = 0; -- Two modifiers at the same time!
+            end if;
+          end if;
+        end loop; 
+        -- Default 32 bit structure size should be 6 bytes (4 for the pointer and 2
+        -- additional byte fields) that are padded out to 8 bytes by the compiler.
+        unsigned short sizeVkToWcharTable = sizeof(VK_TO_WCHAR_TABLE);
+        if not USE_64_BIT and then IsWow64 then
+          -- If we are running under Wow64 the size of the first pointer will be
+          -- 8 bringing the total size to 10 bytes padded out to 16.
+          sizeVkToWcharTable = (sizeVkToWcharTable + ptrPadding + 7) & -8;
+        end if;
+        BYTE *ptrCurrentVkToWcharTable = (BYTE *) pVkToWcharTable;
+        int cbSize, n;
+        do
+          -- cbSize is used to calculate n, and n is used for the size of pVkToWchars[j].wch[n]
+          cbSize = *(ptrCurrentVkToWcharTable + offsetof(VK_TO_WCHAR_TABLE, cbSize) + ptrPadding);
+          n = (cbSize - 2) / 2;
+          -- Same as VK_TO_WCHARS pVkToWchars[] = pVkToWcharTable[i].pVkToWchars
+          PVK_TO_WCHARS pVkToWchars = (PVK_TO_WCHARS) ((PVK_TO_WCHAR_TABLE) ptrCurrentVkToWcharTable)->pVkToWchars;
+          if pVkToWchars /= NULL and mod < n then
+            -- pVkToWchars[j].VirtualKey
+            BYTE *pCurrentVkToWchars = (BYTE *) pVkToWchars;
+            loop
+              if ((PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey == virtualKey {
+                if (((PVK_TO_WCHARS) pCurrentVkToWchars)->Attributes == CAPLOK) && capsLock {
+                  if(mod == shift)
+                    mod = 0;
+                  else
+                    mod = shift;
+                  end if;
+                end if;
+                *outputChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
+                charCount = 1;
+                -- Increment the pCurrentVkToWchars by the size of wch[n].
+                pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
+                if *outputChar = WCH_NONE then
+                  charCount = 0;
+                elsif *outputChar = WCH_DEAD then
+                  *deadChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
+                  charCount = 0;
+                end if;
+                break;
+              else
+                -- Add sizeof WCHAR because we are really an array of WCHAR[n] not WCHAR[]
+                pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
+              end if;
+              exit when (PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey != 0;
+            end loop;
+          end if;
+          -- This is effectively the same as: ptrCurrentVkToWcharTable = pVkToWcharTable[++i];
+          ptrCurrentVkToWcharTable += sizeVkToWcharTable;
+          exit when cbSize /= 0;
+        end loop;
+        -- Code to check for dead characters...
+        if *deadChar /= 0 then
+          for I in 1.. loop
+            exit when pDeadKey[i].dwBoth /= 0;
+            baseChar = (WCHAR) pDeadKey[i].dwBoth;
+            diacritic = (WCHAR) (pDeadKey[i].dwBoth >> 16);
+            if baseChar = *outputChar and diacritic = *deadChar then
+              *deadChar = 0;
+              *outputChar = (WCHAR) pDeadKey[i].wchComposed;
+            end if;
+          end loop;
+        end if;
+        return charCount;
+      end Lookup_Character;
   --------------------
   -- Update_Devices --
   --------------------
     procedure Update_Devices
       is
-      Number_Of_New_Devices : Integer_4_Unsigned_C := 0;
+      Product      : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
+      Manufacturer : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
+      Number_Of_X  : aliased Integer_4_Unsigned_C                       := 0;
+      File         :         Address                                    := NULL_ADDRESS;
       begin
         if
         Get_Device_List(
           List  => NULL_ADDRESS,
-          Count => Number_Of_New_Devices'Address,
+          Count => Number_Of_X'Address,
           Size  => Record_Device_List_Element'Size / Integer_1_Unsigned'Size) = -1
         then
           raise System_Call_Failure;
         end if;
-        if Number_Of_New_Devices = 0 then
+        if Number_Of_X = 0 then
           raise No_Input_Devices_Detected;
         end if;
         -----------
         Build_List:
         -----------
           declare
-          List                : Array_Record_Device_List_Element(1..Integer(Number_Of_New_Devices)) := (others => <>);
-          Have_Checked_Device : Array(List'Range) of Boolean                                        := (others => False);
+          List : aliased Array_Record_Device_List_Element(1..Integer(Number_Of_X)) := (others => <>);
           begin
             if
             Get_Device_List(
               List  => List(List'First)'Address,
-              Count => Number_Of_New_Devices'Address,
+              Count => Number_Of_X'Address,
               Size  => Record_Device_List_Element'Size / Integer_1_Unsigned'Size) = -1
             then
               Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
               raise System_Call_Failure;
-            end if;  
-            for I in Devices'First..Devices'First - 1 + Integer(Number_Of_Devices) loop
-              for J in List'Range loop
-                if ¢(List(J).Handle) = Devices(I).Identifier then
-                  Have_Checked_Device(J) := True;
-                  exit;
-                end if;
-                if J = List'Last then
-                  Remove_Device(¢(Handle));
-                end if;
-              end loop;
-            end loop;
-            for I in Have_Checked_Device'Range loop
-              if not Have_Checked_Device(I) then
+            end if;
+            for I in List'Range loop
+              if not Is_Device_Present(Handle) then
                 case List(I).Kind is
-                  when KIND_IS_KEYBOARD =>
-                    Add_Device(Keyboard_Device, ¢(Handle));
-                  when KIND_IS_MOUSE =>
-                    Add_Device(Keyboard_Device, ¢(Handle));
+                  when KIND_IS_KEYBOARD | KIND_IS_MOUSE =>
+                    Add_Device((Handle, others => <>));
                   when KIND_IS_HUMAN_INTERFACE_DEVICE =>
-                    --------------
-                    Create_Device:
-                    --------------
+                    if 
+                    Get_Device_Information(
+                      Device  => Handle,
+                      Command => GET_DEVICE_NAME,
+                      Data    => NULL_ADDRESS,
+                      Size    => Number_Of_X'Access) /= 0
+                    then
+                      raise System_Call_Failure;
+                    end if;
+                    if Number_Of_X < 2 then
+                      raise System_Call_Failure;
+                    end if;
+                    ---------------
+                    Get_Identifier:
+                    ---------------
                       declare
-                      Number_Of_Characters : aliased Integer_4_Unsigned_C                  := 0;
-                      Name_Manufacturer    : aliased String_2(1..MAXIMUM_DEVICE_NAME_SIZE) := (others => NULL_CHARACTER_2);
-                      Name_Product         : aliased String_2(1..MAXIMUM_DEVICE_NAME_SIZE) := (others => NULL_CHARACTER_2);
-                      File                 :         Address                               := NULL_ADDRESS;
+                      Identifier : aliased String_2(1..Integer(Number_Of_X)) := (Others => NULL_CHARACTER_2);
                       begin
                         if 
                         Get_Device_Information(
                           Device  => Handle,
                           Command => GET_DEVICE_NAME,
-                          Data    => NULL_ADDRESS,
-                          Size    => Number_Of_Characters'Address) /= 0
+                          Data    => Identifier'Access,
+                          Size    => Number_Of_X'Access) < 0
                         then
                           raise System_Call_Failure;
                         end if;
-                        if Number_Of_Characters < 2 then
+                        File :=
+                          Create_File(
+                            Name                 => Identifier'Access,
+                            Desired_Access       => GENERIC_READ or GENERIC_WRITE,
+                            Share_Mode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
+                            Security_Attributes  => NULL_ADDRESS,
+                            Creation_Desposition => OPEN_EXISTING,
+                            Flags_And_Attributes => 0,
+                            Template_File        => NULL_ADDRESS);
+                        if File = NULL_ADDRESS then
                           raise System_Call_Failure;
                         end if;
-                        ---------------
-                        Get_Identifier:
-                        ---------------
+                        if
+                        Get_Device_Product(
+                          File   => File,
+                          Buffer => Product'Access,
+                          Size   => Product'Size / Integer_1_Unsigned'Size) = FAILED
+                        then
+                          null;
+                        end if;
+                        if
+                        Get_Device_Manufacturer(
+                          File   => File,
+                          Buffer => Manufacturer'Access,
+                          Size   => Manufacturer'Size / Integer_1_Unsigned'Size) = FAILED
+                        then
+                          null;
+                        end if;
+                        if Close_Handle(File) = FAILED then
+                          raise System_Call_Failure;
+                        end if;
+                        if 
+                        Get_Device_Information(
+                          Device  => Handle,
+                          Command => GET_PREPARSED_DATA,
+                          Data    => NULL_ADDRESS,
+                          Size    => Number_Of_X'Access) /= 0
+                        then
+                          raise System_Call_Failure;
+                        end if;
+                        if Number_Of_X < 2 then
+                          raise System_Call_Failure;
+                        end if;
+                        -------------------
+                        Get_Preparsed_Data:
+                        -------------------
                           declare
-                          Identifier : aliased String_2(1..Integer(Number_Of_Characters)) := (Others => NULL_CHARACTER_2);
+                          Data : aliased Array_Integer_1_Unsigned_C(1..Number_Of_X) := (others => 0);
                           begin
                             if 
                             Get_Device_Information(
                               Device  => Handle,
-                              Command => GET_DEVICE_NAME,
-                              Data    => Identifier(Identifier'First)'Address,
-                              Size    => Number_Of_Characters'Address) < 0
+                              Command => GET_PREPARSED_DATA,
+                              Data    => NULL_ADDRESS,
+                              Size    => Number_Of_X'Access) /= 0
                             then
-                              raise System_Call_Failure;
-                            end if;
-                            File :=
-                              Create_File(
-                                Name                 => Identifier(Identifier'First)'Address,
-                                Desired_Access       => GENERIC_READ or GENERIC_WRITE,
-                                Share_Mode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
-                                Security_Attributes  => NULL_ADDRESS,
-                                Creation_Desposition => OPEN_EXISTING,
-                                Flags_And_Attributes => 0,
-                                Template_File        => NULL_ADDRESS);
-                            if File = NULL_ADDRESS then
                               raise System_Call_Failure;
                             end if;
                             if
-                            Get_Device_Product(
-                              File   => File,
-                              Buffer => Name_Product(Name_Product'First)'Address,
-                              Size   => Name_Product'Size / Integer_1_Unsigned'Size) = FAILED
+                            Get_Device_Capabilities(
+                              Data         => Data'Access,
+                              Capabilities => Capabilities'Access) /= 
                             then
-                              Name_Product(Name_Product'First) := NULL_CHARACTER_2;
-                            end if;
-                            if
-                            Get_Device_Manufacturer(
-                              File   => File,
-                              Buffer => Name_Manufacturer(Name_Manufacturer'First)'Address,
-                              Size   => Name_Manufacturer'Size / Integer_1_Unsigned'Size) = FAILED
-                            then
-                              if Name_Product(Name_Product'First) = NULL_CHARACTER_2 then
-                                Add_Device(Human_Interface_Device, ¢(Handle));
-                              else
-                                Add_Device(Trim_Null(Name_Product), ¢(Handle));
-                              end if;
-                            else
-                              Add_Device(Trim_Null(Name_Manufacturer) & " " & Trim_Null(Name_Product), ¢(Handle));
-                            end if;
-                            if Close_Handle(File) = FAILED then
                               raise System_Call_Failure;
                             end if;
-                          end Get_Identifier;
-                        return Result;
-                      end Create_Device;
+                            ------------
+                            Get_Buttons:
+                            ------------
+                              declare
+                              begin
+                              end Get_Buttons;
+                      end Get_Identifier;
+                    return Result;
                   when others =>
                     raise System_Call_Failure;
                 end case;
-              end if;
+            end loop;
+            for I in Devices'Range loop
+              for J in List'Range loop
+                if Devices(I).Identifier = List(J).Handle then
+                  exit;
+                end if;
+                if J = List'Last then
+                  Remove_Device(Devices(I).Identifier);
+                end if;
+              end loop;
             end loop;
           end Build_List;
       end Update_Devices;
@@ -272,20 +475,6 @@ package body Implementation
         Player          :         Integer_4_Positive   := 1;
         Number_Of_Bytes : aliased Integer_4_Unsigned_C := 0;
         Header          : aliased Record_Device_Header := (others => <>);
-        ----------------------
-        procedure Queue_Event(
-        ----------------------
-          )
-          is
-          begin
-          end Queue_Event;
-        ----------------------
-        procedure Queue_Event(
-        ----------------------
-          )
-          is
-          begin
-          end Queue_Event;
         begin
           case Message is
             when EVENT_CLOSE =>
@@ -296,8 +485,8 @@ package body Implementation
               Get_Device_Input_Data(
                 Device      => To_Unchecked_Address(Data_Signed),
                 Command     => GET_DEVICE_HEADER,
-                Data        => Header'Address,
-                Size        => Number_Of_Bytes'Address,
+                Data        => Header'Access,
+                Size        => Number_Of_Bytes'Access,
                 Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
                   /= Record_Device_Header'Size / Integer_1_Unsigned'Size
               then
@@ -317,8 +506,8 @@ package body Implementation
                       Get_Device_Input_Data(
                         Device      => To_Unchecked_Address(Data_Signed),
                         Command     => GET_DEVICE_DATA,
-                        Data        => Keyboard'Address,
-                        Size        => Number_Of_Bytes'Address,
+                        Data        => Keyboard'Access,
+                        Size        => Number_Of_Bytes'Access,
                         Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
                           /= Record_Device_Keyboard'Size / Integer_1_Unsigned'Size 
                       then
@@ -331,24 +520,24 @@ package body Implementation
                         case MAP_KEY(Keyboard.Data.Key) is
                           when Shift_Key =>
                             if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then
-                              Queue_Event(Left_Shift_Key, Was_Pressed);
+                              Handle_Key(Left_Shift_Key, Was_Pressed, Header.Handle);
                             else
-                              Queue_Event(Right_Shift_Key, Was_Pressed);
+                              Handle_Key(Right_Shift_Key, Was_Pressed, Header.Handle);
                             end if;
                           when Control_Key =>
                             if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0 then
-                              Queue_Event(Right_Control_Key, Was_Pressed);
+                              Handle_Key(Right_Control_Key, Was_Pressed, Header.Handle);
                             else
-                              Queue_Event(Left_Control_Key, Was_Pressed);
+                              Handle_Key(Left_Control_Key, Was_Pressed, Header.Handle);
                             end if;
                           when Alternative_Key =>
                             if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0  then
-                              Queue_Event(Right_Alternative_Key, Was_Pressed);
+                              Handle_Key(Right_Alternative_Key, Was_Pressed, Header.Handle);
                             else
-                              Queue_Event(Left_Alternative_Key, Was_Pressed);
+                              Handle_Key(Left_Alternative_Key, Was_Pressed, Header.Handle);
                             end if;
                           when others =>
-                            Queue_Event(MAP_KEY(Keyboard.Data.Key), Was_Pressed);
+                            Handle_Key(MAP_KEY(Keyboard.Data.Key), Was_Pressed, Header.Handle);
                         end case;
                       end if;
                     end Handle_Keyboard;
@@ -364,38 +553,37 @@ package body Implementation
                       Get_Device_Input_Data(
                         Device      => To_Unchecked_Address(Data_Signed),
                         Command     => GET_DEVICE_DATA,
-                        Data        => Mouse'Address,
-                        Size        => Number_Of_Bytes'Address,
+                        Data        => Mouse'Access,
+                        Size        => Number_Of_Bytes'Access,
                         Header_Size => Record_Device_Header'Size / Integer_1_Unsigned'Size)
                           /= Record_Device_Mouse'Size / Integer_1_Unsigned'Size 
                       then
                         raise System_Call_Failure;
                       end if;
                       if Mouse.Data.Last_X /= 0 or Mouse.Data.Last_Y /= 0 then
-                        Queue_Event(Mouse.Data.Last_X, Mouse.Data.Last_Y);
+                        Handle_Mouse(Mouse.Data.Last_X, Mouse.Data.Last_Y, Header.Handle);
                       end if;
                       if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_DOWN) > 0 then
-                        Queue_Event(Left_Mouse_Key, True);
+                        Handle_Key(Left_Mouse_Key, True, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_UP) > 0 then
-                        Queue_Event(Left_Mouse_Key, False);
+                        Handle_Key(Left_Mouse_Key, False, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_DOWN) > 0 then
-                        Queue_Event(Right_Mouse_Key, True);
+                        Handle_Key(Right_Mouse_Key, True, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_UP) > 0 then
-                        Queue_Event(Right_Mouse_Key, Flase);
+                        Handle_Key(Right_Mouse_Key, Flase, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_DOWN) > 0 then
-                        Queue_Event(Middle_Mouse_Key, True);
+                        Handle_Key(Middle_Mouse_Key, True, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_UP) > 0 then
-                        Queue_Event(Middle_Mouse_Key, False);
+                        Handle_Key(Middle_Mouse_Key, False, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_DOWN) > 0 then
-                        Queue_Event(Auxiliary_1_Mouse_Key, True);
+                        Handle_Key(Auxiliary_1_Mouse_Key, True, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_UP) > 0 then
-                        Queue_Event(Auxiliary_1_Mouse_Key, False);
+                        Handle_Key(Auxiliary_1_Mouse_Key, False, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_DOWN) > 0 then
-                        Queue_Event(Auxiliary_2_Mouse_Key, True);
+                        Handle_Key(Auxiliary_2_Mouse_Key, True, Header.Handle);
                       elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_UP) > 0 then
-                        Queue_Event(Auxiliary_2_Mouse_Key, False);
-                      end if;
-                      if
+                        Handle_Key(Auxiliary_2_Mouse_Key, False, Header.Handle);
+                      elsif
                       (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_VERTICAL) > 0 or
                       (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0
                       then
@@ -406,26 +594,29 @@ package body Implementation
                           Δ : Integer_2_Signed :=
                             To_Unchecked_Integer_2_Signed(
                               Integer_2_Unsigned(
-                                Shift_Right(Integer_4_Unsigned(Mouse.Data.Button_Flags), 16))) / MOUSE_WHEEL_DELTA;
+                                Shift_Right(
+                                  Value  => Integer_4_Unsigned(Mouse.Data.Button_Flags),
+                                  Amount => Integer_4_Unsigned'Size / Integer_2_Unsigned)))
+                                    / MOUSE_WHEEL_DELTA;
                           begin
                             if Δ < 0 then
                               for I in Δ..-1 loop
                                 if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then
-                                  Queue_Event(Horizontal_Wheel_Mouse_Left_Key, True);
-                                  Queue_Event(Horizontal_Wheel_Mouse_Left_Key, False);
+                                  Handle_Key(Horizontal_Wheel_Mouse_Left_Key, True, Header.Handle, Header.Handle);
+                                  Handle_Key(Horizontal_Wheel_Mouse_Left_Key, False, Header.Handle, Header.Handle);
                                 else
-                                  Queue_Event(Vertical_Wheel_Mouse_Down_Key, True);
-                                  Queue_Event(Vertical_Wheel_Mouse_Down_Key, False);
+                                  Handle_Key(Vertical_Wheel_Mouse_Down_Key, True, Header.Handle, Header.Handle);
+                                  Handle_Key(Vertical_Wheel_Mouse_Down_Key, False, Header.Handle, Header.Handle);
                                 end if;
                               end loop;
                             elsif Δ > 0
                               for I in 1..Δ loop
                                 if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then;
-                                  Queue_Event(Horizontal_Wheel_Mouse_Right_Key, True);
-                                  Queue_Event(Horizontal_Wheel_Mouse_Right_Key, False);
+                                  Handle_Key(Horizontal_Wheel_Mouse_Right_Key, True, Header.Handle);
+                                  Handle_Key(Horizontal_Wheel_Mouse_Right_Key, False, Header.Handle);
                                 else
-                                  Queue_Event(Vertical_Wheel_Mouse_Up_Key, True);
-                                  Queue_Event(Vertical_Wheel_Mouse_Up_Key, False);
+                                  Handle_Key(Vertical_Wheel_Mouse_Up_Key, True, Header.Handle);
+                                  Handle_Key(Vertical_Wheel_Mouse_Up_Key, False, Header.Handle);
                                 end if;
                               end loop;
                             end if;
@@ -465,7 +656,7 @@ package body Implementation
             Style_Extra => 0,
             Class_Name  => To_String_2_C(Class_Name),
             Window_Name => To_String_2_C(Class_Name), 
-            Style       => INPUT_WINDOW_STYLE,
+            Style       => STYLE_NO_ACTIVATE,
             X           => 0,
             Y           => 0,
             Width       => 0,
@@ -500,7 +691,7 @@ package body Implementation
               Target => Window),
             4 =>(
               Page   => GENERIC_DESKTOP_CONTROL,
-              Usage  => USE_RAW_HUMAN_INTERFACE_DEVICE,
+              Usage  => USE_RAW_GAMEPAD,
               Flags  => TAKE_INPUT_ON_NON_ACTIVE,
               Target => Window));
           begin
@@ -514,12 +705,13 @@ package body Implementation
             end if;
           end Set_Message_Loop_To_Recieve_Raw_Input;
       end Initialize;
-  ------------------
-  -- Poll_Devices --
-  ------------------
-    procedure Poll_Devices
+  -------------------
+  -- Handle_Events --
+  -------------------
+    procedure Handle_Events
       is
       Message : aliased Record_Message := (others => <>);
+      XINPUT_STATE  joyData[MAX_JOYSTICKS];
       begin
         if
         Peek_Message(
@@ -530,17 +722,17 @@ package body Implementation
           Command        => REMOVE_MESSAGES_AFTER_PROCESSING) /= FAILED
         then
           if Message.Data = MESSAGE_QUIT then
-            exit;
+            return False
           elsif
           Translate_Message(Message'Address) < 2 and then
           Dispatch_Message(Message'Address) = 0
           then
             null;
           end if;
-          if Did_Recieve_Input_From_Unrecognized_Device then
-            raise Unrecognized_Device;
-          end if;
         end if;
+        for I in 1..NUMBER_OF_GAMEPADS loop
+          Get_(I);
+        end loop;
       end Poll_Devices;
   --------------
   -- Finalize --
@@ -553,10 +745,11 @@ package body Implementation
         Flags  => STOP_READING_TOP_LEVEL_DEVICES,
         Target => NULL_ADDRESS);
       begin
+        Finalize_Keyboard;
         if
         Register_Devices(
           Devices => Empty_Device_Setup'Address,
-          Number  => 1,
+          Number  => Empty_Device_Setup'Size / Record_Device'Size,
           Size    => Record_Device'Size / Integer_1_Unsigned'Size) = FAILED
         then
           raise System_Call_Failure;
