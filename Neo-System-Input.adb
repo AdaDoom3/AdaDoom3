@@ -14,31 +14,43 @@
 --
 --
 --
-package Neo.System.Input
+package body Neo.System.Input
   is
+  --------------------
+  -- Implementation --
+  --------------------
+    package body Implementation
+      is separate;
+    package Instantiated_Implementation
+      is new Implementation(
+      Add_Device     => ,
+      Remove_Device  => ,
+      Get_Device     => ,
+      Handle_Key     => ,
+      Handle_Key     => ,
+      Handle_Mouse   => ,
+      Handle_Stick   => ,
+      Handle_Stick   => ,
+      Handle_Trigger => ,
+      Handle_Trigger => );
+    package Implementation
+      renames Instantiated_Implementation;
   ----------------
   -- Task_Input --
   ----------------
-    task body Task_Input
+    task body Task_Input(
+      Title : in String_2)
       is
-      static int prevTime = 0;
-      static uint64 nextCheck[MAX_JOYSTICKS] = { 0 };
+      Last_Time : Time := Clock;
       begin
         accept Initialize;
-        -- setup the timer that the high frequency thread will wait on
-        -- to fire every 4 msec
-        timer = CreateWaitableTimer( NULL, FALSE, "JoypadTimer" );
-        LARGE_INTEGER dueTime;
-        dueTime.QuadPart = -1;
-        if ( !SetWaitableTimer( timer, &dueTime, 4, NULL, NULL, FALSE ) ) {
-          idLib::FatalError( "SetWaitableTimer for joystick failed" );
-        end if;
-        -- spawn the high frequency joystick reading thread
-        Sys_CreateThread( (xthread_t)JoystickSamplingThread, NULL, THREAD_HIGHEST, "Joystick", CORE_1A );
-        loop -- Try to see close to 4000 micro seconds each interation
+        Implementation.Initialize(Title);
+        Set_Priority();
+        loop
           select 
             accept Finalize
               do
+                Implementation.Finalize;
                 exit;
               end Finalize;
           or
@@ -47,43 +59,10 @@ package Neo.System.Input
                 accept Enable;
               end Disable;
           else
-            int now = Sys_Microseconds();
-            prevTime = now;
-            XINPUT_STATE  joyData[MAX_JOYSTICKS];
-            bool      validData[MAX_JOYSTICKS];
-            for I in 1..MAXIMUM_NUMBER_OF_GAMEPADS loop
-              if now >= nextCheck(I) then
-                -------------
-                Poll_Gamepad:
-                -------------
-                  declare
-                  begin
-                    Implementation.Get_Gamepad_State(I); -- Might block... for a excessive amount of time
-                    nextCheck(I) := now + waitTime;
-                  exception
-                    when Non_Valid_Data_Retrieved_From_Gamepad =>
-                      nextCheck(I) := 0;
-                  end Poll_Gamepad;
-              end if;
-            end loop;
-            -- do this short amount of processing inside a critical section
-            idScopedCriticalSection cs( win32.g_Joystick.mutexXis );
-            for ( int i = 0 ; i < MAX_JOYSTICKS ; i++ ) {
-              controllerState_t * cs = &win32.g_Joystick.controllers[i];
-              if ( !validData[i] ) {
-                cs->valid = false;
-                continue;
-              }
-              cs->valid = true;
-              XINPUT_STATE& current = joyData[i];
-              cs->current = current;
-              -- Switch from using cs->current to current to reduce chance of Load-Hit-Store on consoles
-              threadPacket[threadCount&255] = current.dwPacketNumber;
-              cs->buttonBits |= current.Gamepad.wButtons;
-            }
-          end loop;
-          -- we want this to be processed at least 250 times a second
-          WaitForSingleObject( win32.g_Joystick.timer, INFINITE );
+            if Clock >= Last_Time + DURATION_TO_WAIT_BEFORE_POLLING then
+              Implementation.Poll_Devices;
+              Last_Time := Clock;
+            end if;
           end select;
         end loop;
       end Task_Input;
@@ -93,6 +72,7 @@ package Neo.System.Input
     procedure Test
       is
       begin
+        null;
       end Test;
   ----------------
   -- Initialize --
@@ -122,78 +102,235 @@ package Neo.System.Input
       is
       begin
       end Enable;
-  ---------------------
-  -- Get_Peripherals --
-  ---------------------
-    function Get_Peripherals
-      return Array_Record_Peripheral
+  ----------------
+  -- Add_Device --
+  ----------------
+    procedure Add_Device(
+      Device : in Record_Device)
       is
       begin
-      end Get_Peripherals;
-  ----------------------
-  -- Update_Vibration --
-  ----------------------
-    procedure Update_Vibration(
+      end Add_Device;
+  -------------------
+  -- Remove_Device --
+  -------------------
+    procedure Remove_Device(
+      Identifier : in Integer_8_Unsigned)
+      is
+      begin
+      end Remove_Device;
+  ----------------
+  -- Get_Device --
+  ----------------
+    function Get_Device(
+      Identifier : in Integer_8_Unsigned)
+      return Record_Device
+      is
+      begin
+      end Get_Device;
+  -----------------
+  -- Get_Devices --
+  -----------------
+    function Get_Devices
+      return Array_Record_Device
+      is
+      begin
+        return Devices(1..Number_Of_Devices);
+      end Get_Devices;
+  ------------------------
+  -- Is_Player_Pressing --
+  ------------------------
+    function Is_Player_Pressing(
+      Player : in Integer_4_Positive;
+      Key    : in Enumerated_Key)
+      return Boolean
+      is
+      begin
+      end Is_Player_Pressing;
+    function Is_Player_Pressing(
+      Player : in Record_Player;
+      Key    : in Enumerated_Key)
+      return Boolean;
+      is
+      begin
+      end Is_Pressing;
+  ---------------------------
+  -- Get_Number_Of_Devices --
+  ---------------------------
+    function Get_Number_Of_Devices
+      return Integer_4_Natural
+      is
+      begin
+      end Get_Number_Of_Devices;
+  -----------------
+  -- Get_Devices --
+  -----------------
+    function Get_Devices
+      return Array_Record_Device
+      is
+      begin
+      end Get_Devices;
+  ----------------
+  -- Get_Device --
+  ----------------
+    function Get_Device(
+      Identifier : in Integer_8_Unsigned)
+      return Record_Device
+      is
+      begin
+      end Get_Device;
+  ----------------
+  -- Get_Player --
+  ----------------
+    function Get_Player(
+      Player : in Integer_4_Positive)
+      return Record_Player
+      is
+      begin
+      end Get_Player;
+  ------------------------
+  -- Get_Player_Trigger --
+  ------------------------
+    function Get_Player_Trigger(
       Player  : in Integer_4_Positive;
-      Percent : in Float_Percent)
+      Trigger : in Enumerated_Trigger)
+      return Float_4_Percent
       is
       begin
-      end Update_Vibration;
-  ----------------
-  -- Set_Player --
-  ----------------
-    procedure Set_Player(
-      Identifier : in Integer_4_Positive;
+      end Get_Player_Trigger;
+    function Get_Player_Trigger(
+      Player  : in Integer_4_Positive;
+      Device  : in Integer_8_Unsigned;
+      Trigger : in Integer_4_Positive)
+      return Float_4_Percent
+      is
+      begin
+      end Get_Player_Trigger;
+  ----------------------
+  -- Get_Player_Stick --
+  ----------------------
+    function Get_Player_Stick(
+      Player : in Integer_4_Positive;
+      Stick  : in Enumerated_Stick)
+      return Record_Input_Coordinate
+      is
+      begin
+      end Get_Player_Stick;
+    function Get_Player_Stick(
+      Player : in Integer_4_Positive;
+      Device : in Integer_8_Unsigned;
+      Stick  : in Integer_4_Positive)
+      return Record_Input_Coordinate
+      is
+      begin
+      end Get_Player_Stick
+  ----------------------
+  -- Get_Player_Mouse --
+  ----------------------
+    function Get_Player_Mouse(
+      Player : in Integer_4_Positive)
+      return Record_Input_Coordinate
+      is
+      begin
+      end Get_Player_Mouse;
+  ------------------------------------
+  -- Get_Character_From_Player_Keys --
+  ------------------------------------
+    function Get_Character_From_Player_Keys
+      return Character_2
+      is
+      begin
+      end Get_Character_From_Player_Keys;
+  -----------------------
+  -- Set_Device_Player --
+  -----------------------
+    procedure Set_Device_Player(
+      Identifier : in Integer_8_Unsigned;
       Player     : in Integer_4_Positive)
       is
       begin
-      end Set_Player;
-  ----------------------
-  -- Set_Handle_Stick --
-  ----------------------
-    procedure Set_Handle_Stick(
-      Handler : in Access_Procedure_Handle_Axis)
+      end Set_Device_Player;
+  -------------------
+  -- Set_Vibration --
+  -------------------
+    procedure Set_Vibration(
+      Player                 : in Integer_4_Positive;
+      Percent_Frequency_High : in Float_4_Percent;
+      Percent_Frequency_Low  : in Float_4_Percent;
+      Seconds                : in Duration)
       is
       begin
-      end Set_Handle_Stick;
-  ----------------------
-  -- Set_Handle_Mouse --
-  ----------------------
-    procedure Set_Handle_Mouse(
-      Handler : in Access_Procedure_Handle_Movement)
+      end Set_Vibration;
+    generic
+      with
+        procedure Vibration_Equation(
+          Seconds_Left           : in     Float_4_Real;
+          Percent_Frequency_High :    out Float_4_Percent;
+          Percent_Frequency_Low  :    out Float_4_Percent);
+    procedure Set_Vibration(
+      Player  : in Integer_4_Positive;
+      Seconds : in Duration)
       is
       begin
-      end Set_Handle_Mouse;
-  ------------------------
-  -- Set_Handle_Trigger --
-  ------------------------
-    procedure Set_Handle_Trigger(
-      Handler : in Access_Procedure_Handle_Pedal)
+      end Set_Vibration;
+  ----------------
+  -- Handle_Key --
+  ----------------
+    procedure Handle_Key(
+      Device : in Integer_8_Unsigned;
+      Key    : in Enumerated_Key)
       is
       begin
-      end Set_Handle_Trigger;
-  --------------------------
-  -- Set_Handle_Character --
-  --------------------------
-    procedure Set_Handle_Character(
-      Handler : in Access_Procedure_Handle_Character)
+      end Handle_Key;
+    procedure Handle_Key(
+      Key    : in Integer_4_Positive;
+      Device : in Integer_8_Unsigned)
       is
       begin
-      end Set_Handle_Character;
+      end Handle_Key;
+  ------------------
+  -- Handle_Mouse --
+  ------------------
+    procedure Handle_Mouse(
+      Device : in Integer_8_Unsigned;
+      X      : in Integer_8_Signed;
+      Y      : in Integer_8_Signed)
+      is
+      begin
+      end Handle_Mouse;
+  ------------------
+  -- Handle_Stick --
+  ------------------
+    procedure Handle_Stick(
+      Device : in Integer_8_Unsigned;
+      Stick  : in Enumerated_Stick;
+      X      : in Integer_8_Signed;
+      Y      : in Integer_8_Signed)
+      is
+      begin
+      end Handle_Stick;
+    procedure Handle_Stick(
+      Device : in Integer_8_Unsigned
+      Stick  : in Integer_4_Positive;
+      X      : in Integer_8_Signed;
+      Y      : in Integer_8_Signed)
+      is
+      begin
+      end Handle_Stick;
   --------------------
-  -- Set_Handle_Key --
+  -- Handle_Trigger --
   --------------------
-    procedure Set_Handle_Key(
-      Handler : in Access_Procedure_Handle_Key)
+    procedure Handle_Trigger(
+      Device  : in Integer_8_Unsigned;
+      Trigger : in Enumerated_Trigger;
+      Percent : in Float_4_Percent)
       is
       begin
-      end Set_Handle_Key;
-  ---------------------------
-  -- Set_Handle_Peripheral --
-  ---------------------------
-    procedure Set_Handle_Peripheral(
-      Handler : in Access_Procedure_Handle_Peripheral)
+      end Handle_Trigger;
+    procedure Handle_Trigger(
+      Device  : in Integer_8_Unsigned;
+      Trigger : in Integer_4_Positive;
+      Percent : in Float_4_Percent)
       is
       begin
-      end Set_Handle_P
+      end Handle_Trigger;
   end Neo.System.Input;
