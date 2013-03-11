@@ -170,127 +170,127 @@ package body Implementation
       Is_Application_Menu_Key_Pressed    : in Boolean)
       return Character_2
       is
-      int charCount = 0;
-      *outputChar = 0;
-      *deadChar = 0;
-      short state = 0;
-      int shift = -1;
-      int mod = 0;
-      WCHAR baseChar;
-      WCHAR diacritic;
-      KbdLayerDescriptor pKbdLayerDescriptor
-      int capsLock = (GetKeyState(VK_CAPITAL) & 0x01);
-      Current_Data : Record_Lookup_Character_Internals := Lookup_Character_Data.Get
-      begin
-        if Get_Keyboard_Layout_Name() = FAILED then
-          raise System_Call_Failure;
-        end if;
-        if Current_Data.Layout /= Layout then
-          if not Current_Data.Is_Initialized then
-            -- Create Key to VK table
-          end if;
-          if not USE_64_BIT and then  then
-            ptrPadding := sizeof(void *);
-          end if;
-          if GetSystemDirectory(systemDirectory, MAX_PATH) = FAILED then
-            raise System_Call_Failure;
-          end if;
-          kbdLibrary          := Load_Library(layoutFile);
-          pKbdLayerDescriptor := (KbdLayerDescriptor)GetProcAddress(kbdLibrary, "KbdLayerDescriptor");
-          if pKbdLayerDescriptor = null then
-            Finalize_
-            raise System_Call_Failure;
-          end if;
-          PKBDTABLES pKbd := pKbdLayerDescriptor.All;
-          -- Store the memory address of the following 3 structures.
-          BYTE *base = (BYTE *) pKbd;
-          -- First element of each structure, no offset adjustment needed.
-          pVkToBit = pKbd->pCharModifiers->pVkToBit;
-          -- Second element of pKbd, +4 byte offset on wow64.
-          pVkToWcharTable = *((PVK_TO_WCHAR_TABLE *) (base + offsetof(KBDTABLES, pVkToWcharTable) + ptrPadding));
-          -- Third element of pKbd, +8 byte offset on wow64.
-          pDeadKey = *((PDEADKEY *) (base + offsetof(KBDTABLES, pDeadKey) + (ptrPadding * 2)));
-          Lookup_Character_Data.Set(Current_Data);
-        end if;
-        -- Because this is only a structure of two bytes, we don't need to worry 
-        -- about the structure padding of __ptr64 offsets on Wow64.
-        for I in 1.. loop
-          exit when pVkToBit[i].Vk /= 0;
-          state = GetAsyncKeyState(pVkToBit[i].Vk);
-          if pVkToBit[i].Vk = VK_SHIFT then
-            shift = i + 1; -- Get modification number for Shift key
-          end if;
-          if (state and not SHRT_MAX) /= 0 then
-            if mod = 0 then
-              mod = i + 1;
-            else
-              mod = 0; -- Two modifiers at the same time!
-            end if;
-          end if;
-        end loop; 
-        -- Default 32 bit structure size should be 6 bytes (4 for the pointer and 2
-        -- additional byte fields) that are padded out to 8 bytes by the compiler.
-        unsigned short sizeVkToWcharTable = sizeof(VK_TO_WCHAR_TABLE);
-        if not USE_64_BIT and then IsWow64 then
-          -- If we are running under Wow64 the size of the first pointer will be
-          -- 8 bringing the total size to 10 bytes padded out to 16.
-          sizeVkToWcharTable = (sizeVkToWcharTable + ptrPadding + 7) & -8;
-        end if;
-        BYTE *ptrCurrentVkToWcharTable = (BYTE *) pVkToWcharTable;
-        int cbSize, n;
-        do
-          -- cbSize is used to calculate n, and n is used for the size of pVkToWchars[j].wch[n]
-          cbSize = *(ptrCurrentVkToWcharTable + offsetof(VK_TO_WCHAR_TABLE, cbSize) + ptrPadding);
-          n = (cbSize - 2) / 2;
-          -- Same as VK_TO_WCHARS pVkToWchars[] = pVkToWcharTable[i].pVkToWchars
-          PVK_TO_WCHARS pVkToWchars = (PVK_TO_WCHARS) ((PVK_TO_WCHAR_TABLE) ptrCurrentVkToWcharTable)->pVkToWchars;
-          if pVkToWchars /= NULL and mod < n then
-            -- pVkToWchars[j].VirtualKey
-            BYTE *pCurrentVkToWchars = (BYTE *) pVkToWchars;
-            loop
-              if ((PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey == virtualKey {
-                if (((PVK_TO_WCHARS) pCurrentVkToWchars)->Attributes == CAPLOK) && capsLock {
-                  if(mod == shift)
-                    mod = 0;
-                  else
-                    mod = shift;
-                  end if;
-                end if;
-                *outputChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
-                charCount = 1;
-                -- Increment the pCurrentVkToWchars by the size of wch[n].
-                pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
-                if *outputChar = WCH_NONE then
-                  charCount = 0;
-                elsif *outputChar = WCH_DEAD then
-                  *deadChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
-                  charCount = 0;
-                end if;
-                break;
-              else
-                -- Add sizeof WCHAR because we are really an array of WCHAR[n] not WCHAR[]
-                pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
-              end if;
-              exit when (PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey != 0;
-            end loop;
-          end if;
-          -- This is effectively the same as: ptrCurrentVkToWcharTable = pVkToWcharTable[++i];
-          ptrCurrentVkToWcharTable += sizeVkToWcharTable;
-          exit when cbSize /= 0;
-        end loop;
-        -- Code to check for dead characters...
-        if *deadChar /= 0 then
-          for I in 1.. loop
-            exit when pDeadKey[i].dwBoth /= 0;
-            baseChar = (WCHAR) pDeadKey[i].dwBoth;
-            diacritic = (WCHAR) (pDeadKey[i].dwBoth >> 16);
-            if baseChar = *outputChar and diacritic = *deadChar then
-              *deadChar = 0;
-              *outputChar = (WCHAR) pDeadKey[i].wchComposed;
-            end if;
-          end loop;
-        end if;
-        return charCount;
+      -- int charCount = 0;
+      -- *outputChar = 0;
+      -- *deadChar = 0;
+      -- short state = 0;
+      -- int shift = -1;
+      -- int mod = 0;
+      -- WCHAR baseChar;
+      -- WCHAR diacritic;
+      -- KbdLayerDescriptor pKbdLayerDescriptor
+      -- int capsLock = (GetKeyState(VK_CAPITAL) & 0x01);
+      -- Current_Data : Record_Lookup_Character_Internals := Lookup_Character_Data.Get
+      -- begin
+      --   if Get_Keyboard_Layout_Name() = FAILED then
+      --     raise System_Call_Failure;
+      --   end if;
+      --   if Current_Data.Layout /= Layout then
+      --     if not Current_Data.Is_Initialized then
+      --       -- Create Key to VK table
+      --     end if;
+      --     if not USE_64_BIT and then  then
+      --       ptrPadding := sizeof(void *);
+      --     end if;
+      --     if GetSystemDirectory(systemDirectory, MAX_PATH) = FAILED then
+      --       raise System_Call_Failure;
+      --     end if;
+      --     kbdLibrary          := Load_Library(layoutFile);
+      --     pKbdLayerDescriptor := (KbdLayerDescriptor)GetProcAddress(kbdLibrary, "KbdLayerDescriptor");
+      --     if pKbdLayerDescriptor = null then
+      --       Finalize_
+      --       raise System_Call_Failure;
+      --     end if;
+      --     PKBDTABLES pKbd := pKbdLayerDescriptor.All;
+      --     -- Store the memory address of the following 3 structures.
+      --     BYTE *base = (BYTE *) pKbd;
+      --     -- First element of each structure, no offset adjustment needed.
+      --     pVkToBit = pKbd->pCharModifiers->pVkToBit;
+      --     -- Second element of pKbd, +4 byte offset on wow64.
+      --     pVkToWcharTable = *((PVK_TO_WCHAR_TABLE *) (base + offsetof(KBDTABLES, pVkToWcharTable) + ptrPadding));
+      --     -- Third element of pKbd, +8 byte offset on wow64.
+      --     pDeadKey = *((PDEADKEY *) (base + offsetof(KBDTABLES, pDeadKey) + (ptrPadding * 2)));
+      --     Lookup_Character_Data.Set(Current_Data);
+      --   end if;
+      --   -- Because this is only a structure of two bytes, we don't need to worry 
+      --   -- about the structure padding of __ptr64 offsets on Wow64.
+      --   for I in 1.. loop
+      --     exit when pVkToBit[i].Vk /= 0;
+      --     state = GetAsyncKeyState(pVkToBit[i].Vk);
+      --     if pVkToBit[i].Vk = VK_SHIFT then
+      --       shift = i + 1; -- Get modification number for Shift key
+      --     end if;
+      --     if (state and not SHRT_MAX) /= 0 then
+      --       if mod = 0 then
+      --         mod = i + 1;
+      --       else
+      --         mod = 0; -- Two modifiers at the same time!
+      --       end if;
+      --     end if;
+      --   end loop; 
+      --   -- Default 32 bit structure size should be 6 bytes (4 for the pointer and 2
+      --   -- additional byte fields) that are padded out to 8 bytes by the compiler.
+      --   unsigned short sizeVkToWcharTable = sizeof(VK_TO_WCHAR_TABLE);
+      --   if not USE_64_BIT and then IsWow64 then
+      --     -- If we are running under Wow64 the size of the first pointer will be
+      --     -- 8 bringing the total size to 10 bytes padded out to 16.
+      --     sizeVkToWcharTable = (sizeVkToWcharTable + ptrPadding + 7) & -8;
+      --   end if;
+      --   BYTE *ptrCurrentVkToWcharTable = (BYTE *) pVkToWcharTable;
+      --   int cbSize, n;
+      --   do
+      --     -- cbSize is used to calculate n, and n is used for the size of pVkToWchars[j].wch[n]
+      --     cbSize = *(ptrCurrentVkToWcharTable + offsetof(VK_TO_WCHAR_TABLE, cbSize) + ptrPadding);
+      --     n = (cbSize - 2) / 2;
+      --     -- Same as VK_TO_WCHARS pVkToWchars[] = pVkToWcharTable[i].pVkToWchars
+      --     PVK_TO_WCHARS pVkToWchars = (PVK_TO_WCHARS) ((PVK_TO_WCHAR_TABLE) ptrCurrentVkToWcharTable)->pVkToWchars;
+      --     if pVkToWchars /= NULL and mod < n then
+      --       -- pVkToWchars[j].VirtualKey
+      --       BYTE *pCurrentVkToWchars = (BYTE *) pVkToWchars;
+      --       loop
+      --         if ((PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey == virtualKey {
+      --           if (((PVK_TO_WCHARS) pCurrentVkToWchars)->Attributes == CAPLOK) && capsLock {
+      --             if(mod == shift)
+      --               mod = 0;
+      --             else
+      --               mod = shift;
+      --             end if;
+      --           end if;
+      --           *outputChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
+      --           charCount = 1;
+      --           -- Increment the pCurrentVkToWchars by the size of wch[n].
+      --           pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
+      --           if *outputChar = WCH_NONE then
+      --             charCount = 0;
+      --           elsif *outputChar = WCH_DEAD then
+      --             *deadChar = ((PVK_TO_WCHARS) pCurrentVkToWchars)->wch[mod];
+      --             charCount = 0;
+      --           end if;
+      --           break;
+      --         else
+      --           -- Add sizeof WCHAR because we are really an array of WCHAR[n] not WCHAR[]
+      --           pCurrentVkToWchars += sizeof(VK_TO_WCHARS) + (sizeof(WCHAR) * n);
+      --         end if;
+      --         exit when (PVK_TO_WCHARS) pCurrentVkToWchars)->VirtualKey != 0;
+      --       end loop;
+      --     end if;
+      --     -- This is effectively the same as: ptrCurrentVkToWcharTable = pVkToWcharTable[++i];
+      --     ptrCurrentVkToWcharTable += sizeVkToWcharTable;
+      --     exit when cbSize /= 0;
+      --   end loop;
+      --   -- Code to check for dead characters...
+      --   if *deadChar /= 0 then
+      --     for I in 1.. loop
+      --       exit when pDeadKey[i].dwBoth /= 0;
+      --       baseChar = (WCHAR) pDeadKey[i].dwBoth;
+      --       diacritic = (WCHAR) (pDeadKey[i].dwBoth >> 16);
+      --       if baseChar = *outputChar and diacritic = *deadChar then
+      --         *deadChar = 0;
+      --         *outputChar = (WCHAR) pDeadKey[i].wchComposed;
+      --       end if;
+      --     end loop;
+      --   end if;
+      --   return charCount;
       end Lookup_Character;
   --------------------
   -- Update_Devices --
@@ -299,7 +299,9 @@ package body Implementation
       is
       Product      : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
       Manufacturer : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
+      Capabilities : aliased Record_Device_Capabilities                 := (others => <>);
       Number_Of_X  : aliased Integer_4_Unsigned_C                       := 0;
+      Device       :         Record_Device                              := (others => <>);
       File         :         Address                                    := NULL_ADDRESS;
       begin
         if
@@ -334,6 +336,7 @@ package body Implementation
                   when KIND_IS_KEYBOARD | KIND_IS_MOUSE =>
                     Add_Device((Handle, others => <>));
                   when KIND_IS_HUMAN_INTERFACE_DEVICE =>
+                    Device := (others => <>);
                     if 
                     Get_Device_Information(
                       Device  => Handle,
@@ -408,13 +411,13 @@ package body Implementation
                         Get_Preparsed_Data:
                         -------------------
                           declare
-                          Data : aliased Array_Integer_1_Unsigned_C(1..Number_Of_X) := (others => 0);
+                          Data : aliased Array_Integer_1_Unsigned_C(1..Integer(Number_Of_X)) := (others => 0);
                           begin
                             if 
                             Get_Device_Information(
                               Device  => Handle,
                               Command => GET_PREPARSED_DATA,
-                              Data    => NULL_ADDRESS,
+                              Data    => Data'Access,
                               Size    => Number_Of_X'Access) /= 0
                             then
                               raise System_Call_Failure;
@@ -426,14 +429,43 @@ package body Implementation
                             then
                               raise System_Call_Failure;
                             end if;
-                            ------------
-                            Get_Buttons:
-                            ------------
-                              declare
-                              begin
-                              end Get_Buttons;
+                            if Number_Of_X > 0 then
+                              ------------
+                              Get_Buttons:
+                              ------------
+                                declare
+                                Buttons : aliased Array_Record_Button_Capability(1..Integer(Number_Of_X)) := (others => <>);
+                                begin
+                                  if
+                                  Get_Device_Buttons(
+                                    Report_Kind => DEVICE_INPUT,
+                                    Buttons     => Buttons'Access,
+                                    Length      => Number_Of_X'Access,
+                                    Data        => Data'Access) = FAILED
+                                  then
+                                    raise System_Call_Failure;
+                                  end if;
+                                  Device.Number_Of_Generic_Buttons := Buttons.Bounds.Usage_Maximum - Buttons.Bounds.Usage_Minimum + 1;
+                                  ---------------------
+                                  Get_Button_Specifics:
+                                  ---------------------
+                                    declare
+                                    Button_Values : aliased Array_Record_Button_Values(1..Integer(Number_Of_X)) := (others => <>);
+                                    begin
+                                      if
+                                      Get_Device_Button_Values(
+                                        Report_Kind   => DEVICE_INPUT,
+                                        Button_Values => Button_Values'Access,
+                                        Length        => Number_Of_X'Access,
+                                        Data          => Data'Access) = FAILED
+                                      then
+                                        raise System_Call_Failure;
+                                      end if;
+                                      -- ???
+                                    end Get_Button_Specifics;
+                                end Get_Buttons;
+                            end if;
                       end Get_Identifier;
-                    return Result;
                   when others =>
                     raise System_Call_Failure;
                 end case;
@@ -623,8 +655,23 @@ package body Implementation
                           end Extract_Mouse_Wheel_Delta;
                       end if;
                     end Handle_Mouse;
-                when KIND_IS_HUMAN_INTERFACE_DEVICE =>
-                  null;
+                when KIND_IS_GAMEPAD_OR_JOYSTICK =>
+                  if
+                  Get_Device_Button_Usages(
+                    Report_Kind     => DEVICE_INPUT,
+                    Usage_Page      => Buttons(1).Usage_Page,
+                    Link_Collection => 0,
+                    Usage_List      => ,
+                    Usage_Length    => Number_Of_X'Access,
+                    Data            => Data'Access,
+                    Report          => Data.Hid.Raw_Data'Access,
+                    Report_Length   => Data.Hid.Size_Of_Hid'Access) = FAILED
+                  then
+                    raise System_Call_Failure;
+                  end if;
+                  for I in 1..Integer(Number_Of_X) loop
+                    
+                  end loop;
                 when others =>
                   null;
               end case;
@@ -762,6 +809,8 @@ package body Implementation
         Window := NULL_ADDRESS;
       end Finalize;
   end Neo.System.Input.Implementation;
+
+
 
 
 
