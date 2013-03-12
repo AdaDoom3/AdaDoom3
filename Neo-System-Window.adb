@@ -45,14 +45,14 @@ PACKAGE BODY Neo.System.Window
             --Render_Backend := Backend;
           END Initialize;
         WHILE Implementation.Handle_Events(Index) AND NOT Do_Quit LOOP
-          select 
+          SELECT
             ACCEPT Finalize
               DO
                 Do_Quit := True;
               END Finalize;
           ELSE
             NULL;--Render_Backend.All;
-          END select;
+          END SELECT;
         END LOOP;
       END Task_Multi_Monitor_Window;
   ---------
