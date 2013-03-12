@@ -14,78 +14,90 @@
 --
 --
 --
-package body Neo.System.Window
-  is
+PACKAGE BODY Neo.System.Window
+  IS
+  --------------------
+  -- Implementation --
+  --------------------
+    PACKAGE BODY Generic_Implementation
+      IS SEPARATE;
+    PACKAGE Implementation
+      IS NEW Generic_Implementation(
+        Handle_Finalization => Handle_Finalization,
+        Handle_Activation   => Handle_Activation, 
+        Handle_State_Change => Handle_State_Change,
+        Handle_Window_Move  => Handle_Window_Move,
+        Handle_Resize       => Handle_Resize);
   -------------------------------
   -- Task_Multi_Monitor_Window --
   -------------------------------
-    task body Task_Multi_Monitor_Window
-      is
+    TASK BODY Task_Multi_Monitor_Window
+      IS
       Index          : Integer_4_Positive := 1;
       Do_Quit        : Boolean := False;
-      --Render_Backend : Access_Procedure   := null;
-      begin
-        accept Initialize(
-          I       : in Integer_4_Positive
-          )--Backend : in Access_Procedure)
-          do
+      --Render_Backend : Access_Procedure   := NULL;
+      BEGIN
+        ACCEPT Initialize(
+          I       : IN Integer_4_Positive
+          )--Backend : IN Access_Procedure)
+          DO
             Index          := I;
             --Render_Backend := Backend;
-          end Initialize;
-        while Implementation.Handle_Events(Index) and not Do_Quit loop
+          END Initialize;
+        WHILE Implementation.Handle_Events(Index) AND NOT Do_Quit LOOP
           select 
-            accept Finalize
-              do
+            ACCEPT Finalize
+              DO
                 Do_Quit := True;
-              end Finalize;
-          else
-            null;--Render_Backend.All;
-          end select;
-        end loop;
-      end Task_Multi_Monitor_Window;
+              END Finalize;
+          ELSE
+            NULL;--Render_Backend.All;
+          END select;
+        END LOOP;
+      END Task_Multi_Monitor_Window;
   ---------
   -- Run --
   ---------
-    procedure Run( 
-      Title                       : in String_2;
-      Icon_Path                   : in String_2;
-      Cursor_Path                 : in String_2;
-      --Render_Backend              : in Access_Procedure;
-      Do_Allow_Multiple_Instances : in Boolean := False)
-      is
+    PROCEDURE Run(
+      Title                       : IN String_2;
+      Icon_Path                   : IN String_2;
+      Cursor_Path                 : IN String_2;
+      --Render_Backend              : IN Access_Procedure;
+      Do_Allow_Multiple_Instances : IN Boolean := False)
+      IS
       Native_Width   : Integer_4_Positive      := 1;
       Native_Height  : Integer_4_Positive      := 1;
       Bits_Per_Pixel : Integer_4_Positive      := 1;
       Previous_State : Enumerated_Window_State := Protected_Data.Get.State;
       X              : Integer_4_Signed        := Protected_Data.Get.X;
       Y              : Integer_4_Signed        := Protected_Data.Get.Y;
-      begin
-        if Protected_Data.Get.Title /= null then
-          return;
-        end if;
-        if not Do_Allow_Multiple_Instances and then not Implementation.Is_Only_Instance(Title) then
-          raise System_Call_Failure;
-        end if;
+      BEGIN
+        IF Protected_Data.Get.Title /= NULL THEN
+          RETURN;
+        END IF;
+        IF NOT Do_Allow_Multiple_Instances AND THEN NOT Implementation.Is_Only_Instance(Title) THEN
+          RAISE System_Call_Failure;
+        END IF;
         Implementation.Initialize(Title, Icon_Path, Cursor_Path);
         -------------
         Setup_Window:
         -------------
-          declare
+          DECLARE
           Window : Record_Window := Protected_Data.Get;
-          begin
-            Window.Title           := new String_2(1..Title'Length);
+          BEGIN
+            Window.Title           := NEW String_2(1..Title'Length);
             Window.TItle.All       := Title;
-            Window.Icon_Path       := new String_2(1..Icon_Path'Length);
+            Window.Icon_Path       := NEW String_2(1..Icon_Path'Length);
             Window.Icon_Path.All   := Icon_Path;
-            Window.Cursor_Path     := new String_2(1..Cursor_Path'Length);
+            Window.Cursor_Path     := NEW String_2(1..Cursor_Path'Length);
             Window.Cursor_Path.All := Cursor_Path;
             Protected_Data.Set(Window);
-          end Setup_Window;
-        Outter:loop
+          END Setup_Window;
+        Outter:LOOP
           Get_Screen_Information(Bits_Per_Pixel, Native_Width, Native_Height);
-          -- Check if monitor native resolution violates the minimum/maximum aspect requirements
-          case Protected_Data.Get.State is
-            when Fullscreen_State | Multi_Monitor_State =>
+          -- Check IF monitor native resolution violates the minimum/maximum aspect requirements
+          CASE Protected_Data.Get.State IS
+            WHEN Fullscreen_State | Multi_Monitor_State =>
               Implementation.Adjust(
                 Title         => Title,
                 Do_Fullscreen => True,
@@ -93,15 +105,15 @@ package body Neo.System.Window
                 Y             => 0,
                 Width         => Native_Width,
                 Height        => Native_Height);
-              if Protected_Data.Get.State = Multi_Monitor_State then
+              IF Protected_Data.Get.State = Multi_Monitor_State THEN
                 Implementation.Initialize_Multi_Monitor(
                   Monitors => Implementation.Get_Monitors);
                 -- Detect number of graphics cards
                 -- Spawn_Tasks_For_Auxiliarary_Video_Cards:
-              end if;
+              END IF;
               Center := (Native_Width / 2, Native_Height / 2);
-            when Windowed_State =>
-              -- If the current width and height are greater than native, then accomications must be made
+            WHEN Windowed_State =>
+              -- IF the current width AND height are greater than native, THEN accomications must be made
               Implementation.Adjust(
                 Title         => Title,
                 Do_Fullscreen => False,
@@ -109,76 +121,76 @@ package body Neo.System.Window
                 Y             => Y,
                 Width         => Protected_Data.Get.Width,
                 Height        => Protected_Data.Get.Height);
-          end case;
+          END CASE;
           Previous_State := Protected_Data.Get.State;
           Protected_Data.Set_Initialized(True);
-          Inner:loop
-            if Protected_Data.Get.Is_Changing_Mode then
-              if Protected_Data.Get.Is_In_Menu_Mode then
+          Inner:LOOP
+            IF Protected_Data.Get.Is_Changing_Mode THEN
+              IF Protected_Data.Get.Is_In_Menu_Mode THEN
                 Implementation.Hide_Mouse(False, False);
                 Implementation.Set_Custom_Mouse(False);
-              else
+              ELSE
                 Take_Control;
-              end if;
+              END IF;
               ------------------
               Unset_Mode_Change:
               ------------------
-                declare
+                DECLARE
                 Window : Record_Window := Protected_Data.Get;
-                begin
+                BEGIN
                   Window.Is_Changing_Mode := False;
                   Protected_Data.Set(Window);
-                end Unset_Mode_Change;
-            end if;
+                END Unset_Mode_Change;
+            END IF;
             --Render_Backend.All;
-            exit Outter when or Protected_Data.Get.Is_Done or not Implementation.Handle_Events;
-            exit Inner when not Protected_Data.Is_Initialized;
-          end loop Inner;
-          case Previous_State is
-            when Windowed_State =>
+            EXIT Outter WHEN OR Protected_Data.Get.Is_Done OR NOT Implementation.Handle_Events;
+            EXIT Inner WHEN NOT Protected_Data.Is_Initialized;
+          END LOOP Inner;
+          CASE Previous_State IS
+            WHEN Windowed_State =>
               X := Protected_Data.Get.X;
               Y := Protected_Data.Get.Y;
-            when Multi_Monitor_State =>
+            WHEN Multi_Monitor_State =>
               Implementation.Finalize_Multi_Monitor;
-            when others =>
-              null;
-          end case;
-        end loop Outter;
+            WHEN others =>
+              NULL;
+          END CASE;
+        END LOOP Outter;
         Implementation.Finalize;
         Protected_Data.Set(DEFAULT_RECORD_WINDOW);
-      end Run;
+      END Run;
   --------------
   -- Finalize --
   --------------
-    procedure Finalize
-      is
+    PROCEDURE Finalize
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Is_Done := True;
         Protected_Data.Set(Window);
         -- Free strings
-      end Finalize;
+      END Finalize;
   ---------
   -- Get --
   ---------
-    function Get
-      return Record_Window
-      is
-      begin
-        return Protected_Data.Get.Window;
-      end Get;
+    FUNCTION Get
+      RETURN Record_Window
+      IS
+      BEGIN
+        RETURN Protected_Data.Get.Window;
+      END Get;
   ---------
   -- Set --
   ---------
-    procedure Set(
-      Window : in Record_Window)
-      is
+    PROCEDURE Set(
+      Window : IN Record_Window)
+      IS
       Window      : Record_Window := Protected_Data.Get;
       Mode_Change : Boolean       := False;
-      begin
-        if Do_Enter_Menu_Mode /= Window.Is_In_Menu_Mode then
+      BEGIN
+        IF Do_Enter_Menu_Mode /= Window.Is_In_Menu_Mode THEN
           Mode_Change := True;
-        end if;
+        END IF;
         Protected_Data.Set((
           Title                => Window.Title,
           Icon_Path            => Window.Icon_Path,
@@ -199,188 +211,188 @@ package body Neo.System.Window
           Is_Iconized          => Window.Is_Iconized,
           Is_Done              => Window.Is_Done));
         Protected_Data.Set_Initialized(False);
-      end Set;
+      END Set;
   ------------------
   -- Set_Position --
   ------------------
-    procedure Set_Position(
-      X : in Integer_4_Signed;
-      Y : in Integer_4_Signed)
-      is
+    PROCEDURE Set_Position(
+      X : IN Integer_4_Signed;
+      Y : IN Integer_4_Signed)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.X := X;
         Window.Y := Y;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Position;
+      END Set_Position;
   ------------------
   -- Set_Renderer --
   ------------------
-    procedure Set_Renderer(
-      Renderer : in Enumerated_Renderer)
-      is
+    PROCEDURE Set_Renderer(
+      Renderer : IN Enumerated_Renderer)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Renderer := Renderer;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Renderer;
+      END Set_Renderer;
   ---------------
   -- Set_State --
   ---------------
-    procedure Set_State(
-      State : in Enumerated_Window_State)
-      is
+    PROCEDURE Set_State(
+      State : IN Enumerated_Window_State)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.State := State;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_State;
+      END Set_State;
   ------------------------------
   -- Set_Refreshes_Per_Second --
   ------------------------------
-    procedure Set_Refreshes_Per_Second(
-      Refreshes_Per_Second : in Positive)
-      is
+    PROCEDURE Set_Refreshes_Per_Second(
+      Refreshes_Per_Second : IN Positive)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Refreshes_Per_Second := Refreshes_Per_Second;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Refreshes_Per_Second;
+      END Set_Refreshes_Per_Second;
   -----------------------
   -- Set_Multi_Samples --
   -----------------------
-    procedure Set_Multi_Samples(
-      Multi_Samples : in Positive)
-      is
+    PROCEDURE Set_Multi_Samples(
+      Multi_Samples : IN Positive)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Multi_Samples := Multi_Samples;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Multi_Samples;
+      END Set_Multi_Samples;
   ---------------
   -- Set_Gamma --
   ---------------
-    procedure Set_Gamma(
-      Gamma : in Record_Gamma)
-      is
+    PROCEDURE Set_Gamma(
+      Gamma : IN Record_Gamma)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Gamma := Gamma;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Gamma;
+      END Set_Gamma;
   ----------------
   -- Set_Height --
   ----------------
-    procedure Set_Height(
-      Height : in Positive)
-      is
+    PROCEDURE Set_Height(
+      Height : IN Positive)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Height := Height;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Height;
+      END Set_Height;
   ---------------
   -- Set_Width --
   ---------------
-    procedure Set_Width(
-      Width : in Positive)
-      is
+    PROCEDURE Set_Width(
+      Width : IN Positive)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Width := Width;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Width;
+      END Set_Width;
   --------------------
   -- Set_Resolution --
   --------------------
-    procedure Set_Resolution(
-      Height : in Positive;
-      Width  : in Positive)
-      is
+    PROCEDURE Set_Resolution(
+      Height : IN Positive;
+      Width  : IN Positive)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Height := Height;
         Window.Width  := Width;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Resolution;
+      END Set_Resolution;
 -----------------------------
 -- Set_Narrow_Aspect_Ratio --
 -----------------------------
-  procedure Set_Narrow_Aspect_Ratio(
-    Aspect_Narrow : in Record_Aspect_Ratio)
-    is
+  PROCEDURE Set_Narrow_Aspect_Ratio(
+    Aspect_Narrow : IN Record_Aspect_Ratio)
+    IS
     Window : Record_Window := Protected_Data.Get;
-    begin
+    BEGIN
       Window.Aspect_Narrow := Aspect_Narrow;
       Protected_Data.Set(Window);
       Protected_Data.Set_Initialized(False);
-    end Set_Narrow_Aspect_Ratio;
+    END Set_Narrow_Aspect_Ratio;
   ---------------------------
   -- Set_Wide_Aspect_Ratio --
   ---------------------------
-    procedure Set_Wide_Aspect_Ratio(
-      Aspect_Wide : in Record_Aspect_Ratio)
-      is
+    PROCEDURE Set_Wide_Aspect_Ratio(
+      Aspect_Wide : IN Record_Aspect_Ratio)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Aspect_Wide := Aspect_Wide;
         Protected_Data.Set(Window);
         Protected_Data.Set_Initialized(False);
-      end Set_Wide_Aspect_Ratio;
+      END Set_Wide_Aspect_Ratio;
   -------------------
   -- Set_Menu_Mode --
   -------------------
-    procedure Set_Menu_Mode(
-      Do_Enter_Menu_Mode : in Boolean)
-      is
+    PROCEDURE Set_Menu_Mode(
+      Do_Enter_Menu_Mode : IN Boolean)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.Is_Changing_Mode := True;
-        if Do_Enter_Menu_Mode then
+        IF Do_Enter_Menu_Mode THEN
           Window.Is_In_Menu_Mode := True;
           Protected_Data.Set_Busy(False);
-        else
+        ELSE
           Window.Is_In_Menu_Mode := False;
           Protected_Data.Set_Busy(True);
-        end if;
+        END IF;
         Protected_Data.Set(Window);
-      end Set_Menu_Mode;
+      END Set_Menu_Mode;
   ------------------
   -- Take_Control --
   ------------------
-    procedure Take_Control
-      is
-      begin
-        if Protected_Data.Get.State = Windowed_State then
+    PROCEDURE Take_Control
+      IS
+      BEGIN
+        IF Protected_Data.Get.State = Windowed_State THEN
           -----------------
           Move_From_Hiding:
           -----------------
-            declare
+            DECLARE
             Screen    : Record_Window_Border       := Get_Screen_Border;
             Work_Area : Array_Record_Window_Border := Get_Work_Area;
-            begin
+            BEGIN
               Screen.Right  := Screen.Right  - Screen.Left;
               Screen.Bottom := Screen.Bottom - Screen.Top;
-              if Screen.Left < Work_Area.Left then
+              IF Screen.Left < Work_Area.Left THEN
                 Screen.Left := Work_Area.Left; 
-              elsif Screen.Right + Screen.Left > Work_Area.Right then
+              ELSIF Screen.Right + Screen.Left > Work_Area.Right THEN
                 Screen.Left := Work_Area.Right - Screen.Right;
-              end if;
-              if Screen.Top < Work_Area.Top then
+              END IF;
+              IF Screen.Top < Work_Area.Top THEN
                 Screen.Top := Work_Area.Top; 
-              elsif Screen.Bottom + Screen.Top > Work_Area.Bottom then
+              ELSIF Screen.Bottom + Screen.Top > Work_Area.Bottom THEN
                 Screen.Top := Work_Area.Bottom - Screen.Bottom;
-              end if;
-              if
+              END IF;
+              IF
               Set_Window_Position(
                 Window       => Window,
                 Y            => Screen.Top,
@@ -389,132 +401,132 @@ package body Neo.System.Window
                 Height       => Screen.Bottom,
                 Insert_After => INSERT_ON_TOP_OF_APPLICATIONS,
                 Flags        => 0) = FAILED
-              then
-                raise System_Call_Failure;
-              end if;
-            end Move_From_Hiding;
+              THEN
+                RAISE System_Call_Failure;
+              END IF;
+            END Move_From_Hiding;
           Implementation.Move_Topmost_Windows_Out_Of_The_Way;
           Implementation.Hide_Mouse(True, False);
-        else
+        ELSE
           Implementation.Hide_Mouse(True, True);
-        end if;
+        END IF;
         Protected_Data.Set_Busy(True);
-      end Take_Control;
+      END Take_Control;
   ------------------
   -- Is_In_Border --
   ------------------
-    function Is_In_Border(
-      X : in Integer_4_Signed;
-      Y : in Integer_4_Signed)
-      return Boolean
-      is
+    FUNCTION Is_In_Border(
+      X : IN Integer_4_Signed;
+      Y : IN Integer_4_Signed)
+      RETURN Boolean
+      IS
       Border : Record_Window_Border := Implementation.Get_Screen_Border;
-      begin
-        if
-        X > Border.Left and X < Border.Right and
-        Y > Border.Top  and Y < Border.Bottom
-        then
-          return True;
-        end if;
-        return False;
-      end Is_In_Border;
+      BEGIN
+        IF
+        X > Border.Left AND X < Border.Right AND
+        Y > Border.Top  AND Y < Border.Bottom
+        THEN
+          RETURN True;
+        END IF;
+        RETURN False;
+      END Is_In_Border;
   -------------------------
   -- Handle_Finalization --
   -------------------------
-    procedure Handle_Finalization
-      is
-      begin
+    PROCEDURE Handle_Finalization
+      IS
+      BEGIN
         Finalize;
         -- Free Strings
-      end Handle_Finalization;
+      END Handle_Finalization;
   ------------------------
   -- Handle_Window_Move --
   ------------------------
-    procedure Handle_Window_Move(
-      Window_X : in Integer_4_Signed;
-      Window_Y : in Integer_4_Signed;
-      Screen_X : in Integer_4_Signed;
-      Screen_Y : in Integer_4_Signed)
-      is
+    PROCEDURE Handle_Window_Move(
+      Window_X : IN Integer_4_Signed;
+      Window_Y : IN Integer_4_Signed;
+      Screen_X : IN Integer_4_Signed;
+      Screen_Y : IN Integer_4_Signed)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
+      BEGIN
         Window.X := Window_X;
         Window.Y := Window_Y;
         Protected_Data.Set(Window);
-        if Protected_Data.Get.State = Windowed_State then
+        IF Protected_Data.Get.State = Windowed_State THEN
           Center :=(
             Screen_X + Protected_Data.Get.Width  / 2,
             Screen_Y + Protected_Data.Get.Height / 2);
-        end if;
-      end Handle_Window_Move;  
+        END IF;
+      END Handle_Window_Move;  
   -------------------------
   -- Handle_State_Change --
   -------------------------
-    procedure Handle_State_Change(
-      Change : in Enumerated_Window_Change)
-      is
+    PROCEDURE Handle_State_Change(
+      Change : IN Enumerated_Window_Change)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
-        case Change is
-          when Iconic_Change =>
+      BEGIN
+        CASE Change IS
+          WHEN Iconic_Change =>
             Protected_Data.Set_Busy(False);
             Window.Is_Iconized := True;
             Protected_Data.Set(Window);
-          when Fullscreen_Change =>
+          WHEN Fullscreen_Change =>
             Window.State       := Fullscreen_State;
             Window.Is_Iconized := False;
             Protected_Data.Set(Window);
             Protected_Data.Set_Initialized(False);
-          when Windowed_Change =>
+          WHEN Windowed_Change =>
             Window.Is_Iconized := False;
             Protected_Data.Set(Window);
-        end case;
-      end Handle_State_Change;
+        END CASE;
+      END Handle_State_Change;
   -----------------------
   -- Handle_Activation --
   -----------------------
-    procedure Handle_Activation(
-      Do_Activate     : in Boolean;
-      Do_Detect_Click : in Boolean;
-      X               : in Integer_4_Signed;
-      Y               : in Integer_4_Signed)
-      is
+    PROCEDURE Handle_Activation(
+      Do_Activate     : IN Boolean;
+      Do_Detect_Click : IN Boolean;
+      X               : IN Integer_4_Signed;
+      Y               : IN Integer_4_Signed)
+      IS
       Window : Record_Window := Protected_Data.Get;
-      begin
-        if Protected_Data.Is_Initialized then
-          if Do_Activate then
-            if Protected_Data.Get.Is_In_Menu_Mode then
+      BEGIN
+        IF Protected_Data.Is_Initialized THEN
+          IF Do_Activate THEN
+            IF Protected_Data.Get.Is_In_Menu_Mode THEN
               Implementation.Set_Custom_Mouse(False);
-            else
+            ELSE
               Implementation.Set_Custom_Mouse(True);
-              if Is_In_Border(X, Y) then
+              IF Is_In_Border(X, Y) THEN
                 Take_Control;
-              end if;
-            end if;
-          else
+              END IF;
+            END IF;
+          ELSE
             Protected_Data.Set_Busy(False);
-            if Protected_Data.Get.State /= Windowed_State then
-              if Protected_Data.Get.State = Multi_Monitor_State then
+            IF Protected_Data.Get.State /= Windowed_State THEN
+              IF Protected_Data.Get.State = Multi_Monitor_State THEN
                 Implementation.Finalize_Multi_Monitor;
-              end if;
+              END IF;
               Implementation.Iconize;
               Window.Is_Iconized := True;
-            end if;
+            END IF;
             Implementation.Hide_Mouse(False);
             Implementation.Set_Custom_Mouse(True);
             Keys_Down := (others => False);
-          end if;
+          END IF;
           Protected_Data.Set(Window);
-        end if;
-      end Handle_Activation;
+        END IF;
+      END Handle_Activation;
   -------------------
   -- Handle_Resize --
   -------------------
-    function Handle_Resize(
-      Resize_Location : in Enumerated_Resize;
-      Current_Screen  : in Record_Window_Border)
-      return Record_Window_Border
-      is
+    FUNCTION Handle_Resize(
+      Resize_Location : IN Enumerated_Resize;
+      Current_Screen  : IN Record_Window_Border)
+      RETURN Record_Window_Border
+      IS
       Screen            : Record_Window_Border := Current_Screen;
       -- Window            : Record_Window        := Protected_Data.Get;
       -- Narrow_Ratio      : Float_4_Natural      := Float_4_Natural(Window.Aspect_Wide.Horizontal)   / Float_4_Natural(Window.Aspect_Wide.Vertical);
@@ -526,157 +538,157 @@ package body Neo.System.Window
       -- Previous_Width    : Integer_4_Signed     := Current_Width;
       -- Previous_Height   : Integer_4_Signed     := Current_Height;
       -- Previous_Top      : Integer_4_Signed     := 0; 
-      begin
-        -- if Current_Width < Integer_4_Signed(Float_4_Natural(Current_Height) * Wide_Ratio) then
+      BEGIN
+        -- IF Current_Width < Integer_4_Signed(Float_4_Natural(Current_Height) * Wide_Ratio) THEN
         --   Current_Width := Integer_4_Signed(Float_4_Natural(Current_Height) * Wide_Ratio);
-        -- end if;
-        -- if Current_Width < MINIMUM_DIMENSION_X then
+        -- END IF;
+        -- IF Current_Width < MINIMUM_DIMENSION_X THEN
         --   Current_Width := MINIMUM_DIMENSION_X;
-        -- end if;
-        -- if Current_Height < Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio) then
+        -- END IF;
+        -- IF Current_Height < Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio) THEN
         --   Current_Height := Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio);
-        -- end if;
-        -- case Resize_Location is
-        --   when
+        -- END IF;
+        -- CASE Resize_Location IS
+        --   WHEN
         --   Bottom_Resize |
         --   Top_Resize    =>
         --     Current_Height := Previous_Height;
-        --     if Float_4_Natural(Current_Width) > Narrow_Ratio * Float_4_Natural(Current_Height) then
+        --     IF Float_4_Natural(Current_Width) > Narrow_Ratio * Float_4_Natural(Current_Height) THEN
         --       Current_Width := Integer_4_Signed(Narrow_Ratio * Float_4_Natural(Current_Height));
-        --     end if;
-        --     if Current_Width < MINIMUM_DIMENSION_X then
+        --     END IF;
+        --     IF Current_Width < MINIMUM_DIMENSION_X THEN
         --       Current_Width := MINIMUM_DIMENSION_X;
-        --     end if;
-        --     if Current_Height < Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio) then
+        --     END IF;
+        --     IF Current_Height < Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio) THEN
         --       Current_Height := Integer_4_Signed(Float_4_Natural(Current_Width) / Narrow_Ratio);
-        --     end if;
-        --     if Screen.Left <= Work_Area.Left and Current_Width > Previous_Width then
+        --     END IF;
+        --     IF Screen.Left <= Work_Area.Left AND Current_Width > Previous_Width THEN
         --       Screen.Right := Screen.Right + (Current_Width - Previous_Width);
-        --     elsif Screen.Right >= Work_Area.Right and Current_Width > Previous_Width  then
+        --     ELSIF Screen.Right >= Work_Area.Right AND Current_Width > Previous_Width  THEN
         --       Screen.Left := Screen.Left - (Current_Width - Previous_Width);
-        --     else
+        --     ELSE
         --       Screen.Left  := Screen.Left  - (Current_Width - Previous_Width) / 2;
         --       Screen.Right := Screen.Right + (Current_Width - Previous_Width) / 2;
-        --     end if;
-        --     if Resize_Location = Resize_Location then
+        --     END IF;
+        --     IF Resize_Location = Resize_Location THEN
         --       Screen.Top := Screen.Bottom - (Current_Height + Decoration_Height);
-        --     else
+        --     ELSE
         --       Screen.Bottom := Screen.Top + (Current_Height + Decoration_Height);
-        --     end if;
-        --   when
+        --     END IF;
+        --   WHEN
         --   Left_Resize  |
         --   Right_Resize =>
         --     Current_Width := Previous_Width;
-        --     if Float_4_Natural(Current_Height) > Float_4_Natural(Current_Width) / Wide_Ratio and
-        --       Current_Width > MINIMUM_DIMENSION_X then
+        --     IF Float_4_Natural(Current_Height) > Float_4_Natural(Current_Width) / Wide_Ratio AND
+        --       Current_Width > MINIMUM_DIMENSION_X THEN
         --       Current_Height := Integer_4_Signed(Float_4_Natural(Current_Width) / Wide_Ratio);
-        --     end if;
-        --     if Current_Width < MINIMUM_DIMENSION_X then
+        --     END IF;
+        --     IF Current_Width < MINIMUM_DIMENSION_X THEN
         --       Current_Width := MINIMUM_DIMENSION_X;
-        --     end if;
-        --     if Screen.Top <= Work_Area.Top and Current_Height > Previous_Height then
+        --     END IF;
+        --     IF Screen.Top <= Work_Area.Top AND Current_Height > Previous_Height THEN
         --       Screen.Bottom := Screen.Top + Decoration_Height + Current_Height;
-        --     elsif Screen.Bottom >= Work_Area.Bottom and Current_Height > Previous_Height then
+        --     ELSIF Screen.Bottom >= Work_Area.Bottom AND Current_Height > Previous_Height THEN
         --       Screen.Top := Screen.Bottom - Decoration_Height - Current_Height;
-        --     else
+        --     ELSE
         --       Previous_Top  := Screen.Top;
         --       Screen.Top    := Screen.Bottom - Decoration_Height - (Current_Height + Previous_Height) / 2;
         --       Screen.Bottom := Previous_Top  + Decoration_Height + (Current_Height + Previous_Height) / 2;
-        --     end if;
-        --     if Resize_Location = Resize_Location then
+        --     END IF;
+        --     IF Resize_Location = Resize_Location THEN
         --       Screen.Left  := Screen.Right - (Current_Width + Decoration_Width);
-        --     else
+        --     ELSE
         --       Screen.Right := Screen.Left + Current_Width + Decoration_Width;
-        --     end if;
-        --   when
+        --     END IF;
+        --   WHEN
         --   Bottom_Right_Resize |
         --   Bottom_Left_Resize  |
         --   Top_Left_Resize     |
         --   Top_Right_Resize    =>
-        --     if Resize_Location = Bottom_Left_Resize or Resize_Location = Bottom_Right_Resize then
+        --     IF Resize_Location = Bottom_Left_Resize OR Resize_Location = Bottom_Right_Resize THEN
         --       Screen.Bottom := Screen.Top + Current_Height + Decoration_Height;
-        --     end if;
-        --     if Resize_Location = Top_Right_Resize or Resize_Location = Top_Left_Resize then
+        --     END IF;
+        --     IF Resize_Location = Top_Right_Resize OR Resize_Location = Top_Left_Resize THEN
         --       Screen.Top := Screen.Bottom - Current_Height - Decoration_Height;
-        --     end if;
-        --     if Resize_Location = Bottom_Left_Resize or Resize_Location = Top_Left_Resize then
+        --     END IF;
+        --     IF Resize_Location = Bottom_Left_Resize OR Resize_Location = Top_Left_Resize THEN
         --       Screen.Left := Screen.Right - Decoration_Width - Current_Width;
-        --     end if;
-        --     if Resize_Location = Bottom_Right_Resize or Resize_Location = Top_Right_Resize then
+        --     END IF;
+        --     IF Resize_Location = Bottom_Right_Resize OR Resize_Location = Top_Right_Resize THEN
         --       Screen.Right := Screen.Left + Decoration_Width + Current_Width;
-        --     end if;
+        --     END IF;
         --     --------------------
         --     --Bound_Corner_Sizing:
         --     --------------------
-        --     --  declare
+        --     --  DECLARE
         --     --  Did_Resize_Right  : Boolean := False;
         --     --  Did_Resize_Left   : Boolean := False;
         --     --  Did_Resize_Top    : Boolean := False;
         --     --  Did_Resize_Bottom : Boolean := False;
-        --       -- begin
-        --       --   if Resize_Location = Bottom_Left_Resize or Resize_Location = Bottom_Right_Resize then
+        --       -- BEGIN
+        --       --   IF Resize_Location = Bottom_Left_Resize OR Resize_Location = Bottom_Right_Resize THEN
         --       --     Screen.Bottom := Screen.Top + Current_Height + Decoration_Height;
-        --       --     if Screen.Bottom > Work_Area.Bottom then
+        --       --     IF Screen.Bottom > Work_Area.Bottom THEN
         --       --       Did_Resize_Bottom := True;
         --       --       Screen.Bottom := Work_Area.Bottom;
-        --       --     end if;
-        --       --   end if;
-        --       --   if Resize_Location = Top_Right_Resize or Resize_Location = Top_Left_Resize then
+        --       --     END IF;
+        --       --   END IF;
+        --       --   IF Resize_Location = Top_Right_Resize OR Resize_Location = Top_Left_Resize THEN
         --       --     Screen.Top := Screen.Bottom - Current_Height - Decoration_Height;
-        --       --     if Screen.Top < Work_Area.Top then
+        --       --     IF Screen.Top < Work_Area.Top THEN
         --       --       Did_Resize_Top := True;
         --       --       Screen.Top := Work_Area.Top;
-        --       --     end if;
-        --       --   end if;
-        --       --   if Resize_Location = Bottom_Left_Resize or Resize_Location = Top_Left_Resize then
+        --       --     END IF;
+        --       --   END IF;
+        --       --   IF Resize_Location = Bottom_Left_Resize OR Resize_Location = Top_Left_Resize THEN
         --       --     Screen.Left := Screen.Right - Decoration_Width - Current_Width;
-        --       --     if Screen.Left < Work_Area.Left then
+        --       --     IF Screen.Left < Work_Area.Left THEN
         --       --       Did_Resize_Left := True;
         --       --       Screen.Left := Work_Area.Left;
-        --       --     end if;
-        --       --   end if;
-        --       --   if Resize_Location = Bottom_Right_Resize or Resize_Location = Top_Right_Resize then
+        --       --     END IF;
+        --       --   END IF;
+        --       --   IF Resize_Location = Bottom_Right_Resize OR Resize_Location = Top_Right_Resize THEN
         --       --     Screen.Right := Screen.Left + Decoration_Width + Current_Width;
-        --       --     if Screen.Right > Work_Area.Right then
+        --       --     IF Screen.Right > Work_Area.Right THEN
         --       --       Did_Resize_Right := True;
         --       --       Screen.Right := Work_Area.Right;
-        --       --     end if;
-        --       --   end if;
-        --       --   if
-        --       --     Did_Resize_Right or
-        --       --     Did_Resize_Left or
-        --       --     Did_Resize_Top or
-        --       --     Did_Resize_Bottom then
-        --       --     null;--return Handle_Resize(
+        --       --     END IF;
+        --       --   END IF;
+        --       --   IF
+        --       --     Did_Resize_Right OR
+        --       --     Did_Resize_Left OR
+        --       --     Did_Resize_Top OR
+        --       --     Did_Resize_Bottom THEN
+        --       --     NULL;--RETURN Handle_Resize(
         --       --     --  Resize_Location => Resize_Location,
         --       --     --  Previous_Screen => Previous_Screen,
         --       --     --  Current_Screen  => Screen,
         --       --     --  Work_Area       => Work_Area,
         --       --     --  Decoration_Area => Decoration_Area);
-        --       --   end if;
-        --     case Resize_Location is
-        --       when Bottom_Right_Resize =>
-        --         if Screen.Right > Work_Area.Right or Screen.Bottom > Work_Area.Bottom then
+        --       --   END IF;
+        --     CASE Resize_Location IS
+        --       WHEN Bottom_Right_Resize =>
+        --         IF Screen.Right > Work_Area.Right OR Screen.Bottom > Work_Area.Bottom THEN
         --           Screen := Previous_Screen;
-        --         end if;
-        --       when Bottom_Left_Resize =>
-        --         if Screen.Left < Work_Area.Left or Screen.Bottom > Work_Area.Bottom then
+        --         END IF;
+        --       WHEN Bottom_Left_Resize =>
+        --         IF Screen.Left < Work_Area.Left OR Screen.Bottom > Work_Area.Bottom THEN
         --           Screen := Previous_Screen;
-        --         end if;
-        --       when Top_Left_Resize =>
-        --         if Screen.Top < Work_Area.Top or Screen.Left < Work_Area.Left then
+        --         END IF;
+        --       WHEN Top_Left_Resize =>
+        --         IF Screen.Top < Work_Area.Top OR Screen.Left < Work_Area.Left THEN
         --           Screen := Previous_Screen;
-        --         end if;
-        --       when Top_Right_Resize =>
-        --         if Screen.Top < Work_Area.Top or Screen.Right > Work_Area.Right then
+        --         END IF;
+        --       WHEN Top_Right_Resize =>
+        --         IF Screen.Top < Work_Area.Top OR Screen.Right > Work_Area.Right THEN
         --           Screen := Previous_Screen;
-        --         end if;
-        --       when others =>
-        --         null;
-        --     end case;
-        --   when others =>
-        --     null;
-        -- end case;
+        --         END IF;
+        --       WHEN others =>
+        --         NULL;
+        --     END CASE;
+        --   WHEN others =>
+        --     NULL;
+        -- END CASE;
         -- Window.X      := Screen.Left;
         -- Window.Y      := Screen.Top;
         -- Window.Width  := (Screen.Right  - Screen.Left);
@@ -684,6 +696,7 @@ package body Neo.System.Window
         -- Protected_Data.Set(Window);
         -- Center_X := Screen.Left + (Window.Width)  / 2;
         -- Center_Y := Screen.Top  + (Window.Height) / 2;
-        return Screen;
-      end Handle_Resize;
-  end Neo.System.Window;
+        RETURN Screen;
+      END Handle_Resize;
+  END Neo.System.Window;
+
