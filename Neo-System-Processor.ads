@@ -14,18 +14,18 @@
 --
 --
 --
-with
+WITH
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
-use
+USE
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
-package Neo.System.Processor
-  is
+PACKAGE Neo.System.Processor
+  IS
   ----------------
-  -- Exceptions --
+  -- EXCEPTIONS --
   ----------------
     Invalid_Operation    : Exception;
     Denormalized_Operand : Exception;
@@ -35,30 +35,30 @@ package Neo.System.Processor
     Inexact_Result       : Exception;
     Stack_Fault          : Exception;
   ------------------
-  -- Enumerations --
+  -- ENUMERATIONS --
   ------------------
-    type Enumerated_Vendor
-      is(
+    TYPE Enumerated_Vendor
+      IS(
       Generic_Vendor,
       Intel_Vendor,
       Apple_IBM_Motorola_Vendor,
       Advanced_Micro_Devices_Vendor);
-    type Enumerated_Precision
-      is(
+    TYPE Enumerated_Precision
+      IS(
       Single_Precision,           -- 24 bits
       Double_Precision,           -- 53 bits
       Double_Extended_Precision); -- 64 bits
-    type Enumerated_Rounding
-      is(
+    TYPE Enumerated_Rounding
+      IS(
       Up_Rounding,
       Down_Rounding,
       Nearest_Rounding,
       Truncate_Rounding);
   -------------
-  -- Records --
+  -- RECORDS --
   -------------
-    type Record_Extensions
-      is record
+    TYPE Record_Extensions
+      IS RECORD
         Has_Altivec                                : Boolean := False;
         Has_3DNow                                  : Boolean := False;
         Has_3DNow_Supplement                       : Boolean := False;
@@ -90,77 +90,77 @@ package Neo.System.Processor
         Has_Conditional_Move                       : Boolean := False;
         Has_Leading_Zero_Count                     : Boolean := False;
         Has_Extended_Operation_Support             : Boolean := False;
-      end record;
+      END RECORD;
   -----------------
-  -- Subprograms --
+  -- SUBPROGRAMS --
   -----------------
-    procedure Initialize;
-    procedure Test;
-    procedure Check_Exceptions;
-    procedure Clear_Stack;
-    function Is_Stack_Empty
-      return Boolean;
-    procedure Put_Stack;
-    procedure Put_Trace;
-    procedure Set_Rounding(
-      Rounding : in Enumerated_Rounding);
-    procedure Set_Precision(
-      Precision : in Enumerated_Precision);
-    function Get_Number_Of_Cores
-      return Integer_8_Unsigned;
-    function Get_Speed_In_Megahertz
-      return Integer_8_Unsigned;
-    function Get_Vendor
-      return Enumerated_Vendor;
-    function Get_Extensions
-      return Record_Extensions;
-    function Get_Clock_Ticks
-      return Integer_8_Unsigned;
+    PROCEDURE Initialize;
+    PROCEDURE Test;
+    PROCEDURE Check_Exceptions;
+    PROCEDURE Clear_Stack;
+    FUNCTION Is_Stack_Empty
+      RETURN Boolean;
+    PROCEDURE Put_Stack;
+    PROCEDURE Put_Trace;
+    PROCEDURE Set_Rounding(
+      Rounding : IN Enumerated_Rounding);
+    PROCEDURE Set_Precision(
+      Precision : IN Enumerated_Precision);
+    FUNCTION Get_Number_Of_Cores
+      RETURN Integer_8_Unsigned;
+    FUNCTION Get_Speed_In_Megahertz
+      RETURN Integer_8_Unsigned;
+    FUNCTION Get_Vendor
+      RETURN Enumerated_Vendor;
+    FUNCTION Get_Extensions
+      RETURN Record_Extensions;
+    FUNCTION Get_Clock_Ticks
+      RETURN Integer_8_Unsigned;
 -------
-private
+PRIVATE
 -------
   ---------------
-  -- Constants --
+  -- CONSTANTS --
   ---------------
     TRACE_LIMIT : constant Integer_4_Signed := 1_000;
   --------------------
-  -- Implementation --
+  -- IMPLEMENTATION --
   --------------------
-    package Implementation_For_Compiler
-      is
-        procedure Put_Trace;
-      end Implementation_For_Compiler;
-    package Implementation_For_Operating_System
-      is
-        function Get_Clock_Ticks
-          return Integer_8_Unsigned;
-        function Get_Number_of_Cores
-          return Integer_8_Unsigned;
-        function Get_Speed_In_Megahertz
-          return Integer_8_Unsigned;
-      end Implementation_For_Operating_System;
-    package Implementation_For_Architecture
-      is
-        procedure Initialize;
-        function Get_Vendor
-          return Enumerated_Vendor;
-        function Get_Extensions
-          return Record_Extensions;
-        function Get_Number_of_Cores
-          return Integer_8_Unsigned;
-        function Get_Speed_In_Megahertz
-          return Integer_8_Unsigned;
-        procedure Check_Exceptions;
-        procedure Set_Rounding(
-          Rounding  : in Enumerated_Rounding);
-        procedure Set_Precision(
-          Precision : in Enumerated_Precision);
-        function Get_Clock_Ticks
-          return Integer_8_Unsigned;
-        procedure Put_Stack;
-        procedure Put_Trace;
-        function Is_Stack_Empty
-          return Boolean;
-        procedure Clear_Stack;
-      end Implementation_For_Architecture;
-  end Neo.System.Processor;
+    PACKAGE Implementation_For_Compiler
+      IS
+        PROCEDURE Put_Trace;
+      END Implementation_For_Compiler;
+    PACKAGE Implementation_For_Operating_System
+      IS
+        FUNCTION Get_Clock_Ticks
+          RETURN Integer_8_Unsigned;
+        FUNCTION Get_Number_of_Cores
+          RETURN Integer_8_Unsigned;
+        FUNCTION Get_Speed_In_Megahertz
+          RETURN Integer_8_Unsigned;
+      END Implementation_For_Operating_System;
+    PACKAGE Implementation_For_Architecture
+      IS
+        PROCEDURE Initialize;
+        FUNCTION Get_Vendor
+          RETURN Enumerated_Vendor;
+        FUNCTION Get_Extensions
+          RETURN Record_Extensions;
+        FUNCTION Get_Number_of_Cores
+          RETURN Integer_8_Unsigned;
+        FUNCTION Get_Speed_In_Megahertz
+          RETURN Integer_8_Unsigned;
+        PROCEDURE Check_Exceptions;
+        PROCEDURE Set_Rounding(
+          Rounding  : IN Enumerated_Rounding);
+        PROCEDURE Set_Precision(
+          Precision : IN Enumerated_Precision);
+        FUNCTION Get_Clock_Ticks
+          RETURN Integer_8_Unsigned;
+        PROCEDURE Put_Stack;
+        PROCEDURE Put_Trace;
+        FUNCTION Is_Stack_Empty
+          RETURN Boolean;
+        PROCEDURE Clear_Stack;
+      END Implementation_For_Architecture;
+  END Neo.System.Processor;
