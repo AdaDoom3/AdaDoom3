@@ -122,7 +122,7 @@ PRIVATE
   ---------------
   -- CONSTANTS --
   ---------------
-    TRACE_LIMIT : constant Integer_4_Signed := 1_000;
+    TRACE_LIMIT : CONSTANT Integer_4_Signed := 1_000;
   --------------------
   -- IMPLEMENTATION --
   --------------------
