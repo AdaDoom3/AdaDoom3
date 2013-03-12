@@ -14,218 +14,218 @@
 --
 --
 --
-with
+WITH
   System,
   Interfaces.C,
   Ada.Strings,
   Ada.Strings.Wide_Fixed,
   Neo.Windows;
-use
+USE
   System,
   Interfaces.C,
   Ada.Strings,
   Ada.Strings.Wide_Fixed,
   Neo.Windows;
-separate(Neo.System)
-package body Implementation
-  is
+SEPARATE(Neo.System)
+PACKAGE BODY Implementation
+  IS
   ---------------
   -- Constants --
   ---------------
-    STRING_BUFFER_SIZE_FOR_GET_USERNAME : constant Integer_4_Signed := 1024;
+    STRING_BUFFER_SIZE_FOR_GET_USERNAME : CONSTANT Integer_4_Signed := 1024;
   -----------------
   -- Get_Version --
   -----------------
-    function Get_Operating_System
-      return Enumerated_System
-      is
-      Version_Information : Record_Version_Information := (others => <>);
-      begin
-        if Get_Version(Version_Information'Address) = FAILED then
+    FUNCTION Get_Version
+      RETURN Enumerated_System
+      IS
+      Version_Information : Record_Version_Information := (OTHERS => <>);
+      BEGIN
+        if Get_Version(Version_Information'Address) = FAILED THEN
           Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
-          raise System_Call_Failure;
-        end if;
-        case Version_Information.Platform_Identifier is
-          when 1 =>
-            case Version_Information.Major is
-              when 4 =>
-                case Version_Information.Minor is
-                  when 0 =>
-                    case Version_Information.Service_Pack(2) is
-                      when 'B' | 'C' =>
-                        return Windows_1_4_B_System;
-                      when others =>
-                        return Windows_1_4_A_System;
-                    end case;
-                  when 10 =>
-                    case Version_Information.Service_Pack(2) is
-                      when 'A' =>
-                        return Windows_1_4_10_B_System;
-                      when others =>
-                        return Windows_1_4_10_A_System;
-                    end case;
-                  when 90 =>
-                    return Windows_1_4_90_System;
-                  when others =>
-                    null;
-                end case;
-              when others =>
-                null;
-            end case;
-          when 2 =>
-            case Version_Information.Major is
-              when 0..4 =>
-                return Windows_2_System;
-              when 5 =>
-                case Version_Information.Minor is
-                  when 0 =>
-                    return Windows_2_5_System;
-                  when 1 =>
-                    return Windows_2_5_1_System;
-                  when others =>
-                    null;
-                end case;
-              when 6 =>
-                case Version_Information.Minor is
-                  when 0 =>
-                    return Windows_2_6_System;
-                  when 1 =>
-                    return Windows_2_6_1_System;
-                  when 2 =>
-                    return Windows_2_6_2_System;
-                  when others =>
-                    null;
-                end case;
-              when others =>
-                null;
-            end case;
-          when others =>
-            null;
-        end case;
-        return Windows_System;
-      end Get_Version;
+          RAISE System_Call_Failure;
+        END if;
+        CASE Version_Information.Platform_Identifier IS
+          WHEN 1 =>
+            CASE Version_Information.Major IS
+              WHEN 4 =>
+                CASE Version_Information.Minor IS
+                  WHEN 0 =>
+                    CASE Version_Information.Service_Pack(2) IS
+                      WHEN 'B' | 'C' =>
+                        RETURN Windows_1_4_B_System;
+                      WHEN OTHERS =>
+                        RETURN Windows_1_4_A_System;
+                    END CASE;
+                  WHEN 10 =>
+                    CASE Version_Information.Service_Pack(2) IS
+                      WHEN 'A' =>
+                        RETURN Windows_1_4_10_B_System;
+                      WHEN OTHERS =>
+                        RETURN Windows_1_4_10_A_System;
+                    END CASE;
+                  WHEN 90 =>
+                    RETURN Windows_1_4_90_System;
+                  WHEN OTHERS =>
+                    NULL;
+                END CASE;
+              WHEN OTHERS =>
+                NULL;
+            END CASE;
+          WHEN 2 =>
+            CASE Version_Information.Major IS
+              WHEN 0..4 =>
+                RETURN Windows_2_System;
+              WHEN 5 =>
+                CASE Version_Information.Minor IS
+                  WHEN 0 =>
+                    RETURN Windows_2_5_System;
+                  WHEN 1 =>
+                    RETURN Windows_2_5_1_System;
+                  WHEN OTHERS =>
+                    NULL;
+                END CASE;
+              WHEN 6 =>
+                CASE Version_Information.Minor IS
+                  WHEN 0 =>
+                    RETURN Windows_2_6_System;
+                  WHEN 1 =>
+                    RETURN Windows_2_6_1_System;
+                  WHEN 2 =>
+                    RETURN Windows_2_6_2_System;
+                  WHEN OTHERS =>
+                    NULL;
+                END CASE;
+              WHEN OTHERS =>
+                NULL;
+            END CASE;
+          WHEN OTHERS =>
+            NULL;
+        END CASE;
+        RETURN Windows_System;
+      END Get_Version;
   ------------------
   -- Get_Language --
   ------------------
-    function Get_Language
-      return Enumerated_Language
-      is
-      begin
-        case Get_System_Default_Language is
-          when LANGUAGE_ARABIC =>
-            return Arabic_Language;
-          when LANGUAGE_BASQUE =>
-            return Basque_Language;
-          when LANGUAGE_CATALAN =>
-            return Catalan_Language;
-          when LANGUAGE_CHINESE_SIMPLIFIED =>
-            return Simplified_Chinese_Language;
-          when LANGUAGE_CHINESE_TRADITIONAL =>
-            return Traditional_Chinese_Language;
-          when LANGUAGE_CZECH =>
-            return Czech_Language;
-          when LANGUAGE_DANISH =>
-            return Danish_Language;
-          when LANGUAGE_DUTCH =>
-            return Dutch_Language;
-          when LANGUAGE_ENGLISH =>
-            return English_Language;
-          when LANGUAGE_FINNISH =>
-            return Finnish_Langauge;
-          when LANGUAGE_FRENCH =>
-            return French_Langauge;
-          when LANGUAGE_GERMAN =>
-            return German_Language;
-          when LANGUAGE_GREEK =>
-            return Greek_Language;
-          when LANGUAGE_HEBREW =>
-            return Hebrew_Language;
-          when LANGUAGE_HUNGARIAN =>
-            return Hungarian_Language;
-          when LANGUAGE_ITALIAN =>
-            return Italian_Language;
-          when LANGUAGE_JAPANESE =>
-            return Japanese_Language;
-          when LANGUAGE_KOREAN =>
-            return Korean_Language;
-          when LANGUAGE_NORWEGIAN =>
-            return Norwegian_Language;
-          when LANGUAGE_POLISH =>
-            return Polish_Language;
-          when LANGUAGE_PORTUGUESE =>
-            return Portuguese_Language;
-          when LANGUAGE_PORTUGUESE_BRAZIL =>
-            return Brazilian_Portuguese_Language;
-          when LANGUAGE_RUSSIAN =>
-            return Russian_Language;
-          when LANGUAGE_SLOVAKIAN =>
-            return Slovakian_Language;
-          when LANGUAGE_SLOVENIAN =>
-            return Slovenian_Language;
-          when LANGUAGE_SPANISH =>
-            return Spanish_Language;
-          when LANGUAGE_SWEDISH =>
-            return Swedish_Language;
-          when LANGUAGE_TURKISH =>
-            return Turkish_Language;
-          when others =>
-            return English_Language;
-        end case;
-      end Get_Language;
+    FUNCTION Get_Language
+      RETURN Enumerated_Language
+      IS
+      BEGIN
+        CASE Get_System_Default_Language IS
+          WHEN LANGUAGE_ARABIC =>
+            RETURN Arabic_Language;
+          WHEN LANGUAGE_BASQUE =>
+            RETURN Basque_Language;
+          WHEN LANGUAGE_CATALAN =>
+            RETURN Catalan_Language;
+          WHEN LANGUAGE_CHINESE_SIMPLIFIED =>
+            RETURN Simplified_Chinese_Language;
+          WHEN LANGUAGE_CHINESE_TRADITIONAL =>
+            RETURN Traditional_Chinese_Language;
+          WHEN LANGUAGE_CZECH =>
+            RETURN Czech_Language;
+          WHEN LANGUAGE_DANISH =>
+            RETURN Danish_Language;
+          WHEN LANGUAGE_DUTCH =>
+            RETURN Dutch_Language;
+          WHEN LANGUAGE_ENGLISH =>
+            RETURN English_Language;
+          WHEN LANGUAGE_FINNISH =>
+            RETURN Finnish_Langauge;
+          WHEN LANGUAGE_FRENCH =>
+            RETURN French_Langauge;
+          WHEN LANGUAGE_GERMAN =>
+            RETURN German_Language;
+          WHEN LANGUAGE_GREEK =>
+            RETURN Greek_Language;
+          WHEN LANGUAGE_HEBREW =>
+            RETURN Hebrew_Language;
+          WHEN LANGUAGE_HUNGARIAN =>
+            RETURN Hungarian_Language;
+          WHEN LANGUAGE_ITALIAN =>
+            RETURN Italian_Language;
+          WHEN LANGUAGE_JAPANESE =>
+            RETURN Japanese_Language;
+          WHEN LANGUAGE_KOREAN =>
+            RETURN Korean_Language;
+          WHEN LANGUAGE_NORWEGIAN =>
+            RETURN Norwegian_Language;
+          WHEN LANGUAGE_POLISH =>
+            RETURN Polish_Language;
+          WHEN LANGUAGE_PORTUGUESE =>
+            RETURN Portuguese_Language;
+          WHEN LANGUAGE_PORTUGUESE_BRAZIL =>
+            RETURN Brazilian_Portuguese_Language;
+          WHEN LANGUAGE_RUSSIAN =>
+            RETURN Russian_Language;
+          WHEN LANGUAGE_SLOVAKIAN =>
+            RETURN Slovakian_Language;
+          WHEN LANGUAGE_SLOVENIAN =>
+            RETURN Slovenian_Language;
+          WHEN LANGUAGE_SPANISH =>
+            RETURN Spanish_Language;
+          WHEN LANGUAGE_SWEDISH =>
+            RETURN Swedish_Language;
+          WHEN LANGUAGE_TURKISH =>
+            RETURN Turkish_Language;
+          WHEN OTHERS =>
+            RETURN English_Language;
+        END CASE;
+      END Get_Language;
   ------------------
   -- Get_Username --
   ------------------
-    function Get_Username
-      return String_2
-      is
-      Username : String_2(1..STRING_BUFFER_SIZE_FOR_GET_USERNAME) := (others => ' ');
+    FUNCTION Get_Username
+      RETURN String_2
+      IS
+      Username : String_2(1..STRING_BUFFER_SIZE_FOR_GET_USERNAME) := (OTHERS => ' ');
       Size     : Integer_4_Signed_C                               := Username'Size / 8;
-      begin
-        if Get_User_Name(Username'Address, Size'Address) = FAILED then
-          raise System_Call_Failure;
-        end if;
-        if Username(1) = ' ' then
-          raise System_Call_Failure;
-        end if;
+      BEGIN
+        if Get_User_Name(Username'Address, Size'Address) = FAILED THEN
+          RAISE System_Call_Failure;
+        END if;
+        if Username(1) = ' ' THEN
+          RAISE System_Call_Failure;
+        END if;
         Username(Integer_4_Signed(Size)) := ' ';
-        return Trim(Username, Both);
-      end Get_Username;
+        RETURN Trim(Username, Both);
+      END Get_Username;
   ------------------
   -- Open_Webpage --
   ------------------
-    procedure Open_Webpage(
-      Path : in String_2)
-      is
+    PROCEDURE Open_Webpage(
+      Path : IN String_2)
+      IS
       Window : Address := NULL_ADDRESS;
-      begin
-        null;
+      BEGIN
+        NULL;
         -- if
         -- Shell_Execute(
         --   Window       => NULL_ADDRESS,
         --   Operation    => To_Access_Constant_Character_2_C("open"),
         --   File         => To_Access_Constant_Character_2_C(Path),
-        --   Directory    => null,
-        --   Parameters   => null,
+        --   Directory    => NULL,
+        --   Parameters   => NULL,
         --   Show_Command => MAKE_WINDOW_RESTORE) < To_Address(32)
-        -- then
+        -- THEN
         --   Put_Line("  Open_Webpage: Could not open " & Path);
-        --   return;
-        -- end if;
+        --   RETURN;
+        -- END if;
         -- Put_Line("  Open_Webpage: " & Path);
         -- Window := Get_Foreground_Window;
-        -- if Window /= NULL_ADDRESS and then Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = FAILED then
-        --   null; -- raise System_Call_Failure;
-        -- end if;
-      end Open_Webpage;
+        -- if Window /= NULL_ADDRESS and THEN Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = FAILED THEN
+        --   NULL; -- RAISE System_Call_Failure;
+        -- END if;
+      END Open_Webpage;
   -------------------------
   -- Execute_Application --
   -------------------------
-    procedure Execute_Application(
-      Do_Quit         : in Boolean;
-      Executable_Path : in String_2)
-      is
-      begin
-        null;
+    PROCEDURE Execute_Application(
+      Do_Quit         : IN Boolean;
+      Executable_Path : IN String_2)
+      IS
+      BEGIN
+        NULL;
         --   if
         --   Create_Process(
         --      => NULL_ADDRESS,
@@ -238,23 +238,32 @@ package body Implementation
         --      => NULL_ADDRESS,
         --      => Startup_Information'Address,
         --      => Process_Information'Address) = FAILED
-        --   then
-        -- Executable_Name : in String_2;
-        -- Do_Quit         : in Boolean)
-        -- is
+        --   THEN
+        -- Executable_Name : IN String_2;
+        -- Do_Quit         : IN Boolean)
+        -- IS
         -- TCHAR       szPathOrig[_MAX_PATH];
         -- STARTUPINFO     si;
         -- PROCESS_INFORMATION pi;
-        -- begin
+        -- BEGIN
         --   ZeroMemory( &si, sizeof(si) );
         --   si.cb = sizeof(si);
         --   strncpy( szPathOrig, exePath, _MAX_PATH );
         --   if( !CreateProcess( NULL, szPathOrig, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi ) ) {
         --         common->Error( "Could not start process: '%s' ", szPathOrig );
-        --       return;
+        --       RETURN;
         --   }
         --   if ( doexit ) {
         --     cmdSystem->BufferCommandText( CMD_EXEC_APPEND, "quit\n" );
         --   }
-      end Execute_Application;
-  end Implementation;
+      END Execute_Application;
+  --------------------------------------
+  -- Is_Running_In_64_Bit_Environment --
+  --------------------------------------
+    FUNCTION Is_Running_In_64_Bit_Environment
+      RETURN Boolean
+      IS
+      BEGIN
+      END Is_Running_In_64_Bit_Environment;
+  END Implementation;
+
