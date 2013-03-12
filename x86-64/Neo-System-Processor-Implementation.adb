@@ -290,7 +290,7 @@ PACKAGE BODY Implementation_For_Architecture
           --------------------------
           Enable_Denormals_Are_Zero:
           --------------------------
-            declare
+            DECLARE
             TYPE Array_Save_Area
               IS ARRAY(1..512)
               OF Integer_1_Unsigned;
@@ -333,7 +333,7 @@ PACKAGE BODY Implementation_For_Architecture
         ---------------
         Set_Exceptions:
         ---------------
-          declare
+          DECLARE
           Exception_Mask :         Integer_4_Unsigned := 0;
           Other_Data     : ALIASED Integer_2_Unsigned := 0;
           BEGIN
@@ -461,7 +461,7 @@ PACKAGE BODY Implementation_For_Architecture
           ---------------------
           Clear_Exception_Bits:
           ---------------------
-            declare
+            DECLARE
             Data_From_SIMD  :         Integer_4_Unsigned     := 0;
             x86_Environment : ALIASED Record_x86_Environment := (OTHERS => <>);
             BEGIN
