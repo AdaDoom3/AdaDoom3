@@ -184,10 +184,11 @@ PACKAGE BODY Implementation_For_Architecture
         RETURN
           Integer_8_Unsigned(
             Shift_Right(
-              Shift_Left(
-                Value  => Execute_CPUID(Value.Function_ID, Value.Register),
-                Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
-              Integer(Integer_Bit_Field_Element'Last - (Value.End_Bit - Value.Start_Bit))));
+              Value =>
+                Shift_Left(
+                  Value  => Execute_CPUID(Value.Function_ID, Value.Register),
+                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
+              Amount => Integer(Integer_Bit_Field_Element'Last - (Value.End_Bit - Value.Start_Bit))));
       END Get_Value;
   ----------------
   -- Get_Vendor --
@@ -456,7 +457,7 @@ PACKAGE BODY Implementation_For_Architecture
           Inputs   => Address'Asm_Input(TO_EAX, Data_From_x87'Address),
           Volatile => True);
         Data := (Data AND 16#0000_003F#) AND Integer_4_Unsigned(Data_From_x87);
-        IF Data /= 0 THEN -- RAISE the first error found
+        IF Data /= 0 THEN -- Raise the first error found
           ---------------------
           Clear_Exception_Bits:
           ---------------------
@@ -741,10 +742,10 @@ PACKAGE BODY Implementation_For_Architecture
         IS NEW To_Radian_Image(Integer_4_Unsigned);
       FUNCTION To_Image
         IS NEW To_Radian_Image(Integer_2_Unsigned);
-      Number_Of_Values     :         Integer_4_Unsigned           := 0;
-      Data_From_Extensions : ALIASED Integer_4_Unsigned           := 0;
-      Stack                : ALIASED ARRAY (1..8) OF Float_8_Real := (OTHERS => 0.0);
-      Environment          : ALIASED Record_x86_Environment       := (OTHERS => <>);
+      Number_Of_Values     :         Integer_4_Unsigned          := 0;
+      Data_From_Extensions : ALIASED Integer_4_Unsigned          := 0;
+      Stack                : ALIASED ARRAY(1..8) OF Float_8_Real := (OTHERS => 0.0);
+      Environment          : ALIASED Record_x86_Environment      := (OTHERS => <>);
       BEGIN
         Asm(
           ---------------------------------------------
@@ -827,10 +828,10 @@ PACKAGE BODY Implementation_For_Architecture
           " fin:                         " & END_LINE ,
           ---------------------------------------------
           Volatile => True,
-          Inputs   =>(
+          Inputs =>(
             Address'Asm_Input(TO_EAX, Environment'Address),
             Address'Asm_Input(TO_EDI, Stack'Address)),
-          Outputs  =>
+          Outputs =>
             Integer_4_Unsigned'Asm_Output(FROM_EAX, Number_Of_Values));
         IF Number_Of_Values <= Stack'Size THEN
           FOR I IN 1..Integer(Number_Of_Values) LOOP
@@ -854,4 +855,3 @@ PACKAGE BODY Implementation_For_Architecture
         Put_Line("Program counter: " & To_Image(Environment.Program_Counter, 2));
       END Put_Stack;
   END Implementation_For_Architecture;
-
