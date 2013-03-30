@@ -278,7 +278,7 @@ PACKAGE BODY Implementation_For_Architecture
     PROCEDURE Check_Exceptions
       IS
       BEGIN
-
+        RAISE Unsupported_Feature; -- Should be done
       END Check_Exceptions;
   ------------------
   -- Set_Rounding --
@@ -308,8 +308,9 @@ PACKAGE BODY Implementation_For_Architecture
     FUNCTION Get_Clock_Ticks
       RETURN Integer_8_Unsigned
       IS
-      Result : Integer_4_Unsigned := 0;
+--      Result : Integer_4_Unsigned := 0;
       BEGIN
+        RAISE Unsupported_Feature; -- Should be done
 --         CASE Get_Version IS
 --           WHEN 
 --             Motorola_7400_Version  |
@@ -359,7 +360,7 @@ PACKAGE BODY Implementation_For_Architecture
 --           WHEN OTHERS =>
 --             RAISE Unsupported_Feature;
 --         END CASE;
---         RETURN ;        
+         RETURN 0;        
       END Get_Clock_Ticks;
   --------------------
   -- Is_Stack_Empty --
@@ -368,6 +369,7 @@ PACKAGE BODY Implementation_For_Architecture
       RETURN Boolean
       IS
       BEGIN
+        RAISE Unsupported_Feature;
       END Is_Stack_Empty;
   -----------------
   -- Clear_Stack --
@@ -375,7 +377,7 @@ PACKAGE BODY Implementation_For_Architecture
     PROCEDURE Clear_Stack
       IS
       BEGIN
-
+        RAISE Unsupported_Feature;
       END Clear_Stack;
   ---------------
   -- Put_Trace --
@@ -383,7 +385,7 @@ PACKAGE BODY Implementation_For_Architecture
     PROCEDURE Put_Trace
       IS
       BEGIN
-        NULL;
+        RAISE Unsupported_Feature;
       END Put_Trace;
  --------------------------
  -- Compare_And_Exchange --
@@ -395,7 +397,7 @@ PACKAGE BODY Implementation_For_Architecture
       RETURN Integer_4_Unsigned
       IS
       BEGIN
-
+        RAISE Unsupported_Feature; -- Should be done
       END Compare_And_Exchange;
   ---------------
   -- Put_Stack --
@@ -403,7 +405,7 @@ PACKAGE BODY Implementation_For_Architecture
     PROCEDURE Put_Stack
       IS
       BEGIN
-  
+        RAISE Unsupported_Feature;
       END Put_Stack;
   END Implementation_For_Architecture;
 
