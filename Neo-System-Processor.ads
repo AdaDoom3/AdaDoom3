@@ -63,41 +63,46 @@ PACKAGE Neo.System.Processor
       IS RECORD
         CASE Vendor IS
           WHEN ARM_Licenced_Vendor =>
-            Has_NEON                                   : Boolean := False;
-            Has_Vector_Floating_Point                  : Boolean := False;
+            Has_NEON                                       : Boolean := False;
+            Has_Vector_Floating_Point                      : Boolean := False;
           WHEN Apple_IBM_Motorola_Vendor =>
-            Has_Altivec                                : Boolean := False;
+            Has_Altivec                                    : Boolean := False;
           WHEN Intel_Vendor | Advanced_Micro_Devices_Vendor =>
-            Has_3DNow                                  : Boolean := False;
-            Has_3DNow_Supplement                       : Boolean := False;
-            Has_Multi_Media_Extensions                 : Boolean := False;
-            Has_Multi_Media_Extensions_Supplement      : Boolean := False;
-            Has_Streaming_SIMD_Extensions_1            : Boolean := False;
-            Has_Streaming_SIMD_Extensions_2            : Boolean := False;
-            Has_Streaming_SIMD_Extensions_3            : Boolean := False;
-            Has_Streaming_SIMD_Extensions_3_Supplement : Boolean := False;
-            Has_Streaming_SIMD_Extensions_4_1          : Boolean := False;
-            Has_Streaming_SIMD_Extensions_4_2          : Boolean := False;
-            Has_Streaming_SIMD_Extensions_4_Supplement : Boolean := False;
-            Has_Carryless_Multiplication_Of_Two_64_Bit : Boolean := False;
-            Has_Advanced_Vector_Extensions_Enabled     : Boolean := False;
-            Has_Advanced_Vector_Extensions_1           : Boolean := False;
-            Has_Advanced_Vector_Extensions_2           : Boolean := False;
-            Has_Advanced_Encryption_Service            : Boolean := False;
-            Has_Advanced_State_Operations              : Boolean := False;
-            Has_Bit_Manipulation_Extensions_1          : Boolean := False;
-            Has_Bit_Manipulation_Extensions_2          : Boolean := False;
-            Has_Fused_Multiply_Add_3                   : Boolean := False;
-            Has_Fused_Multiply_Add_4                   : Boolean := False;
-            Has_Hyperthreading                         : Boolean := False;
-            Has_High_Precision_Convert                 : Boolean := False;
-            Has_Half_Precision_Floating_Point_Convert  : Boolean := False;
-            Has_Extended_States_Enabled                : Boolean := False;
-            Has_Population_Count                       : Boolean := False;
-            Has_Context_ID_Manager                     : Boolean := False;
-            Has_Conditional_Move                       : Boolean := False;
-            Has_Leading_Zero_Count                     : Boolean := False;
-            Has_Extended_Operation_Support             : Boolean := False;
+            Has_Multi_Media_Extensions                     : Boolean := False;
+            Has_Streaming_SIMD_Extensions_1                : Boolean := False;
+            Has_Streaming_SIMD_Extensions_2                : Boolean := False;
+            Has_Streaming_SIMD_Extensions_3                : Boolean := False;
+            Has_Streaming_SIMD_Extensions_3_Supplement     : Boolean := False;
+            Has_Streaming_SIMD_Extensions_4_1              : Boolean := False;
+            Has_Streaming_SIMD_Extensions_4_2              : Boolean := False;
+            Has_Carryless_Multiplication_Of_Two_64_Bit     : Boolean := False;
+            Has_Advanced_Vector_Extensions_Enabled         : Boolean := False;
+            Has_Advanced_Vector_Extensions_1               : Boolean := False;
+            Has_Advanced_Vector_Extensions_2               : Boolean := False;
+            Has_Advanced_Encryption_Service                : Boolean := False;
+            Has_Advanced_State_Operations                  : Boolean := False;
+            Has_Bit_Manipulation_Extensions_1              : Boolean := False;
+            Has_Bit_Manipulation_Extensions_2              : Boolean := False;
+            Has_Fused_Multiply_Add_3                       : Boolean := False;
+            Has_Fused_Multiply_Add_4                       : Boolean := False;
+            Has_Hyperthreading                             : Boolean := False;
+            Has_High_Precision_Convert                     : Boolean := False;
+            Has_Half_Precision_Floating_Point_Convert      : Boolean := False;
+            Has_Extended_States_Enabled                    : Boolean := False;
+            Has_Population_Count                           : Boolean := False;
+            Has_Context_ID_Manager                         : Boolean := False;
+            Has_Conditional_Move                           : Boolean := False;
+            Has_Leading_Zero_Count                         : Boolean := False;
+            Has_Extended_Operation_Support                 : Boolean := False;
+            CASE Vendor IS
+              WHEN Advanced_Micro_Devices_Vendor =>
+                Has_Streaming_SIMD_Extensions_4_Supplement : Boolean := False;
+                Has_3DNow                                  : Boolean := False;
+                Has_3DNow_Supplement                       : Boolean := False;
+                Has_Multi_Media_Extensions_Supplement      : Boolean := False;
+              WHEN OTHERS =>
+                NULL;
+            END CASE;
         END CASE;
       END RECORD;
   -----------------
@@ -159,7 +164,7 @@ PRIVATE
           RETURN Integer_8_Unsigned;
         PROCEDURE Check_Exceptions;
         PROCEDURE Set_Rounding(
-          Rounding  : IN Enumerated_Rounding);
+          Rounding : IN Enumerated_Rounding);
         PROCEDURE Set_Precision(
           Precision : IN Enumerated_Precision);
         FUNCTION Get_Clock_Ticks
