@@ -70,7 +70,7 @@ PACKAGE Neo.System
     FUNCTION Get_Language
       RETURN Enumerated_Language;
     FUNCTION Get_Version
-      RETURN Enumerated_System;
+      RETURN Enumerated_Operating_System;
     FUNCTION Get_Username
       RETURN String_2;
     PROCEDURE Open_Webpage(
@@ -98,7 +98,7 @@ PRIVATE
         FUNCTION Get_Language
           RETURN Enumerated_Language;
         FUNCTION Get_Version
-          RETURN Enumerated_System;
+          RETURN Enumerated_Operating_System;
         FUNCTION Get_Username
           RETURN String_2;
         PROCEDURE Open_Webpage(

@@ -32,7 +32,7 @@ package Neo.Foundation.Build_Options
   ------------------
   -- Enumerations --
   ------------------
-    type Enumerated_System
+    type Enumerated_Operating_System
       is(
       Unknown_System,
       Linux_System, -- PowerPC?, x86-64?
