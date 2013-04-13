@@ -15,11 +15,13 @@
 --
 --
 with
+  System,
   Interfaces,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
+  System,
   Interfaces,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
