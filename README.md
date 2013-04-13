@@ -8,7 +8,8 @@ This code uses Ada 2012 features, your compiler will have to at least support th
 Compile
 -------
 In order to compile the code issue the following command:
-  gnatmake -gnat12 main
+
+  `gnatmake -gnat12 main`
 
 Author
 ------
