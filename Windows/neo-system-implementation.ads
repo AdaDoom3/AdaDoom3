@@ -37,7 +37,7 @@ PACKAGE BODY Implementation
   -- Get_Version --
   -----------------
     FUNCTION Get_Version
-      RETURN Enumerated_System
+      RETURN Enumerated_Operating_System
       IS
       Version_Information : Record_Version_Information := (OTHERS => <>);
       BEGIN

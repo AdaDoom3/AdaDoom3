@@ -29,7 +29,7 @@ PACKAGE BODY Neo.System
       BEGIN
         Put_Title("SYSTEM TEST");
         Put_Line("Language " & Enumerated_Language'Wide_Image(Get_Language));
-        Put_Line("Version "  & Enumerated_System'Wide_Image(Get_Version));
+        Put_Line("Version "  & Enumerated_Operating_System'Wide_Image(Get_Version));
         Put_Line("Username """ & Get_Username & """");
         Open_Webpage("http://www.google.com");
         Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
@@ -45,7 +45,7 @@ PACKAGE BODY Neo.System
       Windows   : IN Enumerated_Windows_System)
       RETURN Boolean
       IS
-      Current_System : Enumerated_System := Get_Version;
+      Current_System : Enumerated_Operating_System := Get_Version;
       BEGIN
         -- if Operating_System IN Enumerated_Linux_System'Range then
         -- elsif Operating_System IN Enumerated_Windows_System'Range then
@@ -75,7 +75,7 @@ PACKAGE BODY Neo.System
   -- Get_Version --
   -----------------
     FUNCTION Get_Version
-      RETURN Enumerated_System
+      RETURN Enumerated_Operating_System
       RENAMES Implementation.Get_Version;
   ------------------
   -- Get_Username --
