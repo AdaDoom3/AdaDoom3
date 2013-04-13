@@ -17,7 +17,6 @@
 generic
   type Type_To_Protect
     is private;
-  Initial_Type_To_Protect : Type_To_Protect;
 package Neo.Foundation.Generic_Protected
   is
   ---------------
@@ -34,7 +33,7 @@ package Neo.Foundation.Generic_Protected
         function Is_Initialized
           return Boolean;
       private
-        Data   : Type_To_Protect := Initial_Type_To_Protect;
+        Data   : Type_To_Protect;
         Status : Boolean         := False;
       end Data;
   ---------------
