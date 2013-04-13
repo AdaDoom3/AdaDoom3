@@ -1,5 +1,27 @@
-AdaDoom3 - work in progress
+AdaDoom3
 ========
+
+NOTE: THIS PROJECT IS MOSTLY INCOMPLETE AND DOES NOT COMPILE CURRENTLY
+
+The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear dependancy hierarchy, and robust tasking systems along with many other improvments.
+
+Planned features
+----------------
+* Load and play doom 3 bfg levels
+* Native ports for Windows, Linux X Windows, Mac OS, and SDL
+* Input support for generic and all major gamepads
+* Multi-monitor windowing
+* Threaded rendering with support for using multiple graphics cards
+* SIMD math library
+* Responsive multiplayer
+* Steam support for user accounts and achievements
+
+Roadmap
+-------
+* Raw input implementation
+* Multi-monitor testing
+* OpenGL dll loading
+* Windows specific network implementation
 
 Dependencies
 ------------
@@ -20,6 +42,17 @@ Where:
   example for Windows:
 
   `gnatmake -l/Windows -l/x86_64 -gnat12 main`
+
+Organization
+------------
+The project is organized into the following layers, currently work is being done on the foundation and system layers for Windows.
+* Foundation 
+* System
+* Library
+* Video
+* Audio
+* Core
+* Game
 
 Author
 ------
