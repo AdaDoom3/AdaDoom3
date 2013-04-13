@@ -16,13 +16,6 @@ Planned features
 * Responsive multiplayer
 * Steam support for user accounts and achievements
 
-Roadmap
--------
-* Raw input implementation
-* Multi-monitor testing
-* OpenGL dll loading
-* Windows specific network implementation
-
 Dependencies
 ------------
 This code uses Ada 2012 features, your compiler will have to at least support the aspect with clause.
@@ -33,7 +26,7 @@ In order to compile the code issue the following command:
 
   `gnatmake -l/$OS -l/$PLATFORM -gnat12 main`
 
-Where:
+Where
 
  $OS - is your operating system (currently supported values: Windows)
 
@@ -53,6 +46,14 @@ The project is organized into the following layers, currently work is being done
 * Audio
 * Core
 * Game
+
+Roadmap
+-------
+* Raw input implementation
+* Multi-monitor testing
+* OpenGL dll loading
+* Windows specific network implementation
+* Move on to Library layer
 
 Author
 ------
