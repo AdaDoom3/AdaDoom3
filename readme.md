@@ -58,3 +58,8 @@ Roadmap
 Author
 ------
 jsquirek1[at]student.gsu.edu
+
+License
+-------
+Unless otherwise noted here, all files and subprograms are GPLv3.
+http://www.gnu.org/licenses/gpl-3.0.txt
