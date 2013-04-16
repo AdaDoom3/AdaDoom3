@@ -15,12 +15,16 @@
 --
 -- 
 with
+  System,
   GNAT.Traceback,
   GNAT.Traceback.Symbolic,
+  Ada.Strings,
   Ada.Strings.Wide_Fixed;
 use
+  System,
   GNAT.Traceback,
   GNAT.Traceback.Symbolic,
+  Ada.Strings,
   Ada.Strings.Wide_Fixed;
 separate(Neo.System.Processor)
 package body Implementation_For_Compiler

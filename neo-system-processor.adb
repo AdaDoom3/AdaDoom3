@@ -14,326 +14,326 @@
 --
 --
 --
-PACKAGE BODY Neo.System.Processor
-  IS
+package body Neo.System.Processor
+  is
   --------------------
-  -- IMPLEMENTATION --
+  -- Implementation --
   --------------------
-    PACKAGE BODY Implementation_For_Compiler
-      IS SEPARATE;
-    PACKAGE BODY Implementation_For_Architecture
-      IS SEPARATE;
-    PACKAGE BODY Implementation_For_Operating_System
-      IS SEPARATE;
+    package body Implementation_For_Compiler
+      is separate;
+    package body Implementation_For_Architecture
+      is separate;
+    package body Implementation_For_Operating_System
+      is separate;
   ----------
   -- Test --
   ----------
-    PROCEDURE Test
-      IS
+    procedure Test
+      is
       -----------
-      PROCEDURE A
+      procedure A
       -----------
-        IS
-        BEGIN
+        is
+        begin
           Put_Trace;
-        END A;
+        end A;
       -----------
-      PROCEDURE B
+      procedure B
       -----------
-        IS
-        BEGIN
+        is
+        begin
           A;
-        END B;
+        end B;
       -----------
-      PROCEDURE C
+      procedure C
       -----------
-        IS
-        BEGIN
+        is
+        begin
           B;
-        END C;
+        end C;
       -----------
-      PROCEDURE D
+      procedure D
       -----------
-        IS
-        BEGIN
+        is
+        begin
           C;
-        END D;
-      Specifics : CONSTANT Record_Specifics := Get_Specifics;
-      BEGIN
+        end D;
+      Specifics : constant Record_Specifics := Get_Specifics;
+      begin
         Put_Title("PROCESSOR TEST");
         Set_Precision(Double_Extended_Precision);
         Set_Rounding(Nearest_Rounding);
         Check_Exceptions;
         Put_Line("Clock ticks: " & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
         Put_Line("Sleep...");
-        DELAY 0.5;
+        delay 0.5;
         Put_Line("Clock ticks: " & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
         Put_Line("Sleep...");
-        DELAY 1.0;
+        delay 1.0;
         Put_Line("Clock ticks: "       & Integer_8_Unsigned'Wide_Image(Get_Clock_Ticks));
         Put_Line("Number of cores:"    & Integer_8_Unsigned'Wide_Image(Get_Number_Of_Cores));
         Put_Line("Speed in megahertz:" & Integer_8_Unsigned'Wide_Image(Get_Speed_In_Megahertz));
         Put_Line("Vendor: "            & Enumerated_Vendor'Wide_Image(Specifics.Vendor));
-        CASE Specifics.Vendor IS
-          WHEN ARM_Licenced_Vendor =>
-            IF Specifics.Has_NEON THEN
+        case Specifics.Vendor is
+          when ARM_Licenced_Vendor =>
+            if Specifics.Has_NEON then
               Put_Line("Has NEON");
-            END IF;
-            IF Specifics.Has_Vector_Floating_Point THEN
+            end if;
+            if Specifics.Has_Vector_Floating_Point then
               Put_Line("Has VFP");
-            END IF;
-          WHEN Apple_IBM_Motorola_Vendor =>
-            IF Specifics.Has_Vector_Multimedia_Instructions THEN
+            end if;
+          when Apple_IBM_Motorola_Vendor =>
+            if Specifics.Has_Vector_Multimedia_Instructions then
               Put_Line("Has VMI");
-            END IF;
-            IF Specifics.Has_Vector_Scalar_Instructions THEN
+            end if;
+            if Specifics.Has_Vector_Scalar_Instructions then
               Put_Line("Has VSI");
-            END IF;
-            IF Specifics.Has_Altivec_Additional_Registers THEN
+            end if;
+            if Specifics.Has_Altivec_Additional_Registers then
               Put_Line("Has VMX128");
-            END IF;
-            IF Specifics.Has_Altivec THEN
+            end if;
+            if Specifics.Has_Altivec then
               Put_Line("Has Altivec");
-            END IF;
-          WHEN Intel_Vendor | Advanced_Micro_Devices_Vendor =>
-            IF Specifics.Advanced_Micro_Devices_Vendor THEN
-              IF Specifics.Has_3DNow THEN
+            end if;
+          when Intel_Vendor | Advanced_Micro_Devices_Vendor =>
+            if Specifics.Vendor = Advanced_Micro_Devices_Vendor then
+              if Specifics.Has_3DNow then
                 Put_Line("Has 3DNow!");
-              END IF;
-              IF Specifics.Has_3DNow_Supplement THEN
+              end if;
+              if Specifics.Has_3DNow_Supplement then
                 Put_Line("Has 3DNow!+");
-              END IF;
-              IF Specifics.Has_Streaming_SIMD_Extensions_4_Supplement THEN
+              end if;
+              if Specifics.Has_Streaming_SIMD_Extensions_4_Supplement then
                 Put_Line("Has SSE4a");
-              END IF;
-              IF Specifics.Has_Multi_Media_Extensions_Supplement THEN
+              end if;
+              if Specifics.Has_Multi_Media_Extensions_Supplement then
                 Put_Line("Has MMX+");
-              END IF;
-            END IF;
-            IF Specifics.Has_Multi_Media_Extensions THEN
+              end if;
+            end if;
+            if Specifics.Has_Multi_Media_Extensions then
               Put_Line("Has MMX");
-            END IF;
-            IF Specifics.Has_Fused_Multiply_Add_3 THEN
+            end if;
+            if Specifics.Has_Fused_Multiply_Add_3 then
               Put_Line("Has FMA3");
-            END IF;
-            IF Specifics.Has_Fused_Multiply_Add_4 THEN
+            end if;
+            if Specifics.Has_Fused_Multiply_Add_4 then
               Put_Line("Has FMA4");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_1 THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_1 then
               Put_Line("Has SSE");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_2 THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_2 then
               Put_Line("Has SSE2");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_3 THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_3 then
               Put_Line("Has SSE3");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_3_Supplement THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_3_Supplement then
               Put_Line("Has SSSE3");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_4_1 THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_4_1 then
               Put_Line("Has SSE4.1");
-            END IF;
-            IF Specifics.Has_Streaming_SIMD_Extensions_4_2 THEN
+            end if;
+            if Specifics.Has_Streaming_SIMD_Extensions_4_2 then
               Put_Line("Has SSE4.2");
-            END IF;
-            IF Specifics.Has_Bit_Manipulation_Extensions_1 THEN
+            end if;
+            if Specifics.Has_Bit_Manipulation_Extensions_1 then
               Put_Line("Has BMI1");
-            END IF;
-            IF Specifics.Has_Bit_Manipulation_Extensions_2 THEN
+            end if;
+            if Specifics.Has_Bit_Manipulation_Extensions_2 then
               Put_Line("Has BMI2");
-            END IF;
-            IF Specifics.Has_Advanced_Vector_Extensions_1 THEN
+            end if;
+            if Specifics.Has_Advanced_Vector_Extensions_1 then
               Put("Has AVX");
-              IF NOT Specifics.Has_Advanced_Vector_Extensions_Enabled THEN
+              if not Specifics.Has_Advanced_Vector_Extensions_Enabled then
                 Put_Line(", but it's disabled");
-              ELSE
+              else
                 New_Line;
-              END IF;
-            END IF;
-            IF Specifics.Has_Advanced_Vector_Extensions_2 THEN
+              end if;
+            end if;
+            if Specifics.Has_Advanced_Vector_Extensions_2 then
               Put("Has AVX2");
-              IF NOT Specifics.Has_Advanced_Vector_Extensions_Enabled THEN
-                IF NOT Specifics.Has_Advanced_Vector_Extensions_1 THEN
+              if not Specifics.Has_Advanced_Vector_Extensions_Enabled then
+                if not Specifics.Has_Advanced_Vector_Extensions_1 then
                   Put_Line(", but it's disabled");
-                ELSE
+                else
                   Put_Line(", but it's also disabled");
-                END IF;
-              ELSE
+                end if;
+              else
                 New_Line;
-              END IF;
-            END IF;
-            IF Specifics.Has_Context_ID_Manager THEN
+              end if;
+            end if;
+            if Specifics.Has_Context_ID_Manager then
               Put_Line("Has INVPCID");
-            END IF;
-            IF Specifics.Has_Population_Count THEN
+            end if;
+            if Specifics.Has_Population_Count then
               Put_Line("Has POPCNT");
-            END IF;
-            IF Specifics.Has_Leading_Zero_Count THEN
+            end if;
+            if Specifics.Has_Leading_Zero_Count then
               Put_Line("Has LZCNT");
-            END IF;
-            IF Specifics.Has_Carryless_Multiplication_Of_Two_64_Bit THEN
+            end if;
+            if Specifics.Has_Carryless_Multiplication_Of_Two_64_Bit then
               Put_Line("Has PCLMULQDQ");
-            END IF;
-            IF Specifics.Has_Extended_States_Enabled THEN
+            end if;
+            if Specifics.Has_Extended_States_Enabled then
               Put_Line("Has OSXSAVE");
-            END IF;
-            IF Specifics.Has_Half_Precision_Floating_Point_Convert THEN
+            end if;
+            if Specifics.Has_Half_Precision_Floating_Point_Convert then
               Put_Line("Has F16C");
-            END IF;
-            IF Specifics.Has_High_Precision_Convert THEN
+            end if;
+            if Specifics.Has_High_Precision_Convert then
               Put_Line("Has CVT16");
-            END IF;
-            IF Specifics.Has_Advanced_Encryption_Service THEN
+            end if;
+            if Specifics.Has_Advanced_Encryption_Service then
               Put_Line("Has AES");
-            END IF;
-            IF Specifics.Has_Advanced_State_Operations THEN
+            end if;
+            if Specifics.Has_Advanced_State_Operations then
               Put_Line("Has FXSR");
-            END IF;
-            IF Specifics.Has_Extended_Operation_Support THEN
+            end if;
+            if Specifics.Has_Extended_Operation_Support then
               Put_Line("Has XOP");
-            END IF;
-            IF Specifics.Has_Hyperthreading THEN
+            end if;
+            if Specifics.Has_Hyperthreading then
               Put_Line("Has HTT");
-            END IF;
-            IF Specifics.Has_Conditional_Move THEN
+            end if;
+            if Specifics.Has_Conditional_Move then
               Put_Line("Has CMOV");
-            END IF;
-          WHEN OTHERS =>
-            NULL;
-        END CASE;         
-        IF Is_Stack_Empty THEN
-          Put_Line("Stack IS empty!");
-        ELSE
+            end if;
+          when OTHERS =>
+            null;
+        end case;         
+        if Is_Stack_Empty then
+          Put_Line("Stack is empty!");
+        else
           Put_Stack;
           Clear_Stack;
-          IF Is_Stack_Empty THEN
+          if Is_Stack_Empty then
             Put_Line("Stack was cleared successfully");
-          END IF;
-        END IF;
+          end if;
+        end if;
         Put_Stack;
         D;
         Hang_Window;
-      EXCEPTION
-        WHEN Unsupported_Feature =>
+      exception
+        when Unsupported_Feature =>
           Put_Line("Unsupported feature!");
           Hang_Window;
-      END Test;
+      end Test;
   ----------------
   -- Initialize --
   ----------------
-    PROCEDURE Initialize
-      RENAMES Implementation_For_Architecture.Initialize;
+    procedure Initialize
+      renames Implementation_For_Architecture.Initialize;
   ----------------------
   -- Check_Exceptions --
   ----------------------
-    PROCEDURE Check_Exceptions
-      RENAMES Implementation_For_Architecture.Check_Exceptions;
+    procedure Check_Exceptions
+      renames Implementation_For_Architecture.Check_Exceptions;
   -----------------
   -- Clear_Stack --
   -----------------
-    PROCEDURE Clear_Stack
-      RENAMES Implementation_For_Architecture.Clear_Stack;
+    procedure Clear_Stack
+      renames Implementation_For_Architecture.Clear_Stack;
   --------------------
   -- Is_Stack_Empty --
   --------------------
-    FUNCTION Is_Stack_Empty
-      RETURN Boolean
-      RENAMES Implementation_For_Architecture.Is_Stack_Empty;
+    function Is_Stack_Empty
+      return Boolean
+      renames Implementation_For_Architecture.Is_Stack_Empty;
   ------------------
   -- Set_Rounding --
   ------------------
-    PROCEDURE Set_Rounding(
-      Rounding : IN Enumerated_Rounding)
-      RENAMES Implementation_For_Architecture.Set_Rounding;
+    procedure Set_Rounding(
+      Rounding : in Enumerated_Rounding)
+      renames Implementation_For_Architecture.Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
-    PROCEDURE Set_Precision(
-      Precision : IN Enumerated_Precision)
-      RENAMES Implementation_For_Architecture.Set_Precision;
-  --------------------
-  -- Get_Extensions --
-  --------------------
-    FUNCTION Get_Extensions
-      RETURN Record_Extensions
-      RENAMES Implementation_For_Architecture.Get_Extensions;
+    procedure Set_Precision(
+      Precision : in Enumerated_Precision)
+      renames Implementation_For_Architecture.Set_Precision;
+  -------------------
+  -- Get_Specifics --
+  -------------------
+    function Get_Specifics
+      return Record_Specifics
+      renames Implementation_For_Architecture.Get_Specifics;
   ----------------
   -- Get_Vendor --
   ----------------
-    FUNCTION Get_Vendor
-      RETURN Enumerated_Vendor
-      RENAMES Implementation_For_Architecture.Get_Vendor;
+    function Get_Vendor
+      return Enumerated_Vendor
+      renames Implementation_For_Architecture.Get_Vendor;
   --------------------
   -- Get_Clock_Tics --
   --------------------
-    FUNCTION Get_Clock_Ticks
-      RETURN Integer_8_Unsigned
-      IS
-      BEGIN
-        RETURN Implementation_For_Operating_System.Get_Clock_Ticks;
-      EXCEPTION
-        WHEN Unsupported_Feature | System_Call_Failure =>
-          RETURN Implementation_For_Architecture.Get_Clock_Ticks;
-      END Get_Clock_Ticks;
+    function Get_Clock_Ticks
+      return Integer_8_Unsigned
+      is
+      begin
+        return Implementation_For_Operating_System.Get_Clock_Ticks;
+      exception
+        when Unsupported_Feature | System_Call_Failure =>
+          return Implementation_For_Architecture.Get_Clock_Ticks;
+      end Get_Clock_Ticks;
   -------------------------
   -- Get_Number_Of_Cores --
   -------------------------
-    FUNCTION Get_Number_Of_Cores
-      RETURN Integer_8_Unsigned
-      IS
-      BEGIN
-        RETURN Implementation_For_Operating_System.Get_Number_Of_Cores;
-      EXCEPTION
-        WHEN Unsupported_Feature | System_Call_Failure =>
+    function Get_Number_Of_Cores
+      return Integer_8_Unsigned
+      is
+      begin
+        return Implementation_For_Operating_System.Get_Number_Of_Cores;
+      exception
+        when Unsupported_Feature | System_Call_Failure =>
           -------------
           Try_Assembly:
           -------------
-            DECLARE
-            BEGIN
-              RETURN Implementation_For_Architecture.Get_Number_Of_Cores;
-            EXCEPTION
-              WHEN Unsupported_Feature =>
-                RETURN Integer_8_Unsigned(Number_Of_CPUs); -- How reliable is this?
-            END Try_Assembly;
-      END Get_Number_Of_Cores;
+            declare
+            begin
+              return Implementation_For_Architecture.Get_Number_Of_Cores;
+            exception
+              when Unsupported_Feature =>
+                return Integer_8_Unsigned(Number_Of_CPUs); -- How reliable is this?
+            end Try_Assembly;
+      end Get_Number_Of_Cores;
   ----------------------------
   -- Get_Speed_In_Megahertz --
   ----------------------------
-    FUNCTION Get_Speed_In_Megahertz
-      RETURN Integer_8_Unsigned
-      IS
-      BEGIN
-        RETURN Implementation_For_Operating_System.Get_Speed_In_Megahertz;
-      EXCEPTION
-        WHEN Unsupported_Feature | System_Call_Failure =>
+    function Get_Speed_In_Megahertz
+      return Integer_8_Unsigned
+      is
+      begin
+        return Implementation_For_Operating_System.Get_Speed_In_Megahertz;
+      exception
+        when Unsupported_Feature | System_Call_Failure =>
           ---------------
           Time_Processor:
           ---------------
-            DECLARE
+            declare
             Start : Integer_8_Unsigned := 0;
-            BEGIN
+            begin
               Start := Get_Clock_Ticks;
-              DELAY 0.1;
-              RETURN (Get_Clock_Ticks - Start) * 10;
-            END Time_Processor;
-      END Get_Speed_In_Megahertz;
+              delay PROCESSOR_SPEED_TIMING_DELAY;
+              return (Get_Clock_Ticks - Start) * Integer_8_Unsigned(1.0 / PROCESSOR_SPEED_TIMING_DELAY);
+            end Time_Processor;
+      end Get_Speed_In_Megahertz;
   ---------------
   -- Put_Stack --
   ---------------
-    PROCEDURE Put_Stack
-      RENAMES Implementation_For_Architecture.Put_Stack;
+    procedure Put_Stack
+      renames Implementation_For_Architecture.Put_Stack;
   ---------------
   -- Put_Trace --
   ---------------
-    PROCEDURE Put_Trace
-      IS
-      BEGIN
+    procedure Put_Trace
+      is
+      begin
         Put_Line("Trace:");
         Implementation_For_Compiler.Put_Trace;
-      EXCEPTION
-        WHEN Unsupported_Feature | System_Call_Failure =>
+      exception
+        when Unsupported_Feature | System_Call_Failure =>
           Implementation_For_Architecture.Put_Trace;
-      END Put_Trace;
-  END Neo.System.Processor;
+      end Put_Trace;
+  end Neo.System.Processor;
 

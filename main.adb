@@ -26,10 +26,10 @@ with
 procedure Main
   is
   begin
-    --Neo.Foundation.Text_IO.Test;
-    --Neo.Foundation.Package_Testing.Test;
-    --Neo.System.Test;
-    --Neo.System.Memory.Test;
+    Neo.Foundation.Text_IO.Test;
+    Neo.Foundation.Package_Testing.Test;
+    Neo.System.Test;
+    Neo.System.Memory.Test;
     Neo.System.Processor.Initialize;
     Neo.System.Processor.Test;
   end Main;

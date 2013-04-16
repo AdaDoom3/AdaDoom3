@@ -32,7 +32,7 @@ package Neo.Foundation.Build_Options
   ------------------
   -- Enumerations --
   ------------------
-    type Enumerated_Operating_System
+    type Enumerated_System
       is(
       Unknown_System,
       Linux_System, -- PowerPC?, x86-64?
@@ -91,12 +91,12 @@ package Neo.Foundation.Build_Options
       Macintosh_10_7_System,
       Macintosh_10_8_System);
     subtype Enumerated_Linux_System
-      is Enumerated_Operating_System
+      is Enumerated_System
       range Linux_System..Linux_3_6_System;
     subtype Enumerated_Windows_System
-      is Enumerated_Operating_System
+      is Enumerated_System
       range Windows_System..Windows_2_6_2_System;
     subtype Enumerated_Macintosh_System
-      is Enumerated_Operating_System
+      is Enumerated_System
       range Macintosh_System..Macintosh_10_8_System;
   end Neo.Foundation.Build_Options;

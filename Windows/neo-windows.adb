@@ -15,6 +15,7 @@
 --
 --
 package body Neo.Windows
+  is
   ----------------------
   -- Get_Blank_Cursor --
   ----------------------
@@ -23,6 +24,6 @@ package body Neo.Windows
       is
       begin
         return(
-          16##, );
+          16#00#, 16#00#);
       end Get_Blank_Cursor;
   end Neo.Windows;

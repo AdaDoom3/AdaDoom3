@@ -15,8 +15,12 @@
 --
 --
 with
+  Interfaces,
+  Interfaces.C,
   Neo.Windows;
 use
+  Interfaces,
+  Interfaces.C,
   Neo.Windows;
 separate(Neo.System.Memory)
 package body Implementation

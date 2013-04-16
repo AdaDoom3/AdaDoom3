@@ -14,27 +14,28 @@
 --
 --
 --
-WITH
+with
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
-USE
+use
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
-PACKAGE Neo.System
-  IS
+package Neo.System
+  is
   ----------------
-  -- EXCEPTIONS --
+  -- Exceptions --
   ----------------
     System_Call_Failure : Exception;
+    Unsupported_Feature : Exception;
   ------------------
-  -- ENUMERATIONS --
+  -- Enumerations --
   ------------------
-    TYPE Enumerated_Language
-      IS(
+    type Enumerated_Language
+      is(
       Arabic_Language,
       Basque_Language,
       Catalan_Language,
@@ -64,48 +65,48 @@ PACKAGE Neo.System
       Swedish_Language,
       Turkish_Language);
   -----------------
-  -- SUBPROGRAMS --
+  -- Subprograms --
   -----------------
-    PROCEDURE Test;
-    FUNCTION Get_Language
-      RETURN Enumerated_Language;
-    FUNCTION Get_Version
-      RETURN Enumerated_Operating_System;
-    FUNCTION Get_Username
-      RETURN String_2;
-    PROCEDURE Open_Webpage(
-      Path : IN String_2);
-    PROCEDURE Execute_Application(
-      Do_Quit         : IN Boolean;
-      Executable_Path : IN String_2);
-    FUNCTION Is_Newer_Than(
-      Linux     : IN Enumerated_Linux_System;
-      Macintosh : IN Enumerated_Macintosh_System;
-      Windows   : IN Enumerated_Windows_System)
-      RETURN Boolean;
-    FUNCTION Is_Running_In_64_Bit_Environment
-      RETURN Boolean;
+    procedure Test;
+    function Get_Language
+      return Enumerated_Language;
+    function Get_Version
+      return Enumerated_System;
+    function Get_Username
+      return String_2;
+    procedure Open_Webpage(
+      Path : in String_2);
+    procedure Execute_Application(
+      Do_Quit         : in Boolean;
+      Executable_Path : in String_2);
+    function Is_Newer_Than(
+      Linux     : in Enumerated_Linux_System;
+      Macintosh : in Enumerated_Macintosh_System;
+      Windows   : in Enumerated_Windows_System)
+      return Boolean;
+    function Is_Running_In_64_Bit_Environment
+      return Boolean;
 -------
-PRIVATE
+private
 -------
   --------------------
-  -- IMPLEMENTATION --
+  -- Implementation --
   --------------------
-    PACKAGE Implementation
-      IS
-        FUNCTION Is_Running_In_64_Bit_Environment
-          RETURN Boolean;
-        FUNCTION Get_Language
-          RETURN Enumerated_Language;
-        FUNCTION Get_Version
-          RETURN Enumerated_Operating_System;
-        FUNCTION Get_Username
-          RETURN String_2;
-        PROCEDURE Open_Webpage(
-          Path : IN String_2);
-        PROCEDURE Execute_Application(
-          Do_Quit         : IN Boolean;
-          Executable_Path : IN String_2);
-      END Implementation;
-  END Neo.System;
+    package Implementation
+      is
+        function Is_Running_In_64_Bit_Environment
+          return Boolean;
+        function Get_Language
+          return Enumerated_Language;
+        function Get_Version
+          return Enumerated_System;
+        function Get_Username
+          return String_2;
+        procedure Open_Webpage(
+          Path : in String_2);
+        procedure Execute_Application(
+          Do_Quit         : in Boolean;
+          Executable_Path : in String_2);
+      end Implementation;
+  end Neo.System;
 
