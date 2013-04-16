@@ -57,6 +57,14 @@ Roadmap
 * Windows specific network implementation
 * Move on to Library layer
 
+Tasks
+-----
+The following are small tasks that are currently needed
+* Begin adding Linux support by implementing stubbed functions/subprograms in the following files
+  * Linux/neo-system-implementation.adb
+  * Linux/neo-system-memory-implementation.adb
+  * Linux/neo-system-processor-implementation_for_operating_system.adb
+
 Author
 ------
 jsquirek1[at]student.gsu.edu
