@@ -26,7 +26,7 @@ package body Neo.System.Memory
   ----------
     procedure Test
       is
-      Memory : Record_Memory;-- := <>;
+      Memory : Record_Memory := (others => <>);
       begin
         Put_Title("MEMORY TEST");
         Memory := Get_Data;
