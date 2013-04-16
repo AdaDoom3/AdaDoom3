@@ -33,10 +33,14 @@ Where
  $PLATFORM - is your architecture (currently supported values: x86_64)
  
  $COMPILER - is your compiler (currently supported values: GNAT)
+ 
+ To enable file/subprogram/line printing during stack traces the `-g` compile flag must be used (GNAT only). 
 
   example for Windows:
 
-  `gnatmake -I/Windows -I/x86_64 -I/GNAT -gnat12 main.adb`
+  `gnatmake -I/Windows -I/x86_64 -I/GNAT -g -gnat12 main.adb`
+  
+
 
 Organization
 ------------
