@@ -222,7 +222,8 @@ package body Implementation_For_Architecture
       is
       begin
         if Get_Vendor = Intel_Vendor then
-          return Get_Value(INTEL_CPU_COUNT); -- Inaccurate
+          raise Unsupported_Feature;
+          --return Get_Value(INTEL_CPU_COUNT); -- Inaccurate
         end if;
         return Get_Value(AMD_CPU_COUNT) + 1;
       end Get_Number_Of_Cores;
