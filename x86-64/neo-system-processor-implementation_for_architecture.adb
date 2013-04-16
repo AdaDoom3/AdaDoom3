@@ -222,8 +222,7 @@ package body Implementation_For_Architecture
       is
       begin
         if Get_Vendor = Intel_Vendor then
-          raise Unsupported_Feature;
-          --return Get_Value(INTEL_CPU_COUNT); -- Inaccurate
+          raise Unsupported_Feature;--return Get_Value(INTEL_CPU_COUNT); -- Inaccurate
         end if;
         return Get_Value(AMD_CPU_COUNT) + 1;
       end Get_Number_Of_Cores;
@@ -234,7 +233,7 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if not use_64_BIT then
+        if not USE_64_BIT then
           Asm( -- Check for cpuid
             --------------------------------------------
             "   pushfl                    " & END_LINE &
@@ -272,7 +271,7 @@ package body Implementation_For_Architecture
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
           if Data = 0 then
-            RAisE CPUID_Is_Not_Supported;
+            raise CPUID_Is_Not_Supported;
           end if;
         end if;
         if Is_Enabled(INTEL_FXSR) then
@@ -446,7 +445,7 @@ package body Implementation_For_Architecture
           Inputs   => Address'Asm_Input(TO_EAX, Data_From_x87'Address),
           Volatile => True);
         Data := (Data and 16#0000_003F#) and Integer_4_Unsigned(Data_From_x87);
-        if Data /= 0 then -- Raise the first error found
+        if Data /= 0 then -- raise the first error found
           ---------------------
           Clear_Exception_Bits:
           ---------------------
@@ -481,25 +480,25 @@ package body Implementation_For_Architecture
                 Volatile => True); 
             end Clear_Exception_Bits;
           if (Data and 16#0000_0001#) /= 0 then
-            RAisE Invalid_Operation;
+            raise Invalid_Operation;
           end if;
           if (Data and 16#0000_0002#) /= 0 then
-            RAisE Denormalized_Operand;
+            raise Denormalized_Operand;
           end if;
           if (Data and 16#0000_0004#) /= 0 then
-            RAisE Divide_By_Zero;
+            raise Divide_By_Zero;
           end if;
           if (Data and 16#0000_0008#) /= 0 then
-            RAisE Numeric_Overflow;
+            raise Numeric_Overflow;
           end if;
           if (Data and 16#0000_0010#) /= 0 then
-            RAisE Numeric_Underflow;
+            raise Numeric_Underflow;
           end if;
           if (Data and 16#0000_0020#) /= 0 then
-            RAisE Inexact_Result;
+            raise Inexact_Result;
           end if;
           if (Data and 16#0000_0040#) /= 0 then
-            RAisE Stack_Fault;
+            raise Stack_Fault;
           end if;
         end if;
       end Check_Exceptions;
