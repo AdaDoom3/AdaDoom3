@@ -1,7 +1,7 @@
 AdaDoom3
 ========
 
-NOTE: THIS PROJECT IS MOSTLY INCOMPLETE AND DOES NOT COMPILE CURRENTLY
+NOTE: THIS PROJECT IS MOSTLY INCOMPLETE
 
 The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear dependancy hierarchy, and robust tasking systems along with many other improvments.
 
@@ -31,10 +31,12 @@ Where
  $OS - is your operating system (currently supported values: Windows)
 
  $PLATFORM - is your architecture (currently supported values: x86_64)
+ 
+ $COMPILER - is your compiler (currently supported values: GNAT)
 
   example for Windows:
 
-  `gnatmake -l/Windows -l/x86_64 -gnat12 main`
+  `gnatmake -I/Windows -I/x86_64 -I/GNAT -gnat12 main.adb`
 
 Organization
 ------------
