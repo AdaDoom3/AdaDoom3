@@ -53,9 +53,7 @@ package body Implementation_For_Compiler
               if Current = Traceback'Last then
                 exit;
               end if;
-              if Index /= Length then
-                New_Line;
-              end if;
+              New_Line;
               ----------------------
               Put_With_Padded_Index:
               ----------------------
