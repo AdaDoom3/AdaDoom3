@@ -24,7 +24,7 @@ Compiling
 ---------
 In order to compile the code issue the following command:
 
-  `gnatmake -l/$OS -l/$PLATFORM -gnat12 main`
+  `gnatmake -I/$OS -I/$PLATFORM -I/$COMPILER -gnat12 main.adb`
 
 Where
 
