@@ -58,6 +58,7 @@ Roadmap
 * Raw input implementation
 * Multi-monitor testing
 * OpenGL dll loading
+* Audio via XAudio2
 * Windows specific network implementation
 * Move on to Library layer
 
