@@ -14,7 +14,7 @@
 --
 --
 --
-project Doom3
+project AdaDoom3
   is
   ----------------
   -- ???
@@ -82,5 +82,5 @@ project Doom3
         "-gnata",        -- ???
         "-gnat12");      -- ???
     end Compiler;
-end Doom3;
+end AdaDoom3;
 
