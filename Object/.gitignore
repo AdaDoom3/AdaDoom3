@@ -1,3 +1,6 @@
+*.bexch
+*.cswi
+*.cgpr
 *.ad?
 *.exe
 *.ali

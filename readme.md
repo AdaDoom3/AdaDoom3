@@ -3,18 +3,18 @@ AdaDoom3
 
 NOTE: THIS PROJECT IS MOSTLY INCOMPLETE
 
-The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear dependancy hierarchy, and robust tasking systems along with many other improvments.
+The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear dependency hierarchy, and robust tasking systems along with many other improvements.
 
 Planned features
 ----------------
-* Load and play doom 3 bfg levels
-* Native ports for Windows, Linux X Windows, Mac OS, and SDL
-* Input support for generic and all major gamepads
-* Multi-monitor windowing
-* Threaded rendering with support for using multiple graphics cards
-* SIMD math library
-* Responsive multiplayer
-* Steam support for user accounts and achievements
+* Load and play doom 3 bfg levels.
+* Native ports for Windows, Linux X Windows, Mac OS, and SDL.
+* Input support for generic and all major game-pads.
+* Multi-monitor windowing.
+* Threaded rendering with support for using multiple graphics cards.
+* SIMD math library.
+* Responsive multi-player.
+* Steam support for user accounts and achievements.
 
 Dependencies
 ------------
@@ -28,19 +28,23 @@ In order to compile the code issue the following command:
 
 Where
 
- $OS - is your operating system (currently supported values: Windows)
+ * $OS - is your operating system (currently supported values: Windows)
+ * $PLATFORM - is your architecture (currently supported values: x86_64)
+ * $COMPILER - is your compiler (currently supported values: GNAT)
 
- $PLATFORM - is your architecture (currently supported values: x86_64)
- 
- $COMPILER - is your compiler (currently supported values: GNAT)
- 
- To enable file/subprogram/line printing during stack traces the `-g` compile flag must be used (GNAT only). 
+To enable file/subprogram/line printing during stack traces the `-g` compile flag must be used (GNAT only). 
 
-  example for Windows:
+  Example for Windows:
 
-  `gnatmake -I/Windows -I/x86_64 -I/GNAT -g -gnat12 main.adb`
+>   `gnatmake -I/Windows -I/x86_64 -I/GNAT -g -gnat12 main.adb`
   
+Using GPS/GPRBuild
+------------------
 
+An alternative to the compilation method above is to use GPRBuild:
+>    `gprbuild adadoom3.gpr`
+
+Or the Gnat Programming Studio IDE may be used, and to compile therein simply click the triangular `Play` button after ensuring that the scenario drop-down boxes have the correct values.
 
 Organization
 ------------
@@ -55,12 +59,12 @@ The project is organized into the following layers, currently work is being done
 
 Roadmap
 -------
-* Raw input implementation
-* Multi-monitor testing
-* OpenGL dll loading
-* Audio via XAudio2
-* Windows specific network implementation
-* Move on to Library layer
+* Raw input implementation.
+* Multi-monitor testing.
+* OpenGL dll loading.
+* Audio via XAudio2.
+* Windows specific network implementation.
+* Move on to Library layer.
 
 Tasks
 -----
