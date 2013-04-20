@@ -24,9 +24,9 @@ project AdaDoom3 is
   ------------------------------------------------------------
   --	Declare scenario variables.							--
   ------------------------------------------------------------
-    System    : Os_Type       := external("System", "Windows");
-    Processor : Cpu_Type      := external("Processor", "x86-64");
-    Compiler  : Compiler_Type := external("Compiler", "GNAT");
+    System    : Os_Type       := external(	"System",		"Windows"	);
+    Processor : Cpu_Type      := external(	"Processor",	"x86-64"	);
+    Compiler  : Compiler_Type := external(	"Compiler",		"GNAT"		);
   ------------------------------------------------------------
   --	Declare project variables.							--
   ------------------------------------------------------------
@@ -82,4 +82,26 @@ project AdaDoom3 is
         "-gnat12"			-- Enable the Ada 2012 extensions.
 		);
     end Compiler;
+	
+	---------------------
+	-- Binder Settings --
+	---------------------
+	package Binder is
+	  for Default_Switches ("ada")
+		use(
+		"-E"				-- Store traceback in exception occourance.
+		);
+	end Binder;
+
+   	-----------------------
+	-- Compiler Settings --
+	-----------------------
+	package Linker is
+	  for Default_Switches ("ada")
+		use (
+		"-fprofile-generate",	-- Generate code-coverage data files.
+		"-g"					-- Include debud information.
+		);
+	end Linker;
+
 end AdaDoom3;
