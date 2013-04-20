@@ -171,7 +171,7 @@ package body Implementation_For_Architecture
       return Boolean
       is
       begin
-	return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
+        return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
       end Is_Enabled;
   ---------------
   -- Get_Value --
@@ -212,7 +212,7 @@ package body Implementation_For_Architecture
         if String_1(B) & String_1(D) & String_1(C) = VendOR_INTEL then
           return Intel_Vendor;
         end if;
-	return Advanced_Micro_Devices_Vendor;
+        return Advanced_Micro_Devices_Vendor;
       end Get_Vendor;
   -------------------------
   -- Get_Number_Of_Cores --
@@ -501,7 +501,7 @@ package body Implementation_For_Architecture
             raise Stack_Fault;
           end if;
         end if;
-    end Check_Exceptions;
+      end Check_Exceptions;
   ------------------
   -- Set_Rounding --
   ------------------
@@ -551,7 +551,7 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
-    end Set_Rounding;
+      end Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
@@ -582,7 +582,7 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)));
-    end Set_Precision;
+      end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
   --------------------
