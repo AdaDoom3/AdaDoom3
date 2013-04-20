@@ -1,0 +1,31 @@
+project Doom3 is
+
+   for Object_Dir use "obj";
+   for Exec_Dir use "obj";
+   for Main use ("main.adb");
+   type Os_Type is
+      ("Linux", "Windows");
+   Os : Os_Type := external ("OS", "Windows");
+   type Cpu_Type is
+      ("PowerPC", "x86-64", "x86");
+   Cpu : Cpu_Type := external ("CPU", "x86-64");
+   type Compiler_Type is
+      ("GNAT");
+   Compiler : Compiler_Type := external ("Compiler", "GNAT");
+
+      for Source_Dirs use (".", Os, Compiler, Cpu);
+
+   package Ide is
+      for Documentation_Dir use "doc";
+   end Ide;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j4", "-k", "-g", "-C", "-s");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-O3", "-gnato", "-fstack-check", "-gnatE", "-g", "-gnata", "-gnat12");
+   end Compiler;
+
+end Doom3;
+
