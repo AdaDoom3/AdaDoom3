@@ -15,7 +15,7 @@
 --
 --
 with
-  System,
+  System.Multiprocessors,
   Interfaces.C,
   Neo.Linux;
 use
@@ -32,7 +32,7 @@ package body Implementation_For_Operating_System
       return Integer_8_Unsigned
       is
       begin
-        raise System_Call_Failure;
+        return Integer_8_Unsigned (Multiprocessors.Number_Of_CPUs);
       end Get_Number_Of_Cores;
   ---------------------
   -- Get_Clock_Ticks --
