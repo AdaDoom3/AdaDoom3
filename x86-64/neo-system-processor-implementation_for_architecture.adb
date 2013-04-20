@@ -171,7 +171,7 @@ package body Implementation_For_Architecture
       return Boolean
       is
       begin
-        return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
+	return (Execute_CPUID(Feature.Function_ID, Feature.Register) and 2**Integer(Feature.Bit)) /= 0;
       end Is_Enabled;
   ---------------
   -- Get_Value --
@@ -212,7 +212,7 @@ package body Implementation_For_Architecture
         if String_1(B) & String_1(D) & String_1(C) = VendOR_INTEL then
           return Intel_Vendor;
         end if;
-        return Advanced_Micro_Devices_Vendor;
+	return Advanced_Micro_Devices_Vendor;
       end Get_Vendor;
   -------------------------
   -- Get_Number_Of_Cores --
@@ -358,7 +358,7 @@ package body Implementation_For_Architecture
                   Address           'Asm_Input(TO_EAX, Data'Address),
                   Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)));
             end if;
-            Exception_Mask := Shift_Right(Exception_Mask, 7); 
+            Exception_Mask := Shift_Right(Exception_Mask, 7);
             Asm(
               ----------------------------------------
               " fnstcw (%%eax)          " & END_LINE &
@@ -470,14 +470,14 @@ package body Implementation_For_Architecture
                 Volatile => True,
                 Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
               -- Clear 6 exception bits plus stack fault
-              x86_Environment.Status_Word := x86_Environment.Status_Word and 16#FF80#; 
+              x86_Environment.Status_Word := x86_Environment.Status_Word and 16#FF80#;
               Asm(
                 Template => "fldenv (%%eax)",
                 Volatile => True,
                 Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
               Asm(
                 Template => "fnclex",
-                Volatile => True); 
+                Volatile => True);
             end Clear_Exception_Bits;
           if (Data and 16#0000_0001#) /= 0 then
             raise Invalid_Operation;
@@ -501,7 +501,7 @@ package body Implementation_For_Architecture
             raise Stack_Fault;
           end if;
         end if;
-      end Check_Exceptions;
+    end Check_Exceptions;
   ------------------
   -- Set_Rounding --
   ------------------
@@ -537,7 +537,7 @@ package body Implementation_For_Architecture
               Address           'Asm_Input(TO_EAX, Data'Address),
               Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
         end if;
-        Rounding_Mask := Shift_Right(Rounding_Mask, 3); 
+        Rounding_Mask := Shift_Right(Rounding_Mask, 3);
         Asm(
           ----------------------------------------
           " fnstcw (%%eax)          " & END_LINE &
@@ -551,7 +551,7 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
-      end Set_Rounding;
+    end Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
@@ -582,7 +582,7 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)));
-      end Set_Precision;
+    end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
   --------------------
@@ -610,28 +610,29 @@ package body Implementation_For_Architecture
       return Boolean
       is
       Result :         Integer_4_Unsigned     := 0;
-      Data   : aliased Record_x86_Environment := (others => <>); 
+      Data   : aliased Record_x86_Environment := (others => <>);
       begin
-        Asm(
-          ---------------------------------------------
-          "   fnstenv (%%eax)            " & END_LINE &
-          "   movl    8(%%eax),    %%eax " & END_LINE &
-          "   xor     $0xffffffff, %%eax " & END_LINE &
-          "   and     $0x0000ffff, %%eax " & END_LINE &
-          "   jz      empty              " & END_LINE &
-          "   movl    $0x00000000, %%eax " & END_LINE &
-          "   jmp     finished           " & END_LINE &
-          ---------------------------------------------
-          " empty:                       " & END_LINE &
-          "   movl    $0x00000001, %%eax " & END_LINE &
-          ---------------------------------------------
-          " finished:                    " & END_LINE ,
-          ---------------------------------------------
-          Volatile => True,
-          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-          Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
-        return Result /= 0;
-      end Is_Stack_Empty;
+--          Asm(
+--            ---------------------------------------------
+--            "   fnstenv (%%eax)            " & END_LINE &
+--            "   movl    8(%%eax),    %%eax " & END_LINE &
+--            "   xor     $0xffffffff, %%eax " & END_LINE &
+--            "   and     $0x0000ffff, %%eax " & END_LINE &
+--            "   jz      empty              " & END_LINE &
+--            "   movl    $0x00000000, %%eax " & END_LINE &
+--            "   jmp     finished           " & END_LINE &
+--            ---------------------------------------------
+--            " empty:                       " & END_LINE &
+--            "   movl    $0x00000001, %%eax " & END_LINE &
+--            ---------------------------------------------
+--            " finished:                    " & END_LINE ,
+--            ---------------------------------------------
+--            Volatile => True,
+--            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+--            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
+--          return Result /= 0;
+return false;
+    end Is_Stack_Empty;
   -----------------
   -- Clear_Stack --
   -----------------
@@ -639,25 +640,26 @@ package body Implementation_For_Architecture
       is
       Data : aliased Record_x86_Environment := (others => <>);
       begin
-        Asm(
-          ---------------------------------------------
-          "   fnstenv (%%eax)            " & END_LINE &
-          "   movl    8(%%eax),    %%eax " & END_LINE &
-          "   xor     $0xffffffff, %%eax " & END_LINE &
-          "   movl    $0x0000c000, %%edx " & END_LINE &
-          ---------------------------------------------
-          " emptystack:                  " & END_LINE &
-          "   movl    %%eax,       %%ecx " & END_LINE &
-          "   and     %%ecx,       %%edx " & END_LINE &
-          "   jz      cease              " & END_LINE &
-          "   fstp    %%st               " & END_LINE &
-          "   shr     $2,          %%edx " & END_LINE &
-          "   jmp     emptystack         " & END_LINE &
-          ---------------------------------------------
-          " cease:                       " & END_LINE ,
-          ---------------------------------------------
-          Volatile => True,
-          Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
+--          Asm(
+--            ---------------------------------------------
+--            "   fnstenv (%%eax)            " & END_LINE &
+--            "   movl    8(%%eax),    %%eax " & END_LINE &
+--            "   xor     $0xffffffff, %%eax " & END_LINE &
+--            "   movl    $0x0000c000, %%edx " & END_LINE &
+--            ---------------------------------------------
+--            " emptystack:                  " & END_LINE &
+--            "   movl    %%eax,       %%ecx " & END_LINE &
+--            "   and     %%ecx,       %%edx " & END_LINE &
+--            "   jz      cease              " & END_LINE &
+--            "   fstp    %%st               " & END_LINE &
+--            "   shr     $2,          %%edx " & END_LINE &
+--            "   jmp     emptystack         " & END_LINE &
+--            ---------------------------------------------
+--            " cease:                       " & END_LINE ,
+--            ---------------------------------------------
+--            Volatile => True,
+--            Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
+null;
       end Clear_Stack;
   ---------------
   -- Put_Trace --
