@@ -33,13 +33,20 @@ project AdaDoom3 is
     for Object_Dir	use "Object";
     for Exec_Dir	use ".";
     for Main		use("main.adb");
-    for Source_Dirs	use(
-		"Code",
-		"Code\" & System,
-		"Code\" & Compiler,
-		"Code\" & Processor
-	  );
 
+    Sep := "";
+
+    case System is
+        when "Windows" => Sep := "\";
+        when "Linux"   => Sep := "/";
+    end case;
+
+    for Source_Dirs use(
+               "Code",
+               "Code" & Sep & System,
+               "Code" & Sep & Compiler,
+               "Code" & Sep & Processor
+	  );
 
   ------------------------------------------------------------
   --	Project packages; these control the tools.			--
