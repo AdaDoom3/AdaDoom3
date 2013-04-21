@@ -21,14 +21,14 @@ project AdaDoom3 is
     type Enumerated_System is(
       "Linux",
       "Windows"
-	);
+      );
     type Enumerated_Processor is(
       "PowerPC",
       "x86-64"
-	);
+      );
     type Enumerated_Compiler is(
       "GNAT"
-	);
+      );
 
   ---------------
   -- Scenarios --
@@ -40,13 +40,14 @@ project AdaDoom3 is
   ---------------
   -- Variables --
   ---------------
-   SEPARATOR := ":";	-- Conditional expressions not allowed in assignment.
-   case System is	-- So we use a Case to set seperate assignments.
-      when "Windows"	=> SEPARATOR :=  "\";
-      when "Linux"	=> SEPARATOR :=  "/";
-   end case;
-
-   Base      := "Code";
+    BASE      := "Code";
+    SEPARATOR := "/";	-- Conditional expressions (if ... = ... x else y) not allowed in assignment.
+    case System is	-- So we use a Case to set seperate assignments.
+      when "Windows" =>
+        SEPARATOR :=  "\";
+      when others =>
+        null;
+    end case;
 
   --------------
   -- Settings --
@@ -56,27 +57,26 @@ project AdaDoom3 is
     for Exec_Dir
       use ".";
     for Main
-      use("main.adb");
+      use(BASE & SEPARATOR & "main.adb");
     for Source_Dirs
       use(
-      Base,
-      Base & SEPARATOR & System,
-      Base & SEPARATOR & Compiler,
-      Base & SEPARATOR & Processor
-         );
+      BASE,
+      BASE & SEPARATOR & System,
+      BASE & SEPARATOR & Compiler,
+      BASE & SEPARATOR & Processor);
 
   --------------
   -- Packages --  These control the tools
   --------------
 
-   -- GPS
-   package Ide is
+    -- GPS
+    package Ide is
       for Documentation_Dir
         use "Documentation";
-   end Ide;
+    end Ide;
 
-   -- Gnatmake and gprbuild
-   package Builder is
+    -- Gnatmake and gprbuild
+    package Builder is
       for Default_Switches("ada")
         use(
         "-j4",			-- Use four tasks during compilation
@@ -85,10 +85,10 @@ project AdaDoom3 is
         "-C",			-- Use mapping file
         "-s"			-- Recompile if switches are changed
         );
-   end Builder;
+    end Builder;
 
-   -- Compiler settings
-   package Compiler is
+    -- Compiler settings
+    package Compiler is
       for Default_Switches("ada")
         use(
         "-O3",			-- Full optimization and automatic inlining
@@ -99,21 +99,21 @@ project AdaDoom3 is
         "-gnata",		-- Enable pre and post conditions
         "-gnat12"		-- Enable the Ada 2012 extensions
         );
-   end Compiler;
+    end Compiler;
 
-   package Binder is
+    package Binder is
       for Default_Switches ("ada")
         use(
         "-E"			-- Store traceback in exceptions
         );
-   end Binder;
+    end Binder;
 
-   package Linker is
+    package Linker is
       for Default_Switches ("ada")
         use(
         "-fprofile-generate",	-- Generate code coverage
         "-g"			-- Include debug information
         );
-   end Linker;
+    end Linker;
 
 end AdaDoom3;
