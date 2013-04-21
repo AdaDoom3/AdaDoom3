@@ -18,7 +18,6 @@ with
   Interfaces.C,
   Neo.Linux;
 use
-  System,
   Interfaces.C,
   Neo.Linux;
 separate(Neo.System.Processor)
