@@ -41,7 +41,7 @@ project AdaDoom3 is
   -- Variables --
   ---------------
     BASE      := "Code";
-    SEPARATOR := "/";	-- Conditional expressions (if ... = ... x else y) not allowed in assignment.
+    SEPARATOR := "/";	-- Conditional expressions (if System = "Windows" "\" else "/") not allowed in assignment.
     case System is	-- So we use a Case to set seperate assignments.
       when "Windows" =>
         SEPARATOR :=  "\";
