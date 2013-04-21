@@ -8,6 +8,7 @@ The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear depende
 Planned features
 ----------------
 * Load and play doom 3 bfg levels.
+* Load Valve map workshop levels.
 * Native ports for Windows, Linux X Windows, Mac OS, and SDL.
 * Input support for generic and all major game-pads.
 * Multi-monitor windowing.
