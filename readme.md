@@ -39,6 +39,19 @@ To enable file/subprogram/line printing during stack traces the `-g` compile fla
 
 >   `gnatmake -I/Windows -I/x86_64 -I/GNAT -g -gnat12 main.adb`
   
+Build Status
+------------
+Jenkins polls the git repository hourly for any changes and regularly builds the project.
+
+You can monitor the build status and build history on the following address:
+
+  http://46.148.150.105:8080/
+
+Currently handled by Jenkins:
+ * Linux x86-64 http://46.148.150.105:8080/job/AdaDoom3-linux-x86-64/
+
+Contact the jenkins maintainer at netprobe@gmail.com if you would like to add your machine as a build slave.
+
 Using GPS/GPRBuild
 ------------------
 
