@@ -44,7 +44,10 @@ Using GPS/GPRBuild
 An alternative to the compilation method above is to use GPRBuild:
 >    `gprbuild adadoom3.gpr`
 
-Or the Gnat Programming Studio IDE may be used, and to compile therein simply click the triangular `Play` button after ensuring that the scenario drop-down boxes have the correct values.
+Or the Gnat Programming Studio IDE may be used:
+http://libre.adacore.com/download/
+
+To compile with GPS click the play button `▶` after ensuring the scenario drop boxes are correct.
 
 Organization
 ------------
