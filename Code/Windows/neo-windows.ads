@@ -545,19 +545,6 @@ package Neo.Windows
         Information : Address              := NULL_ADDRESS; -- Changes on 64/32 bit systems
       end record;
       pragma Convention(C, Record_Key);
-    type Record_Memory_Status
-      is record
-        Size                       : Integer_4_Unsigned_C := Record_Memory_Status'Size / 8;
-        Memory_Load                : Integer_4_Unsigned_C := 0;
-        Total_Physical             : Integer_8_Unsigned_C := 0;
-        Available_Physical         : Integer_8_Unsigned_C := 0;
-        Total_Page_File            : Integer_8_Unsigned_C := 0;
-        Available_Page_File        : Integer_8_Unsigned_C := 0;
-        Total_Virtual              : Integer_8_Unsigned_C := 0;
-        Available_Virtual          : Integer_8_Unsigned_C := 0;
-        Available_Extended_Virtual : Integer_8_Unsigned_C := 0;
-      end record;
-      pragma Convention(C, Record_Memory_Status);
     type Record_GUID
       is record
         First_Eight_Hex   : Integer_4_Unsigned_C             := 0;

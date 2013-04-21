@@ -270,9 +270,46 @@ package body Implementation_For_Architecture
             --------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
-          if Data = 0 then
-            raise CPUID_Is_Not_Supported;
-          end if;
+        else
+          Asm( -- Check for cpuid
+            --------------------------------------------
+            "   pushf                     " & END_LINE &
+            "   pop    %%rax              " & END_LINE &
+            "   test   $0x00200000, %%eax " & END_LINE &
+            "   jz     set21              " & END_LINE &
+            "   and    $0xffdfffff, %%eax " & END_LINE &
+            "   push   %%rax              " & END_LINE &
+            "   popf                      " & END_LINE &
+            "   pushf                     " & END_LINE &
+            "   pop    %%rax              " & END_LINE &
+            "   test   $0x00200000, %%eax " & END_LINE &
+            "   jz     good               " & END_LINE &
+            "   jmp    error              " & END_LINE &
+            --------------------------------------------
+            " set21:                      " & END_LINE &
+            "   or     $0x00200000, %%eax " & END_LINE &
+            "   push   %%rax              " & END_LINE &
+            "   popf                      " & END_LINE &
+            "   pushf                     " & END_LINE &
+            "   pop    %%rax              " & END_LINE &
+            "   test   $0x00200000, %%eax " & END_LINE &
+            "   jnz    good               " & END_LINE &
+            "   jmp    error              " & END_LINE &
+            --------------------------------------------
+            " error:                      " & END_LINE &
+            "   movl   $0x00000000, %%eax " & END_LINE &
+            "   jmp    done               " & END_LINE &
+            --------------------------------------------
+            " good:                       " & END_LINE &
+            "   movl   $0x00000001, %%eax " & END_LINE &
+            --------------------------------------------
+            " done:                       " & END_LINE ,
+            --------------------------------------------
+            Volatile => True,
+            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
+        end if;
+        if Data = 0 then
+          raise CPUID_Is_Not_Supported;
         end if;
         if Is_Enabled(INTEL_FXSR) then
           --------------------------

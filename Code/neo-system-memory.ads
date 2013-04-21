@@ -16,13 +16,14 @@
 --
 with
   System,
-  Interfaces,
+  Interfaces.C,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
   System,
   Interfaces,
+  Interfaces.C,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
@@ -47,6 +48,21 @@ package Neo.System.Memory -- Memory allocation, all in one place
         Virtual_Available          : Integer_8_Natural;
         Virtual_Available_Extended : Integer_8_Natural;
       end record;
+
+    type Record_Memory_Status
+      is record
+        Size                       : Integer_4_Unsigned_C := Record_Memory_Status'Size / 8;
+        Memory_Load                : Integer_4_Unsigned_C := 0;
+        Total_Physical             : Integer_8_Unsigned_C := 0;
+        Available_Physical         : Integer_8_Unsigned_C := 0;
+        Total_Page_File            : Integer_8_Unsigned_C := 0;
+        Available_Page_File        : Integer_8_Unsigned_C := 0;
+        Total_Virtual              : Integer_8_Unsigned_C := 0;
+        Available_Virtual          : Integer_8_Unsigned_C := 0;
+        Available_Extended_Virtual : Integer_8_Unsigned_C := 0;
+      end record;
+   pragma Convention(C, Record_Memory_Status);
+
   ---------------
   -- Constants --
   ---------------

@@ -15,13 +15,12 @@
 --
 --
 with
-  System,
   Interfaces.C,
-  Neo.Windows;
+  Neo.Linux;
 use
   System,
   Interfaces.C,
-  Neo.Windows;
+  Neo.Linux;
 separate(Neo.System.Processor)
 package body Implementation_For_Operating_System
   is
@@ -33,6 +32,7 @@ package body Implementation_For_Operating_System
       is
       begin
         raise System_Call_Failure;
+        return 0;
       end Get_Number_Of_Cores;
   ---------------------
   -- Get_Clock_Ticks --
