@@ -5,9 +5,8 @@
 --
 --
 --
---
---
---
+-- Perhaps Clear, Free, and Allocate should be removed and we should implement the functions with "stream types" 
+-- in the processor main body instead, to avoid platform dependent stuff.
 --
 --
 --
