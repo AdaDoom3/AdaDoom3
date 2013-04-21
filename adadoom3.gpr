@@ -41,6 +41,9 @@ project AdaDoom3
   ---------------
     SEPARATOR := (if System = "Windows" "\" else "/");
     ROOT      := "Code";
+  --------------
+  -- Settings --
+  --------------
     for Object_Dir
       use "Object";
     for Exec_Dir
