@@ -15,103 +15,86 @@
 --
 --
 project AdaDoom3 is
-  ------------------------------------------------------------------------
-  --	Declare enumerations for project scenario.			--
-  ------------------------------------------------------------------------
-    type Os_Type is		(	"Linux",	"Windows"	);
-    type Cpu_Type is		(	"PowerPC",	"x86-64"	);
-    type Compiler_Type is	(	"GNAT"				);
-  ------------------------------------------------------------------------
-  --	Declare scenario variables.					--
-  ------------------------------------------------------------------------
-    System    : Os_Type       := external( "System",	"Windows"	);
-    Processor : Cpu_Type      := external( "Processor",	"x86-64"	);
-    Compiler  : Compiler_Type := external( "Compiler",	"GNAT"		);
-  ------------------------------------------------------------------------
-  --	Declare project variables.					--
-  ------------------------------------------------------------------------
-    for Object_Dir	use "Object";
-    for Exec_Dir	use ".";
-    for Main		use("main.adb");
-
-    Sep := "";
-
-   ----------------------------------
-   -- Set the directory separator. --
-   ----------------------------------
-    case System is
-        when "Windows" => Sep := "\";
-        when "Linux"   => Sep := "/";
-    end case;
-
+  ------------------
+  -- Enumerations --
+  ------------------
+    type Os_Type is         (      "Linux",      "Windows"     );
+    type Cpu_Type is        (      "PowerPC",    "x86-64"      );
+    type Compiler_Type is   (      "GNAT"                      );
+  ---------------
+  -- Scenarios --
+  ---------------
+    System    : Os_Type       := external( "System",    "Windows"     );
+    Processor : Cpu_Type      := external( "Processor", "x86-64"      );
+    Compiler  : Compiler_Type := external( "Compiler",  "GNAT"        );
+  ---------------
+  -- Variables --
+  ---------------
+    for Object_Dir   use "Object";
+    for Exec_Dir     use ".";
+    for Main         use("main.adb");
+    Sep := (if System = "Windows" "\" else "/");
     for Source_Dirs use(
-               "Code",
-               "Code" & Sep & System,
-               "Code" & Sep & Compiler,
-               "Code" & Sep & Processor
-	  );
-
-  ------------------------------------------------------------------------
-  --	Project packages; these control the tools.			--
-  ------------------------------------------------------------------------
-
-	------------------
-	-- GPS Settings --
-	------------------
-	package Ide is
-	    for Documentation_Dir
-		use "Documentation";
-	end Ide;
-
-	---------------------------
-	-- Gnatmake and gprbuild --
-	---------------------------
-	package Builder is
-	    for Default_Switches("ada")
-		use(
-		"-j4",		-- Use 4 tasks during compilation.
-		"-k",		-- "Keep going", build as far as possible.
-		"-g",		-- Add debugging information.
-		"-C",		-- Use mapping file.
-		"-s"		-- Recompile if switches are changed.
-		);
-	end Builder;
-
-	-----------------------
-	-- Compiler Settings --
-	-----------------------
-	package Compiler is
-	  for Default_Switches("ada")
-	    use(
-		"-O3",		-- Full optimizarion + automatic inlining.
-		"-gnato",	-- Enable overflow-checking for numerics.
-		"-fstack-check",-- Generate checks for exceeding the stack.
-		"-gnatE",	-- Enable dynamic generic elaboration checks.
-		"-g",		-- Add debugging information.
-		"-gnata",	-- Enable assertions; needed for pre- & post-conditions.
-		"-gnat12"	-- Enable the Ada 2012 extensions.
-	    );
-	end Compiler;
-
-	---------------------
-	-- Binder Settings --
-	---------------------
-	package Binder is
-	  for Default_Switches ("ada")
-	    use(
-		"-E"			-- Store traceback in exceptions.
-	    );
-	end Binder;
-
-   	-----------------------
-	-- Compiler Settings --
-	-----------------------
-	package Linker is
-	  for Default_Switches ("ada")
-	    use (
-		"-fprofile-generate",	-- Generate code-coverage data files.
-		"-g"			-- Include debud information.
-	    );
-	end Linker;
-
+      "Code",
+      "Code" & Sep & System,
+      "Code" & Sep & Compiler,
+      "Code" & Sep & Processor
+      );
+  --------------
+  -- Packages --  These control the tools
+  --------------
+       ------------------
+       -- GPS Settings --
+       ------------------
+       package Ide is
+           for Documentation_Dir
+              use "Documentation";
+       end Ide;
+       ---------------------------
+       -- Gnatmake and gprbuild --
+       ---------------------------
+       package Builder is
+           for Default_Switches("ada")
+              use(
+              "-j4",        -- Use 4 tasks during compilation.
+              "-k",         -- "Keep going", build as far as possible.
+              "-g",         -- Add debugging information.
+              "-C",         -- Use mapping file.
+              "-s"          -- Recompile if switches are changed.
+              );
+       end Builder;
+       -----------------------
+       -- Compiler Settings --
+       -----------------------
+       package Compiler is
+         for Default_Switches("ada")
+           use(
+              "-O3",           -- Full optimizarion + automatic inlining.
+              "-gnato",        -- Enable overflow-checking for numerics.
+              "-fstack-check", -- Generate checks for exceeding the stack.
+              "-gnatE",        -- Enable dynamic generic elaboration checks.
+              "-g",            -- Add debugging information.
+              "-gnata",        -- Enable assertions; needed for pre- & post-conditions.
+              "-gnat12"        -- Enable the Ada 2012 extensions.
+           );
+       end Compiler;
+       ---------------------
+       -- Binder Settings --
+       ---------------------
+       package Binder is
+         for Default_Switches ("ada")
+           use(
+              "-E"                 -- Store traceback in exceptions.
+           );
+       end Binder;
+       -----------------------
+       -- Compiler Settings --
+       -----------------------
+       package Linker is
+         for Default_Switches ("ada")
+           use (
+              "-fprofile-generate",       -- Generate code-coverage data files.
+              "-g"                 -- Include debud information.
+           );
+       end Linker;
 end AdaDoom3;
