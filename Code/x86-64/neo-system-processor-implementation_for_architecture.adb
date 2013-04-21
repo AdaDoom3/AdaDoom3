@@ -635,14 +635,14 @@ package body Implementation_For_Architecture
           "   movl    8(%%eax),    %%eax " & END_LINE &
           "   xor     $0xffffffff, %%eax " & END_LINE &
           "   and     $0x0000ffff, %%eax " & END_LINE &
-          "   jz      1f                 " & END_LINE &
+          "   jz      itisempty          " & END_LINE &
           "   movl    $0x00000000, %%eax " & END_LINE &
-          "   jmp     2f                 " & END_LINE &
+          "   jmp     somethingthere     " & END_LINE &
           ---------------------------------------------
-          " 1:                           " & END_LINE &
+          " itisempty:                   " & END_LINE &
           "   movl    $0x00000001, %%eax " & END_LINE &
           ---------------------------------------------
-          " 2:                           " & END_LINE ,
+          " somethingthere:              " & END_LINE ,
           ---------------------------------------------
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
@@ -663,15 +663,15 @@ package body Implementation_For_Architecture
           "   xor     $0xffffffff, %%eax " & END_LINE &
           "   movl    $0x0000c000, %%edx " & END_LINE &
           ---------------------------------------------
-          " 1:                           " & END_LINE &
+          " doclear:                     " & END_LINE &
           "   movl    %%eax,       %%ecx " & END_LINE &
           "   and     %%ecx,       %%edx " & END_LINE &
-          "   jz      1f                 " & END_LINE &
+          "   jz      complete           " & END_LINE &
           "   fstp    %%st               " & END_LINE &
           "   shr     $2,          %%edx " & END_LINE &
-          "   jmp     1b                 " & END_LINE &
+          "   jmp     doclear            " & END_LINE &
           ---------------------------------------------
-          " 2:                           " & END_LINE ,
+          " complete:                    " & END_LINE ,
           ---------------------------------------------
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
