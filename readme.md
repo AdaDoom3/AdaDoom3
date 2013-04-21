@@ -93,7 +93,7 @@ The following are small tasks that are currently needed
 
 Author
 ------
-jsquirek1[at]student.gsu.edu
+exitcode.zero[at]gmail.com
 
 License
 -------
