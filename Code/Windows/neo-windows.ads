@@ -457,6 +457,19 @@ package Neo.Windows
         Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Keyboard);
+    type Record_Memory_Status
+      is record
+        Size                       : Integer_4_Unsigned_C := Record_Memory_Status'Size / 8;
+        Memory_Load                : Integer_4_Unsigned_C := 0;
+        Total_Physical             : Integer_8_Unsigned_C := 0;
+        Available_Physical         : Integer_8_Unsigned_C := 0;
+        Total_Page_File            : Integer_8_Unsigned_C := 0;
+        Available_Page_File        : Integer_8_Unsigned_C := 0;
+        Total_Virtual              : Integer_8_Unsigned_C := 0;
+        Available_Virtual          : Integer_8_Unsigned_C := 0;
+        Available_Extended_Virtual : Integer_8_Unsigned_C := 0;
+      end record;
+      pragma Convention(C, Record_Memory_Status);
     type Record_Version_Information
       is record
         Size                : Integer_4_Unsigned_C := Record_Version_Information'Size / 8;
