@@ -1,7 +1,7 @@
 git init
-git remote add origin https://github.com/AdaDoom3/AdaDoom3.git
 git config --global user.email ""
 git config --global user.name ""
+git remote add origin https://github.com/AdaDoom3/AdaDoom3.git
 git pull origin master
 git add .
 git commit -m ''
