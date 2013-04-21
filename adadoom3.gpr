@@ -82,7 +82,6 @@ project AdaDoom3 is
         );
     end Builder;
 
-    -- Compiler settings
     package Compiler is
       for Default_Switches("ada")
         use(
