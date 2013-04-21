@@ -14,87 +14,88 @@
 --
 --
 --
-project AdaDoom3 is
+project AdaDoom3
+  is
   ------------------
   -- Enumerations --
   ------------------
-    type Os_Type is         (      "Linux",      "Windows"     );
-    type Cpu_Type is        (      "PowerPC",    "x86-64"      );
-    type Compiler_Type is   (      "GNAT"                      );
+    type Enumerated_System
+      is(
+      "Linux",
+      "Windows");
+    type Enumerated_Processor
+      is(
+      "PowerPC",
+      "x86-64");
+    type Enumerated_Compiler
+      is(
+      "GNAT");
   ---------------
   -- Scenarios --
   ---------------
-    System    : Os_Type       := external( "System",    "Windows"     );
-    Processor : Cpu_Type      := external( "Processor", "x86-64"      );
-    Compiler  : Compiler_Type := external( "Compiler",  "GNAT"        );
+    System    : Enumerated_System    := External("System",    "Windows");
+    Processor : Enumerated_Processor := External("Processor", "x86-64");
+    Compiler  : Enumerated_Compiler  := External("Compiler",  "GNAT");
   ---------------
   -- Variables --
   ---------------
-    for Object_Dir   use "Object";
-    for Exec_Dir     use ".";
-    for Main         use("main.adb");
-    Sep := (if System = "Windows" "\" else "/");
+    DIRECTORY_SEPARATOR := (if System = "Windows" "\" else "/");
+    for Object_Dir
+      use "Object";
+    for Exec_Dir
+      use ".";
+    for Main
+      use("main.adb");
     for Source_Dirs use(
       "Code",
-      "Code" & Sep & System,
-      "Code" & Sep & Compiler,
-      "Code" & Sep & Processor
-      );
+      "Code" & DIRECTORY_SEPARATOR & System,
+      "Code" & DIRECTORY_SEPARATOR & Compiler,
+      "Code" & DIRECTORY_SEPARATOR & Processor);
   --------------
   -- Packages --  These control the tools
   --------------
-       ------------------
-       -- GPS Settings --
-       ------------------
-       package Ide is
-           for Documentation_Dir
-              use "Documentation";
-       end Ide;
-       ---------------------------
-       -- Gnatmake and gprbuild --
-       ---------------------------
-       package Builder is
-           for Default_Switches("ada")
-              use(
-              "-j4",        -- Use 4 tasks during compilation.
-              "-k",         -- "Keep going", build as far as possible.
-              "-g",         -- Add debugging information.
-              "-C",         -- Use mapping file.
-              "-s"          -- Recompile if switches are changed.
-              );
-       end Builder;
-       -----------------------
-       -- Compiler Settings --
-       -----------------------
-       package Compiler is
-         for Default_Switches("ada")
-           use(
-              "-O3",           -- Full optimizarion + automatic inlining.
-              "-gnato",        -- Enable overflow-checking for numerics.
-              "-fstack-check", -- Generate checks for exceeding the stack.
-              "-gnatE",        -- Enable dynamic generic elaboration checks.
-              "-g",            -- Add debugging information.
-              "-gnata",        -- Enable assertions; needed for pre- & post-conditions.
-              "-gnat12"        -- Enable the Ada 2012 extensions.
-           );
-       end Compiler;
-       ---------------------
-       -- Binder Settings --
-       ---------------------
-       package Binder is
-         for Default_Switches ("ada")
-           use(
-              "-E"                 -- Store traceback in exceptions.
-           );
-       end Binder;
-       -----------------------
-       -- Compiler Settings --
-       -----------------------
-       package Linker is
-         for Default_Switches ("ada")
-           use (
-              "-fprofile-generate",       -- Generate code-coverage data files.
-              "-g"                 -- Include debud information.
-           );
-       end Linker;
+    package Ide -- GPS
+      is
+      for Documentation_Dir
+        use "Documentation";
+    end Ide;
+    package Builder -- Gnatmake and gprbuild
+      is
+      for Default_Switches("ada")
+        use(
+        "-j4", -- Use four tasks during compilation
+        "-k",  -- "Keep going", build as far as possible
+        "-g",  -- Add debugging information
+        "-C",  -- Use mapping file
+        "-s"--,  -- Recompile if switches are changed
+        );
+    end Builder;
+    package Compiler
+      is
+      for Default_Switches("ada")
+        use(
+        "-O3",           -- Full optimization and automatic inlining
+        "-gnato",        -- Enable overflow checking for numerics
+        "-fstack-check", -- Generate checks for exceeding the stack
+        "-gnatE",        -- Enable dynamic generic elaboration checks
+        "-g",            -- Add debugging information
+        "-gnata",        -- Enable pre and post conditions
+        "-gnat12"--,       -- Enable the Ada 2012 extensions
+        );
+    end Compiler;
+    package Binder
+      is
+      for Default_Switches ("ada")
+        use(
+        "-E"--, -- Store traceback in exceptions
+        );
+    end Binder;
+    package Linker
+      is
+      for Default_Switches ("ada")
+        use 
+        "-fprofile-generate", -- Generate code coverage
+        "-g"--,                  -- Include debug information
+        );
+    end Linker;
 end AdaDoom3;
