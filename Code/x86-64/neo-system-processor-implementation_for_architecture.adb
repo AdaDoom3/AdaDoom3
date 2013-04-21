@@ -234,6 +234,23 @@ package body Implementation_For_Architecture
       Data : aliased Integer_4_Unsigned := 0;
       begin
         if not USE_64_BIT then
+          --    __asm__ (
+          --"        pushfl                      # Get original EFLAGS             \n"
+          --"        popl    %%eax                                                 \n"
+          --"        movl    %%eax,%%ecx                                           \n"
+          --"        xorl    $0x200000,%%eax     # Flip ID bit in EFLAGS           \n"
+          --"        pushl   %%eax               # Save new EFLAGS value on stack  \n"
+          --"        popfl                       # Replace current EFLAGS value    \n"
+          --"        pushfl                      # Get new EFLAGS                  \n"
+          --"        popl    %%eax               # Store new EFLAGS in EAX         \n"
+          --"        xorl    %%ecx,%%eax         # Can not toggle ID bit,          \n"
+          --"        jz      1f                  # Processor=80486                 \n"
+          --"        movl    $1,%0               # We have CPUID support           \n"
+          --"1:                                                                    \n"
+          --    : "=m" (has_CPUID)
+          --    :
+          --    : "%eax", "%ecx"
+          --    );
           Asm( -- Check for cpuid
             --------------------------------------------
             "   pushfl                    " & END_LINE &
