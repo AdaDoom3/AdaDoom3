@@ -14,33 +14,40 @@
 --
 --
 --
-project AdaDoom3
-  is
+project AdaDoom3 is
   ------------------
   -- Enumerations --
   ------------------
-    type Enumerated_System
-      is(
+    type Enumerated_System is(
       "Linux",
-      "Windows");
-    type Enumerated_Processor
-      is(
+      "Windows"
+	);
+    type Enumerated_Processor is(
       "PowerPC",
-      "x86-64");
-    type Enumerated_Compiler
-      is(
-      "GNAT");
+      "x86-64"
+	);
+    type Enumerated_Compiler is(
+      "GNAT"
+	);
+
   ---------------
   -- Scenarios --
   ---------------
     System    : Enumerated_System    := External("System",    "Windows");
     Processor : Enumerated_Processor := External("Processor", "x86-64");
     Compiler  : Enumerated_Compiler  := External("Compiler",  "GNAT");
+
   ---------------
   -- Variables --
   ---------------
-    SEPARATOR := (if System = "Windows" "\" else "/");
-    ROOT      := "Code";
+   SEPARATOR := ":";	-- Conditional expressions not allowed in assignment.
+   case System is	-- So we use a Case to set seperate assignments.
+      when "Windows"	=> SEPARATOR :=  "\";
+      when "Linux"	=> SEPARATOR :=  "/";
+   end case;
+
+   Base      := "Code";
+
   --------------
   -- Settings --
   --------------
@@ -52,55 +59,61 @@ project AdaDoom3
       use("main.adb");
     for Source_Dirs
       use(
-      ROOT,
-      ROOT & SEPARATOR & System,
-      ROOT & SEPARATOR & Compiler,
-      ROOT & SEPARATOR & Processor);
+      Base,
+      Base & SEPARATOR & System,
+      Base & SEPARATOR & Compiler,
+      Base & SEPARATOR & Processor
+         );
+
   --------------
   -- Packages --  These control the tools
   --------------
-    package Ide -- GPS
-      is
+
+   -- GPS
+   package Ide is
       for Documentation_Dir
         use "Documentation";
-    end Ide;
-    package Builder -- Gnatmake and gprbuild
-      is
+   end Ide;
+
+   -- Gnatmake and gprbuild
+   package Builder is
       for Default_Switches("ada")
         use(
-        "-j4", -- Use four tasks during compilation
-        "-k",  -- "Keep going", build as far as possible
-        "-g",  -- Add debugging information
-        "-C",  -- Use mapping file
-        "-s"--,  -- Recompile if switches are changed
+        "-j4",			-- Use four tasks during compilation
+        "-k",			-- "Keep going", build as far as possible
+        "-g",			-- Add debugging information
+        "-C",			-- Use mapping file
+        "-s"			-- Recompile if switches are changed
         );
-    end Builder;
-    package Compiler
-      is
+   end Builder;
+
+   -- Compiler settings
+   package Compiler is
       for Default_Switches("ada")
         use(
-        "-O3",           -- Full optimization and automatic inlining
-        "-gnato",        -- Enable overflow checking for numerics
-        "-fstack-check", -- Generate checks for exceeding the stack
-        "-gnatE",        -- Enable dynamic generic elaboration checks
-        "-g",            -- Add debugging information
-        "-gnata",        -- Enable pre and post conditions
-        "-gnat12"--,       -- Enable the Ada 2012 extensions
+        "-O3",			-- Full optimization and automatic inlining
+        "-gnato",		-- Enable overflow checking for numerics
+        "-fstack-check",	-- Generate checks for exceeding the stack
+        "-gnatE",		-- Enable dynamic generic elaboration checks
+        "-g",			-- Add debugging information
+        "-gnata",		-- Enable pre and post conditions
+        "-gnat12"		-- Enable the Ada 2012 extensions
         );
-    end Compiler;
-    package Binder
-      is
+   end Compiler;
+
+   package Binder is
       for Default_Switches ("ada")
         use(
-        "-E"--, -- Store traceback in exceptions
+        "-E"			-- Store traceback in exceptions
         );
-    end Binder;
-    package Linker
-      is
+   end Binder;
+
+   package Linker is
       for Default_Switches ("ada")
-        use 
-        "-fprofile-generate", -- Generate code coverage
-        "-g"--,                  -- Include debug information
+        use(
+        "-fprofile-generate",	-- Generate code coverage
+        "-g"			-- Include debug information
         );
-    end Linker;
+   end Linker;
+
 end AdaDoom3;
