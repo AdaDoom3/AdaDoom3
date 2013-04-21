@@ -39,8 +39,8 @@ project AdaDoom3
   ---------------
   -- Variables --
   ---------------
-    DIRECTORY_SEPARATOR := (if System = "Windows" "\" else "/");
-    DIRECTORY_FOR_CODE  := "Code";
+    SEPARATOR := (if System = "Windows" "\" else "/");
+    CODE      := "Code";
     for Object_Dir
       use "Object";
     for Exec_Dir
@@ -49,10 +49,10 @@ project AdaDoom3
       use("main.adb");
     for Source_Dirs
       use(
-      DIRECTORY_FOR_CODE,
-      DIRECTORY_FOR_CODE & DIRECTORY_SEPARATOR & System,
-      DIRECTORY_FOR_CODE & DIRECTORY_SEPARATOR & Compiler,
-      DIRECTORY_FOR_CODE & DIRECTORY_SEPARATOR & Processor);
+      CODE,
+      CODE & SEPARATOR & System,
+      CODE & SEPARATOR & Compiler,
+      CODE & SEPARATOR & Processor);
   --------------
   -- Packages --  These control the tools
   --------------
