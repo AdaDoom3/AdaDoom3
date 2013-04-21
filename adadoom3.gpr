@@ -21,15 +21,13 @@ project AdaDoom3 is
   -------------
     type Option_System is(
       "Linux",
-      "Windows"
-      );
+      "MacOS",
+      "Windows");
     type Option_Processor is(
       "PowerPC",
-      "x86-64"
-      );
+      "x86-64");
     type Option_Compiler is(
-      "GNAT"
-      );
+      "GNAT");
 
   ---------------
   -- Scenarios --
@@ -42,7 +40,7 @@ project AdaDoom3 is
   -- Variables --
   ---------------
     BASE      := "Code";
-    SEPARATOR := "/";	case System is when "Windows" => SEPARATOR :=  "\"; when others => null; end case;
+    SEPARATOR := "/"; case System is when "Windows" => SEPARATOR :=  "\"; when "MacOS" => SEPARATOR :=  ":"; end case;
 
   ---------------
   -- Locations --
