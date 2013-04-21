@@ -52,7 +52,7 @@ project AdaDoom3 is
     for Exec_Dir
       use ".";
     for Main
-      use(BASE & SEPARATOR & "main.adb");
+      use("main.adb");
     for Source_Dirs
       use(
       BASE,
