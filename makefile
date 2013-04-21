@@ -9,7 +9,7 @@ GMAKE_OPTS = -p -XSystem=$(SYSTEM) -XProcessor=$(PROCESSOR) -XCompiler=$(COMPILE
 all: build
 
 build:
-	gnatmake $(GMAKE_OPTS) -Padadoom3
+  gnatmake $(GMAKE_OPTS) -Padadoom3
 
 clean:
-	@rm -rf $(OBJ_DIR)/*
+  @rm -rf $(OBJ_DIR)/*
