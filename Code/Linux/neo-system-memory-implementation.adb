@@ -31,7 +31,6 @@ package body Implementation
     function Get
       return Record_Memory
       is
-      Status : Record_Memory_Status := (others => <>);
       begin
         return(
           Physical_Total             => 0,
