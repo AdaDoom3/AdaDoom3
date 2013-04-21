@@ -1,16 +1,68 @@
 --
 --
 --
---
---
---
---
---
---
---
---
---
---
+--  GLenum            Win32_UINT   Integer_4_Unsigned_C
+--  GLboolean         Win32_UCHAR  Integer_1_Unsigned_C
+--  GLbitfield        Win32_UINT   Integer_4_Unsigned_C
+--  GLbyte            Win32_CHAR   Character_1_C
+--  GLshort           Win32_SHORT  Integer_2_Signed_C
+--  GLint             Win32_LONG   Integer_4_Signed_C
+--  GLsizei           Win32_LONG   Integer_4_Signed_C  
+--  GLubyte           Win32_BYTE   Integer_1_Unsigned_C
+--  GLushort          Win32_USHORT Integer_2_Unsigned_C
+--  GLuint            Win32_UINT   Integer_4_Unsigned_C
+--  GLfloat           Win32_FLOAT  Float_4_Real_C
+--  GLclampf          Win32_FLOAT  Float_4_Real_C
+--  GLdouble          Win32_DOUBLE Float_8_Real_C
+--  GLclampd          Win32_DOUBLE Float_8_Real_C
+--  GLvoid            Win32_VOID   type VOID is null record
+--  PGLvoid           access all GLvoid
+--  a_GLint           access all GLint
+--  a_GLuint          access all GLuint
+--  a_GLdouble        access all GLdouble
+--  a_GLshort         access all GLshort
+--  ac_GLint          access constant GLint
+--  ac_GLuint         access constant GLuint
+--  ac_GLfloat        access constant GLfloat
+--  ac_GLdouble       access constant GLdouble
+--  ac_GLshort        access constant GLshort
+--  Win32_PCBYTE      access constant Integer_1_Unsigned_C
+--  Win32_FLOAT       Float_4_Real_C
+--  Win32_DOUBLE      Float_8_Real_C
+--  WIN32_ATOM        Integer_2_Unsigned_C
+--  WIN32_BOOL        Integer_4_Signed_C
+--  WIN32_BYTE        Integer_1_Unsigned_C
+--  WIN32_CHAR        Character_1_C
+--  WIN32_DWORD       Integer_4_Unsigned_C
+--  WIN32_WORD        Integer_2_Unsigned_C
+--  WIN32_INT         Integer_4_Signed_C
+--  WIN32_LONG        Integer_4_Signed_C
+--  WIN32_SHORT       Integer_2_Signed_C
+--  WIN32_UINT        Integer_4_Unsigned_C
+--  WIN32_WPARAM      Integer_4_Unsigned_C
+--  WIN32_LPARAM      Integer_4_Signed_C
+--  WIN32_COLORREF    Integer_4_Unsigned_C
+--  WIN32_SIZE        Integer_Size_C
+--  WIN32_String      String_1_C
+--  WIN32_Wide_String String_2_C
+--  WIN32_LPCSTR      Access_Constant_Character_1_C
+--  WIN32_LPCWSTR     Access_Constant_Character_2_C
+--  WIN32_LPSTR       Access_Character_1_C
+--  WIN32_LPWSTR      Access_Character_2_C
+--  WIN32_LPVOID      Address
+--  WIN32_HANDLE      Address
+--  WIN32_HWND        Address
+--  WIN32_HBRUSH      Address
+--  WIN32_HBITMAP     Address
+--  WIN32_HDC         Address
+--  WIN32_HGDIOBJ     Address
+--  WIN32_HFONT       Address
+--  WIN32_HMENU       Address
+--  WIN32_HCURSOR     Address
+--  WIN32_HICON       Address
+--  WIN32_HPEN        Address
+--  WIN32_HINSTANCE   Address
+--  WIN32_HMODULE     Address
 --
 --
 --
