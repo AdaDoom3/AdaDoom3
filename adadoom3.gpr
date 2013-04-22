@@ -42,25 +42,25 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    System         : Option_System    := External("System",     "Windows");
-    Processor      : Option_Processor := External("Processor",  "x86-64");
-    Compiler       : Option_Compiler  := External("Compiler",   "GNAT");
-    Debugging      : Option_Boolean   := External("Debugging",  "True");
-    Sixty_Four_Bit : Option_Boolean   := External("64 Bit",     "False");
-    Safety         : Option_Safety    := External("Saftey",     "On");
+    SYSTEM         : Option_System    := External("System",     "Windows");
+    PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
+    COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
+    DEBUGGING      : Option_Boolean   := External("Debugging",  "True");
+    SIXTY_FOUR_BIT : Option_Boolean   := External("64 Bit",     "False");
+    SAFETY         : Option_Safety    := External("Saftey",     "On");
 
   ---------------
   -- Variables --
   ---------------
-    BASE      := "Code";
-    SEPARATOR := "/";
+    Base      := "Code";
+    Separator := "/";
 
     -- The case statement needs to cover all choices;
     -- multiple lines used to increase readability.
     case System is
-      when "Windows" => SEPARATOR := "\";
-      when "MacOS"   => SEPARATOR := ":";
-      when "Linux"   => SEPARATOR := "/";
+      when "Windows" => Separator := "\";
+      when "MacOS"   => Separator := ":";
+      when "Linux"   => Separator := "/";
     end case;
 
   ---------------
@@ -74,10 +74,10 @@ project AdaDoom3 is
       use("main.adb");
     for Source_Dirs
       use(
-      BASE,
-      BASE & SEPARATOR & System,
-      BASE & SEPARATOR & Compiler,
-      BASE & SEPARATOR & Processor);
+      Base,
+      Base & Separator & System,
+      Base & Separator & Compiler,
+      Base & Separator & Processor);
 
   -----------
   -- Tools --
@@ -92,7 +92,7 @@ project AdaDoom3 is
     -- Gnatmake and gprbuild
     package Builder is
 
-      SWITCHES := (
+      Switches := (
         "-j4",			-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
@@ -100,16 +100,16 @@ project AdaDoom3 is
 
       case Debugging is
         when "True"  =>
-          SWITCHES := SWITCHES & "-g";          -- Add debugging information.
+          Switches := Switches & "-g";          -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use SWITCHES;
+      for Default_Switches("ada") use Switches;
     end Builder;
 
     package Compiler is
 
-      SWITCHES := (
+      Switches := (
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
@@ -119,24 +119,24 @@ project AdaDoom3 is
 
       case Debugging is
         when "True"  =>
-          SWITCHES := SWITCHES & "-g";           -- Add debugging information.
+          Switches := Switches & "-g";           -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use SWITCHES;
+      for Default_Switches("ada") use Switches;
     end Compiler;
 
     package Binder is
 
-      SWITCHES := ();
+      Switches := ();
 
       case Debugging is
         when "True"  =>
-          SWITCHES := SWITCHES & "-E";           -- Store traceback in exceptions
+          Switches := Switches & "-E";           -- Store traceback in exceptions
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use SWITCHES;
+      for Default_Switches("ada") use Switches;
     end Binder;
 
     package Linker is
@@ -145,11 +145,11 @@ project AdaDoom3 is
 
       case Debugging is
         when "True"  =>
-            SWITCHES := SWITCHES & "-g";         -- Add debugging information.
+            Switches := Switches & "-g";         -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use SWITCHES;
+      for Default_Switches("ada") use Switches;
     end Linker;
 
 end AdaDoom3;
