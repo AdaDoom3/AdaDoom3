@@ -38,11 +38,11 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    System        : Option_System    := External("System",     "Windows");
-    Processor     : Option_Processor := External("Processor",  "x86-64");
-    Compiler      : Option_Compiler  := External("Compiler",   "GNAT");
-    Debugging     : Option_Boolean   := External("Debugging",  "True");
-    Sixty_For_Bit : Option_Boolean   := External("64bit",      "False");
+    System         : Option_System    := External("System",     "Windows");
+    Processor      : Option_Processor := External("Processor",  "x86-64");
+    Compiler       : Option_Compiler  := External("Compiler",   "GNAT");
+    Debugging      : Option_Boolean   := External("Debugging",  "True");
+    Sixty_Four_Bit : Option_Boolean   := External("64bit",      "False");
 
   ---------------
   -- Variables --
