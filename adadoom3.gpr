@@ -36,8 +36,8 @@ project AdaDoom3 is
       "Some checks",
       "Off");
     type Option_Boolean is(
-      "True",
-      "False");
+      "Yes",
+      "No");
 
   ---------------
   -- Scenarios --
@@ -45,8 +45,8 @@ project AdaDoom3 is
     SYSTEM         : Option_System    := External("System",     "Windows");
     PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
     COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
-    DEBUGGING      : Option_Boolean   := External("Debugging",  "True");
-    SIXTY_FOUR_BIT : Option_Boolean   := External("64 Bit",     "False");
+    DEBUGGING      : Option_Boolean   := External("Debugging",  "Yes");
+    SIXTY_FOUR_BIT : Option_Boolean   := External("64 Bit",     "No");
     SAFETY         : Option_Safety    := External("Saftey",     "On");
 
   ---------------
@@ -99,9 +99,9 @@ project AdaDoom3 is
         "-s");			-- Recompile if switches are changed
 
       case Debugging is
-        when "True"  =>
+        when "Yes"  =>
           Switches := Switches & "-g";          -- Add debugging information.
-        when "False" => null;
+        when "No" => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -118,9 +118,9 @@ project AdaDoom3 is
         "-gnat2012");		-- Enable the Ada 2012 extensions
 
       case Debugging is
-        when "True"  =>
+        when "Yes" =>
           Switches := Switches & "-g";           -- Add debugging information.
-        when "False" => null;
+        when "No" => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -131,9 +131,9 @@ project AdaDoom3 is
       Switches := ();
 
       case Debugging is
-        when "True"  =>
+        when "Yes" =>
           Switches := Switches & "-E";           -- Store traceback in exceptions
-        when "False" => null;
+        when "No" => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -141,12 +141,12 @@ project AdaDoom3 is
 
     package Linker is
 
-      SWITCHES := ("-fprofile-generate");        -- Generate code coverage
+      Switches := ("-fprofile-generate");        -- Generate code coverage
 
       case Debugging is
-        when "True"  =>
+        when "Yes" =>
             Switches := Switches & "-g";         -- Add debugging information.
-        when "False" => null;
+        when "No" => null;
       end case;
 
       for Default_Switches("ada") use Switches;
