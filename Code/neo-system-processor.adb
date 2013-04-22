@@ -14,6 +14,7 @@
 --
 --
 --
+With System.Address_Image;
 package body Neo.System.Processor
   is
   --------------------
@@ -201,7 +202,7 @@ package body Neo.System.Processor
             end if;
           when OTHERS =>
             null;
-        end case;         
+        end case;
         if Is_Stack_Empty then
           Put_Line("Stack is empty!");
         else
