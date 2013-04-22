@@ -14,7 +14,6 @@
 --
 --
 --
-With System.Address_Image;
 package body Neo.System.Processor
   is
   --------------------
