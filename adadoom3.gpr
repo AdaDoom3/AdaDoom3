@@ -42,7 +42,7 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    -- The parameters of External cannot contain spaces or punctuation other than a period
+    -- The parameters of External cannot contain spaces or punctuation other than a period or dash
     SYSTEM         : Option_System    := External("System",     "Windows");
     PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
     COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
