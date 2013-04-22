@@ -38,7 +38,7 @@ To enable file/subprogram/line printing during stack traces the `-g` compile fla
 
   Example for Windows:
 
->   `gnatmake -I/Windows -I/x86_64 -I/GNAT -I/x32 -g -gnat12 main.adb`
+>   `gnatmake -I/Windows -I/x86-64 -I/GNAT -I/x32 -g -gnat12 main.adb`
   
 Build Status
 ------------
