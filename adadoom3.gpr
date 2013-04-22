@@ -87,8 +87,7 @@ project AdaDoom3 is
         "-j4",			-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
-        "-s"			-- Recompile if switches are changed
-        );
+        "-s");			-- Recompile if switches are changed
 
       case Debugging is
         when "True"  =>
@@ -107,8 +106,7 @@ project AdaDoom3 is
         "-fstack-check",	-- Generate checks for exceeding the stack
         "-gnatE",		-- Enable dynamic generic elaboration checks
         "-gnata",		-- Enable pre and post conditions
-        "-gnat12"		-- Enable the Ada 2012 extensions
-        );
+        "-gnat2012");		-- Enable the Ada 2012 extensions
 
       case Debugging is
         when "True"  =>
