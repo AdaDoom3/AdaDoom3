@@ -5,9 +5,9 @@
 --
 --
 --
--- The neo-foundation-build_options.ads file needs to be removed if it is possible to build 64 bit applications
--- with gps. The windows version of gps does not come with a 64 bit version of gnatmake and when I search for MinGW
--- builds with 64 bit support they lack support for things like laddr2line (needed for -g flag).
+-- The windows version of gps does not come with a 64 bit version of gnatmake and when I search for MinGW
+-- builds with 64 bit support they lack support for things like laddr2line (needed for -g flag). This makes
+-- 64 bit builds effectively impossible for Windows users not used to commandline.
 --
 --
 --
