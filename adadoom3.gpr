@@ -28,19 +28,31 @@ project AdaDoom3 is
       "x86-64");
     type Option_Compiler is(
       "GNAT");
+    type Option_Boolean is(
+      "True",
+      "False");
 
   ---------------
   -- Scenarios --
   ---------------
-    System    : Option_System    := External("System",    "Windows");
-    Processor : Option_Processor := External("Processor", "x86-64");
-    Compiler  : Option_Compiler  := External("Compiler",  "GNAT");
+    System    : Option_System    := External("System",     "Windows");
+    Processor : Option_Processor := External("Processor",  "x86-64");
+    Compiler  : Option_Compiler  := External("Compiler",   "GNAT");
+    Debugging : Option_Boolean   := External("Debugging",  "True");
 
   ---------------
   -- Variables --
   ---------------
     BASE      := "Code";
-    SEPARATOR := "/"; case System is when "Windows" => SEPARATOR :=  "\"; when "MacOS" => SEPARATOR :=  ":"; end case;
+    SEPARATOR := "/";
+
+    -- The case statement needs to cover all choices;
+    -- multiple lines used to increase readability.
+     case System is
+      when "Windows" => SEPARATOR :=  "\";
+      when "MacOS"   => SEPARATOR :=  ":";
+      when "Linux"   => SEPARATOR :=  "/";
+     end case;
 
   ---------------
   -- Locations --
@@ -70,42 +82,67 @@ project AdaDoom3 is
 
     -- Gnatmake and gprbuild
     package Builder is
-      for Default_Switches("ada")
-        use(
+
+      Options := (
         "-j4",			-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
-        "-g",			-- Add debugging information
         "-C",			-- Use mapping file
         "-s"			-- Recompile if switches are changed
         );
+
+      case Debugging is
+        when "True"  =>
+            Options := Options & "-g";          -- Add debugging information.
+        when "False" => null;
+      end case;
+
+      for Default_Switches("ada") use Options;
     end Builder;
 
     package Compiler is
-      for Default_Switches("ada")
-        use(
+
+      Options := (
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
         "-gnatE",		-- Enable dynamic generic elaboration checks
-        "-g",			-- Add debugging information
         "-gnata",		-- Enable pre and post conditions
         "-gnat12"		-- Enable the Ada 2012 extensions
         );
+
+      case Debugging is
+        when "True"  =>
+            Options := Options & "-g";          -- Add debugging information.
+        when "False" => null;
+      end case;
+
+      for Default_Switches("ada") use Options;
     end Compiler;
 
     package Binder is
-      for Default_Switches("ada")
-        use(
-        "-E"			-- Store traceback in exceptions
-        );
+
+      Options := ();
+
+      case Debugging is
+        when "True"  =>
+            Options := Options & "-E";          -- Store traceback in exceptions
+        when "False" => null;
+      end case;
+
+      for Default_Switches("ada") use Options;
     end Binder;
 
     package Linker is
-      for Default_Switches("ada")
-        use(
-        "-fprofile-generate",	-- Generate code coverage
-        "-g"			-- Include debug information
-        );
+
+      Options := ("-fprofile-generate");        -- Generate code coverage
+
+      case Debugging is
+        when "True"  =>
+            Options := Options & "-g";          -- Add debugging information.
+        when "False" => null;
+      end case;
+
+      for Default_Switches("ada") use Options;
     end Linker;
 
 end AdaDoom3;
