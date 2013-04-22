@@ -246,13 +246,13 @@ package body Implementation_For_Architecture
             "   popl    %%eax              " & END_LINE & -- Store new in EAX register
             "   xorl    %%ecx,       %%eax " & END_LINE & -- Cannot toggle identifier bit
             "   jz      done               " & END_LINE & -- Processor is 80486
-            "   movl    $0x00000001, %%eax " & END_LINE & -- We have CPUID support
+            "   movl    $0xdabbad00, %%eax " & END_LINE & -- We have CPUID support
             ---------------------------------------------
             " done:                        " & END_LINE ,
             ---------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
-          if Data = 0 then
+          if Data /= 16#DABBA_D00# then
             raise CPUID_Is_Not_Supported;
           end if;
         end if;
