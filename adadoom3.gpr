@@ -42,11 +42,13 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
+    -- NOTE: The first parameter of the External cannot contain spaces, and
+    --       likely cannot contain punctuation other than a period.
     SYSTEM         : Option_System    := External("System",     "Windows");
     PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
     COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
     DEBUGGING      : Option_Boolean   := External("Debugging",  "Yes");
-    SIXTY_FOUR_BIT : Option_Boolean   := External("64 Bit",     "No");
+    SIXTY_FOUR_BIT : Option_Boolean   := External("64-Bit",     "No");
     SAFETY         : Option_Safety    := External("Saftey",     "On");
 
   ---------------
