@@ -235,24 +235,20 @@ package body Implementation_For_Architecture
       begin
         if not USE_64_BIT then
           Asm( -- Check for cpuid
-            --------------------------------------------
-            "   pushfl                    " & END_LINE & -- Get original extended flags
-            "   popl   %%eax              " & END_LINE &
-            "   movl   %%eax,       %%ecx " & END_LINE &
-            "   xorl   $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
-            "   pushl  %%eax              " & END_LINE & -- Save new value on stack
-            "   popfl                     " & END_LINE & -- Replace current value
-            "   pushfl                    " & END_LINE & -- Get new extended flags
-            "   popl   %%eax              " & END_LINE & -- Store new flags in EAX register
-            "   xorl   %%ecx,       %%eax " & END_LINE & -- Cannot toggle identifier bit
-            "   jz     done               " & END_LINE & -- Processor is 80486, no cpuid support
-            "   movl   $0xdabbad00, %%eax " & END_LINE & -- Processor is modern, we have cpuid support
-            --------------------------------------------
-            " done:                       " & END_LINE ,
-            --------------------------------------------
+            ---------------------------------------------
+            "   pushfl                     " & END_LINE & -- Get original extended flags
+            "   popl    %%eax              " & END_LINE &
+            "   movl    %%eax,       %%ecx " & END_LINE &
+            "   xorl    $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
+            "   pushl   %%eax              " & END_LINE & -- Save new extended flag value on stack
+            "   popfl                      " & END_LINE & -- Replace current value
+            "   pushfl                     " & END_LINE & -- Get new extended flags
+            "   popl    %%eax              " & END_LINE & -- Store new in EAX register
+            "   xorl    %%ecx,       %%eax " & END_LINE , -- Can we toggle identifier bit?
+            ---------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
-          if Data /= 16#DABBA_D00# then
+          if Data = 0 then -- No we cannot, no cpuid command supported
             raise CPUID_Is_Not_Supported;
           end if;
         end if;
