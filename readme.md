@@ -25,19 +25,20 @@ Compiling
 ---------
 In order to compile the code issue the following command:
 
->  `gnatmake -I/$OS -I/$PLATFORM -I/$COMPILER -gnat12 main.adb`
+>  `gnatmake -I/$OS -I/$PLATFORM -I/$COMPILER -I/$ARCHITECTURE -gnat12 main.adb`
 
 Where
 
  * $OS - is your operating system (currently supported values: Windows)
  * $PLATFORM - is your architecture (currently supported values: x86_64)
  * $COMPILER - is your compiler (currently supported values: GNAT)
+ * $ARCHITECTURE - is what bit size you want to use (currently supported values: x32, x64)
 
 To enable file/subprogram/line printing during stack traces the `-g` compile flag must be used (GNAT only). 
 
   Example for Windows:
 
->   `gnatmake -I/Windows -I/x86_64 -I/GNAT -g -gnat12 main.adb`
+>   `gnatmake -I/Windows -I/x86_64 -I/GNAT -I/x32 -g -gnat12 main.adb`
   
 Build Status
 ------------
