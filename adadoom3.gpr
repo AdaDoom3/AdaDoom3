@@ -36,8 +36,8 @@ project AdaDoom3 is
       "Some checks",
       "Off");
     type Option_Build is(
-      "x32",
-      "x64");
+      "32-Bit",
+      "64-Bit");
     type Option_Boolean is(
       "Yes",
       "No");
@@ -49,7 +49,7 @@ project AdaDoom3 is
     -- Also, the parameters of External cannot contain spaces or punctuation other than a period or dash
     DEBUGGING : Option_Boolean   := External("Debugging",  "Yes");
     SAFETY    : Option_Safety    := External("Safety",     "On");
-    BUILD     : Option_Build     := External("Build",      "x32");
+    BUILD     : Option_Build     := External("Build",      "32-Bit");
     COMPILER  : Option_Compiler  := External("Compiler",   "GNAT");
     PROCESSOR : Option_Processor := External("Processor",  "x86-64");
     SYSTEM    : Option_System    := External("System",     "Windows");
@@ -77,7 +77,6 @@ project AdaDoom3 is
     for Source_Dirs
       use(
       Base,
-      Base & Separator & BUILD,
       Base & Separator & SYSTEM,
       Base & Separator & COMPILER,
       Base & Separator & PROCESSOR);
@@ -96,7 +95,7 @@ project AdaDoom3 is
     package Builder is
 
       Switches := (
-        "-j4",			-- Use four tasks during compilation
+        "-j4",  		-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
         "-s");			-- Recompile if switches are changed
@@ -120,7 +119,12 @@ project AdaDoom3 is
         "-gnata",		-- Enable pre and post conditions
         "-gnat2012");		-- Enable the Ada 2012 extensions
 
-      case Debugging is
+      case BUILD is
+        when "64-Bit" => Switches := Switches & "-m64";      -- Force 64 bit compilation
+        when "32-Bit" => null;
+      end case;
+
+      case DEBUGGING is
         when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
         when "No"  => null;
       end case;
@@ -132,7 +136,7 @@ project AdaDoom3 is
 
       Switches := ();
 
-      case Debugging is
+      case DEBUGGING is
         when "Yes" => Switches := Switches & "-E";           -- Store traceback in exceptions
         when "No"  => null;
       end case;
@@ -144,7 +148,7 @@ project AdaDoom3 is
 
       Switches := ("-fprofile-generate");                    -- Generate code coverage
 
-      case Debugging is
+      case DEBUGGING is
         when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
         when "No"  => null;
       end case;
