@@ -233,7 +233,7 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if not USE_64_BIT then
+        if Address'Size = 32 then
           Asm( -- Check for cpuid
             ------------------------------------------
             " pushfl                    " & END_LINE & -- Get original extended flags
