@@ -24,11 +24,9 @@ use
   Interfaces.C,
   System,
   System.Machine_Code;
-
 separate(Neo.System.Processor)
 package body Implementation_For_Architecture
   is
-Function Image( Input : Address ) Return String renames Ada_Sys.Address_Image;
   ----------------
   -- Exceptions --
   ----------------
@@ -806,7 +804,6 @@ NULL;
 --              Address'Asm_Input(TO_EDI, Stack'Address)),
 --            Outputs =>
 --  	    Integer_4_Unsigned'Asm_Output(FROM_EAX, Number_Of_Values));
-
 GOTO ENDING;
         if Number_Of_Values <= Stack'Size then
           for I in 1..Integer(Number_Of_Values) loop
@@ -827,7 +824,7 @@ GOTO ENDING;
         Put_Line("Data offset: "     & To_Image(Environment.Data_Offset,     2));
         Put_Line("Data selector: "   & To_Image(Environment.Data_Selector,   2));
         Put_Line("Operation code: "  & To_Image(Environment.Operation_Code,  2));
-	Put_Line("Program counter: " & To_Image(Environment.Program_Counter, 2));
+        Put_Line("Program counter: " & To_Image(Environment.Program_Counter, 2));
 <<ENDING>>
 Put_Line( "Put_Stack has been disabled due to ASM bug." );
       end Put_Stack;
