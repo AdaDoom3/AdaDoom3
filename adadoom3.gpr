@@ -20,13 +20,16 @@ project AdaDoom3 is
   -- Options --
   -------------
     type Option_System is(
+--      "SDL",
       "Linux",
-      "MacOS",
+--      "MacOS",
       "Windows");
     type Option_Processor is(
+--      "ARM",
       "PowerPC",
       "x86-64");
     type Option_Compiler is(
+--      "ObjectAda",
       "GNAT");
     type Option_Boolean is(
       "True",
@@ -35,10 +38,11 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    System    : Option_System    := External("System",     "Windows");
-    Processor : Option_Processor := External("Processor",  "x86-64");
-    Compiler  : Option_Compiler  := External("Compiler",   "GNAT");
-    Debugging : Option_Boolean   := External("Debugging",  "True");
+    System        : Option_System    := External("System",     "Windows");
+    Processor     : Option_Processor := External("Processor",  "x86-64");
+    Compiler      : Option_Compiler  := External("Compiler",   "GNAT");
+    Debugging     : Option_Boolean   := External("Debugging",  "True");
+    Sixty_For_Bit : Option_Boolean   := External("64bit",      "False");
 
   ---------------
   -- Variables --
@@ -49,9 +53,9 @@ project AdaDoom3 is
     -- The case statement needs to cover all choices;
     -- multiple lines used to increase readability.
     case System is
-      when "Windows" => SEPARATOR :=  "\";
-      when "MacOS"   => SEPARATOR :=  ":";
-      when "Linux"   => SEPARATOR :=  "/";
+      when "Windows" => SEPARATOR := "\";
+      when "MacOS"   => SEPARATOR := ":";
+      when "Linux"   => SEPARATOR := "/";
     end case;
 
   ---------------
@@ -83,7 +87,7 @@ project AdaDoom3 is
     -- Gnatmake and gprbuild
     package Builder is
 
-      Options := (
+      SWITCHES := (
         "-j4",			-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
@@ -91,16 +95,16 @@ project AdaDoom3 is
 
       case Debugging is
         when "True"  =>
-            Options := Options & "-g";          -- Add debugging information.
+          SWITCHES := SWITCHES & "-g";          -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use Options;
+      for Default_Switches("ada") use SWITCHES;
     end Builder;
 
     package Compiler is
 
-      Options := (
+      SWITCHES := (
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
@@ -110,37 +114,37 @@ project AdaDoom3 is
 
       case Debugging is
         when "True"  =>
-            Options := Options & "-g";          -- Add debugging information.
+          SWITCHES := SWITCHES & "-g";          -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use Options;
+      for Default_Switches("ada") use SWITCHES;
     end Compiler;
 
     package Binder is
 
-      Options := ();
+      SWITCHES := ();
 
       case Debugging is
         when "True"  =>
-            Options := Options & "-E";          -- Store traceback in exceptions
+          SWITCHES := SWITCHES & "-E";          -- Store traceback in exceptions
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use Options;
+      for Default_Switches("ada") use SWITCHES;
     end Binder;
 
     package Linker is
 
-      Options := ("-fprofile-generate");        -- Generate code coverage
+      SWITCHES := ("-fprofile-generate");        -- Generate code coverage
 
       case Debugging is
         when "True"  =>
-            Options := Options & "-g";          -- Add debugging information.
+            SWITCHES := SWITCHES & "-g";          -- Add debugging information.
         when "False" => null;
       end case;
 
-      for Default_Switches("ada") use Options;
+      for Default_Switches("ada") use SWITCHES;
     end Linker;
 
 end AdaDoom3;
