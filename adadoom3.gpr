@@ -59,7 +59,7 @@ project AdaDoom3 is
     -- multiple lines used to increase readability.
     case System is
       when "Windows" => Separator := "\";
-      -- when "MacOS"   => Separator := ":";
+--    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
     end case;
 
@@ -75,9 +75,9 @@ project AdaDoom3 is
     for Source_Dirs
       use(
       Base,
-      Base & Separator & System,
-      Base & Separator & Compiler,
-      Base & Separator & Processor);
+      Base & Separator & SYSTEM,
+      Base & Separator & COMPILER,
+      Base & Separator & PROCESSOR);
 
   -----------
   -- Tools --
@@ -99,9 +99,8 @@ project AdaDoom3 is
         "-s");			-- Recompile if switches are changed
 
       case Debugging is
-        when "Yes"  =>
-          Switches := Switches & "-g";          -- Add debugging information.
-        when "No" => null;
+        when "Yes" => Switches := Switches & "-g";          -- Add debugging information.
+        when "No"  => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -113,15 +112,14 @@ project AdaDoom3 is
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
-        "-gnatW8",  -- Enable unicode identifiers
+        "-gnatW8",    -- Enable unicode identifiers
         "-gnatE",		-- Enable dynamic generic elaboration checks
         "-gnata",		-- Enable pre and post conditions
         "-gnat2012");		-- Enable the Ada 2012 extensions
 
       case Debugging is
-        when "Yes" =>
-          Switches := Switches & "-g";           -- Add debugging information.
-        when "No" => null;
+        when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
+        when "No"  => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -132,9 +130,8 @@ project AdaDoom3 is
       Switches := ();
 
       case Debugging is
-        when "Yes" =>
-          Switches := Switches & "-E";           -- Store traceback in exceptions
-        when "No" => null;
+        when "Yes" => Switches := Switches & "-E";           -- Store traceback in exceptions
+        when "No"  => null;
       end case;
 
       for Default_Switches("ada") use Switches;
@@ -142,12 +139,11 @@ project AdaDoom3 is
 
     package Linker is
 
-      Switches := ("-fprofile-generate");        -- Generate code coverage
+      Switches := ("-fprofile-generate");                    -- Generate code coverage
 
       case Debugging is
-        when "Yes" =>
-            Switches := Switches & "-g";         -- Add debugging information.
-        when "No" => null;
+        when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
+        when "No"  => null;
       end case;
 
       for Default_Switches("ada") use Switches;
