@@ -255,9 +255,6 @@ package body Implementation_For_Architecture
           if Data = 0 then
             raise CPUID_Is_Not_Supported;
           end if;
-          if Data = 0 then
-            raise CPUID_Is_Not_Supported;
-          end if;
         end if;
         if Is_Enabled(INTEL_FXSR) then
           --------------------------
