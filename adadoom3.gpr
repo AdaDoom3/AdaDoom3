@@ -59,7 +59,7 @@ project AdaDoom3 is
     -- multiple lines used to increase readability.
     case System is
       when "Windows" => Separator := "\";
-      when "MacOS"   => Separator := ":";
+      -- when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
     end case;
 

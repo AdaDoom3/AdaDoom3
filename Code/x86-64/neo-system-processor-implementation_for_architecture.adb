@@ -259,7 +259,7 @@ package body Implementation_For_Architecture
             declare
             type Array_Save_Area
               is array(1..512)
-              of Integer_1_Unsigned;
+              of Integer_1_Unsigned
               with Alignment => 16;
             Save_Area : aliased Array_Save_Area := (others => 0);
             begin
