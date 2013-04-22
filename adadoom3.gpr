@@ -35,6 +35,9 @@ project AdaDoom3 is
       "On",
       "Some checks",
       "Off");
+    type Option_Build is(
+      "x32",
+      "x64");
     type Option_Boolean is(
       "Yes",
       "No");
@@ -43,27 +46,22 @@ project AdaDoom3 is
   -- Scenarios --
   ---------------
     -- The parameters of External cannot contain spaces or punctuation other than a period or dash
-    SYSTEM         : Option_System    := External("System",     "Windows");
-    PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
-    COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
-    DEBUGGING      : Option_Boolean   := External("Debugging",  "Yes");
-    SIXTY_FOUR_BIT : Option_Boolean   := External("64-Bit",     "No");
-    SAFETY         : Option_Safety    := External("Safety",     "On");
+    SYSTEM    : Option_System    := External("System",     "Windows");
+    PROCESSOR : Option_Processor := External("Processor",  "x86-64");
+    COMPILER  : Option_Compiler  := External("Compiler",   "GNAT");
+    DEBUGGING : Option_Boolean   := External("Debugging",  "Yes");
+    BUILD     : Option_Build     := External("Build",      "x32");
+    SAFETY    : Option_Safety    := External("Safety",     "On");
 
   ---------------
   -- Variables --
   ---------------
-    Architecture := "x32";
-    Base         := "Code";
-    Separator    := "/";
+    Base      := "Code";
+    Separator := "/";
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
-    end case;
-    case SIXTY_FOUR_BIT is
-      when "Yes" => Architecture := "x64";
-      when "No"  => Architecture := "x32";
     end case;
 
   ---------------
@@ -78,10 +76,10 @@ project AdaDoom3 is
     for Source_Dirs
       use(
       Base,
+      Base & Separator & BUILD,
       Base & Separator & SYSTEM,
       Base & Separator & COMPILER,
-      Base & Separator & PROCESSOR,
-      Base & Separator & Architecture);
+      Base & Separator & PROCESSOR);
 
   -----------
   -- Tools --
