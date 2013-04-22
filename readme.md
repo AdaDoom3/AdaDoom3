@@ -49,6 +49,7 @@ You can monitor the build status and build history on the following address:
 
 Currently handled by Jenkins:
  * Linux x86-64 http://46.148.150.105:8080/job/AdaDoom3-linux-x86-64/
+ * Windows Vista x86 http://46.148.150.105:8080/job/AdaDoom3-windows-vista-x86
 
 Contact the jenkins maintainer at netprobe[at]gmail.com if you would like to add your machine as a build slave.
 
