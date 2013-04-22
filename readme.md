@@ -30,7 +30,7 @@ In order to compile the code issue the following command:
 Where
 
  * $OS - is your operating system (currently supported values: Windows)
- * $PLATFORM - is your architecture (currently supported values: x86_64)
+ * $PLATFORM - is your processor type (currently supported values: x86-64)
  * $COMPILER - is your compiler (currently supported values: GNAT)
  * $ARCHITECTURE - is what bit size you want to use (currently supported values: x32, x64)
 
