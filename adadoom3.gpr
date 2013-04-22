@@ -42,8 +42,7 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    -- NOTE: The first parameter of the External cannot contain spaces, and
-    --       likely cannot contain punctuation other than a period.
+    -- The parameters of External cannot contain spaces or punctuation other than a period
     SYSTEM         : Option_System    := External("System",     "Windows");
     PROCESSOR      : Option_Processor := External("Processor",  "x86-64");
     COMPILER       : Option_Compiler  := External("Compiler",   "GNAT");
@@ -56,9 +55,6 @@ project AdaDoom3 is
   ---------------
     Base      := "Code";
     Separator := "/";
-
-    -- The case statement needs to cover all choices;
-    -- multiple lines used to increase readability.
     case System is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
