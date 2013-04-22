@@ -45,13 +45,14 @@ project AdaDoom3 is
   ---------------
   -- Scenarios --
   ---------------
-    -- The parameters of External cannot contain spaces or punctuation other than a period or dash
-    SYSTEM    : Option_System    := External("System",     "Windows");
-    PROCESSOR : Option_Processor := External("Processor",  "x86-64");
-    COMPILER  : Option_Compiler  := External("Compiler",   "GNAT");
+    -- The parameters of External cannot contain spaces or punctuation other than a period or dash. In the GPS
+    -- GUI they are displayed with the latest External call on top (like a stack)
     DEBUGGING : Option_Boolean   := External("Debugging",  "Yes");
-    BUILD     : Option_Build     := External("Build",      "x32");
     SAFETY    : Option_Safety    := External("Safety",     "On");
+    BUILD     : Option_Build     := External("Build",      "x32");
+    COMPILER  : Option_Compiler  := External("Compiler",   "GNAT");
+    PROCESSOR : Option_Processor := External("Processor",  "x86-64");
+    SYSTEM    : Option_System    := External("System",     "Windows");
 
   ---------------
   -- Variables --
