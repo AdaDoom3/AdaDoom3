@@ -234,59 +234,27 @@ package body Implementation_For_Architecture
       Data : aliased Integer_4_Unsigned := 0;
       begin
         if not USE_64_BIT then
-          --    __asm__ (
-          --"        pushfl                      # Get original EFLAGS             \n"
-          --"        popl    %%eax                                                 \n"
-          --"        movl    %%eax,%%ecx                                           \n"
-          --"        xorl    $0x200000,%%eax     # Flip ID bit in EFLAGS           \n"
-          --"        pushl   %%eax               # Save new EFLAGS value on stack  \n"
-          --"        popfl                       # Replace current EFLAGS value    \n"
-          --"        pushfl                      # Get new EFLAGS                  \n"
-          --"        popl    %%eax               # Store new EFLAGS in EAX         \n"
-          --"        xorl    %%ecx,%%eax         # Can not toggle ID bit,          \n"
-          --"        jz      1f                  # Processor=80486                 \n"
-          --"        movl    $1,%0               # We have CPUID support           \n"
-          --"1:                                                                    \n"
-          --    : "=m" (has_CPUID)
-          --    :
-          --    : "%eax", "%ecx"
-          --    );
           Asm( -- Check for cpuid
-            --------------------------------------------
-            "   pushfl                    " & END_LINE &
-            "   popl   %%eax              " & END_LINE &
-            "   test   $0x00200000, %%eax " & END_LINE &
-            "   jz     set21              " & END_LINE &
-            "   and    $0xffdfffff, %%eax " & END_LINE &
-            "   pushl  %%eax              " & END_LINE &
-            "   popfl                     " & END_LINE &
-            "   pushfl                    " & END_LINE &
-            "   popl   %%eax              " & END_LINE &
-            "   test   $0x00200000, %%eax " & END_LINE &
-            "   jz     good               " & END_LINE &
-            "   jmp    error              " & END_LINE &
-            --------------------------------------------
-            " set21:                      " & END_LINE &
-            "   or     $0x00200000, %%eax " & END_LINE &
-            "   pushl  %%eax              " & END_LINE &
-            "   popfl                     " & END_LINE &
-            "   pushfl                    " & END_LINE &
-            "   popl   %%eax              " & END_LINE &
-            "   test   $0x00200000, %%eax " & END_LINE &
-            "   jnz    good               " & END_LINE &
-            "   jmp    error              " & END_LINE &
-            --------------------------------------------
-            " error:                      " & END_LINE &
-            "   movl   $0x00000000, %%eax " & END_LINE &
-            "   jmp    done               " & END_LINE &
-            --------------------------------------------
-            " good:                       " & END_LINE &
-            "   movl   $0x00000001, %%eax " & END_LINE &
-            --------------------------------------------
-            " done:                       " & END_LINE ,
-            --------------------------------------------
+            ---------------------------------------------
+            "   pushfl                     " & END_LINE & -- Get original extended flags
+            "   popl    %%eax              " & END_LINE &
+            "   movl    %%eax,       %%ecx " & END_LINE &
+            "   xorl    $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
+            "   pushl   %%eax              " & END_LINE & -- Save new extended flag value on stack
+            "   popfl                      " & END_LINE & -- Replace current value
+            "   pushfl                     " & END_LINE & -- Get new extended flags
+            "   popl    %%eax              " & END_LINE & -- Store new in EAX register
+            "   xorl    %%ecx,       %%eax " & END_LINE & -- Cannot toggle identifier bit
+            "   jz      done               " & END_LINE & -- Processor is 80486
+            "   movl    $0x00000001, %%eax " & END_LINE & -- We have CPUID support
+            ---------------------------------------------
+            " done:                        " & END_LINE ,
+            ---------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
+          if Data = 0 then
+            raise CPUID_Is_Not_Supported;
+          end if;
           if Data = 0 then
             raise CPUID_Is_Not_Supported;
           end if;
