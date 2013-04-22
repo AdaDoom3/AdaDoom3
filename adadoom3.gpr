@@ -48,11 +48,11 @@ project AdaDoom3 is
 
     -- The case statement needs to cover all choices;
     -- multiple lines used to increase readability.
-     case System is
+    case System is
       when "Windows" => SEPARATOR :=  "\";
       when "MacOS"   => SEPARATOR :=  ":";
       when "Linux"   => SEPARATOR :=  "/";
-     end case;
+    end case;
 
   ---------------
   -- Locations --
@@ -70,9 +70,9 @@ project AdaDoom3 is
       BASE & SEPARATOR & Compiler,
       BASE & SEPARATOR & Processor);
 
-  --------------
-  -- Packages --  These control the tools
-  --------------
+  -----------
+  -- Tools --
+  -----------
 
     -- GPS
     package Ide is
