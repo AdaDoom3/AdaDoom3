@@ -14,7 +14,6 @@
 --
 --
 --
-With System;
 package Neo
   is
   ----------------
