@@ -53,12 +53,17 @@ project AdaDoom3 is
   ---------------
   -- Variables --
   ---------------
-    Base      := "Code";
-    Separator := "/";
-    case System is
+    Architecture := "x32";
+    Base         := "Code";
+    Separator    := "/";
+    case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
+    end case;
+    case SIXTY_FOUR_BIT is
+      when "Yes" => Architecture := "x64";
+      when "No"  => Architecture := "x32";
     end case;
 
   ---------------
@@ -75,7 +80,8 @@ project AdaDoom3 is
       Base,
       Base & Separator & SYSTEM,
       Base & Separator & COMPILER,
-      Base & Separator & PROCESSOR);
+      Base & Separator & PROCESSOR,
+      Base & Separator & Architecture);
 
   -----------
   -- Tools --
