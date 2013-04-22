@@ -98,8 +98,8 @@ package body Implementation_For_Architecture
     FROM_EBX                         : constant String_1           := "=b";
     FROM_ECX                         : constant String_1           := "=c";
     FROM_EDX                         : constant String_1           := "=d";
-    VendOR_INTEL                     : constant String_1           := "GenuineIntel";
-    VendOR_ADVANCED_MICRO_DEVICES    : constant String_1           := "AuthenticAMD";
+    VENDOR_INTEL                     : constant String_1           := "GenuineIntel";
+    VENDOR_ADVANCED_MICRO_DEVICES    : constant String_1           := "AuthenticAMD";
     INTEL_SSE3                       : constant Record_Feature     := (16#0000_0001#, ECX_Register,  0);
     INTEL_PCLMULQDQ                  : constant Record_Feature     := (16#0000_0001#, ECX_Register,  1);
     INTEL_SSSE3                      : constant Record_Feature     := (16#0000_0001#, ECX_Register,  9);
@@ -209,7 +209,7 @@ package body Implementation_For_Architecture
             Array_String_Segment'Asm_Output(FROM_EBX, B),
             Array_String_Segment'Asm_Output(FROM_ECX, C),
             Array_String_Segment'Asm_Output(FROM_EDX, D)));
-        if String_1(B) & String_1(D) & String_1(C) = VendOR_INTEL then
+        if String_1(B) & String_1(D) & String_1(C) = VENDOR_INTEL then
           return Intel_Vendor;
         end if;
         return Advanced_Micro_Devices_Vendor;
@@ -235,21 +235,21 @@ package body Implementation_For_Architecture
       begin
         if not USE_64_BIT then
           Asm( -- Check for cpuid
-            ---------------------------------------------
-            "   pushfl                     " & END_LINE & -- Get original extended flags
-            "   popl    %%eax              " & END_LINE &
-            "   movl    %%eax,       %%ecx " & END_LINE &
-            "   xorl    $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
-            "   pushl   %%eax              " & END_LINE & -- Save new extended flag value on stack
-            "   popfl                      " & END_LINE & -- Replace current value
-            "   pushfl                     " & END_LINE & -- Get new extended flags
-            "   popl    %%eax              " & END_LINE & -- Store new in EAX register
-            "   xorl    %%ecx,       %%eax " & END_LINE & -- Cannot toggle identifier bit
-            "   jz      done               " & END_LINE & -- Processor is 80486
-            "   movl    $0xdabbad00, %%eax " & END_LINE & -- We have CPUID support
-            ---------------------------------------------
-            " done:                        " & END_LINE ,
-            ---------------------------------------------
+            --------------------------------------------
+            "   pushfl                    " & END_LINE & -- Get original extended flags
+            "   popl   %%eax              " & END_LINE &
+            "   movl   %%eax,       %%ecx " & END_LINE &
+            "   xorl   $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
+            "   pushl  %%eax              " & END_LINE & -- Save new value on stack
+            "   popfl                     " & END_LINE & -- Replace current value
+            "   pushfl                    " & END_LINE & -- Get new extended flags
+            "   popl   %%eax              " & END_LINE & -- Store new flags in EAX register
+            "   xorl   %%ecx,       %%eax " & END_LINE & -- Cannot toggle identifier bit
+            "   jz     done               " & END_LINE & -- Processor is 80486, no cpuid support
+            "   movl   $0xdabbad00, %%eax " & END_LINE & -- Processor is modern, we have cpuid support
+            --------------------------------------------
+            " done:                       " & END_LINE ,
+            --------------------------------------------
             Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
           if Data /= 16#DABBA_D00# then
@@ -264,8 +264,7 @@ package body Implementation_For_Architecture
             type Array_Save_Area
               is array(1..512)
               of Integer_1_Unsigned;
-              for Array_Save_Area'Alignment
-                use 16;
+              with Alignment => 16;
             Save_Area : aliased Array_Save_Area := (others => 0);
             begin
               Asm(
