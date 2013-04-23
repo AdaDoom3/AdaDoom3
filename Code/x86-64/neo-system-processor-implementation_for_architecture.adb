@@ -76,9 +76,8 @@ package body Implementation_For_Architecture
         Data_Offset     : Integer_4_Unsigned := 0;
         Data_Selector   : Integer_2_Unsigned := 0;
         Unused_D        : Integer_2_Unsigned := 0;
-      end record;
-      for Record_x86_Environment'Size
-        use 224;
+      end record
+      with Size => 28 * Byte'Size;
   ---------------
   -- Constants --
   ---------------
