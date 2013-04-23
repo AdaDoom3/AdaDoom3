@@ -57,16 +57,19 @@ project AdaDoom3 is
   ---------------
   -- Variables --
   ---------------
-    Base             := "Code";
-    Separator        := "/";
-    Debugging_Switch := "";
+    Base              := "Code";
+    Separator         := "";
+    Debugging_General := "";
+    Debugging_Binder  := "";
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
     end case;
     case DEBUGGING is
-      when "Yes" => Debugging_Switch := "-g";
+      when "Yes" =>
+        Debugging_General := "-g"; -- Create extended information in stack traces
+        Debugging_Binder  := "-E"; -- Store traceback in exceptions
       when "No"  => null;
     end case;
 
@@ -99,7 +102,8 @@ project AdaDoom3 is
     -- Gnatmake and gprbuild
     package Builder is
       for Default_Switches("ada")
-        use(Debugging_Switch,
+        use(
+        Debugging_General,
         "-j4",    	-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
@@ -107,7 +111,8 @@ project AdaDoom3 is
     end Builder;
 
     package Compiler is
-      Switches :=(Debugging_Switch,
+      Switches :=(
+        Debugging_General,
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
@@ -124,19 +129,14 @@ project AdaDoom3 is
     end Compiler;
 
     package Binder is
-      Switches :=(
-        );
-      case DEBUGGING is
-        when "Yes" => Switches := Switches & "-E";           -- Store traceback in exceptions
-        when "No"  => null;
-      end case;
       for Default_Switches("ada")
-        use Switches;
+        use Debugging_Binder;
     end Binder;
 
     package Linker is
       for Default_Switches("ada")
-        use(Debugging_Switch,
+        use(
+        Debugging_General,
         "-fprofile-generate");                    -- Generate code coverage
     end Linker;
 
