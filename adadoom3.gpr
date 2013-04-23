@@ -57,12 +57,17 @@ project AdaDoom3 is
   ---------------
   -- Variables --
   ---------------
-    Base      := "Code";
-    Separator := "/";
+    Base             := "Code";
+    Separator        := "/";
+    Debugging_Switch := "";
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
+    end case;
+    case DEBUGGING is
+      when "Yes" => Debugging_Switch := "-g";
+      when "No"  => null;
     end case;
 
   -------------
@@ -93,23 +98,15 @@ project AdaDoom3 is
 
     -- Gnatmake and gprbuild
     package Builder is
-
-      Switches := (
+      for Default_Switches("ada")
+        use Debugging_Switch &
         "-j4",  		-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
         "-s");			-- Recompile if switches are changed
-
-      case Debugging is
-        when "Yes" => Switches := Switches & "-g";          -- Add debugging information.
-        when "No"  => null;
-      end case;
-
-      for Default_Switches("ada") use Switches;
     end Builder;
 
     package Compiler is
-
       Switches := (
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
@@ -118,42 +115,28 @@ project AdaDoom3 is
         "-gnatE",		-- Enable dynamic generic elaboration checks
         "-gnata",		-- Enable pre and post conditions
         "-gnat2012");		-- Enable the Ada 2012 extensions
-
       case BUILD is
         when "64-Bit" => Switches := Switches & "-m64";      -- Force 64 bit compilation
         when "32-Bit" => null;
       end case;
-
-      case DEBUGGING is
-        when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
-        when "No"  => null;
-      end case;
-
-      for Default_Switches("ada") use Switches;
+      for Default_Switches("ada")
+        use Switches & Debugging_Switch;
     end Compiler;
 
     package Binder is
-
       Switches := ();
-
       case DEBUGGING is
         when "Yes" => Switches := Switches & "-E";           -- Store traceback in exceptions
         when "No"  => null;
       end case;
-
-      for Default_Switches("ada") use Switches;
+      for Default_Switches("ada")
+        use Switches;
     end Binder;
 
     package Linker is
-
-      Switches := ("-fprofile-generate");                    -- Generate code coverage
-
-      case DEBUGGING is
-        when "Yes" => Switches := Switches & "-g";           -- Add debugging information.
-        when "No"  => null;
-      end case;
-
-      for Default_Switches("ada") use Switches;
+      for Default_Switches("ada")
+        use Debugging_Switch &
+        "-fprofile-generate");                    -- Generate code coverage
     end Linker;
 
 end AdaDoom3;
