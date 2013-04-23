@@ -179,6 +179,8 @@ package Neo.Foundation.Data_Types
     subtype Float_4_Degree
       is Float_4_Real
       range 1.0..360.0;
+    subtype Byte
+      is Integer_1_Unsigned;
   -------------
   -- Strings --
   -------------
