@@ -29,7 +29,7 @@ project AdaDoom3 is
       "PowerPC",
       "x86-64");
     type Option_Compiler is(
---    "ObjectAda",
+      "ObjectAda",
       "GNAT");
     type Option_Safety is(
       "On",
