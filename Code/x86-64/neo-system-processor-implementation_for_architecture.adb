@@ -438,7 +438,8 @@ package body Implementation_For_Architecture
               if Is_Enabled(INTEL_FXSR) then
                 Asm(
                   Volatile => True,
-                  Inputs   => Address'Asm_Input(TO_EAX, Data_From_SIMD'Address)
+                  Inputs   => Address'Asm_Input(TO_EAX, Data_From_SIMD'Address),
+                  Template =>
                   ---------------------------------------------
                   " stmxcsr (%%eax)              " & END_LINE &
                   " movl    (%%eax),     %%ebx   " & END_LINE &
@@ -509,7 +510,8 @@ package body Implementation_For_Architecture
             Volatile => True,
             Inputs   =>(
               Address           'Asm_Input(TO_EAX, Data'Address),
-              Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask))
+              Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)),
+            Template =>
             ---------------------------------------------
             " stmxcsr (%%eax)              " & END_LINE &
             " movl    (%%eax),     %%ebx   " & END_LINE &
@@ -578,6 +580,7 @@ package body Implementation_For_Architecture
       begin
         Asm(
           Volatile => True,
+          Template =>
           ----------------------
           " cpuid " & END_LINE &
           " rdtsc " & END_LINE ,
