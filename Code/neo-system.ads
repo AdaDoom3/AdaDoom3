@@ -17,12 +17,10 @@
 with
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
-  Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 use
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
-  Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 package Neo.System
   is
