@@ -123,7 +123,7 @@ project AdaDoom3 is
         when "32-Bit" => null;
       end case;
       for Default_Switches("ada")
-        use Switches;
+        use (Switches);
     end Compiler;
 
     package Binder is
