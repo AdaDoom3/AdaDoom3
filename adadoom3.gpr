@@ -61,16 +61,21 @@ project AdaDoom3 is
     Separator         := "";
     Debugging_General := "";
     Debugging_Binder  := "";
+    Build_64_Bit      := "";
+    case DEBUGGING is
+      when "Yes" =>
+        Debugging_General := "-g";             -- Create extended information in stack traces
+        Debugging_Binder  := "-E";             -- Store traceback in exceptions
+      when "No"  => null;
+    end case;
+    case BUILD is
+      when "64-Bit" => Build_64_Bit := "-m64"; -- Force 64 bit compilation
+      when "32-Bit" => null;
+    end case;
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
       when "Linux"   => Separator := "/";
-    end case;
-    case DEBUGGING is
-      when "Yes" =>
-        Debugging_General := "-g"; -- Create extended information in stack traces
-        Debugging_Binder  := "-E"; -- Store traceback in exceptions
-      when "No"  => null;
     end case;
 
   --------------
@@ -109,8 +114,10 @@ project AdaDoom3 is
     end Builder;
 
     package Compiler is
-      Switches :=(
+      for Default_Switches("ada")
+        use(
         Debugging_General,
+        Build_64_Bit,
         "-O3",			-- Full optimization and automatic inlining
         "-gnato",		-- Enable overflow checking for numerics
         "-fstack-check",	-- Generate checks for exceeding the stack
@@ -118,12 +125,6 @@ project AdaDoom3 is
         "-gnatE",		-- Enable dynamic generic elaboration checks
         "-gnata",		-- Enable pre and post conditions
         "-gnat2012");		-- Enable the Ada 2012 extensions
-      case BUILD is
-        when "64-Bit" => Switches := Switches & "-m64";      -- Force 64 bit compilation
-        when "32-Bit" => null;
-      end case;
-      for Default_Switches("ada")
-        use (Switches);
     end Compiler;
 
     package Binder is
