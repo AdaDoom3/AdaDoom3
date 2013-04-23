@@ -400,7 +400,7 @@ package body Implementation_For_Architecture
         Is_Newer_Than(Linux_2_7_System, Macintosh_10_6_System, Windows_2_6_1_System)
         then
           Asm( -- Check if the operating system will save the YMM registers
-            Volatile => True
+            Volatile => True,
             Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),
             Template => "xgetbv",
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
@@ -450,16 +450,16 @@ package body Implementation_For_Architecture
               end if;
               Asm(
                 Volatile => True,
-                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address)
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address),
                 Template => "fnstenv (%%eax)");
               -- Clear 6 exception bits plus stack fault
               x86_Environment.Status_Word := x86_Environment.Status_Word and 16#FF80#;
               Asm(
                 Volatile => True,
-                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address)
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address),
                 Template => "fldenv (%%eax)");
               Asm(
-                Volatile => True
+                Volatile => True,
                 Template => "fnclex");
             end Clear_Exception_Bits;
           if (Data and 16#0000_0001#) /= 0 then
@@ -629,7 +629,7 @@ package body Implementation_For_Architecture
       begin
         Asm(
           Volatile => True,
-          Inputs   => Address'Asm_Input(TO_EAX, Data'Address)
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Template => 
           ---------------------------------------------
           "   fnstenv (%%eax)            " & END_LINE &
