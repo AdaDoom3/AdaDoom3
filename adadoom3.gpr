@@ -150,20 +150,15 @@ project AdaDoom3 is
   --------------
   -- Switches --
   --------------
-
-    -- Gnatmake and gprbuild
     package Builder is
       for Default_Switches("ada") use (Switch_Builder);
     end Builder;
-
     package Compiler is
       for Default_Switches("ada") use (Switch_Compiler);
     end Compiler;
-
     package Binder is
       for Default_Switches("ada") use (Switch_Binder);
     end Binder;
-
     package Linker is
       for Default_Switches("ada") use (Switch_Linker);
     end Linker;
