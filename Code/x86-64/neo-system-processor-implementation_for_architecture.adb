@@ -400,10 +400,10 @@ package body Implementation_For_Architecture
         Is_Newer_Than(Linux_2_7_System, Macintosh_10_6_System, Windows_2_6_1_System)
         then
           Asm( -- Check if the operating system will save the YMM registers
-            Template => "xgetbv",
+            Volatile => True
             Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),
-            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data),
-            Volatile => True);
+            Template => "xgetbv",
+            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
           Specifics.Has_Advanced_Vector_Extensions_Enabled := (Data and 16#0000_0006#) > 0;
         end if;
         return Specifics;
@@ -418,14 +418,14 @@ package body Implementation_For_Architecture
       begin
         if Is_Enabled(INTEL_FXSR) then
           Asm(
-            Template => "stmxcsr (%%eax)",
+            Volatile => True,
             Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-            Volatile => True);
+            Template => "stmxcsr (%%eax)");
         end if;
         Asm(
-          Template => "fnstsw (%%eax)",
+          Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data_From_x87'Address),
-          Volatile => True);
+          Template => "fnstsw (%%eax)");
         Data := (Data and 16#0000_003F#) and Integer_4_Unsigned(Data_From_x87);
         if Data /= 0 then -- raise the first error found
           ---------------------
@@ -437,29 +437,29 @@ package body Implementation_For_Architecture
             begin
               if Is_Enabled(INTEL_FXSR) then
                 Asm(
+                  Volatile => True,
+                  Inputs   => Address'Asm_Input(TO_EAX, Data_From_SIMD'Address)
                   ---------------------------------------------
                   " stmxcsr (%%eax)              " & END_LINE &
                   " movl    (%%eax),     %%ebx   " & END_LINE &
                   " and     $0xffffffc0, %%ebx   " & END_LINE &
                   " movl    %%ebx,       (%%eax) " & END_LINE &
-                  " ldmxcsr (%%eax)              " & END_LINE ,
+                  " ldmxcsr (%%eax)              " & END_LINE );
                   ---------------------------------------------
-                  Volatile => True,
-                  Inputs   => Address'Asm_Input(TO_EAX, Data_From_SIMD'Address));
               end if;
               Asm(
-                Template => "fnstenv (%%eax)",
                 Volatile => True,
-                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address)
+                Template => "fnstenv (%%eax)");
               -- Clear 6 exception bits plus stack fault
               x86_Environment.Status_Word := x86_Environment.Status_Word and 16#FF80#;
               Asm(
-                Template => "fldenv (%%eax)",
                 Volatile => True,
-                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address));
+                Inputs   => Address'Asm_Input(TO_EAX, x86_Environment'Address)
+                Template => "fldenv (%%eax)");
               Asm(
-                Template => "fnclex",
-                Volatile => True);
+                Volatile => True
+                Template => "fnclex");
             end Clear_Exception_Bits;
           if (Data and 16#0000_0001#) /= 0 then
             raise Invalid_Operation;
@@ -506,33 +506,33 @@ package body Implementation_For_Architecture
         end case;
         if Is_Enabled(INTEL_FXSR) then
           Asm(
+            Volatile => True,
+            Inputs   =>(
+              Address           'Asm_Input(TO_EAX, Data'Address),
+              Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask))
             ---------------------------------------------
             " stmxcsr (%%eax)              " & END_LINE &
             " movl    (%%eax),     %%ebx   " & END_LINE &
             " and     $0xffff9fff, %%ebx   " & END_LINE &
             " or      %%cx,        %%bx    " & END_LINE &
             " movl    %%ebx,       (%%eax) " & END_LINE &
-            " ldmxcsr (%%eax)              " & END_LINE ,
+            " ldmxcsr (%%eax)              " & END_LINE );
             ---------------------------------------------
-            Volatile => True,
-            Inputs   =>(
-              Address           'Asm_Input(TO_EAX, Data'Address),
-              Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
         end if;
         Rounding_Mask := Shift_Right(Rounding_Mask, 3);
         Asm(
+          Volatile => True,
+          Inputs   =>(
+            Address           'Asm_Input(TO_EAX, Other_Data'Address),
+            Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask))
           ----------------------------------------
           " fnstcw (%%eax)          " & END_LINE &
           " movw   (%%eax), %%bx    " & END_LINE &
           " and    $0xf3ff, %%bx    " & END_LINE &
           " or     %%cx,    %%bx    " & END_LINE &
           " movw   %%bx,    (%%eax) " & END_LINE &
-          " fldcw  (%%eax)          " & END_LINE ,
+          " fldcw  (%%eax)          " & END_LINE );
           ----------------------------------------
-          Volatile => True,
-          Inputs   =>(
-            Address           'Asm_Input(TO_EAX, Other_Data'Address),
-            Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)));
       end Set_Rounding;
   -------------------
   -- Set_Precision --
@@ -552,18 +552,18 @@ package body Implementation_For_Architecture
             Precision_Mask := 16#0300#;
         end case;
         Asm(
+          Volatile => True,
+          Inputs   =>(
+            Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
+            Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)),
           ----------------------------------------
           " fnstcw (%%eax)          " & END_LINE &
           " movw   (%%eax), %%bx    " & END_LINE &
           " and    $0xfcff, %%bx    " & END_LINE &
           " or     %%cx,    %%bx    " & END_LINE &
           " movw   %%bx,    (%%eax) " & END_LINE &
-          " fldcw  (%%eax)          " & END_LINE ,
+          " fldcw  (%%eax)          " & END_LINE );
           ----------------------------------------
-          Volatile => True,
-          Inputs   =>(
-            Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
-            Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)));
       end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
@@ -575,11 +575,11 @@ package body Implementation_For_Architecture
       High_Part : Integer_4_Unsigned := 0;
       begin
         Asm(
+          Volatile => True,
           ----------------------
           " cpuid " & END_LINE &
           " rdtsc " & END_LINE ,
           ----------------------
-          Volatile => True,
           Outputs  =>(
             Integer_4_Unsigned'Asm_Output(FROM_EAX, Low_Part),
             Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
@@ -595,6 +595,8 @@ package body Implementation_For_Architecture
       Data   : aliased Record_x86_Environment := (others => <>);
       begin
         Asm(
+          Volatile => True,
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           ---------------------------------------------
           "   fnstenv (%%eax)            " & END_LINE &
           "   movl    8(%%eax),    %%eax " & END_LINE &
@@ -609,8 +611,6 @@ package body Implementation_For_Architecture
           ---------------------------------------------
           " 2:                           " & END_LINE ,
           ---------------------------------------------
-          Volatile => True,
-          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
         return Result /= 0;
     end Is_Stack_Empty;
