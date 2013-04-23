@@ -99,32 +99,33 @@ project AdaDoom3 is
     -- Gnatmake and gprbuild
     package Builder is
       for Default_Switches("ada")
-        use Debugging_Switch &
-        "-j4" &  		-- Use four tasks during compilation
-        "-k" &			-- "Keep going", build as far as possible
-        "-C" &			-- Use mapping file
+        use(Debugging_Switch,
+        "-j4",    	-- Use four tasks during compilation
+        "-k",			-- "Keep going", build as far as possible
+        "-C",			-- Use mapping file
         "-s");			-- Recompile if switches are changed
     end Builder;
 
     package Compiler is
-      Switches :=
-        "-O3" &			-- Full optimization and automatic inlining
-        "-gnato" &		-- Enable overflow checking for numerics
-        "-fstack-check" &	-- Generate checks for exceeding the stack
-        "-gnatW8" &    -- Enable unicode identifiers
-        "-gnatE" &		-- Enable dynamic generic elaboration checks
-        "-gnata" &		-- Enable pre and post conditions
-        "-gnat2012";		-- Enable the Ada 2012 extensions
+      Switches :=(Debugging_Switch,
+        "-O3",			-- Full optimization and automatic inlining
+        "-gnato",		-- Enable overflow checking for numerics
+        "-fstack-check",	-- Generate checks for exceeding the stack
+        "-gnatW8",		-- Enable unicode identifiers
+        "-gnatE",		-- Enable dynamic generic elaboration checks
+        "-gnata",		-- Enable pre and post conditions
+        "-gnat2012");		-- Enable the Ada 2012 extensions
       case BUILD is
         when "64-Bit" => Switches := Switches & "-m64";      -- Force 64 bit compilation
         when "32-Bit" => null;
       end case;
       for Default_Switches("ada")
-        use Switches & Debugging_Switch;
+        use Switches;
     end Compiler;
 
     package Binder is
-      Switches := "";
+      Switches :=(
+        );
       case DEBUGGING is
         when "Yes" => Switches := Switches & "-E";           -- Store traceback in exceptions
         when "No"  => null;
@@ -135,7 +136,7 @@ project AdaDoom3 is
 
     package Linker is
       for Default_Switches("ada")
-        use Debugging_Switch &
+        use(Debugging_Switch,
         "-fprofile-generate");                    -- Generate code coverage
     end Linker;
 
