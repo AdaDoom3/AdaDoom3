@@ -94,7 +94,6 @@
 with
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
-  Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Generic_Protected,
   Neo.System,
