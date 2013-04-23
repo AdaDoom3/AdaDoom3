@@ -524,7 +524,8 @@ package body Implementation_For_Architecture
           Volatile => True,
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
-            Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask))
+            Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)),
+          Template => 
           ----------------------------------------
           " fnstcw (%%eax)          " & END_LINE &
           " movw   (%%eax), %%bx    " & END_LINE &
@@ -556,6 +557,7 @@ package body Implementation_For_Architecture
           Inputs   =>(
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)),
+          Template => 
           ----------------------------------------
           " fnstcw (%%eax)          " & END_LINE &
           " movw   (%%eax), %%bx    " & END_LINE &
@@ -597,6 +599,7 @@ package body Implementation_For_Architecture
         Asm(
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+          Template => 
           ---------------------------------------------
           "   fnstenv (%%eax)            " & END_LINE &
           "   movl    8(%%eax),    %%eax " & END_LINE &
@@ -622,6 +625,9 @@ package body Implementation_For_Architecture
       Data : aliased Record_x86_Environment := (others => <>);
       begin
         Asm(
+          Volatile => True,
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address)
+          Template => 
           ---------------------------------------------
           "   fnstenv (%%eax)            " & END_LINE &
           "   movl    8(%%eax),    %%eax " & END_LINE &
@@ -636,10 +642,8 @@ package body Implementation_For_Architecture
           "   shr     $2,          %%edx " & END_LINE &
           "   jmp     1b                 " & END_LINE &
           ---------------------------------------------
-          " 2:                           " & END_LINE ,
+          " 2:                           " & END_LINE );
           ---------------------------------------------
-          Volatile => True,
-          Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
       end Clear_Stack;
   ---------------
   -- Put_Trace --
