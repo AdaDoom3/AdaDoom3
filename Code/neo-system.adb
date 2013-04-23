@@ -60,9 +60,9 @@ package body Neo.System
       return Boolean
       is
       begin
-        IF USE_64_BIT THEN
+        if Address'Size = 64 THEN
           return True;
-        end IF;
+        end if;
         return Implementation.Is_Running_In_64_Bit_Environment;
       end Is_Running_In_64_Bit_Environment;
   ------------------
