@@ -117,42 +117,28 @@ package Neo.System.Processor
   -----------------
   -- Subprograms --
   -----------------
-    procedure Initialize
-      with Inline;
-    procedure Test
-      with Inline;
-    procedure Check_Exceptions
-      with Inline;
-    procedure Clear_Stack
-      with Inline;
+    procedure Initialize;
+    procedure Test;
+    procedure Check_Exceptions;
+    procedure Clear_Stack;
     function Is_Stack_Empty
-      return Boolean
-      with Inline;
-    procedure Put_Stack
-      with Inline;
-    procedure Put_Trace
-      with Inline;
+      return Boolean;
+    procedure Put_Stack;
+    procedure Put_Trace;
     procedure Set_Rounding(
-      Rounding : IN Enumerated_Rounding)
-      with Inline;
+      Rounding : in Enumerated_Rounding);
     procedure Set_Precision(
-      Precision : IN Enumerated_Precision)
-      with Inline;
+      Precision : in Enumerated_Precision);
     function Get_Number_Of_Cores
-      return Integer_8_Unsigned
-      with Inline;
+      return Integer_8_Unsigned;
     function Get_Speed_In_Megahertz
-      return Integer_8_Unsigned
-      with Inline;
+      return Integer_8_Unsigned;
     function Get_Vendor
-      return Enumerated_Vendor
-      with Inline;
+      return Enumerated_Vendor;
     function Get_Specifics
-      return Record_Specifics
-      with Inline;
+      return Record_Specifics;
     function Get_Clock_Ticks
-      return Integer_8_Unsigned
-      with Inline;
+      return Integer_8_Unsigned;
 -------
 private
 -------
