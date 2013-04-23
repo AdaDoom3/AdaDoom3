@@ -73,9 +73,11 @@ project AdaDoom3 is
       when "No"  => null;
     end case;
 
-  -------------
-  -- Project --
-  -------------
+  --------------
+  -- Settings --
+  --------------
+    
+    -- AdaDoom3
     for Source_Dirs
       use(
       Base,
@@ -88,10 +90,6 @@ project AdaDoom3 is
       use "Object";
     for Main
       use("main.adb");
-
-  -----------
-  -- Tools --
-  -----------
 
     -- GPS
     package Ide is
