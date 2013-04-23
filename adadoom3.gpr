@@ -107,12 +107,15 @@ project AdaDoom3 is
       for Default_Switches("ada")
         use(
         Debugging_General,
-        "-j4",    	-- Use four tasks during compilation
+        "-j4",  		-- Use four tasks during compilation
         "-k",			-- "Keep going", build as far as possible
         "-C",			-- Use mapping file
         "-s");			-- Recompile if switches are changed
     end Builder;
 
+  --------------
+  -- Switches --
+  --------------
     package Compiler is
       for Default_Switches("ada")
         use(
@@ -126,17 +129,15 @@ project AdaDoom3 is
         "-gnata",		-- Enable pre and post conditions
         "-gnat2012");		-- Enable the Ada 2012 extensions
     end Compiler;
-
     package Binder is
       for Default_Switches("ada")
         use (Debugging_Binder);
     end Binder;
-
     package Linker is
       for Default_Switches("ada")
         use(
         Debugging_General,
-        "-fprofile-generate");                    -- Generate code coverage
+        "-fprofile-generate");  		-- Generate code coverage
     end Linker;
 
 end AdaDoom3;
