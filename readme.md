@@ -33,7 +33,7 @@ Where
  * $PLATFORM - is your processor type (currently supported values: x86-64)
  * $COMPILER - is your compiler (currently supported values: GNAT)
 
-To enable file/subprogram/line printing during stack traces the `-g` compile flag must be used (GNAT only). 
+Use the `-g` compile flag to enable file/subprogram/line printing during stack traces (GNAT only). 
 
   Example for Windows:
 
@@ -61,7 +61,8 @@ Or the Gnat Programming Studio IDE may be used (email is optional):
 http://libre.adacore.com/download/
 
 To compile with GPS click the gear and hammer button `✹` after ensuring the scenario drop boxes are correct.
-To run after successfully compiling press play `▶`
+
+After successfully compiling press play `▶` to run.
 
 Organization
 ------------
