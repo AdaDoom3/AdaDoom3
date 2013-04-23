@@ -97,23 +97,24 @@ project AdaDoom3 is
       when "GNAT" =>
         Switch_Builder :=(
           Switch_Debugging_General,
-          "-j4",                               -- Use four tasks during compilation
-          "-k",                                -- "Keep going", build as far as possible
-          "-C",                                -- Use mapping file
-          "-s");                               -- Recompile if switches are changed
+          "-j4",                                -- Use four tasks during compilation
+          "-k",                                 -- "Keep going", build as far as possible
+          "-C",                                 -- Use mapping file
+          "-s");                                -- Recompile if switches are changed
         Switch_Compiler :=(
           Switch_Debugging_General,
           Switch_Build_64_Bit,
-          "-O3",                               -- Full optimization and automatic inlining
-          "-gnato",                            -- Enable overflow checking for numerics
-          "-fstack-check",                     -- Generate checks for exceeding the stack
-          "-gnatW8",                           -- Enable unicode identifiers
-          "-gnatE",                            -- Enable dynamic generic elaboration checks
-          "-gnata",                            -- Enable pre and post conditions
-          "-gnat2012");                        -- Enable the Ada 2012 extensions
+          "-O3",                                -- Full optimization and automatic inlining
+          "-gnato",                             -- Enable overflow checking for numerics
+          "-fstack-check",                      -- Generate checks for exceeding the stack
+          "-gnatW8",                            -- Enable unicode identifiers
+          "-gnatE",                             -- Enable dynamic generic elaboration checks
+          "-gnata",                             -- Enable pre and post conditions
+          "-gnat2012");                         -- Enable the Ada 2012 extensions
         Switch_Binder :=(
           Switch_Debugging_Binder);
-        Switch_Linker :=(
+        Switch_Linker :=
+          "-fprofile-generate");                -- Generate code coverage
           Switch_Debugging_General);
       when "ObjectAda" =>
         Switch_Builder :=(
