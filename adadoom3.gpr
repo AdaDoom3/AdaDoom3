@@ -128,7 +128,8 @@ project AdaDoom3 is
 
     package Binder is
       for Default_Switches("ada")
-        use Debugging_Binder;
+        use(
+        Debugging_Binder;
     end Binder;
 
     package Linker is
