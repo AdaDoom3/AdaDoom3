@@ -66,6 +66,10 @@ project AdaDoom3 is
     Switch_Linker            := ();
     Base                     := "Code";
     Separator                := "/";
+
+  -----------
+  -- Logic --
+  -----------
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
