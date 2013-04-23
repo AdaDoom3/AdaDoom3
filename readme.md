@@ -60,8 +60,8 @@ An alternative to the compilation method above is to use GPRBuild:
 Or the Gnat Programming Studio IDE may be used (email is optional):
 http://libre.adacore.com/download/
 
-To compile with GPS click the gear button `✹` after ensuring the scenario drop boxes are correct.
-To run after successfully compiling press the play button `▶`
+To compile with GPS click the gear and hammer button `✹` after ensuring the scenario drop boxes are correct.
+To run after successfully compiling press play `▶`
 
 Organization
 ------------
