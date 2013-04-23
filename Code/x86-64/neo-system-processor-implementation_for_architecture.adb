@@ -234,6 +234,8 @@ package body Implementation_For_Architecture
       begin
         if Address'Size = 32 then
           Asm( -- Check for cpuid
+            Volatile => True,
+            Template =>
             ------------------------------------------
             " pushfl                    " & END_LINE & -- Get original extended flags
             " popl   %%eax              " & END_LINE &
@@ -245,7 +247,6 @@ package body Implementation_For_Architecture
             " popl   %%eax              " & END_LINE & -- Store new in EAX register
             " xorl   %%ecx,       %%eax " & END_LINE , -- Can we toggle the identifier bit?
             ------------------------------------------
-            Volatile => True,
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
           if Data = 0 then -- No we cannot, no cpuid command supported (processor is probably 80486)
             raise CPUID_Is_Not_Supported;
@@ -263,36 +264,39 @@ package body Implementation_For_Architecture
             Save_Area : aliased Array_Save_Area := (others => 0);
             begin
               Asm(
+                Volatile => True,
+                Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
+                Template =>
                 ----------------------------------------
                 " fxsave (%%eax)          " & END_LINE &
                 " movl   28(%%eax), %%ebx " & END_LINE ,
                 ----------------------------------------
-                Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
-                Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data),
-                Volatile => True);
+                Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data));
               if (Data and 16#20#) /= 0 then
                 Asm(
+                  Volatile => True,
+                  Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+                  Template =>
                   -----------------------------------------
                   " stmxcsr (%%eax)          " & END_LINE &
                   " movl    (%%eax), %%ebx   " & END_LINE &
                   " or      $0x40,   %%bx    " & END_LINE &
                   " movl    %%ebx,   (%%eax) " & END_LINE &
-                  " ldmxcsr (%%eax)          " & END_LINE ,
+                  " ldmxcsr (%%eax)          " & END_LINE );
                   -----------------------------------------
-                  Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-                  Volatile => True);
               end if;
             end Enable_Denormals_Are_Zero;
           Asm(
+            Volatile => True,
+            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+            Template =>
             -----------------------------------------
             " stmxcsr (%%eax)          " & END_LINE &
             " movl    (%%eax), %%ebx   " & END_LINE &
             " or      $0x8000, %%ebx   " & END_LINE &
             " movl    %%ebx,   (%%eax) " & END_LINE &
-            " ldmxcsr (%%eax)          " & END_LINE ,
+            " ldmxcsr (%%eax)          " & END_LINE );
             -----------------------------------------
-            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
-            Volatile => True);
         end if;
         ---------------
         Set_Exceptions:
@@ -321,33 +325,35 @@ package body Implementation_For_Architecture
             end if;
             if Is_Enabled(INTEL_FXSR) then
               Asm(
+                Volatile => True,
+                Inputs   =>(
+                  Address           'Asm_Input(TO_EAX, Data'Address),
+                  Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)),
+                Template =>
                 ---------------------------------------------
                 " stmxcsr (%%eax)              " & END_LINE &
                 " movl    (%%eax),     %%ebx   " & END_LINE &
                 " and     $0xffffe07f, %%ebx   " & END_LINE &
                 " or      %%ecx,       %%ebx   " & END_LINE &
                 " movl    %%ebx,       (%%eax) " & END_LINE &
-                " ldmxcsr (%%eax)              " & END_LINE ,
+                " ldmxcsr (%%eax)              " & END_LINE );
                 ---------------------------------------------
-                Volatile => True,
-                Inputs   =>(
-                  Address           'Asm_Input(TO_EAX, Data'Address),
-                  Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)));
             end if;
             Exception_Mask := Shift_Right(Exception_Mask, 7);
             Asm(
+              Volatile => True,
+              Inputs   =>(
+                Address           'Asm_Input(TO_EAX, Other_Data'Address),
+                Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)),
+              Template =>
               ----------------------------------------
               " fnstcw (%%eax)          " & END_LINE &
               " movw   (%%eax), %%bx    " & END_LINE &
               " and    $0xffc0, %%bx    " & END_LINE &
               " or     %%cx,    %%bx    " & END_LINE &
               " movw   %%bx,    (%%eax) " & END_LINE &
-              " fldcw  (%%eax)          " & END_LINE ,
+              " fldcw  (%%eax)          " & END_LINE );
               ----------------------------------------
-              Volatile => True,
-              Inputs   =>(
-                Address           'Asm_Input(TO_EAX, Other_Data'Address),
-                Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)));
           end Set_Exceptions;
       end Initialize;
   -------------------
