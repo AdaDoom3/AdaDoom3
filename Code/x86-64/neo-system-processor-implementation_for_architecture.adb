@@ -143,9 +143,9 @@ package body Implementation_For_Architecture
       A, B, C, D : Integer_4_Unsigned := 0;
       begin
         Asm(
-          Template => "cpuid",
           Volatile => True,
           Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, Function_ID),
+          Template => "cpuid",
           Outputs  =>(
             Integer_4_Unsigned'Asm_Output(FROM_EAX, A),
             Integer_4_Unsigned'Asm_Output(FROM_EBX, B),
@@ -201,9 +201,9 @@ package body Implementation_For_Architecture
       B, D, C : Array_String_Segment := (others => Ascii.Nul);
       begin
         Asm(
-          Template => "cpuid",
           Volatile => True,
           Inputs   => Integer_4_Unsigned'Asm_Input(TO_EAX, 0),
+          Template => "cpuid",
           Outputs  =>(
             Array_String_Segment'Asm_Output(FROM_EBX, B),
             Array_String_Segment'Asm_Output(FROM_ECX, C),
