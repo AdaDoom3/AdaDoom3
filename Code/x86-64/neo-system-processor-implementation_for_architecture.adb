@@ -588,25 +588,24 @@ package body Implementation_For_Architecture
       Result :         Integer_4_Unsigned     := 0;
       Data   : aliased Record_x86_Environment := (others => <>);
       begin
---          Asm(
---            ---------------------------------------------
---            "   fnstenv (%%eax)            " & END_LINE &
---            "   movl    8(%%eax),    %%eax " & END_LINE &
---            "   xor     $0xffffffff, %%eax " & END_LINE &
---            "   and     $0x0000ffff, %%eax " & END_LINE &
---            "   jz      itisempty_1        " & END_LINE &
---            "   movl    $0x00000000, %%eax " & END_LINE &
---            "   jmp     somethingthere_1   " & END_LINE &
---            ---------------------------------------------
---            " itisempty_1:                 " & END_LINE &
---            "   movl    $0x00000001, %%eax " & END_LINE &
---            ---------------------------------------------
---            " somethingthere_1:            " & END_LINE ,
---            ---------------------------------------------
---            Volatile => True,
---            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
---            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
-NULL;
+        Asm(
+          ---------------------------------------------
+          "   fnstenv (%%eax)            " & END_LINE &
+          "   movl    8(%%eax),    %%eax " & END_LINE &
+          "   xor     $0xffffffff, %%eax " & END_LINE &
+          "   and     $0x0000ffff, %%eax " & END_LINE &
+          "   jz      1f                 " & END_LINE &
+          "   movl    $0x00000000, %%eax " & END_LINE &
+          "   jmp     2f                 " & END_LINE &
+          ---------------------------------------------
+          " 1:                           " & END_LINE &
+          "   movl    $0x00000001, %%eax " & END_LINE &
+          ---------------------------------------------
+          " 2:                           " & END_LINE ,
+          ---------------------------------------------
+          Volatile => True,
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+          Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
         return Result /= 0;
     end Is_Stack_Empty;
   -----------------
@@ -615,27 +614,26 @@ NULL;
     procedure Clear_Stack
       is
       Data : aliased Record_x86_Environment := (others => <>);
-    begin
---          Asm(
---            ---------------------------------------------
---            "   fnstenv (%%eax)            " & END_LINE &
---            "   movl    8(%%eax),    %%eax " & END_LINE &
---            "   xor     $0xffffffff, %%eax " & END_LINE &
---            "   movl    $0x0000c000, %%edx " & END_LINE &
---            ---------------------------------------------
---            " doclear_1:                   " & END_LINE &
---            "   movl    %%eax,       %%ecx " & END_LINE &
---            "   and     %%ecx,       %%edx " & END_LINE &
---            "   jz      complete_1         " & END_LINE &
---            "   fstp    %%st               " & END_LINE &
---            "   shr     $2,          %%edx " & END_LINE &
---            "   jmp     doclear_1          " & END_LINE &
---            ---------------------------------------------
---            " complete_1:                  " & END_LINE ,
---            ---------------------------------------------
---            Volatile => True,
---            Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
-NULL;
+      begin
+        Asm(
+          ---------------------------------------------
+          "   fnstenv (%%eax)            " & END_LINE &
+          "   movl    8(%%eax),    %%eax " & END_LINE &
+          "   xor     $0xffffffff, %%eax " & END_LINE &
+          "   movl    $0x0000c000, %%edx " & END_LINE &
+          ---------------------------------------------
+          " 1:                           " & END_LINE &
+          "   movl    %%eax,       %%ecx " & END_LINE &
+          "   and     %%ecx,       %%edx " & END_LINE &
+          "   jz      2f                 " & END_LINE &
+          "   fstp    %%st               " & END_LINE &
+          "   shr     $2,          %%edx " & END_LINE &
+          "   jmp     1b                 " & END_LINE &
+          ---------------------------------------------
+          " 2:                           " & END_LINE ,
+          ---------------------------------------------
+          Volatile => True,
+          Inputs   => Address'Asm_Input(TO_EAX, Data'Address));
       end Clear_Stack;
   ---------------
   -- Put_Trace --
