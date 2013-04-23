@@ -57,15 +57,15 @@ project AdaDoom3 is
   ---------------
   -- Variables --
   ---------------
-    Switch_Debugging_General := "";
-    Switch_Debugging_Binder  := "";
-    Switch_Build_64_Bit      := "";
-    Switch_Builder           := "";
-    Switch_Compiler          := "";
-    Switch_Binder            := "";
-    Switch_Linker            := "";
+    Switch_Debugging_General := ();
+    Switch_Debugging_Binder  := ();
+    Switch_Build_64_Bit      := ();
+    Switch_Builder           := ();
+    Switch_Compiler          := ();
+    Switch_Binder            := ();
+    Switch_Linker            := ();
     Base                     := "Code";
-    Separator                := "";
+    Separator                := "/";
     case SYSTEM is
       when "Windows" => Separator := "\";
 --    when "MacOS"   => Separator := ":";
@@ -75,11 +75,11 @@ project AdaDoom3 is
       when "Yes" =>
         case COMPILER is
           when "GNAT" =>
-            Switch_Debugging_General := "-g"; -- Create extended information in stack traces
-            Switch_Debugging_Binder  := "-E"; -- Store traceback in exceptions
+            Switch_Debugging_General := ("-g"); -- Create extended information in stack traces
+            Switch_Debugging_Binder  := ("-E"); -- Store traceback in exceptions
           when "ObjectAda" =>
-            Switch_Debugging_General := "";
-            Switch_Debugging_Binder  := "";
+            Switch_Debugging_General := ("");
+            Switch_Debugging_Binder  := ("");
         end case;
       when "No"  => null;
     end case;
@@ -87,9 +87,9 @@ project AdaDoom3 is
       when "64-Bit" =>
         case COMPILER is
           when "GNAT" =>
-            Switch_Build_64_Bit := "-m64";    -- Force 64 bit compilation
+            Switch_Build_64_Bit := ("-m64");    -- Force 64 bit compilation
           when "ObjectAda" =>
-            Switch_Build_64_Bit := "";
+            Switch_Build_64_Bit := ("");
         end case;
       when "32-Bit" => null;
     end case;
@@ -97,24 +97,24 @@ project AdaDoom3 is
       when "GNAT" =>
         Switch_Builder :=(
           Switch_Debugging_General,
-          "-j4",                             -- Use four tasks during compilation
-          "-k",                              -- "Keep going", build as far as possible
-          "-C",                              -- Use mapping file
-          "-s");                             -- Recompile if switches are changed
+          "-j4",                               -- Use four tasks during compilation
+          "-k",                                -- "Keep going", build as far as possible
+          "-C",                                -- Use mapping file
+          "-s");                               -- Recompile if switches are changed
         Switch_Compiler :=(
           Switch_Debugging_General,
           Switch_Build_64_Bit,
-          "-O3",                             -- Full optimization and automatic inlining
-          "-gnato",                          -- Enable overflow checking for numerics
-          "-fstack-check",                   -- Generate checks for exceeding the stack
-          "-gnatW8",                         -- Enable unicode identifiers
-          "-gnatE",                          -- Enable dynamic generic elaboration checks
-          "-gnata",                          -- Enable pre and post conditions
-          "-gnat2012");                      -- Enable the Ada 2012 extensions
+          "-O3",                               -- Full optimization and automatic inlining
+          "-gnato",                            -- Enable overflow checking for numerics
+          "-fstack-check",                     -- Generate checks for exceeding the stack
+          "-gnatW8",                           -- Enable unicode identifiers
+          "-gnatE",                            -- Enable dynamic generic elaboration checks
+          "-gnata",                            -- Enable pre and post conditions
+          "-gnat2012");                        -- Enable the Ada 2012 extensions
         Switch_Binder :=(
           Switch_Debugging_Binder);
         Switch_Linker :=(
-          Switch_Debugging_General); 
+          Switch_Debugging_General);
       when "ObjectAda" =>
         Switch_Builder :=(
           Switch_Debugging_General);
@@ -130,7 +130,7 @@ project AdaDoom3 is
   ---------------
   -- Locations --
   ---------------
-    
+
     -- AdaDoom3
     for Source_Dirs use(
       Base,
