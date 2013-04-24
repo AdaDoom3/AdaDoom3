@@ -71,9 +71,9 @@ project AdaDoom3 is
   -- Logic --
   -----------
     case SYSTEM is
-      when "Windows" => Separator := "\";
---    when "MacOS"   => Separator := ":";
-      when "Linux"   => Separator := "/";
+      when "Windows"       => Separator := "\";
+--    when "MacOS"         => Separator := ":";
+      when "Linux" | "SDL" => Separator := "/";
     end case;
     case DEBUGGING is
       when "Yes" =>
