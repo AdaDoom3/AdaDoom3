@@ -19,7 +19,7 @@ with
 use
   Neo.Windows;
 separate(Neo.System.Text)
-package body Implementation_For_Operating_System
+package body Implementation
   is
   ---------------
   -- Constants --
@@ -98,4 +98,4 @@ package body Implementation_For_Operating_System
             return Result;
           end Compose_Result;
       end Get_Clipboard;
-  end Implementation_For_Operating_System;
+  end Implementation;
