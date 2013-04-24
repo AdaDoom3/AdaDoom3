@@ -25,7 +25,7 @@ project AdaDoom3 is
 --    "MacOS",
       "Windows");
     type Option_Processor is(
---    "ARM",
+      "ARM",
       "PowerPC",
       "x86-64");
     type Option_Compiler is(
