@@ -640,7 +640,7 @@ package body Implementation_For_Architecture
             " 1:                           " & END_LINE &
             "   movl    %%eax,       %%ecx " & END_LINE &
             "   and     %%ecx,       %%edx " & END_LINE &
-            "   jz      2f                 " & END_LINE &
+            "   jz      1f                 " & END_LINE &
             "   fstp    %%st               " & END_LINE &
             "   shr     $2,          %%edx " & END_LINE &
             "   jmp     1b                 " & END_LINE &
