@@ -277,7 +277,7 @@ package body Implementation_For_Architecture
               if (Data and 16#20#) /= 0 then
                 Asm(
                   Volatile => True,
-                  Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+                  Inputs   => Access_Integer_4_Unsigned'Asm_Input(TO_EAX, Data'Access),
                   Template =>
                     -----------------------------------------
                     " stmxcsr (%%eax)          " & END_LINE &
@@ -290,7 +290,7 @@ package body Implementation_For_Architecture
             end Enable_Denormals_Are_Zero;
           Asm(
             Volatile => True,
-            Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
+            Inputs   => Access_Integer_4_Unsigned'Asm_Input(TO_EAX, Data'Access),
             Template =>
               -----------------------------------------
               " stmxcsr (%%eax)          " & END_LINE &
