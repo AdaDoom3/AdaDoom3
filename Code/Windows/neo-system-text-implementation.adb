@@ -5,8 +5,8 @@
 --
 --
 --
---
---
+-- After first booting up the clipboard is empty and if Get_Clipboard is called a system call
+-- failure is raised when instead a null string should be returned.
 --
 --
 --
