@@ -183,11 +183,11 @@ package body Implementation_For_Architecture
         return
           Integer_8_Unsigned(
             Shift_Right(
-              Value =>
+              Amount => Integer(Integer_Bit_Field_Element'Last - (Value.End_Bit - Value.Start_Bit)),
+              Value  =>
                 Shift_Left(
-                  Value  => Execute_CPUID(Value.Function_ID, Value.Register),
-                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit)),
-              Amount => Integer(Integer_Bit_Field_Element'Last - (Value.End_Bit - Value.Start_Bit))));
+                  Amount => Integer(Integer_Bit_Field_Element'Last - Value.End_Bit),
+                  Value  => Execute_CPUID(Value.Function_ID, Value.Register))));
       end Get_Value;
   ----------------
   -- Get_Vendor --
@@ -236,17 +236,17 @@ package body Implementation_For_Architecture
           Asm( -- Check for cpuid
             Volatile => True,
             Template =>
-            ------------------------------------------
-            " pushfl                    " & END_LINE & -- Get original extended flags
-            " popl   %%eax              " & END_LINE &
-            " movl   %%eax,       %%ecx " & END_LINE &
-            " xorl   $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
-            " pushl  %%eax              " & END_LINE & -- Save new extended flag value on stack
-            " popfl                     " & END_LINE & -- Replace current value
-            " pushfl                    " & END_LINE & -- Get new extended flags
-            " popl   %%eax              " & END_LINE & -- Store new in EAX register
-            " xorl   %%ecx,       %%eax " & END_LINE , -- Can we toggle the identifier bit?
-            ------------------------------------------
+              ------------------------------------------
+              " pushfl                    " & END_LINE & -- Get original extended flags
+              " popl   %%eax              " & END_LINE &
+              " movl   %%eax,       %%ecx " & END_LINE &
+              " xorl   $0x00200000, %%eax " & END_LINE & -- Flip identifier bit in the extended flags
+              " pushl  %%eax              " & END_LINE & -- Save new extended flag value on stack
+              " popfl                     " & END_LINE & -- Replace current value
+              " pushfl                    " & END_LINE & -- Get new extended flags
+              " popl   %%eax              " & END_LINE & -- Store new in EAX register
+              " xorl   %%ecx,       %%eax " & END_LINE , -- Can we toggle the identifier bit?
+              ------------------------------------------
             Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
           if Data = 0 then -- No we cannot, no cpuid command supported (processor is probably 80486)
             raise CPUID_Is_Not_Supported;
@@ -267,36 +267,36 @@ package body Implementation_For_Architecture
                 Volatile => True,
                 Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
                 Template =>
-                ----------------------------------------
-                " fxsave (%%eax)          " & END_LINE &
-                " movl   28(%%eax), %%ebx " & END_LINE ,
-                ----------------------------------------
+                  ----------------------------------------
+                  " fxsave (%%eax)          " & END_LINE &
+                  " movl   28(%%eax), %%ebx " & END_LINE ,
+                  ----------------------------------------
                 Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data));
               if (Data and 16#20#) /= 0 then
                 Asm(
                   Volatile => True,
                   Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
                   Template =>
-                  -----------------------------------------
-                  " stmxcsr (%%eax)          " & END_LINE &
-                  " movl    (%%eax), %%ebx   " & END_LINE &
-                  " or      $0x40,   %%bx    " & END_LINE &
-                  " movl    %%ebx,   (%%eax) " & END_LINE &
-                  " ldmxcsr (%%eax)          " & END_LINE );
-                  -----------------------------------------
+                    -----------------------------------------
+                    " stmxcsr (%%eax)          " & END_LINE &
+                    " movl    (%%eax), %%ebx   " & END_LINE &
+                    " or      $0x40,   %%bx    " & END_LINE &
+                    " movl    %%ebx,   (%%eax) " & END_LINE &
+                    " ldmxcsr (%%eax)          " & END_LINE );
+                    -----------------------------------------
               end if;
             end Enable_Denormals_Are_Zero;
           Asm(
             Volatile => True,
             Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
             Template =>
-            -----------------------------------------
-            " stmxcsr (%%eax)          " & END_LINE &
-            " movl    (%%eax), %%ebx   " & END_LINE &
-            " or      $0x8000, %%ebx   " & END_LINE &
-            " movl    %%ebx,   (%%eax) " & END_LINE &
-            " ldmxcsr (%%eax)          " & END_LINE );
-            -----------------------------------------
+              -----------------------------------------
+              " stmxcsr (%%eax)          " & END_LINE &
+              " movl    (%%eax), %%ebx   " & END_LINE &
+              " or      $0x8000, %%ebx   " & END_LINE &
+              " movl    %%ebx,   (%%eax) " & END_LINE &
+              " ldmxcsr (%%eax)          " & END_LINE );
+              -----------------------------------------
         end if;
         ---------------
         Set_Exceptions:
@@ -330,14 +330,14 @@ package body Implementation_For_Architecture
                   Address           'Asm_Input(TO_EAX, Data'Address),
                   Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)),
                 Template =>
-                ---------------------------------------------
-                " stmxcsr (%%eax)              " & END_LINE &
-                " movl    (%%eax),     %%ebx   " & END_LINE &
-                " and     $0xffffe07f, %%ebx   " & END_LINE &
-                " or      %%ecx,       %%ebx   " & END_LINE &
-                " movl    %%ebx,       (%%eax) " & END_LINE &
-                " ldmxcsr (%%eax)              " & END_LINE );
-                ---------------------------------------------
+                  ---------------------------------------------
+                  " stmxcsr (%%eax)              " & END_LINE &
+                  " movl    (%%eax),     %%ebx   " & END_LINE &
+                  " and     $0xffffe07f, %%ebx   " & END_LINE &
+                  " or      %%ecx,       %%ebx   " & END_LINE &
+                  " movl    %%ebx,       (%%eax) " & END_LINE &
+                  " ldmxcsr (%%eax)              " & END_LINE );
+                  ---------------------------------------------
             end if;
             Exception_Mask := Shift_Right(Exception_Mask, 7);
             Asm(
@@ -346,14 +346,14 @@ package body Implementation_For_Architecture
                 Address           'Asm_Input(TO_EAX, Other_Data'Address),
                 Integer_4_Unsigned'Asm_Input(TO_ECX, Exception_Mask)),
               Template =>
-              ----------------------------------------
-              " fnstcw (%%eax)          " & END_LINE &
-              " movw   (%%eax), %%bx    " & END_LINE &
-              " and    $0xffc0, %%bx    " & END_LINE &
-              " or     %%cx,    %%bx    " & END_LINE &
-              " movw   %%bx,    (%%eax) " & END_LINE &
-              " fldcw  (%%eax)          " & END_LINE );
-              ----------------------------------------
+                ----------------------------------------
+                " fnstcw (%%eax)          " & END_LINE &
+                " movw   (%%eax), %%bx    " & END_LINE &
+                " and    $0xffc0, %%bx    " & END_LINE &
+                " or     %%cx,    %%bx    " & END_LINE &
+                " movw   %%bx,    (%%eax) " & END_LINE &
+                " fldcw  (%%eax)          " & END_LINE );
+                ----------------------------------------
           end Set_Exceptions;
       end Initialize;
   -------------------
@@ -440,13 +440,13 @@ package body Implementation_For_Architecture
                   Volatile => True,
                   Inputs   => Address'Asm_Input(TO_EAX, Data_From_SIMD'Address),
                   Template =>
-                  ---------------------------------------------
-                  " stmxcsr (%%eax)              " & END_LINE &
-                  " movl    (%%eax),     %%ebx   " & END_LINE &
-                  " and     $0xffffffc0, %%ebx   " & END_LINE &
-                  " movl    %%ebx,       (%%eax) " & END_LINE &
-                  " ldmxcsr (%%eax)              " & END_LINE );
-                  ---------------------------------------------
+                    ---------------------------------------------
+                    " stmxcsr (%%eax)              " & END_LINE &
+                    " movl    (%%eax),     %%ebx   " & END_LINE &
+                    " and     $0xffffffc0, %%ebx   " & END_LINE &
+                    " movl    %%ebx,       (%%eax) " & END_LINE &
+                    " ldmxcsr (%%eax)              " & END_LINE );
+                    ---------------------------------------------
               end if;
               Asm(
                 Volatile => True,
@@ -512,14 +512,14 @@ package body Implementation_For_Architecture
               Address           'Asm_Input(TO_EAX, Data'Address),
               Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)),
             Template =>
-            ---------------------------------------------
-            " stmxcsr (%%eax)              " & END_LINE &
-            " movl    (%%eax),     %%ebx   " & END_LINE &
-            " and     $0xffff9fff, %%ebx   " & END_LINE &
-            " or      %%cx,        %%bx    " & END_LINE &
-            " movl    %%ebx,       (%%eax) " & END_LINE &
-            " ldmxcsr (%%eax)              " & END_LINE );
-            ---------------------------------------------
+              ---------------------------------------------
+              " stmxcsr (%%eax)              " & END_LINE &
+              " movl    (%%eax),     %%ebx   " & END_LINE &
+              " and     $0xffff9fff, %%ebx   " & END_LINE &
+              " or      %%cx,        %%bx    " & END_LINE &
+              " movl    %%ebx,       (%%eax) " & END_LINE &
+              " ldmxcsr (%%eax)              " & END_LINE );
+              ---------------------------------------------
         end if;
         Rounding_Mask := Shift_Right(Rounding_Mask, 3);
         Asm(
@@ -528,14 +528,14 @@ package body Implementation_For_Architecture
             Address           'Asm_Input(TO_EAX, Other_Data'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Rounding_Mask)),
           Template => 
-          ----------------------------------------
-          " fnstcw (%%eax)          " & END_LINE &
-          " movw   (%%eax), %%bx    " & END_LINE &
-          " and    $0xf3ff, %%bx    " & END_LINE &
-          " or     %%cx,    %%bx    " & END_LINE &
-          " movw   %%bx,    (%%eax) " & END_LINE &
-          " fldcw  (%%eax)          " & END_LINE );
-          ----------------------------------------
+            ----------------------------------------
+            " fnstcw (%%eax)          " & END_LINE &
+            " movw   (%%eax), %%bx    " & END_LINE &
+            " and    $0xf3ff, %%bx    " & END_LINE &
+            " or     %%cx,    %%bx    " & END_LINE &
+            " movw   %%bx,    (%%eax) " & END_LINE &
+            " fldcw  (%%eax)          " & END_LINE );
+            ----------------------------------------
       end Set_Rounding;
   -------------------
   -- Set_Precision --
@@ -560,14 +560,14 @@ package body Implementation_For_Architecture
             Address           'Asm_Input(TO_EAX, Blank_Memory'Address),
             Integer_4_Unsigned'Asm_Input(TO_ECX, Precision_Mask)),
           Template => 
-          ----------------------------------------
-          " fnstcw (%%eax)          " & END_LINE &
-          " movw   (%%eax), %%bx    " & END_LINE &
-          " and    $0xfcff, %%bx    " & END_LINE &
-          " or     %%cx,    %%bx    " & END_LINE &
-          " movw   %%bx,    (%%eax) " & END_LINE &
-          " fldcw  (%%eax)          " & END_LINE );
-          ----------------------------------------
+            ----------------------------------------
+            " fnstcw (%%eax)          " & END_LINE &
+            " movw   (%%eax), %%bx    " & END_LINE &
+            " and    $0xfcff, %%bx    " & END_LINE &
+            " or     %%cx,    %%bx    " & END_LINE &
+            " movw   %%bx,    (%%eax) " & END_LINE &
+            " fldcw  (%%eax)          " & END_LINE );
+            ----------------------------------------
       end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
@@ -581,10 +581,10 @@ package body Implementation_For_Architecture
         Asm(
           Volatile => True,
           Template =>
-          ----------------------
-          " cpuid " & END_LINE &
-          " rdtsc " & END_LINE ,
-          ----------------------
+            ----------------------
+            " cpuid " & END_LINE &
+            " rdtsc " & END_LINE ,
+            ----------------------
           Outputs  =>(
             Integer_4_Unsigned'Asm_Output(FROM_EAX, Low_Part),
             Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
@@ -603,20 +603,20 @@ package body Implementation_For_Architecture
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Template => 
-          ---------------------------------------------
-          "   fnstenv (%%eax)            " & END_LINE &
-          "   movl    8(%%eax),    %%eax " & END_LINE &
-          "   xor     $0xffffffff, %%eax " & END_LINE &
-          "   and     $0x0000ffff, %%eax " & END_LINE &
-          "   jz      1f                 " & END_LINE &
-          "   movl    $0x00000000, %%eax " & END_LINE &
-          "   jmp     2f                 " & END_LINE &
-          ---------------------------------------------
-          " 1:                           " & END_LINE &
-          "   movl    $0x00000001, %%eax " & END_LINE &
-          ---------------------------------------------
-          " 2:                           " & END_LINE ,
-          ---------------------------------------------
+            ---------------------------------------------
+            "   fnstenv (%%eax)            " & END_LINE &
+            "   movl    8(%%eax),    %%eax " & END_LINE &
+            "   xor     $0xffffffff, %%eax " & END_LINE &
+            "   and     $0x0000ffff, %%eax " & END_LINE &
+            "   jz      1f                 " & END_LINE &
+            "   movl    $0x00000000, %%eax " & END_LINE &
+            "   jmp     2f                 " & END_LINE &
+            ---------------------------------------------
+            " 1:                           " & END_LINE &
+            "   movl    $0x00000001, %%eax " & END_LINE &
+            ---------------------------------------------
+            " 2:                           " & END_LINE ,
+            ---------------------------------------------
           Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
         return Result /= 0;
     end Is_Stack_Empty;
@@ -631,22 +631,22 @@ package body Implementation_For_Architecture
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Template => 
-          ---------------------------------------------
-          "   fnstenv (%%eax)            " & END_LINE &
-          "   movl    8(%%eax),    %%eax " & END_LINE &
-          "   xor     $0xffffffff, %%eax " & END_LINE &
-          "   movl    $0x0000c000, %%edx " & END_LINE &
-          ---------------------------------------------
-          " 1:                           " & END_LINE &
-          "   movl    %%eax,       %%ecx " & END_LINE &
-          "   and     %%ecx,       %%edx " & END_LINE &
-          "   jz      2f                 " & END_LINE &
-          "   fstp    %%st               " & END_LINE &
-          "   shr     $2,          %%edx " & END_LINE &
-          "   jmp     1b                 " & END_LINE &
-          ---------------------------------------------
-          " 2:                           " & END_LINE );
-          ---------------------------------------------
+            ---------------------------------------------
+            "   fnstenv (%%eax)            " & END_LINE &
+            "   movl    8(%%eax),    %%eax " & END_LINE &
+            "   xor     $0xffffffff, %%eax " & END_LINE &
+            "   movl    $0x0000c000, %%edx " & END_LINE &
+            ---------------------------------------------
+            " 1:                           " & END_LINE &
+            "   movl    %%eax,       %%ecx " & END_LINE &
+            "   and     %%ecx,       %%edx " & END_LINE &
+            "   jz      2f                 " & END_LINE &
+            "   fstp    %%st               " & END_LINE &
+            "   shr     $2,          %%edx " & END_LINE &
+            "   jmp     1b                 " & END_LINE &
+            ---------------------------------------------
+            " 2:                           " & END_LINE );
+            ---------------------------------------------
       end Clear_Stack;
   ---------------
   -- Put_Trace --
