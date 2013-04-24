@@ -97,7 +97,7 @@ project AdaDoom3 is
         end case;
       when "32-Bit" => null;
     end case;
-    case COMPILER is
+    case COMPILER is -- Useful?
       when "GNAT" =>
         Switch_Builder :=
           Switch_Debugging_General &(
