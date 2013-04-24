@@ -20,7 +20,7 @@ project AdaDoom3 is
   -- Options --
   -------------
     type Option_System is(
---    "SDL",
+      "SDL",
       "Linux",
 --    "MacOS",
       "Windows");
@@ -136,7 +136,7 @@ project AdaDoom3 is
   -- Tools --
   -----------
 
-    -- AdaDoom3
+    -- Project
     for Source_Dirs use(
       Base,
       Base & Separator & SYSTEM,
@@ -152,19 +152,19 @@ project AdaDoom3 is
     end Ide;
 
     package Builder is
-      for Default_Switches("ada") use Switch_Builder;
+      for Default_Switches("Ada") use Switch_Builder;
     end Builder;
 
     package Compiler is
-      for Default_Switches("ada") use Switch_Compiler;
+      for Default_Switches("Ada") use Switch_Compiler;
     end Compiler;
 
     package Binder is
-      for Default_Switches("ada") use Switch_Binder;
+      for Default_Switches("Ada") use Switch_Binder;
     end Binder;
 
     package Linker is
-      for Default_Switches("ada") use Switch_Linker;
+      for Default_Switches("Ada") use Switch_Linker;
     end Linker;
 
 end AdaDoom3;
