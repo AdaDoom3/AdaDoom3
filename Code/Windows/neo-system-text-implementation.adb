@@ -90,7 +90,7 @@ package body Implementation
           Result : String_2 := To_String_2(Accessor);
           begin
             if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then 
-              null;--raise System_Call_Failure;
+              null;--raise System_Call_Failure; Why does this fail???
             end if;
             if Close_Clipboard = FAILED then
               raise System_Call_Failure;
