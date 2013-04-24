@@ -55,6 +55,4 @@ private
         function Get_Clipboard
           return String_2;
       end Implementation;
-    package body Implementation 
-      is separate;
   end Neo.System.Text;
