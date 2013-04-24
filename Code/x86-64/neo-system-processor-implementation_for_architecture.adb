@@ -645,7 +645,7 @@ package body Implementation_For_Architecture
             "   shr     $2,          %%edx " & END_LINE &
             "   jmp     1b                 " & END_LINE &
             ---------------------------------------------
-            " 2:                           " & END_LINE );
+            " 1:                           " & END_LINE );
             ---------------------------------------------
       end Clear_Stack;
   ---------------
