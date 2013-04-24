@@ -261,11 +261,13 @@ package body Implementation_For_Architecture
               is array(1..512)
               of Integer_1_Unsigned
               with Alignment => 16;
+            type Access_Array_Save_Area
+              is access all Array_Save_Area;
             Save_Area : aliased Array_Save_Area := (others => 0);
             begin
               Asm(
                 Volatile => True,
-                Inputs   => Address'Asm_Input(TO_EAX, Save_Area'Address),
+                Inputs   => Access_Array_Save_Area'Asm_Input(TO_EAX, Save_Area'Access),
                 Template =>
                   ----------------------------------------
                   " fxsave (%%eax)          " & END_LINE &
