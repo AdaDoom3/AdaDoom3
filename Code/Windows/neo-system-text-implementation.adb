@@ -15,8 +15,12 @@
 --
 --
 with
+  Interfaces,
+  Interfaces.C,
   Neo.Windows;
 use
+  Interfaces,
+  Interfaces.C,
   Neo.Windows;
 separate(Neo.System.Text)
 package body Implementation
@@ -34,17 +38,17 @@ package body Implementation
       Data     : Address                     := NULL_ADDRESS;
       Accessor : Access_Integer_2_Unsigned_C := null;
       begin
-        Data := Global_Allocate(MEMORY_MOVEABLE or MEMORY_DDE_SHARE, (Text'Length + 1) * 2);
+        Data := Global_Allocate(MEMORY_MOVEABLE or MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE, (Text'Length + 1) * 2);
         if Data = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        Accessor := To_Access_Integer_2_Unsigned_C(Global_Lock(Data));
+        Accessor := To_Unchecked_Access_Integer_2_Unsigned_C(Global_Lock(Data));
         if Accessor = null then
           raise System_Call_Failure;
         end if;
         for I in 1..Text'Length loop
           Accessor.All := Integer_2_Unsigned_C(Character_2'Pos(Text(I)));
-          Accessor     := To_Access_Integer_2_Unsigned_C(To_Integer_4_Unsigned(Accessor) + 2);
+          Accessor     := To_Unchecked_Access_Integer_2_Unsigned_C(To_Unchecked_Integer_4_Unsigned(Accessor) + 2);
         end loop;
         Accessor.All := 0;
         if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
@@ -79,7 +83,7 @@ package body Implementation
         if Data = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        Accessor := To_Access_Constant_Character_2_C(Global_Lock(Data));
+        Accessor := To_Unchecked_Access_Constant_Character_2_C(Global_Lock(Data));
         if Accessor = null then
           raise System_Call_Failure;
         end if;
