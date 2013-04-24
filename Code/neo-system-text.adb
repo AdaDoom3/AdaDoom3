@@ -19,7 +19,7 @@ package body Neo.System.Text
   --------------------
   -- Implementation --
   --------------------
-    package body Neo.System.Text.Implementation
+    package body Implementation 
       is separate;
   ----------
   -- Test --
