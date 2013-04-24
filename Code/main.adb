@@ -97,6 +97,7 @@ with
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Generic_Protected,
   Neo.System,
+  Neo.System.Text,
   Neo.System.Memory,
   Neo.System.Processor;
 procedure Main
@@ -105,6 +106,7 @@ procedure Main
     --Neo.Foundation.Text_IO.Test;
     --Neo.Foundation.Package_Testing.Test;
     Neo.System.Test;
+    Neo.System.Text.Test;
     Neo.System.Memory.Test;
     Neo.System.Processor.Initialize;
     Neo.System.Processor.Test;
