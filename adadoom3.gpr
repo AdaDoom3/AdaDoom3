@@ -111,7 +111,7 @@ project AdaDoom3 is
           "-O3",                                -- Full optimization and automatic inlining
           "-gnato",                             -- Enable overflow checking for numerics
           "-fstack-check",                      -- Generate checks for exceeding the stack
-          "-gnatW8",                            -- Enable unicode identifiers
+          "-gnatW8",                            -- Enable unicode identifiers (GPS can't view unicode identifiers)
           "-gnatE",                             -- Enable dynamic generic elaboration checks
           "-gnata",                             -- Enable pre and post conditions
           "-gnat2012");                         -- Enable the Ada 2012 extensions
