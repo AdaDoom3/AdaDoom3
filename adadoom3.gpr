@@ -146,6 +146,13 @@ project AdaDoom3 is
     for Object_Dir  use "Object";
     for Main        use ("main.adb");
 
+  package Naming is
+    for Casing             use "lowercase";
+--  for Dot_Replacement    use ".";
+--  for Spec_Suffix("Ada") use "ads";
+--  for Body_Suffix("Ada") use "adb";
+  end Naming;
+
     -- GPS
     package Ide is
       for Documentation_Dir use "Documentation";
