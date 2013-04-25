@@ -101,6 +101,5 @@ package body Implementation
             end if;
             return Result;
           end Compose_Result;
-      exception when System_Call_Failure => return NULL_STRING_2; -- Hack
       end Get_Clipboard;
   end Implementation;
