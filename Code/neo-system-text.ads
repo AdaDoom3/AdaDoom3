@@ -35,13 +35,6 @@ package Neo.System.Text
 -------
 private
 -------
-  ---------------
-  -- Constants --
-  ---------------
-    MEDIA_NAME_NON_CONFORMANT             : constant String_2    := "|:\";
-    MEDIA_NAME_NON_CONFORMANT_REPLACEMENT : constant Character_1 := '/';
-    MEDIA_NAME_EXTENSION_SEPORATOR        : constant Character_1 := '.';
-    REPLACEMENT_FOR_EXTENDED_CHARACTER    : constant Character_1 := '~'; 
   --------------------
   -- Implementation --
   --------------------
