@@ -32,9 +32,6 @@ package Neo.System.Text
       return String_2;
     procedure Set_Clipboard(
       Text : in String_2);
-    function Create_Media_Name(
-      Item : in String_2)
-      return String_2;
 -------
 private
 -------
