@@ -35,6 +35,9 @@ package Neo.System.Filesystem
   -- Suprograms --
   ----------------
     procedure Test;
+    function Create_Media_Name(
+      Item : in String_2)
+      return String_2;
     function Get_Freespace(
       Path : in String_2)
       return Integer_8_Natural;
