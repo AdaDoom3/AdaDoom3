@@ -1,8 +1,15 @@
 SYSTEM     = Linux
 COMPILER   = GNAT
 PROCESSOR  = x86-64
-OBJ_DIR    = OBJECT
-GMAKE_OPTS = -p -XSystem=$(SYSTEM) -XProcessor=$(PROCESSOR) -XCompiler=$(COMPILER)
+BUILD      = 64-Bit
+OBJ_DIR    = Object
+
+GMAKE_OPTS =               \
+  -p                       \
+  -XSystem=$(SYSTEM)       \
+  -XProcessor=$(PROCESSOR) \
+  -XCompiler=$(COMPILER)   \
+  -XBuild=$(BUILD)
 
 all: build
 
