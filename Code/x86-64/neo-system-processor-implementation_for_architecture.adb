@@ -605,22 +605,14 @@ package body Implementation_For_Architecture
           Volatile => True,
           Inputs   => Address'Asm_Input(TO_EAX, Data'Address),
           Template => 
-            ---------------------------------------------
-            "   fnstenv (%%eax)            " & END_LINE &
-            "   movl    8(%%eax),    %%eax " & END_LINE &
-            "   xor     $0xffffffff, %%eax " & END_LINE &
-            "   and     $0x0000ffff, %%eax " & END_LINE &
-            "   jz      1f                 " & END_LINE &
-            "   movl    $0x00000000, %%eax " & END_LINE &
-            "   jmp     2f                 " & END_LINE &
-            ---------------------------------------------
-            " 1:                           " & END_LINE &
-            "   movl    $0x00000001, %%eax " & END_LINE &
-            ---------------------------------------------
-            " 2:                           " & END_LINE ,
-            ---------------------------------------------
+            -------------------------------------------
+            " fnstenv (%%eax)            " & END_LINE &
+            " movl    8(%%eax),    %%eax " & END_LINE &
+            " xor     $0xffffffff, %%eax " & END_LINE &
+            " and     $0x0000ffff, %%eax " & END_LINE ,
+            -------------------------------------------
           Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
-        return Result /= 0;
+        return Result = 0;
     end Is_Stack_Empty;
   -----------------
   -- Clear_Stack --
