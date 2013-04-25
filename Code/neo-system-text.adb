@@ -28,9 +28,9 @@ package body Neo.System.Text
       is
       begin
         Put_Title("TEXT TEST");
-        Put_Line(Create_Media_Name("C:\Program Files\AdaDoom3\main.exe"));
-        Put_Line(Create_Media_Name("/usr/bin/asdf/adadoom3/main.?"));
-        Put_Line(Create_Media_Name(":usr:home:asdf:adadoom3:main"));
+        --Put_Line(Create_Media_Name("C:\Program Files\AdaDoom3\main.exe"));
+        --Put_Line(Create_Media_Name("/usr/bin/asdf/adadoom3/main.?"));
+        --Put_Line(Create_Media_Name(":usr:home:asdf:adadoom3:main"));
         Put_Line(Get_Clipboard);
         Set_Clipboard("Yes");
         Put_Line("But does it work? " & Get_Clipboard & "!");
