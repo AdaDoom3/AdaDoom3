@@ -36,7 +36,7 @@ package body Implementation_For_Architecture
   -------------
     type Integer_Bit_Field_Element
       is new Integer_4_Signed
-      RANGE 0..31;
+      range 0..31;
   ------------------
   -- Enumerations --
   ------------------
