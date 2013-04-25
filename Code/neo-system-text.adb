@@ -36,22 +36,18 @@ package body Neo.System.Text
         Put_Line("But does it work? " & Get_Clipboard & "!");
         Hang_Window;
       end Test;
-  -----------------------
-  -- Create_Media_Name --
-  -----------------------
-    function Create_Media_Name(
-      Item : in String_2)
-      return String_2
-      is
-      begin
-        return "";
-      end Create_Media_Name;
   -------------------
   -- Get_Clipboard --
   -------------------
     function Get_Clipboard
       return String_2
-      renames Implementation.Get_Clipboard;
+      is
+      begin
+        return Implementation.Get_Clipboard;
+      exception
+        when System_Call_Failure =>
+          return NULL_STRING_2;
+      end Get_Clipboard;
   -------------------
   -- Set_Clipboard --
   -------------------
