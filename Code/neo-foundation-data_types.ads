@@ -86,6 +86,8 @@ package Neo.Foundation.Data_Types
   -------------
   -- Numbers --
   -------------
+    type Integer_Address
+      is mod Memory_Size;
     subtype Character_1_C
       is Interfaces.C.Char;
     subtype Character_1
@@ -465,11 +467,9 @@ package Neo.Foundation.Data_Types
     procedure Finalize
       is new Ada.Unchecked_Deallocation(String_2, Access_String_2);
     function To_Unchecked_Address
-      is new Ada.Unchecked_Conversion(Integer_4_Unsigned_C, Address);
-    function To_Unchecked_Address  
-      is new Ada.Unchecked_Conversion(Integer_4_Signed, Address);
+      is new Ada.Unchecked_Conversion(Integer_Address, Address);
     function To_Unchecked_Address
-      is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Address);
+      is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Address);
     function To_Unchecked_Access_Character_1_C
       is new Ada.Unchecked_Conversion(Address, Access_Character_1_C);
     function To_Unchecked_Access_Character_2_C
@@ -478,32 +478,32 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_1_C);
     function To_Unchecked_Access_Constant_Character_2_C
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_2_C);
-    function To_Unchecked_Access_Constant_Character_2_C
-      is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Access_Constant_Character_2_C);
+    function To_Unchecked_Access_Constant_Character_2_C --
+      is new Ada.Unchecked_Conversion(Integer_Address, Access_Constant_Character_2_C);
     function To_Unchecked_Access_Integer_2_Unsigned_C
       is new Ada.Unchecked_Conversion(Address, Access_Integer_2_Unsigned_C);
-    function To_Unchecked_Access_Integer_2_Unsigned_C
-      is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Access_Integer_2_Unsigned_C);
+    function To_Unchecked_Access_Integer_2_Unsigned_C --
+      is new Ada.Unchecked_Conversion(Integer_Address, Access_Integer_2_Unsigned_C);
     function To_Unchecked_Access_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Address, Access_Integer_4_Unsigned);
     function To_Unchecked_Float_4_Real
       is new Ada.Unchecked_Conversion(Float_4_Real, Integer_4_Unsigned);
     function To_Unchecked_Integer_2_Signed
       is new Ada.Unchecked_Conversion(Integer_2_Unsigned, Integer_2_Signed);
-    function To_Unchecked_Integer_4_Signed_C     
+    function To_Unchecked_Integer_4_Signed_C      --
       is new Ada.Unchecked_Conversion(Address, Integer_4_Signed_C);
-    function To_Unchecked_Integer_4_Signed
-      is new Ada.Unchecked_Conversion(Address, Integer_4_Signed);
+    function To_Unchecked_Integer_Address --
+      is new Ada.Unchecked_Conversion(Address, Integer_Address);
+    function To_Unchecked_Integer_Address --
+      is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
+    function To_Unchecked_Integer_Address --
+      is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Signed
       is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Integer_4_Signed);
-    function To_Unchecked_Integer_4_Unsigned_C
-      is new Ada.Unchecked_Conversion(Address, Integer_4_Unsigned_C);
-    function To_Unchecked_Integer_4_Unsigned
-      is new Ada.Unchecked_Conversion(Address, Integer_4_Unsigned);
-    function To_Unchecked_Integer_4_Unsigned
-      is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_4_Unsigned);
-    function To_Unchecked_Integer_4_Unsigned
-      is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_4_Unsigned);
+    function To_Unchecked_Integer_4_Address --
+      is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
+    function To_Unchecked_Integer_4_Address --
+      is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Integer_4_Unsigned);
     function To_Unchecked_Integer_4_Unsigned
