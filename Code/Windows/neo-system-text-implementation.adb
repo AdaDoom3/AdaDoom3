@@ -17,6 +17,7 @@
 with
   Interfaces,
   Interfaces.C,
+  Ada.Unchecked_Conversion,
   Neo.Windows;
 use
   Interfaces,
@@ -35,22 +36,33 @@ package body Implementation
     procedure Set_Clipboard(
       Text : in String_2)
       is
-      Data     : Address                     := NULL_ADDRESS;
-      Accessor : Access_Integer_2_Unsigned_C := null;
+      type Array_Text
+        is array(Text'First..Text'Last + 1)
+  of Character_2_C;
+      type Access_Array_Text
+        is access all Array_Text;
+      function To_Unchecked_Access_Array_Text
+        is new Ada.Unchecked_Conversion(Address, Access_Array_Text);
+      Data     : Address           := NULL_ADDRESS;
+      Accessor : Access_Array_Text := null;
       begin
-        Data := Global_Allocate(MEMORY_MOVEABLE or MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE, (Text'Length + 1) * 2);
+        Data :=
+	  Global_Allocate(
+	    Flags => MEMORY_MOVEABLE or MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE,
+	    Bytes => Array_Text'Size / Byte'Size);
         if Data = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        Accessor := To_Unchecked_Access_Integer_2_Unsigned_C(Global_Lock(Data));
+        Accessor := To_Unchecked_Access_Array_Text(Global_Lock(Data));
         if Accessor = null then
           raise System_Call_Failure;
         end if;
-        for I in 1..Text'Length loop
-          Accessor.All := Integer_2_Unsigned_C(Character_2'Pos(Text(I)));
-          Accessor     := To_Unchecked_Access_Integer_2_Unsigned_C(To_Unchecked_Integer_Address(Accessor) + 2);
+        for I in Text'Range loop
+          Accessor(I) := Character_2_C'Val(Character_2'Pos(Text(I)));
+	  if I = Text'Last then
+	    Accessor(I + 1) := Character_2_C'Val(Character_2'Pos(NULL_CHARACTER_2));
+	  end if;
         end loop;
-        Accessor.All := 0;
         if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
           raise System_Call_Failure;
         end if;
@@ -93,7 +105,7 @@ package body Implementation
           declare
           Result : String_2 := To_String_2(Accessor);
           begin
-            if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then 
+            if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
               null;--raise System_Call_Failure; Why does this fail???
             end if;
             if Close_Clipboard = FAILED then
