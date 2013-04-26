@@ -60,7 +60,7 @@ package body Implementation
         for I in Text'Range loop
           Accessor(I) := Character_2_C'Val(Character_2'Pos(Text(I)));
 	  if I = Text'Last then
-	    Accessor(I + 1) := Character_2_C'Val(Character_2'Pos(NULL_CHARACTER_2));
+	    Accessor(I + 1) := Character_2_C'Val(0);
 	  end if;
         end loop;
         if Global_Unlock(Data) /= 0 then
