@@ -7,7 +7,7 @@
 --  GLbyte            Win32_CHAR   Character_1_C
 --  GLshort           Win32_SHORT  Integer_2_Signed_C
 --  GLint             Win32_LONG   Integer_4_Signed_C
---  GLsizei           Win32_LONG   Integer_4_Signed_C  
+--  GLsizei           Win32_LONG   Integer_4_Signed_C
 --  GLubyte           Win32_BYTE   Integer_1_Unsigned_C
 --  GLushort          Win32_USHORT Integer_2_Unsigned_C
 --  GLuint            Win32_UINT   Integer_4_Unsigned_C
@@ -126,7 +126,7 @@ package Neo.Foundation.Data_Types
       is Interfaces.C.Unsigned;
     subtype Integer_4_Unsigned
       is Unsigned_32;
-    subtype Integer_4_Signed_C 
+    subtype Integer_4_Signed_C
       is Interfaces.C.Int;
     subtype Integer_4_Signed
       is Integer;
@@ -192,7 +192,7 @@ package Neo.Foundation.Data_Types
       is Wide_String;
     subtype String_1_C
       is Interfaces.C.Char_Array;
-    subtype String_2_C      
+    subtype String_2_C
       is Interfaces.C.WChar_Array;
   ---------------
   -- Accessors --
@@ -288,7 +288,7 @@ package Neo.Foundation.Data_Types
     type Array_Integer_4_Unsigned
       is array(Positive range <>)
       of Integer_4_Unsigned;
-    type Array_Integer_4_Signed_C 
+    type Array_Integer_4_Signed_C
       is array(Positive range <>)
       of Integer_4_Signed_C ;
     type Array_Integer_4_Signed
@@ -403,7 +403,7 @@ package Neo.Foundation.Data_Types
       is access all Array_Integer_4_Unsigned_C;
     type Access_Array_Integer_4_Unsigned
       is access all Array_Integer_4_Unsigned;
-    type Access_Array_Integer_4_Signed_C 
+    type Access_Array_Integer_4_Signed_C
       is access all Array_Integer_4_Signed_C;
     type Access_Array_Integer_4_Signed
       is access all Array_Integer_4_Signed;
@@ -478,11 +478,11 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_1_C);
     function To_Unchecked_Access_Constant_Character_2_C
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_2_C);
-    function To_Unchecked_Access_Constant_Character_2_C --
+    function To_Unchecked_Access_Constant_Character_2_C 
       is new Ada.Unchecked_Conversion(Integer_Address, Access_Constant_Character_2_C);
     function To_Unchecked_Access_Integer_2_Unsigned_C
       is new Ada.Unchecked_Conversion(Address, Access_Integer_2_Unsigned_C);
-    function To_Unchecked_Access_Integer_2_Unsigned_C --
+    function To_Unchecked_Access_Integer_2_Unsigned_C 
       is new Ada.Unchecked_Conversion(Integer_Address, Access_Integer_2_Unsigned_C);
     function To_Unchecked_Access_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Address, Access_Integer_4_Unsigned);
@@ -490,57 +490,52 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Float_4_Real, Integer_4_Unsigned);
     function To_Unchecked_Integer_2_Signed
       is new Ada.Unchecked_Conversion(Integer_2_Unsigned, Integer_2_Signed);
-    function To_Unchecked_Integer_4_Signed_C      --
-      is new Ada.Unchecked_Conversion(Address, Integer_4_Signed_C);
-    function To_Unchecked_Integer_Address --
+    function To_Unchecked_Integer_Address 
       is new Ada.Unchecked_Conversion(Address, Integer_Address);
-    function To_Unchecked_Integer_Address --
+    function To_Unchecked_Integer_Address 
       is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
-    function To_Unchecked_Integer_Address --
+    function To_Unchecked_Integer_Address 
       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Signed
       is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Integer_4_Signed);
-    function To_Unchecked_Integer_4_Address --
+    function To_Unchecked_Integer_4_Address 
       is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
-    function To_Unchecked_Integer_4_Address --
+    function To_Unchecked_Integer_4_Address 
       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Integer_4_Unsigned);
     function To_Unchecked_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Float_4_Real, Integer_4_Unsigned);
-    function To_Integer_4_Signed_C(
-      Item : in String_1_C) 
-      return Integer_4_Signed_C;
     function To_Access_Character_1_C(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return Access_Character_1_C;
     function To_Access_Character_2_C(
       Item : in String_2)
       return Access_Character_2_C;
     function To_Access_Constant_Character_1_C(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return Access_Constant_Character_1_C;
     function To_Access_Constant_Character_2_C(
       Item : in String_2)
       return Access_Constant_Character_2_C;
     function To_String_1_C(
-      Item : in String_1) 
+      Item : in String_1)
       return String_1_C;
     function To_String_1_C(
-      Item : in String_2) 
+      Item : in String_2)
       return String_1_C;
     function To_String_1(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return String_1;
     function To_String_1(
-      Item : in String_2) 
+      Item : in String_2)
       return String_1;
     function To_String_2_C(
       Item : in String_2)
       return String_2_C;
     function To_String_2(
       Item : in String_1_C)
-      return String_2;      
+      return String_2;
     function To_String_2(
       Item : in String_1)
       return String_2;
