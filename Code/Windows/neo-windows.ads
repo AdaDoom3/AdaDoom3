@@ -32,9 +32,9 @@ package Neo.Windows
   ---------------
   -- Constants --
   ---------------
-    GENERIC_CURSOR                             : constant Address := To_Unchecked_Address(Integer_4_Unsigned_C(16#0000_7F00#));
-    GENERIC_ICON                               : constant Address := To_Unchecked_Address(Integer_4_Unsigned_C(16#0000_7F00#));
-    BRUSH_GRAY                                 : constant Address := To_Unchecked_Address(Integer_4_Unsigned_C(16#0000_0011#));
+    GENERIC_CURSOR                             : constant Address              := To_Unchecked_Address(16#0000_7F00#);
+    GENERIC_ICON                               : constant Address              := To_Unchecked_Address(16#0000_7F00#);
+    BRUSH_GRAY                                 : constant Address              := To_Unchecked_Address(16#0000_0011#);
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0_0#; -- ???
     STOP_READING_TOP_LEVEL_DEVICES             : constant Integer_4_Unsigned_C := 16#0000_0001#;
     TAKE_INPUT_ON_NON_ACTIVE                   : constant Integer_4_Unsigned_C := 16#0000_0100#;
