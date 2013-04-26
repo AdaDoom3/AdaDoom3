@@ -118,7 +118,7 @@ project AdaDoom3 is
         Switch_Binder :=
           Switch_Debugging_Binder;
         Switch_Linker :=
-          Switch_Debugging_General &(
+          (--Switch_Debugging_General &(
           "-fprofile-generate");                -- Generate code coverage
       when "ObjectAda" =>
         Switch_Builder :=
