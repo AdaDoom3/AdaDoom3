@@ -75,13 +75,13 @@ package body Implementation
       begin
         null;
       end Execute_Application;
-  --------------------------------------
-  -- Is_Running_In_64_Bit_Environment --
-  --------------------------------------
-    function Is_Running_In_64_Bit_Environment
+  -----------------------------------------------
+  -- Is_Running_In_Emulated_32_Bit_Environment --
+  -----------------------------------------------
+    function Is_Running_In_Emulated_32_Bit_Environment
       return Boolean
       is
       begin
         return False;
-      end Is_Running_In_64_Bit_Environment;
+      end Is_Running_In_Emulated_32_Bit_Environment;
   end Implementation;
