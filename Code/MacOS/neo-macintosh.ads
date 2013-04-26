@@ -14,6 +14,6 @@
 --
 --
 --
-package Neo.MacOS
+package Neo.Macintosh
   is
-  end Neo.MacOS;
+  end Neo.Macintosh;
