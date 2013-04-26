@@ -57,11 +57,9 @@ package body Implementation
         if Accessor = null then
           raise System_Call_Failure;
         end if;
+        Accessor(Accessor.All'Last) := Character_2_C'Val(0);
         for I in Text'Range loop
           Accessor(I) := Character_2_C'Val(Character_2'Pos(Text(I)));
-	  if I = Text'Last then
-	    Accessor(I + 1) := Character_2_C'Val(0);
-	  end if;
         end loop;
         if Global_Unlock(Data) /= 0 then
           raise System_Call_Failure;
