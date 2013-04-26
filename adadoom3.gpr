@@ -144,19 +144,19 @@ project AdaDoom3 is
       Base & Separator & PROCESSOR);
     for Exec_Dir    use ".";
     for Object_Dir  use "Object";
-    for Main        use ("main.adb");
-
-  package Naming is
-    for Casing             use "lowercase";
---  for Dot_Replacement    use ".";
---  for Spec_Suffix("Ada") use "ads";
---  for Body_Suffix("Ada") use "adb";
-  end Naming;
+    for Main        use ("adadoom3.adb");
 
     -- GPS
     package Ide is
       for Documentation_Dir use "Documentation";
     end Ide;
+
+    package Naming is
+      for Casing             use "Lowercase";
+  --  for Dot_Replacement    use ".";
+      for Spec_Suffix("Ada") use "ads";
+      for Body_Suffix("Ada") use "adb";
+    end Naming;
 
     package Builder is
       for Default_Switches("Ada") use Switch_Builder;
