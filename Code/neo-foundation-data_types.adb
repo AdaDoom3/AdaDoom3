@@ -167,11 +167,13 @@ package body Neo.Foundation.Data_Types
       Length  : Integer_4_Signed              := 0;
       Pointer : Access_Constant_Character_2_C := Item;
       begin
+        return "";
         while Pointer.All /= WChar_T'Val(0) loop
           Length  := Length + 1;
           Pointer :=
             To_Unchecked_Access_Constant_Character_2_C(
-              To_Unchecked_Integer_4_Unsigned(Pointer) + Character_2_C'Size / 8);
+              To_Unchecked_Address(
+                To_Unchecked_Integer_Address(Pointer) + Character_2_C'Size / Byte'Size));
         end loop;
         --------------
         Create_Result:
@@ -183,8 +185,9 @@ package body Neo.Foundation.Data_Types
             for I in 1..Result'Length loop
               Result(I) := Character_2(Pointer.All);
               Pointer   :=
-               To_Unchecked_Access_Constant_Character_2_C(
-                 To_Unchecked_Integer_4_Unsigned(Pointer) + Character_2_C'Size / 8);
+                To_Unchecked_Access_Constant_Character_2_C(
+                  To_Unchecked_Address(
+                    To_Unchecked_Integer_Address(Pointer) + Character_2_C'Size / Byte'Size));
             end loop;
             return Result;
           end Create_Result;
