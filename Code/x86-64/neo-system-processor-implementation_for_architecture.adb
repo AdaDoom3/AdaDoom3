@@ -232,7 +232,9 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if Address'Size = 32 then
+        if Memory_Size < 32 then
+          raise CPUID_Is_Not_Supported;
+        elsif Memory_Size = 32 then
           Asm( -- Check for cpuid
             Volatile => True,
             Template =>
