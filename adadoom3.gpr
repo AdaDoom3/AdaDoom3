@@ -153,9 +153,9 @@ project AdaDoom3 is
 
     package Naming is
       for Casing             use "Lowercase";
-  --  for Dot_Replacement    use ".";
-      for Spec_Suffix("Ada") use "ads";
-      for Body_Suffix("Ada") use "adb";
+--    for Dot_Replacement    use ".";
+--    for Spec_Suffix("Ada") use ".ads";
+--    for Body_Suffix("Ada") use ".adb";
     end Naming;
 
     package Builder is
