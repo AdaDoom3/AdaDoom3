@@ -210,7 +210,7 @@ package body Implementation_For_Architecture
             Array_String_Segment'Asm_Output(FROM_EDX, D)));
         return(
           if String_1(B) & String_1(D) & String_1(C) = VENDOR_INTEL then
-            Intel_Vendor;
+            Intel_Vendor
           else
             Advanced_Micro_Devices_Vendor);
       end Get_Vendor;
