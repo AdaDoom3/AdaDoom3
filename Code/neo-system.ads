@@ -151,7 +151,7 @@ package Neo.System
       Macintosh : in Enumerated_Macintosh_System;
       Windows   : in Enumerated_Windows_System)
       return Boolean;
-    function Is_Running_In_64_Bit_Environment
+    function Is_Running_In_Emulated_32_Bit_Environment
       return Boolean;
 -------
 private
@@ -161,7 +161,7 @@ private
   --------------------
     package Implementation
       is
-        function Is_Running_In_64_Bit_Environment
+        function Is_Running_In_Emulated_32_Bit_Environment
           return Boolean;
         function Get_Language
           return Enumerated_Language;
