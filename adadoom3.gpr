@@ -22,7 +22,7 @@ project AdaDoom3 is
     type Option_System is(
       "SDL",
       "Linux",
---    "MacOS",
+      "Macintosh",
       "Windows");
     type Option_Processor is(
       "ARM",
@@ -72,7 +72,7 @@ project AdaDoom3 is
   -----------
     case SYSTEM is
       when "Windows"       => Separator := "\";
---    when "MacOS"         => Separator := ":";
+      when "Macintosh"     => Separator := ":";
       when "Linux" | "SDL" => Separator := "/";
     end case;
     case DEBUGGING is
