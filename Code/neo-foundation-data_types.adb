@@ -13,7 +13,7 @@
 --
 --
 --
---                                                                                                                
+--
 package body Neo.Foundation.Data_Types
   is
   -----------------------------
@@ -38,7 +38,7 @@ package body Neo.Foundation.Data_Types
   -- To_Access_Character_1_C --
   -----------------------------
     function To_Access_Character_1_C(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return Access_Character_1_C
       is
       begin
@@ -72,34 +72,24 @@ package body Neo.Foundation.Data_Types
         return To_Access_Constant_Character_2_C(To_C(Item));
       end To_Access_Constant_Character_2_C;
     function To_Access_Constant_Character_1_C(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return Access_Constant_Character_1_C
       is
       begin
         return To_Unchecked_Access_Constant_Character_1_C(Item(Item'First)'Address);
       end To_Access_Constant_Character_1_C;
-  ---------------------------
-  -- To_Integer_4_Signed_C --
-  ---------------------------
-    function To_Integer_4_Signed_C(
-      Item : in String_1_C) 
-      return Integer_4_Signed_C
-      is
-      begin
-        return To_Unchecked_Integer_4_Signed_C(Item(Item'First)'Address);
-      end To_Integer_4_Signed_C;
   -------------------
   -- To_String_1_C --
   -------------------
     function To_String_1_C(
-      Item : in String_1) 
+      Item : in String_1)
       return String_1_C
       is
       begin
         return To_C(Item);
       end To_String_1_C;
     function To_String_1_C(
-      Item : in String_2) 
+      Item : in String_2)
       return String_1_C
       is
       begin
@@ -109,14 +99,14 @@ package body Neo.Foundation.Data_Types
   -- To_String_1 --
   -----------------
     function To_String_1(
-      Item : in String_1_C) 
+      Item : in String_1_C)
       return String_1
       is
       begin
         return "";
       end To_String_1;
     function To_String_1(
-      Item : in String_2) 
+      Item : in String_2)
       return String_1
       is
       begin
@@ -167,13 +157,12 @@ package body Neo.Foundation.Data_Types
       Length  : Integer_4_Signed              := 0;
       Pointer : Access_Constant_Character_2_C := Item;
       begin
-        return "";
         while Pointer.All /= WChar_T'Val(0) loop
           Length  := Length + 1;
           Pointer :=
             To_Unchecked_Access_Constant_Character_2_C(
               To_Unchecked_Address(
-                To_Unchecked_Integer_Address(Pointer) + Character_2_C'Size / Byte'Size));
+                To_Unchecked_Integer_Address(Pointer) +Character_2_C'Size / Byte'Size));
         end loop;
         --------------
         Create_Result:
