@@ -175,24 +175,21 @@ package body Implementation_For_Operating_System
             Registry_Query_Value(
               Key        => Key,
               Value_Name => To_String_2_C("~MHz"),
-              Reserved   => NULL_ADDRESS,
-              Kind       => NULL_ADDRESS,
               Data       => Speed'Address,
-              Data_Size  => Length'Address) /= NO_ERROR and then
+              Data_Size  => Length'Address,
+              others     => NULL_ADDRESS) /= NO_ERROR and then
             Registry_Query_Value(
               Key        => Key,
               Value_Name => To_String_2_C("~Mhz"),
-              Reserved   => NULL_ADDRESS,
-              Kind       => NULL_ADDRESS,
               Data       => Speed'Address,
-              Data_Size  => Length'Address) /= NO_ERROR and then
+              Data_Size  => Length'Address,
+              others     => NULL_ADDRESS) /= NO_ERROR and then
             Registry_Query_Value(
               Key        => Key,
               Value_Name => To_String_2_C("~mhz"),
-              Reserved   => NULL_ADDRESS,
-              Kind       => NULL_ADDRESS,
               Data       => Speed'Address,
-              Data_Size  => Length'Address) /= NO_ERROR
+              Data_Size  => Length'Address,
+              others     => NULL_ADDRESS) /= NO_ERROR
             then
               Do_Raise := True;
             end if;
