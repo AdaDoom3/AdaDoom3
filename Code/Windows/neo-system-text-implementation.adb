@@ -63,7 +63,7 @@ package body Implementation
 	    Accessor(I + 1) := Character_2_C'Val(Character_2'Pos(NULL_CHARACTER_2));
 	  end if;
         end loop;
-        if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
+        if Global_Unlock(Data) /= 0 then
           raise System_Call_Failure;
         end if;
         if Open_Clipboard(NULL_ADDRESS) = FAILED and then Global_Free(Data) /= NULL_ADDRESS then
@@ -105,7 +105,7 @@ package body Implementation
           declare
           Result : String_2 := To_String_2(Accessor);
           begin
-            if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
+            if Global_Unlock(Data) /= 0 then
               null;--raise System_Call_Failure; Why does this fail???
             end if;
             if Close_Clipboard = FAILED then
