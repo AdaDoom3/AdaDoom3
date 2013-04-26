@@ -208,10 +208,11 @@ package body Implementation_For_Architecture
             Array_String_Segment'Asm_Output(FROM_EBX, B),
             Array_String_Segment'Asm_Output(FROM_ECX, C),
             Array_String_Segment'Asm_Output(FROM_EDX, D)));
-        if String_1(B) & String_1(D) & String_1(C) = VENDOR_INTEL then
-          return Intel_Vendor;
-        end if;
-        return Advanced_Micro_Devices_Vendor;
+        return(
+          if String_1(B) & String_1(D) & String_1(C) = VENDOR_INTEL
+            Intel_Vendor;
+          else
+            Advanced_Micro_Devices_Vendor);
       end Get_Vendor;
   -------------------------
   -- Get_Number_Of_Cores --
