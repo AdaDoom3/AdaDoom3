@@ -53,18 +53,18 @@ package body Neo.System
         -- end if;
         return True;
       end Is_Newer_Than;
-  --------------------------------------
-  -- Is_Running_In_64_Bit_Environment --
-  --------------------------------------
-    function Is_Running_In_64_Bit_Environment
+  -----------------------------------------------
+  -- Is_Running_In_Emulated_32_Bit_Environment --
+  -----------------------------------------------
+    function Is_Running_In_Emulated_32_Bit_Environment
       return Boolean
       is
       begin
         if Address'Size = 64 THEN
           return True;
         end if;
-        return Implementation.Is_Running_In_64_Bit_Environment;
-      end Is_Running_In_64_Bit_Environment;
+        return Implementation.Is_Running_In_Emulated_32_Bit_Environment;
+      end Is_Running_In_Emulated_32_Bit_Environment;
   ------------------
   -- Get_Language --
   ------------------
