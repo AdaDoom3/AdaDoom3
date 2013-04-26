@@ -48,7 +48,7 @@ package body Implementation
         end if;
         for I in 1..Text'Length loop
           Accessor.All := Integer_2_Unsigned_C(Character_2'Pos(Text(I)));
-          Accessor     := To_Unchecked_Access_Integer_2_Unsigned_C(To_Unchecked_Integer_4_Unsigned(Accessor) + 2);
+          Accessor     := To_Unchecked_Access_Integer_2_Unsigned_C(To_Unchecked_Integer_Address(Accessor) + 2);
         end loop;
         Accessor.All := 0;
         if Global_Unlock(Data) /= Integer_4_Signed_C(NO_ERROR) then
