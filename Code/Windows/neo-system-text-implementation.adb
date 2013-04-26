@@ -38,7 +38,7 @@ package body Implementation
       is
       type Array_Text
         is array(Text'First..Text'Last + 1)
-  of Character_2_C;
+        of Character_2_C;
       type Access_Array_Text
         is access all Array_Text;
       function To_Unchecked_Access_Array_Text
