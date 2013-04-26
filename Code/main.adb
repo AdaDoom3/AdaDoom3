@@ -136,7 +136,7 @@ with
   Neo.System.Text,
   Neo.System.Memory,
   Neo.System.Processor;
-procedure AdaDoom3
+procedure Main
   is
   begin
     --Neo.Foundation.Text_IO.Test;
@@ -146,4 +146,4 @@ procedure AdaDoom3
     Neo.System.Memory.Test;
     Neo.System.Processor.Initialize;
     Neo.System.Processor.Test;
-  end AdaDoom3;
+  end Main;
