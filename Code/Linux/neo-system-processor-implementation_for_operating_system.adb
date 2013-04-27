@@ -23,6 +23,17 @@ use
 separate(Neo.System.Processor)
 package body Implementation_For_Operating_System
   is
+
+  --  Posix variables
+
+  SC_NPROCESSORS_ONLN : constant := 84;
+
+  -------------
+  -- Sysconf --
+  -------------
+    function Sysconf (Name : Integer) return Long;
+    pragma Import (C, Sysconf, "sysconf");
+
   -------------------------
   -- Get_Number_Of_Cores --
   -------------------------
@@ -30,8 +41,7 @@ package body Implementation_For_Operating_System
       return Integer_8_Unsigned
       is
       begin
-        raise System_Call_Failure;
-        return 0;
+        return Integer_8_Unsigned (Sysconf (Name => SC_NPROCESSORS_ONLN));
       end Get_Number_Of_Cores;
   ---------------------
   -- Get_Clock_Ticks --
