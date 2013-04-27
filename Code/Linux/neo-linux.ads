@@ -25,7 +25,7 @@ package Neo.Linux
   ---------------
   -- Constants --
   ---------------
-    SC_NPROCESSORS_ONLN : constant := 84;
+    SC_NPROCESSORS_ONLN : constant Integer_4_Signed_C := 84;
   -----------------
   -- Subprograms --
   -----------------
