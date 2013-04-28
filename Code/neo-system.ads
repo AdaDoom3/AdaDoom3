@@ -79,12 +79,16 @@ package Neo.System
       Linux_2_8_System,
       Linux_2_9_System,
       Linux_3_System,
+      Linux_3_0_System,
       Linux_3_1_System,
       Linux_3_2_System,
       Linux_3_3_System,
       Linux_3_4_System,
       Linux_3_5_System,
       Linux_3_6_System,
+      Linux_3_7_System,
+      Linux_3_8_System,
+      Linux_3_9_System,
       Windows_System, -- x86-64
       Windows_1_4_A_System,
       Windows_1_4_B_System,
@@ -124,7 +128,7 @@ package Neo.System
       Macintosh_10_8_System);
     subtype Enumerated_Linux_System
       is Enumerated_System
-      range Linux_System..Linux_3_6_System;
+      range Linux_System..Linux_3_9_System;
     subtype Enumerated_Windows_System
       is Enumerated_System
       range Windows_System..Windows_2_6_2_System;
