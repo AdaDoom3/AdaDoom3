@@ -28,14 +28,24 @@ package body Neo.System.Text
       is
       begin
         Put_Title("TEXT TEST");
-        --Put_Line(Create_Media_Name("C:\Program Files\AdaDoom3\main.exe"));
-        --Put_Line(Create_Media_Name("/usr/bin/asdf/adadoom3/main.?"));
-        --Put_Line(Create_Media_Name(":usr:home:asdf:adadoom3:main"));
+        Put_Line("Language: " & Enumerated_Language'Wide_Image(Get_Language));
         Put_Line(Get_Clipboard);
         Set_Clipboard("Yes");
         Put_Line("But does it work? " & Get_Clipboard & "!");
         Hang_Window;
       end Test;
+  ------------------
+  -- Get_Language --
+  ------------------
+    function Get_Language
+      return Enumerated_Language
+      is
+      begin
+        Implementation.Get_Language;
+      exception
+        when System_Call_Failure =>
+          return English_Language;
+      end Get_Language;
   -------------------
   -- Get_Clipboard --
   -------------------
@@ -53,5 +63,11 @@ package body Neo.System.Text
   -------------------
     procedure Set_Clipboard(
       Text : in String_2)
-      renames Implementation.Set_Clipboard;
-  end Neo.System.Text;
+      is
+      begin
+        Implementation.Set_Clipboard;
+      exception
+        when System_Call_Failure =>
+          null;
+      end Set_Clipboard;
+end Neo.System.Text;
