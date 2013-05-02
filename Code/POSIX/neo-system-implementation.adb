@@ -32,8 +32,8 @@ package body Implementation
   ---------------
   -- Constants --
   ---------------
-    SYSTEM_NAME_LINUX     : constant String_2 := "Linux";
-    SYSTEM_NAME_MACINTOSH : constant String_2 := "Darwin";
+    SYSTEM_NAME_LINUX     : constant String_1 := "Linux";
+    SYSTEM_NAME_MACINTOSH : constant String_1 := "Darwin";
   -----------------
   -- Get_Version --
   -----------------
