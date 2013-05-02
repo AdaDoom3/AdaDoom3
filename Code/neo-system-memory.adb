@@ -30,14 +30,15 @@ package body Neo.System.Memory
       begin
         Put_Title("MEMORY TEST");
         Memory := Get_Data;
-        Put_Line("Load"                       & Float_4_Percent'Wide_Image(Memory.Load));
-        Put_Line("Physical_Total"             & Integer_8_Natural'Wide_Image(Memory.Physical_Total));
-        Put_Line("Physical_Available"         & Integer_8_Natural'Wide_Image(Memory.Physical_Available));
-        Put_Line("Page_File_Total"            & Integer_8_Natural'Wide_Image(Memory.Page_File_Total));
-        Put_Line("Page_File_Available"        & Integer_8_Natural'Wide_Image(Memory.Page_File_Available));
-        Put_Line("Virtual_Total"              & Integer_8_Natural'Wide_Image(Memory.Virtual_Total));
-        Put_Line("Virtual_Available"          & Integer_8_Natural'Wide_Image(Memory.Virtual_Available));
-        Put_Line("Virtual_Available_Extended" & Integer_8_Natural'Wide_Image(Memory.Virtual_Available_Extended));
+        Put_Line("Load: "                       & Float_4_Percent'Wide_Image(Memory.Load));
+        Put_Line("Free space in gigs: "         & Integer_8_Natural'Wide_Image(Memory.Free_Space_In_Gigabytes));
+        Put_Line("Physical_Total: "             & Integer_8_Natural'Wide_Image(Memory.Physical_Total));
+        Put_Line("Physical_Available: "         & Integer_8_Natural'Wide_Image(Memory.Physical_Available));
+        Put_Line("Page_File_Total: "            & Integer_8_Natural'Wide_Image(Memory.Page_File_Total));
+        Put_Line("Page_File_Available: "        & Integer_8_Natural'Wide_Image(Memory.Page_File_Available));
+        Put_Line("Virtual_Total: "              & Integer_8_Natural'Wide_Image(Memory.Virtual_Total));
+        Put_Line("Virtual_Available: "          & Integer_8_Natural'Wide_Image(Memory.Virtual_Available));
+        Put_Line("Virtual_Available_Extended: " & Integer_8_Natural'Wide_Image(Memory.Virtual_Available_Extended));
         Hang_Window;
       end Test;
   ---------------------
@@ -46,29 +47,45 @@ package body Neo.System.Memory
     procedure Set_Byte_Limits(
       Minimum : in Integer_4_Unsigned;
       Maximum : in Integer_4_Unsigned)
-      renames Implementation.Set_Byte_Limits;
+      is
+      begin
+        Implementation.Set_Byte_Limits;
+      exception
+        when System_Call_Failure =>
+          null;
+      end Set_Byte_Limits;
   --------------
   -- Get_Data --
   --------------
     function Get_Data
       return Record_Memory
-      renames Implementation.Get;
+      is
+      begin
+        return Implementation.Get_Data;
+      exception
+        when System_Call_Failure =>
+          return (others => <>);
+      end Set_Byte_Limits;
   ----------
   -- Lock --
   ----------
-    function Lock(
+    procedure Lock(
       Location        : in Address;
       Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean
       renames Implementation.Lock;
   ------------
   -- Unlock --
   ------------
-    function Unlock(
+    procedure Unlock(
       Location        : in Address;
       Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean
-      renames Implementation.Unlock;
+      is
+      begin
+        Implementation.Unlock;
+      exception
+        when System_Call_Failure =>
+          null;
+      end Unlock;
   ----------
   -- Free --
   ----------
