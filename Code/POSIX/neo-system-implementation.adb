@@ -29,6 +29,11 @@ use
 separate(Neo.System)
 package body Implementation
   is
+  ---------------
+  -- Constants --
+  ---------------
+    SYSTEM_NAME_LINUX     : constant String_2 := "Linux";
+    SYSTEM_NAME_MACINTOSH : constant String_2 := "Darwin";
   -----------------
   -- Get_Version --
   -----------------
@@ -40,7 +45,11 @@ package body Implementation
         if Get_Unix_Name(Data'Access) /= SUCCESS then
           raise System_Call_Failure;
         end if;
-        if Data.System(1..5) = "Linux" then
+        if
+        Data.System(
+          Data.System'First..
+          Data.System'First + SYSTEM_NAME_LINUX'Length) = SYSTEM_NAME_LINUX
+        then
           case Data.Version(Data'First) is
             when '2' =>
               case Data.Version(Data'First + 2) is
@@ -65,7 +74,11 @@ package body Implementation
             when others =>
               return Linux_System;
           end case;
-        elsif Data.System(1..6) = "Darwin" then
+        elsif
+        Data.System(
+          Data.System'First..
+          Data.System'First + SYSTEM_NAME_MACINTOSH'Length) = SYSTEM_NAME_MACINTOSH
+        then
           case Data.Version(Data'First) is
             when '8' =>
               case Data.Version(Data'First + 2) is
