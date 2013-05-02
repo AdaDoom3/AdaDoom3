@@ -40,7 +40,7 @@ package Neo.System.Memory -- Memory allocation, all in one place
     type Record_Memory
       is record
         Load                       : Float_4_Percent;
-        Free_Space_Gigabytes       : Integer_8_Natural;
+        Free_Space_In_Gigabytes    : Integer_8_Natural;
         Physical_Total             : Integer_8_Natural;
         Physical_Available         : Integer_8_Natural;
         Page_File_Total            : Integer_8_Natural;
