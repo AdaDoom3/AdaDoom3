@@ -15,7 +15,6 @@
 --
 --
 project AdaDoom3 is
-
   -------------
   -- Options --
   -------------
@@ -27,151 +26,112 @@ project AdaDoom3 is
     type Option_Processor is(
       "ARM",
       "PowerPC",
-      "x86-64");
+      "x86_64");
     type Option_Compiler is(
       "ObjectAda",
       "GNAT");
-    type Option_Safety is(
-      "On",
-      "Some checks",
-      "Off");
     type Option_Build is(
       "32-Bit",
       "64-Bit");
     type Option_Boolean is(
       "Yes",
       "No");
-
   ---------------
-  -- Scenarios --
+  -- Scenarios --  In the GPS GUI scenarios are displayed with the latest External call on top of the widget (like a stack)
   ---------------
-    -- In the GPS GUI scenarios are displayed with the latest External call on top (like a stack)
-    -- Also, the parameters of External cannot contain spaces or punctuation other than a period or dash
-    DEBUGGING : Option_Boolean   := External("Debugging",  "Yes");
-    SAFETY    : Option_Safety    := External("Safety",     "On");
-    BUILD     : Option_Build     := External("Build",      "32-Bit");
-    COMPILER  : Option_Compiler  := External("Compiler",   "GNAT");
-    PROCESSOR : Option_Processor := External("Processor",  "x86-64");
-    SYSTEM    : Option_System    := External("System",     "Windows");
-
-  ---------------
-  -- Variables --
-  ---------------
-    Switch_Debugging_General := ();
-    Switch_Debugging_Binder  := ();
-    Switch_Build_64_Bit      := ();
-    Switch_Builder           := ();
-    Switch_Compiler          := ();
-    Switch_Binder            := ();
-    Switch_Linker            := ();
-    Base                     := "Code";
-    Separator                := "/";
-
-  -----------
-  -- Logic --
-  -----------
+    DEBUGGING : Option_Boolean   := External("Debugging", "Yes");
+    OPTIMIZE  : Option_Boolean   := External("Optimize",  "Yes");
+    SAFETY    : Option_Safety    := External("Safety",    "Yes");
+    BUILD     : Option_Build     := External("Build",     "32-Bit");
+    COMPILER  : Option_Compiler  := External("Compiler",  "GNAT");
+    PROCESSOR : Option_Processor := External("Processor", "x86_64");
+    SYSTEM    : Option_System    := External("System",    "Windows");
+  ----------------
+  -- Filesystem --
+  ----------------
+    Separator := "/";
     case SYSTEM is
       when "Windows"       => Separator := "\";
       when "Macintosh"     => Separator := ":";
       when "Linux" | "SDL" => Separator := "/";
     end case;
-    case DEBUGGING is
-      when "Yes" =>
-        case COMPILER is
-          when "GNAT" =>
-            Switch_Debugging_General := ("-g"); -- Create extended information in stack traces
-            Switch_Debugging_Binder  := ("-E"); -- Store traceback in exceptions
-          when "ObjectAda" =>
-            Switch_Debugging_General := ("");
-            Switch_Debugging_Binder  := ("");
-        end case;
-      when "No"  => null;
+    case SYSTEM is
+      when "Windows" | "SDL" =>
+        for Source_Dirs use
+          Base,
+          Base & Separator & SYSTEM,
+          Base & Separator & COMPILER,
+          Base & Separator & PROCESSOR);
+      when "Linux" | "Macintosh" =>
+        for Source_Dirs use
+          Base,
+          Base & Separator & SYSTEM,
+          Base & Separator & COMPILER,
+          Base & Separator & PROCESSOR,
+          Base & Separator & "POSIX");
     end case;
-    case BUILD is
-      when "64-Bit" =>
-        case COMPILER is
-          when "GNAT" =>
-            Switch_Build_64_Bit := ("-m64");    -- Force 64 bit compilation
-          when "ObjectAda" =>
-            Switch_Build_64_Bit := ("");
-        end case;
-      when "32-Bit" => null;
-    end case;
-    case COMPILER is -- Useful?
-      when "GNAT" =>
-        Switch_Builder :=
-          Switch_Debugging_General &(
-          "-j4",                                -- Use four tasks during compilation
-          "-k",                                 -- "Keep going", build as far as possible
-          "-C",                                 -- Use mapping file
-          "-s");                                -- Recompile if switches are changed
-        Switch_Compiler :=
-          Switch_Debugging_General &
-          Switch_Build_64_Bit &(
-          "-O3",                                -- Full optimization and automatic inlining
-          "-gnato",                             -- Enable overflow checking for numerics
-          "-fstack-check",                      -- Generate checks for exceeding the stack
-          "-gnatW8",                            -- Enable unicode identifiers (GPS can't view unicode identifiers)
-          "-gnatE",                             -- Enable dynamic generic elaboration checks
-          "-gnata",                             -- Enable pre and post conditions
-          "-gnat2012");                         -- Enable the Ada 2012 extensions
-        Switch_Binder :=
-          Switch_Debugging_Binder;
-        Switch_Linker :=
-          Switch_Debugging_General &(
-          "-fprofile-generate");                -- Generate code coverage
-      when "ObjectAda" =>
-        Switch_Builder :=
-          Switch_Debugging_General;
-        Switch_Compiler :=
-          Switch_Debugging_General &
-          Switch_Build_64_Bit;
-        Switch_Binder :=
-          Switch_Debugging_Binder;
-        Switch_Linker :=
-          Switch_Debugging_General;
-    end case;
-
-  -----------
-  -- Tools --
-  -----------
-
-    -- Project
-    for Source_Dirs use(
-      Base,
-      Base & Separator & SYSTEM,
-      Base & Separator & COMPILER,
-      Base & Separator & PROCESSOR);
-    for Exec_Dir    use ".";
-    for Object_Dir  use "Object";
-    for Main        use ("main.adb");
-
-    -- GPS
+    for Exec_Dir             use ".";
+    for Object_Dir           use "Object";
+    for Main                 use ("main.adb");
     package Ide is
-      for Documentation_Dir use "Documentation";
+      for Documentation_Dir  use "Documentation";
     end Ide;
-
     package Naming is
       for Casing             use "Lowercase";
---    for Dot_Replacement    use ".";
---    for Spec_Suffix("Ada") use ".ads";
---    for Body_Suffix("Ada") use ".adb";
-    end Naming;
-
+      for Dot_Replacement    use "-";
+      for Spec_Suffix("Ada") use ".ads";
+      for Body_Suffix("Ada") use ".adb";
+    end Naming;                            
+  --------------
+  -- Switches --
+  --------------
+    Switch_Binder   :=();
+    Switch_Linker   :=(
+      "-fprofile-generate");                                          -- Generate code coverage
+    Switch_Compiler :=(
+      "-gnatW8",                                                      -- Enable unicode identifiers (GPS can't view unicode identifiers)
+      "-gnat2012");                                                   -- Enable the Ada 2012 extensions
+    Switch_Builder  :=(
+      "-j4",                                                          -- Use four tasks during compilation
+      "-k",                                                           -- "Keep going", build as far as possible
+      "-C",                                                           -- Use mapping file
+      "-s");                                                          -- Recompile if switches are changed
+    case OPTIMIZE is
+      when "Yes"    => Switch_Compiler := Switch_Compiler & ("-O3");  -- Full optimization and automatic inlining
+      when "No"     => null;
+    end case;
+    case BUILD is
+      when "64-Bit" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Force 64 bit compilation
+      when "32-Bit" => null;
+    end case;
+    case DEBUGGING is
+      when "Yes" =>
+        Switch_Binder   := Switch_Binder   & ("-E");                  -- Store traceback in exceptions
+        Switch_Builder  := Switch_Builder  & ("-g");                  -- Create extended information in stack traces
+        Switch_Compiler := Switch_Compiler & ("-g"); 
+        Switch_Linker   := Switch_Linker   & ("-g"); 
+      when "No" => null;
+    end case;
+    case SAFETY is
+      when "Yes" =>
+        Switch_Compiler :=
+          Switch_Compiler &(
+          "-fstack-check",                                            -- Generate checks for exceeding the stack
+          "-gnato",                                                   -- Enable overflow checking for numerics
+          "-gnatE",                                                   -- Enable dynamic generic elaboration checks
+          "-gnata");                                                  -- Enable pre and post conditions
+      when "Off" => null;
+    end case;
     package Builder is
       for Default_Switches("Ada") use Switch_Builder;
     end Builder;
-
     package Compiler is
       for Default_Switches("Ada") use Switch_Compiler;
     end Compiler;
-
     package Binder is
       for Default_Switches("Ada") use Switch_Binder;
     end Binder;
-
     package Linker is
       for Default_Switches("Ada") use Switch_Linker;
     end Linker;
-
 end AdaDoom3;
