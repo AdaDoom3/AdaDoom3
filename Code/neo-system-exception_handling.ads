@@ -48,9 +48,6 @@ package Neo.System.Exception_Handling
   -- Subprograms --
   -----------------
     procedure Test;
-    procedure Put;
-    function Get
-      return String_2;
     procedure Start_Alert;
     procedure Stop_Alert;
     procedure Create_Error_Console(
@@ -68,7 +65,38 @@ package Neo.System.Exception_Handling
 -------
 private
 -------
+  ---------------
+  -- Protected --
+  ---------------
+    protected type Protected_Alert_Status
+      is
+        function Is_Alerting
+          return Boolean;
+        procedure Set_Is_Alerting(
+          Status : in Boolean);
+      private
+        Status : Boolean := False;
+      end Protected_Alert_Status;
+  ---------------
+  -- Variables --
+  ---------------
+    Alert_Status : Protected_Alert_Status;
   --------------------
   -- Implementation --
   --------------------
+    package Implementation
+      is
+        procedure Start_Alert;
+        procedure Stop_Alert;
+        procedure Create_Error_Console(
+          Text    : in String_2;
+          Buttons : in Array_Console_Buttons);
+        function Is_Okay(
+          Title        : in String_2;
+          Message      : in String_2;
+          Buttons      : in Enumerated_Buttons;
+          Icon         : in Enumerated_Icon;
+          Parent_Title : in String_2 := NULL_STRING_2)
+          return Boolean;
+      end Implementation;
   end Neo.System.Exception_Handling;
