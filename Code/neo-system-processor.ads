@@ -152,53 +152,39 @@ private
   --------------------
     package Implementation_For_Compiler
       is
-        procedure Put_Trace
-          with Inline;
+        procedure Put_Trace;
       end Implementation_For_Compiler;
     package Implementation_For_Operating_System
       is
         function Get_Clock_Ticks
-          return Integer_8_Unsigned
-          with Inline;
+          return Integer_8_Unsigned;
         function Get_Number_of_Cores
-          return Integer_8_Unsigned
-          with Inline;
+          return Integer_8_Unsigned;
         function Get_Speed_In_Megahertz
-          return Integer_8_Unsigned
-          with Inline;
+          return Integer_8_Unsigned;
       end Implementation_For_Operating_System;
     package Implementation_For_Architecture
       is
-        procedure Initialize
-          with Inline;
+        procedure Initialize;
         function Get_Vendor
-          return Enumerated_Vendor
-          with Inline;
+          return Enumerated_Vendor;
         function Get_Specifics
           return Record_Specifics
           with Inline;
         function Get_Number_of_Cores
-          return Integer_8_Unsigned
-          with Inline;
-        procedure Check_Exceptions
-          with Inline;
+          return Integer_8_Unsigned;
+        procedure Check_Exceptions;
         procedure Set_Rounding(
-          Rounding : IN Enumerated_Rounding)
-          with Inline;
+          Rounding : IN Enumerated_Rounding);
         procedure Set_Precision(
-          Precision : IN Enumerated_Precision)
-          with Inline;
+          Precision : IN Enumerated_Precision);
         function Get_Clock_Ticks
-          return Integer_8_Unsigned
-          with Inline;
-        procedure Put_Stack
-          with Inline;
-        procedure Put_Trace
-          with Inline;
+          return Integer_8_Unsigned;
+        procedure Put_Stack;
+        procedure Put_Trace;
         function Is_Stack_Empty
-          return Boolean
-          with Inline;
-        procedure Clear_Stack
-          with Inline;
+          return Boolean;
+        procedure Clear_Stack;
       end Implementation_For_Architecture;
   end Neo.System.Processor;
+
