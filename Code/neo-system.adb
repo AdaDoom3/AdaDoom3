@@ -60,40 +60,72 @@ package body Neo.System
       return Boolean
       is
       begin
-        if Address'Size = 64 THEN
-          return True;
-        end if;
-        return Implementation.Is_Running_In_Emulated_32_Bit_Environment;
+        return(
+          if Memory_Size >= 2**64 then
+            False;
+          else
+            Implementation.Is_Running_In_Emulated_32_Bit_Environment);
       end Is_Running_In_Emulated_32_Bit_Environment;
   ------------------
   -- Get_Language --
   ------------------
     function Get_Language
       return Enumerated_Language
-      renames Implementation.Get_Language;
+      is
+      begin
+        return Implementation.Get_Language;
+      exception
+        when System_Call_Failure =>
+          return English_Language;
+      end Get_Language;
   -----------------
   -- Get_Version --
   -----------------
     function Get_Version
       return Enumerated_System
-      renames Implementation.Get_Version;
+      is
+      begin
+        return Implementation.Get_Version;
+      exception
+        when System_Call_Failure =>
+          return Unknown_System;
+      end Get_Version;
   ------------------
   -- Get_Username --
   ------------------
     function Get_Username
       return String_2
-      renames Implementation.Get_Username;
+      is
+      begin
+        return Implementation.Get_Username;
+      exception
+        when System_Call_Failure =>
+          return DEFAULT_USERNAME;
+      end Get_Language;
   ------------------
   -- Open_Webpage --
   ------------------
     procedure Open_Webpage(
       Path : in String_2)
-      renames Implementation.Open_Webpage;
+      is
+      begin
+        return Implementation.Open_Webpage(Path);
+      exception
+        when System_Call_Failure =>
+          null;
+      end Open_Webpage;
   -------------------------
   -- Execute_Application --
   -------------------------
     procedure Execute_Application(
       Do_Quit         : in Boolean;
       Executable_Path : in String_2)
-      renames Implementation.Execute_Application;
+      is
+      begin
+        return Implementation.Execute_Application(Do_Quit, Executable_Path);
+      exception
+        when System_Call_Failure =>
+          null;
+      end Execute_Application;
   end Neo.System;
+
