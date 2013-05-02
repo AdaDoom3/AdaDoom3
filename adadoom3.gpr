@@ -37,7 +37,7 @@ project AdaDoom3 is
       "Yes",
       "No");
   ---------------
-  -- Scenarios --  In the GPS GUI scenarios are displayed with the latest External call on top of the widget (like a stack)
+  -- Scenarios --  In the GPS GUI scenarios are displayed with the latest External call on top within the widget
   ---------------
     DEBUGGING : Option_Boolean   := External("Debugging", "Yes");
     OPTIMIZE  : Option_Boolean   := External("Optimize",  "Yes");
@@ -89,7 +89,7 @@ project AdaDoom3 is
     Switch_Linker   :=(
       "-fprofile-generate");                                          -- Generate code coverage
     Switch_Compiler :=(
-      "-gnatW8",                                                      -- Enable unicode identifiers (GPS can't view unicode identifiers)
+      "-gnatW8",                                                      -- Enable unicode identifiers
       "-gnat2012");                                                   -- Enable the Ada 2012 extensions
     Switch_Builder  :=(
       "-j4",                                                          -- Use four tasks during compilation
