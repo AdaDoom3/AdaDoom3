@@ -29,6 +29,10 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System.Memory -- Memory allocation, all in one place
   is
+  ----------------
+  -- Exceptions --
+  ----------------
+    -- Lock, unlock stuff here
   -------------
   -- Numbers --
   -------------
@@ -64,22 +68,20 @@ package Neo.System.Memory -- Memory allocation, all in one place
       Maximum : in Integer_4_Unsigned);
     function Get_Data
       return Record_Memory;
-    function Lock(
+    procedure Lock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean;
-    function Unlock(
+      Number_Of_Bytes : in Integer_4_Unsigned);
+    procedure Unlock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean;
+      Number_Of_Bytes : in Integer_4_Unsigned);
     function Allocate(
       Number_Of_Bits    : in Integer_4_Unsigned;
       Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Address;
+      return Array_Integer_1_Unsigned;
     function Allocate_Dirty(
       Number_Of_Bits    : in Integer_4_Unsigned;
       Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Address;
+      return Array_Integer_1_Unsigned;
     procedure Free(
       Item : in Address);
 -------
@@ -95,14 +97,12 @@ private
         procedure Set_Byte_Limits(
           Minimum : in Integer_4_Unsigned;
           Maximum : in Integer_4_Unsigned);
-        function Lock(
+        procedure Lock(
           Location        : in Address;
-          Number_Of_Bytes : in Integer_4_Unsigned)
-          return Boolean;
-        function Unlock(
+          Number_Of_Bytes : in Integer_4_Unsigned);
+        procedure Unlock(
           Location        : in Address;
-          Number_Of_Bytes : in Integer_4_Unsigned)
-          return Boolean;
+          Number_Of_Bytes : in Integer_4_Unsigned);
         function Clear(
           Location      : in Address;
           Size          : in Integer_4_Unsigned;
