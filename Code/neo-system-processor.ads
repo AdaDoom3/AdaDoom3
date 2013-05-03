@@ -169,15 +169,14 @@ private
         function Get_Vendor
           return Enumerated_Vendor;
         function Get_Specifics
-          return Record_Specifics
-          with Inline;
+          return Record_Specifics;
         function Get_Number_of_Cores
           return Integer_8_Unsigned;
         procedure Check_Exceptions;
         procedure Set_Rounding(
-          Rounding : IN Enumerated_Rounding);
+          Rounding : in Enumerated_Rounding);
         procedure Set_Precision(
-          Precision : IN Enumerated_Precision);
+          Precision : in Enumerated_Precision);
         function Get_Clock_Ticks
           return Integer_8_Unsigned;
         procedure Put_Stack;
