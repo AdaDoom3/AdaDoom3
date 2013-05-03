@@ -37,7 +37,7 @@ package Neo.System.Memory -- Memory allocation, all in one place
   -- Numbers --
   -------------
     type Integer_Memory_Identifier
-      is new Integer_1_Unsigned;
+      is new Integer_Address;
   -------------
   -- Records --
   -------------
@@ -56,9 +56,9 @@ package Neo.System.Memory -- Memory allocation, all in one place
   ---------------
   -- Constants --
   ---------------
-    CLEARED_MEMORY_VALUE  : constant Boolean                   := False;
-    UNASSIGNED_IDENTIFIER : constant Integer_Memory_Identifier := 0;
-    MEMORY_ALIGNMENT      : constant Integer_4_Unsigned        := 16;
+    CLEARED_MEMORY_VALUE      : constant Boolean                   := False;
+    UNASSIGNED_IDENTIFIER     : constant Integer_Memory_Identifier := 0;
+    MEMORY_ALIGNMENT_IN_BYTES : constant Integer_4_Unsigned        := 2;
   -----------------
   -- Subprograms --
   -----------------
