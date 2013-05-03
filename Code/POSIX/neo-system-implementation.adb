@@ -126,7 +126,7 @@ package body Implementation
       --  end if;
       --  return Trim(Password.Name, Both);
         raise System_Call_Failure;
-        return "";
+        return DEFAULT_USERNAME;
       end Get_Username;
   ------------------
   -- Open_Webpage --
