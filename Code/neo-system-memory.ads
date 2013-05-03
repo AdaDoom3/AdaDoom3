@@ -67,6 +67,10 @@ package Neo.System.Memory
       with Pre => Minimum < Maximum;
     function Get_State
       return Record_State;
+  ---------------
+  -- Constants --
+  ---------------
+    LAUNCH_STATE : constant Record_State := Get_State;
 -------
 private
 -------
