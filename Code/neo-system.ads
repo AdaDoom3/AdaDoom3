@@ -26,6 +26,11 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System
   is
+  ----------------
+  -- Exceptions --
+  ----------------
+    System_Call_Failure : Exception;
+    Unsupported_Feature : Exception;
   ---------------
   -- Constants --
   ---------------
@@ -33,18 +38,6 @@ package Neo.System
   ------------------
   -- Enumerations --
   ------------------
-    type Enumerated_Icon
-      is(
-      No_Icon,
-      Warning_Icon,
-      Information_Icon,
-      Error_Icon);
-    type Enumerated_Buttons
-      is(
-      Yes_No_Buttons,
-      Okay_Button,
-      Okay_Cancel_Buttons,
-      Retry_Cancel_Buttons);
     type Enumerated_Language
       is(
       Arabic_Language,
@@ -97,6 +90,8 @@ package Neo.System
       Linux_3_8_System,
       Linux_3_9_System,
       Windows_System,
+      Windows_1_System,
+      Windows_1_4_System,
       Windows_1_4_A_System, -- x86-64
       Windows_1_4_B_System,
       Windows_1_4_10_A_System,
