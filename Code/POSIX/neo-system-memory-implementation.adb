@@ -90,14 +90,4 @@ package body Implementation
         raise System_Call_Failure;
         return NULL_ADDRESS;
       end Allocate;
-  ----------
-  -- Free --
-  ----------
-    procedure Free(
-      Data : in Address)
-      is
-      begin
-        raise System_Call_Failure;
-        null;
-      end Free;
   end Implementation;
