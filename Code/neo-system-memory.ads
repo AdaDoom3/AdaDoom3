@@ -41,7 +41,7 @@ package Neo.System.Memory -- Memory allocation, all in one place
   -------------
   -- Records --
   -------------
-    type Record_Memory
+    type Record_State
       is record
         Load                       : Float_4_Percent;
         Free_Space_In_Gigabytes    : Integer_8_Natural;
@@ -59,6 +59,33 @@ package Neo.System.Memory -- Memory allocation, all in one place
     CLEARED_MEMORY_VALUE      : constant Boolean                   := False;
     UNASSIGNED_IDENTIFIER     : constant Integer_Memory_Identifier := 0;
     MEMORY_ALIGNMENT_IN_BYTES : constant Integer_4_Unsigned        := 2;
+  --------------
+  -- Packages --
+  --------------
+    generic
+      type Type_To_Manage
+        is private;
+      Manager_Identifier : Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER;
+    package Manager -- wip
+      is
+        type Array_Type_To_Manage
+          is array(Positive range <>)
+          of Type_To_Manage;
+        function Allocate
+          return Type_To_Manage;
+        function Allocate(
+          Number_To_Allocate : in Integer_4_Positive)
+          return Array_Type_To_Manage;
+        function Allocate_Dirty
+          return Type_To_Manage;
+        function Allocate_Dirty(
+          Number_To_Allocate : in Integer_4_Positive)
+          return Array_Type_To_Manage;
+        procedure Lock(
+          Item : in out Type_To_Manage);
+        procedure Unlock(
+          Item : in out Type_To_Manage);
+      end Manager;
   -----------------
   -- Subprograms --
   -----------------
@@ -66,24 +93,8 @@ package Neo.System.Memory -- Memory allocation, all in one place
     procedure Set_Byte_Limits(
       Minimum : in Integer_4_Unsigned;
       Maximum : in Integer_4_Unsigned);
-    function Get_Data
-      return Record_Memory;
-    function Allocate(
-      Number_Of_Bytes   : in Integer_Address;
-      Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Array_Integer_1_Unsigned;
-    function Allocate_Dirty(
-      Number_Of_Bytes   : in Integer_Address;
-      Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Array_Integer_1_Unsigned;
-    generic
-      type Type_To_Lock;
-    procedure Lock(
-      Item : in out Type_To_Lock);
-    generic
-      type Type_To_Unlock;
-    procedure Unlock(
-      Item : in out Type_To_Unlock);
+    function Get_State
+      return Record_State;
 -------
 private
 -------
@@ -92,8 +103,8 @@ private
   --------------------
     package Implementation
       is
-        function Get
-          return Record_Memory;
+        function Get_State
+          return Record_State;
         procedure Set_Byte_Limits(
           Minimum : in Integer_4_Unsigned;
           Maximum : in Integer_4_Unsigned);
