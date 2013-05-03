@@ -31,6 +31,7 @@ package body Implementation
       return Record_Memory
       is
       begin
+        -- fstatvfs, statvfs
         raise System_Call_Failure;
         return(others => <>);
       end Get;
