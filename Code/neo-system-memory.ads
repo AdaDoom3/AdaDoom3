@@ -52,7 +52,6 @@ package Neo.System.Memory
         is private;
     package Manager
       is
-        -- Lock, unlock exceptions here
         procedure Lock(
           Item : in out Type_To_Manage);
         procedure Unlock(
