@@ -45,7 +45,8 @@ package body Implementation
           Virtual_Total              => Integer_8_Natural(Status.Total_Virtual),
           Virtual_Available          => Integer_8_Natural(Status.Available_Virtual),
           Virtual_Available_Extended => Integer_8_Natural(Status.Available_Extended_Virtual),
-          Load                       => Float_4_Percent(Status.Memory_Load));
+          Load                       => Float_4_Percent(Status.Memory_Load),
+          Freespace_In_Gigabytes     => );
       end Get;
   ---------------------
   -- Set_Byte_Limits --
@@ -96,6 +97,7 @@ package body Implementation
       return Address
       is
       begin
+        raise System_Call_Failure;
         return NULL_ADDRESS;
       end Clear;
   --------------
@@ -107,16 +109,8 @@ package body Implementation
       return Address
       is
       begin
+        raise System_Call_Failure;
         return NULL_ADDRESS;
       end Allocate;
-  ----------
-  -- Free --
-  ----------
-    procedure Free(
-      Data : in Address)
-      is
-      begin
-        null;
-      end Free;
   end Implementation;
 
