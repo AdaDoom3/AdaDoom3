@@ -29,6 +29,8 @@ package body Neo.System.Exception_Handling
     procedure Start_Alert
       is
       begin
+        if Alert_Status.Is_Alerting then
+        end if;
       end Start_Alert;
   ----------------
   -- Stop_Alert --
@@ -71,7 +73,6 @@ package body Neo.System.Exception_Handling
       is
       begin
       end Is_Alerting;
-
   ---------------
   -- Protected --
   ---------------
