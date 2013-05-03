@@ -73,6 +73,7 @@ package body Neo.System.Memory
     procedure Set_Byte_Limits(
       Minimum : in Integer_4_Unsigned;
       Maximum : in Integer_4_Unsigned)
+      with Pre => Minimum < Maximum
       is
       begin
         Implementation.Set_Byte_Limits;
