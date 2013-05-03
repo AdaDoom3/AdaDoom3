@@ -84,7 +84,7 @@ package body Implementation_For_Architecture
     DO_CRASH_ON_INEXACT_RESULT       : constant Boolean            := False;
     DO_CRASH_ON_DIVIDE_BY_ZERO       : constant Boolean            := False;
     DO_CRASH_ON_NUMERIC_OVERFLOW     : constant Boolean            := False;
-    DO_CRASH_ON_inVALID_OPERATION    : constant Boolean            := False;
+    DO_CRASH_ON_INVALID_OPERATION    : constant Boolean            := False;
     DO_CRASH_ON_NUMERIC_UNDERFLOW    : constant Boolean            := False;
     DO_CRASH_ON_DENORMALIZED_OPERAND : constant Boolean            := False;
     TO_ESI                           : constant String_1           := "s";
@@ -325,7 +325,7 @@ package body Implementation_For_Architecture
             if not DO_CRASH_ON_DENORMALIZED_OPERAND then
               Exception_Mask := Exception_Mask OR 16#0000_0100#;
             end if;
-            if not DO_CRASH_ON_inVALID_OPERATION then
+            if not DO_CRASH_ON_INVALID_OPERATION then
               Exception_Mask := Exception_Mask OR 16#0000_0080#;
             end if;
             if Is_Enabled(INTEL_FXSR) then
