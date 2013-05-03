@@ -21,6 +21,16 @@ use
 separate(Neo.System.Text)
 package body Implementation
   is
+  ------------------
+  -- Get_Language --
+  ------------------
+    function Get_Language
+      return Enumerated_Language
+      is
+      begin
+        raise System_Call_Failure;
+        return English_Language;
+      end Get_Language;
   -------------------
   -- Set_Clipboard --
   -------------------
