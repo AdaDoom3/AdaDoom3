@@ -68,22 +68,22 @@ package Neo.System.Memory -- Memory allocation, all in one place
       Maximum : in Integer_4_Unsigned);
     function Get_Data
       return Record_Memory;
-    procedure Lock(
-      Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned);
-    procedure Unlock(
-      Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned);
     function Allocate(
-      Number_Of_Bits    : in Integer_4_Unsigned;
+      Number_Of_Bytes   : in Integer_Address;
       Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
       return Array_Integer_1_Unsigned;
     function Allocate_Dirty(
-      Number_Of_Bits    : in Integer_4_Unsigned;
+      Number_Of_Bytes   : in Integer_Address;
       Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
       return Array_Integer_1_Unsigned;
-    procedure Free(
-      Item : in Address);
+    generic
+      type Type_To_Lock;
+    procedure Lock(
+      Item : in out Type_To_Lock);
+    generic
+      type Type_To_Unlock;
+    procedure Unlock(
+      Item : in out Type_To_Unlock);
 -------
 private
 -------
@@ -112,7 +112,5 @@ private
           Size      : in Integer_4_Unsigned;
           Alignment : in Integer_4_Unsigned)
           return Address;
-        procedure Free(
-          Data : in Address);
       end Implementation;
   end Neo.System.Memory;
