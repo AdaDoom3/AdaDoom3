@@ -52,8 +52,8 @@ project AdaDoom3 is
           when "ARM"                => for PROCESSOR use "x86-64";
           when "PowerPC" | "x86-64" => null;
         end case;
-      when "Windows"       => for PROCESSOR use "x86-64";
-      when "Linux" | "SDL" => null;
+      when "Windows"                => for PROCESSOR use "x86-64";
+      when "Linux" | "SDL"          => null;
     end case;
   ----------------
   -- Filesystem --
@@ -127,7 +127,7 @@ project AdaDoom3 is
           "-gnato",                                                   -- Enable overflow checking for numerics
           "-gnatE",                                                   -- Enable dynamic generic elaboration checks
           "-gnata");                                                  -- Enable pre and post conditions
-      when "Off" => null;
+      when "No" => null;
     end case;
     package Builder is
       for Default_Switches("Ada") use Switch_Builder;
