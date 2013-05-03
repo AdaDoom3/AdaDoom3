@@ -46,6 +46,15 @@ project AdaDoom3 is
     COMPILER  : Option_Compiler  := External("Compiler",  "GNAT");
     PROCESSOR : Option_Processor := External("Processor", "x86-64");
     SYSTEM    : Option_System    := External("System",    "Windows");
+    case SYSTEM is
+      when "Macintosh" =>
+        case PROCESSOR is
+          when "ARM"                => for PROCESSOR use "x86-64";
+          when "PowerPC" | "x86-64" => null;
+        end case;
+      when "Windows"       => for PROCESSOR use "x86-64";
+      when "Linux" | "SDL" => null;
+    end case;
   ----------------
   -- Filesystem --
   ----------------
