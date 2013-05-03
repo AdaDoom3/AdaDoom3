@@ -40,26 +40,26 @@ package body Implementation
     function Get_Version
       return Enumerated_System
       is
-      Data : aliased Record_Unix_Name := (others => <>);
+      Name : aliased Record_Unix_Name := (others => <>);
       begin
-        if Get_Unix_Name(Data'Access) /= SUCCESS then
+        if Get_Unix_Name(Name'Access) /= SUCCESS then
           raise System_Call_Failure;
         end if;
         if
-        Data.System(
-          Data.System'First..
-          Data.System'First + SYSTEM_NAME_LINUX'Length) = SYSTEM_NAME_LINUX
+        Name.System(
+          Name.System'First..
+          Name.System'First + SYSTEM_NAME_LINUX'Length) = SYSTEM_NAME_LINUX
         then
-          case Data.Version(Data'First) is
+          case Name.Version(Name.Version'First) is
             when '2' =>
-              case Data.Version(Data'First + 2) is
+              case Name.Version(Name.Version'First + 2) is
                 when '4'    => return Linux_2_4_System;
                 when '5'    => return Linux_2_5_System;
                 when '6'    => return Linux_2_6_System;
                 when others => return Linux_2_System;
                end case;
             when '3' =>
-              case Data.Version(Data'First + 2) is
+              case Name.Version(Name.Version'First + 2) is
                 when '1'    => return Linux_3_1_System;
                 when '2'    => return Linux_3_2_System;
                 when '3'    => return Linux_3_3_System;
@@ -75,26 +75,26 @@ package body Implementation
               return Linux_System;
           end case;
         elsif
-        Data.System(
-          Data.System'First..
-          Data.System'First + SYSTEM_NAME_MACINTOSH'Length) = SYSTEM_NAME_MACINTOSH
+        Name.System(
+          Name.System'First..
+          Name.System'First + SYSTEM_NAME_MACINTOSH'Length) = SYSTEM_NAME_MACINTOSH
         then
-          case Data.Version(Data'First) is
+          case Name.Version(Name.Version'First) is
             when '8' =>
-              case Data.Version(Data'First + 2) is
+              case Name.Version(Name.Version'First + 2) is
                 when '5'    => return Macintosh_8_5_System;
                 when '6'    => return Macintosh_8_6_System;
                 when others => return Macintosh_8_System;
               end case;
             when '9' =>
-              case Data.Version(Data'First + 4) is
+              case Name.Version(Name.Version'First + 4) is
                 when '1'    => return Macintosh_9_1_System;
                 when '2'    => return Macintosh_9_2_System;
                 when others => return Macintosh_9_System;
               end case;
             when '1' =>
-              if Data.Version(Data'First + 1) = '0' then
-                case Data.Version(Data'First + 3) is
+              if Name.Version(Name.Version'First + 1) = '0' then
+                case Name.Version(Name.Version'First + 3) is
                   when '1'    => return Macintosh_10_1_System;
                   when '2'    => return Macintosh_10_2_System;
                   when '3'    => return Macintosh_10_3_System;
