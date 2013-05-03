@@ -55,13 +55,4 @@ package body Implementation_For_Operating_System
         raise System_Call_Failure;
         return 0;
       end Get_Speed_In_Megahertz;
-  -----------------------------------------------
-  -- Is_Running_In_Emulated_32_Bit_Environment --
-  -----------------------------------------------
-    function Is_Running_In_Emulated_32_Bit_Environment
-      return Boolean
-      is
-      begin
-        return False;
-      end Is_Running_In_#mulated_32_Bit_Environment;
   end Implementation_For_Operating_System;
