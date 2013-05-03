@@ -5,8 +5,9 @@
 --
 --
 --
--- Perhaps Clear, Free, and Allocate should be removed and we should implement the functions with "stream types" 
--- in the processor main body instead, to avoid platform dependent stuff.
+--
+--
+--
 --
 --
 --
@@ -24,17 +25,17 @@ use
 separate(Neo.System.Memory)
 package body Implementation
   is
-  ---------
-  -- Get --
-  ---------
-    function Get
+  ----------------
+  -- Get_Status --
+  ----------------
+    function Get_Status
       return Record_Memory
       is
       begin
         -- fstatvfs, statvfs
         raise System_Call_Failure;
         return(others => <>);
-      end Get;
+      end Get_Status;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
@@ -65,29 +66,4 @@ package body Implementation
       begin
         raise System_Call_Failure;
       end Unlock;
-  -----------
-  -- Clear --
-  -----------
-    function Clear(
-      Location      : in Address;
-      Size          : in Integer_4_Unsigned;
-      Initial_Value : in Boolean := CLEARED_MEMORY_VALUE)
-      return Address
-      is
-      begin
-        raise System_Call_Failure;
-        return NULL_ADDRESS;
-      end Clear;
-  --------------
-  -- Allocate --
-  --------------
-    function Allocate(
-      Size      : in Integer_4_Unsigned;
-      Alignment : in Integer_4_Unsigned)
-      return Address
-      is
-      begin
-        raise System_Call_Failure;
-        return NULL_ADDRESS;
-      end Allocate;
   end Implementation;
