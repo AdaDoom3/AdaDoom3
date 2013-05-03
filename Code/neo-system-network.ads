@@ -104,7 +104,7 @@ private
         Number_Of_Read_Bytes      : Integer_4_Natural      := 0;
         Number_Of_Written_Packets : Integer_4_Natural      := 0;
         Number_Of_Written_Bytes   : Integer_4_Natural      := 0;
-      END RECORD;
+      end record;
   -----------------
   -- Subprograms --
   -----------------
