@@ -6,7 +6,7 @@
 --
 --
 -- https://bitbucket.org/slouken/sdl/src/e8916fe9cfc8/src/video/x11/SDL_x11opengl.c?at=default
---
+-- https://github.com/id-Software/DOOM-3/blob/master/neo/sys/linux/glimp.cpp
 --
 --
 --
