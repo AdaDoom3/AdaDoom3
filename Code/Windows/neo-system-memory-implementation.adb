@@ -25,15 +25,15 @@ use
 separate(Neo.System.Memory)
 package body Implementation
   is
-  ---------
-  -- Get --
-  ---------
-    function Get
-      return Record_Memory
+  ----------------
+  -- Get_Status --
+  ----------------
+    function Get_Status
+      return Record_Status
       is
-      Status : Record_Memory_Status := (others => <>);
+      Status : Record_Status := (others => <>);
       begin
-        if Global_Memory_Status(Status'Address) = FAILED then
+        if Global_Memory_Status(Status'Access) = FAILED then
           raise System_Call_Failure;
         end if;
         return(
@@ -47,7 +47,7 @@ package body Implementation
           Virtual_Available_Extended => Integer_8_Natural(Status.Available_Extended_Virtual),
           Load                       => Float_4_Percent(Status.Memory_Load),
           Freespace_In_Gigabytes     => );
-      end Get;
+      end Get_Status;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
@@ -68,49 +68,26 @@ package body Implementation
   ----------
   -- Lock --
   ----------
-    function Lock(
+    procedure Lock(
       Location        : in Address;
       Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean
       is
       begin
-        return Virtual_Lock(Location, Integer_Size_C(Number_Of_Bytes)) /= FAILED;
+        if Virtual_Lock(Location, Integer_Size_C(Number_Of_Bytes)) = FAILED then
+          raise ???;
+        end if;
       end Lock;
   ------------
   -- Unlock --
   ------------
-    function Unlock(
+    procedure Unlock(
       Location        : in Address;
       Number_Of_Bytes : in Integer_4_Unsigned)
-      return Boolean
       is
       begin
-        return Virtual_Unlock(Location, Integer_Size_C(Number_Of_Bytes)) /= FAILED;
+        if Virtual_Unlock(Location, Integer_Size_C(Number_Of_Bytes)) = FAILED then
+          raise ???;
+        end if;
       end Unlock;
-  -----------
-  -- Clear --
-  -----------
-    function Clear(
-      Location      : in Address;
-      Size          : in Integer_4_Unsigned;
-      Initial_Value : in Boolean := CLEARED_MEMORY_VALUE)
-      return Address
-      is
-      begin
-        raise System_Call_Failure;
-        return NULL_ADDRESS;
-      end Clear;
-  --------------
-  -- Allocate --
-  --------------
-    function Allocate(
-      Size      : in Integer_4_Unsigned;
-      Alignment : in Integer_4_Unsigned)
-      return Address
-      is
-      begin
-        raise System_Call_Failure;
-        return NULL_ADDRESS;
-      end Allocate;
   end Implementation;
 
