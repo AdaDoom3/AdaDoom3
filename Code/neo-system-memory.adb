@@ -21,24 +21,50 @@ package body Neo.System.Memory
   --------------------
     package body Implementation
       is separate;
+  -------------
+  -- Manager --
+  -------------
+    generic
+      type Type_To_Manage
+        is private;
+    package body Manager
+      is
+        procedure Lock(
+          Item : in out Type_To_Manage)
+          is
+          begin
+            Implementation.Lock(Item'Address, Item'Size / Byte'Size);
+          exception
+            when System_Call_Failure =>
+              null;
+        procedure Unlock(
+          Item : in out Type_To_Manage)
+          is
+          begin
+            Implementation.Unlock(Item'Address, Item'Size / Byte'Size);
+          exception
+            when System_Call_Failure =>
+              null;
+          end Unlock;
+      end Manager;
   ----------
   -- Test --
   ----------
     procedure Test
       is
-      Memory : Record_Memory := (others => <>);
+      Status : Record_Status := (others => <>);
       begin
         Put_Title("MEMORY TEST");
-        Memory := Get_Data;
+        Memory := Get_Status;
         Put_Line("Load: "                       & Float_4_Percent'Wide_Image(Memory.Load));
         Put_Line("Free space in gigs: "         & Integer_8_Natural'Wide_Image(Memory.Free_Space_In_Gigabytes));
-        Put_Line("Physical_Total: "             & Integer_8_Natural'Wide_Image(Memory.Physical_Total));
-        Put_Line("Physical_Available: "         & Integer_8_Natural'Wide_Image(Memory.Physical_Available));
-        Put_Line("Page_File_Total: "            & Integer_8_Natural'Wide_Image(Memory.Page_File_Total));
-        Put_Line("Page_File_Available: "        & Integer_8_Natural'Wide_Image(Memory.Page_File_Available));
-        Put_Line("Virtual_Total: "              & Integer_8_Natural'Wide_Image(Memory.Virtual_Total));
-        Put_Line("Virtual_Available: "          & Integer_8_Natural'Wide_Image(Memory.Virtual_Available));
-        Put_Line("Virtual_Available_Extended: " & Integer_8_Natural'Wide_Image(Memory.Virtual_Available_Extended));
+        Put_Line("Physical total: "             & Integer_8_Natural'Wide_Image(Memory.Physical_Total));
+        Put_Line("Physical available: "         & Integer_8_Natural'Wide_Image(Memory.Physical_Available));
+        Put_Line("Page file total: "            & Integer_8_Natural'Wide_Image(Memory.Page_File_Total));
+        Put_Line("Page file available: "        & Integer_8_Natural'Wide_Image(Memory.Page_File_Available));
+        Put_Line("Virtual total: "              & Integer_8_Natural'Wide_Image(Memory.Virtual_Total));
+        Put_Line("Virtual available: "          & Integer_8_Natural'Wide_Image(Memory.Virtual_Available));
+        Put_Line("Virtual available extended: " & Integer_8_Natural'Wide_Image(Memory.Virtual_Available_Extended));
         Hang_Window;
       end Test;
   ---------------------
@@ -54,10 +80,10 @@ package body Neo.System.Memory
         when System_Call_Failure =>
           null;
       end Set_Byte_Limits;
-  --------------
-  -- Get_Data --
-  --------------
-    function Get_Data
+  ----------------
+  -- Get_Status --
+  ----------------
+    function Get_Status
       return Record_Memory
       is
       begin
@@ -65,63 +91,6 @@ package body Neo.System.Memory
       exception
         when System_Call_Failure =>
           return (others => <>);
-      end Set_Byte_Limits;
-  ----------
-  -- Lock --
-  ----------
-    procedure Lock(
-      Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned)
-      renames Implementation.Lock;
-  ------------
-  -- Unlock --
-  ------------
-    procedure Unlock(
-      Location        : in Address;
-      Number_Of_Bytes : in Integer_4_Unsigned)
-      is
-      begin
-        Implementation.Unlock;
-      exception
-        when System_Call_Failure =>
-          null;
-      end Unlock;
-  ----------
-  -- Free --
-  ----------
-    procedure Free(
-      Item : in Address)
-      renames Implementation.Free;
-  --------------
-  -- Allocate --
-  --------------
-    function Allocate(
-      Number_Of_Bits    : in Integer_4_Unsigned;
-      Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Address
-      is
-      begin
-        return
-          Implementation.Clear(
-            Location      => Allocate_Dirty(Number_Of_Bits, Memory_Identifier),
-            Initial_Value => CLEARED_MEMORY_VALUE,
-            Size          => Number_Of_Bits);
-      end Allocate;
-  --------------------
-  -- Allocate_Dirty --
-  --------------------
-    function Allocate_Dirty(
-      Number_Of_Bits    : in Integer_4_Unsigned;
-      Memory_Identifier : in Integer_Memory_Identifier := UNASSIGNED_IDENTIFIER)
-      return Address
-      is
-      begin
-        return
-          Implementation.Allocate(
-            Size =>
-              Integer_4_Unsigned(
-                (Number_Of_Bits + (MEMORY_ALIGNMENT - 1))
-                and not (MEMORY_ALIGNMENT - 1)),
-            Alignment => MEMORY_ALIGNMENT);
-      end Allocate_Dirty;
+      end Get_Status;
   end Neo.System.Memory;
+
