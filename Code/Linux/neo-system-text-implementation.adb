@@ -28,7 +28,7 @@ package body Implementation
       Text : in String_2)
       is
       begin
-        null;
+        raise System_Call_Failure;
       end Set_Clipboard;
   -------------------
   -- Get_Clipboard --
@@ -37,6 +37,7 @@ package body Implementation
       return String_2
       is
       begin
+        raise System_Call_Failure;
         return NULL_STRING_2;
       end Get_Clipboard;
   end Implementation;
