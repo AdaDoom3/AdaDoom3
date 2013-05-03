@@ -145,7 +145,7 @@ package Neo.System
     procedure Execute_Application(
       Do_Quit         : in Boolean;
       Executable_Path : in String_2);
-    function Is_Running_In_Emulated_32_Bit_Environment
+    function Is_Running_In_Emulated_32_Bit_Environment -- Currently only here for Windows® keyboard input
       return Boolean;
 -------
 private
