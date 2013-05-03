@@ -5,8 +5,8 @@
 --
 --
 --
---
---
+-- This might be helpful
+-- https://bitbucket.org/slouken/sdl/src/e8916fe9cfc8/src/video/x11/SDL_x11clipboard.c?at=default
 --
 --
 --
