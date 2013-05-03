@@ -29,7 +29,7 @@ package body Implementation
   -- Get_Status --
   ----------------
     function Get_Status
-      return Record_Memory
+      return Record_Status
       is
       begin
         -- fstatvfs, statvfs
