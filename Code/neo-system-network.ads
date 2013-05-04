@@ -32,6 +32,24 @@ package Neo.System.Network
   -----------
     type Record_Connection
       is private;
+  --------------
+  -- Packages --
+  --------------
+    generic
+      type Array_Type_To_Message
+        is array--???private;
+    package Messenger
+      is
+        function Recieve(
+          Connection : in  Record_Connection;
+          From       : out String_2;
+          Timeout    : in  Duration := 0.0)
+          return Array_Type_To_Message;
+        procedure Send(
+          Connection : in Record_Connection;
+          To         : in String_2;
+          Data       : in Array_Type_To_Message);
+      end Messenger;
   -----------------
   -- Subprograms --
   -----------------
@@ -41,16 +59,16 @@ package Neo.System.Network
       return String_2;
     function Get_Network_Address(
       Connection : in Record_Connection)
-      return Record_Network_Address;
+      return String_2;
     function Get_Number_Of_Read_Packets(
       Connection : in Record_Connection)
-      return Integer_4_Natural;
+      return Integer_8_Unsigned;
     function Get_Number_Of_Read_Bytes(
       Connection : in Record_Connection)
-      return Integer_4_Natural;
+      return Integer_8_Unsigned;
     function Get_Number_Of_Written_Packets(
       Connection : in Record_Connection)
-      return Integer_4_Natural;
+      return Integer_8_Unsigned;
     function Get_Number_Of_Written_Bytes(
       Connection : in Record_Connection)
       return Integer_4_Natural;
@@ -61,15 +79,6 @@ package Neo.System.Network
       Connection : in out Record_Connection);
     procedure Vocalize(
       Connection : in out Record_Connection);
-    function Recieve(
-      Connection : in  Record_Connection;
-      From       : out Record_Network_Address;
-      Timeout    : in  Duration := 0.0)
-      return Array_Integer_1_Unsigned;
-    procedure Send(
-      Connection : in Record_Connection;
-      To         : in Record_Network_Address;
-      Data       : in Array_Integer_1_Unsigned);
 -------
 private
 -------
@@ -79,7 +88,7 @@ private
     type Record_Connection
       is Ada.Controlled.Limited_Controlled
       with record
-        Network_Address           : String_1(1..64)   := (others => NULL_CHARACTER_1);
+        Network_Address           : String_2(1..64)   := (others => NULL_CHARACTER_2);
         Socket                    : Integer_4_Natural := 0;
         Is_Silenced               : Boolean           := False;
         Number_Of_Read_Packets    : Integer_4_Natural := 0;
@@ -103,19 +112,20 @@ private
           return String_2;
         procedure Set_Address(
           Connection      : in out Record_Connection;
-          Network_Address : in     Record_Network_Address);
+          Network_Address : in     String_2);
         function Recieve(
           Connection : in Record_Connection;
-          From       : in Record_Network_Address)
+          From       : in String_2)
           return Array_Integer_1_Unsigned;
         function Recieve(
           Connection : in Record_Connection;
-          From       : in Record_Network_Address;
+          From       : in String_2;
           Timeout    : in Duration)
           return Array_Integer_1_Unsigned;
         procedure Send(
+          Data       : in Array_Integer_1_Unsigned;
           Connection : in Record_Connection;
-          To         : in Record_Network_Address);
+          To         : in String_2);
       end Implementation;
   end Neo.System.Network;
 
