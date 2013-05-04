@@ -178,6 +178,7 @@ package body Implementation_For_Architecture
     function Get_Value(
       Value : in Record_Value)
       return Integer_8_Unsigned
+      with Pre => Value.End_Bit > Value.Start_Bit
       is
       begin
         return
