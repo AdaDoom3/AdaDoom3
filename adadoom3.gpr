@@ -49,10 +49,10 @@ project AdaDoom3 is
     case SYSTEM is
       when "Macintosh" =>
         case PROCESSOR is
-          when "ARM"                => for PROCESSOR use "x86-64";
+          when "ARM"                => null;--for PROCESSOR use "x86-64";
           when "PowerPC" | "x86-64" => null;
         end case;
-      when "Windows"                => for PROCESSOR use "x86-64";
+      when "Windows"                => null;--for PROCESSOR use "x86-64";
       when "Linux" | "SDL"          => null;
     end case;
   ----------------
