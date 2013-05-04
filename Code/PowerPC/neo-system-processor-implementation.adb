@@ -24,7 +24,7 @@ use
   Interfaces.C,
   System,
   System.Machine_Code;
-SEPARATE(Neo.System.Processor)
+separate(Neo.System.Processor)
 package body Implementation_For_Architecture
   is
   ------------------
