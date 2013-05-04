@@ -52,7 +52,7 @@ package body Implementation_For_Operating_System
       return Integer_8_Unsigned
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature; -- There are no POSIX commands for this, so raise an exception and let it be timed higher-up by Get_Clock_Ticks
         return 0;
       end Get_Speed_In_Megahertz;
   end Implementation_For_Operating_System;
