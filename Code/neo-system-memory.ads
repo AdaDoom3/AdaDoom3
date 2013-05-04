@@ -34,16 +34,16 @@ package Neo.System.Memory
   -------------
     type Record_State
       is record
-        Load                       : Float_4_Percent;
-        Disk_Total                 : Integer_8_Unsigned;
-        Disk_Available             : Integer_8_Unsigned;
-        Physical_Total             : Integer_Address;
-        Physical_Available         : Integer_Address;
-        Page_File_Total            : Integer_Address;
-        Page_File_Available        : Integer_Address;
-        Virtual_Total              : Integer_Address;
-        Virtual_Available          : Integer_Address;
-        Virtual_Available_Extended : Integer_Address;
+        Load                                       : Float_4_Percent;
+        Number_Of_Disk_Bytes_Total                 : Integer_8_Unsigned;
+        Number_Of_Disk_Bytes_Available             : Integer_8_Unsigned;
+        Number_Of_Physical_Bytes_Total             : Integer_Address;
+        Number_Of_Physical_Bytes_Available         : Integer_Address;
+        Number_Of_Page_File_Bytes_Total            : Integer_Address;
+        Number_Of_Page_File_Bytes_Available        : Integer_Address;
+        Number_Of_Virtual_Bytes_Total              : Integer_Address;
+        Number_Of_Virtual_Bytes_Available          : Integer_Address;
+        Number_Of_Virtual_Bytes_Available_Extended : Integer_Address;
       end record;
   --------------
   -- Packages --
