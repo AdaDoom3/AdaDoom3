@@ -58,27 +58,23 @@ project AdaDoom3 is
   ----------------
   -- Filesystem --
   ----------------
-    Separator := "/";
+    Directories := "Code";
+    Separator   := "/";
     case SYSTEM is
       when "Windows"       => Separator := "\";
       when "Macintosh"     => Separator := ":";
       when "Linux" | "SDL" => Separator := "/";
     end case;
+    Directories :=(
+      Directories,  
+      Directories & Separator & SYSTEM,
+      Directories & Separator & COMPILER,
+      Directories & Separator & PROCESSOR);
     case SYSTEM is
-      when "Windows" | "SDL" =>
-        for Source_Dirs use
-          Base,
-          Base & Separator & SYSTEM,
-          Base & Separator & COMPILER,
-          Base & Separator & PROCESSOR);
-      when "Linux" | "Macintosh" =>
-        for Source_Dirs use
-          Base,
-          Base & Separator & SYSTEM,
-          Base & Separator & COMPILER,
-          Base & Separator & PROCESSOR,
-          Base & Separator & "POSIX");
+      when "Windows" | "SDL"       => null;
+      when "Linux"   | "Macintosh" => Directories := Directories & ("POSIX");
     end case;
+    for Source_Dirs          use Directories;
     for Exec_Dir             use ".";
     for Object_Dir           use "Object";
     for Main                 use ("main.adb");
