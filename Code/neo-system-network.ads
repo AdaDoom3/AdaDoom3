@@ -40,7 +40,6 @@ package Neo.System.Network
     type Record_State
       is record
         Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
-        Socket                    : Integer_8_Unsigned := 0;
         Number_Of_Packets_Read    : Integer_8_Unsigned := 0;
         Number_Of_Packets_Written : Integer_8_Unsigned := 0;
         Number_Of_Bytes_Read      : Integer_8_Unsigned := 0;
@@ -82,6 +81,7 @@ private
       is Ada.Controlled.Limited_Controlled
       with record
         Vocal_Status : Protected_Status;
+        Socket       : Integer_8_Unsigned := 0; --???
         State        : Record_State := (others => <>);
       end record;
   -----------------
