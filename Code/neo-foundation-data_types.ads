@@ -452,6 +452,18 @@ package Neo.Foundation.Data_Types
     type Access_Array_Float_4_Degree
       is access all Array_Float_4_Degree;
   ---------------
+  -- Protected --
+  ---------------
+    protected type Protected_Status
+      is
+        function Is_Doing_Something
+          return Boolean;
+        procedure Set_Is_Doing_Something(
+          New_Status : in Boolean);
+      private
+        Status : Boolean := False;
+      end Protected_Status;
+  ---------------
   -- Constants --
   ---------------
     C_TRUE           : constant Integer_4_Signed_C := 1;
