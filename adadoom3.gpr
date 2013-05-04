@@ -58,7 +58,8 @@ project AdaDoom3 is
   ----------------
   -- Filesystem --
   ----------------
-    Directories := "Code";
+    Base        := "Code";
+    Directories := ();
     Separator   := "/";
     case SYSTEM is
       when "Windows"       => Separator := "\";
@@ -66,13 +67,13 @@ project AdaDoom3 is
       when "Linux" | "SDL" => Separator := "/";
     end case;
     Directories :=(
-      Directories,  
-      Directories & Separator & SYSTEM,
-      Directories & Separator & COMPILER,
-      Directories & Separator & PROCESSOR);
+      Base,  
+      Base & Separator & SYSTEM,
+      Base & Separator & COMPILER,
+      Base & Separator & PROCESSOR);
     case SYSTEM is
       when "Windows" | "SDL"       => null;
-      when "Linux"   | "Macintosh" => Directories := Directories & ("POSIX");
+      when "Linux"   | "Macintosh" => Directories := Base & ("POSIX");
     end case;
     for Source_Dirs          use Directories;
     for Exec_Dir             use ".";
