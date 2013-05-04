@@ -14,24 +14,24 @@
 --
 --
 --
-WITH
+with
   Interfaces,
   Interfaces.C,
   System,
   System.Machine_Code;
-USE
+use
   Interfaces,
   Interfaces.C,
   System,
   System.Machine_Code;
 SEPARATE(Neo.System.Processor)
-PACKAGE BODY Implementation_For_Architecture
-  IS
+package body Implementation_For_Architecture
+  is
   ------------------
   -- ENUMERATIONS --
   ------------------
     TYPE Enumerated_Processor_Version
-      IS(
+      is(
       Power_6_Compliant_Version,
       Power_7_Compliant_Version,
       Power_7_Plus_Compliant_Version,
@@ -63,8 +63,8 @@ PACKAGE BODY Implementation_For_Architecture
       IBM_Xenon_Version,                 -- Microsoft Xbox360
       Freescale_E500V1_Core_Version,
       Freescale_E500V2_Core_Version); 
-    FOR Enumerated_Processor_Version
-      USE(
+    for Enumerated_Processor_Version
+      use(
       Power_6_Compliant_Version         => 16#0F00#,
       Power_7_Compliant_Version         => 16#003F#,
       Power_7_Plus_Compliant_Version    => 16#004A#,
@@ -100,17 +100,17 @@ PACKAGE BODY Implementation_For_Architecture
   -- RECORDS --
   -------------
     TYPE Record_Version
-      IS RECORD
+      is RECORD
         Major : Integer_2_Unsigned := 0;
         Minor : Integer_2_Unsigned := 0;
-      END RECORD;
-    FOR Record_Version'Size
-      USE 32;
+      end RECORD;
+    for Record_Version'Size
+      use 32;
     TYPE Record_Processor
-      IS RECORD
+      is RECORD
         Integer_8_Unsigned : Integer_8_Unsigned := 1;
-        Extensions         : Record_Extensions  := (OTHERS => <>);
-      END RECORD;
+        Extensions         : Record_Extensions  := (others => <>);
+      end RECORD;
   ---------------
   -- CONSTANTS --
   ---------------
@@ -121,7 +121,7 @@ PACKAGE BODY Implementation_For_Architecture
           --Has_Vector_Multimedia_Instructions => True, ???
           --Has_Vector_Scalar_Instructions     => True, ???
           Has_Altivec                        => True,
-          OTHERS                             => False)),
+          others                             => False)),
       IBM_Xenon_Version =>( 
         Core_Guess => 3,
         Extensions =>(
@@ -129,190 +129,196 @@ PACKAGE BODY Implementation_For_Architecture
           --Has_Vector_Scalar_Instructions     => True, ???
           Has_Altivec                        => True,
           Has_Altivec_Additional_Registers   => True,
-          OTHERS                             => False), 
+          others                             => False), 
       Power_8_Compliant_Version =>(
         Core_Guess => 16, -- ???
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
-          OTHERS                             => False),
+          others                             => False),
       Power_7_Plus_Compliant_Version =>(
         Core_Guess => 8,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
-          OTHERS                             => False),
+          others                             => False),
       Power_7_Compliant_Version =>(
         Core_Guess => 8,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
-          OTHERS                             => False),
+          others                             => False),
       Power_6_Compliant_Version =>(
         Core_Guess => 2,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
-          OTHERS                             => False),
+          others                             => False),
       IBM_970_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
-          OTHERS                             => False),
+          others                             => False),
       IBM_970FX_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
-          OTHERS                             => False),
+          others                             => False),
       IBM_970GX_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
-          OTHERS                             => False),
+          others                             => False),
       IBM_970MP_Version =>(
         Core_Guess => 2,
         Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7400_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7410_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7450_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7455_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7457_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7447A_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
+          others                             => False),
       Motorola_7448_Version =>(
         Core_Guess => 1,
         Extensions =>(
           Has_Altivec                        => True,
-          OTHERS                             => False),
-      OTHERS =>(
+          others                             => False),
+      others =>(
         Core_Guess => 1,
         Extensions =>(
-          OTHERS                             => False));
+          others                             => False));
   ----------------
   -- Initialize --
   ----------------
-    PROCEDURE Initialize
-      IS
-      BEGIN
-        NULL;
-      END Initialize;
+    procedure Initialize
+      is
+      begin
+        null;
+      end Initialize;
   ----------------
   -- Get_Vendor --
   ----------------
-    FUNCTION Get_Vendor
-      RETURN Enumerated_Vendor
-      IS
-      BEGIN
-        RETURN Apple_IBM_Motorola;
-      END Get_Vendor;
+    function Get_Vendor
+      return Enumerated_Vendor
+      is
+      begin
+        return Apple_IBM_Motorola;
+      end Get_Vendor;
   -----------------
   -- Get_Version --
   -----------------
-    FUNCTION Get_Version
-      RETURN Enumerated_Version
-      IS
-      Version : ALIASED Record_Version := (OTHERS => <>);
-      BEGIN
+    function Get_Version
+      return Enumerated_Version
+      is
+      Version : aliased Record_Version := (others => <>);
+      begin
         Asm(
           Template => "mfpvr %%r0",
           Volatile => True,
-          Inputs   => Access_Record_Version'Asm_Input(TO_R0, Version'Access));
-        RETURN Enumerated_Processor_Version'Val(Version.Major);
-      EXCEPTION
-        WHEN  => 
-          RAISE Unsupported_Feature;
-      END Get_Version;
+          Inputs   => Access_Record_Version'asm_input(TO_R0, Version'access));
+        return Enumerated_Processor_Version'val(Version.Major);
+      exception
+        when  => 
+          raise Unsupported_Feature;
+      end Get_Version;
   -------------------------
   -- Get_Number_Of_Cores --
   -------------------------
-    FUNCTION Get_Number_Of_Cores
-      RETURN Integer_8_Unsigned
-      IS
-      BEGIN
-        RETURN POWERPC_PROCESSORS(Get_Version).Core_Guess;
-      END Get_Number_Of_Cores;
-  --------------------
-  -- Get_Extensions --
-  --------------------
-    FUNCTION Get_Extensions
-      RETURN Record_Extensions
-      IS
-      BEGIN
-        RETURN POWERPC_PROCESSORS(Get_Version).Extensions;
-      END Get_Extensions;
+    function Get_Number_Of_Cores
+      return Integer_8_Natural
+      is
+      begin
+        raise System_Call_Failure;
+        return 1;
+        --return POWERPC_PROCESSORS(Get_Version).Core_Guess;
+      end Get_Number_Of_Cores;
+  -------------------
+  -- Get_Specifics --
+  -------------------
+    function Get_Specifics
+      return Record_Specifics
+      is
+      begin
+        raise System_Call_Failure;
+        return (others => <>);
+        --return POWERPC_PROCESSORS(Get_Version).Extensions;
+      end Get_Specifics;
   ----------------------
   -- Check_Exceptions --
   ----------------------
-    PROCEDURE Check_Exceptions
-      IS
-      BEGIN
-        RAISE Unsupported_Feature; -- Should be done
-      END Check_Exceptions;
+    procedure Check_Exceptions
+      is
+      begin
+        raise System_Call_Failure;
+      end Check_Exceptions;
   ------------------
   -- Set_Rounding --
   ------------------
-    PROCEDURE Set_Rounding(
-      Rounding : IN Enumerated_Rounding)
-      IS
-      BEGIN
-        IF NOT POWERPC_PROCESSORS(Get_Version).Has_Altivec OR Rounding /= Round_To_Nearest THEN
-          RAISE Unsupported_Feature;
-        END IF;
-      END Set_Rounding;
+    procedure Set_Rounding(
+      Rounding : in Enumerated_Rounding)
+      is
+      begin
+        raise System_Call_Failure;
+        --if not POWERPC_PROCESSORS(Get_Version).Has_Altivec or Rounding /= Round_To_Nearest THEN
+        --  raise Unsupported_Feature;
+        --end if;
+      end Set_Rounding;
   -------------------
   -- Set_Precision --
   -------------------
-    PROCEDURE Set_Precision(
-      Precision : IN Enumerated_Precision)
-      IS
-      BEGIN
-        IF NOT POWERPC_PROCESSORS(Get_Version).Has_Altivec OR Precision /= Single_Precision THEN
-          RAISE Unsupported_Feature;
-        END IF;
-      END Set_Precision;
+    procedure Set_Precision(
+      Precision : in Enumerated_Precision)
+      is
+      begin
+        raise System_Call_Failure;
+        --if not POWERPC_PROCESSORS(Get_Version).Has_Altivec or Precision /= Single_Precision THEN
+        --  raise Unsupported_Feature;
+        --end if;
+      end Set_Precision;
   --------------------
   -- Get_Clock_Tics --
   --------------------
-    FUNCTION Get_Clock_Ticks
-      RETURN Integer_8_Unsigned
-      IS
+    function Get_Clock_Ticks
+      return Integer_8_Unsigned
+      is
 --      Result : Integer_4_Unsigned := 0;
-      BEGIN
-        RAISE Unsupported_Feature; -- Should be done
---         CASE Get_Version IS
---           WHEN 
+      begin
+        raise Unsupported_Feature; -- Should be done
+--         case Get_Version is
+--           when 
 --             Motorola_7400_Version  |
 --             Motorola_7410_Version  |
 --             Motorola_7450_Version  |
@@ -334,7 +340,7 @@ PACKAGE BODY Implementation_For_Architecture
 --                 Volitile => True,
 --                 Inputs =>
 --                 Outputs =>);
---           WHEN
+--           when
 --             IBM_750FX_Version |
 --             IBM_970FX_Version |
 --             IBM_970GX_Version |
@@ -357,55 +363,54 @@ PACKAGE BODY Implementation_For_Architecture
 --                 Volitile => True,
 --                 Inputs =>
 --                 Outputs =>);
---           WHEN OTHERS =>
---             RAISE Unsupported_Feature;
---         END CASE;
-         RETURN 0;        
-      END Get_Clock_Ticks;
+--           when others =>
+--             raise Unsupported_Feature;
+--         end case;
+         return 0;        
+      end Get_Clock_Ticks;
   --------------------
   -- Is_Stack_Empty --
   --------------------
-    FUNCTION Is_Stack_Empty
-      RETURN Boolean
-      IS
-      BEGIN
-        RAISE Unsupported_Feature;
-      END Is_Stack_Empty;
+    function Is_Stack_Empty
+      return Boolean
+      is
+      begin
+        raise System_Call_Failure;
+      end Is_Stack_Empty;
   -----------------
   -- Clear_Stack --
   -----------------
-    PROCEDURE Clear_Stack
-      IS
-      BEGIN
-        RAISE Unsupported_Feature;
-      END Clear_Stack;
+    procedure Clear_Stack
+      is
+      begin
+        raise Unsupported_Feature;
+      end Clear_Stack;
   ---------------
   -- Put_Trace --
   ---------------
-    PROCEDURE Put_Trace
-      IS
-      BEGIN
-        RAISE Unsupported_Feature;
-      END Put_Trace;
- --------------------------
- -- Compare_And_Exchange --
- --------------------------
-   FUNCTION Compare_And_Exchange(
-      Destination : OUT Integer_4_Unsigned;
-      Comparand   : IN  Integer_4_Unsigned;
-      Item        : IN  Integer_4_Unsigned)
-      RETURN Integer_4_Unsigned
-      IS
-      BEGIN
-        RAISE Unsupported_Feature; -- Should be done
-      END Compare_And_Exchange;
+    procedure Put_Trace
+      is
+      begin
+        raise Unsupported_Feature;
+      end Put_Trace;
+  --------------------------
+  -- Compare_And_Exchange --
+  --------------------------
+  -- function Compare_And_Exchange(
+  --    Destination : out Integer_4_Unsigned;
+  --    Comparand   : in  Integer_4_Unsigned;
+  --    Item        : in  Integer_4_Unsigned)
+  --    return Integer_4_Unsigned
+  --    is
+  --    begin
+  --      raise System_Call_Failure;
+  --    end Compare_And_Exchange;
   ---------------
   -- Put_Stack --
   ---------------
-    PROCEDURE Put_Stack
-      IS
-      BEGIN
-        RAISE Unsupported_Feature;
-      END Put_Stack;
-  END Implementation_For_Architecture;
-
+    procedure Put_Stack
+      is
+      begin
+        raise Unsupported_Feature;
+      end Put_Stack;
+  end Implementation_For_Architecture;
