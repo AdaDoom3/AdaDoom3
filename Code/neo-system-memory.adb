@@ -57,22 +57,21 @@ package body Neo.System.Memory
         Put_Title("MEMORY TEST");
         Memory := Get_Status;
         Put_Line("Load: "                       & Float_4_Percent'Wide_Image(Memory.Load));
-        Put_Line("Free space in gigs: "         & Integer_8_Natural'Wide_Image(Memory.Free_Space_In_Gigabytes));
-        Put_Line("Physical total: "             & Integer_8_Natural'Wide_Image(Memory.Physical_Total));
-        Put_Line("Physical available: "         & Integer_8_Natural'Wide_Image(Memory.Physical_Available));
-        Put_Line("Page file total: "            & Integer_8_Natural'Wide_Image(Memory.Page_File_Total));
-        Put_Line("Page file available: "        & Integer_8_Natural'Wide_Image(Memory.Page_File_Available));
-        Put_Line("Virtual total: "              & Integer_8_Natural'Wide_Image(Memory.Virtual_Total));
-        Put_Line("Virtual available: "          & Integer_8_Natural'Wide_Image(Memory.Virtual_Available));
-        Put_Line("Virtual available extended: " & Integer_8_Natural'Wide_Image(Memory.Virtual_Available_Extended));
+        Put_Line("Physical total: "             & Integer_Address'Wide_Image(Memory.Physical_Total));
+        Put_Line("Physical available: "         & Integer_Address'Wide_Image(Memory.Physical_Available));
+        Put_Line("Page file total: "            & Integer_Address'Wide_Image(Memory.Page_File_Total));
+        Put_Line("Page file available: "        & Integer_Address'Wide_Image(Memory.Page_File_Available));
+        Put_Line("Virtual total: "              & Integer_Address'Wide_Image(Memory.Virtual_Total));
+        Put_Line("Virtual available: "          & Integer_Address'Wide_Image(Memory.Virtual_Available));
+        Put_Line("Virtual available extended: " & Integer_Address'Wide_Image(Memory.Virtual_Available_Extended));
         Hang_Window;
       end Test;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
     procedure Set_Byte_Limits(
-      Minimum : in Integer_4_Unsigned;
-      Maximum : in Integer_4_Unsigned)
+      Minimum : in Integer_Address;
+      Maximum : in Integer_Address)
       with Pre => Minimum < Maximum
       is
       begin
