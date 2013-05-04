@@ -61,6 +61,7 @@ package body Neo.System.Processor
       Specifics : constant Record_Specifics := Get_Specifics;
       begin
         Put_Title("PROCESSOR TEST");
+        D;
         Set_Precision(Double_Extended_Precision);
         Set_Rounding(Nearest_Rounding);
         Check_Exceptions;
@@ -212,7 +213,6 @@ package body Neo.System.Processor
           end if;
         end if;
         Put_Stack;
-        D;
         Hang_Window;
       exception
         when Unsupported_Feature =>
