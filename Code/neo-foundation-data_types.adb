@@ -16,6 +16,26 @@
 --
 package body Neo.Foundation.Data_Types
   is
+  ----------------------
+  -- Protected_Status --
+  ----------------------
+    protected body Protected_Status
+      is
+        function Is_Doing_Something
+          return Boolean
+          is
+          begin
+            return Status;
+          end Is_Doing_Something;
+        procedure Set_Is_Doing_Something(
+          New_Status : in Boolean)
+          is
+          begin
+            Status := New_Status;
+          end Set_Is_Doing_Something;
+      private
+        Status : Boolean := False;
+      end Protected_Status;
   -----------------------------
   -- Is_Low_Order_Byte_First --
   -----------------------------
