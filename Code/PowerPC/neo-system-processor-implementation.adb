@@ -28,7 +28,7 @@ separate(Neo.System.Processor)
 package body Implementation_For_Architecture
   is
   ------------------
-  -- ENUMERATIONS --
+  -- Enumerations --
   ------------------
     TYPE Enumerated_Processor_Version
       is(
@@ -97,24 +97,24 @@ package body Implementation_For_Architecture
       Freescale_E500V1_Core_Version     => 16#8020#,
       Freescale_E500V2_Core_Version     => 16#8021#);
   -------------
-  -- RECORDS --
+  -- Records --
   -------------
-    TYPE Record_Version
-      is RECORD
+    type Record_Version
+      is record
         Major : Integer_2_Unsigned := 0;
         Minor : Integer_2_Unsigned := 0;
-      end RECORD;
+      end record;
     for Record_Version'Size
       use 32;
-    TYPE Record_Processor
-      is RECORD
+    type Record_Processor
+      is record
         Integer_8_Unsigned : Integer_8_Unsigned := 1;
         Extensions         : Record_Extensions  := (others => <>);
-      end RECORD;
+      end record;
   ---------------
-  -- CONSTANTS --
+  -- Constants --
   ---------------
-    POWERPC_PROCESSORS : CONSTANT ARRAY(Enumerated_Processor_Version'Range) OF Record_Extensions :=(
+    POWERPC_PROCESSORS : constant array(Enumerated_Processor_Version'Range) of Record_Extensions :=(
       IBM_Cell_Broadband_Engine_Version =>(
         Core_Guess => 8,
         Extensions =>(
