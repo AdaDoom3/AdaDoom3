@@ -24,9 +24,9 @@ package Neo.System.Network
   ----------------
   -- Exceptions --
   ----------------
-    Silenced_Without_Being_Vocal   : Exception;
-    Vocalized_without_Begin_Silent : Exception;
-    Invalid_Network_Address_Passed : Exception;
+    Connection_Silenced_Without_Being_Vocal   : Exception;
+    Connection_Vocalized_without_Begin_Silent : Exception;
+    Invalid_Network_Address_Passed            : Exception;
   -----------
   -- Types --
   -----------
@@ -88,7 +88,7 @@ private
     type Record_Connection
       is Ada.Controlled.Limited_Controlled
       with record
-        Status                    : Protected_Status;
+        Vocal_Status              : Protected_Status;
         Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
         Socket                    : Integer_8_Unsigned := 0;
         Number_Of_Read_Packets    : Integer_8_Unsigned := 0;
