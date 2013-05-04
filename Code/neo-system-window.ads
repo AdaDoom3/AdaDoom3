@@ -21,7 +21,6 @@ with
   Ada.Command_Line,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
-  Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Generic_Protected;
 use
@@ -31,7 +30,6 @@ use
   Ada.Command_Line,
   Neo.Foundation.Text_IO,
   Neo.Foundation.Data_Types,
-  Neo.Foundation.Build_Options,
   Neo.Foundation.Package_Testing;
 package Neo.System.Window
   is
@@ -86,12 +84,6 @@ package Neo.System.Window
   -----------------
   -- Subprograms --
   -----------------
-    generic
-      with
-        procedure Handle_Character(
-          Item : in Character_2);
-      with
-        procedure 
     procedure Run(
       Title                       : in String_2;
       Icon_Path                   : in String_2;
@@ -197,16 +189,16 @@ private
   ---------------
     type Access_Array_Record_Monitor
       is access all Array_Record_Monitor;
-  --------------
-  -- Packages --
-  --------------
-    package Protected_Record_Window
-      is new Neo.Foundation.Generic_Protected(Record_Window);
+  ---------------
+  -- Protected --
+  ---------------
+    protected type Protected_Data
+      is
   ---------------
   -- Variables --
   ---------------
-    Protected_Data : Protected_Record_Window.Data;
-    Center         : array (1..2) of Integer_4_Signed := (others => 0);
+    Data   : Protected_Data;
+    Center : array(1..2) of Integer_4_Signed := (others => 0);
   -----------------
   -- Subprograms --
   -----------------
@@ -301,8 +293,6 @@ private
           Do_Restore_System_Mouse : in Boolean := False);
         procedure Move_Topmost_Windows_Out_Of_The_Way;
       end Implementation_For_Operating_System;
-    package body Implementation_For_Operating_System
-      is separate;
     package Implementation
       is new Implementation_For_Operating_System(
         Handle_Finalization => Handle_Finalization,
