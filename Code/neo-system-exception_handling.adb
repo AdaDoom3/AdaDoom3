@@ -23,6 +23,14 @@ package body Neo.System.Exception_Handling
       is
       begin
         Put_Title("EXCEPTION HANDLING TEST");
+        Start_Alert;
+        while Is_Okay("" & Character_2'Val(16#221E#), "Continue?!") loop
+          delay 0.1;
+        end loop;
+        --Start_Alert; -- Should raise an exception
+        Stop_Alert;
+        --Stop_Alert; -- Should also raise an exception
+        --Create_Error_Console();
       end Test;
   -----------------
   -- Start_Alert --
@@ -73,9 +81,9 @@ package body Neo.System.Exception_Handling
     function Is_Okay(
       Title        : in String_2;
       Message      : in String_2;
-      Buttons      : in Enumerated_Buttons;
-      Icon         : in Enumerated_Icon;
-      Parent_Title : in String_2 := NULL_STRING_2)
+      Buttons      : in Enumerated_Buttons := Yes_No_Buttons;
+      Icon         : in Enumerated_Icon    := No_Icon;
+      Parent_Title : in String_2           := NULL_STRING_2)
       return Boolean
       is
       begin
