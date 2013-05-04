@@ -81,12 +81,15 @@ package body Neo.System.Exception_Handling
     function Is_Okay(
       Title        : in String_2;
       Message      : in String_2;
-      Buttons      : in Enumerated_Buttons := Yes_No_Buttons;
+      Buttons      : in Enumerated_Buttons := Okay_Buttons;
       Icon         : in Enumerated_Icon    := No_Icon;
       Parent_Title : in String_2           := NULL_STRING_2)
       return Boolean
       is
       begin
+        if Title = NULL_STRING_2 or Message = NULL_STRING_2 then
+          raise Empty_Is_Okay_Message;
+        end if;
         Implementation.Is_Okay(
           Title        => Title,
           Message      => Message,
