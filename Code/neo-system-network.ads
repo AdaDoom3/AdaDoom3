@@ -64,7 +64,7 @@ package Neo.System.Network
       Connection : in out Record_Connection);
     function Recieve(
       Connection : in  Record_Connection;
-      From       : out String_2; -- Out in function parameters is only allowed in newer versions of Ada
+      From       : out String_2; -- Out within function parameters is only allowed in newer versions of Ada
       Timeout    : in  Duration := 0.0)
       return Stream_Element_Array;
     procedure Send(
@@ -82,7 +82,7 @@ private
       with record
         Vocal_Status : Protected_Status;
         Socket       : Integer_8_Unsigned := 0; --???
-        State        : Record_State := (others => <>);
+        State        : Record_State       := (others => <>);
       end record;
   -----------------
   -- Subprograms --
