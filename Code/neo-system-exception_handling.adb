@@ -16,26 +16,6 @@
 --
 package body Neo.System.Exception_Handling
   is
-  ----------------------------
-  -- Protected_Alert_Status --
-  ----------------------------
-    protected body Protected_Alert_Status
-      is
-        function Is_Alerting
-          return Boolean
-          is
-          begin
-            return Status;
-          end Is_Alerting;
-        procedure Set_Is_Alerting(
-          New_Status : in Boolean)
-          is
-          begin
-            Status := New_Status;
-          end Is_Alerting;
-      private
-        Status : Boolean := False;
-      end Protected_Alert_Status;
   ----------
   -- Test --
   ----------
@@ -50,11 +30,11 @@ package body Neo.System.Exception_Handling
     procedure Start_Alert
       is
       begin
-        if Alert_Status.Is_Alerting then
+        if Alert_Status.Is_Doing_Something then
           raise Alert_Started_Before_Stop;
         end if;
         Implementation.Start_Alert;
-        Alert_Status.Set_Is_Alerting(True);
+        Alert_Status.Set_Is_Doing_Something(True);
       exception
         when System_Call_Failure =>
           null;
@@ -65,11 +45,11 @@ package body Neo.System.Exception_Handling
     procedure Stop_Alert
       is
       begin
-        if not Alert_Status.Is_Alerting then
+        if not Alert_Status.Is_Doing_Something then
           raise Alert_Stopped_Without_Start;
         end if;
         Implementation.Stop_Alert;
-        Alert_Status.Set_Is_Alerting(False);
+        Alert_Status.Set_Is_Doing_Something(False);
       exception
         when System_Call_Failure =>
           null;
@@ -114,5 +94,5 @@ package body Neo.System.Exception_Handling
   -----------------
     function Is_Alerting
       return Boolean
-      renames Alert_Status.Is_Alerting;
+      renames Alert_Status.Is_Doing_Something;
   end Neo.System.Exception_Handling;
