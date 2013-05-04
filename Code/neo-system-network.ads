@@ -71,7 +71,7 @@ package Neo.System.Network
       return Integer_8_Unsigned;
     function Get_Number_Of_Written_Bytes(
       Connection : in Record_Connection)
-      return Integer_4_Natural;
+      return Integer_8_Unsigned;
     procedure Set_Address(
       Connection      : in out Record_Connection;
       Network_Address : in     String_2);
@@ -88,13 +88,13 @@ private
     type Record_Connection
       is Ada.Controlled.Limited_Controlled
       with record
-        Network_Address           : String_2(1..64)   := (others => NULL_CHARACTER_2);
-        Socket                    : Integer_4_Natural := 0;
-        Is_Silenced               : Boolean           := False;
-        Number_Of_Read_Packets    : Integer_4_Natural := 0;
-        Number_Of_Read_Bytes      : Integer_4_Natural := 0;
-        Number_Of_Written_Packets : Integer_4_Natural := 0;
-        Number_Of_Written_Bytes   : Integer_4_Natural := 0;
+        Status                    : Protected_Status;
+        Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
+        Socket                    : Integer_8_Unsigned := 0;
+        Number_Of_Read_Packets    : Integer_8_Unsigned := 0;
+        Number_Of_Read_Bytes      : Integer_8_Unsigned := 0;
+        Number_Of_Written_Packets : Integer_8_Unsigned := 0;
+        Number_Of_Written_Bytes   : Integer_8_Unsigned := 0;
       end record;
   -----------------
   -- Subprograms --
@@ -128,4 +128,3 @@ private
           To         : in String_2);
       end Implementation;
   end Neo.System.Network;
-
