@@ -53,7 +53,7 @@ package Neo.System.Network
   -------------
   -- Records --
   -------------
-    type Record_Connection_Status
+    type Record_Status
       is record
         Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
         Socket                    : Integer_8_Unsigned := 0;
@@ -69,7 +69,7 @@ package Neo.System.Network
     procedure Finalize;
     function Get_Local_IP
       return String_2;
-    function Get_Connection_Status(
+    function Get_Status(
       Connection : in Record_Connection)
       return Record_Status;
     procedure Set_Address(
