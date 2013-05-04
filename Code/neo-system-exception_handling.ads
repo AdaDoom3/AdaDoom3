@@ -66,21 +66,9 @@ package Neo.System.Exception_Handling
 private
 -------
   ---------------
-  -- Protected --
-  ---------------
-    protected type Protected_Alert_Status
-      is
-        function Is_Alerting
-          return Boolean;
-        procedure Set_Is_Alerting(
-          New_Status : in Boolean);
-      private
-        Status : Boolean := False;
-      end Protected_Alert_Status;
-  ---------------
   -- Variables --
   ---------------
-    Alert_Status : Protected_Alert_Status;
+    Status : Protected_Status;
   --------------------
   -- Implementation --
   --------------------
