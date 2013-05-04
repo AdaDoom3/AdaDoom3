@@ -53,7 +53,7 @@ package Neo.System.Network
   -------------
   -- Records --
   -------------
-    type Record_Status
+    type Record_State
       is record
         Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
         Socket                    : Integer_8_Unsigned := 0;
@@ -69,9 +69,9 @@ package Neo.System.Network
     procedure Finalize;
     function Get_Local_IP
       return String_2;
-    function Get_Status(
+    function Get_State(
       Connection : in Record_Connection)
-      return Record_Status;
+      return Record_State;
     procedure Set_Address(
       Connection      : in out Record_Connection;
       Network_Address : in     String_2);
@@ -88,8 +88,8 @@ private
     type Record_Connection
       is Ada.Controlled.Limited_Controlled
       with record
-        Vocal_Status      : Protected_Status;
-        Connection_Status : Record_Connection_Status := (others => <>);
+        Vocal_Status : Protected_Status;
+        State        : Record_State := (others => <>);
       end record;
   -----------------
   -- Subprograms --
