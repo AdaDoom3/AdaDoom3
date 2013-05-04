@@ -50,6 +50,18 @@ package Neo.System.Network
           To         : in String_2;
           Data       : in Array_Type_To_Message);
       end Messenger;
+  -------------
+  -- Records --
+  -------------
+    type Record_Connection_Status
+      is record
+        Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
+        Socket                    : Integer_8_Unsigned := 0;
+        Number_Of_Read_Packets    : Integer_8_Unsigned := 0;
+        Number_Of_Read_Bytes      : Integer_8_Unsigned := 0;
+        Number_Of_Written_Packets : Integer_8_Unsigned := 0;
+        Number_Of_Written_Bytes   : Integer_8_Unsigned := 0;
+      end record;
   -----------------
   -- Subprograms --
   -----------------
@@ -57,21 +69,9 @@ package Neo.System.Network
     procedure Finalize;
     function Get_Local_IP
       return String_2;
-    function Get_Network_Address(
+    function Get_Connection_Status(
       Connection : in Record_Connection)
-      return String_2;
-    function Get_Number_Of_Read_Packets(
-      Connection : in Record_Connection)
-      return Integer_8_Unsigned;
-    function Get_Number_Of_Read_Bytes(
-      Connection : in Record_Connection)
-      return Integer_8_Unsigned;
-    function Get_Number_Of_Written_Packets(
-      Connection : in Record_Connection)
-      return Integer_8_Unsigned;
-    function Get_Number_Of_Written_Bytes(
-      Connection : in Record_Connection)
-      return Integer_8_Unsigned;
+      return Record_Status;
     procedure Set_Address(
       Connection      : in out Record_Connection;
       Network_Address : in     String_2);
@@ -88,13 +88,8 @@ private
     type Record_Connection
       is Ada.Controlled.Limited_Controlled
       with record
-        Vocal_Status              : Protected_Status;
-        Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
-        Socket                    : Integer_8_Unsigned := 0;
-        Number_Of_Read_Packets    : Integer_8_Unsigned := 0;
-        Number_Of_Read_Bytes      : Integer_8_Unsigned := 0;
-        Number_Of_Written_Packets : Integer_8_Unsigned := 0;
-        Number_Of_Written_Bytes   : Integer_8_Unsigned := 0;
+        Vocal_Status      : Protected_Status;
+        Connection_Status : Record_Connection_Status := (others => <>);
       end record;
   -----------------
   -- Subprograms --
