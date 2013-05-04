@@ -15,9 +15,11 @@
 --
 --
 with
+  Ada.Streams,
   Ada.Finalization.Controlled,
   Neo.Foundation.Data_Types;
 use
+  Ada.Streams,
   Neo.Foundation.Data_Types;
 package Neo.System.Network
   is
@@ -26,30 +28,12 @@ package Neo.System.Network
   ----------------
     Connection_Silenced_Without_Being_Vocal   : Exception;
     Connection_Vocalized_without_Begin_Silent : Exception;
-    Invalid_Network_Address_Passed            : Exception;
+    Invalid_Network_Address_String_Passed     : Exception;
   -----------
   -- Types --
   -----------
     type Record_Connection
       is private;
-  --------------
-  -- Packages --
-  --------------
-    generic
-      type Array_Type_To_Message
-        is array--???private;
-    package Messenger
-      is
-        function Recieve(
-          Connection : in  Record_Connection;
-          From       : out String_2;
-          Timeout    : in  Duration := 0.0)
-          return Array_Type_To_Message;
-        procedure Send(
-          Connection : in Record_Connection;
-          To         : in String_2;
-          Data       : in Array_Type_To_Message);
-      end Messenger;
   -------------
   -- Records --
   -------------
@@ -79,6 +63,15 @@ package Neo.System.Network
       Connection : in out Record_Connection);
     procedure Vocalize(
       Connection : in out Record_Connection);
+    function Recieve(
+      Connection : in  Record_Connection;
+      From       : out String_2;
+      Timeout    : in  Duration := 0.0)
+      return Stream_Element_Array;
+    procedure Send(
+      Connection : in Record_Connection;
+      To         : in String_2;
+      Data       : in Stream_Element_Array);
 -------
 private
 -------
@@ -116,9 +109,9 @@ private
           Connection : in Record_Connection;
           From       : in String_2;
           Timeout    : in Duration)
-          return Array_Integer_1_Unsigned;
+          return Address;
         procedure Send(
-          Data       : in Array_Integer_1_Unsigned;
+          Data       : in Address;
           Connection : in Record_Connection;
           To         : in String_2);
       end Implementation;
