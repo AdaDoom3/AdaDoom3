@@ -37,13 +37,13 @@ package Neo.System.Memory
         Load                       : Float_4_Percent;
         Disk_Total                 : Integer_8_Unsigned;
         Disk_Available             : Integer_8_Unsigned;
-        Physical_Total             : Integer_8_Unsigned;
-        Physical_Available         : Integer_8_Unsigned;
-        Page_File_Total            : Integer_8_Unsigned;
-        Page_File_Available        : Integer_8_Unsigned;
-        Virtual_Total              : Integer_8_Unsigned;
-        Virtual_Available          : Integer_8_Unsigned;
-        Virtual_Available_Extended : Integer_8_Unsigned;
+        Physical_Total             : Integer_Address;
+        Physical_Available         : Integer_Address;
+        Page_File_Total            : Integer_Address;
+        Page_File_Available        : Integer_Address;
+        Virtual_Total              : Integer_Address;
+        Virtual_Available          : Integer_Address;
+        Virtual_Available_Extended : Integer_Address;
       end record;
   --------------
   -- Packages --
