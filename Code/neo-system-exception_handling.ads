@@ -68,7 +68,7 @@ private
   ---------------
   -- Variables --
   ---------------
-    Status : Protected_Status;
+    Alert_Status : Protected_Status;
   --------------------
   -- Implementation --
   --------------------
