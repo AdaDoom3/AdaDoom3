@@ -86,7 +86,7 @@ package body Implementation
     Hook_Mouse                   :         Address              := null_ADDRESS;
     Mouse                        :         Address              := null_ADDRESS;
     Icon                         :         Address              := null_ADDRESS;
-    Original_Clip                : aliased Record_Rectangle     := <>;
+    Original_Clip                : aliased Record_Rectangle     := (others => <>);
   ----------------
   -- Initialize --
   ----------------
@@ -140,7 +140,7 @@ package body Implementation
                       Integer_4_Signed( -- Extract high
                         To_Integer_2_Signed(
                           Integer_2_Unsigned(
-                             Shift_Right(To_Integer_4_Unsigned(Data_Signed), Integer_2_Unsigned'Size)))));
+                            Shift_Right(To_Integer_4_Unsigned(Data_Signed), Integer_2_Unsigned'Size)))));
                 end Handle_Move;
             when EVENT_COMMAND =>
               case Data_Unsigned is
