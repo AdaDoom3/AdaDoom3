@@ -73,7 +73,7 @@ private
         function Is_Alerting
           return Boolean;
         procedure Set_Is_Alerting(
-          Status : in Boolean);
+          New_Status : in Boolean);
       private
         Status : Boolean := False;
       end Protected_Alert_Status;
