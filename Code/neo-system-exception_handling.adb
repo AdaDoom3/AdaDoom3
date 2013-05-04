@@ -30,7 +30,7 @@ package body Neo.System.Exception_Handling
     procedure Start_Alert
       is
       begin
-        if Alert_Status.Is_Doing_Something then
+        if Is_Alerting then
           raise Alert_Started_Before_Stop;
         end if;
         Implementation.Start_Alert;
@@ -45,7 +45,7 @@ package body Neo.System.Exception_Handling
     procedure Stop_Alert
       is
       begin
-        if not Alert_Status.Is_Doing_Something then
+        if not Is_Alerting then
           raise Alert_Stopped_Without_Start;
         end if;
         Implementation.Stop_Alert;
