@@ -41,10 +41,10 @@ package Neo.System.Network
       is record
         Network_Address           : String_2(1..64)    := (others => NULL_CHARACTER_2);
         Socket                    : Integer_8_Unsigned := 0;
-        Number_Of_Read_Packets    : Integer_8_Unsigned := 0;
-        Number_Of_Read_Bytes      : Integer_8_Unsigned := 0;
-        Number_Of_Written_Packets : Integer_8_Unsigned := 0;
-        Number_Of_Written_Bytes   : Integer_8_Unsigned := 0;
+        Number_Of_Packets_Read    : Integer_8_Unsigned := 0;
+        Number_Of_Packets_Written : Integer_8_Unsigned := 0;
+        Number_Of_Bytes_Read      : Integer_8_Unsigned := 0;
+        Number_Of_Bytes_Written   : Integer_8_Unsigned := 0;
       end record;
   -----------------
   -- Subprograms --
