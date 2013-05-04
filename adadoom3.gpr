@@ -103,8 +103,7 @@ project AdaDoom3 is
       "-s");                                                          -- Recompile if switches are changed
     case SAFETY is
       when "Yes" =>
-        Switch_Compiler :=
-          Switch_Compiler &(
+        Switch_Compiler := Switch_Compiler &(
           "-fstack-check",                                            -- Generate checks for exceeding the stack
           "-gnato",                                                   -- Enable overflow checking for numerics
           "-gnatE",                                                   -- Enable dynamic generic elaboration checks
