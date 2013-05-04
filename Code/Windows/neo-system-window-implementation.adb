@@ -51,9 +51,9 @@ package body Implementation
     -- enables the Aero-Snap™ feature in newer versions of Windows, which breaks resizing higher up in the System.
     DO_DISABLE_FULLSCREEN_BOX_IN_NEWER_THAN_XP : constant Boolean              := True;
     DO_SET_BLANK_MOUSE                         : constant Boolean              := False; -- Removes possibility of a cursor flicker
-    SEPorATor_LEFT                             : constant String_2             := "(";
-    SEPorATor_RIGHT                            : constant String_2             := ")";
-    MULTI_MONITor_NAME                         : constant String_2             := "Multi Monitor";
+    SEPORATOR_LEFT                             : constant String_2             := "(";
+    SEPORATOR_RIGHT                            : constant String_2             := ")";
+    MULTI_MONITOR_NAME                         : constant String_2             := "Multi Monitor";
     FULLSCREEN_STYLE_POSITION                  : constant Integer_4_Unsigned_C := STYLE_EXTRA_ALWAYS_ON_TOP;
     FULLSCREEN_STYLE:
       constant Integer_4_Unsigned_C :=
@@ -68,7 +68,7 @@ package body Implementation
         STYLE_BorDER_THIN_LINE  or
         STYLE_BorDER_SIZABLE    or
         STYLE_BOX_ICONIZE; 
-    MULTI_MONITor_STYLE:
+    MULTI_MONITOR_STYLE:
       constant Integer_4_Unsigned_C :=
         FULLSCREEN_STYLE        or
         STYLE_NO_ACTIVATE;
@@ -86,7 +86,7 @@ package body Implementation
     Hook_Mouse                   :         Address              := null_ADDRESS;
     Mouse                        :         Address              := null_ADDRESS;
     Icon                         :         Address              := null_ADDRESS;
-    Original_Clip                : aliased Record_Rectangle     := (others => <>);
+    Original_Clip                : aliased Record_Rectangle     := <>;
   ----------------
   -- Initialize --
   ----------------
@@ -140,7 +140,7 @@ package body Implementation
                       Integer_4_Signed( -- Extract high
                         To_Integer_2_Signed(
                           Integer_2_Unsigned(
-                            Shift_Right(To_Integer_4_Unsigned(Data_Signed), Integer_2_Unsigned'Size)))));
+                             Shift_Right(To_Integer_4_Unsigned(Data_Signed), Integer_2_Unsigned'Size)))));
                 end Handle_Move;
             when EVENT_COMMAND =>
               case Data_Unsigned is
@@ -386,7 +386,7 @@ package body Implementation
         Menu_Name  => null,
         Class_Name =>
           To_Access_Constant_Character_2_C(
-            Class_Title.all & SEPorATor_LEFT & MULTI_MONITor_NAME & SEPorATor_RIGHT));
+            Class_Title.all & SEPORATOR_LEFT & MULTI_MONITOR_NAME & SEPORATOR_RIGHT));
       -----
       begin
       -----
@@ -406,7 +406,7 @@ package body Implementation
                 Multi_Monitor_Windows(J) :=
                   Create_Window(
                     Style_Extra => 0,
-                    Style       => MULTI_MONITor_STYLE,
+                    Style       => MULTI_MONITOR_STYLE,
                     X           => Integer_4_Signed_C(Monitors(I).Desktop.Left),
                     Y           => Integer_4_Signed_C(Monitors(I).Desktop.Top),
                     Width       => Integer_4_Signed_C(Monitors(I).Desktop.Right  - Monitors(I).Desktop.Left),
@@ -417,10 +417,10 @@ package body Implementation
                     Parameter   => null_ADDRESS,
                     Class_Name  =>
                       To_String_2_C(
-                        Class_Title.all & SEPorATor_LEFT & MULTI_MONITor_NAME & SEPorATor_RIGHT),
+                        Class_Title.all & SEPORATOR_LEFT & MULTI_MONITOR_NAME & SEPORATOR_RIGHT),
                     Window_Name =>
                       To_String_2_C(
-                        Class_Title.all & SEPorATor_LEFT & Integer_4_Signed'Wide_Image(I) & SEPorATor_RIGHT));
+                        Class_Title.all & SEPORATOR_LEFT & Integer_4_Signed'Wide_Image(I) & SEPORATOR_RIGHT));
                 if Multi_Monitor_Windows(J) = null_ADDRESS then
                   raise System_Call_Failure;
                 end if;
@@ -459,7 +459,7 @@ package body Implementation
         Unregister_Class(
           Window_Class => null_ADDRESS,
           Class_Name   => To_String_2_C(
-            Class_Title.all & SEPorATor_LEFT & MULTI_MONITor_NAME & SEPorATor_RIGHT)) = FAILED
+            Class_Title.all & SEPORATOR_LEFT & MULTI_MONITOR_NAME & SEPORATOR_RIGHT)) = FAILED
         then
           raise System_Call_Failure;
         end if;
