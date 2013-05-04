@@ -29,6 +29,7 @@ package Neo.System.Exception_Handling
   ----------------
     Alert_Started_Before_Stop   : Exception;
     Alert_Stopped_Without_Start : Exception;
+    Empty_Is_Okay_Message       : Exception;
   ------------------
   -- Enumerations --
   ------------------
@@ -56,9 +57,9 @@ package Neo.System.Exception_Handling
     function Is_Okay(
       Title        : in String_2;
       Message      : in String_2;
-      Buttons      : in Enumerated_Buttons;
-      Icon         : in Enumerated_Icon;
-      Parent_Title : in String_2 := NULL_STRING_2)
+      Buttons      : in Enumerated_Buttons := Okay_Button;
+      Icon         : in Enumerated_Icon    := No_Icon;
+      Parent_Title : in String_2           := NULL_STRING_2)
       return Boolean;
     function Is_Alerting
       return Boolean;
@@ -84,7 +85,7 @@ private
           Message      : in String_2;
           Buttons      : in Enumerated_Buttons;
           Icon         : in Enumerated_Icon;
-          Parent_Title : in String_2 := NULL_STRING_2)
+          Parent_Title : in String_2)
           return Boolean;
       end Implementation;
   end Neo.System.Exception_Handling;
