@@ -65,7 +65,7 @@ package Neo.System.Network
       Connection : in out Record_Connection);
     function Recieve(
       Connection : in  Record_Connection;
-      From       : out String_2;
+      From       : out String_2; -- Out in function parameters is only allowed in newer versions of Ada
       Timeout    : in  Duration := 0.0)
       return Stream_Element_Array;
     procedure Send(
