@@ -30,7 +30,7 @@ package body Neo.System.Exception_Handling
         --Start_Alert; -- Should raise an exception
         Stop_Alert;
         --Stop_Alert; -- Should also raise an exception
-        --Create_Error_Console();
+        --Create_Error_Console("An error occured!", ("OMG DO SOMETING!?", Okay_Button));
       end Test;
   -----------------
   -- Start_Alert --
