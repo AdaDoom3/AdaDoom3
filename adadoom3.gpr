@@ -73,7 +73,7 @@ project AdaDoom3 is
       Base & Separator & PROCESSOR);
     case SYSTEM is
       when "Windows" | "SDL"       => null;
-      when "Linux"   | "Macintosh" => Directories := Base & ("POSIX");
+      when "Linux"   | "Macintosh" => Directories := Directories & ("POSIX");
     end case;
     for Source_Dirs          use Directories;
     for Exec_Dir             use ".";
