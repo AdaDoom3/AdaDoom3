@@ -52,20 +52,20 @@ package body Neo.System.Memory
   ----------
     procedure Test
       is
-      Status : Record_State := (others => <>);
+      State : Record_State := (others => <>); -- Get_State is called after for Put_Title, for clarity purposes 
       begin
         Put_Title("MEMORY TEST");
-        Memory := Get_State;
-        Put_Line("Load: "                       & Float_4_Percent'Wide_Image(Memory.Load));
-        Put_Line("Disk total: "                 & Integer_Address'Wide_Image(Memory.Number_Of_Disk_Bytes_Total));
-        Put_Line("Disk available: "             & Integer_Address'Wide_Image(Memory.Number_Of_Disk_Bytes_Available));
-        Put_Line("Physical total: "             & Integer_Address'Wide_Image(Memory.Number_Of_Physical_Bytes_Total));
-        Put_Line("Physical available: "         & Integer_Address'Wide_Image(Memory.Number_Of_Physical_Bytes_Available));
-        Put_Line("Page file total: "            & Integer_Address'Wide_Image(Memory.Number_Of_Page_File_Bytes_Total));
-        Put_Line("Page file available: "        & Integer_Address'Wide_Image(Memory.Number_Of_Page_File_Bytes_Available));
-        Put_Line("Virtual total: "              & Integer_Address'Wide_Image(Memory.Number_Of_Virtual_Bytes_Total));
-        Put_Line("Virtual available: "          & Integer_Address'Wide_Image(Memory.Number_Of_Virtual_Bytes_Available));
-        Put_Line("Virtual available extended: " & Integer_Address'Wide_Image(Memory.Number_Of_Virtual_Bytes_Available_Extended));
+        State := Get_State;
+        Put_Line("Load: "                       & Float_4_Percent'Wide_Image(State.Load));
+        Put_Line("Disk total: "                 & Integer_Address'Wide_Image(State.Number_Of_Disk_Bytes_Total));
+        Put_Line("Disk available: "             & Integer_Address'Wide_Image(State.Number_Of_Disk_Bytes_Available));
+        Put_Line("Physical total: "             & Integer_Address'Wide_Image(State.Number_Of_Physical_Bytes_Total));
+        Put_Line("Physical available: "         & Integer_Address'Wide_Image(State.Number_Of_Physical_Bytes_Available));
+        Put_Line("Page file total: "            & Integer_Address'Wide_Image(State.Number_Of_Page_File_Bytes_Total));
+        Put_Line("Page file available: "        & Integer_Address'Wide_Image(State.Number_Of_Page_File_Bytes_Available));
+        Put_Line("Virtual total: "              & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Total));
+        Put_Line("Virtual available: "          & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Available));
+        Put_Line("Virtual available extended: " & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Available_Extended));
         Hang_Window;
       end Test;
   ---------------------
@@ -77,7 +77,7 @@ package body Neo.System.Memory
       with Pre => Minimum < Maximum
       is
       begin
-        Implementation.Set_Byte_Limits;
+        Implementation.Set_Byte_Limits(Minimum, Maximum);
       exception
         when System_Call_Failure =>
           null;
