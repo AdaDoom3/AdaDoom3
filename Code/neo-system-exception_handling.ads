@@ -24,6 +24,10 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System.Exception_Handling
   is
+  ---------------
+  -- Constants --
+  ---------------
+    MAXIMUM_NUMBER_OF_CONSOLE_BUTTONS : Integer_4_Positive := 4;
   ----------------
   -- Exceptions --
   ----------------
@@ -45,15 +49,29 @@ package Neo.System.Exception_Handling
       Okay_Button,
       Okay_Cancel_Buttons,
       Retry_Cancel_Buttons);
+  -------------
+  -- Records --
+  -------------
+    type Record_Console_Button
+      is record
+        Action  : Access_Procedure := null;
+        Caption : String_2(1..16)  := (others => NULL_CHARACTER_2);
+      end record;
+  ------------
+  -- Arrays --
+  ------------
+    type Array_Record_Console_Button
+      is array(1..MAXIMUM_NUMBER_OF_CONSOLE_BUTTONS)
+      of Record_Console_Button;
   -----------------
   -- Subprograms --
   -----------------
     procedure Test;
     procedure Start_Alert;
     procedure Stop_Alert;
-    procedure Create_Error_Console(
+    procedure Spawn_Console(
       Text    : in String_2;
-      Buttons : in Array_Console_Buttons);
+      Buttons : in Array_Record_Console_Button);
     function Is_Okay(
       Title        : in String_2;
       Message      : in String_2;
@@ -77,9 +95,9 @@ private
       is
         procedure Start_Alert;
         procedure Stop_Alert;
-        procedure Create_Error_Console(
+        procedure Spawn_Console(
           Text    : in String_2;
-          Buttons : in Array_Console_Buttons);
+          Buttons : in Array_Record_Console_Button);
         function Is_Okay(
           Title        : in String_2;
           Message      : in String_2;
