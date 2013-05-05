@@ -125,7 +125,7 @@ package body Implementation
       --    raise System_Call_Failure;
       --  end if;
       --  return Trim(Password.Name, Both);
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
         return DEFAULT_USERNAME;
       end Get_Username;
   ------------------
@@ -135,7 +135,7 @@ package body Implementation
       Path : in String_2)
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Open_Webpage;
   -------------------------
   -- Execute_Application --
@@ -145,7 +145,7 @@ package body Implementation
       Executable_Path : in String_2)
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Execute_Application;
   -----------------------------------------------
   -- Is_Running_In_Emulated_32_Bit_Environment --
