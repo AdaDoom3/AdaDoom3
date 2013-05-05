@@ -1,3 +1,6 @@
+# A shell script needs to replace this makefile, and based off of the bit size of the client's
+# computer pass the appropriate flags to gpr
+
 SYSTEM     = Linux
 COMPILER   = GNAT
 PROCESSOR  = x86-64
