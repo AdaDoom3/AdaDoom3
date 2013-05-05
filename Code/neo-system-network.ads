@@ -65,12 +65,12 @@ package Neo.System.Network
       Connection : in out Record_Connection);
     function Recieve(
       Connection : in  Record_Connection;
-      From       : out String_2; -- Out within function parameters is only allowed in newer versions of Ada
+      Sender     : out String_2; -- Out within function parameters is only allowed in newer versions of Ada
       Timeout    : in  Duration := 0.0)
       return Stream_Element_Array;
     procedure Send(
       Connection : in Record_Connection;
-      To         : in String_2;
+      Recipient  : in String_2;
       Data       : in Stream_Element_Array);
 -------
 private
