@@ -25,6 +25,8 @@ package Neo.Posix
   ---------------
     SUCCESS                     : constant Integer_4_Signed_C := 0;
     NUMBER_OF_PROCESSORS_ONLINE : constant Integer_4_Signed_C := 84;
+    UNIX_NAME_LINUX             : constant String_1_C         := "Linux";
+    UNIX_NAME_MACINTOSH         : constant String_1_C         := "Darwin";
   -------------
   -- Records --
   -------------
