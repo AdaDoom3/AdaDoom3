@@ -46,13 +46,13 @@ package body Implementation_For_Operating_System
         return Integer_8_Unsigned(Time.System);
       end Get_Clock_Ticks;
   ----------------------------
-  -- Get_Speed_In_Megahertz --
+  -- Get_Speed_In_Megahertz -- No POSIX commands for this, so raise an exception and let it be timed by Get_Clock_Ticks
   ----------------------------
     function Get_Speed_In_Megahertz
       return Integer_8_Unsigned
       is
       begin
-        raise Unsupported_Feature; -- There are no POSIX commands for this, so raise an exception and let it be timed higher-up by Get_Clock_Ticks
+        raise Unsupported_Feature; 
         return 0;
       end Get_Speed_In_Megahertz;
   end Implementation_For_Operating_System;
