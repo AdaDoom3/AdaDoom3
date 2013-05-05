@@ -5,7 +5,7 @@
 --
 --
 --
--- https://bitbucket.org/slouken/sdl/src/e8916fe9cfc8/src/video/x11/SDL_x11opengl.c?at=default
+-- https://github.com/AdaDoom3/AdaDoom3/blob/testgenprotectremoval/Libraries/SDL/src/video/x11/SDL_x11opengl.c
 -- https://github.com/id-Software/DOOM-3/blob/master/neo/sys/linux/glimp.cpp
 --
 --
