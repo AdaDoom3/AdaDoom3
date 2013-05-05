@@ -6,7 +6,7 @@
 --
 --
 -- This might be helpful
--- https://bitbucket.org/slouken/sdl/src/e8916fe9cfc8/src/video/x11/SDL_x11clipboard.c?at=default
+-- https://github.com/AdaDoom3/AdaDoom3/blob/testgenprotectremoval/Libraries/SDL/src/video/x11/SDL_x11clipboard.c
 --
 --
 --
