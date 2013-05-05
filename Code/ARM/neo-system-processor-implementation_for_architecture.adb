@@ -27,7 +27,7 @@ package Implementation_For_Architecture
     procedure Initialize
       is
       begin
-        raise System_Call_Failure;
+        null;
       end Initialize;
   ----------------
   -- Get_Vendor --
@@ -36,8 +36,7 @@ package Implementation_For_Architecture
       return Enumerated_Vendor
       is
       begin
-        raise System_Call_Failure;
-        return Generic_Vendor;
+        return ARM_Licenced_Vendor;
       end Get_Vendor;
   -------------------
   -- Get_Specifics --
@@ -65,7 +64,7 @@ package Implementation_For_Architecture
     procedure Check_Exceptions
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Check_Exceptions;
   ------------------
   -- Set_Rounding --
@@ -74,7 +73,7 @@ package Implementation_For_Architecture
       Rounding : in Enumerated_Rounding)
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
         return Nearest_Rounding;
       end Set_Rounding;
   -------------------
@@ -84,7 +83,7 @@ package Implementation_For_Architecture
       Precision : in Enumerated_Precision)
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
         return Double_Extended_Precision;
       end Set_Precision;
   ---------------------
@@ -94,7 +93,7 @@ package Implementation_For_Architecture
       return Integer_8_Unsigned
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
         return 0;
       end Get_Clock_Ticks;
   ---------------
@@ -103,7 +102,7 @@ package Implementation_For_Architecture
     procedure Put_Stack
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Put_Stack;
   ---------------
   -- Put_Trace --
@@ -111,7 +110,7 @@ package Implementation_For_Architecture
     procedure Put_Trace
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Put_Trace;
   --------------------
   -- Is_Stack_Empty --
@@ -120,7 +119,7 @@ package Implementation_For_Architecture
       return Boolean
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
         return True;
       end Is_Stack_Empty;
   -----------------
@@ -129,6 +128,6 @@ package Implementation_For_Architecture
     procedure Clear_Stack
       is
       begin
-        raise System_Call_Failure;
+        raise Unsupported_Feature;
       end Clear_Stack;
   end Implementation_For_Architecture;
