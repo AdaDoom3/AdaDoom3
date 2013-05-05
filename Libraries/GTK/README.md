@@ -1,16 +1,13 @@
---------------------------------------------------------------------
---                                                                --
---        GtkAda . An Ada graphical toolkit based on Gtk+         --
---                                                                --
---------------------------------------------------------------------
+GtkAda. An Ada graphical toolkit based on Gtk+ 
+==============================================
 
 Installation
-============
+------------
  
 See the file 'INSTALL'
 
 General Information
-===================
+-------------------
 
 The home page for GtkAda is
 
@@ -36,7 +33,7 @@ This library has been tested using Gtk+ 2.24.8 on the following systems:
    - Windows XP/Vista/7
 
 Disclaimer
-==========
+----------
 
 GtkAda  is free software;  you  can redistribute  it and/or  modify it
 under terms of the GNU General Public License as published by the Free
@@ -50,7 +47,7 @@ file  COPYING.  If  not,  write to  the  Free  Software Foundation, 59
 Temple Place - Suite 330, Boston, -- MA 02111-1307, USA.
 
 Documentation
-=============
+-------------
 
 The GtkAda reference manul and user's guide can be found under the
 docs/ subdirectory in various formats (texinfo, ps, txt, info, html)
