@@ -29,11 +29,6 @@ use
 separate(Neo.System)
 package body Implementation
   is
-  ---------------
-  -- Constants --
-  ---------------
-    SYSTEM_NAME_LINUX     : constant String_1 := "Linux";
-    SYSTEM_NAME_MACINTOSH : constant String_1 := "Darwin";
   -----------------
   -- Get_Version --
   -----------------
@@ -48,7 +43,7 @@ package body Implementation
         if
         Name.System(
           Name.System'First..
-          Name.System'First + SYSTEM_NAME_LINUX'Length) = SYSTEM_NAME_LINUX
+          Name.System'First + UNIX_NAME_LINUX'Length) = UNIX_NAME_LINUX
         then
           case Name.Version(Name.Version'First) is
             when '2' =>
@@ -77,7 +72,7 @@ package body Implementation
         elsif
         Name.System(
           Name.System'First..
-          Name.System'First + SYSTEM_NAME_MACINTOSH'Length) = SYSTEM_NAME_MACINTOSH
+          Name.System'First + UNIX_NAME_MACINTOSH'Length) = UNIX_NAME_MACINTOSH
         then
           case Name.Version(Name.Version'First) is
             when '8' =>
