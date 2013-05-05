@@ -1,0 +1,4 @@
+with "gtkada";
+project Default is
+   for Main use ("power.adb");
+end Default;

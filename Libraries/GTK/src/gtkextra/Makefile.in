@@ -1,0 +1,28 @@
+SRC=gtkbordercombo.c  gtkfontcombo.c     gtkplotbox.c \
+    gtkplotdata.c     gtkplotpixmap.c    gtkpsfont.c  \
+    gtkcolorcombo.c   gtkitementry.c     gtkplot.c    \
+    gtkplotdt.c       gtkplotpolar.c     gtksheet.c   \
+    gtkcombobutton.c  gtkplot3d.c        gtkplotcandle.c \
+    gtkplotflux.c     gtkplotprint.c     gtkextra.c \
+    gtkplotarray.c    gtkplotcanvas.c    gtkplotgdk.c \
+    gtkplotps.c       gtkextra-marshal.c gtkplotbar.c \
+    gtkplotcsurface.c gtkplotpc.c        gtkplotsurface.c \
+    gtkplotcanvastext.c gtkplotcanvasplot.c gtkplotcanvaspixmap.c \
+    gtkplotcanvasline.c gtkplotcanvasellipse.c gtkplotcanvasrectangle.c
+
+OBJ=${SRC:%.c=${OBJ_DIR}/%.o}
+OBJ_DIR=obj
+ALL_CFLAGS=@CFLAGS@ @GTK_CFLAGS@ $(FPIC)
+
+all: $(OBJ)
+
+include ../Makefile.common
+
+${OBJ_DIR}/%.o: %.c %.h
+	$(CC) -c $(ALL_CFLAGS) $< -o $@
+
+clean:
+	-$(RM) ${OBJ_DIR}/*.o
+
+distclean: clean
+	-$(RM) Makefile

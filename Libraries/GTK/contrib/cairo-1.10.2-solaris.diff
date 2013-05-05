@@ -1,0 +1,22 @@
+	* util/cairo-trace/trace.c: Fix compilation on Solaris (no setenv).
+
+--- util/cairo-trace/trace.c.old	2010-09-02 13:38:56.000000000 +0200
++++ util/cairo-trace/trace.c	2010-11-23 15:57:11.540600643 +0100
+@@ -811,7 +811,7 @@ _init_logfile (void)
+ 	    return FALSE;
+ 	}
+ 
+-	setenv ("CAIRO_TRACE_FD", "-1", 1);
++	putenv (strdup ("CAIRO_TRACE_FD=-1"));
+ 	goto done;
+     }
+ 
+@@ -832,7 +832,7 @@ _init_logfile (void)
+ 
+ 	filename = buf;
+ 
+-	setenv ("CAIRO_TRACE_FD", "-1", 1);
++	putenv (strdup ("CAIRO_TRACE_FD=-1"));
+     }
+ 
+     logfile = fopen (filename, "wb");

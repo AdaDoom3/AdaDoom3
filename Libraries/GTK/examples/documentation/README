@@ -1,0 +1,5 @@
+This directory contains some small examples that are automatically inserted
+in the documentation.
+These examples contain few comments, and you might prefer to read them 
+in the documentation itself.
+They are typically _not_ runnable directly.

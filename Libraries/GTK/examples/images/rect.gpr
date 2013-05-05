@@ -1,0 +1,4 @@
+with "gtkada";
+project Rect is
+   for Main use ("rect.adb");
+end Rect;

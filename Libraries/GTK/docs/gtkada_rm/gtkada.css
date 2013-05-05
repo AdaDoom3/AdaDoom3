@@ -1,0 +1,203 @@
+body
+{
+   background: white;
+}
+
+div.page
+{
+   margin:0px 0px 0px 10px;
+}
+
+div#leftSide div#leftSideInside, div#rightSideInside, div.topBarInside
+{
+ background:none;
+}
+
+div#leftSide, div#rightSide
+{
+  width:205px;
+  padding-bottom:10px;
+}
+
+#documentation {
+  padding:0;
+  margin: 0 215px 10px 5px;
+}
+
+div#rightSide, div.topBar, div#leftSide
+{
+ background:#F3F3F3;
+ border:1px solid grey;
+ margin:3px;
+}
+
+div.topBar {
+  margin-left:215px;
+  right:5px;
+  width:auto;
+}
+
+div#Index li
+{
+  border:none;
+  margin-bottom:2px;
+}
+
+div.entity
+{
+ color:#666666;
+}
+a:link,
+a:active,
+a:visited
+{
+   color: #0000BB;
+   color: #0000BB;
+}
+a:hover
+{
+   color: red;
+}
+
+a.hide:link,
+a.hide:active,
+a.hide:hover,
+a.hide:visited
+{
+color:grey;
+font-size:12px;
+}
+
+h4 a.hide
+{
+  margin: 0 3px 0 2px;
+}
+
+div.classroot a.hide:link,
+div.classroot a.hide:active,
+div.classroot a.hide:hover,
+div.classroot a.hide:visited
+{
+color:grey;
+font-size:10px;
+left:3px;
+margin-top:2px;
+margin-right:0;
+position:absolute;
+}
+div.subprograms h1
+{
+   margin-top:20px;
+   border-bottom: 2px solid black;
+   margin-left:2px;
+}
+div.subprograms .class
+{
+   border: none;
+   margin: 10px 0px 20px 15px;
+}
+div.subprograms .name
+{
+   color: #007F62;
+}
+div.subprograms .name_emphasis
+{
+   color: #007F62;
+   font-weight:normal;
+}
+div.subprograms div.details span.keyword
+{
+   font-weight:normal;
+}
+
+div.subprograms h3, div.subprograms h4, div.subprograms div a
+{
+   font-weight:normal;
+   font-family: monospace;
+}
+div.subprograms div {
+   margin-left:15px;
+}
+div.subprograms div.details
+{
+   background:#EAEAEA;
+   font-size:10px;
+}
+div.subprograms div.comment *, div.subprograms div.comment
+{
+   border:0px;
+   font-size:10px;
+   font-family: monospace;
+   font-style:normal;
+}
+div.classroot
+{
+   margin-bottom: 0px;
+   color: white;
+   white-space:nowrap;
+   background:none;
+}
+div.classtree
+{
+   background: none;
+}
+div.classtreechildren
+{
+   background: none;
+   top: 0px;
+   margin: 0px 0px 0px 8px;
+   padding: 0px;
+
+}
+div.classtreechildreninside
+{
+   background: none;
+   padding: 0px 0px 0px 8px;
+}
+div.classroot h3,
+div.classtree h3
+{
+   height: 15px;
+   font-size: 12px;
+   font-size:12px;
+   margin: 0px 0px 0px 0px;
+}
+
+.droplink
+{
+  text-decoration:none;
+  padding: 0px;
+  background: none;
+}
+
+.default .droplink ul, .default .droplink:hover ul
+{
+  visibility:visible;
+  overflow:none;
+  height:auto;
+  display:inline;
+  position:static;
+  background:none;
+  border:none;
+  width:auto;
+  float:right;
+}
+
+.default .droplink ul li
+{
+ display:inline;
+ float:none;
+}
+
+.default .droplink ul li a
+{
+  font-variant:normal;
+  font-family:arial,verdana;
+  font-size:10px;
+  color:#4444BB;
+}
+
+.default .droplink ul li a:hover
+{
+  color:red;
+}

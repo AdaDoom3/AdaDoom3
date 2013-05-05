@@ -1,0 +1,70 @@
+@SET_MAKE@
+
+examples=$(prefix)/share/examples/gtkada/testgtk
+
+target  = testgtk
+src_dir = ../src
+opengl_dir = $(src_dir)/opengl
+
+CC = @CC@
+TARGET_LFLAGS = @TARGET_LFLAGS@
+
+OBJ_DIR=obj
+include ../src/Makefile.common
+
+## These cannot be shared in Makefile.common, since relative paths might be
+## generated for configure (../install-sh), or absolute paths (/usr/bin/install)
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+
+ifeq ($(HAVE_OPENGL),True)
+OPENGL_C_OBJECTS=lw.o
+OPENGL_LIBS= @GL_LIBS@
+OPENGL_FLAGS=@GL_CFLAGS@
+GTKADA_GL_LIBS=-lgtkada_gl
+else
+OPENGL_C_OBJECTS=
+OPENGL_LIBS=
+OPENGL_FLAGS=
+GTKADA_GL_LIBS=
+endif
+
+GNATMAKELDFLAGS = -largs -L$(src_dir)/lib-obj -L$(opengl_dir) -lgtkada \
+  $(GTKADA_GL_LIBS) @GTK_LIBS_FOR_GNATMAKE@ $(TARGET_LFLAGS)
+
+all: opengl/view_gl.adb $(OPENGL_C_OBJECTS) $(target) 
+
+$(target): force
+	${GNATMAKE} -Ptestgtk ${GPR_BUILD} -largs ${GNATMAKELDFLAGS} ${OPENGL_C_OBJECTS} ${OPENGL_LIBS}
+
+opengl/view_gl.adb:: opengl/view_gl.gpb Makefile
+	gnatprep -r -c -DHAVE_GL=$(HAVE_OPENGL) -DWIN32=False \
+	  opengl/view_gl.gpb opengl/view_gl.adb
+
+lw.o: opengl/lw.c opengl/lw.h
+	$(CC) -c opengl/lw.c -Iopengl ${OPENGL_FLAGS} @GTK_CFLAGS@
+
+install: force
+	$(MKDIR) "${DESTDIR}$(examples)"
+	$(MKDIR) "${DESTDIR}$(examples)/opengl"
+	$(RM) b~*
+	-$(INSTALL_PROGRAM) testgtk$(EXEEXT) "${DESTDIR}$(examples)"
+	-$(INSTALL_PROGRAM) testcairo$(EXEEXT) "${DESTDIR}$(examples)"
+	$(CP) *.ad? *.xpm *.png *.jpg *.gif *.lwo *.xml "${DESTDIR}$(examples)"
+	$(CP) opengl/*.ad? opengl/*.[ch] "${DESTDIR}$(examples)/opengl"
+
+clean: module_clean
+
+distclean: clean
+	-${RM} Makefile
+
+mostlyclean: clean
+	-${RM} Makefile
+
+maintainer-clean: clean
+	-${RM} Makefile
+
+force:
+

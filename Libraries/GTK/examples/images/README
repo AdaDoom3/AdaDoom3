@@ -1,0 +1,7 @@
+This demos shows how you can load images from the disk, and display
+them on the screen. It also reacts to mouse events to provide an
+interactive selection rectangle.
+
+How to build the demos:
+  >  gnatmake -Prect
+

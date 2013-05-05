@@ -1,0 +1,72 @@
+GTKADA NEW FEATURES LIST
+========================
+
+Copyright (c) 2010-2011, AdaCore
+
+This file contains a list of new features introduced in GtkAda.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+New features in GtkAda 2.24.1
+-----------------------------
+
+KC08-027 Documentation converted to Sphinx (2011-12-08)
+
+  The new format provides nicer output, as well as an integrated search
+  facility for the HTML version
+
+New features in GtkAda 2.22.0
+-----------------------------
+
+K506-019 Binding for GtkSpinner
+
+  A new binding Gtk.Spinner has been added.  A Gtk.Spinner is an animated
+  widget that can be used to signal the user that some program activity is
+  occurring.
+
+K422-015 Design changes and preparation for Gtk-3
+
+  Gtkada.MDI has been slightly changed so that MDI children now have nicer
+  looking menubars. MDI notebooks now contain a close button that allows
+  the user to close tabs that are not in front.
+
+  The Gtkada.Canvas widget has been completely redesigned to make use of
+  Cairo instead of Gdk. Its API should now be Gtk-3 ready.
+
+  Added new Cairo bindings: Cairo.PDF, Cairo.Region, Cairo.SVG. Gdk.Window has
+  also been completed with Cairo bindings.
+
+  New package Gtkada.Style to provide Gtk.Style-like drawing primitives that
+  use Cairo instead of Gdk.
+
+K125-039 Glade-3 GUI builder
+
+  The GUI builder shipped with GtkAda has been upgraded to Glade-3.
+
+JC10-012 MDI: short titles also applies to title bars
+
+  The MDI can be configured so that floating windows use a short title
+  rather than a full title (in particular, for file names, this will generally
+  be the base name rather than full path name). This preference now also
+  applies to title bars for non-floating windows.
+
+JB29-030 MDI: support for independent perspectives
+
+  It is now possible to configure the MDI so that the perspectives do not
+  share the central area (as a result, no window is preserved when switching
+  among perspectives, unless they are explicitly part of the new perspective).
+
+JB09-025 High-level API for using Glade-3 and Gtk.Builder
+
+  A new package Gtkada.Builder has been introduced. This provides a
+  high-level API for developing GtkAda applications using the Glade-3
+  GUI builder.
+
+JA07-018 Bindings to GTK+ printing API
+
+  In addition to bindings already added as part of J510-028, additional
+  packages have been provided so that full use of the printing API provided
+  by GTK+ is possible.  The existing printing example in testgtk has been
+  enhanced to demonstrate how to use the new API.

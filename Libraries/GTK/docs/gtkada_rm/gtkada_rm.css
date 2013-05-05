@@ -1,0 +1,184 @@
+img                          { border: 0px; padding: 1px; }
+h2                           { background: #098aba;
+                               padding: 0px 0px 0px 5px;
+                               margin: 0px;
+                               font-variant: small-caps;
+                               font-size: 16px; }
+body                         { font-size: 14px; }
+
+/* Generate page layout */
+div#objectName               { font-variant: small-caps; 
+                               font-weight: bold;
+                               font-size: 20px;
+                               background: #0ca7e1;
+                               padding: 3px 0px 3px 0px;
+                               width: 100%;
+                               margin: 0px 0px 0px 0px;
+                               top: 0px;
+                               left: 0px;
+                               vertical-align: middle;
+                               border: 1px solid black}
+div#leftSide                 { float: left;
+                               /* min-width: 200px; /* width of screenshots */
+                               margin: 0px 0px 0px 0px;
+                             }
+div#documentation            { float: left;
+                               margin: 10px 0px 0px 10px;
+                               padding: 0px 10px 0px 0px;
+                               width: 730px; /* So that it works in 1024x768 */
+                             }
+div.notebookPage             { padding: 0px 4px 0px 0px; }
+div#rightSide                { float: left;
+                               margin: 0px 0px 0px 10px; }
+div.Toc                      { border: 1px solid black;
+                               margin: 10px 10px 0px 0px;
+                               float: left;
+                               min-height: 370px;
+                               width: 220px; }
+div.GeneralIndex             { border: 1px solid black;
+                               margin: 10px 10px 0px 100px;
+                             }
+div#IndexIndex               { width: 80px; 
+                               float: left;
+                               margin: 10px 0px 0px 0px;
+                               position: fixed;
+                               border: 1px solid black; }
+div.gallery                  { float: left; 
+                               padding: 5px 10px 5px 0px; }
+div.gallery-spacer           { clear: both; }
+
+/* Automatic scrollbars in some of the lists
+   Uncomment this to have local scrollbars in the Alphabetical index and the
+   main documentation page.
+   This is not perfect without javascript support: the maximum height should
+   depend on the screen height and the number of toolbars displayed in the
+   browser. Otherwise, we also have a general scrollbar for the page, which
+   interacts badly with the rest.
+   Also, some browsers, in particular Konqueror 3.5.3 do not work well with
+   anchors in such a case, and the index can't be clicked on to jump to a
+   specific subprogram as a result.
+*/
+/*
+div.notebookPage, 
+div#Index ul                 { max-height: 800px;  // SCREEN SIZE
+                               overflow: auto; }
+*/
+
+/* Styles within each region */
+div#objectName span          { margin: 10px 50px 0px 0px;
+                                }
+div#objectName span img      { margin: 0px; }
+
+div#leftSide div,
+div#rightSide div            { border: 1px solid black;
+                               padding: 0px 0px 0px 0px;
+                               margin-top: 10px;
+                             }
+a:link,
+a:active,
+a:visited                    { text-decoration: none;
+                               color: blue;
+                             }
+div#leftSide  a:hover,
+div#rightSide a:hover        { color: red; }
+div#leftSide ul,
+div.GeneralIndex ul,
+div#widgetTree ul,
+div.Toc ul,
+div#rightSide ul             { margin: 2px 0px 0px 10px;
+                               padding: 0px 0px 0px 0px; }
+div#navigation ul ul         { margin: 0px 0px 0px 10px;  }
+div#navigation li li         { list-style-type: square;
+                               list-style-position: inside;
+                               font-style: oblique;
+                               font-size: 0.9em; }
+div#classHierarchy ul.top    { padding-right: 5px; }
+div#classHierarchy img       { border-width: 0px;
+                               padding: 0px;
+                               margin: 0px 0px 0px 0px;
+                               outline-width: 0px }
+div#classHierarchy ul        { margin: 0px 0px 5px 0px; }
+div#classHierarchy ul ul     { margin: 0px; }
+div#widgetTree ul ul         { margin: 0px; }
+div#classHierarchy li,
+div#widgetTree li            { margin: 0px;
+                               padding: 0px;
+                               font-size: 14px;
+                               vertical-align: middle; }
+div#widgetTreeButtons input  { font-size: 12px;
+                               padding: 0px; }
+div#widgetTree li            { margin: 0px;
+                               padding: 0px;
+                               height: 18px;
+                               font-size: 14px;
+                               vertical-align: middle; }
+div#leftSide li,
+div.GeneralIndex li,
+div#widgetTree li,
+div.Toc li,
+div#rightSide li             { list-style-type: none;
+                               list-style-position: inside }
+div#screenshot               { text-align: center;
+                               background: #dcdad5; }
+div.description              { background: #eee4cb; 
+                               white-space: normal;
+                               margin-bottom: 20px; }
+div#subprograms ul,
+div#types ul                 { padding: 0px; 
+                               margin: 0px; }
+div#subprograms li,
+div#types li                 { list-style-type: none; 
+                               /* padding: 0px 5px 0px 5px; */
+                               margin: 0px 0px 20px 0px;
+                               border: 1px solid black;}
+div#subprograms span.name,
+div#types span.name,
+div.properties div.name,
+div#signals div.name         { color: red; }
+div#signals div.name         { background: #ddd3ba; 
+                               width: 100%;}
+div#subprograms div.profile,
+div#types div.profile,
+div.properties div.profile,
+div#signals div.profile      { white-space: pre;
+                               font-family: "Courier New", Courier;
+                               padding: 0px 5px 0px 5px;
+                               background: #ddddee; }
+div#example,
+div#testgtk                  { font-family: "Courier New", Courier;
+                               white-space: pre; }
+div#subprograms div.comment,
+div.properties div.comment,
+div#types div.comment,
+div#signals div.comment      { padding: 0px 5px 0px 5px; }
+div#subprograms h3           { font-size: 16px;
+                               background: #ddd3ba;
+                               margin: 0px;
+                             }
+div#signals ul,
+div.properties ul            { margin: 0px; }
+div#signals li,
+div.properties li            { list-style-type: none; 
+                               border: 1px solid black;
+                               margin: 0px 0px 10px 0px; }
+
+/* Notebooks */
+ul#notebook                  { border-bottom: 1px solid black;
+                               padding: 0px;
+                               margin: 3px 0px 5px 0px;  }
+ul#notebook li               { display: inline;
+                               margin: 0px;
+                               padding: 0px 5px 0px 0px; 
+                               border-bottom: 1px solid black;
+                               list-style-type: none; }
+ul#notebook a:link,
+ul#notebook a:active,
+ul#notebook a:visited        { text-decoration: none;
+                               background: #ddd;
+                               padding: 0px 4px 0px 4px;
+                               border: 1px solid black;
+                               color: #333;  }
+ul#notebook li.current a:link,
+ul#notebook li.current a:active,
+ul#notebook li.current a:visited  { background: #bbb; }
+ul#notebook li.current       { border-bottom: 0px solid red; }

@@ -1,0 +1,12 @@
+This directory contains an exemple how to create a widget directly
+in Ada.
+
+This should be reserved to users that already know how GtkAda and gtk+
+work. We have tried to provide some high level interfaces (this is
+much easier to do than in C, even if you still can't do
+everything...), but you will have to know and to handle a lot of signals.
+
+The widget we create here is a simple "target" widget, on which the
+user can click. If the mouse was on the target, then a signal "bullseye"
+(created specially for this widget) is emited, otherwise a signal
+"missed" is emited.

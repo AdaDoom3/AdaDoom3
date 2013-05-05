@@ -1,0 +1,4 @@
+This directory provides the necessary setup to create your own translation
+files for applications based on GtkAda.
+
+See gtkada-intl.ads for more information on internationalization.

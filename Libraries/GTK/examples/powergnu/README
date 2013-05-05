@@ -1,0 +1,15 @@
+This directory contains a simple presentation viewer written using GtkAda.
+
+It demonstrates the simplicity of use of the gdk-pixbuf library and also
+is an example of a new widget (Image_Drawing) created in GtkAda that redefines
+its resizing and drawing handling.
+
+To execute: replace the contents of the file file.tst with a list of
+ images (one per file), similar to
+
+/dir/image1.jpg
+/dir/image2.jpg
+
+and execute
+   ./power file.tst
+

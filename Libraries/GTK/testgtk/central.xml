@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<desktop perspective="perspective2" >
+  <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_VERTICAL" >
+    <Notebook height=" 1.02128E+02%" Tabs="POS_BOTTOM" >
+      <Child Group=" 1" State="NORMAL" >
+        <my_window_3 />
+      </Child>
+      <Child Raised="True" Group=" 1" State="NORMAL" >
+        <my_window_4 />
+      </Child>
+      <Child Group=" 1" State="NORMAL" >
+        <my_window_5 />
+      </Child>
+    </Notebook>
+  </Pane>
+</desktop>

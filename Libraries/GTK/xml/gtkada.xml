@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<GPS>
+  <doc_path>share/doc/gtkada</doc_path>
+
+   <submenu before="About">
+      <title>/Help/GtkAda</title>
+   </submenu>
+
+  <documentation_file>
+     <name>gtkada_rm/index.html</name>
+     <descr>GtkAda Reference Manuel</descr>
+     <category>GtkAda</category>
+     <menu before="About">/Help/GtkAda/Reference Manual</menu>
+  </documentation_file>
+
+  <documentation_file>
+     <name>gtkada_ug/index.html</name>
+     <descr>GtkAda User's Guide</descr>
+     <category>GtkAda</category>
+     <menu before="About">/Help/GtkAda/User's Guide</menu>
+  </documentation_file>
+</GPS>

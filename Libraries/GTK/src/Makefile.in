@@ -1,0 +1,142 @@
+all: dirs libs tools
+
+CFLAGS = -DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS \
+ @CFLAGS@ -Wall @GTK_CFLAGS@ -I.. $(FPIC)
+
+GETTEXT_INTL=@GETTEXT_INTL@
+HAVE_GETTEXT=@HAVE_GETTEXT@
+
+OBJ_DIR=lib-obj
+INC_SUBDIR=.
+
+LIBNAME       = libgtkada$(SO_EXT)
+ifeq ($(OS),Windows_NT)
+SONAME        = libgtkada-$(MAJOR).$(MINOR)$(SO_EXT)
+else
+SONAME        = libgtkada-$(MAJOR).$(MINOR)$(SO_EXT).$(MICRO)
+endif
+ARCHIVENAME   = libgtkada.a
+
+c_objects = misc.o misc_extra.o misc_broken.o misc_generated.o
+c_objects_dir= ${c_objects:%=${OBJ_DIR}/%}
+c_extra_objects = ../gtkextra/obj/gtk*.o
+
+SRC_FILES=glib*.o gdk*.o gtk*.o pango*.o cairo*.o ${c_objects} ${c_extra_objects}
+GTKADA_LIBS=
+EXTERNAL_LIBS=
+include Makefile.common
+
+## These cannot be shared in Makefile.common, since relative paths might be
+## generated for configure (../install-sh), or absolute paths (/usr/bin/install)
+INSTALL         = @INSTALL@
+INSTALL_DATA    = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_SCRIPT  = @INSTALL_SCRIPT@
+
+## General and public targets
+
+libs: ada ${c_objects_dir} gtkextra
+ifeq ($(BUILD_SHARED),yes)
+libs: ${OBJ_DIR}/$(SONAME)
+endif
+ifeq ($(BUILD_STATIC),yes)
+libs: ${OBJ_DIR}/${ARCHIVENAME}
+endif
+libs: opengl gnome
+
+opengl gtkextra gnome tools: force
+	$(MAKE) -C $@
+
+## Private targets
+
+dirs:: force
+	-$(MKDIR) $(OBJ_DIR)
+
+ada: gtkada-intl.adb force
+	${GNATMAKE} -Pgtkada_src -u ${FPIC} ${GPR_BUILD}
+
+gtkada-intl.adb: gtkada-intl.gpb Makefile
+	gnatprep -DGETTEXT_INTL=$(GETTEXT_INTL) \
+	  -DHAVE_GETTEXT=$(HAVE_GETTEXT) gtkada-intl.gpb gtkada-intl.adb
+
+install: force
+	@if [ "${DESTDIR}$(prefix)" != `pwd` ]; then \
+	   echo Installing GtkAda in ${DESTDIR}$(prefix); \
+	   $(MKDIR) "${DESTDIR}$(bindir)"; \
+	   $(MKDIR) "${DESTDIR}$(libdir)"; \
+	   $(MKDIR) "${DESTDIR}$(incdir)"; \
+	   if [ ${BUILD_STATIC} = yes ]; then \
+	      $(MKDIR) "${DESTDIR}$(alidir)/static"; \
+	      $(INSTALL_DATA) ${OBJ_DIR}/$(ARCHIVENAME) "${DESTDIR}$(alidir)/static"; \
+	      $(RM) "${DESTDIR}$(libdir)/$(ARCHIVENAME)"; \
+	      if [ -f /usr/bin/$(RANLIB) -o -f /bin/$(RANLIB) ]; then \
+	         $(RANLIB) "${DESTDIR}$(alidir)/static/$(ARCHIVENAME)"; \
+	      fi; \
+	   fi; \
+	   if [ $(BUILD_SHARED) = yes ]; then \
+	        $(MKDIR) "${DESTDIR}$(alidir)/relocatable"; \
+		if [ "$(OS)" = "Windows_NT" ]; then \
+		     $(INSTALL_DATA) ${OBJ_DIR}/$(SONAME) "${DESTDIR}$(bindir)"; \
+		     $(CHMOD) +x "${DESTDIR}$(bindir)/$(SONAME)"; \
+		else \
+	             $(INSTALL_PROGRAM) ${OBJ_DIR}/$(SONAME) "${DESTDIR}$(alidir)/relocatable"; \
+		     $(RM) "${DESTDIR}$(libdir)/$(LIBNAME)"; \
+		     $(LN) $(SONAME) "${DESTDIR}$(alidir)/relocatable/$(LIBNAME)"; \
+		     $(LN) gtkada/relocatable/$(SONAME) "${DESTDIR}$(libdir)/$(LIBNAME)"; \
+		     $(LN) gtkada/relocatable/$(SONAME) "${DESTDIR}$(libdir)/$(SONAME)"; \
+		fi; \
+	        $(CP) $(OBJ_DIR)/glib*.ali $(OBJ_DIR)/gdk*.ali "${DESTDIR}$(alidir)/relocatable"; \
+	        $(CP) $(OBJ_DIR)/gtk*.ali $(OBJ_DIR)/pango*.ali "${DESTDIR}$(alidir)/relocatable"; \
+	        $(CP) $(OBJ_DIR)/cairo*.ali "${DESTDIR}$(alidir)/relocatable"; \
+	   fi; \
+	   $(CP) glib*.ads glib*.adb $(MESA_SPECS) "${DESTDIR}$(incdir)"; \
+	   $(CP) gdk*.ads gdk*.adb "${DESTDIR}$(incdir)"; \
+	   $(CP) gtk*.ads gtk*.adb "${DESTDIR}$(incdir)"; \
+	   $(CP) pango*.ads pango*.adb "${DESTDIR}$(incdir)"; \
+	   $(CP) cairo*.ads cairo*.adb "${DESTDIR}$(incdir)"; \
+		$(CP) generated/*.ad? "${DESTDIR}${incdir}"; \
+	   if [ ${BUILD_STATIC} = yes ]; then \
+	      $(CP) $(OBJ_DIR)/glib*.ali $(OBJ_DIR)/gdk*.ali "${DESTDIR}$(alidir)/static"; \
+	      $(CP) $(OBJ_DIR)/gtk*.ali $(OBJ_DIR)/pango*.ali "${DESTDIR}$(alidir)/static"; \
+	      $(CP) $(OBJ_DIR)/cairo*.ali "${DESTDIR}$(alidir)/static"; \
+	   fi; \
+           $(MAKE) -C opengl install; \
+           $(MAKE) -C gnome install; \
+           $(MAKE) -C tools install; \
+	   if [ ${BUILD_STATIC} = yes ]; then \
+	      $(CHMOD) ugo-w "${DESTDIR}$(alidir)/static"/*.ali; \
+	   fi; \
+	   if [ $(BUILD_SHARED) = yes ]; then \
+	      $(CHMOD) ugo-w "${DESTDIR}$(alidir)/relocatable"/*.ali; \
+	   fi; \
+	fi
+
+clean:
+	-${RM} *.o *.ali *~ b_*.c b~*.ad? core gtkada-intl.adb
+	-$(RM) $(OBJ_DIR)/*
+	-${RM} .\#*
+	$(MAKE) -C gtkextra clean
+	$(MAKE) -C opengl clean
+	$(MAKE) -C gnome clean
+	$(MAKE) -C tools clean
+
+distclean: force
+	-${RM} Makefile
+	$(MAKE) -C gtkextra distclean
+	$(MAKE) -C opengl distclean
+	$(MAKE) -C gnome distclean
+	$(MAKE) -C tools distclean
+	-$(RM) Makefile.common
+
+## Find the list of bindings that are not up-to-date
+bindings_not_up_to_date:
+	@egrep -L "2.8.17|gtkextra 2.1.1|glib 2.10" *.ads | grep -v gtkada | grep -v b~ | grep -v dgate_callbacks
+
+## Building the C files: they all depend on the c file in the source directory
+## The dependencies on the .h files have to be given explicitly
+
+$(c_objects_dir): $(OBJ_DIR)/%.o : %.c
+	$(CC) -o $@ -c $(CFLAGS) $<
+
+force:
+

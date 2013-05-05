@@ -1,0 +1,7 @@
+This example demonstrates how to create your own signals in GtkAda.
+Click on any of the toggle buttons in the window. When you have
+clicked three of them aligned on the same row, an even is sent by
+the tictactoe widget, handled by the main loop, and a text is
+displayed on stdout.
+Note: no image appears in the button, so as to keep the example
+as simple as possible

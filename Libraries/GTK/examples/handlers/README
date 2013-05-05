@@ -1,0 +1,18 @@
+This directory contains two main examples related to the handling
+of signals and marshallers in GtkAda.
+
+- delete_event.adb
+
+  Shows how you can connect the "delete" signal to a widget to prevent
+  its closure by GtkAda.
+  This signal expects handlers that return a Boolean.
+
+- own_marshallers.ads, general_tips.adb, specific_tips.adb
+
+  Demonstrate how you can create how you can connect to a signal that
+  does not have any predefined marshaller in gtk-marshallers.
+
+  general_tips.adb shows how to use the general form of handlers.
+  specific_tips.adb shows how to create your own marshallers.
+
+  These are not examples that you can run!!

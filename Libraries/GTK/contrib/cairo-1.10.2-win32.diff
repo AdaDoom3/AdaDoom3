@@ -1,0 +1,29 @@
+Consider using patch from https://bugs.freedesktop.org/show_bug.cgi?id=42821
+win32: Reset clip in _cairo_win32_surface_release_dest_image
+
+	* src/cairo.c: define ffs the corresponding gcc builtin.
+	* configure: Work around ^M handling on cygwin with igncr
+
+--- configure.old	2009-02-23 14:58:37.786900000 +0100
++++ configure	2009-02-23 15:04:28.053300000 +0100
+@@ -33980,6 +33980,7 @@ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; 
+ else
+   ac_cs_awk_cr=$ac_cr
+ fi
++ac_cs_awk_cr=$ac_cr
+ 
+ echo 'BEGIN {' >"$tmp/subs1.awk" &&
+ _ACEOF
+--- src/cairo.c.orig	2011-11-17 12:33:14.609375000 +0100
++++ src/cairo.c	2011-11-17 12:34:15.937500000 +0100
+@@ -36,6 +36,10 @@
+  *	Carl D. Worth <cworth@cworth.org>
+  */
+ 
++#ifdef __MINGW32__
++#define ffs __builtin_ffs
++#endif
++
+ #include "cairoint.h"
+ #include "cairo-private.h"
+ 

@@ -1,0 +1,5 @@
+with "gtkada";
+project Default is
+    for Main use ("banner.adb", "contextual.adb",
+                  "glist_traverse.adb", "toggle.adb", "tooltips.adb");
+end Default;

@@ -1,0 +1,31 @@
+	* Makefile.in: Disable test directory, broken by libtool
+
+	* pixman/solaris-hwcap.mapfile: Fix build failure on Solaris 8 x86
+
+--- pixman/solaris-hwcap.mapfile.old	2010-01-29 14:22:24.918260000 +0100
++++ pixman/solaris-hwcap.mapfile	2010-01-29 14:22:46.065066000 +0100
+@@ -33,4 +33,4 @@
+ # library isn't flagged as only usable on CPU's with those ISA's, since it
+ # checks at runtime for availability before calling them
+ 
+-hwcap_1 = V0x0 FPU OVERRIDE;
++# hwcap_1 = V0x0 FPU OVERRIDE;
+*** Makefile.in.orig	2011-07-04 22:24:39.000000000 +0200
+--- Makefile.in	2011-07-19 13:41:57.000000000 +0200
+*************** target_alias = @target_alias@
+*** 269,275 ****
+  top_build_prefix = @top_build_prefix@
+  top_builddir = @top_builddir@
+  top_srcdir = @top_srcdir@
+! SUBDIRS = pixman demos test
+  pkgconfigdir = $(libdir)/pkgconfig
+  pkgconfig_DATA = pixman-1.pc
+  GPGKEY = 6FF7C1A8
+--- 269,275 ----
+  top_build_prefix = @top_build_prefix@
+  top_builddir = @top_builddir@
+  top_srcdir = @top_srcdir@
+! SUBDIRS = pixman
+  pkgconfigdir = $(libdir)/pkgconfig
+  pkgconfig_DATA = pixman-1.pc
+  GPGKEY = 6FF7C1A8

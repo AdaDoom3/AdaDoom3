@@ -1,0 +1,10 @@
+--- configure.old	2011-11-22 11:37:31.409000000 +0100
++++ configure	2011-11-22 11:39:05.931000000 +0100
+@@ -23753,6 +23753,7 @@ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; 
+ else
+   ac_cs_awk_cr=$ac_cr
+ fi
++ac_cs_awk_cr=$ac_cr
+ 
+ echo 'BEGIN {' >"$tmp/subs1.awk" &&
+ _ACEOF

@@ -1,0 +1,4 @@
+with "gtkada";
+project Display_Switch is
+    for Main use ("test_display_switch.adb");
+end Display_Switch;

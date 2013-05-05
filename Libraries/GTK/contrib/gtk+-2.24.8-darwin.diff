@@ -1,0 +1,26 @@
+2010-09-07  Nicolas Setton  <setton@adacore.com>
+
+        * configure: deactivate detection of RANDR extension:
+	on Snow Leopard the system .pc files indicate that this
+	exist, when in fact this is deactivated in the X11
+	implementation.
+
+*** configure.orig	2010-09-07 17:15:03.000000000 +0200
+--- configure	2010-09-07 17:15:19.000000000 +0200
+***************
+*** 23993,23999 ****
+  
+  
+    # Check for the RANDR extension
+!   if $PKG_CONFIG --exists "xrandr >= 1.2.99" ; then
+  
+  $as_echo "#define HAVE_RANDR 1" >>confdefs.h
+  
+--- 23993,23999 ----
+  
+  
+    # Check for the RANDR extension
+!   if $PKG_CONFIG --exists "xrandr_deactivated >= 1.2.99" ; then
+  
+  $as_echo "#define HAVE_RANDR 1" >>confdefs.h
+  

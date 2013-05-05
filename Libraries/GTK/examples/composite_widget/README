@@ -1,0 +1,35 @@
+This directory demonstrates how you can write a composite widget
+directly in Ada.
+
+- What is a composite widget ?
+
+This is a widget which is composed of multiple subwidgets, but does
+not define need to draw anything new by itself, nor create new signals, ...
+
+Examples of this are Dialogs (as in this example, these are basically
+just a window + some boxes inside), File_Selection (Although there might
+be some new signals involved), Font_Selection, ...
+
+As you see, most of the widgets you will ever create belongs to this
+category.
+
+
+- Why do I need to create a new widget for that ?
+
+Well, you don't *need* to, but it allows you to easily manipulate it
+with all the standard GtkAda functions (Show_All, ...).
+This is really a convenient way to reuse things.
+And thanks to the object oriented structure of GtkAda, this is really
+easy to do. Actually, this is even the natural way to do. Things are
+much more difficult in Motif for instance when you want to create
+such composite widgets, because you have to emulate the object oriented
+behavior, whereas in Ada95, everything is already handled by the compiler.
+
+- Why is this better than creating the widget in C and create the binding ?
+
+Well this is of course much faster, easier, cleaner, ... (Hey, this is
+Ada, what do you expect ? :-)
+However, your widget will not be callable from your C routines, if you
+ever want to do that (This is because we don't create the records that
+a C implementation would expect), but don't worry, it will work
+fine from Ada.
