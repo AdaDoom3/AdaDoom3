@@ -5,7 +5,7 @@
 --
 --
 --
---
+-- Record_Connection really needs to be a proper object instead of just a controlled type
 --
 --
 --
