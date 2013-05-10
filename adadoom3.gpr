@@ -37,7 +37,7 @@ project AdaDoom3 is
       "Yes",
       "No");
   ---------------
-  -- Scenarios --  In the GPS GUI scenarios are displayed with the latest External call on top within the widget
+  -- Scenarios -- In the GPS GUI scenarios are displayed with the latest External call on top within the widget
   ---------------
     DEBUGGING : Option_Boolean   := External("Debugging", "Yes");
     OPTIMIZE  : Option_Boolean   := External("Optimize",  "Yes");
@@ -122,7 +122,7 @@ project AdaDoom3 is
       when "No"     => null;
     end case;
     case BUILD is
-      when "64-Bit" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Force 64 bit compilation
+      when "64-Bit" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
       when "32-Bit" => null;
     end case;
     package Builder is
