@@ -27,7 +27,7 @@ package Neo.System.Network
   -- Exceptions --
   ----------------
     Connection_Silenced_Without_Being_Vocal   : Exception;
-    Connection_Vocalized_without_Begin_Silent : Exception;
+    Connection_Vocalized_without_Being_Silent : Exception;
     Invalid_Network_Address_String_Passed     : Exception;
     String_Buffer_Too_Small_To_Store_Address  : Exception;
   -----------
