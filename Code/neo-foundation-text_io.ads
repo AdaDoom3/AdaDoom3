@@ -31,7 +31,7 @@ package Neo.Foundation.Text_IO
   -------------
   -- Numbers --
   -------------
-    subtype Integer_Base
+    subtype Integer_Number_Base
       is Ada.Text_IO.Number_Base;
     subtype Integer_Positive_Count
       is Ada.Wide_Text_IO.Positive_Count;
@@ -56,12 +56,10 @@ package Neo.Foundation.Text_IO
   -- Subprograms --
   -----------------
     procedure Test;
-    procedure Set_Data(
-      Line_Size : in Integer_4_Positive;
-      Localize  : in Access_Subprogram_Localize;
-      Put       : in Access_Subprogram_Put;
-      Get_Line  : in Access_Subprogram_Get_Line;
-      Skip_Line : in Access_Subprogram_Skip_Line);
+    procedure Set_Debug_Printing(
+      Do_Print_Debugging : in Boolean);
+    procedure Set_Catalog_Path(
+      Path : in String_2);
     procedure Set_Line_Size(
       Line_Size : in Integer_4_Positive);
     procedure Set_Localize(
@@ -79,6 +77,15 @@ package Neo.Foundation.Text_IO
       Item        : in String_2;
       Do_Localize : in Boolean := False);
     procedure Put_Line(
+      Item        : in String_2;
+      Do_Localize : in Boolean := False);
+    procedure Put_Debug(
+      Item        : in Character_2;
+      Do_Localize : in Boolean := False);
+    procedure Put_Debug(
+      Item        : in String_2;
+      Do_Localize : in Boolean := False);
+    procedure Put_Debug_Line(
       Item        : in String_2;
       Do_Localize : in Boolean := False);
     procedure Get(
@@ -107,26 +114,23 @@ private
   ---------------
     WIDE_IMAGE_BUFFER_SIZE : constant Integer_4_Positive := 256;
     DEFAULT_LINE_SIZE      : constant Integer_4_Positive := 80;
-  -------------
-  -- Records --
-  -------------
-    type Record_Input_Output
-      is record
+  ---------------
+  -- Protected --
+  ---------------
+    protected type Protected_Input_Output
+      is
+
+      private
         Line_Size : Integer_4_Positive          := DEFAULT_LINE_SIZE;
         Localize  : Access_Subprogram_Localize  := null;
         Put       : Access_Subprogram_Put       := Ada.Wide_Text_IO.Put'Access;
         Get_Line  : Access_Subprogram_Get_Line  := Ada.Wide_Text_IO.Get_Line'Access;
         Skip_Line : Access_Subprogram_Skip_Line := Ada.Wide_Text_IO.Skip_Line'Access;
-      end record;
-  --------------
-  -- Packages --
-  --------------
-    package Protected_Record_Input_Output
-      is new Neo.Foundation.Generic_Protected(Record_Input_Output);
+      end Protected_Input_Output;
   ---------------
   -- Variables --
   ---------------
-    Protected_Data : Protected_Record_Input_Output.Data;
+    Input_Output : Protected_Input_Output;
   end Neo.Foundation.Text_IO;
 
 
