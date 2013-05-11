@@ -20,21 +20,13 @@ with
   Ada.Wide_Text_IO,
   Ada.Strings.Fixed,
   Ada.Unchecked_Conversion,
-  Neo.Foundation.Data_Types,
-  Neo.Foundation.Generic_Protected;
+  Neo.Foundation.Data_Types;
 use
   Ada.Strings,
   Ada.Strings.Fixed,
   Neo.Foundation.Data_Types;
 package Neo.Foundation.Text_IO
   is
-  -------------
-  -- Numbers --
-  -------------
-    subtype Integer_Number_Base
-      is Ada.Text_IO.Number_Base;
-    subtype Integer_Positive_Count
-      is Ada.Wide_Text_IO.Positive_Count;
   ---------------
   -- Accessors --
   ---------------
@@ -51,7 +43,7 @@ package Neo.Foundation.Text_IO
         Last : out Integer_4_Natural);
     type Access_Subprogram_Skip_Line
       is access procedure(
-        Spacing : in Integer_Positive_Count := 1);
+        Spacing : in Positive_Count := 1);
   -----------------
   -- Subprograms --
   -----------------
@@ -99,12 +91,13 @@ package Neo.Foundation.Text_IO
       Spacing : in Integer_4_Positive := 1);
     procedure New_Line(
       Lines : in Integer_4_Positive := 1);
-    generic -- TODO Add spacing
+    generic
       type Type_Number
         is mod <>;
     function To_Radian_Image(
-      Item : in Type_Number;
-      Base : in Integer_Base)
+      Item    : in Type_Number;
+      Base    : in Number_Base;
+      Spacing : in Integer_4_Positive)
       return String_2;
 -------
 private
@@ -121,11 +114,12 @@ private
       is
 
       private
-        Line_Size : Integer_4_Positive          := DEFAULT_LINE_SIZE;
-        Localize  : Access_Subprogram_Localize  := null;
-        Put       : Access_Subprogram_Put       := Ada.Wide_Text_IO.Put'Access;
-        Get_Line  : Access_Subprogram_Get_Line  := Ada.Wide_Text_IO.Get_Line'Access;
-        Skip_Line : Access_Subprogram_Skip_Line := Ada.Wide_Text_IO.Skip_Line'Access;
+        Line_Size    : Integer_4_Positive          := DEFAULT_LINE_SIZE;
+        Catalog_Path : Access_String_2             := null;
+        Localize     : Access_Subprogram_Localize  := null;
+        Put          : Access_Subprogram_Put       := Ada.Wide_Text_IO.Put'Access;
+        Get_Line     : Access_Subprogram_Get_Line  := Ada.Wide_Text_IO.Get_Line'Access;
+        Skip_Line    : Access_Subprogram_Skip_Line := Ada.Wide_Text_IO.Skip_Line'Access;
       end Protected_Input_Output;
   ---------------
   -- Variables --
