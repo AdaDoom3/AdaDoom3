@@ -33,7 +33,7 @@ package Neo.Library.Task_Dispatcher
   -- Constants --
   ---------------
     STORAGE_SIZE                : constant Storage_Count    := ;
-    MAXIMUM_PRIORITY            : constant Priority         := Priority'Last
+    PRIORITY_MAXIMUM            : constant Priority         := Priority'Last;
     WORKER_STORAGE_SIZE_DEFAULT : constant Integer_4_Signed := 16#200_000#;
     WORKER_STORAGE_SIZE_MINIMUM : constant Integer_4_Signed := 16#4_000#;
   -------------
@@ -41,9 +41,15 @@ package Neo.Library.Task_Dispatcher
   -------------
     type Record_Status
       is record
-        Number_Of_Workers           : Positive_Worker_Count := ;
-        Number_Of_Avaliable_Workers : Worker_Count_Type     := ;
-        Worker_Stack_Size           : Storage_Count         := ;
+        Number_Of_Workers                  : Positive_Worker_Count := ;
+        Number_Of_Avaliable_Workers        : Worker_Count_Type     := ;
+        Number_Of_Executed_Jobs            : := ;
+        Last_Submission_Time_Started       : Time := ;
+        Last_Submission_Duration_Wasted    : Duration := 0.0;
+        Last_Submission_Duration           : Duration := 0.0;
+        Average_Submission_Duration_Wasted : Duration := 0.0;
+        Average_Submission_Duration        : Duration := 0.0;
+        Worker_Stack_Size                  : Storage_Count := ;
       end record;
   -----------------
   -- Subprograms -- 
