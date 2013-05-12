@@ -45,13 +45,13 @@ package Neo.Library.Task_Dispatcher
   -------------
     type Record_Status
       is record
-        Number_Of_Workers           : Positive_Worker_Count := ;
-        Number_Of_Avaliable_Workers : Worker_Count_Type     := ;
-        Number_Of_Executed_Jobs     : := ;
-        Last_Job_Time_Started       : Time := ;
-        Average_Job_Duration_Wasted : Duration := 0.0;
-        Average_Job_Duration        : Duration := 0.0;
-        Worker_Stack_Size           : Storage_Count := ;
+        Number_Of_Workers_Total      : Positive_Worker_Count := ;
+        Number_Of_Workers_Avaliable  : Worker_Count_Type     := ;
+        Number_Of_Executed_Jobs      : := ;
+        Time_Most_Recent_Job_Started : Time := ;
+        Duration_Average_Job_Wasted  : Duration := 0.0;
+        Duration_Average_Job_Total   : Duration := 0.0;
+        Worker_Stack_Size            : Storage_Count := ;
       end record;
   -----------------
   -- Subprograms -- 
