@@ -39,10 +39,11 @@ package Neo.Posix
         Version : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
         Machine : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
         Domain  : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-      end record
-      with
+      end record;
+      --with
         --Convention => C,
-        Size       => X * Byte'Size;
+      --  Size       => X * Byte'Size;
+      for Record_Unix_Name'Size use X * Byte'Size;
       pragma(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
@@ -50,7 +51,7 @@ package Neo.Posix
         System          : Integer_8_Unsigned_C := 0; 
         Children_User   : Integer_8_Unsigned_C := 0; 
         Children_System : Integer_8_Unsigned_C := 0; 
-      end record
+      end record;
       pragma(C, Record_Time_Stamp);
       --with Convention => C;
   -----------------
