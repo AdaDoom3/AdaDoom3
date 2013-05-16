@@ -38,8 +38,8 @@ package body Implementation
         end if;
         return(
           -- For some reason (on old systems?), Total_Physical is sometimes off by a meg or two, so round up to the nearest 16 megs
-          Number_Of_Physical_Bytes_Total             => Integer_Address((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
-          Number_Of_Physical_Bytes_Available         => Integer_Address(Status.Available_Physical),
+          Number_Of_Physical_Bytes_Total             => 0,--Integer_Address((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
+          Number_Of_Physical_Bytes_Available         => 0,--Integer_Address(Status.Available_Physical),
           Number_Of_Disk_Bytes_Total                 => Integer_8_Unsigned(0),
           Number_Of_Disk_Bytes_Available             => Integer_8_Unsigned(0),
           Number_Of_Page_File_Bytes_Total            => 0,--Integer_Address(Status.Total_Page_File),
