@@ -44,7 +44,7 @@ package Neo.Posix
         --Convention => C,
       --  Size       => X * Byte'Size;
       for Record_Unix_Name'Size use X * Byte'Size;
-      pragma(C, Record_Unix_Name);
+      --pragma(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
         User            : Integer_8_Unsigned_C := 0; --clock_t
@@ -52,7 +52,7 @@ package Neo.Posix
         Children_User   : Integer_8_Unsigned_C := 0; 
         Children_System : Integer_8_Unsigned_C := 0; 
       end record;
-      pragma(C, Record_Time_Stamp);
+      --pragma(C, Record_Time_Stamp);
       --with Convention => C;
   -----------------
   -- Subprograms --
