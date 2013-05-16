@@ -1,0 +1,9 @@
+This directory contains small examples adapted from the ones
+distributed with gtk+.
+These are generally small examples that demonstrates some
+aspects of GtkAda that you might find useful:
+
+scribble:
+   Short example on how to use Gdk to paint text and graphics
+   on a Gtk_Drawing_Area, and restore its content when the
+   window gets an "expose_event"

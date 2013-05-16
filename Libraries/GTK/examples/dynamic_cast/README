@@ -1,0 +1,6 @@
+This directory contains an example that shows how you can dynamically modify
+the labels contained in a button, even if the labels were created automatically
+by the C gtk+, and you don't have an Ada handle to it yet.
+
+This uses the Gtk.Type_Conversion feature.
+

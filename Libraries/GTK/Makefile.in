@@ -1,0 +1,79 @@
+SHELL=/bin/sh
+
+.SUFFIXES:
+.PHONY: clean-generic mostlyclean-generic \
+	clean distclean mostlyclean maintainer-clean \
+	install src tests
+
+src_dir     = src
+testgtk_dir = testgtk
+doc_dir     = docs
+example_dir = examples
+projects_dir = projects
+xml_dir      = xml
+
+all: src tests
+
+src:
+	$(MAKE) -C $(src_dir)
+
+tests: src
+	$(MAKE) -C $(testgtk_dir)
+
+install: 
+	$(MAKE) -C $(src_dir) install
+	$(MAKE) -C $(projects_dir) install
+	$(MAKE) -C $(testgtk_dir) install
+	$(MAKE) -C $(doc_dir) install
+	$(MAKE) -C $(example_dir) install
+	$(MAKE) -C $(xml_dir) install
+	@echo '------------------------------------------------------------------'
+	@echo '--  GtkAda has now been installed.                              --'
+	@echo '--  To be able to use the library, you may need to update your  --'
+	@echo '--  LD_LIBRARY_PATH or to run ldconfig. You may also need to    --'
+	@echo '--  update your PATH to include gtkada-config in it.            --'
+	@echo '------------------------------------------------------------------'
+
+.PHONY: docs
+docs:
+	$(MAKE) -C docs
+
+
+GIR_FILES=contrib/Gtk-2.0.gir
+
+# Generate the binding automatically, through a python script
+# The list of files to generate is in contrib/binding.py
+
+generate: force
+	${RM} src/generated/*.ad?
+	python contrib/binding.py ${GIR_FILES} contrib/binding.xml
+	cd src/generated; gnatchop -q -w tmp.ada
+
+clean-generic:
+	-${RM} core
+	-${RM} .\#*
+
+mostlyclean-generic: clean-generic
+	-${RM} Makefile
+
+clean: clean-generic
+	-$(MAKE) -C $(testgtk_dir) clean
+	-$(MAKE) -C $(example_dir) clean
+	-$(MAKE) -C $(src_dir) clean
+
+distclean: mostlyclean-generic
+	-${RM} config.cache config.log config.status
+	-$(MAKE) -C $(testgtk_dir) distclean
+	-$(MAKE) -C $(src_dir) distclean
+
+mostlyclean: mostlyclean-generic
+	-$(MAKE) -C $(testgtk_dir) mostlyclean
+	-$(MAKE) -C $(src_dir) mostlyclean
+
+maintainer-clean: mostlyclean-generic
+	-${RM} config.cache config.log config.status
+	-${RM} configure
+	-$(MAKE) -C $(testgtk_dir) maintainer-clean
+	-$(MAKE) -C $(src_dir) maintainer-clean
+
+force:

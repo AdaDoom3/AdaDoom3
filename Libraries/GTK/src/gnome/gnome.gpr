@@ -1,0 +1,17 @@
+with "../../shared";
+with "../gtkada_src";
+
+project Gnome is
+   for Object_Dir use "obj";
+
+   case Shared.Build_Gnome is
+       when "True"  => for Source_Dirs use (".");
+       when "False" => for Source_Dirs use ();
+   end case;
+
+   for Languages use ("Ada");
+   package Builder  renames Shared.Builder;
+   package Compiler renames Shared.Compiler;
+   package IDE      renames Shared.IDE;
+end Gnome;
+

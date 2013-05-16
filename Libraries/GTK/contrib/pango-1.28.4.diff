@@ -1,0 +1,16 @@
+	* pango/opentype/hb-common.h: Fix compilation on solaris.
+
+--- pango/opentype/hb-common.h.old	2010-01-29 15:49:53.248615000 +0100
++++ pango/opentype/hb-common.h	2010-01-29 15:54:14.183661000 +0100
+@@ -27,7 +27,11 @@
+ #ifndef HB_COMMON_H
+ #define HB_COMMON_H
+ 
++#ifdef sun
++#include <inttypes.h>
++#else
+ #include <stdint.h>
++#endif
+ 
+ # ifdef __cplusplus
+ #  define HB_BEGIN_DECLS	extern "C" {

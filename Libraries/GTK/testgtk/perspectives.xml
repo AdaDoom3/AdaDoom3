@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<perspectives state=" 0" height=" 600" width=" 800"  >
+  <perspective name="perspective2"  >
+    <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_VERTICAL" >
+      <Pane height=" 6.72897E+01%" Orientation="ORIENTATION_HORIZONTAL" >
+        <central width=" 8.43333E+01%"  />
+        <Notebook width=" 1.66667E+01%" Tabs="POS_BOTTOM" >
+          <Child Raised="True" Group=" 1" State="NORMAL" >
+            <my_window_1 />
+          </Child>
+        </Notebook>
+      </Pane>
+      <Notebook height=" 3.41121E+01%" Tabs="POS_BOTTOM" >
+        <Child Raised="True" Focus="True" Group=" 1" State="NORMAL" >
+          <my_window_2 />
+        </Child>
+      </Notebook>
+    </Pane>
+  </perspective>
+  <perspective name="perspective1"  >
+    <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_HORIZONTAL" >
+      <Notebook width=" 1.66667E+01%" Tabs="POS_BOTTOM" >
+        <Child Raised="True" Focus="True" Group=" 1" State="NORMAL" >
+          <my_window_2 />
+        </Child>
+      </Notebook>
+      <Pane width=" 8.43333E+01%" Orientation="ORIENTATION_VERTICAL" >
+        <Notebook height=" 1.51869E+01%" Tabs="POS_BOTTOM" >
+          <Child Raised="True" Group=" 1" State="NORMAL" >
+            <my_window_1 />
+          </Child>
+        </Notebook>
+        <Pane height=" 8.62150E+01%" Orientation="ORIENTATION_HORIZONTAL" >
+          <central width=" 1.01200E+02%"  />
+        </Pane>
+      </Pane>
+    </Pane>
+  </perspective>
+</perspectives>

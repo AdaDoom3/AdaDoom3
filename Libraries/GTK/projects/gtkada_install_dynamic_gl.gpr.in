@@ -1,0 +1,69 @@
+-----------------------------------------------------------------------
+--           GtkAda - Ada binding for the Gimp Toolkit               --
+--                                                                   --
+--                Copyright (C) 2007-2010, AdaCore                   --
+--                                                                   --
+-- This library is free software; you can redistribute it and/or     --
+-- modify it under the terms of the GNU General Public               --
+-- License as published by the Free Software Foundation; either      --
+-- version 2 of the License, or (at your option) any later version.  --
+--                                                                   --
+-- This library is distributed in the hope that it will be useful,   --
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of    --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU --
+-- General Public License for more details.                          --
+--                                                                   --
+-- You should have received a copy of the GNU General Public         --
+-- License along with this library; if not, write to the             --
+-- Free Software Foundation, Inc., 59 Temple Place - Suite 330,      --
+-- Boston, MA 02111-1307, USA.                                       --
+--                                                                   --
+-- As a special exception, if other files instantiate generics from  --
+-- this unit, or you link this unit with other files to produce an   --
+-- executable, this  unit  does not  by itself cause  the resulting  --
+-- executable to be covered by the GNU General Public License. This  --
+-- exception does not however invalidate any other reasons why the   --
+-- executable file  might be covered by the  GNU Public License.     --
+-----------------------------------------------------------------------
+
+--  Project file used by the InstallShield to build the GtkAda GL shared
+--  library on Windows.
+
+with "gtkada_install_dynamic";
+
+project GtkAda_Install_Dynamic_GL is
+
+   for Source_Dirs use ("opengl");
+
+   for Library_Dir use "../../bin";
+   for Library_ALI_Dir use "../../lib/gtkada/relocatable/opengl";
+   for Library_Kind use "relocatable";
+   for Library_Name use "gtkada_gl-@GTKADA_MAJOR_VERSION@.@GTKADA_MINOR_VERSION@";
+   for Library_Options use ("-L.", "-L../../bin", "-L../../lib",
+        "-lgtkada_c",
+        "-lgtkada_gl_c", 
+        "-lgtk-win32-2.0",
+        "-lgdk-win32-2.0",
+        "-latk-1.0",
+        "-lgdk_pixbuf-2.0",
+        "-ljpeg",
+        "-lpng",
+        "-lpangocairo-1.0",
+        "-lgio-2.0",
+        "-lcairo",
+        "-lpangowin32-1.0",
+        "-lgdi32",
+        "-lpango-1.0",
+        "-lgobject-2.0",
+        "-lgmodule-2.0",
+        "-lgthread-2.0",
+        "-lglib-2.0",
+        "-lintl",
+        "-liconv",
+        "-luser32");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-O2");
+   end Compiler;
+
+end GtkAda_Install_Dynamic_GL;

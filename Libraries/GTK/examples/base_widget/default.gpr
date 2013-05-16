@@ -1,0 +1,7 @@
+--  The following with clause is the only thing necessary to compile and link
+--  a GtkAda application
+
+with "gtkada";
+project Default is
+   for Main use ("main.adb");
+end Default;

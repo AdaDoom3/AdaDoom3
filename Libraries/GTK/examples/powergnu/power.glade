@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<GTK-Interface>
+
+<project>
+  <name>power</name>
+  <program_name>power</program_name>
+  <directory></directory>
+  <source_directory>.</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <language>Ada 95</language>
+  <gnome_support>False</gnome_support>
+  <gettext_support>False</gettext_support>
+</project>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>powergnu</name>
+  <events>GDK_KEY_PRESS_MASK</events>
+  <signal>
+    <name>delete_event</name>
+    <handler>on_powergnu_delete_event</handler>
+    <last_modification_time>Sun, 12 Nov 2000 12:57:08 GMT</last_modification_time>
+  </signal>
+  <signal>
+    <name>key_press_event</name>
+    <handler>on_powergnu_key_press_event</handler>
+    <last_modification_time>Sun, 12 Nov 2000 13:52:00 GMT</last_modification_time>
+  </signal>
+  <title>GtkAda Presentation Viewer</title>
+  <type>GTK_WINDOW_TOPLEVEL</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>False</modal>
+  <default_width>800</default_width>
+  <default_height>600</default_height>
+  <allow_shrink>True</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>False</auto_shrink>
+
+  <widget>
+    <class>GtkVBox</class>
+    <name>vbox1</name>
+    <homogeneous>False</homogeneous>
+    <spacing>0</spacing>
+
+    <widget>
+      <class>GtkFrame</class>
+      <name>main_frame</name>
+      <label_xalign>0</label_xalign>
+      <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+      <child>
+	<padding>0</padding>
+	<expand>True</expand>
+	<fill>True</fill>
+      </child>
+
+      <widget>
+	<class>GtkDrawingArea</class>
+	<name>drawing_area</name>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkStatusbar</class>
+      <name>statusbar1</name>
+      <child>
+	<padding>0</padding>
+	<expand>False</expand>
+	<fill>False</fill>
+      </child>
+    </widget>
+  </widget>
+</widget>
+
+</GTK-Interface>

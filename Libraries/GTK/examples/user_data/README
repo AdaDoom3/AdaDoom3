@@ -1,0 +1,4 @@
+This directory contains some examples that show how to properly use
+user data in callback.
+This is closely associated with the GtkAda user's guide, in the
+section about signals handling.

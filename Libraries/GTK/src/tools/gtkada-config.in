@@ -1,0 +1,114 @@
+#!/bin/sh
+# @configure_input@
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@/gtkada
+includedir=@includedir@/gtkada
+gtk_libs="@GTK_LIBS_FOR_GNATMAKE@"
+
+# OS Specific relocatable settings
+if [ "$OS" = "Windows_NT" ]; then
+    os_reloc="-L${prefix}/bin -lgtkada-@GTKADA_MAJOR_VERSION@.@GTKADA_MINOR_VERSION@"
+else
+    os_reloc="-L${libdir}/relocatable -lgtkada"
+fi
+
+cflags_static="-aI${includedir} -aO${libdir}/static"
+cflags_relocatable="-aI${includedir} -aO${libdir}/relocatable"
+libs_relocatable="${os_reloc} ${gtk_libs}"
+libs_static="-L${libdir}/static -lgtkada ${gtk_libs}"
+
+usage()
+{
+        cat <<EOF
+Usage: gtkada-config [OPTIONS]
+Options:
+        [--prefix]
+        [--version|-v]
+        [--libs]
+        [--cflags]
+        [--static]
+        [--help|-h]
+EOF
+        exit $1
+}
+
+show_cflags=1
+show_libs=1
+libtype=relocatable
+
+# Can have the following values:
+#   0 = none
+#   1 = cflags
+#   2 = libs
+#   4 = complete
+output_type=4
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+    --help|-h)
+      usage 1>&2
+      exit 1
+      ;;
+    --static)
+      libtype=static
+      ;;
+    --prefix)
+      echo $prefix
+      exit 0
+      ;;
+    --version|-v)
+      echo @GTKADA_VERSION@
+      exit 0
+      ;;
+    --libs)
+      show_libs=1
+      show_cflags=0
+      ;;
+    --cflags)
+      show_libs=0
+      show_cflags=1
+      ;;
+    *)
+      usage 1>&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+## Force static if relocatable was not installed
+if [ -d $libdir/relocatable ]; then
+   :
+else
+   libtype=static
+fi
+
+result=""
+
+if [ $show_cflags = 1 ]; then
+   if [ $libtype = static ]; then
+      result="$cflags_static"
+   else
+      result="$cflags_relocatable"
+   fi
+
+   if [ $show_libs = 1 ]; then
+     result="$result -largs "
+   fi
+fi
+
+if [ $show_libs = 1 ]; then
+   if [ $libtype = static ]; then
+     result="${result}${libs_static}"
+   else
+     result="${result}${libs_relocatable}"
+   fi
+fi
+
+echo $result

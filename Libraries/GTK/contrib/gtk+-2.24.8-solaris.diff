@@ -1,0 +1,39 @@
+2012-12-19	Nicolas Setton  <setton@adacore.com>
+
+	* configure: Deactivate the use of mediaLib, not supported on
+	sparc64-solaris.
+	* gdk/gdkmedialib.c: Add include, missing when mediaLib is
+	deactivated.
+
+--- configure.orig	Fri Dec 14 12:11:34 2012
++++ configure	Fri Dec 14 12:11:46 2012
+@@ -22367,7 +22367,7 @@
+ 
+ if test $use_mlib = yes; then
+ 
+-$as_echo "#define USE_MEDIALIB 1" >>confdefs.h
++# $as_echo "#define USE_MEDIALIB 1" >>confdefs.h
+ 
+     MEDIA_LIB=-lmlib
+ 
+--- gdk/gdkmedialib.c.orig	Fri Dec 14 12:19:11 2012
++++ gdk/gdkmedialib.c	Fri Dec 14 12:23:09 2012
+@@ -30,6 +30,9 @@
+ #include <stdlib.h>
+ #include <dlfcn.h>
+ 
++#include <gdktypes.h>
++
++
+ #ifdef HAVE_STRINGS_H
+ #include <strings.h>
+ #endif
+@@ -48,7 +51,7 @@
+ 
+ typedef char *      (*ml_version)         (void);
+ 
+-static ml_version                 medialib_version = mlib_version;
++static ml_version                 medialib_version = 0;
+ 
+ gboolean 
+ _gdk_use_medialib (void)

@@ -1,0 +1,25 @@
+2012-05-29	Nicolas Setton  <setton@adacore.com>
+
+	* atk/atktext.h:
+	Add an underscore in front of prototype functions, so they are not
+	picked up by the GIR scanner.
+
+--- atk/atktext.h.orig	2012-05-29 14:25:49.268200000 +0200
++++ atk/atktext.h	2012-05-29 17:07:49.893400000 +0200
+@@ -174,7 +174,7 @@
+   gchar* content;
+ };
+ 
+-GType atk_text_range_get_type (void);
++GType _atk_text_range_get_type (void);
+ 
+ /**
+  *AtkTextClipType
+--- atk/atk.symbols.orig	2012-05-31 14:12:44.060200000 +0200
++++ atk/atk.symbols	2012-05-31 14:13:24.308200000 +0200
+@@ -246,3 +246,5 @@
+ 	atk_value_get_type
+ 	atk_value_set_current_value
+ 	atk_window_get_type
++	atk_socket_get_type
++	atk_plug_get_type

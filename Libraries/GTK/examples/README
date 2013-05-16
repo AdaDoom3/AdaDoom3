@@ -1,0 +1,17 @@
+This is the GtkAda Examples Directory. Our goal is to provide the
+GtkAda user with some pieces of code that are easy to understand, easy
+to modify and to play with.
+
+If you are interested in sharing your own programs with the GtkAda community,
+please tune them with the latest GtkAda version and send them with appropriate
+documentation (and bug reports) to the authors.
+
+Note that you need to first install GtkAda to use these examples.
+
+Some of the examples are build using the GNAT project files, to demonstrate
+how to use them to simply compile and link your application.
+See for instance base_widget/ and calendar_combo/
+
+Others are build using the gtkada-config script, on machines where this script
+is usable.
+

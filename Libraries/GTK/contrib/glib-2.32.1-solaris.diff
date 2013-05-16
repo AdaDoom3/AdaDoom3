@@ -1,0 +1,41 @@
+2013-01-08	Nicolas Setton  <setton@adacore.com>
+
+	* (Makefile.in, glib/Makefile.in): Deactivate make in tests,
+	not working because of an obscure C99 incompatibility on
+	sparc64-solaris.
+
+--- Makefile.in.orig	2013-01-08 07:02:49.776465000 -0500
++++ Makefile.in	2013-01-08 07:03:22.917261000 -0500
+@@ -426,7 +426,7 @@
+ 	gio-windows-2.0.pc.in
+ TEST_PROGS = 
+ ACLOCAL_AMFLAGS = -I m4macros ${ACLOCAL_FLAGS}
+-SUBDIRS = . m4macros glib gmodule gthread gobject gio tests po docs
++SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs
+ DIST_SUBDIRS = $(SUBDIRS) build
+ bin_SCRIPTS = glib-gettextize
+ AM_CPPFLAGS = \
+--- glib/Makefile.in.orig	2013-01-08 07:03:52.344523000 -0500
++++ glib/Makefile.in	2013-01-08 07:04:08.418097000 -0500
+@@ -555,8 +555,8 @@
+ @HAVE_GOOD_PRINTF_FALSE@PRINTF_SUBDIR = gnulib
+ @HAVE_GOOD_PRINTF_FALSE@printf_la = gnulib/libgnulib.la
+ @USE_SYSTEM_PCRE_FALSE@MAYBE_PCRE = pcre 
+-SUBDIRS = libcharset $(PRINTF_SUBDIR) $(MAYBE_PCRE) update-pcre . tests
+-DIST_SUBDIRS = libcharset gnulib pcre update-pcre tests
++SUBDIRS = libcharset $(PRINTF_SUBDIR) $(MAYBE_PCRE) update-pcre . 
++DIST_SUBDIRS = libcharset gnulib pcre update-pcre 
+ AM_CPPFLAGS = \
+ 	$(glib_INCLUDES) 		\
+ 	$(pcre_inc) 			\
+--- gobject/Makefile.in.orig	2013-01-11 12:31:13.908839000 +0100
++++ gobject/Makefile.in	2013-01-11 12:31:40.156360000 +0100
+@@ -465,7 +465,7 @@
+ # GObject - GLib Type, Object, Parameter and Signal Library
+ # Copyright (C) 1997,98,99,2000 Tim Janik and Red Hat, Inc.
+ #
+-SUBDIRS = . tests
++SUBDIRS = . 
+ BUILT_SOURCES = $(am__append_1)
+ CLEANFILES = $(am__append_2) gobject-public-headers.txt $(gen_sources) \
+ 	libgobject-gdb.py

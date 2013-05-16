@@ -1,0 +1,177 @@
+2012-12-07	Nicolas Setton  <setton@adacore.com>
+
+	* gtk/gtk-default.css: Provide better colors to the expander.
+	* gtk/gtkthemingengine.c: Provide a Windows-specific function
+	to draw expanders, since the default one does not work with
+	the default theme engine.
+
+	Not to be submitted, to be re-investigated as part of a general
+	work on themes.
+
+2012-04-20	Nicolas Setton  <setton@adacore.com>
+
+	* gtk/gtkapplicationwindow.c: GDesktopApplication is not defined under
+	Windows, do not use it.
+
+	To be submitted.
+
+2011-11-17	Nicolas Setton  <setton@adacore.com>
+
+	* gdk/win32/gdkdnd-win32.c (resolve_link): Deactivate resolving of
+	dnd links for now, since CLSID_ShellLink and IID_IShellLinkW are
+	not found at link time for an unknown reason.
+	To be investigated.
+
+--- gdk/win32/gdkdnd-win32.c.orig	2011-11-17 14:59:18.578125000 +0100
++++ gdk/win32/gdkdnd-win32.c	2011-11-17 15:42:47.875000000 +0100
+@@ -1342,6 +1342,7 @@ resolve_link (HWND     hWnd,
+    * assumed that CoInitialize has been called.
+    */
+ 
++#if 0
+   hr = CoCreateInstance (&CLSID_ShellLink,
+ 			 NULL,
+ 			 CLSCTX_INPROC_SERVER,
+@@ -1388,6 +1389,8 @@ resolve_link (HWND     hWnd,
+     pslW->lpVtbl->Release (pslW);
+ 
+   return SUCCEEDED (hr);
++#endif
++  return FALSE;
+ }
+ 
+ #if 0
+--- gtk/gtkapplicationwindow.c.orig	2012-04-20 15:26:50.203250000 +0200
++++ gtk/gtkapplicationwindow.c	2012-04-20 15:30:48.234500000 +0200
+@@ -273,6 +273,7 @@
+     }
+   else
+     {
++#ifdef HAVE_GIO_UNIX
+       /* the shell does not show it, so make sure we show it */
+       if (g_menu_model_get_n_items (G_MENU_MODEL (window->priv->app_menu_section)) == 0)
+         {
+@@ -311,6 +312,7 @@
+               g_clear_object (&app_info);
+             }
+         }
++#endif
+     }
+ }
+ 
+--- gtk/gtk-default.css.orig	2012-12-07 14:42:06.143600000 +0100
++++ gtk/gtk-default.css	2012-12-07 16:55:02.688800000 +0100
+@@ -28,12 +28,15 @@
+ }
+ 
+ .expander, GtkTreeView.view.expander {
+-  color: #fff;
++  color: @text_color;
++  border-color: shade (@bg_color, 0.5);
+ }
+ 
+ .expander:hover,
++GtkTreeView.view.expander:hover,
+ GtkTreeView.view.expander:selected:hover {
+   color: @text_color;
++  border-color: @text_color;
+ }
+ 
+ .expander:active {
+--- gtk/gtkthemingengine.c.orig	2012-12-07 11:58:23.915600000 +0100
++++ gtk/gtkthemingengine.c	2012-12-07 16:44:39.468800000 +0100
+@@ -110,6 +110,12 @@
+                                               gdouble           y,
+                                               gdouble           width,
+                                               gdouble           height);
++static void gtk_theming_engine_render_windows_expander (GtkThemingEngine *engine,
++                                                        cairo_t          *cr,
++                                                        gdouble           x,
++                                                        gdouble           y,
++                                                        gdouble           width,
++                                                        gdouble           height);
+ static void gtk_theming_engine_render_expander (GtkThemingEngine *engine,
+                                                 cairo_t          *cr,
+                                                 gdouble           x,
+@@ -220,7 +226,7 @@
+   klass->render_arrow = gtk_theming_engine_render_arrow;
+   klass->render_background = gtk_theming_engine_render_background;
+   klass->render_frame = gtk_theming_engine_render_frame;
+-  klass->render_expander = gtk_theming_engine_render_expander;
++  klass->render_expander = gtk_theming_engine_render_windows_expander;
+   klass->render_focus = gtk_theming_engine_render_focus;
+   klass->render_layout = gtk_theming_engine_render_layout;
+   klass->render_line = gtk_theming_engine_render_line;
+@@ -1862,6 +1868,72 @@
+ }
+ 
+ static void
++gtk_theming_engine_render_windows_expander (GtkThemingEngine *engine,
++                                            cairo_t          *cr,
++                                            gdouble           x,
++                                            gdouble           y,
++                                            gdouble           width,
++                                            gdouble           height)
++{
++  GtkStateFlags flags;
++  GdkRGBA outline_color, fg_color, bg_color;
++  gint line_width;
++  gboolean running;
++  gdouble progress;
++  gint expander_width;
++  gint expander_height;
++  gint cross_start;
++  gint cross_length;
++
++  expander_width = 9;
++  expander_height = 9;
++  line_width = 1;
++
++  cross_start = line_width;
++  cross_length = expander_width - 4 * line_width;
++  
++  cairo_save (cr);
++  flags = gtk_theming_engine_get_state (engine);
++
++  gtk_theming_engine_get_color (engine, flags, &fg_color);
++  gtk_theming_engine_get_border_color (engine, flags, &outline_color);
++  gtk_theming_engine_get_background_color (engine, flags, &bg_color);
++
++  running = gtk_theming_engine_state_is_running (engine, GTK_STATE_ACTIVE, &progress);
++
++  if (!running)
++    progress = (flags & GTK_STATE_FLAG_ACTIVE) ? 1 : 0;
++
++  cairo_translate (cr, 
++		   x + (width - expander_width + 1) / 2 + line_width, 
++		   y + (height - expander_height + 1) / 2 + line_width);
++
++  cairo_set_antialias (cr, CAIRO_ANTIALIAS_NONE);
++
++  cairo_set_line_width (cr, line_width);
++  gdk_cairo_set_source_rgba (cr, &bg_color);
++  cairo_rectangle (cr, 0, 0, expander_width - line_width, expander_height - line_width);
++  cairo_fill_preserve (cr);
++  gdk_cairo_set_source_rgba (cr, &outline_color);
++  cairo_stroke (cr);
++
++  gdk_cairo_set_source_rgba (cr, &fg_color);
++
++  cairo_move_to (cr, cross_start, expander_height / 2);
++  cairo_rel_line_to (cr, cross_length, 0);
++
++  if (!progress)
++    {
++      cairo_move_to (cr, expander_width / 2, cross_start);
++      cairo_rel_line_to (cr, 0, cross_length);
++    }
++
++  cairo_stroke (cr);
++
++  cairo_restore (cr);
++}
++
++static void
+ gtk_theming_engine_render_expander (GtkThemingEngine *engine,
+                                     cairo_t          *cr,
+                                     gdouble           x,

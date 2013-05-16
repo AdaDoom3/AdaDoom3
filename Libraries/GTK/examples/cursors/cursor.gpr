@@ -1,0 +1,4 @@
+with "gtkada";
+project Cursor is
+   for Main use ("cursor.adb");
+end Cursor;

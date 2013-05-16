@@ -1,0 +1,16 @@
+2012-01-07	Nicolas Setton  <setton@adacore.com>
+
+	* (configure): Do not use a space in PACKAGE_STRING, not supported
+	by libtool on x86_64-linux.
+
+--- configure.orig	2013-01-07 17:10:42.725311288 +0100
++++ configure	2013-01-07 17:10:48.413446560 +0100
+@@ -572,7 +572,7 @@
+ PACKAGE_NAME='gnome-themes-standard'
+ PACKAGE_TARNAME='gnome-themes-standard'
+ PACKAGE_VERSION='3.4.2'
+-PACKAGE_STRING='gnome-themes-standard 3.4.2'
++PACKAGE_STRING='gnome-themes-standard_3.4.2'
+ PACKAGE_BUGREPORT='http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-themes-standard'
+ PACKAGE_URL=''
+ 

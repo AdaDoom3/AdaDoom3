@@ -1,0 +1,446 @@
+2013-03-18  Vadim Godunko <godunko@adacome.com>
+
+        * gtk/gtktreeview.c (gtk_tree_view_draw_grid_lines): Take in sense
+        current direction when drawing vertical lines of the grid.
+
+2011-12-12  Jerome Lambourg <lambourg@adacore.com>
+
+        * gtk/gtkbutton.c (gtk_button_setting_changed): Make sure that
+        no top-level window is being deallocated while iterating through
+        them during a theme change (KC01-003).
+
+        See https://bugzilla.gnome.org/show_bug.cgi?id=665852
+
+2011-07-19  Nicolas Setton  <setton@adacore.com>
+
+	* gdk/x11/gdkmain-x11.c (gdk_x_error, gdk_x_io_error): Make
+	functions external, so it is possible to break on them in the
+	stripped version of the library.
+
+        Gtk3: to be ported.
+
+2011-05-17  Jerome Lambourg  <lambourg@adacore.com>
+
+	* gtk/gtkrc.c (gtk_rc_style_finalize): Fix a potential issue when
+	freeing a rc style and the corresponding style is NULL, as found
+	sometimes with the win32 backend.
+
+2010-09-28  Nicolas Setton  <setton@adacore.com>
+
+	* gtk/gtktextview.c (extend_selection): Fix typo in documentation.
+	When extending the selection in SELECT_WORDS granularity past the
+	end of a line, select only the EOL character(s).
+	When extending the selection in SELECT_LINES granularity, include
+	the EOL character(s) in the selection.
+
+	Submitted at https://bugzilla.gnome.org/show_bug.cgi?id=630825
+
+2010-12-06  Arnaud Charlet  <charlet@adacore.com>
+
+	* gdk/x11/gdkdnd-x11.c (gdk_window_cache_new): Disable use of
+	XCompositeGetOverlayWindow/XCompositeReleaseOverlayWindow, apparently
+	not available on older linux distribs.
+
+        Gtk3: not needed, replaced by configuring with --disable-libxcomposite
+
+2010-03-27  Arnaud Charlet  <charlet@adacore.com>
+
+	* gtk/gtkentry.c (gtk_entry_set_buffer): Prevent crashing when
+	encountering a null buffer as reported on gtk+ list.
+
+2010-03-24  Nicolas Setton  <setton@adacore.com>
+
+	* gtk/gtktextview.c (gtk_text_view_check_cursor_blink): Do not
+	register a cursor blink if the text view if not realized.
+	This prevents a segmentation fault which can happen if the
+	text_view happens to get the focus before it has been realized.
+
+2010-01-11  Arnaud Charlet  <charlet@adacore.com>
+
+	* gdk/gdkwindow.c (gdk_window_get_composite_drawable): Protect
+	against NULL access.
+	Observed when creating a new file in GPS under Windows.
+
+2009-09-19  Arnaud Charlet  <charlet@adacore.com>
+
+	* gtk/gtktreemodel.c (gtk_tree_model_row_has_child_toggled): Replace
+	g_return_if_fail by explicit check, since path may legitimately
+	be NULL (I918-021).
+
+2009-01-12  Nicolas Setton  <setton@adacore.com>
+
+	* gtktreeview.c (gtk_tree_view_enter_notify): Do not react to
+	crossing events.
+	(gtk_tree_view_leave_notify): Likewise.
+        Prevents unwanted side-effects of synth-crossing. (I106-018)
+
+2009-01-06  Nicolas Setton  <setton@adacore.com>
+
+	* gtk/gtktreeview.c (gtk_tree_view_enter_notify): Put kludge to
+	work around Gtk+ bug in handling of keyboard keys+focus events in
+	tree view (HC15-032).
+
+2006-02-23  Arnaud Charlet  <charlet@adacore.com>
+
+	* gdk/x11/gdkasync.c: #define ANSICPP on Solaris, to work around
+	bug in X11/Xmd.h on Solaris 8.
+
+2003-11-27  Arnaud Charlet  <charlet@adacore.com>
+
+	* gtk/gtktextview.c (incremental_validate_callback): Increase amount
+	of characters validated at each call, this gives a better behavior
+	when loading big files.
+	Submitted at http://bugzilla.gnome.org/show_bug.cgi?id=332057
+
+--- gtk/gtktextview.c.old	2006-02-17 16:11:04.000000000 +0100
++++ gtk/gtktextview.c	2006-02-20 17:08:54.691581240 +0100
+@@ -3273,7 +3273,7 @@ incremental_validate_callback (gpointer 
+   
+   DV(g_print(G_STRLOC"\n"));
+   
+-  gtk_text_layout_validate (text_view->layout, 2000);
++  gtk_text_layout_validate (text_view->layout, 20000);
+ 
+   gtk_text_view_update_adjustments (text_view);
+   
+--- gdk/x11/gdkasync.c.old	Thu Feb 23 11:30:46 2006
++++ gdk/x11/gdkasync.c	Thu Feb 23 11:48:14 2006
+@@ -47,6 +47,11 @@ in this Software without prior written a
+ #ifdef NEED_XIPROTO_H_FOR_XREPLY
+ #include <X11/extensions/XIproto.h>
+ #endif
++
++#if defined (sun) && defined (__SVR4)
++#define ANSICPP
++#endif
++
+ #include <X11/Xlibint.h>
+ #include "gdkasync.h"
+ #include "gdkx.h"
+--- gtk/gtktreeview.c.old	2008-11-24 07:35:35.000000000 +0100
++++ gtk/gtktreeview.c	2009-01-06 15:14:25.171875000 +0100
+@@ -5459,6 +5459,9 @@ gtk_tree_view_enter_notify (GtkWidget   
+   if (tree_view->priv->tree == NULL)
+     return FALSE;
+ 
++  if (event->y == 0)
++    return FALSE;
++
+   /* find the node internally */
+   new_y = TREE_WINDOW_Y_TO_RBTREE_Y(tree_view, event->y);
+   if (new_y < 0)
+--- gtk/gtktreeview.c.orig	2009-01-12 11:49:09.000000000 +0100
++++ gtk/gtktreeview.c	2009-01-12 15:44:05.000000000 +0100
+@@ -5461,6 +5461,12 @@ gtk_tree_view_enter_notify (GtkWidget   
+   GtkRBNode *node;
+   gint new_y;
+ 
++  if (event->mode == GDK_CROSSING_GRAB 
++      || event->mode == GDK_CROSSING_NORMAL
++      || event->mode == GDK_CROSSING_GTK_GRAB
++      || event->mode == GDK_CROSSING_GTK_UNGRAB)
++    return TRUE;
++
+   /* Sanity check it */
+   if (event->window != tree_view->priv->bin_window)
+     return FALSE;
+@@ -5487,7 +5493,10 @@ gtk_tree_view_leave_notify (GtkWidget   
+ {
+   GtkTreeView *tree_view;
+ 
+-  if (event->mode == GDK_CROSSING_GRAB)
++  if (event->mode == GDK_CROSSING_GRAB 
++      || event->mode == GDK_CROSSING_NORMAL
++      || event->mode == GDK_CROSSING_GTK_GRAB
++      || event->mode == GDK_CROSSING_GTK_UNGRAB)
+     return TRUE;
+ 
+   tree_view = GTK_TREE_VIEW (widget);
+--- gtk/gtktreemodel.c.old	2009-09-19 12:03:49.804000000 +0200
++++ gtk/gtktreemodel.c	2009-09-19 12:41:00.954000000 +0200
+@@ -1512,8 +1512,11 @@ gtk_tree_model_row_has_child_toggled (Gt
+ 				      GtkTreeIter  *iter)
+ {
+   g_return_if_fail (GTK_IS_TREE_MODEL (tree_model));
+-  g_return_if_fail (path != NULL);
+-  g_return_if_fail (iter != NULL);
++
++  if (path == NULL)
++    return;
++  if (iter == NULL)
++    return;
+ 
+   g_signal_emit (tree_model, tree_model_signals[ROW_HAS_CHILD_TOGGLED], 0, path, iter);
+ }
+--- gdk/gdkwindow.c.old	2009-12-08 16:13:05.000000000 +0100
++++ gdk/gdkwindow.c	2010-01-10 20:33:05.783000000 +0100
+@@ -3858,7 +3858,7 @@ gdk_window_get_composite_drawable (GdkDr
+ 		     width, height);
+ 
+   /* paint the backing stores */
+-  if (implicit_paint)
++  if (implicit_paint && list != NULL)
+     {
+       GdkWindowPaint *paint = list->data;
+ 
+*** gtk/gtktextview.c.orig	Wed Mar 24 14:47:16 2010
+--- gtk/gtktextview.c	Wed Mar 24 14:47:19 2010
+*************** gtk_text_view_check_cursor_blink (GtkTex
+*** 4931,4937 ****
+        text_view->cursor_visible &&
+        GTK_WIDGET_HAS_FOCUS (text_view))
+      {
+!       if (cursor_blinks (text_view))
+  	{
+  	  if (text_view->blink_timeout == 0)
+  	    {
+--- 4931,4937 ----
+        text_view->cursor_visible &&
+        GTK_WIDGET_HAS_FOCUS (text_view))
+      {
+!       if (cursor_blinks (text_view) && gtk_widget_get_realized (text_view))
+  	{
+  	  if (text_view->blink_timeout == 0)
+  	    {
+--- gtk/gtkentry.c.old
++++ gtk/gtkentry.c
+@@ -6668,8 +6668,11 @@ gtk_entry_set_buffer
+   g_object_notify (obj, "invisible-char-set");
+   g_object_thaw_notify (obj);
+
+-  gtk_editable_set_position (GTK_EDITABLE (entry), 0);
+-  gtk_entry_recompute (entry);
++  if (priv->buffer)
++    {
++      gtk_editable_set_position (GTK_EDITABLE (entry), 0);
++      gtk_entry_recompute (entry);
++    }
+ }
+
+ 
+--- gtk/gtktextview.c.orig	2010-09-28 16:24:33.000000000 +0200
++++ gtk/gtktextview.c	2010-09-28 17:13:53.000000000 +0200
+@@ -6115,7 +6115,7 @@ typedef enum 
+ /*
+  * Move @start and @end to the boundaries of the selection unit (indicated by 
+  * @granularity) which contained @start initially.
+- * If the selction unit is SELECT_WORDS and @start is not contained in a word
++ * If the selection unit is SELECT_WORDS and @start is not contained in a word
+  * the selection is extended to all the white spaces between the end of the 
+  * word preceding @start and the start of the one following.
+  */
+@@ -6144,26 +6144,37 @@ extend_selection (GtkTextView *text_view
+ 	{
+ 	  GtkTextIter tmp;
+ 
+-	  tmp = *start;
+-	  if (gtk_text_iter_backward_visible_word_start (&tmp))
+-	    gtk_text_iter_forward_visible_word_end (&tmp);
+-
+-	  if (gtk_text_iter_get_line (&tmp) == gtk_text_iter_get_line (start))
+-	    *start = tmp;
+-	  else
+-	    gtk_text_iter_set_line_offset (start, 0);
+-
+-	  tmp = *end;
+-	  if (!gtk_text_iter_forward_visible_word_end (&tmp))
+-	    gtk_text_iter_forward_to_end (&tmp);
+-
+-	  if (gtk_text_iter_ends_word (&tmp))
+-	    gtk_text_iter_backward_visible_word_start (&tmp);
+-
+-	  if (gtk_text_iter_get_line (&tmp) == gtk_text_iter_get_line (end))
+-	    *end = tmp;
++	  if (gtk_text_iter_ends_line (start))
++	    {
++	      /* start is at an end of line: simply extend the
++	       * selection to include the end-of-line character(s).
++	       */   
++	      if (!gtk_text_iter_forward_line (end))
++		gtk_text_iter_forward_to_end (end);
++	    }
+ 	  else
+-	    gtk_text_iter_forward_to_line_end (end);
++	    {  
++	      tmp = *start;
++	      if (gtk_text_iter_backward_visible_word_start (&tmp))
++		gtk_text_iter_forward_visible_word_end (&tmp);
++
++	      if (gtk_text_iter_get_line (&tmp) == gtk_text_iter_get_line (start))
++		*start = tmp;
++	      else
++		gtk_text_iter_set_line_offset (start, 0);
++
++	      tmp = *end;
++	      if (!gtk_text_iter_forward_visible_word_end (&tmp))
++		gtk_text_iter_forward_to_end (&tmp);
++
++	      if (gtk_text_iter_ends_word (&tmp))
++		gtk_text_iter_backward_visible_word_start (&tmp);
++
++	      if (gtk_text_iter_get_line (&tmp) == gtk_text_iter_get_line (end))
++		*end = tmp;
++	      else
++		gtk_text_iter_forward_to_line_end (end);
++	    }
+ 	}
+     }
+   else if (granularity == SELECT_LINES) 
+@@ -6186,6 +6197,12 @@ extend_selection (GtkTextView *text_view
+ 	  if (!gtk_text_view_starts_display_line (text_view, end))
+ 	    gtk_text_view_forward_display_line_end (text_view, end);
+ 	}
++	
++      /* At this point end points at the end of a line:
++       * include the end-of-line character(s) in the selection. 
++       */
++      if (!gtk_text_iter_forward_line (end))
++	gtk_text_iter_forward_to_end (end);
+     }
+ }
+  
+--- gdk/x11/gdkdnd-x11.c.old	2011-04-10 22:36:59.140000000 +0200
++++ gdk/x11/gdkdnd-x11.c	2011-04-10 22:37:24.808000000 +0200
+@@ -578,6 +578,7 @@ gdk_window_cache_new (GdkScreen *screen)
+ 
+   g_free (children);
+ 
++#if 0
+ #ifdef HAVE_XCOMPOSITE
+   /*
+    * Add the composite overlay window to the cache, as this can be a reasonable
+@@ -593,6 +594,7 @@ gdk_window_cache_new (GdkScreen *screen)
+       XCompositeReleaseOverlayWindow (xdisplay, GDK_WINDOW_XWINDOW (root_window));
+     }
+ #endif
++#endif
+ 
+   return result;
+ }
+*** gtk/gtkrc.c.old	Tue May 17 17:48:57 2011
+--- gtk/gtkrc.c	Tue May 17 17:49:39 2011
+***************
+*** 1189,1195 ****
+      {
+        GSList *rc_styles = tmp_list1->data;
+        GtkStyle *style = g_hash_table_lookup (realized_style_ht, rc_styles);
+!       g_object_unref (style);
+  
+        /* Remove the list of styles from the other rc_styles
+         * in the list
+--- 1189,1196 ----
+      {
+        GSList *rc_styles = tmp_list1->data;
+        GtkStyle *style = g_hash_table_lookup (realized_style_ht, rc_styles);
+!       if (style != NULL)
+!         g_object_unref (style);
+  
+        /* Remove the list of styles from the other rc_styles
+         * in the list
+--- gdk/x11/gdkmain-x11.c.orig	2011-07-19 10:56:20.000000000 +0200
++++ gdk/x11/gdkmain-x11.c	2011-07-19 11:01:32.000000000 +0200
+@@ -79,9 +79,9 @@
+ #define XConvertCase gdkx_XConvertCase
+ #endif
+ 
+-static int	    gdk_x_error			 (Display     *display, 
+-						  XErrorEvent *error);
+-static int	    gdk_x_io_error		 (Display     *display);
++int	    gdk_x_error			 (Display     *display, 
++					  XErrorEvent *error);
++int	    gdk_x_io_error		 (Display     *display);
+ 
+ /* Private variable declarations
+  */
+@@ -452,7 +452,7 @@
+  *--------------------------------------------------------------
+  */
+ 
+-static int
++int
+ gdk_x_error (Display	 *display,
+ 	     XErrorEvent *error)
+ {
+@@ -515,7 +515,7 @@
+  *--------------------------------------------------------------
+  */
+ 
+-static int
++int
+ gdk_x_io_error (Display *display)
+ {
+   /* This is basically modelled after the code in XLib. We need
+--- gtk/gtkbutton.c.old	2011-12-12 18:09:53.000000000 +0100
++++ gtk/gtkbutton.c	2011-12-12 18:10:38.000000000 +0100
+@@ -2128,9 +2128,15 @@
+   list = gtk_window_list_toplevels ();
+ 
+   for (l = list; l; l = l->next)
++    g_object_ref (G_OBJECT (l->data));
++
++  for (l = list; l; l = l->next)
+     gtk_container_forall (GTK_CONTAINER (l->data), 
+ 			  traverse_container, NULL);
+ 
++  for (l = list; l; l = l->next)
++    g_object_unref (G_OBJECT (l->data));
++
+   g_list_free (list);
+ }
+ 
+--- gtk/gtktreeview.c.old	2012-08-25 04:28:59.000000000 +0400
++++ gtk/gtktreeview.c	2013-03-18 15:23:54.676025021 +0400
+@@ -4276,31 +4276,31 @@
+                          
+ static void
+ gtk_tree_view_draw_grid_lines (GtkTreeView    *tree_view,
+-			       GdkEventExpose *event,
+-			       gint            n_visible_columns)
++			       GdkEventExpose *event)
+ {
+-  GList *list = tree_view->priv->columns;
+-  gint i = 0;
++  GList *list;
++  GtkTreeViewColumn *last;
+   gint current_x = 0;
++  gboolean rtl;
+ 
+   if (tree_view->priv->grid_lines != GTK_TREE_VIEW_GRID_LINES_VERTICAL
+       && tree_view->priv->grid_lines != GTK_TREE_VIEW_GRID_LINES_BOTH)
+     return;
+ 
+-  /* Only draw the lines for visible rows and columns */
+-  for (list = tree_view->priv->columns; list; list = list->next, i++)
++  rtl = (gtk_widget_get_direction (GTK_WIDGET (tree_view)) == GTK_TEXT_DIR_RTL);
++
++  for (list = (rtl ? g_list_last (tree_view->priv->columns) : g_list_first (tree_view->priv->columns)),
++       last = (rtl ? g_list_first (tree_view->priv->columns) : g_list_last (tree_view->priv->columns))->data;
++       list;
++       list = (rtl ? list->prev : list->next))
+     {
+       GtkTreeViewColumn *column = list->data;
+ 
+-      /* We don't want a line for the last column */
+-      if (i == n_visible_columns - 1)
+-	break;
+-
+-      if (! column->visible)
+-	continue;
+-
+       current_x += column->width;
+ 
++      /* We don't want a line for the last column */
++      if (column == last) break;
++
+       gtk_tree_view_draw_line (tree_view, event->window,
+                                GTK_TREE_VIEW_GRID_LINE,
+                                current_x - 1, 0,
+@@ -5038,7 +5038,7 @@
+   while (y_offset < event->area.height);
+ 
+ done:
+-  gtk_tree_view_draw_grid_lines (tree_view, event, n_visible_columns);
++  gtk_tree_view_draw_grid_lines (tree_view, event);
+ 
+  if (tree_view->priv->rubber_band_status == RUBBER_BAND_ACTIVE)
+    {

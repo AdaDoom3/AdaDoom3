@@ -1,0 +1,170 @@
+2012-11-26	Nicolas Roche	<roche@adacore.com>
+
+	* giscanner/scannerlexer.l: Add support for __inline__,
+	__asm__ __volatile__, __volatile__, and __restrict__,
+	present in mingw64 headers.
+
+2012-11-22	Nicolas Setton	<setton@adacore.com>
+
+	* giscanner/dumper.py: Fix use of "export all symbols" mode
+	under Windows.
+
+2012-05-29	Nicolas Setton  <setton@adacore.com>
+
+	* configure: Fix detection of Python include and libraries.
+
+	* giscanner/utils.py: Port to Windows a local hack.
+
+	* giscanner/dumper.py: The extension is '.exe', not 'exe'.
+	Add workaround against wrong library additions on the link
+	line.
+
+	* giscanner/giscannermodule.c: our base python is 2.7, which
+	uses msvcr90.dll rather than msvcr71.dll.
+
+	* giscanner/shlibs.py: os.uname does not exist in Python 2.7,
+	do not use it, deactivate FreeBSD.
+
+	* giscanner/scannermain.py: Fix detection of Windows.
+
+--- configure.orig	2012-05-28 12:11:19.186600000 +0200
++++ configure	2012-05-28 12:18:20.885800000 +0200
+@@ -14507,12 +14507,12 @@
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for headers required to compile python extensions" >&5
+ $as_echo_n "checking for headers required to compile python extensions... " >&6; }
+-py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
+-py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
++py_prefix=`$PYTHON -c "import sys; print sys.prefix[2:].replace('\\\\\\', '/')"`
++py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix[2:].replace('\\\\\\', '/')"`
+ if test "x$PYTHON_INCLUDES" == x; then
+-  PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
++  PYTHON_INCLUDES="-I${py_prefix}/include"
+   if test "$py_prefix" != "$py_exec_prefix"; then
+-    PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
++    PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include"
+   fi
+ fi
+ 
+@@ -14539,10 +14539,10 @@
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libraries required to link against libpython" >&5
+ $as_echo_n "checking for libraries required to link against libpython... " >&6; }
+ if test "x$PYTHON_LIBS" == x; then
+-	PYTHON_LIBS="-L${py_prefix}/lib -lpython${PYTHON_VERSION}"
++	PYTHON_LIBS="-L${py_prefix}/libs -lpython27"
+ fi
+ if test "x$PYTHON_LIB_LOC" == x; then
+-	PYTHON_LIB_LOC="${py_prefix}/lib"
++	PYTHON_LIB_LOC="${py_prefix}/libs"
+ fi
+ 
+ 
+--- giscanner/utils.py.orig	2012-05-28 12:24:25.395400000 +0200
++++ giscanner/utils.py	2012-05-28 12:24:48.171400000 +0200
+@@ -99,6 +99,7 @@
+     #        in a way which is compatible with both libtool 2.2
+     #        and pre-2.2. Johan 2008-10-21
+     libname = libname.replace('.libs/.libs', '.libs')
++    libname = libname.replace('.libs\.libs', '.libs')
+     return libname
+ 
+ # Returns arguments for invoking libtool, if applicable, otherwise None
+--- giscanner/giscannermodule.c.orig	2012-05-28 13:53:10.861000000 +0200
++++ giscanner/giscannermodule.c	2012-05-28 13:53:26.242600000 +0200
+@@ -418,7 +418,7 @@
+     int (*p__get_osfhandle) (int);
+     HANDLE handle;
+ 
+-    msvcr71 = GetModuleHandle ("msvcr71.dll");
++    msvcr71 = GetModuleHandle ("msvcr90.dll");
+     if (!msvcr71)
+       {
+ 	g_print ("No msvcr71.dll loaded.\n");
+--- ../working-gobject-introspection-1.32.1/giscanner/shlibs.py	2011-11-21 17:15:50.000000000 +0100
++++ giscanner/shlibs.py	2012-05-28 14:54:03.944200000 +0200
+@@ -69,7 +69,7 @@
+     if not libraries:
+         return []
+ 
+-    if os.uname()[0] == 'OpenBSD':
++    if "false" == 'OpenBSD':
+         # Hack for OpenBSD when using the ports' libtool which uses slightly
+         # different directories to store the libraries in. So rewite binary.args[0]
+         # by inserting '.libs/'.
+--- ../working-gobject-introspection-1.32.1/giscanner/dumper.py	2012-05-28 15:31:41.888200000 +0200
++++ giscanner/dumper.py	2012-05-28 15:31:52.199800000 +0200
+@@ -146,7 +146,7 @@
+         o_path = self._generate_tempfile(tmpdir, '.o')
+ 
+         if os.name == 'nt':
+-            ext = 'exe'
++            ext = '.exe'
+         else:
+             ext = ''
+ 
+@@ -254,6 +254,7 @@
+                 subprocess.list2cmdline(args), )
+             sys.stdout.flush()
+         try:
++            args = [a.replace('\\', '/').replace('/bin/bash', 'c:/cygwin/bin/bash') for a in args]
+             subprocess.check_call(args)
+         except subprocess.CalledProcessError, e:
+             raise LinkerError(e)
+--- giscanner/dumper.py.orig	2012-05-29 12:18:06.501400000 +0200
++++ giscanner/dumper.py	2012-05-29 12:18:42.381400000 +0200
+@@ -297,7 +297,8 @@
+             if library.endswith(".la"): # explicitly specified libtool library
+                 args.append(library)
+             else:
+-                args.append('-l' + library)
++                if not library.startswith('lib'):
++                    args.append('-l' + library)
+ 
+ def compile_introspection_binary(options, get_type_functions,
+                                  error_quark_functions):
+--- giscanner/scannermain.py.orig	2012-05-29 13:58:49.301800000 +0200
++++ giscanner/scannermain.py	2012-05-29 13:59:07.616200000 +0200
+@@ -162,7 +162,7 @@
+     group = get_preprocessor_option_group(parser)
+     parser.add_option_group(group)
+ 
+-    if os.environ.get('MSYSTEM') == 'MINGW32':
++    if True:
+         group = get_windows_option_group(parser)
+         parser.add_option_group(group)
+ 
+--- giscanner/dumper.py.orig	2012-11-23 10:59:23.023800000 +0100
++++ giscanner/dumper.py	2012-11-23 11:30:17.863800000 +0100
+@@ -225,7 +225,7 @@
+         args.extend(['-o', output])
+         if libtool:
+             if os.name == 'nt':
+-                args.append('-export-all-symbols')
++                args.append('-Wl,--export-all-symbols')
+             else:
+                 args.append('-export-dynamic')
+ 
+--- giscanner/scannerlexer.l	2012-04-17 20:24:58.000000000 +0200
++++ ../gobject-introspection-1.32.1-good/giscanner/scannerlexer.l	2012-11-23 15:34:48.774600000 +0100
+@@ -135,16 +135,21 @@
+ "->"					{ return ARROW; }
+ 
+ "__asm" 	        	        { if (!parse_ignored_macro()) REJECT; }
++"__asm__ __volatile__" 	        	        { if (!parse_ignored_macro()) REJECT; }
+ "__asm__" 	        	        { if (!parse_ignored_macro()) REJECT; }
+ "__attribute__" 		        { if (!parse_ignored_macro()) REJECT; }
+ "__attribute" 		                { if (!parse_ignored_macro()) REJECT; }
+ "__const"                               { return CONST; }
+ "__extension__"                         { return EXTENSION; }
+ "__inline"				{ return INLINE; }
++"__inline__"                            { return INLINE; }
+ "__nonnull" 			        { if (!parse_ignored_macro()) REJECT; }
+ "__signed__"				{ return SIGNED; }
+ "__restrict"				{ return RESTRICT; }
++"__restrict__"                          { return RESTRICT; }
+ "__typeof"				{ if (!parse_ignored_macro()) REJECT; }
++
++"__volatile__"                          { return VOLATILE; }
+ "_Bool"					{ return BOOL; }
+ 
+ [a-zA-Z_][a-zA-Z_0-9]*			{ if (scanner->macro_scan) return IDENTIFIER; else REJECT; }

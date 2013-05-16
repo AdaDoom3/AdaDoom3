@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<perspectives state=" 0" height=" 600" width=" 800"  >
+  <perspective name="indep_perspective 2"  >
+    <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_HORIZONTAL" >
+      <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_VERTICAL" >
+        <Notebook height=" 1.01382E+02%" Tabs="POS_BOTTOM" >
+          <Child Raised="True" Group=" 1" State="NORMAL" >
+            <my_window_2 />
+          </Child>
+        </Notebook>
+      </Pane>
+      <Notebook width=" 1.66667E+01%" Tabs="POS_BOTTOM" >
+        <Child Raised="True" Focus="True" Group=" 1" State="NORMAL" >
+          <my_window_3 />
+        </Child>
+      </Notebook>
+    </Pane>
+  </perspective>
+  <perspective name="default" >
+    <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_HORIZONTAL" >
+      <Notebook width=" 1.66667E+01%" Tabs="POS_BOTTOM" >
+        <Child Raised="True" Focus="True" Group=" 1" State="NORMAL" >
+          <my_window_3 />
+        </Child>
+      </Notebook>
+      <Pane width=" 1.00000E+02%" Orientation="ORIENTATION_VERTICAL" >
+        <Notebook height=" 7.47664E+00%" Tabs="POS_BOTTOM" >
+          <Child Raised="True" Group=" 1" State="NORMAL" >
+            <my_window_1 />
+          </Child>
+        </Notebook>
+        <Notebook height=" 9.39252E+01%" Tabs="POS_BOTTOM" >
+          <Child Raised="True" Group=" 1" State="NORMAL" >
+            <my_window_2 />
+          </Child>
+        </Notebook>
+      </Pane>
+    </Pane>
+  </perspective>
+</perspectives>

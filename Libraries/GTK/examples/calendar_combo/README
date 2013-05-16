@@ -1,0 +1,4 @@
+This directory shows how one can use the Gtk_Combo_Box widget
+to implement some special combo boxes.
+In this example, we implement a combo box that allows the user to
+select a date.

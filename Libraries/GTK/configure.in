@@ -1,0 +1,56 @@
+AC_REVISION($Revision: 202332 $)
+AC_PREREQ(2.50)
+AC_INIT(src/glib.ads)
+
+# Current release settings
+GTKADA_MAJOR_VERSION=2
+GTKADA_MINOR_VERSION=24
+GTKADA_MICRO_VERSION=4
+GTKADA_VERSION=$GTKADA_MAJOR_VERSION.$GTKADA_MINOR_VERSION.$GTKADA_MICRO_VERSION
+
+AC_CANONICAL_SYSTEM
+AM_ADD_OS_SPECIFIC_FLAGS
+
+# checking for local tools
+AC_PROG_CC
+AM_PATH_GNAT
+AM_PATH_PERL
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+AC_PROG_RANLIB
+
+# Are we in devel mode ?
+CHECK_BUILD_TYPE
+
+# checking for gtk
+AM_PATH_GTK(2.24.0,,AC_MSG_ERROR(Test for GTK failed. See the file 'INSTALL' for help.))
+
+# checking for PANGO_UNDERLINE_ERROR
+AM_PANGO_UNDERLINE_ERROR
+
+# Gettext stuff
+ALL_LINGUAS="fr"
+AM_GNU_GETTEXT
+
+# try to find OpenGL if present
+AM_CHECK_OPENGL
+
+# try to find gnome if present
+AM_CHECK_GNOME
+
+# Set the version number of GtkAda
+AC_SUBST(GTKADA_VERSION)
+AC_SUBST(GTKADA_MAJOR_VERSION)
+AC_SUBST(GTKADA_MINOR_VERSION)
+AC_SUBST(GTKADA_MICRO_VERSION)
+AC_SUBST(BUILD_TYPE)
+
+EXEC_PREFIX="$prefix"
+AC_SUBST(EXEC_PREFIX)
+
+# Ignore user's choice of libdir, as well as configure's own default,
+# because we want GtkAda to always install in /lib (backward compatibility)
+
+libdir='${prefix}/lib'
+
+AC_OUTPUT(Makefile src/Makefile.common src/Makefile src/tools/gtkada-config src/tools/Makefile testgtk/Makefile src/gtkextra/Makefile src/opengl/Makefile src/gnome/Makefile docs/Makefile docs/gtkada_rm/Makefile po/Makefile src/config.h projects/gtkada.pc projects/gtkada_install_dynamic.gpr projects/gtkada_install_dynamic_gl.gpr)

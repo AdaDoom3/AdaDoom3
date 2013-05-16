@@ -1,0 +1,47 @@
+	* configure: Work around ^M handling on cygwin with igncr
+
+	* glib/convert.c, glib/gmem.c: Do not crash when trying to convert
+	a huge file, return NULL instead.
+
+--- glib/gconvert.c.old	2007-01-26 17:16:07.171875000 +0100
++++ glib/gconvert.c	2007-01-26 17:17:35.812500000 +0100
+@@ -610,7 +610,15 @@ g_convert_with_iconv (const gchar *str,
+ 		
+ 		outbuf_size *= 2;
+ 		dest = g_realloc (dest, outbuf_size);
+-		
++
++		if (dest == NULL)
++		  {
++		    g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_FAILED,
++			         _("Error during conversion: %s"),
++			         g_strerror (errno));
++		    return NULL;
++		  }
++
+ 		outp = dest + used;
+ 		outbytes_remaining = outbuf_size - used - 1; /* -1 for nul */
+ 	      }
+--- glib/gmem.c.orig	2008-04-08 05:47:29.000000000 +0200
++++ glib/gmem.c	2008-04-17 18:26:07.765625000 +0200
+@@ -171,8 +171,10 @@ g_realloc (gpointer mem,
+       if (mem)
+ 	return mem;
+ 
++      /*
+       g_error ("%s: failed to allocate %"G_GSIZE_FORMAT" bytes",
+                G_STRLOC, n_bytes);
++      */
+     }
+ 
+   if (mem)
+--- configure.old	2009-07-20 17:21:54.661000000 +0200
++++ configure	2009-07-20 17:22:25.630000000 +0200
+@@ -44575,6 +44575,7 @@ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; 
+ else
+   ac_cs_awk_cr=$ac_cr
+ fi
++ac_cs_awk_cr=$ac_cr
+ 
+ echo 'BEGIN {' >"$tmp/subs1.awk" &&
+ _ACEOF

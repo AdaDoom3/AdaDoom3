@@ -1,0 +1,18 @@
+This demo shows how you can use GtkAda to create flicker-free
+animations, thanks to double-buffering.
+
+A new widget is supplied that provides transparent double-buffering,
+which you can easily reuse in your own application.
+
+Please read the output of all the demos for more information.
+
+How to build the demos:
+  >  make
+
+
+IMPORTANT NOTE:
+To use the multi-tasking demo (anim), you need to compile your application
+with support for native threads.
+If you are using the GNAT compiler, you should read the file README.TASKING in
+the GNAT distribution (basically on Linux, you need to change the links to
+adalib and adainclude in the installation directories).

@@ -1,0 +1,21 @@
+EXPORTS
+	gdk_gl_choose_visual
+	gdk_gl_context_attrlist_share_new
+	gdk_gl_context_new
+	gdk_gl_context_share_new
+	gdk_gl_get_config
+	gdk_gl_get_info
+	gdk_gl_make_current
+	gdk_gl_pixmap_make_current
+	gdk_gl_pixmap_new
+	gdk_gl_query
+	gdk_gl_swap_buffers
+	gdk_gl_use_gdk_font
+	gdk_gl_wait_gdk
+	gdk_gl_wait_gl
+	gtk_gl_area_get_type
+	gtk_gl_area_make_current
+	gtk_gl_area_new
+	gtk_gl_area_new_vargs
+	gtk_gl_area_share_new
+	gtk_gl_area_swap_buffers

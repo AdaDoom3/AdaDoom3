@@ -1,0 +1,134 @@
+SHELL=/bin/sh
+CC = @CC@
+FPIC = @FPIC@
+PWD = $(shell pwd)
+
+GNATMAKE = gnatmake
+OS_SPECIFIC_LINK_OPTIONS = @OS_SPECIFIC_LINK_OPTIONS@
+BUILD_STATIC = @BUILD_STATIC@
+BUILD_SHARED = @BUILD_SHARED@
+LDFLAGS  = @LDFLAGS@
+SO_EXT   = @SO_EXT@
+SO_OPTS  = @SO_OPTS@
+MAJOR    = @GTKADA_MAJOR_VERSION@
+MINOR    = @GTKADA_MINOR_VERSION@
+MICRO    = @GTKADA_MICRO_VERSION@
+GTK_LIBS = @GTK_LIBS_FOR_GNATMAKE@
+HAVE_OPENGL   = @HAVE_OPENGL@
+HAVE_GNOME    = @HAVE_GNOME@
+BUILD_TYPE      = @BUILD_TYPE@
+DEFAULT_LIBRARY_TYPE=@DEFAULT_LIBRARY_TYPE@
+
+GPR_BUILD=-XBUILD=${BUILD_TYPE} -XOPENGL=${HAVE_OPENGL} -XGNOME=${HAVE_GNOME}
+
+CP = cp -p -f
+ifeq ($(OS),Windows_NT)
+   LN=$(CP)
+   EXEEXT=.exe
+else
+   LN=ln -f -s
+   EXEEXT=
+endif
+
+CHMOD = chmod
+ARFLAGS = cr
+CD = cd
+MKDIR = mkdir -p
+RMDIR = rmdir
+MV = mv
+RM = rm -f
+
+RANLIB = @RANLIB@
+
+# DESTDIR may be set to the path to a staging directory to install files in
+# when building packages. If DESTDIR is empty, files will be installed directly
+# in their final locations.
+DESTDIR =
+
+prefix        = @prefix@
+exec_prefix   = @exec_prefix@
+bindir        = @bindir@
+libdir        = @libdir@
+incdir        = @includedir@/gtkada
+alidir        = @libdir@/gtkada
+
+#################################################################
+## Generic targets
+## This code is reused by all modules, but is put in a common place
+## to avoid code duplication.
+## Object directory for the modules must be defined in OBJ_DIR.
+## Library to generate is defined in SONAME, ARCHIVENAME and LIBNAME
+## List of source files basenames in SRC_FILES
+## Additional external libs in EXTERNAL_LIBS
+## Module's project file in GPRFILE
+#################################################################
+
+.PHONY: clean distclean module_ada module_install_common module_libname \
+   module_archivename force
+.SUFFIXES: .c .o .ads .adb .ali
+
+all:
+
+module_all:     module_ada
+module_install: module_install_common
+ifeq (${BUILD_STATIC},yes)
+module_all:     ${OBJ_DIR}/${ARCHIVENAME}
+module_install: module_install_static
+endif
+ifeq (${BUILD_SHARED},yes)
+module_all:     ${OBJ_DIR}/${SONAME}
+module_install: module_install_shared
+endif
+
+module_ada: force
+	${GNATMAKE} -P${GPRFILE} -u ${FPIC} ${GPR_BUILD}
+
+ifneq (${SONAME},)
+module_install_common: force
+	$(MKDIR) "${DESTDIR}$(incdir)/$(INC_SUBDIR)"
+	$(CP) *.ads *.adb "${DESTDIR}$(incdir)/$(INC_SUBDIR)"
+
+module_install_static: force
+	$(MKDIR) "${DESTDIR}$(alidir)/static/$(INC_SUBDIR)/"
+	$(INSTALL_DATA) ${OBJ_DIR}/$(ARCHIVENAME) "${DESTDIR}$(alidir)/static/$(INC_SUBDIR)/"
+	$(RM) "${DESTDIR}$(libdir)/$(ARCHIVENAME)"
+	${CP} ${OBJ_DIR}/*.ali "${DESTDIR}${alidir}/static"
+
+module_install_shared: force
+	$(MKDIR) "${DESTDIR}$(alidir)/relocatable/$(INC_SUBDIR)/"
+	$(INSTALL_PROGRAM) ${OBJ_DIR}/$(SONAME) "${DESTDIR}$(alidir)/relocatable/$(INC_SUBDIR)/"
+	$(RM) "${DESTDIR}$(libdir)/$(LIBNAME)"
+ifneq (${OS},Windows_NT)
+	$(LN) $(SONAME) "${DESTDIR}$(alidir)/relocatable/$(LIBNAME)"
+	$(LN) gtkada/relocatable/$(INC_SUBDIR)/$(SONAME) "${DESTDIR}$(libdir)/$(LIBNAME)"
+	$(LN) gtkada/relocatable/$(INC_SUBDIR)/$(SONAME) "${DESTDIR}$(libdir)/$(SONAME)"
+endif
+	${CP} ${OBJ_DIR}/*.ali "${DESTDIR}${alidir}/relocatable"
+
+${OBJ_DIR}/${SONAME}: ${wildcard ${SRC_FILES:%=${OBJ_DIR}/%}}
+	@echo Building ${SONAME}
+	@cd ${OBJ_DIR}; $(CC) -shared $(FPIC) $(OS_SPECIFIC_LINK_OPTIONS) \
+	  -o $(SONAME) $(SO_OPTS)$(SONAME) ${LDFLAGS} ${SRC_FILES} \
+          $(GTKADA_LIBS) $(GTK_LIBS) $(EXTERNAL_LIBS)
+	@cd ${OBJ_DIR}; $(RM) $(LIBNAME)
+	@cd ${OBJ_DIR}; $(LN) $(SONAME) $(LIBNAME)
+	@cd ${OBJ_DIR}; ${CHMOD} +x ${LIBNAME}
+
+${OBJ_DIR}/${ARCHIVENAME}: ${wildcard ${SRC_FILES:%=${OBJ_DIR}/%}}
+	@echo Building ${ARCHIVENAME}
+	@cd ${OBJ_DIR}; $(AR) $(ARFLAGS) $(ARCHIVENAME) ${SRC_FILES}
+	@if [ -f /usr/bin/$(RANLIB) -o -f /bin/$(RANLIB) ]; then \
+	   cd ${OBJ_DIR}; $(RANLIB) $(ARCHIVENAME); \
+	fi
+endif
+
+module_clean: force
+	-${RM} *~ core .\#*
+	-${RM} ${OBJ_DIR}/*.ali
+	-${RM} ${OBJ_DIR}/*.o
+	-${RM} ${OBJ_DIR}/lib*
+
+module_distclean: clean
+	-${RM} Makefile
+
+force:
