@@ -87,10 +87,10 @@ Roadmap
 Tasks
 -----
 The following are small tasks that are currently needed
-* Begin adding Linux support by implementing stubbed functions/subprograms in the following files
-  * Linux/neo-system-implementation.adb
-  * Linux/neo-system-memory-implementation.adb
-  * Linux/neo-system-processor-implementation_for_operating_system.adb
+* Begin adding Linux/Mac support by implementing stubbed functions/subprograms in the following files
+  * POSIX/neo-system-implementation.adb
+  * POSIX/neo-system-memory-implementation.adb
+  * POSIX/neo-system-processor-implementation_for_operating_system.adb
 
 Author
 ------
