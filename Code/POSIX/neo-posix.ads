@@ -74,5 +74,5 @@ private
   ----------------
     pragma Import(C, Get_System_Configuration, "sysconf");
     pragma Import(C, Get_Unix_Name,            "uname");
-    pragma Import(C, Get_Time_Spent,           "times");
+    pragma Import(C, Get_Time_Stamp,           "times");
   end Neo.Posix;
