@@ -42,7 +42,6 @@ package body Implementation
     procedure Set_Byte_Limits(
       Minimum : in Integer_Address;
       Maximum : in Integer_Address)
-      with Pre => Minimum < Maximum
       is
       begin
         raise System_Call_Failure;
