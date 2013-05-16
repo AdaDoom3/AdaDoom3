@@ -41,8 +41,9 @@ package Neo.Posix
         Domain  : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
       end record
       with
-        Convention => C,
+        --Convention => C,
         Size       => X * Byte'Size;
+      pragma(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
         User            : Integer_8_Unsigned_C := 0; --clock_t
@@ -50,18 +51,19 @@ package Neo.Posix
         Children_User   : Integer_8_Unsigned_C := 0; 
         Children_System : Integer_8_Unsigned_C := 0; 
       end record
-      with Convention => C;
+      pragma(C, Record_Time_Stamp);
+      --with Convention => C;
   -----------------
   -- Subprograms --
   -----------------
     function Get_Unix_Name(
-      Buffer : in access Record_Unix_Name)
+      Buffer : access Record_Unix_Name)
       return Integer_4_Signed_C;
     function Get_System_Configuration(
       Name : Integer_4_Signed_C)
       return Long;
     function Get_Time_Stamp(
-      Buffer : in access Record_Time_Stamp)
+      Buffer : access Record_Time_Stamp)
       return Integer_8_Unsigned_C;
 -------
 private
