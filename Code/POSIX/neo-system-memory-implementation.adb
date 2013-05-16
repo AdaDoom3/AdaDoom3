@@ -25,17 +25,17 @@ use
 separate(Neo.System.Memory)
 package body Implementation
   is
-  ----------------
-  -- Get_Status --
-  ----------------
-    function Get_Status
-      return Record_Status
+  ---------------
+  -- Get_State --
+  ---------------
+    function Get_State
+      return Record_State
       is
       begin
         -- fstatvfs, statvfs
         raise System_Call_Failure;
         return(others => <>);
-      end Get_Status;
+      end Get_State;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
