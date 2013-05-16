@@ -16,7 +16,7 @@ GMAKE_OPTS =               \
 all: build
 
 build:
-  gnatmake $(GMAKE_OPTS) -Padadoom3
+	gnatmake $(GMAKE_OPTS) -Padadoom3
 
 clean:
 	@rm -rf $(OBJ_DIR)/*
