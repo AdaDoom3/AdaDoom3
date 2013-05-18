@@ -35,12 +35,12 @@ package Neo.Posix
   -------------
     type Record_Unix_Name
       is record
-        System  : String_1_C(1..65) := (others => NULL_CHARACTER_1);
-        Node    : String_1_C(1..65) := (others => NULL_CHARACTER_1);
-        Release : String_1_C(1..65) := (others => NULL_CHARACTER_1);
-        Version : String_1_C(1..65) := (others => NULL_CHARACTER_1);
-        Machine : String_1_C(1..65) := (others => NULL_CHARACTER_1);
-        Domain  : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        System  : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
+        Node    : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
+        Release : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
+        Version : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
+        Machine : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
+        Domain  : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
       end record;
       --with
         --Convention => C,
@@ -50,9 +50,9 @@ package Neo.Posix
     type Record_Time_Stamp
       is record
         User            : Integer_8_Unsigned_C := 0; --clock_t
-        System          : Integer_8_Unsigned_C := 0; 
-        Children_User   : Integer_8_Unsigned_C := 0; 
-        Children_System : Integer_8_Unsigned_C := 0; 
+        System          : Integer_8_Unsigned_C := 0;
+        Children_User   : Integer_8_Unsigned_C := 0;
+        Children_System : Integer_8_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Time_Stamp);
       --with Convention => C;

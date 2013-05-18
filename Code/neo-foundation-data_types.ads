@@ -466,13 +466,14 @@ package Neo.Foundation.Data_Types
   ---------------
   -- Constants --
   ---------------
-    C_TRUE           : constant Integer_4_Signed_C := 1;
-    C_FALSE          : constant Integer_4_Signed_C := 0;
-    NULL_CHARACTER_1 : constant Character_1        := Character_1'Val(0);
-    NULL_CHARACTER_2 : constant Character_2        := Character_2'Val(0);
-    NULL_STRING_1    : constant String_1           := "" & NULL_CHARACTER_1;
-    NULL_STRING_2    : constant String_2           := "" & NULL_CHARACTER_2;
-    END_LINE         : constant String_1(1..2)     := Ascii.CR & Ascii.LF;
+    C_TRUE             : constant Integer_4_Signed_C := 1;
+    C_FALSE            : constant Integer_4_Signed_C := 0;
+    C_NULL_CHARACTER_1 : constant Character_1_C      := Interfaces.C.nul;
+    NULL_CHARACTER_1   : constant Character_1        := Character_1'Val(0);
+    NULL_CHARACTER_2   : constant Character_2        := Character_2'Val(0);
+    NULL_STRING_1      : constant String_1           := "" & NULL_CHARACTER_1;
+    NULL_STRING_2      : constant String_2           := "" & NULL_CHARACTER_2;
+    END_LINE           : constant String_1(1..2)     := Ascii.CR & Ascii.LF;
   -----------------
   -- Subprograms --
   -----------------
@@ -490,11 +491,11 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_1_C);
     function To_Unchecked_Access_Constant_Character_2_C
       is new Ada.Unchecked_Conversion(Address, Access_Constant_Character_2_C);
-    function To_Unchecked_Access_Constant_Character_2_C 
+    function To_Unchecked_Access_Constant_Character_2_C
       is new Ada.Unchecked_Conversion(Integer_Address, Access_Constant_Character_2_C);
     function To_Unchecked_Access_Integer_2_Unsigned_C
       is new Ada.Unchecked_Conversion(Address, Access_Integer_2_Unsigned_C);
-    function To_Unchecked_Access_Integer_2_Unsigned_C 
+    function To_Unchecked_Access_Integer_2_Unsigned_C
       is new Ada.Unchecked_Conversion(Integer_Address, Access_Integer_2_Unsigned_C);
     function To_Unchecked_Access_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Address, Access_Integer_4_Unsigned);
@@ -502,17 +503,17 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Float_4_Real, Integer_4_Unsigned);
     function To_Unchecked_Integer_2_Signed
       is new Ada.Unchecked_Conversion(Integer_2_Unsigned, Integer_2_Signed);
-    function To_Unchecked_Integer_Address 
+    function To_Unchecked_Integer_Address
       is new Ada.Unchecked_Conversion(Address, Integer_Address);
-    function To_Unchecked_Integer_Address 
+    function To_Unchecked_Integer_Address
       is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
-    function To_Unchecked_Integer_Address 
+    function To_Unchecked_Integer_Address
       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Signed
       is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Integer_4_Signed);
-    function To_Unchecked_Integer_4_Address 
+    function To_Unchecked_Integer_4_Address
       is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
-    function To_Unchecked_Integer_4_Address 
+    function To_Unchecked_Integer_4_Address
       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
     function To_Unchecked_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Integer_4_Unsigned);

@@ -1,5 +1,5 @@
---                                                                                                                      
---                                                                                                                      
+--
+--
 --
 --
 --
@@ -114,7 +114,7 @@ package body Implementation
     function Get_Username
       return String_2
       is
-      --Password : access Record_Password := Get_Password(Get_User);--getpwuid(geteuid); -- struct passwd 
+      --Password : access Record_Password := Get_Password(Get_User);--getpwuid(geteuid); -- struct passwd
       begin
       --  if Password = null then
       --    raise System_Call_Failure;
