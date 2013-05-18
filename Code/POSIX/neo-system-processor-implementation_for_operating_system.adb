@@ -38,7 +38,7 @@ package body Implementation_For_Operating_System
     function Get_Clock_Ticks
       return Integer_8_Unsigned
       is
-      Time : Record_Time_Stamp := (others => <>);
+      Time : aliased Record_Time_Stamp := (others => <>);
       begin
         if Get_Time_Stamp(Time'Access) = -1 then
           raise System_Call_Failure;
