@@ -25,7 +25,7 @@ package Neo.Posix
   ---------------
     SUCCESS                     : constant Integer_4_Signed_C := 0;
     NUMBER_OF_PROCESSORS_ONLINE : constant Integer_4_Signed_C := 84;
-    UNIX_NAME_STRING_SIZE       : constant Integer_4_Signed   := 65;
+    --UNIX_NAME_STRING_SIZE       : constant Integer_4_Signed   := 65;
     UNIX_NAME_LINUX             : constant String_1_C         := "Linux";
     UNIX_NAME_MACINTOSH         : constant String_1_C         := "Darwin";
   -------------
@@ -33,12 +33,12 @@ package Neo.Posix
   -------------
     type Record_Unix_Name
       is record
-        System  : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-        Node    : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-        Release : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-        Version : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-        Machine : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
-        Domain  : String_1_C(1..UNIX_NAME_STRING_SIZE) := (others => NULL_CHARACTER_1);
+        System  : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        Node    : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        Release : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        Version : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        Machine : String_1_C(1..65) := (others => NULL_CHARACTER_1);
+        Domain  : String_1_C(1..65) := (others => NULL_CHARACTER_1);
       end record;
       --with
         --Convention => C,
