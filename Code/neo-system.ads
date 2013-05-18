@@ -104,9 +104,10 @@ package Neo.System
       Windows_2_6_1_System, -- AVX
       Windows_2_6_2_System,
       Macintosh_System,
+      Macintosh_8_System,
       Macintosh_8_5_System, -- PowerPC
       Macintosh_8_6_System,
-      Macintosh_9_0_System,
+      Macintosh_9_System,
       Macintosh_9_1_System,
       Macintosh_9_2_System,
       Macintosh_10_System,
