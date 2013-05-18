@@ -45,7 +45,7 @@ package Neo.Posix
       --with
         --Convention => C,
       --  Size       => X * Byte'Size;
-      for Record_Unix_Name'Size use X * Byte'Size;
+      for Record_Unix_Name'Size use 6 * 65 * Byte'Size;
       pragma Convention(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
