@@ -1,5 +1,0 @@
-This demos shows how you can set your own cursors in your windows
-
-How to build the demos:
-  >  gnatmake -Pcursors
-

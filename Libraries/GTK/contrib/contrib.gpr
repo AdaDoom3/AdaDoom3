@@ -1,4 +1,0 @@
-project Contrib is
-   for Source_Dirs use (".");
-   for Languages use ("Python", "Xml");
-end Contrib;
