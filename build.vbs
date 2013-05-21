@@ -22,14 +22,14 @@
   ''''''''
     'If no environment variables are set, search for the gnat executables'
     'First search by EXECUTABLE_PATH_GUESSES, and if that fails search everywhere'
-    if FileSystem.FileExists(sDir) then
-      FileSystem.DeleteFile(sDir)
+    if FileSystem.FileExists(directory) then
+      FileSystem.DeleteFile(directory)
     end if
     for each drive in FileSystem.Drives
       if drive.DriveType = 2 then
         Search drive.DriveLetter
       end if
-    Next
+    next
     CurrentFile = fileSystem.OpenTextFile(directory, 1)
     for each itemName in Split(CurrentFile.ReadAll, VbCrLf)
       if InStr(1, itemName, fileName, 1) > 0 then
@@ -37,9 +37,9 @@
       end if
     next
     CurrentFile.Close
-    sub Search(sDrive)
-      'WScript.Echo "Scanning drive " & sDrive & ":"'
-      'WindowShell.Run "cmd /c dir /s /b " & sDrive & ":\" & sName & " >>" & sDir, 0, True'
+    sub Search(drive)
+      'WScript.Echo "Scanning drive " & drive & ":"'
+      'WindowShell.Run "cmd /c dir /s /b " & drive & ":\" & itemName & " >>" & directory, 0, True'
     end sub
     'Once it is found, make the script edit itself (if its possible?) and add'
     'the valid path to the EXECUTABLE_PATH_GUESSES string array. If some of the path'
