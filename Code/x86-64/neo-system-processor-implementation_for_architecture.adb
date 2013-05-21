@@ -649,6 +649,18 @@ package body Implementation_For_Architecture
             " 1:                           " & END_LINE );
             ---------------------------------------------
       end Clear_Stack;
+  --------------------------
+  -- Compare_And_Exchange --
+  --------------------------
+  -- function Compare_And_Exchange(
+  --    Destination : out Integer_4_Unsigned;
+  --    Comparand   : in  Integer_4_Unsigned;
+  --    Item        : in  Integer_4_Unsigned)
+  --    return Integer_4_Unsigned
+  --    is
+  --    begin
+  --      raise System_Call_Failure;
+  --    end Compare_And_Exchange;
   ---------------
   -- Put_Trace --
   ---------------
