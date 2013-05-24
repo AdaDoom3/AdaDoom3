@@ -122,6 +122,18 @@ package Implementation_For_Architecture
         raise Unsupported_Feature;
         return True;
       end Is_Stack_Empty;
+  --------------------------
+  -- Compare_And_Exchange --
+  --------------------------
+    function Compare_And_Exchange(
+      Destination : out Integer_4_Unsigned;
+      Comparand   : in  Integer_4_Unsigned;
+      Item        : in  Integer_4_Unsigned)
+      return Integer_4_Unsigned
+      is
+      begin
+        raise System_Call_Failure;
+      end Compare_And_Exchange;
   -----------------
   -- Clear_Stack --
   -----------------

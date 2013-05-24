@@ -139,6 +139,11 @@ package Neo.System.Processor
       return Record_Specifics;
     function Get_Clock_Ticks
       return Integer_8_Unsigned;
+    function Compare_And_Exchange(
+      Destination : out Integer_4_Unsigned;
+      Comparand   : in  Integer_4_Unsigned;
+      Item        : in  Integer_4_Unsigned)
+      return Integer_4_Unsigned;
 -------
 private
 -------
@@ -184,6 +189,11 @@ private
         function Is_Stack_Empty
           return Boolean;
         procedure Clear_Stack;
+        function Compare_And_Exchange(
+          Destination : out Integer_4_Unsigned;
+          Comparand   : in  Integer_4_Unsigned;
+          Item        : in  Integer_4_Unsigned)
+          return Integer_4_Unsigned;
       end Implementation_For_Architecture;
   end Neo.System.Processor;
 

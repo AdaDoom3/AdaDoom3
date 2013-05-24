@@ -234,6 +234,15 @@ package body Neo.System.Processor
   -----------------
     procedure Clear_Stack
       renames Implementation_For_Architecture.Clear_Stack;
+  --------------------------
+  -- Compare_And_Exchange --
+  --------------------------
+    function Compare_And_Exchange(
+      Destination : out Integer_4_Unsigned;
+      Comparand   : in  Integer_4_Unsigned;
+      Item        : in  Integer_4_Unsigned)
+      return Integer_4_Unsigned
+      renames Implementation_For_Architecture.Compare_And_Exchange;
   --------------------
   -- Is_Stack_Empty --
   --------------------

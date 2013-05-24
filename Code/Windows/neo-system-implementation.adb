@@ -1,5 +1,5 @@
---                                                                                                                      
---                                                                                                                      
+--
+--
 --
 --
 --
@@ -189,14 +189,24 @@ package body Implementation
         --     cmdSystem->BufferCommandText( CMD_EXEC_APPEND, "quit\n" );
         --   }
       end Execute_Application;
-  -----------------------------------------------
-  -- Is_Running_In_Emulated_32_Bit_Environment --
-  -----------------------------------------------
-    function Is_Running_In_Emulated_32_Bit_Environment
-      return Boolean
+  -----------------------------------
+  -- Get_Operating_System_Bit_Size --
+  -----------------------------------
+    function Get_Operating_System_Bit_Size
+      return Integer_4_Positive
       is
+      Result : aliased Integer_4_Signed_C := 0;
       begin
-        return False;
-      end Is_Running_In_Emulated_32_Bit_Environment;
+        if Get_Application_Bit_Size = 64 then
+          return 64;
+        elsif Is_Running_In_Emulated_32_Bit(Get_Current_Process, Result'unchecked_access) = FAILED then
+          raise System_Call_Failure;
+        end if;
+        return(
+          if Result = C_TRUE then
+            64
+          else
+            32);
+      end Get_Operating_System_Bit_Size;
   end Implementation;
 

@@ -347,14 +347,54 @@ package Neo.Windows
     --     Product : Integer_2_Unsigned_C := 0;
     --     Version : Integer_2_Unsigned_C := 0;
     --   end record;
-    type Record_Device_Header
-      is record
-        Kind        : Integer_4_Unsigned_C := 0;
-        Size        : Integer_4_Unsigned_C := 0;
-        Device      : Address              := NULL_ADDRESS;
-        Data_Signed : Integer_4_Signed_C   := 0;
-      end record;
-      pragma Convention(C, Record_Device_Header);
+-- typedef struct _XINPUT_GAMEPAD
+-- {
+--     WORD                                wButtons;
+--     BYTE                                bLeftTrigger;
+--     BYTE                                bRightTrigger;
+--     SHORT                               sThumbLX;
+--     SHORT                               sThumbLY;
+--     SHORT                               sThumbRX;
+--     SHORT                               sThumbRY;
+-- } XINPUT_GAMEPAD, *PXINPUT_GAMEPAD;
+
+-- typedef struct _XINPUT_STATE
+-- {
+--     DWORD                               dwPacketNumber;
+--     XINPUT_GAMEPAD                      Gamepad;
+-- } XINPUT_STATE, *PXINPUT_STATE;
+
+-- typedef struct _XINPUT_VIBRATION
+-- {
+--     WORD                                wLeftMotorSpeed;
+--     WORD                                wRightMotorSpeed;
+-- } XINPUT_VIBRATION, *PXINPUT_VIBRATION;
+
+-- typedef struct _XINPUT_CAPABILITIES
+-- {
+--     BYTE                                type;
+--     BYTE                                SubType;
+--     WORD                                Flags;
+--     XINPUT_GAMEPAD                      Gamepad;
+--     XINPUT_VIBRATION                    Vibration;
+-- } XINPUT_CAPABILITIES, *PXINPUT_CAPABILITIES;
+
+-- #ifndef XINPUT_USE_9_1_0
+
+-- typedef struct _XINPUT_BATTERY_INFORMATION
+-- {
+--     BYTE BatteryType;
+--     BYTE BatteryLevel;
+-- } XINPUT_BATTERY_INFORMATION, *PXINPUT_BATTERY_INFORMATION;
+
+-- typedef struct _XINPUT_KEYSTROKE
+-- {
+--     WORD    VirtualKey;
+--     WCHAR   Unicode;
+--     WORD    Flags;
+--     BYTE    UserIndex;
+--     BYTE    HidCode;
+-- } XINPUT_KEYSTROKE, *PXINPUT_KEYSTROKE;
     -- type Record_Device_Capabilities
     --   is record
     --     Usage                                 : Integer_2_Unsigned_C  := 0;
@@ -428,6 +468,23 @@ package Neo.Windows
     --     Designator_Maximum  : Integer_2_Unsigned_C := 0;
     --   end record;
     --   pragma Convention(C, Record_Device_Capability_Values);
+    -- type Record_Mouse
+    --   is record
+    --     Point       : Record_Point;
+    --     Data        : Integer_4_Unsigned_C;
+    --     Flags       : Integer_4_Unsigned_C;
+    --     Time        : Integer_4_Unsigned_C;
+    --     Information : Address; -- Changes on 64/32 bit systems
+    --   end record;
+    --   pragma Convention(C, Record_Mouse);
+    type Record_Device_Header
+      is record
+        Kind        : Integer_4_Unsigned_C := 0;
+        Size        : Integer_4_Unsigned_C := 0;
+        Device      : Address              := NULL_ADDRESS;
+        Data_Signed : Integer_4_Signed_C   := 0;
+      end record;
+      pragma Convention(C, Record_Device_Header);
     type Record_Mouse
       is record
         Flags             : Integer_2_Unsigned_C := 0;
@@ -438,15 +495,6 @@ package Neo.Windows
         Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Mouse);
-    -- type Record_Mouse
-    --   is record
-    --     Point       : Record_Point;
-    --     Data        : Integer_4_Unsigned_C;
-    --     Flags       : Integer_4_Unsigned_C;
-    --     Time        : Integer_4_Unsigned_C;
-    --     Information : Address; -- Changes on 64/32 bit systems
-    --   end record;
-    --   pragma Convention(C, Record_Mouse);
     type Record_Keyboard
       is record
         Make_Code         : Integer_2_Unsigned_C := 0;
@@ -598,54 +646,6 @@ package Neo.Windows
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Mouse         := (others => <>);
       end record;
--- typedef struct _XINPUT_GAMEPAD
--- {
---     WORD                                wButtons;
---     BYTE                                bLeftTrigger;
---     BYTE                                bRightTrigger;
---     SHORT                               sThumbLX;
---     SHORT                               sThumbLY;
---     SHORT                               sThumbRX;
---     SHORT                               sThumbRY;
--- } XINPUT_GAMEPAD, *PXINPUT_GAMEPAD;
-
--- typedef struct _XINPUT_STATE
--- {
---     DWORD                               dwPacketNumber;
---     XINPUT_GAMEPAD                      Gamepad;
--- } XINPUT_STATE, *PXINPUT_STATE;
-
--- typedef struct _XINPUT_VIBRATION
--- {
---     WORD                                wLeftMotorSpeed;
---     WORD                                wRightMotorSpeed;
--- } XINPUT_VIBRATION, *PXINPUT_VIBRATION;
-
--- typedef struct _XINPUT_CAPABILITIES
--- {
---     BYTE                                type;
---     BYTE                                SubType;
---     WORD                                Flags;
---     XINPUT_GAMEPAD                      Gamepad;
---     XINPUT_VIBRATION                    Vibration;
--- } XINPUT_CAPABILITIES, *PXINPUT_CAPABILITIES;
-
--- #ifndef XINPUT_USE_9_1_0
-
--- typedef struct _XINPUT_BATTERY_INFORMATION
--- {
---     BYTE BatteryType;
---     BYTE BatteryLevel;
--- } XINPUT_BATTERY_INFORMATION, *PXINPUT_BATTERY_INFORMATION;
-
--- typedef struct _XINPUT_KEYSTROKE
--- {
---     WORD    VirtualKey;
---     WCHAR   Unicode;
---     WORD    Flags;
---     BYTE    UserIndex;
---     BYTE    HidCode;
--- } XINPUT_KEYSTROKE, *PXINPUT_KEYSTROKE;
   ------------
   -- Arrays --
   ------------
@@ -758,12 +758,10 @@ package Neo.Windows
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
     --   return Address;
-    function Is_Lower(
-      Item : in Character_2)
-      return Integer_4_Signed;
-    function Is_Upper(
-      Item : in Character_2)
-      return Integer_4_Signed;
+    function Is_Running_In_Emulated_32_Bit(
+      Process : in Address;
+      Result  : in Access_Integer_4_Signed_C)
+      return Integer_4_Signed_C;
     function Register_Devices(
       Devices : in Address;
       Number  : in Integer_4_Unsigned_C;
@@ -948,9 +946,9 @@ package Neo.Windows
       return Address;
     function Get_Disk_Free_Space(
       Directory                  : in Access_Constant_Character_2_C;
-      Free_Bytes_Available       : in Address;
-      Total_Number_Of_Bytes      : in Address;
-      Total_Number_Of_Free_Bytes : in Address)
+      Free_Bytes_Available       : in Access_Integer_8_Unsigned_C;
+      Total_Number_Of_Bytes      : in Access_Integer_8_Unsigned_C;
+      Total_Number_Of_Free_Bytes : in Access_Integer_8_Unsigned_C)
       return Integer_4_Signed_C;
     function Shell_Execute(
       Window       : in Address;
@@ -1226,8 +1224,7 @@ private
     pragma Linker_Options("-lhid");
     pragma Linker_Options("-lsetupapi");
     pragma Import(C,       Get_Current_Instance,           "rts_get_hInstance");
-    pragma Import(Stdcall, Is_Lower,                       "iswlower");
-    pragma Import(Stdcall, Is_Upper,                       "iswupper");
+    pragma Import(Stdcall, Is_Running_In_Emulated_32_Bit,  "IsWow64Process");
     --pragma Import(Stdcall, Write_File,                     "WriteFile");
     --pragma Import(Stdcall, Convert_String_2_C_To_UTF_8,    "WideCharToMultiByte");
     --pragma Import(Stdcall, Enumerate_Device_Interfaces,    "SetupDiEnumDeviceInterfaces");

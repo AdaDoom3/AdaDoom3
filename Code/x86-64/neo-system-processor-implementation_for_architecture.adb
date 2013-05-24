@@ -237,9 +237,9 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if Memory_Size < 2 ** 32 then
+        if Get_Application_Bit_Size < 32 then
           raise CPUID_Is_Not_Supported;
-        elsif Memory_Size = 2 ** 32 then
+        elsif Get_Application_Bit_Size = 32 then
           Asm( -- Check for cpuid
             Volatile => True,
             Template =>
@@ -652,15 +652,16 @@ package body Implementation_For_Architecture
   --------------------------
   -- Compare_And_Exchange --
   --------------------------
-  -- function Compare_And_Exchange(
-  --    Destination : out Integer_4_Unsigned;
-  --    Comparand   : in  Integer_4_Unsigned;
-  --    Item        : in  Integer_4_Unsigned)
-  --    return Integer_4_Unsigned
-  --    is
-  --    begin
-  --      raise System_Call_Failure;
-  --    end Compare_And_Exchange;
+    function Compare_And_Exchange(
+      Destination : out Integer_4_Unsigned;
+      Comparand   : in  Integer_4_Unsigned;
+      Item        : in  Integer_4_Unsigned)
+      return Integer_4_Unsigned
+      is
+      begin
+        raise System_Call_Failure;
+        return 0;
+      end Compare_And_Exchange;
   ---------------
   -- Put_Trace --
   ---------------

@@ -28,11 +28,14 @@ package body Neo.System
       is
       begin
         Put_Title("SYSTEM TEST");
-        Put_Line("Version "  & Enumerated_System'Wide_Image(Get_Version));
-        Put_Line("Username """ & Get_Username & """");
+        Put_Line("Version: "  & Enumerated_System'Wide_Image(Get_Version));
+        Put_Line("Username: """ & Get_Username & """");
+        Put_Line("Application bit size: " & Integer_4_Positive'Wide_Image(Get_Application_Bit_Size));
+        Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Operating_System_Bit_Size));
         Open_Webpage("http://www.google.com");
         Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
-        --Put_Line("Newer than Windows XP is " & Boolean'Wide_Image(Is_Newer_Than(Windows_2_5_1_System)));
+        Put_Line("OS supports AVX assembly is " & Boolean'Wide_Image(
+          Is_Newer_Than(Linux_3_System, Macintosh_10_7_System, Windows_2_6_1_System)));
         Hang_Window;
       end Test;
   -------------------
@@ -46,25 +49,36 @@ package body Neo.System
       is
       Current_System : Enumerated_System := Get_Version;
       begin
-        -- if Operating_System in Enumerated_Linux_System'Range then
-        -- elsif Operating_System in Enumerated_Windows_System'Range then
-        -- elsif Operating_System in Enumerated_Macintosh_System'Range then
-        -- end if;
-        return True;
+        if Current_System in Enumerated_Linux_System'range then
+          return Current_System >= Linux;
+        elsif Current_System in Enumerated_Windows_System'range then
+          return Current_System >= Windows;
+        elsif Current_System in Enumerated_Macintosh_System'range then
+          return Current_System >= Macintosh;
+        end if;
+        return False;
       end Is_Newer_Than;
-  -----------------------------------------------
-  -- Is_Running_In_Emulated_32_Bit_Environment --
-  -----------------------------------------------
-    function Is_Running_In_Emulated_32_Bit_Environment
-      return Boolean
+  ------------------------------
+  -- Get_Application_Bit_Size --
+  ------------------------------
+    function Get_Application_Bit_Size
+      return Integer_4_Positive
       is
       begin
-        return(
-          if Memory_Size >= 2**64 then
-            False
-          else
-            Implementation.Is_Running_In_Emulated_32_Bit_Environment);
-      end Is_Running_In_Emulated_32_Bit_Environment;
+        return Address'Size;
+      end Get_Application_Bit_Size;
+  -----------------------------------
+  -- Get_Operating_System_Bit_Size --
+  -----------------------------------
+    function Get_Operating_System_Bit_Size
+      return Integer_4_Positive
+      is
+      begin
+        return Implementation.Get_Operating_System_Bit_Size;
+      exception
+        when System_Call_Failure =>
+          return Get_Application_Bit_Size;
+      end Get_Operating_System_Bit_Size;
   -----------------
   -- Get_Version --
   -----------------

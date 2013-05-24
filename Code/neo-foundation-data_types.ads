@@ -217,6 +217,8 @@ package Neo.Foundation.Data_Types
       is access constant Character_2_C;
     type Access_Character_2_C
       is access all Character_2_C;
+    type Access_Integer_8_Unsigned_C
+      is access all Integer_8_Unsigned_C;
     type Access_Integer_4_Unsigned_C
       is access all Integer_4_Unsigned_C;
     type Access_Integer_4_Unsigned

@@ -1,5 +1,5 @@
---                                                                                                                      
---                                                                                                                      
+--
+--
 --
 --
 --
@@ -136,6 +136,10 @@ package Neo.System
       return Enumerated_System;
     function Get_Username
       return String_2;
+    function Get_Application_Bit_Size
+      return Integer_4_Positive;
+    function Get_Operating_System_Bit_Size
+      return Integer_4_Positive;
     function Is_Newer_Than(
       Linux     : in Enumerated_Linux_System;
       Macintosh : in Enumerated_Macintosh_System;
@@ -146,8 +150,6 @@ package Neo.System
     procedure Execute_Application(
       Do_Quit         : in Boolean;
       Executable_Path : in String_2);
-    function Is_Running_In_Emulated_32_Bit_Environment -- Currently only here for Windows® keyboard input
-      return Boolean;
 -------
 private
 -------
@@ -156,8 +158,8 @@ private
   --------------------
     package Implementation
       is
-        function Is_Running_In_Emulated_32_Bit_Environment
-          return Boolean;
+        function Get_Operating_System_Bit_Size
+          return Integer_4_Positive;
         function Get_Version
           return Enumerated_System;
         function Get_Username

@@ -31,17 +31,28 @@ package body Implementation
     function Get_State
       return Record_State
       is
-      Status : aliased Record_Memory_Status := (others => <>);
+      Status                         : aliased Record_Memory_Status := (others => <>);
+      Number_Of_Disk_Bytes_Available : aliased Integer_8_Unsigned_C := 0;
+      Number_Of_Disk_Bytes_Total     : aliased Integer_8_Unsigned_C := 0;
       begin
-        if Global_Memory_Status(Status'Unchecked_Access) = FAILED then
+        if Global_Memory_Status(Status'unchecked_access) = FAILED then
+          raise System_Call_Failure;
+        end if;
+        if
+        Get_Disk_Free_Space(
+          Directory                  => null,
+          Free_Bytes_Available       => Number_Of_Disk_Bytes_Available'unchecked_access,
+          Total_Number_Of_Bytes      => Number_Of_Disk_Bytes_Total'unchecked_access,
+          Total_Number_Of_Free_Bytes => null) = FAILED
+        then
           raise System_Call_Failure;
         end if;
         return(
           -- Total_Physical can be slightly inaccurate, so round up to the nearest 16 mb
           Number_Of_Physical_Bytes_Total             => Integer_8_Unsigned((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
           Number_Of_Physical_Bytes_Available         => Integer_8_Unsigned(Status.Available_Physical),
-          Number_Of_Disk_Bytes_Total                 => Integer_8_Unsigned(0),
-          Number_Of_Disk_Bytes_Available             => Integer_8_Unsigned(0),
+          Number_Of_Disk_Bytes_Total                 => Integer_8_Unsigned(Number_Of_Disk_Bytes_Total),
+          Number_Of_Disk_Bytes_Available             => Integer_8_Unsigned(Number_Of_Disk_Bytes_Available),
           Number_Of_Page_File_Bytes_Total            => Integer_8_Unsigned(Status.Total_Page_File),
           Number_Of_Page_File_Bytes_Available        => Integer_8_Unsigned(Status.Available_Page_File),
           Number_Of_Virtual_Bytes_Total              => Integer_8_Unsigned(Status.Total_Virtual),

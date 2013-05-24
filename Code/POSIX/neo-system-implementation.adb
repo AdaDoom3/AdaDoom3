@@ -142,15 +142,14 @@ package body Implementation
       begin
         raise Unsupported_Feature;
       end Execute_Application;
-  -----------------------------------------------
-  -- Is_Running_In_Emulated_32_Bit_Environment --
-  -----------------------------------------------
-    function Is_Running_In_Emulated_32_Bit_Environment
-      return Boolean
+  -----------------------------------
+  -- Get_Operating_System_Bit_Size --
+  -----------------------------------
+    function Get_Operating_System_Bit_Size
+      return Integer_4_Positive
       is
       begin
-        -- Way to check for this?
-        -- http://www.maketecheasier.com/run-32-bit-apps-in-64-bit-linux/2009/08/10
-        return False;
+        raise System_Call_Failure;
+        return Get_Application_Bit_Size;
       end Is_Running_In_Emulated_32_Bit_Environment;
   end Implementation;
