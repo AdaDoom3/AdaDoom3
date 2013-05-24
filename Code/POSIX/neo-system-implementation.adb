@@ -151,5 +151,5 @@ package body Implementation
       begin
         raise System_Call_Failure;
         return Get_Application_Bit_Size;
-      end Is_Running_In_Emulated_32_Bit_Environment;
+      end Get_Operating_System_Bit_Size;
   end Implementation;
