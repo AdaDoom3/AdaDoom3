@@ -41,7 +41,7 @@ package Neo.Posix
         Machine : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
         Domain  : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
       end record
-      with Size use 6 * 65 * Byte'Size;
+      with Size => 6 * 65 * Byte'Size;
       pragma Convention(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
