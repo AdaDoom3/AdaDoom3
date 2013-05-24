@@ -136,9 +136,7 @@ package Neo.System
       return Enumerated_System;
     function Get_Username
       return String_2;
-    function Get_Application_Bit_Size
-      return Integer_4_Positive;
-    function Get_Operating_System_Bit_Size
+    function Get_Bit_Size
       return Integer_4_Positive;
     function Is_Newer_Than(
       Linux     : in Enumerated_Linux_System;
@@ -158,7 +156,7 @@ private
   --------------------
     package Implementation
       is
-        function Get_Operating_System_Bit_Size
+        function Get_Bit_Size
           return Integer_4_Positive;
         function Get_Version
           return Enumerated_System;

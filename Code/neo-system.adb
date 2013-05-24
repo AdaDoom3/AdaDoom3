@@ -30,8 +30,8 @@ package body Neo.System
         Put_Title("SYSTEM TEST");
         Put_Line("Version: "  & Enumerated_System'Wide_Image(Get_Version));
         Put_Line("Username: """ & Get_Username & """");
-        Put_Line("Application bit size: " & Integer_4_Positive'Wide_Image(Get_Application_Bit_Size));
-        Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Operating_System_Bit_Size));
+        Put_Line("Application bit size: " & Integer_4_Signed'Wide_Image(Address'Size));
+        Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Bit_Size));
         Open_Webpage("http://www.google.com");
         Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
         Put_Line("OS supports AVX assembly is " & Boolean'Wide_Image(
@@ -58,27 +58,18 @@ package body Neo.System
         end if;
         return False;
       end Is_Newer_Than;
-  ------------------------------
-  -- Get_Application_Bit_Size --
-  ------------------------------
-    function Get_Application_Bit_Size
+  ------------------
+  -- Get_Bit_Size --
+  ------------------
+    function Get_Bit_Size
       return Integer_4_Positive
       is
       begin
-        return Address'Size;
-      end Get_Application_Bit_Size;
-  -----------------------------------
-  -- Get_Operating_System_Bit_Size --
-  -----------------------------------
-    function Get_Operating_System_Bit_Size
-      return Integer_4_Positive
-      is
-      begin
-        return Implementation.Get_Operating_System_Bit_Size;
+        return Implementation.Get_Bit_Size;
       exception
         when System_Call_Failure =>
-          return Get_Application_Bit_Size;
-      end Get_Operating_System_Bit_Size;
+          return Address'Size;
+      end Get_Bit_Size;
   -----------------
   -- Get_Version --
   -----------------

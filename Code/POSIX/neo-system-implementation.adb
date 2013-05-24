@@ -142,14 +142,14 @@ package body Implementation
       begin
         raise Unsupported_Feature;
       end Execute_Application;
-  -----------------------------------
-  -- Get_Operating_System_Bit_Size --
-  -----------------------------------
-    function Get_Operating_System_Bit_Size
+  ------------------
+  -- Get_Bit_Size --
+  ------------------
+    function Get_Bit_Size
       return Integer_4_Positive
       is
       begin
         raise System_Call_Failure;
         return Get_Application_Bit_Size;
-      end Get_Operating_System_Bit_Size;
+      end Get_Bit_Size;
   end Implementation;
