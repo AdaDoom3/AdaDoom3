@@ -36,7 +36,6 @@ package Neo.System.Input
   -- Exceptions --
   ----------------
     No_Input_Devices_Detected             : Exception;
-    Generic_Input_Index_Out_Of_Range      : Exception;
     Input_Enabled_Without_Being_Disabled  : Exception;
     Input_Disabled_Without_Being_Enabled  : Exception;
     Device_With_Identifier_Does_Not_Exist : Exception;
@@ -119,37 +118,14 @@ package Neo.System.Input
     type Enumerated_Trigger
       is(
       Left_Trigger, Right_Trigger);
-  -----------
-  -- Types --
-  -----------
-    type Record_Key;
-    type Record_Device;
-    type Record_Input_Coordinate;
-    type Record_Generic_Device_Input;
-  ------------
-  -- Arrays --
-  ------------
-    type Array_Record_Device
-      is array(Integer_4_Positive range)
-      of Record_Device;
-    type Array_Record_Key
-      is array(Integer_4_Positive range)
-      of Boolean;
-    type Array_Record_Input_Coordinate
-      is array(Integer_4_Positive range)
-      of Record_Input_Coordinate;
   -------------
   -- Records --
   -------------
-    type Record_Key
-      is record
-        Is_Pressed          : Boolean := False;
-        Time_Of_Last_Change : Time    := (others => <>);
-      end record;
     type Record_Device
       is record
-        Identifier                 : Integer_Address    := 0;
+        Identifier                 : Integer_8_Unsigned := 0;
         Player                     : Integer_4_Positive := 1;
+        Player_Index               : Integer_4_Positive := 1;
         Description                : String_2(1..128)   := null;
         Number_Of_Generic_Buttons  : Integer_4_Natural  := 0;
         Number_Of_Generic_Triggers : Integer_4_Natural  := 0;
@@ -160,16 +136,6 @@ package Neo.System.Input
         X : Integer_8_Signed := 0;
         Y : Integer_8_Signed := 0;
       end record;
-    type Record_Player
-      is record
-        Number_Of_Assigned_Devices : Integer_4_Natural              := 0;
-        Last_Character_Key         : Record_Key                     := (others => <>);
-        Mouse                      : Record_Input_Coordinate        := (others => <>);
-        Triggers                   : Array_Percent_Triggers_Pressed := (others => <>);
-        Sticks                     : Array_Record_Input_Coordinate  := (others => <>);
-        Buttons                    : Array_Record_Key               := (others => (others => <>));
-        Keys                       : Array_Record_Key               := (others => (others => <>));
-      end record;
   -----------------
   -- Subprograms --
   -----------------
@@ -178,73 +144,55 @@ package Neo.System.Input
     procedure Finalize;
     procedure Disable;
     procedure Enable;
-    function Is_Pressing(
-      Player : in Integer_4_Positive;
-      Key    : in Enumerated_Key)
-      return Boolean;
-    function Is_Pressing(
-      Device : in Integer_Address;
-      Player : in Record_Player;
-      Key    : in Enumerated_Key)
-      return Boolean;
-    function Get_Mouse(
-      Player : in Integer_4_Positive)
-      return Record_Input_Coordinate;
-    function Get_Button(
-      Player : in Integer_4_Positive;
-      Device : in Integer_4_Natural;
-      Button : in Integer_4_Positive)
-      return Record_Key;
-    function Get_Button(
-      Player : in Integer_4_Positive;
-      Device : in Integer_4_Natural;
-      Button : in Enumerated_Button)
-      return Record_Key;
     function Get_Devices
       return Array_Record_Device;
     function Get_Device(
-      Identifier : in Integer_Address)
+      Identifier : in Integer_8_Unsigned)
       return Record_Device;
+    function Get_Last_Character_Pressed(
+      Player : in Integer_4_Positive)
+      return Character_2;
+    function Get_Mouse(
+      Player : in Integer_4_Positive)
+      return Record_Input_Coordinate;
+    function Get_Key(
+      Player : in Integer_4_Positive;
+      Button : in Enumerated_Key)
+      return Boolean;
+    function Get_Button(
+      Player : in Integer_4_Positive;
+      Button : in Enumerated_Button)
+      return Boolean;
+    function Get_Button(
+      Player : in Integer_4_Positive;
+      Button : in Integer_4_Positive;
+      Device : in Integer_4_Natural)
+      return Boolean;
     function Get_Trigger(
       Player  : in Integer_4_Positive;
       Trigger : in Enumerated_Trigger)
       return Float_4_Percent;
     function Get_Trigger(
-      Device  : in Integer_8_Unsigned;
       Player  : in Integer_4_Positive;
-      Trigger : in Integer_4_Positive)
+      Trigger : in Integer_4_Positive;
+      Device  : in Integer_8_Unsigned)
       return Float_4_Percent;
     function Get_Stick(
       Player : in Integer_4_Positive;
       Stick  : in Enumerated_Stick)
       return Record_Input_Coordinate;
     function Get_Stick(
-      Device : in Integer_8_Unsigned;
       Player : in Integer_4_Positive;
-      Stick  : in Integer_4_Positive)
+      Stick  : in Integer_4_Positive;
+      Device : in Integer_8_Unsigned)
       return Record_Input_Coordinate;
-    function Get_Mouse(
-      Player : in Integer_4_Positive)
-      return Record_Input_Coordinate;
-    function Get_Character_From_Player_Keys
-      return Character_2;
-    procedure Set_Device_Player(
+    procedure Set_Device_Owner(
       Identifier : in Integer_8_Unsigned;
       Player     : in Integer_4_Positive);
     procedure Set_Vibration(
       Player                 : in Integer_4_Positive;
       Percent_Frequency_High : in Float_4_Percent;
-      Percent_Frequency_Low  : in Float_4_Percent;
-      Seconds                : in Duration);
-    generic
-      with
-        procedure Vibration_Equation(
-          Seconds_Left           : in     Float_4_Real;
-          Percent_Frequency_High :    out Float_4_Percent;
-          Percent_Frequency_Low  :    out Float_4_Percent);
-    procedure Set_Vibration(
-      Player  : in Integer_4_Positive;
-      Seconds : in Duration);
+      Percent_Frequency_Low  : in Float_4_Percent);
 -------
 private
 -------
