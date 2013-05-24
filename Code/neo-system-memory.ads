@@ -37,13 +37,13 @@ package Neo.System.Memory
         Load                                       : Float_4_Percent;
         Number_Of_Disk_Bytes_Total                 : Integer_8_Unsigned;
         Number_Of_Disk_Bytes_Available             : Integer_8_Unsigned;
-        Number_Of_Physical_Bytes_Total             : Integer_Address;
-        Number_Of_Physical_Bytes_Available         : Integer_Address;
-        Number_Of_Page_File_Bytes_Total            : Integer_Address;
-        Number_Of_Page_File_Bytes_Available        : Integer_Address;
-        Number_Of_Virtual_Bytes_Total              : Integer_Address;
-        Number_Of_Virtual_Bytes_Available          : Integer_Address;
-        Number_Of_Virtual_Bytes_Available_Extended : Integer_Address;
+        Number_Of_Physical_Bytes_Total             : Integer_8_Unsigned;
+        Number_Of_Physical_Bytes_Available         : Integer_8_Unsigned;
+        Number_Of_Page_File_Bytes_Total            : Integer_8_Unsigned;
+        Number_Of_Page_File_Bytes_Available        : Integer_8_Unsigned;
+        Number_Of_Virtual_Bytes_Total              : Integer_8_Unsigned;
+        Number_Of_Virtual_Bytes_Available          : Integer_8_Unsigned;
+        Number_Of_Virtual_Bytes_Available_Extended : Integer_8_Unsigned;
       end record;
   --------------
   -- Packages --
@@ -63,8 +63,8 @@ package Neo.System.Memory
   -----------------
     procedure Test;
     procedure Set_Byte_Limits(
-      Minimum : in Integer_Address;
-      Maximum : in Integer_Address)
+      Minimum : in Integer_8_Unsigned;
+      Maximum : in Integer_8_Unsigned)
       with Pre => Minimum < Maximum;
     function Get_State
       return Record_State;
@@ -81,14 +81,14 @@ private
         function Get_State
           return Record_State;
         procedure Set_Byte_Limits(
-          Minimum : in Integer_Address;
-          Maximum : in Integer_Address)
+          Minimum : in Integer_8_Unsigned;
+          Maximum : in Integer_8_Unsigned)
           with Pre => Minimum < Maximum;
         procedure Lock(
           Location        : in Address;
-          Number_Of_Bytes : in Integer_Address);
+          Number_Of_Bytes : in Integer_8_Unsigned);
         procedure Unlock(
           Location        : in Address;
-          Number_Of_Bytes : in Integer_Address);
+          Number_Of_Bytes : in Integer_8_Unsigned);
       end Implementation;
   end Neo.System.Memory;

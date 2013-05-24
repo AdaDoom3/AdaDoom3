@@ -57,21 +57,21 @@ package body Neo.System.Memory
         Put_Line("Load: "                       & Float_4_Percent'Wide_Image(State.Load));
         Put_Line("Disk total: "                 & Integer_8_Unsigned'Wide_Image(State.Number_Of_Disk_Bytes_Total));
         Put_Line("Disk available: "             & Integer_8_Unsigned'Wide_Image(State.Number_Of_Disk_Bytes_Available));
-        Put_Line("Physical total: "             & Integer_Address'Wide_Image(State.Number_Of_Physical_Bytes_Total));
-        Put_Line("Physical available: "         & Integer_Address'Wide_Image(State.Number_Of_Physical_Bytes_Available));
-        Put_Line("Page file total: "            & Integer_Address'Wide_Image(State.Number_Of_Page_File_Bytes_Total));
-        Put_Line("Page file available: "        & Integer_Address'Wide_Image(State.Number_Of_Page_File_Bytes_Available));
-        Put_Line("Virtual total: "              & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Total));
-        Put_Line("Virtual available: "          & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Available));
-        Put_Line("Virtual available extended: " & Integer_Address'Wide_Image(State.Number_Of_Virtual_Bytes_Available_Extended));
+        Put_Line("Physical total: "             & Integer_8_Unsigned'Wide_Image(State.Number_Of_Physical_Bytes_Total));
+        Put_Line("Physical available: "         & Integer_8_Unsigned'Wide_Image(State.Number_Of_Physical_Bytes_Available));
+        Put_Line("Page file total: "            & Integer_8_Unsigned'Wide_Image(State.Number_Of_Page_File_Bytes_Total));
+        Put_Line("Page file available: "        & Integer_8_Unsigned'Wide_Image(State.Number_Of_Page_File_Bytes_Available));
+        Put_Line("Virtual total: "              & Integer_8_Unsigned'Wide_Image(State.Number_Of_Virtual_Bytes_Total));
+        Put_Line("Virtual available: "          & Integer_8_Unsigned'Wide_Image(State.Number_Of_Virtual_Bytes_Available));
+        Put_Line("Virtual available extended: " & Integer_8_Unsigned'Wide_Image(State.Number_Of_Virtual_Bytes_Available_Extended));
         Hang_Window;
       end Test;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
     procedure Set_Byte_Limits(
-      Minimum : in Integer_Address;
-      Maximum : in Integer_Address)
+      Minimum : in Integer_8_Unsigned;
+      Maximum : in Integer_8_Unsigned)
       is
       begin
         Implementation.Set_Byte_Limits(Minimum, Maximum);

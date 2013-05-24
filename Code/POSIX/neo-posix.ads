@@ -27,7 +27,6 @@ package Neo.Posix
   ---------------
     SUCCESS                     : constant Integer_4_Signed_C := 0;
     NUMBER_OF_PROCESSORS_ONLINE : constant Integer_4_Signed_C := 84;
-    --UNIX_NAME_STRING_SIZE       : constant Integer_4_Signed   := 65;
     UNIX_NAME_LINUX             : constant String_1_C         := "Linux";
     UNIX_NAME_MACINTOSH         : constant String_1_C         := "Darwin";
   -------------
@@ -35,17 +34,14 @@ package Neo.Posix
   -------------
     type Record_Unix_Name
       is record
-        System  : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-        Node    : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-        Release : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-        Version : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-        Machine : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-        Domain  : String_1_C(1..65) := (others => C_NULL_CHARACTER_1);
-      end record;
-      --with
-        --Convention => C,
-      --  Size       => X * Byte'Size;
-      for Record_Unix_Name'Size use 6 * 65 * Byte'Size;
+        System  : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+        Node    : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+        Release : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+        Version : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+        Machine : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+        Domain  : String_1_C(1..65) := (others => NULL_CHARACTER_1_C);
+      end record
+      with Size use 6 * 65 * Byte'Size;
       pragma Convention(C, Record_Unix_Name);
     type Record_Time_Stamp
       is record
@@ -55,7 +51,6 @@ package Neo.Posix
         Children_System : Integer_8_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Time_Stamp);
-      --with Convention => C;
   -----------------
   -- Subprograms --
   -----------------

@@ -37,24 +37,24 @@ package body Implementation
           raise System_Call_Failure;
         end if;
         return(
-          -- For some reason (on old systems?), Total_Physical is sometimes off by a meg or two, so round up to the nearest 16 megs
-          Number_Of_Physical_Bytes_Total             => 0,--Integer_Address((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
-          Number_Of_Physical_Bytes_Available         => 0,--Integer_Address(Status.Available_Physical),
+          -- Total_Physical can be slightly inaccurate, so round up to the nearest 16 mb
+          Number_Of_Physical_Bytes_Total             => Integer_8_Unsigned((Status.Total_Physical / (1024 * 1024) + 8) and 16#FFFF_FFFF_FFFF_FFF0#),
+          Number_Of_Physical_Bytes_Available         => Integer_8_Unsigned(Status.Available_Physical),
           Number_Of_Disk_Bytes_Total                 => Integer_8_Unsigned(0),
           Number_Of_Disk_Bytes_Available             => Integer_8_Unsigned(0),
-          Number_Of_Page_File_Bytes_Total            => 0,--Integer_Address(Status.Total_Page_File),
-          Number_Of_Page_File_Bytes_Available        => 0,--Integer_Address(Status.Available_Page_File),
-          Number_Of_Virtual_Bytes_Total              => 0,--Integer_Address(Status.Total_Virtual),
-          Number_Of_Virtual_Bytes_Available          => 0,--Integer_Address(Status.Available_Virtual),
-          Number_Of_Virtual_Bytes_Available_Extended => 0,--Integer_Address(Status.Available_Extended_Virtual),
+          Number_Of_Page_File_Bytes_Total            => Integer_8_Unsigned(Status.Total_Page_File),
+          Number_Of_Page_File_Bytes_Available        => Integer_8_Unsigned(Status.Available_Page_File),
+          Number_Of_Virtual_Bytes_Total              => Integer_8_Unsigned(Status.Total_Virtual),
+          Number_Of_Virtual_Bytes_Available          => Integer_8_Unsigned(Status.Available_Virtual),
+          Number_Of_Virtual_Bytes_Available_Extended => Integer_8_Unsigned(Status.Available_Extended_Virtual),
           Load                                       => Float_4_Percent(Status.Memory_Load));
       end Get_State;
   ---------------------
   -- Set_Byte_Limits --
   ---------------------
     procedure Set_Byte_Limits(
-      Minimum : in Integer_Address;
-      Maximum : in Integer_Address)
+      Minimum : in Integer_8_Unsigned;
+      Maximum : in Integer_8_Unsigned)
       is
       begin
         if
@@ -71,7 +71,7 @@ package body Implementation
   ----------
     procedure Lock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_Address)
+      Number_Of_Bytes : in Integer_8_Unsigned)
       is
       begin
         if Virtual_Lock(Location, Integer_Size_C(Number_Of_Bytes)) = FAILED then
@@ -83,7 +83,7 @@ package body Implementation
   ------------
     procedure Unlock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_Address)
+      Number_Of_Bytes : in Integer_8_Unsigned)
       is
       begin
         if Virtual_Unlock(Location, Integer_Size_C(Number_Of_Bytes)) = FAILED then

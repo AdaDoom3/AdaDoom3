@@ -40,8 +40,8 @@ package body Implementation
   -- Set_Byte_Limits --
   ---------------------
     procedure Set_Byte_Limits(
-      Minimum : in Integer_Address;
-      Maximum : in Integer_Address)
+      Minimum : in Integer_8_Unsigned;
+      Maximum : in Integer_8_Unsigned)
       is
       begin
         raise System_Call_Failure;
@@ -51,7 +51,7 @@ package body Implementation
   ----------
     procedure Lock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_Address)
+      Number_Of_Bytes : in Integer_8_Unsigned)
       is
       begin
         raise System_Call_Failure;
@@ -61,7 +61,7 @@ package body Implementation
   ------------
     procedure Unlock(
       Location        : in Address;
-      Number_Of_Bytes : in Integer_Address)
+      Number_Of_Bytes : in Integer_8_Unsigned)
       is
       begin
         raise System_Call_Failure;

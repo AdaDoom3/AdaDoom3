@@ -468,7 +468,7 @@ package Neo.Foundation.Data_Types
   ---------------
     C_TRUE             : constant Integer_4_Signed_C := 1;
     C_FALSE            : constant Integer_4_Signed_C := 0;
-    C_NULL_CHARACTER_1 : constant Character_1_C      := Interfaces.C.nul;
+    NULL_CHARACTER_1_C : constant Character_1_C      := Interfaces.C.NUL;
     NULL_CHARACTER_1   : constant Character_1        := Character_1'Val(0);
     NULL_CHARACTER_2   : constant Character_2        := Character_2'Val(0);
     NULL_STRING_1      : constant String_1           := "" & NULL_CHARACTER_1;

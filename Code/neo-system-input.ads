@@ -122,8 +122,6 @@ package Neo.System.Input
   -----------
   -- Types --
   -----------
-    type Record_Input
-      is private;
     type Record_Key;
     type Record_Device;
     type Record_Input_Coordinate;
@@ -131,24 +129,15 @@ package Neo.System.Input
   ------------
   -- Arrays --
   ------------
-    type Array_Record_Key
-      is array (Integer_4_Positive range <>)
-      of Boolean;
     type Array_Record_Device
-      is array (Integer_4_Positive range <>)
+      is array(Integer_4_Positive range)
       of Record_Device;
+    type Array_Record_Key
+      is array(Integer_4_Positive range)
+      of Boolean;
     type Array_Record_Input_Coordinate
-      is array (Integer_4_Positive range <>)
+      is array(Integer_4_Positive range)
       of Record_Input_Coordinate;
-  ---------------
-  -- Accessors --
-  ---------------
-    type Access_Array_Record_Key
-      is access all Array_Record_Key;
-    type Access_Array_Record_Input_Coordinate
-      is access all Array_Record_Input_Coordinate
-    type Access_Record_Generic_Device_Input
-      is access all Record_Generic_Device_Input;
   -------------
   -- Records --
   -------------
@@ -159,7 +148,7 @@ package Neo.System.Input
       end record;
     type Record_Device
       is record
-        Identifier                 : Address            := 0;
+        Identifier                 : Integer_Address    := 0;
         Player                     : Integer_4_Positive := 1;
         Description                : String_2(1..128)   := null;
         Number_Of_Generic_Buttons  : Integer_4_Natural  := 0;
@@ -171,23 +160,15 @@ package Neo.System.Input
         X : Integer_8_Signed := 0;
         Y : Integer_8_Signed := 0;
       end record;
-    type Record_Generic_Device_Input
-      is record
-        Identifier       : Address                              := 0;  
-        Generic_Buttons  : Access_Array_Record_Key              := null;
-        Generic_Triggers : Access_Array_Float_4_Percent         := null;
-        Generic_Sticks   : Access_Array_Record_Input_Coordinate := null;
-        Next             : Access_Record_Generic_Device_Input   := null;
-      end record;
     type Record_Player
       is record
-        Devices            : Access_Record_Generic_Device_Input                       := null;
-        Last_Character_Key : Record_Key                                               := (others => <>);
-        Mouse              : Record_Input_Coordinate                                  := (others => <>);
-        Triggers           : Array_Float_4_Percent         (Enumerated_Trigger'Range) := (others => <>);
-        Sticks             : Array_Record_Input_Coordinate (Enumerated_Stick'Range)   := (others => <>);
-        Buttons            : Array_Record_Key              (Enumerated_Button'Range)  := (others => (others => <>));
-        Keys               : Array_Record_Key              (Enumerated_Key'Range)     := (others => (others => <>));
+        Number_Of_Assigned_Devices : Integer_4_Natural              := 0;
+        Last_Character_Key         : Record_Key                     := (others => <>);
+        Mouse                      : Record_Input_Coordinate        := (others => <>);
+        Triggers                   : Array_Percent_Triggers_Pressed := (others => <>);
+        Sticks                     : Array_Record_Input_Coordinate  := (others => <>);
+        Buttons                    : Array_Record_Key               := (others => (others => <>));
+        Keys                       : Array_Record_Key               := (others => (others => <>));
       end record;
   -----------------
   -- Subprograms --
@@ -197,44 +178,52 @@ package Neo.System.Input
     procedure Finalize;
     procedure Disable;
     procedure Enable;
-    function Is_Player_Pressing(
+    function Is_Pressing(
       Player : in Integer_4_Positive;
       Key    : in Enumerated_Key)
       return Boolean;
-    function Is_Player_Pressing(
-      Device : in Integer_8_Unsigned;
+    function Is_Pressing(
+      Device : in Integer_Address;
       Player : in Record_Player;
       Key    : in Enumerated_Key)
       return Boolean;
-    function Get_Number_Of_Devices
-      return Integer_4_Natural;
+    function Get_Mouse(
+      Player : in Integer_4_Positive)
+      return Record_Input_Coordinate;
+    function Get_Button(
+      Player : in Integer_4_Positive;
+      Device : in Integer_4_Natural;
+      Button : in Integer_4_Positive)
+      return Record_Key;
+    function Get_Button(
+      Player : in Integer_4_Positive;
+      Device : in Integer_4_Natural;
+      Button : in Enumerated_Button)
+      return Record_Key;
     function Get_Devices
       return Array_Record_Device;
     function Get_Device(
-      Identifier : in Integer_8_Unsigned)
+      Identifier : in Integer_Address)
       return Record_Device;
-    function Get_Player(
-      Player : in Integer_4_Positive)
-      return Record_Player;
-    function Get_Player_Trigger(
+    function Get_Trigger(
       Player  : in Integer_4_Positive;
       Trigger : in Enumerated_Trigger)
       return Float_4_Percent;
-    function Get_Player_Trigger(
+    function Get_Trigger(
       Device  : in Integer_8_Unsigned;
       Player  : in Integer_4_Positive;
       Trigger : in Integer_4_Positive)
       return Float_4_Percent;
-    function Get_Player_Stick(
+    function Get_Stick(
       Player : in Integer_4_Positive;
       Stick  : in Enumerated_Stick)
       return Record_Input_Coordinate;
-    function Get_Player_Stick(
+    function Get_Stick(
       Device : in Integer_8_Unsigned;
       Player : in Integer_4_Positive;
       Stick  : in Integer_4_Positive)
       return Record_Input_Coordinate;
-    function Get_Player_Mouse(
+    function Get_Mouse(
       Player : in Integer_4_Positive)
       return Record_Input_Coordinate;
     function Get_Character_From_Player_Keys
@@ -269,16 +258,44 @@ private
   ---------------
     type Access_Record_Input_Event
       is access all Record_Input_Event;
+    type Access_Array_Record_Key
+      is access all Array_Record_Key;
+    type Access_Array_Record_Input_Coordinate
+      is access all Array_Record_Input_Coordinate
+    type Access_Record_Generic_Device_Input
+      is access all Record_Generic_Device_Input;
   -------------
   -- Records --
   -------------
-    type Record_Input
+    type Record_Generic_Device_Input
       is record
+        Identifier       : Integer_Address                      := 0;  
+        Generic_Buttons  : Access_Array_Record_Key              := null;
+        Generic_Triggers : Access_Array_Float_4_Percent         := null;
+        Generic_Sticks   : Access_Array_Record_Input_Coordinate := null;
+        Next             : Access_Record_Generic_Device_Input   := null;
+      end record;
+    type Record_Player
+      is record
+        Devices            : Access_Record_Generic_Device_Input                       := null;
+        Last_Character_Key : Record_Key                                               := (others => <>);
+        Mouse              : Record_Input_Coordinate                                  := (others => <>);
+        Triggers           : Array_Float_4_Percent         (Enumerated_Trigger'Range) := (others => <>);
+        Sticks             : Array_Record_Input_Coordinate (Enumerated_Stick'Range)   := (others => <>);
+        Buttons            : Array_Record_Key              (Enumerated_Button'Range)  := (others => (others => <>));
+        Keys               : Array_Record_Key              (Enumerated_Key'Range)     := (others => (others => <>));
+      end record;
+  ---------------
+  -- Protected --
+  ---------------
+    protected type Protected_Input
+      is
+      private
         Number_Of_Devices : Integer_4_Natural;
         Players           : 
         Device_List_Head  : Access_;
         Event_Queue_Head  : Access_;
-      end record;
+      end Protected_Input;
   -----------
   -- Tasks --
   -----------
