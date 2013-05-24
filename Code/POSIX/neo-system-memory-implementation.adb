@@ -17,11 +17,11 @@
 with
   Interfaces,
   Interfaces.C,
-  Neo.Linux;
+  Neo.POSIX;
 use
   Interfaces,
   Interfaces.C,
-  Neo.Linux;
+  Neo.POSIX;
 separate(Neo.System.Memory)
 package body Implementation
   is
