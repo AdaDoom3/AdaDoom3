@@ -24,9 +24,9 @@ use
   Neo.Foundation.Package_Testing;
 package Neo.System.Text
   is
-  ----------------
-  -- Suprograms --
-  ----------------
+  -----------------
+  -- Subprograms --
+  -----------------
     procedure Test;
     function Get_Language
       return Enumerated_Language;
