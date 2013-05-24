@@ -237,9 +237,9 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if Get_Application_Bit_Size < 32 then
+        if Address'Size < 32 then
           raise CPUID_Is_Not_Supported;
-        elsif Get_Application_Bit_Size = 32 then
+        elsif Address'Size = 32 then
           Asm( -- Check for cpuid
             Volatile => True,
             Template =>
