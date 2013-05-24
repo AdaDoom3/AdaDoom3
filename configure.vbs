@@ -1,4 +1,4 @@
-'build.vbs'
+'configure.vbs'
   '''''''''''''
   ' Constants '
   '''''''''''''
