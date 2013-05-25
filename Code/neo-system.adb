@@ -30,34 +30,31 @@ package body Neo.System
         Put_Title("SYSTEM TEST");
         Put_Line("Version: "  & Enumerated_System'Wide_Image(Get_Version));
         Put_Line("Username: """ & Get_Username & """");
-        Put_Line("Application bit size: " & Integer_4_Signed'Wide_Image(Address'Size));
+        Put_Line("Application bit size: " & Integer_4_Signed'Wide_Image(WORD_SIZE));
         Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Bit_Size));
         Open_Webpage("http://www.google.com");
         Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
-        Put_Line("OS supports AVX assembly is " & Boolean'Wide_Image(
-          Is_Newer_Than(Linux_3_System, Macintosh_10_7_System, Windows_2_6_1_System)));
+        Put_Line("Supports AVX feature is " & Boolean'Wide_Image(Is_Feature_Supported(REQUIREMENTS_FOR_AVX)));
         Hang_Window;
       end Test;
-  -------------------
-  -- Is_Newer_Than --
-  -------------------
-    function Is_Newer_Than(
-      Linux     : in Enumerated_Linux_System;
-      Macintosh : in Enumerated_Macintosh_System;
-      Windows   : in Enumerated_Windows_System)
+  --------------------------
+  -- Is_Feature_Supported --
+  --------------------------
+    function Is_Feature_Supported(
+      Feature_Requirements : in Record_Feature_Requirements)
       return Boolean
       is
       Current_System : Enumerated_System := Get_Version;
       begin
         if Current_System in Enumerated_Linux_System'range then
-          return Current_System >= Linux;
+          return Current_System >= Feature_Requirements.Minimum_Linux;
         elsif Current_System in Enumerated_Windows_System'range then
-          return Current_System >= Windows;
+          return Current_System >= Feature_Requirements.Minimum_Windows;
         elsif Current_System in Enumerated_Macintosh_System'range then
-          return Current_System >= Macintosh;
+          return Current_System >= Feature_Requirements.Minimum_Macintosh;
         end if;
         return False;
-      end Is_Newer_Than;
+      end Is_Feature_Supported;
   ------------------
   -- Get_Bit_Size --
   ------------------

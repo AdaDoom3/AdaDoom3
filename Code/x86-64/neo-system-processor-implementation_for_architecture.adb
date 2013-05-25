@@ -237,9 +237,9 @@ package body Implementation_For_Architecture
       is
       Data : aliased Integer_4_Unsigned := 0;
       begin
-        if Address'Size < 32 then
+        if WORD_SIZE < 32 then
           raise CPUID_Is_Not_Supported;
-        elsif Address'Size = 32 then
+        elsif WORD_SIZE = 32 then
           Asm( -- Check for cpuid
             Volatile => True,
             Template =>
@@ -404,10 +404,7 @@ package body Implementation_For_Architecture
         Specifics.Has_High_Precision_Convert                 := Is_Enabled(AMD_CVT16);
         Specifics.Has_Extended_Operation_Support             := Is_Enabled(AMD_XOP);
         Specifics.Has_Leading_Zero_Count                     := Is_Enabled(AMD_ABM);
-        if
-        Specifics.Has_Streaming_SIMD_Extensions_4_2 and then
-        Is_Newer_Than(Linux_3_System, Macintosh_10_6_System, Windows_2_6_1_System)
-        then
+        if Specifics.Has_Streaming_SIMD_Extensions_4_2 and then Is_Feature_Supported(REQUIREMENTS_FOR_AVX) then
           Asm( -- Check if the operating system will save the YMM registers
             Volatile => True,
             Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),

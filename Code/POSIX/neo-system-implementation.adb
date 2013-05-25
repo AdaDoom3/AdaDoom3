@@ -37,7 +37,7 @@ package body Implementation
       is
       Name : aliased Record_Unix_Name := (others => <>);
       begin
-        if Get_Unix_Name(Name'Access) /= SUCCESS then
+        if Get_Unix_Name(Name'access) /= SUCCESS then
           raise System_Call_Failure;
         end if;
         if
@@ -150,6 +150,6 @@ package body Implementation
       is
       begin
         raise System_Call_Failure;
-        return Address'size;
+        return WORD_SIZE;
       end Get_Bit_Size;
   end Implementation;

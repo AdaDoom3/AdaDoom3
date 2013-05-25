@@ -31,10 +31,6 @@ package Neo.System
   ----------------
     System_Call_Failure : Exception;
     Unsupported_Feature : Exception;
-  ---------------
-  -- Constants --
-  ---------------
-    DEFAULT_USERNAME : constant String_2 := "Unnamed";
   ------------------
   -- Enumerations --
   ------------------
@@ -128,6 +124,23 @@ package Neo.System
     subtype Enumerated_Macintosh_System
       is Enumerated_System
       range Macintosh_System..Macintosh_10_8_System;
+  -------------
+  -- Records --
+  -------------
+    type Record_Feature_Requirements
+      is record
+        Minimum_Linux     : Enumerated_Linux_System     := Linux_System;
+        Minimum_Windows   : Enumerated_Windows_System   := Windows_System;
+        Minimum_Macintosh : Enumerated_Macintosh_System := Macintosh_System;
+      end record;
+  ---------------
+  -- Constants --
+  ---------------
+    DEFAULT_USERNAME     : constant String_2 := "Unnamed";
+    REQUIREMENTS_FOR_AVX : constant Record_Feature_Requirements :=(
+      Minimum_Linux     => Linux_3_System,
+      Minimum_Windows   => Windows_2_6_1_System,
+      Minimum_Macintosh => Macintosh_10_6_System);
   ----------------
   -- Suprograms --
   ----------------
@@ -138,10 +151,8 @@ package Neo.System
       return String_2;
     function Get_Bit_Size
       return Integer_4_Positive;
-    function Is_Newer_Than(
-      Linux     : in Enumerated_Linux_System;
-      Macintosh : in Enumerated_Macintosh_System;
-      Windows   : in Enumerated_Windows_System)
+    function Is_Feature_Supported(
+      Feature_Requirements : in Record_Feature_Requirements)
       return Boolean;
     procedure Open_Webpage(
       Path : in String_2);

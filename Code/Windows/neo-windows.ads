@@ -36,6 +36,7 @@ package Neo.Windows
     GENERIC_ICON                               : constant Address              := To_Unchecked_Address(16#0000_7F00#);
     BRUSH_GRAY                                 : constant Address              := To_Unchecked_Address(16#0000_0011#);
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0_0#; -- ???
+    CORES_SHARE_SINGLE_PROCESSOR               : constant Integer_4_Unsigned_C := 16#0000_0000#;
     STOP_READING_TOP_LEVEL_DEVICES             : constant Integer_4_Unsigned_C := 16#0000_0001#;
     TAKE_INPUT_ON_NON_ACTIVE                   : constant Integer_4_Unsigned_C := 16#0000_0100#;
     CODE_PAGE_UTF_8                            : constant Integer_4_Unsigned_C := 16#0000_FDE9#;
@@ -250,59 +251,48 @@ package Neo.Windows
 -- #ifndef _MSC_VER
 -- typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 -- #endif
-
 -- typedef void* (CALLBACK *KbdLayerDescriptor) (VOID);
-
 -- #define CAPLOK          0x01
 -- #define WCH_NONE        0xF000
 -- #define WCH_DEAD        0xF001
-
 -- typedef struct _VK_TO_WCHARS {
 --         BYTE VirtualKey;
 --         BYTE Attributes;
 --         WCHAR wch[];
 -- } VK_TO_WCHARS, *PVK_TO_WCHARS;
-
 -- typedef struct _LIGATURE {
 --         BYTE VirtualKey;
 --         WORD ModificationNumber;
 --         WCHAR wch[];
 -- } LIGATURE, *PLIGATURE;
-
 -- typedef struct _VK_TO_BIT {
 --         BYTE Vk;
 --         BYTE ModBits;
 -- } VK_TO_BIT, *PVK_TO_BIT;
-
 -- typedef struct _MODIFIERS {
 --         PVK_TO_BIT pVkToBit; // __ptr64
 --         WORD wMaxModBits;
 --         BYTE ModNumber[];
 -- } MODIFIERS, *PMODIFIERS;
-
 -- typedef struct _VSC_VK {
 --         BYTE Vsc;
 --         USHORT Vk;
 -- } VSC_VK, *PVSC_VK;
-
 -- typedef struct _VK_TO_WCHAR_TABLE {
 --         //PVK_TO_WCHARS1 pVkToWchars; // __ptr64
 --         PVK_TO_WCHARS pVkToWchars; // __ptr64
 --         BYTE nModifications;
 --         BYTE cbSize;
 -- } VK_TO_WCHAR_TABLE, *PVK_TO_WCHAR_TABLE;
-
 -- typedef struct _DEADKEY {
 --         DWORD dwBoth;
 --         WCHAR wchComposed;
 --         USHORT uFlags;
 -- } DEADKEY, *PDEADKEY;
-
 -- typedef struct _VSC_LPWSTR {
 --         BYTE vsc;
 --         WCHAR *pwsz; // __ptr64
 -- } VSC_LPWSTR, *PVSC_LPWSTR;
-
 -- typedef struct tagKbdLayer {
 --         PMODIFIERS pCharModifiers; // __ptr64
 --         PVK_TO_WCHAR_TABLE pVkToWcharTable; // __ptr64
@@ -357,19 +347,16 @@ package Neo.Windows
 --     SHORT                               sThumbRX;
 --     SHORT                               sThumbRY;
 -- } XINPUT_GAMEPAD, *PXINPUT_GAMEPAD;
-
 -- typedef struct _XINPUT_STATE
 -- {
 --     DWORD                               dwPacketNumber;
 --     XINPUT_GAMEPAD                      Gamepad;
 -- } XINPUT_STATE, *PXINPUT_STATE;
-
 -- typedef struct _XINPUT_VIBRATION
 -- {
 --     WORD                                wLeftMotorSpeed;
 --     WORD                                wRightMotorSpeed;
 -- } XINPUT_VIBRATION, *PXINPUT_VIBRATION;
-
 -- typedef struct _XINPUT_CAPABILITIES
 -- {
 --     BYTE                                type;
@@ -378,15 +365,12 @@ package Neo.Windows
 --     XINPUT_GAMEPAD                      Gamepad;
 --     XINPUT_VIBRATION                    Vibration;
 -- } XINPUT_CAPABILITIES, *PXINPUT_CAPABILITIES;
-
 -- #ifndef XINPUT_USE_9_1_0
-
 -- typedef struct _XINPUT_BATTERY_INFORMATION
 -- {
 --     BYTE BatteryType;
 --     BYTE BatteryLevel;
 -- } XINPUT_BATTERY_INFORMATION, *PXINPUT_BATTERY_INFORMATION;
-
 -- typedef struct _XINPUT_KEYSTROKE
 -- {
 --     WORD    VirtualKey;
@@ -646,15 +630,39 @@ package Neo.Windows
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Mouse         := (others => <>);
       end record;
+    type Record_Processor_Information
+      is record
+        Processor_Mask : Access_Integer_Address          := null;
+        Relationship   : Integer_4_Unsigned_C            := 0;
+        Union_Bullshit : Array_Integer_1_Unsigned(1..16) := (others => 0);
+        -- union {
+        --   struct {
+        --     BYTE Flags;
+        --   } ProcessorCore;
+        --   struct {
+        --     DWORD NodeNumber;
+        --   } NumaNode;
+        --   struct {
+        --     BYTE                 Level;
+        --     BYTE                 Associativity;
+        --     WORD                 LineSize;
+        --     DWORD                Size;
+        --     PROCESSOR_CACHE_TYPE Type; enumerated type
+        --   } CACHE_DESCRIPTOR, *PCACHE_DESCRIPTOR;
+        --   ULONGLONG        Reserved[2];}; ULONGLONG is 8 bytes
+      end record;
   ------------
   -- Arrays --
   ------------
     type Array_Record_Device_List_Element
-      is array (Positive range <>)
+      is array(Positive range <>)
       of Record_Device_List_Element;
     type Array_Record_Device_Setup
-      is array (Positive range <>)
+      is array(Positive range <>)
       of Record_Device_Setup;
+    type Array_Record_Processor_Information
+      is array(Positive range <>)
+      of Record_Processor_Information;
   ---------------
   -- Accessors --
   ---------------
@@ -672,19 +680,28 @@ package Neo.Windows
       is access all Record_Rectangle;
     type Access_Record_Monitor_Information
       is access all Record_Monitor_Information;
+    type Access_Array_Record_Processor_Information
+      is access all Array_Record_Processor_Information;
+    type Access_Get_Logical_Processor_Information
+      is access function(
+        Buffer        : in Access_Array_Record_Processor_Information;
+        Return_Length : in Access_Integer_4_Unsigned_C)
+        return Integer_4_Signed_C;
   -----------------
   -- Subprograms --
   -----------------
     function To_Integer_4_Signed_C
-      is NEW Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
+      is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
     function To_Integer_4_Signed_C
-      is NEW Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
+      is new Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
     function To_Access_Record_Rectangle
-      is NEW Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
+      is new Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
     function To_Access_Record_Key
-      is NEW Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
+      is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
     function To_Access_Record_Rectangle
-      is NEW Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
+      is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
+    function To_Access_Get_Logical_Processor_Information
+      is new Ada.Unchecked_Conversion(Address, Access_Get_Logical_Processor_Information);
     function Get_Blank_Cursor
       return Array_Integer_1_Unsigned;
     -- DWORD WINAPI XInputGetState
@@ -780,10 +797,10 @@ package Neo.Windows
     function Registry_Query_Value(
       Key        : in Address;
       Value_Name : in String_2_C;
-      Reserved   : in Address;
-      Kind       : in Address;
+      Reserved   : in Access_Integer_4_Unsigned_C;
+      Kind       : in Access_Integer_4_Unsigned_C;
       Data       : in Address;
-      Data_Size  : in Address)
+      Data_Size  : in Access_Integer_4_Unsigned_C)
       return Integer_4_Unsigned_C;
     function Get_Device_Usages(
       Kind            : in Integer_4_Signed_C; -- Enumerated
@@ -1047,14 +1064,14 @@ package Neo.Windows
       return Address;
     function Get_Process_Affinity_Mask(
       Process               : in Address;
-      Process_Affinity_Mask : in Address;
-      System_Affinity_Mask  : in Address)
+      Process_Affinity_Mask : in Access_Integer_Address;
+      System_Affinity_Mask  : in Access_Integer_Address)
       return Integer_4_Signed_C;
     function Query_Performance_Counter(
-      Performance_Count : in Address)
+      Performance_Count : in Access_Integer_8_Unsigned_C)
       return Integer_4_Signed_C;
     function Query_Performance_Frequency(
-      Frequency : in Address)
+      Frequency : in Access_Integer_8_Unsigned_C)
       return Integer_4_Signed_C;
     function Get_Last_Error
       return Integer_4_Unsigned_C;

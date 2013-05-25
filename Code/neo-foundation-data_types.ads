@@ -26,6 +26,7 @@
 --  ac_GLfloat        access constant GLfloat
 --  ac_GLdouble       access constant GLdouble
 --  ac_GLshort        access constant GLshort
+--  Win32_ULONG_PTR   Access_Integer_Address
 --  Win32_PCBYTE      access constant Integer_1_Unsigned_C
 --  Win32_FLOAT       Float_4_Real_C
 --  Win32_DOUBLE      Float_8_Real_C
@@ -87,7 +88,7 @@ package Neo.Foundation.Data_Types
   -- Numbers --
   -------------
     type Integer_Address
-      is mod Memory_Size;
+      is mod MEMORY_SIZE;
     subtype Character_1_C
       is Interfaces.C.Char;
     subtype Character_1
@@ -217,6 +218,8 @@ package Neo.Foundation.Data_Types
       is access constant Character_2_C;
     type Access_Character_2_C
       is access all Character_2_C;
+    type Access_Integer_Address
+      is access all Integer_Address;
     type Access_Integer_8_Unsigned_C
       is access all Integer_8_Unsigned_C;
     type Access_Integer_4_Unsigned_C
