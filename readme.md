@@ -126,3 +126,13 @@ License
 -------
 Unless otherwise noted here, all files and subprograms are GPLv3.
 http://www.gnu.org/licenses/gpl-3.0.txt
+
+Getting Started
+---------------
+To begin developing for AdaDoom3, first examine all of the “base” system and foundation components in the /Code directory.
+
+Each package in this folder (as all packages in Ada) consists of a specification (ads) and a body file (adb). For clarity, everything but subprogram, package, protected type, and task bodies are placed in the specification (including global variables and private function prototypes) allowing an entire overview of user-important information in one file.
+
+It is highly recommended to examine the foundation files first as they will be included at almost every level in the design. They contain all of the basic components: data types, utilities for testing packages, and redirectable text input and output. The data types file is especially notable, because it renames all elementary Ada data types to be more descriptive by including each type’s byte size and range (i.e. renaming Integer to Integer_4_Signed). Although it is possible to use the non-renamed data types with the renamed ones interchangeably, it is not recommended.
+
+More to come…
