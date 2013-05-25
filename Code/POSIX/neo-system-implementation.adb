@@ -150,6 +150,6 @@ package body Implementation
       is
       begin
         raise System_Call_Failure;
-        return Get_Application_Bit_Size;
+        return Address'size;
       end Get_Bit_Size;
   end Implementation;
