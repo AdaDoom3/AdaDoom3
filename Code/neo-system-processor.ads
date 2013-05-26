@@ -150,8 +150,8 @@ private
   ---------------
   -- Constants --
   ---------------
-    PROCESSOR_SPEED_TIMING_DELAY : constant Duration         := 0.1;
-    TRACE_LIMIT                  : constant Integer_4_Signed := 1_000;
+    DELAY_FOR_PROCESSOR_SPEED_TIMING : constant Duration         := 0.1;
+    TRACE_LIMIT                      : constant Integer_4_Signed := 1_000;
   --------------------
   -- Implementation --
   --------------------

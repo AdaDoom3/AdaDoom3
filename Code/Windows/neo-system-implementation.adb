@@ -197,7 +197,7 @@ package body Implementation
       is
       Result : aliased Integer_4_Signed_C := 0;
       begin
-        if Address'Size = 64 then
+        if WORD_SIZE = 64 then
           return 64;
         elsif Is_Running_In_Emulated_32_Bit(Get_Current_Process, Result'unchecked_access) = FAILED then
           raise System_Call_Failure;

@@ -136,8 +136,6 @@ package Neo.System.Window
     procedure Set_Wide_Aspect_Ratio(
       Aspect_Wide : in Record_Aspect_Ratio);
     procedure Take_Control;
-    procedure Enable_Character_Handling;
-    procedure Disable_Character_Handling;
 -------
 private
 -------
@@ -296,7 +294,7 @@ private
     package Implementation
       is new Implementation_For_Operating_System(
         Handle_Finalization => Handle_Finalization,
-        Handle_Activation   => Handle_Activation, 
+        Handle_Activation   => Handle_Activation,
         Handle_State_Change => Handle_State_Change,
         Handle_Window_Move  => Handle_Window_Move,
         Handle_Resize       => Handle_Resize);

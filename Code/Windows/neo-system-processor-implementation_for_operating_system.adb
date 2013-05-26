@@ -32,14 +32,14 @@ package body Implementation_For_Operating_System
     function Get_Number_Of_Cores
       return Integer_8_Unsigned
       is
-      Size   : aliased Integer_4_Unsigned_C := 0;
-      Result :         Integer_8_Unsigned   := 0;
+      Number_Of_Information_Records : aliased Integer_4_Unsigned_C := 0;
+      Result                        :         Integer_8_Unsigned   := 0;
       begin
         if
-        Get_Version < Windows_2_6_System or( -- Get_Core_Information requires XP SP3 or later
+        Get_Version < Windows_2_6_System or else( -- Get_Core_Information requires XP SP3 or later
           Get_Core_Information(
             Buffer        => null,
-            Return_Length => Size'unchecked_access) = FAILED and then
+            Return_Length => Number_Of_Information_Records'unchecked_access) = FAILED and then
           Get_Last_Error /= ERROR_INSUFFICIENT_BUFFER)
         then
           ------------------
@@ -60,7 +60,8 @@ package body Implementation_For_Operating_System
               if Process_Affinity = 0 and System_Affinity = 0 then
                 return 1;
               end if;
-              while System_Affinity > 0 loop -- Process_Affinity is not set correctly, but System_Affinity seemed right on test machines
+              -- Process_Affinity is not set correctly, but System_Affinity seemed right on test machines
+              while System_Affinity > 0 loop
                 Result          := Result + 1;
                 System_Affinity := Integer_Address(Shift_Right(Integer_8_Unsigned(System_Affinity), 1));
               end loop;
@@ -71,18 +72,19 @@ package body Implementation_For_Operating_System
           Use_Get_Core_Information:
           -------------------------
             declare
-            Information : Access_Array_Record_Core_Information := new Array_Record_Core_Information(1..Integer(Size));
+            Information : Access_Array_Record_Core_Information :=
+              new Array_Record_Core_Information(1..Integer(Number_Of_Information_Records));
             begin
               if
               Get_Core_Information(
                 Buffer        => Information,
-                Return_Length => Size'unchecked_access) = FAILED
+                Return_Length => Number_Of_Information_Records'unchecked_access) = FAILED
               then
                 raise System_Call_Failure;
               end if;
               for I in Information.all'range loop
                 if Information(I).Relationship = CORES_SHARE_SINGLE_PROCESSOR then
-                  for J in 0..WORD_SIZE - 1 loop
+                  for J in 0..Information(I).Processor_Mask'size - 1 loop
                     Result := Result +(
                       if (Information(I).Processor_Mask and 2**J) > 0 then
                         1

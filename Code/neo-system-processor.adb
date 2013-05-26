@@ -293,18 +293,18 @@ package body Neo.System.Processor
       is
       begin
         return Implementation_For_Operating_System.Get_Number_Of_Cores;
-      --exception
-      --  when Unsupported_Feature | System_Call_Failure =>
+      exception
+        when Unsupported_Feature | System_Call_Failure =>
           -------------
-          --Try_Assembly:
+          Try_Assembly:
           -------------
-          --  declare
-          --  begin
-          --    return Implementation_For_Architecture.Get_Number_Of_Cores;
-          --  exception
-          --    when Unsupported_Feature =>
-          --      return Integer_8_Unsigned(Number_Of_CPUs); -- How reliable is this?
-          --  end Try_Assembly;
+            declare
+            begin
+              return Implementation_For_Architecture.Get_Number_Of_Cores;
+            exception
+              when Unsupported_Feature =>
+                return Integer_8_Unsigned(Number_Of_CPUs); -- How reliable is this?
+            end Try_Assembly;
       end Get_Number_Of_Cores;
   ----------------------------
   -- Get_Speed_In_Megahertz --
@@ -323,8 +323,8 @@ package body Neo.System.Processor
             Start : Integer_8_Unsigned := 0;
             begin
               Start := Get_Clock_Ticks;
-              delay PROCESSOR_SPEED_TIMING_DELAY;
-              return (Get_Clock_Ticks - Start) * Integer_8_Unsigned(1.0 / PROCESSOR_SPEED_TIMING_DELAY);
+              delay DELAY_FOR_PROCESSOR_SPEED_TIMING;
+              return (Get_Clock_Ticks - Start) * Integer_8_Unsigned(1.0 / DELAY_FOR_PROCESSOR_SPEED_TIMING);
             end Time_Processor;
       end Get_Speed_In_Megahertz;
   ---------------
