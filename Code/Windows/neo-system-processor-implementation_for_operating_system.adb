@@ -82,10 +82,9 @@ package body Implementation_For_Operating_System
               end if;
               for I in Information.all'range loop
                 if Information(I).Relationship = CORES_SHARE_SINGLE_PROCESSOR then
-                  for J in 1..WORD_SIZE loop
-                    --Put_Line(Integer_Address'wide_image(Information(I).Processor_Mask) & " " & Integer_8_Unsigned'Wide_Image(2**J));
+                  for J in 0..WORD_SIZE - 1 loop
                     Result := Result +(
-                      if (Integer_8_Unsigned(Information(I).Processor_Mask) and 2**(J - 1)) > 0 then
+                      if (Information(I).Processor_Mask and 2**J) > 0 then
                         1
                       else
                         0);
