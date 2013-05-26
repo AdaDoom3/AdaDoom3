@@ -35,7 +35,7 @@ package Neo.Windows
     GENERIC_CURSOR                             : constant Address              := To_Unchecked_Address(16#0000_7F00#);
     GENERIC_ICON                               : constant Address              := To_Unchecked_Address(16#0000_7F00#);
     BRUSH_GRAY                                 : constant Address              := To_Unchecked_Address(16#0000_0011#);
-    ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0_0#; -- ???
+    ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0000_007A#;
     CORES_SHARE_SINGLE_PROCESSOR               : constant Integer_4_Unsigned_C := 16#0000_0000#;
     STOP_READING_TOP_LEVEL_DEVICES             : constant Integer_4_Unsigned_C := 16#0000_0001#;
     TAKE_INPUT_ON_NON_ACTIVE                   : constant Integer_4_Unsigned_C := 16#0000_0100#;
@@ -630,9 +630,9 @@ package Neo.Windows
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Mouse         := (others => <>);
       end record;
-    type Record_Processor_Information
+    type Record_Core_Information
       is record
-        Processor_Mask : Access_Integer_Address          := null;
+        Processor_Mask : Integer_Address                 := 0;
         Relationship   : Integer_4_Unsigned_C            := 0;
         Union_Bullshit : Array_Integer_1_Unsigned(1..16) := (others => 0);
         -- union {
@@ -660,9 +660,9 @@ package Neo.Windows
     type Array_Record_Device_Setup
       is array(Positive range <>)
       of Record_Device_Setup;
-    type Array_Record_Processor_Information
+    type Array_Record_Core_Information
       is array(Positive range <>)
-      of Record_Processor_Information;
+      of Record_Core_Information;
   ---------------
   -- Accessors --
   ---------------
@@ -680,13 +680,8 @@ package Neo.Windows
       is access all Record_Rectangle;
     type Access_Record_Monitor_Information
       is access all Record_Monitor_Information;
-    type Access_Array_Record_Processor_Information
-      is access all Array_Record_Processor_Information;
-    type Access_Get_Logical_Processor_Information
-      is access function(
-        Buffer        : in Access_Array_Record_Processor_Information;
-        Return_Length : in Access_Integer_4_Unsigned_C)
-        return Integer_4_Signed_C;
+    type Access_Array_Record_Core_Information
+      is access all Array_Record_Core_Information;
   -----------------
   -- Subprograms --
   -----------------
@@ -700,8 +695,6 @@ package Neo.Windows
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
     function To_Access_Record_Rectangle
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
-    function To_Access_Get_Logical_Processor_Information
-      is new Ada.Unchecked_Conversion(Address, Access_Get_Logical_Processor_Information);
     function Get_Blank_Cursor
       return Array_Integer_1_Unsigned;
     -- DWORD WINAPI XInputGetState
@@ -775,6 +768,10 @@ package Neo.Windows
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
     --   return Address;
+    function Get_Core_Information(
+      Buffer        : in Access_Array_Record_Core_Information;
+      Return_Length : in Access_Integer_4_Unsigned_C)
+      return Integer_4_Signed_C;
     function Is_Running_In_Emulated_32_Bit(
       Process : in Address;
       Result  : in Access_Integer_4_Signed_C)
@@ -1249,6 +1246,7 @@ private
     pragma Import(Stdcall, Registry_Query_Value,           "RegQueryValueExW");
     pragma Import(Stdcall, Registry_Open_Key,              "RegOpenKeyExW");
     pragma Import(Stdcall, Create_File,                    "CreateFileW");
+    pragma Import(Stdcall, Get_Core_Information,           "GetLogicalProcessorInformation");
     pragma Import(Stdcall, Destroy_Device_List,            "SetupDiDestroyDeviceInfoList");
     --pragma Import(Stdcall, Get_Device_Interface_Detail,    "SetupDiGetDeviceInterfaceDetail");
     pragma Import(Stdcall, Get_Device_Registry_Property,   "SetupDiGetDeviceRegistryPropertyW");

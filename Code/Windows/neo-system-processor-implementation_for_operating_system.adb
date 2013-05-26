@@ -32,16 +32,16 @@ package body Implementation_For_Operating_System
     function Get_Number_Of_Cores
       return Integer_8_Unsigned
       is
-      Size                              : aliased Integer_4_Unsigned_C                     := 0;
-      Result                            :         Integer_8_Unsigned                       := 0;
-      Get_Logical_Processor_Information :         Access_Get_Logical_Processor_Information :=
-          To_Access_Get_Logical_Processor_Information( 
-            Get_Procedure_Address( -- Fails with error code 127: The specified procedure could not be found.
-              Module         => Get_Module_Handle(To_Access_Constant_Character_2_C("kernel32")), -- Succeeds
-              Procedure_Name => To_Access_Constant_Character_2_C("GetLogicalProcessorInformation")));
+      Size   : aliased Integer_4_Unsigned_C := 0;
+      Result :         Integer_8_Unsigned   := 0;
       begin
-        if Get_Logical_Processor_Information = null then
---Put_Line("1 " & Integer_4_Unsigned_C'wide_image(Get_Last_Error));
+        if
+        Get_Version < Windows_2_6_System or( -- Get_Core_Information requires XP SP3 or later
+          Get_Core_Information(
+            Buffer        => null,
+            Return_Length => Size'unchecked_access) = FAILED and then
+          Get_Last_Error /= ERROR_INSUFFICIENT_BUFFER)
+        then
           ------------------
           Use_Affinity_Mask:
           ------------------
@@ -67,25 +67,14 @@ package body Implementation_For_Operating_System
               return Result;
             end Use_Affinity_Mask;
         else
---Put_Line("2");
-          if
-          Get_Logical_Processor_Information.all(
-            Buffer        => null,
-            Return_Length => Size'unchecked_access) = FAILED and then
-          Get_Last_Error /= ERROR_INSUFFICIENT_BUFFER
-          then
-            raise System_Call_Failure;
-          end if;
-          --------------------------------------
-          Use_Get_Logical_Processor_Information: -- Untested
-          --------------------------------------
+          -------------------------
+          Use_Get_Core_Information:
+          -------------------------
             declare
-            Bit_Test    : Integer_8_Unsigned := 0;
-            Information : Access_Array_Record_Processor_Information :=
-              new Array_Record_Processor_Information(1..Integer(Size));
+            Information : Access_Array_Record_Core_Information := new Array_Record_Core_Information(1..Integer(Size));
             begin
               if
-              Get_Logical_Processor_Information.all(
+              Get_Core_Information(
                 Buffer        => Information,
                 Return_Length => Size'unchecked_access) = FAILED
               then
@@ -93,20 +82,18 @@ package body Implementation_For_Operating_System
               end if;
               for I in Information.all'range loop
                 if Information(I).Relationship = CORES_SHARE_SINGLE_PROCESSOR then
-                  Bit_Test := Shift_Left(1, WORD_SIZE - 1);
                   for J in 1..WORD_SIZE loop
+                    --Put_Line(Integer_Address'wide_image(Information(I).Processor_Mask) & " " & Integer_8_Unsigned'Wide_Image(2**J));
                     Result := Result +(
-                      if (Integer_8_Unsigned(Information(I).Processor_Mask.all) and Bit_Test) = 1 then
+                      if (Integer_8_Unsigned(Information(I).Processor_Mask) and 2**(J - 1)) > 0 then
                         1
                       else
                         0);
-                    Bit_Test := Bit_Test / 2;
                   end loop;
                 end if;
               end loop;
-            end Use_Get_Logical_Processor_Information;
+            end Use_Get_Core_Information;
           end if;
---Put_Line("3");
         return Result;
       end Get_Number_Of_Cores;
   ---------------------
