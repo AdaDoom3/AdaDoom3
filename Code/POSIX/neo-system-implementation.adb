@@ -137,6 +137,7 @@ package body Implementation
   -------------------------
     procedure Execute_Application(
       Executable_Path : in String_2;
+      Do_Fullscreen   : in Boolean;
       Do_Quit         : in Boolean)
       is
       begin
