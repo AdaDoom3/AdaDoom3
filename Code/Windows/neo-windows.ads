@@ -232,8 +232,7 @@ package Neo.Windows
     DATA_VERTICAL_RESOLUTION                   : constant Integer_4_Signed_C   := 10;
     MILLISECOND_TIMEOUT_FORCE_WRITE            : constant Integer_4_Signed_C   := 500;
     MOUSE_WHEEL_DELTA                          : constant Integer_2_Signed     := 120;
-    MAXIMUM_PATH_FOR_CREATE_FILE               : constant Integer_4_Signed     := 32_767;
-    MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 260;
+    MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 32_767;
   -------------
   -- Arrays --
   ------------

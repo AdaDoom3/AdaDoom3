@@ -158,6 +158,7 @@ package Neo.System
       Path : in String_2);
     procedure Execute_Application(
       Executable_Path : in String_2;
+      Do_Fullscreen   : in Boolean := False;
       Do_Quit         : in Boolean := False);
 -------
 private
@@ -177,6 +178,7 @@ private
           Path : in String_2);
         procedure Execute_Application(
           Executable_Path : in String_2;
+          Do_Fullscreen   : in Boolean;
           Do_Quit         : in Boolean);
       end Implementation;
   end Neo.System;

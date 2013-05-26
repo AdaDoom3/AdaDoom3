@@ -315,7 +315,7 @@ package body Implementation
         if Primary_Window = null_ADDRESS then
           raise System_Call_Failure;
         end if;
-        if Show_Window(Primary_Window, MAKE_WINDOW_NorMALIZE) = 0 then 
+        if Show_Window(Primary_Window, MAKE_WINDOW_NORMALIZE) = 0 then 
           null;
         end if;
         if Update_Window(Primary_Window) = FAILED then
@@ -424,7 +424,7 @@ package body Implementation
                 if Multi_Monitor_Windows(J) = null_ADDRESS then
                   raise System_Call_Failure;
                 end if;
-                if Show_Window(Multi_Monitor_Windows(J), MAKE_WINDOW_NorMALIZE) = 0 then 
+                if Show_Window(Multi_Monitor_Windows(J), MAKE_WINDOW_NORMALIZE) = 0 then 
                   null;
                 end if;
                 if Update_Window(Multi_Monitor_Windows(J)) = FAILED then
@@ -434,7 +434,7 @@ package body Implementation
               end if;
             end loop;
           end Create_Multi_Monitor_Windows;
-        if Show_Window(Primary_Window, MAKE_WINDOW_NorMALIZE) = 0 then 
+        if Show_Window(Primary_Window, MAKE_WINDOW_NORMALIZE) = 0 then 
           null;
         end if;
         if Update_Window(Primary_Window) = FAILED then
@@ -754,7 +754,7 @@ package body Implementation
             raise System_Call_Failure;
           end if;
         end if;
-        if Show_Window(Primary_Window, MAKE_WINDOW_NorMALIZE) = 0 then 
+        if Show_Window(Primary_Window, MAKE_WINDOW_NORMALIZE) = 0 then 
           null;
         end if;
         if Update_Window(Primary_Window) = FAILED then
@@ -778,7 +778,7 @@ package body Implementation
           end if;
           Primary_Window := Find_Window(To_String_2_C(Name), null_ADDRESS);
           if Primary_Window /= null_ADDRESS then
-            if Show_Window(Primary_Window, MAKE_WINDOW_NorMALIZE) = 0 then
+            if Show_Window(Primary_Window, MAKE_WINDOW_NORMALIZE) = 0 then
               null;
             end if;
             Handle := Set_Focus(Primary_Window);

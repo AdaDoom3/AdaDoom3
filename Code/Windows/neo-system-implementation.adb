@@ -142,7 +142,7 @@ package body Implementation
       is
       Window : Address := NULL_ADDRESS;
       begin
-        raise System_Call_Failure;
+        Execute_Application("explorer " & Path, True, False);
         --if
         --Shell_Execute( -- Fails with error code 2: ERROR_FILE_NOT_FOUND!
         --  Window       => NULL_ADDRESS,
@@ -156,8 +156,11 @@ package body Implementation
         --  raise System_Call_Failure;
         --end if;
         --Window := Get_Foreground_Window;
-        --if Window /= NULL_ADDRESS and then Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = FAILED then
+        --if Window = NULL_ADDRESS then
         --  raise System_Call_Failure;
+        --end if;
+        --if Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = 0 then
+        --  null;
         --end if;
       end Open_Webpage;
   -------------------------
@@ -165,13 +168,17 @@ package body Implementation
   -------------------------
     procedure Execute_Application(
       Executable_Path : in String_2;
+      Do_Fullscreen   : in Boolean;
       Do_Quit         : in Boolean)
       is
       Startup_Information : aliased Record_Startup_Information := (others => <>);
       Process_Information : aliased Record_Process_Information := (others => <>);
       begin
-        if Executable_Path'length > MAXIMUM_PATH_LENGTH - 1 then
+        if Executable_Path'length > MAXIMUM_PATH_LENGTH then
           raise Executable_Path_Exceeds_Maximum_Length;
+        end if;
+        if Do_Fullscreen then
+          Startup_Information.Show_Window := Integer_2_Unsigned_C(MAKE_WINDOW_FULLSCREEN);
         end if;
         if
         Create_Process(

@@ -32,7 +32,7 @@ package body Neo.System
         Put_Line("Username: """ & Get_Username & """");
         Put_Line("Application bit size: " & Integer_4_Signed'Wide_Image(WORD_SIZE));
         Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Bit_Size));
-        Open_Webpage("http://www.google.com");
+        Put_Line("Supports AVX feature is " & Boolean'Wide_Image(Is_Feature_Supported(REQUIREMENTS_FOR_AVX)));
         if Get_Version in Enumerated_Windows_System'range then
           Put_Line("Launching task manager...");
           Execute_Application("taskmgr");
@@ -43,7 +43,8 @@ package body Neo.System
           Put_Line("Launching ???...");
           null;--Execute_Application("???");
         end if;
-        Put_Line("Supports AVX feature is " & Boolean'Wide_Image(Is_Feature_Supported(REQUIREMENTS_FOR_AVX)));
+        Put_Line("Opening google.com...");
+        Open_Webpage("http://www.google.com");
         Hang_Window;
       end Test;
   --------------------------
@@ -117,10 +118,11 @@ package body Neo.System
   -------------------------
     procedure Execute_Application(
       Executable_Path : in String_2;
+      Do_Fullscreen   : in Boolean := False;
       Do_Quit         : in Boolean := False)
       is
       begin
-        Implementation.Execute_Application(Executable_Path, Do_Quit);
+        Implementation.Execute_Application(Executable_Path, Do_Fullscreen, Do_Quit);
       exception
         when System_Call_Failure =>
           null;
