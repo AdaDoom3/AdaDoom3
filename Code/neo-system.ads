@@ -157,8 +157,8 @@ package Neo.System
     procedure Open_Webpage(
       Path : in String_2);
     procedure Execute_Application(
-      Do_Quit         : in Boolean;
-      Executable_Path : in String_2);
+      Executable_Path : in String_2;
+      Do_Quit         : in Boolean := False);
 -------
 private
 -------
@@ -176,8 +176,8 @@ private
         procedure Open_Webpage(
           Path : in String_2);
         procedure Execute_Application(
-          Do_Quit         : in Boolean;
-          Executable_Path : in String_2);
+          Executable_Path : in String_2;
+          Do_Quit         : in Boolean);
       end Implementation;
   end Neo.System;
 

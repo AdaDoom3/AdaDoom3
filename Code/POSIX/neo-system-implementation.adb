@@ -136,8 +136,8 @@ package body Implementation
   -- Execute_Application --
   -------------------------
     procedure Execute_Application(
-      Do_Quit         : in Boolean;
-      Executable_Path : in String_2)
+      Executable_Path : in String_2;
+      Do_Quit         : in Boolean)
       is
       begin
         raise Unsupported_Feature;

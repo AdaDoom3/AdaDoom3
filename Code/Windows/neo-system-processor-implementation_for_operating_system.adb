@@ -15,12 +15,9 @@
 --
 --
 with
-  System,
-  System.Address_Image,
   Interfaces.C,
   Neo.Windows;
 use
-  System,
   Interfaces.C,
   Neo.Windows;
 separate(Neo.System.Processor)
@@ -68,9 +65,9 @@ package body Implementation_For_Operating_System
               return Result;
             end Use_Affinity_Mask;
         else
-          -------------------------
-          Use_Get_Core_Information:
-          -------------------------
+          ---------------------
+          Use_Core_Information:
+          ---------------------
             declare
             Information : Access_Array_Record_Core_Information :=
               new Array_Record_Core_Information(1..Integer(Number_Of_Information_Records));
@@ -93,7 +90,7 @@ package body Implementation_For_Operating_System
                   end loop;
                 end if;
               end loop;
-            end Use_Get_Core_Information;
+            end Use_Core_Information;
           end if;
         return Result;
       end Get_Number_Of_Cores;

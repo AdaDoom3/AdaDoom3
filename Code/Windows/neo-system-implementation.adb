@@ -29,20 +29,19 @@ use
 separate(Neo.System)
 package body Implementation
   is
-  ---------------
-  -- Constants --
-  ---------------
-    STRING_BUFFER_SIZE_FOR_GET_USERNAME : constant Integer_4_Signed := 1024;
+  ----------------
+  -- Exceptions --
+  ----------------
+    Executable_Path_Exceeds_Maximum_Length : Exception;
   -----------------
   -- Get_Version --
   -----------------
     function Get_Version
       return Enumerated_System
       is
-      Version_Information : Record_Version_Information := (others => <>);
+      Version_Information : aliased Record_Version_Information := (others => <>);
       begin
-        if Get_Version(Version_Information'Address) = FAILED then
-          Put_Line(Integer_4_Unsigned_C'Wide_Image(Get_Last_Error));
+        if Get_Version(Version_Information'unchecked_access) = FAILED then
           raise System_Call_Failure;
         end if;
         case Version_Information.Platform_Identifier is
@@ -110,17 +109,30 @@ package body Implementation
     function Get_Username
       return String_2
       is
-      Username : String_2(1..STRING_BUFFER_SIZE_FOR_GET_USERNAME) := (others => ' ');
-      Size     : Integer_4_Signed_C                               := Username'Size / 8;
+      Length : aliased Integer_4_Signed_C := 0;
       begin
-        if Get_User_Name(Username'Address, Size'Address) = FAILED then
+        if
+        Get_Username(null, Length'unchecked_access) = FAILED and then
+        Get_Last_Error /= ERROR_INSUFFICIENT_BUFFER
+        then
           raise System_Call_Failure;
         end if;
-        if Username(1) = ' ' then
-          raise System_Call_Failure;
-        end if;
-        Username(Integer_4_Signed(Size)) := ' ';
-        return Trim(Username, Both);
+        ---------------------------------
+        Create_Username_Buffer_And_Fetch:
+        ---------------------------------
+          declare
+          Username : aliased Access_String_2_C  := new String_2_C(1..Integer_Size_C(Length));
+          begin
+            Length       := Username.all'size / Byte'size;
+      	    Username.all := (others => ' ');
+            if Get_Username(Username, Length'unchecked_access) = FAILED then
+              raise System_Call_Failure;
+            end if;
+            if Username(1) = ' ' then
+              raise System_Call_Failure;
+            end if;
+            return To_String_2(Username.all);
+          end Create_Username_Buffer_And_Fetch;
       end Get_Username;
   ------------------
   -- Open_Webpage --
@@ -130,64 +142,55 @@ package body Implementation
       is
       Window : Address := NULL_ADDRESS;
       begin
-        null;
-        -- if
-        -- Shell_Execute(
-        --   Window       => NULL_ADDRESS,
-        --   Operation    => To_Access_Constant_Character_2_C("open"),
-        --   File         => To_Access_Constant_Character_2_C(Path),
-        --   Directory    => null,
-        --   Parameters   => null,
-        --   Show_Command => MAKE_WINDOW_RESTORE) < To_Address(32)
-        -- then
-        --   Put_Line("  Open_Webpage: Could not open " & Path);
-        --   return;
-        -- end if;
-        -- Put_Line("  Open_Webpage: " & Path);
-        -- Window := Get_Foreground_Window;
-        -- if Window /= NULL_ADDRESS and then Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = FAILED then
-        --   null; -- raise System_Call_Failure;
-        -- end if;
+        raise System_Call_Failure;
+        --if
+        --Shell_Execute( -- Fails with error code 2: ERROR_FILE_NOT_FOUND!
+        --  Window       => NULL_ADDRESS,
+        --  Operation    => To_Access_Constant_Character_2_C("open"),
+        --  File         => To_Access_Constant_Character_2_C(Path),
+        --  Directory    => null,
+        --  Parameters   => null,
+        --  Show_Command => MAKE_WINDOW_RESTORE) <= 32
+        --then
+        --  Put_Last_Error;
+        --  raise System_Call_Failure;
+        --end if;
+        --Window := Get_Foreground_Window;
+        --if Window /= NULL_ADDRESS and then Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = FAILED then
+        --  raise System_Call_Failure;
+        --end if;
       end Open_Webpage;
   -------------------------
   -- Execute_Application --
   -------------------------
     procedure Execute_Application(
-      Do_Quit         : in Boolean;
-      Executable_Path : in String_2)
+      Executable_Path : in String_2;
+      Do_Quit         : in Boolean)
       is
+      Startup_Information : aliased Record_Startup_Information := (others => <>);
+      Process_Information : aliased Record_Process_Information := (others => <>);
       begin
-        null;
-        --   if
-        --   Create_Process(
-        --      => NULL_ADDRESS,
-        --      => Path_Orgin,
-        --      => NULL_ADDRESS,
-        --      => NULL_ADDRESS,
-        --      => C_FALSE,
-        --      => 0,
-        --      => NULL_ADDRESS,
-        --      => NULL_ADDRESS,
-        --      => Startup_Information'Address,
-        --      => Process_Information'Address) = FAILED
-        --   then
-        -- Executable_Name : in String_2;
-        -- Do_Quit         : in Boolean)
-        -- is
-        -- TCHAR       szPathOrig[_MAX_PATH];
-        -- STARTUPINFO     si;
-        -- PROCESS_INFORMATION pi;
-        -- begin
-        --   ZeroMemory( &si, sizeof(si) );
-        --   si.cb = sizeof(si);
-        --   strncpy( szPathOrig, exePath, _MAX_PATH );
-        --   if( !CreateProcess( null, szPathOrig, null, null, FALSE, 0, null, null, &si, &pi ) ) {
-        --         common->Error( "Could not start process: '%s' ", szPathOrig );
-        --       return;
-        --   }
-        --   if ( doexit ) {
-        --     cmdSystem->BufferCommandText( CMD_EXEC_APPEND, "quit\n" );
-        --   }
+        if Executable_Path'length > MAXIMUM_PATH_LENGTH - 1 then
+          raise Executable_Path_Exceeds_Maximum_Length;
+        end if;
+        if
+        Create_Process(
+          Application_Name    => null,
+          Command_Line        => To_Access_Character_2_C(Executable_Path),
+          Process_Attributes  => null,
+          Thread_Attributes   => null,
+          Inherit_Handles     => C_FALSE,
+          Creation_Flags      => 0,
+          Environment         => NULL_ADDRESS,
+          Current_Directory   => null,
+          Startup_Information => Startup_Information'unchecked_access,
+          Process_Information => Process_Information'unchecked_access) = FAILED
+        then
+          raise System_Call_Failure;
+        end if;
+        --if Do_Quit then
+        --  cmdSystem->BufferCommandText(CMD_EXEC_APPEND, "quit" & END_LINE);
+        --end if;
       end Execute_Application;
   ------------------
   -- Get_Bit_Size --

@@ -33,7 +33,16 @@ package body Neo.System
         Put_Line("Application bit size: " & Integer_4_Signed'Wide_Image(WORD_SIZE));
         Put_Line("System bit size: " & Integer_4_Positive'Wide_Image(Get_Bit_Size));
         Open_Webpage("http://www.google.com");
-        Execute_Application(False, "C:\Windows\System32\taskmgr.exe");
+        if Get_Version in Enumerated_Windows_System'range then
+          Put_Line("Launching task manager...");
+          Execute_Application("taskmgr");
+        elsif Get_Version in Enumerated_Linux_System'range then
+          Put_Line("Launching ???...");
+          null;--Execute_Application("???");
+        elsif Get_Version in Enumerated_Macintosh_System'range then
+          Put_Line("Launching ???...");
+          null;--Execute_Application("???");
+        end if;
         Put_Line("Supports AVX feature is " & Boolean'Wide_Image(Is_Feature_Supported(REQUIREMENTS_FOR_AVX)));
         Hang_Window;
       end Test;
@@ -101,20 +110,22 @@ package body Neo.System
         Implementation.Open_Webpage(Path);
       exception
         when System_Call_Failure =>
-          null;
+          Put_Line("Could not open " & Path);
       end Open_Webpage;
   -------------------------
   -- Execute_Application --
   -------------------------
     procedure Execute_Application(
-      Do_Quit         : in Boolean;
-      Executable_Path : in String_2)
+      Executable_Path : in String_2;
+      Do_Quit         : in Boolean := False)
       is
       begin
-        Implementation.Execute_Application(Do_Quit, Executable_Path);
+        Implementation.Execute_Application(Executable_Path, Do_Quit);
       exception
         when System_Call_Failure =>
           null;
+        when others =>
+          Put_Line("Unknown failure");
       end Execute_Application;
   end Neo.System;
 

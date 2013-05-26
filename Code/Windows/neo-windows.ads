@@ -32,9 +32,9 @@ package Neo.Windows
   ---------------
   -- Constants --
   ---------------
-    GENERIC_CURSOR                             : constant Address              := To_Unchecked_Address(16#0000_7F00#);
-    GENERIC_ICON                               : constant Address              := To_Unchecked_Address(16#0000_7F00#);
-    BRUSH_GRAY                                 : constant Address              := To_Unchecked_Address(16#0000_0011#);
+    GENERIC_CURSOR                             : constant Integer_Address      := 16#7F00#;
+    GENERIC_ICON                               : constant Integer_Address      := 16#7F00#;
+    BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0000_007A#;
     CORES_SHARE_SINGLE_PROCESSOR               : constant Integer_4_Unsigned_C := 16#0000_0000#;
     STOP_READING_TOP_LEVEL_DEVICES             : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -233,6 +233,7 @@ package Neo.Windows
     MILLISECOND_TIMEOUT_FORCE_WRITE            : constant Integer_4_Signed_C   := 500;
     MOUSE_WHEEL_DELTA                          : constant Integer_2_Signed     := 120;
     MAXIMUM_PATH_FOR_CREATE_FILE               : constant Integer_4_Signed     := 32_767;
+    MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 260;
   -------------
   -- Arrays --
   ------------
@@ -332,7 +333,7 @@ package Neo.Windows
     --   end record;
     -- type Record_Device_Attributes
     --   is record
-    --     Size    : Integer_4_Unsigned_C := Record_Device_Attributes'Size / 8;
+    --     Size    : Integer_4_Unsigned_C := Record_Device_Attributes'Size / Byte'size;
     --     Vendor  : Integer_2_Unsigned_C := 0;
     --     Product : Integer_2_Unsigned_C := 0;
     --     Version : Integer_2_Unsigned_C := 0;
@@ -491,7 +492,7 @@ package Neo.Windows
       pragma Convention(C, Record_Keyboard);
     type Record_Memory_Status
       is record
-        Size                       : Integer_4_Unsigned_C := Record_Memory_Status'Size / 8;
+        Size                       : Integer_4_Unsigned_C := Record_Memory_Status'Size / Byte'size;
         Memory_Load                : Integer_4_Unsigned_C := 0;
         Total_Physical             : Integer_8_Unsigned_C := 0;
         Available_Physical         : Integer_8_Unsigned_C := 0;
@@ -504,7 +505,7 @@ package Neo.Windows
       pragma Convention(C, Record_Memory_Status);
     type Record_Version_Information
       is record
-        Size                : Integer_4_Unsigned_C := Record_Version_Information'Size / 8;
+        Size                : Integer_4_Unsigned_C := Record_Version_Information'Size / Byte'size;
         Major               : Integer_4_Unsigned_C := 0;
         Minor               : Integer_4_Unsigned_C := 0;
         Build_Number        : Integer_4_Unsigned_C := 0;
@@ -519,14 +520,14 @@ package Neo.Windows
       pragma Convention(C, Record_Version_Information);
     type Record_Device_Interface
       is record
-        Size     : Integer_4_Unsigned_C        := Record_Device_Interface'Size / 8;
+        Size     : Integer_4_Unsigned_C        := Record_Device_Interface'Size / Byte'size;
         Class_ID : Integer_4_Unsigned_C        := 0;
         Flags    : Integer_4_Unsigned_C        := 0;
         Reserved : Access_Integer_4_Unsigned_C := NULL; -- ULONG_PTR
       end record;
     type Record_Flash_Information
       is record
-        Size     : Integer_4_Unsigned_C := Record_Flash_Information'Size / 8;
+        Size     : Integer_4_Unsigned_C := Record_Flash_Information'Size / Byte'size;
         Window   : Address              := NULL_ADDRESS;
         Flags    : Integer_4_Unsigned_C := 0;
         Count    : Integer_4_Unsigned_C := 0;
@@ -543,7 +544,7 @@ package Neo.Windows
       pragma Convention(C, Record_Rectangle);
     type Record_Monitor_Information
       is record
-        Size      : Integer_4_Unsigned_C := Record_Monitor_Information'Size / 8;
+        Size      : Integer_4_Unsigned_C := Record_Monitor_Information'Size / Byte'size;
         Monitor   : Record_Rectangle     := (others => <>);
         Work_Area : Record_Rectangle     := (others => <>);
         Flags     : Integer_4_Unsigned_C := 0;
@@ -551,7 +552,7 @@ package Neo.Windows
       pragma Convention(C, Record_Monitor_Information);
     type Record_Window_Class
       is record
-        Size       : Integer_4_Unsigned_C          := Record_Window_Class'Size / 8;
+        Size       : Integer_4_Unsigned_C          := Record_Window_Class'Size / Byte'size;
         Style      : Integer_4_Unsigned_C          := 0;
         Callback   : Address                       := NULL_ADDRESS;
         Extra_A    : Integer_4_Signed_C            := 0;
@@ -600,7 +601,7 @@ package Neo.Windows
       pragma Convention(C, Record_GUID);
     type Record_Device_Information
       is record
-        Size       : Integer_4_Unsigned_C := Record_Device_Information'Size / 8;
+        Size       : Integer_4_Unsigned_C := Record_Device_Information'Size / Byte'size;
         Class_GUID : Record_GUID          := (others => <>);
         Instance   : Integer_4_Unsigned_C := 0;
         Reserved   : Address              := NULL_ADDRESS; -- ULONG_PTR
@@ -625,11 +626,13 @@ package Neo.Windows
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Keyboard      := (others => <>);
       end record;
+      pragma Convention(C, Record_Device_Keyboard);
     type Record_Device_Mouse
       is record
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Mouse         := (others => <>);
       end record;
+      pragma Convention(C, Record_Device_Mouse);
     type Record_Core_Information
       is record
         Processor_Mask : Integer_Address                 := 0;
@@ -651,6 +654,44 @@ package Neo.Windows
         --   } CACHE_DESCRIPTOR, *PCACHE_DESCRIPTOR;
         --   ULONGLONG        Reserved[2];}; ULONGLONG is 8 bytes
       end record;
+      pragma Convention(C, Record_Core_Information);
+    type Record_Process_Information
+      is record
+        Process            : Address              := NULL_ADDRESS;
+        Thread             : Address              := NULL_ADDRESS;
+        Process_Identifier : Integer_4_Unsigned_C := 0;
+        Thread_Identifier  : Integer_4_Unsigned_C := 0;
+      end record;
+      pragma Convention(C, Record_Process_Information);
+    type Record_Startup_Information
+      is record
+        Size               : Integer_4_Unsigned_C        := Record_Startup_Information'size / Byte'size;
+        Reserved           : Access_String_2_C           := null;
+        Desktop            : Access_String_2_C           := null;
+        Title              : Access_String_2_C           := null;
+        X                  : Integer_4_Unsigned_C        := 0;
+        Y                  : Integer_4_Unsigned_C        := 0;
+        X_Size             : Integer_4_Unsigned_C        := 0;
+        Y_Size             : Integer_4_Unsigned_C        := 0;
+        X_Character_Length : Integer_4_Unsigned_C        := 0;
+        Y_Character_Length : Integer_4_Unsigned_C        := 0;
+        Fill_Attribute     : Integer_4_Unsigned_C        := 0;
+        Flags              : Integer_4_Unsigned_C        := 0;
+        Show_Window        : Integer_2_Unsigned_C        := 0;
+        Reserved_A         : Integer_2_Unsigned_C        := 0;
+        Reserved_B         : Access_Integer_1_Unsigned_C := null;
+        Standard_Input     : Address                     := NULL_ADDRESS;
+        Standard_Output    : Address                     := NULL_ADDRESS;
+        Standard_Error     : Address                     := NULL_ADDRESS;
+      end record;
+      pragma Convention(C, Record_Startup_Information);
+    type Record_Security_Attributes
+      is record
+        Length         : Integer_4_Unsigned_C := 0;
+        Descriptor     : Address              := NULL_ADDRESS;
+        Inherit_Handle : Integer_4_Signed_C   := 0;
+      end record;
+      pragma Convention(C, Record_Security_Attributes);
   ------------
   -- Arrays --
   ------------
@@ -670,6 +711,8 @@ package Neo.Windows
     --   is access all Record_Device_List;
     -- type Access_Array_Record_Device_List
     --   is access all Array_Record_Device_List;
+    type Access_Record_Version_Information
+      is access all Record_Version_Information;
     type Access_Record_Memory_Status
       is access all Record_Memory_Status;
     type Access_Record_Key
@@ -682,6 +725,12 @@ package Neo.Windows
       is access all Record_Monitor_Information;
     type Access_Array_Record_Core_Information
       is access all Array_Record_Core_Information;
+    type Access_Record_Startup_Information
+      is access all Record_Startup_Information;
+    type Access_Record_Process_Information
+      is access all Record_Process_Information;
+    type Access_Record_Security_Attributes
+      is access all Record_Security_Attributes;
   -----------------
   -- Subprograms --
   -----------------
@@ -697,6 +746,8 @@ package Neo.Windows
       is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
     function Get_Blank_Cursor
       return Array_Integer_1_Unsigned;
+    procedure Put_Last_Error(
+      Prefix : in String_2 := "Last error: ");
     -- DWORD WINAPI XInputGetState
     -- (
     --     DWORD         dwUserIndex,  // Index of the gamer associated WITH the device
@@ -768,6 +819,18 @@ package Neo.Windows
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
     --   return Address;
+    function Create_Process(
+      Application_Name    : in Access_Constant_Character_2_C;
+      Command_Line        : in Access_Character_2_C;
+      Process_Attributes  : in Access_Record_Security_Attributes;
+      Thread_Attributes   : in Access_Record_Security_Attributes;
+      Inherit_Handles     : in Integer_4_Signed_C;
+      Creation_Flags      : in Integer_4_Unsigned_C;
+      Environment         : in Address;
+      Current_Directory   : in Access_Constant_Character_2_C;
+      Startup_Information : in Access_Record_Startup_Information;
+      Process_Information : in Access_Record_Process_Information)
+      return Integer_4_Signed_C;
     function Get_Core_Information(
       Buffer        : in Access_Array_Record_Core_Information;
       Return_Length : in Access_Integer_4_Unsigned_C)
@@ -903,11 +966,11 @@ package Neo.Windows
       Index  : in Integer_4_Signed_C)
       return Integer_4_Unsigned_C;
     function Get_Version(
-      Version_Information : in Address)
+      Version_Information : in Access_Record_Version_Information)
       return Integer_4_Signed_C;
-    function Get_User_Name(
-      Buffer : Address;
-      Size   : Address)
+    function Get_Username(
+      Buffer : Access_String_2_C;
+      Size   : Access_Integer_4_Signed_C)
       return Integer_4_Signed_C;
     function Create_Cursor(
       Instance   : in Address;
@@ -971,7 +1034,7 @@ package Neo.Windows
       Parameters   : in Access_Constant_Character_2_C;
       Directory    : in Access_Constant_Character_2_C;
       Show_Command : in Integer_4_Signed_C)
-      return Address;
+      return Integer_Address;
     function Set_Process_Working_Set_Size(
       Process : in Address;
       Minimum : in Integer_Size_C;
@@ -1242,6 +1305,7 @@ private
     --pragma Import(Stdcall, Write_File,                     "WriteFile");
     --pragma Import(Stdcall, Convert_String_2_C_To_UTF_8,    "WideCharToMultiByte");
     --pragma Import(Stdcall, Enumerate_Device_Interfaces,    "SetupDiEnumDeviceInterfaces");
+    pragma Import(Stdcall, Create_Process,                 "CreateProcessW");
     pragma Import(Stdcall, Registry_Close_Key,             "RegCloseKey");
     pragma Import(Stdcall, Registry_Query_Value,           "RegQueryValueExW");
     pragma Import(Stdcall, Registry_Open_Key,              "RegOpenKeyExW");
@@ -1273,7 +1337,7 @@ private
     pragma Import(Stdcall, Get_Client_Rectangle,           "GetClientRect");
     pragma Import(Stdcall, Get_Class_Setting,              "GetClassLongW");
     pragma Import(Stdcall, Get_Version,                    "GetVersionExW");
-    pragma Import(Stdcall, Get_User_Name,                  "GetUserNameW");
+    pragma Import(Stdcall, Get_Username,                   "GetUserNameW");
     pragma Import(Stdcall, Create_Cursor,                  "CreateCursor");
     pragma Import(Stdcall, Change_Class_Setting,           "SetClassLongW");
     pragma Import(Stdcall, Flash_Window,                   "FlashWindowEx");

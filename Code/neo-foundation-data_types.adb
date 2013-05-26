@@ -89,12 +89,22 @@ package body Neo.Foundation.Data_Types
       begin
         return To_Access_Constant_Character_2_C(To_C(Item));
       end To_Access_Constant_Character_2_C;
-    function To_Access_Constant_Character_1_C(
+  --------------------------------------
+  -- To_Access_Constant_Character_1_C --
+  --------------------------------------
+    function To_Access_Constant_Character_1_C2(
       Item : in String_1_C)
       return Access_Constant_Character_1_C
       is
       begin
         return To_Unchecked_Access_Constant_Character_1_C(Item(Item'First)'Address);
+      end To_Access_Constant_Character_1_C2;
+    function To_Access_Constant_Character_1_C(
+      Item : in String_1)
+      return Access_Constant_Character_1_C
+      is
+      begin
+        return To_Access_Constant_Character_1_C2(To_C(Item));
       end To_Access_Constant_Character_1_C;
   -------------------
   -- To_String_1_C --
@@ -134,11 +144,22 @@ package body Neo.Foundation.Data_Types
   -- To_String_2_C --
   -------------------
     function To_String_2_C(
+      Item : in String_1_C)
+      return String_2_C
+      is
+      Result : String_2_C(1..Item'length) := (others => NULL_CHARACTER_2_C);
+      begin
+        for I in Result'range loop
+          Result(I) := Character_2_C'val(Character_1_C'pos(Item(I)));
+        end loop;
+        return Result;
+      end To_String_2_C;
+    function To_String_2_C(
       Item : in String_2)
       return String_2_C
       is
       begin
-        return To_C(Item & Character_2'Val(0));
+        return To_C(Item & NULL_CHARACTER_2);
       end To_String_2_C;
   -----------------
   -- To_String_2 --
@@ -148,14 +169,37 @@ package body Neo.Foundation.Data_Types
       return String_2
       is
       begin
-        return "";
+        return To_String_2(To_String_2_C(Item));
       end To_String_2;
     function To_String_2(
       Item : in String_2_C)
       return String_2
       is
+      Last : Integer_Size_C := 1;
       begin
-        return "";
+        for I in 1..Item'last loop
+          if Item(Integer_Size_C(I)) = NULL_CHARACTER_2_C then
+            if I = 1 then
+              raise C_String_Is_Empty;
+            end if;
+            Last := I;
+            exit;
+          end if;
+          if I = Item'last then
+            raise C_String_Is_Not_Null_Terminated;
+          end if;
+        end loop;
+        --------------
+        Create_Result:
+        --------------
+          declare
+          Result : String_2(1..Item'length - 1) := (others => NULL_CHARACTER_2);
+          begin
+            for I in Result'range loop
+              Result(I) := Character_2'val(Character_2_C'pos(Item(Integer_Size_C(I))));
+            end loop;
+            return Result;
+          end Create_Result;
       end To_String_2;
     function To_String_2(
       Item : in String_1)
@@ -175,7 +219,7 @@ package body Neo.Foundation.Data_Types
       Length  : Integer_4_Signed              := 0;
       Pointer : Access_Constant_Character_2_C := Item;
       begin
-        while Pointer.All /= Character_2_C'Val(0) loop
+        while Pointer.all /= Character_2_C'Val(0) loop
           Length  := Length + 1;
           Pointer :=
             To_Unchecked_Access_Constant_Character_2_C(
