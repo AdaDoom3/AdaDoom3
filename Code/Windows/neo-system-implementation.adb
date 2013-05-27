@@ -117,9 +117,9 @@ package body Implementation
         then
           raise System_Call_Failure;
         end if;
-        ---------------------------------
-        Create_Username_Buffer_And_Fetch:
-        ---------------------------------
+        ----------------
+        Create_Username:
+        ----------------
           declare
           Username : aliased Access_String_2_C  := new String_2_C(1..Integer_Size_C(Length));
           begin
@@ -128,11 +128,8 @@ package body Implementation
             if Get_Username(Username, Length'unchecked_access) = FAILED then
               raise System_Call_Failure;
             end if;
-            if Username(1) = ' ' then
-              raise System_Call_Failure;
-            end if;
             return To_String_2(Username.all);
-          end Create_Username_Buffer_And_Fetch;
+          end Create_Username;
       end Get_Username;
   ------------------
   -- Open_Webpage --
@@ -140,36 +137,15 @@ package body Implementation
     procedure Open_Webpage(
       Path : in String_2)
       is
-      Window : Address := NULL_ADDRESS;
       begin
-        Execute_Application("explorer " & Path, True, False);
-        --if
-        --Shell_Execute( -- Fails with error code 2: ERROR_FILE_NOT_FOUND!
-        --  Window       => NULL_ADDRESS,
-        --  Operation    => To_Access_Constant_Character_2_C("open"),
-        --  File         => To_Access_Constant_Character_2_C(Path),
-        --  Directory    => null,
-        --  Parameters   => null,
-        --  Show_Command => MAKE_WINDOW_RESTORE) <= 32
-        --then
-        --  Put_Last_Error;
-        --  raise System_Call_Failure;
-        --end if;
-        --Window := Get_Foreground_Window;
-        --if Window = NULL_ADDRESS then
-        --  raise System_Call_Failure;
-        --end if;
-        --if Show_Window(Window, MAKE_WINDOW_FULLSCREEN) = 0 then
-        --  null;
-        --end if;
+        Execute_Application("explorer " & Path, True);
       end Open_Webpage;
   -------------------------
   -- Execute_Application --
   -------------------------
     procedure Execute_Application(
       Executable_Path : in String_2;
-      Do_Fullscreen   : in Boolean;
-      Do_Quit         : in Boolean)
+      Do_Fullscreen   : in Boolean)
       is
       Startup_Information : aliased Record_Startup_Information := (others => <>);
       Process_Information : aliased Record_Process_Information := (others => <>);
@@ -195,9 +171,6 @@ package body Implementation
         then
           raise System_Call_Failure;
         end if;
-        --if Do_Quit then
-        --  cmdSystem->BufferCommandText(CMD_EXEC_APPEND, "quit" & END_LINE);
-        --end if;
       end Execute_Application;
   ------------------
   -- Get_Bit_Size --

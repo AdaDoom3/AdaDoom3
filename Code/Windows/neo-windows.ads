@@ -232,7 +232,7 @@ package Neo.Windows
     DATA_VERTICAL_RESOLUTION                   : constant Integer_4_Signed_C   := 10;
     MILLISECOND_TIMEOUT_FORCE_WRITE            : constant Integer_4_Signed_C   := 500;
     MOUSE_WHEEL_DELTA                          : constant Integer_2_Signed     := 120;
-    MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 32_767;
+    MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 32_768 - 1; -- Minus one to account for null terminator
   -------------
   -- Arrays --
   ------------
@@ -637,21 +637,18 @@ package Neo.Windows
         Processor_Mask : Integer_Address                 := 0;
         Relationship   : Integer_4_Unsigned_C            := 0;
         Union_Bullshit : Array_Integer_1_Unsigned(1..16) := (others => 0);
-        -- union {
-        --   struct {
-        --     BYTE Flags;
-        --   } ProcessorCore;
-        --   struct {
-        --     DWORD NodeNumber;
-        --   } NumaNode;
-        --   struct {
-        --     BYTE                 Level;
-        --     BYTE                 Associativity;
-        --     WORD                 LineSize;
-        --     DWORD                Size;
-        --     PROCESSOR_CACHE_TYPE Type; enumerated type
-        --   } CACHE_DESCRIPTOR, *PCACHE_DESCRIPTOR;
-        --   ULONGLONG        Reserved[2];}; ULONGLONG is 8 bytes
+        --union
+        --  struct ProcessorCore
+        --    BYTE Flags;
+        --  struct NumaNode
+        --    DWORD NodeNumber;
+        --  struct CACHE_DESCRIPTOR
+        --    BYTE                 Level;
+        --    BYTE                 Associativity;
+        --    WORD                 LineSize;
+        --    DWORD                Size;
+        --    PROCESSOR_CACHE_TYPE Type; -- Enumerated type
+        --  ULONGLONG[2] Reserved -- ULONGLONG is 8 bytes
       end record;
       pragma Convention(C, Record_Core_Information);
     type Record_Process_Information

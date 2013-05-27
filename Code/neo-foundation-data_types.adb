@@ -205,10 +205,10 @@ package body Neo.Foundation.Data_Types
       Item : in String_1)
       return String_2
       is
-      Result : String_2(Item'First..Item'Last) := (others => Character_2'Val(0));
+      Result : String_2(Item'range) := (others => Character_2'val(0));
       begin
-        for I in Item'Range loop
-          Result(I) := Character_2'Val(Character_1'Pos(Item(I)));
+        for I in Item'range loop
+          Result(I) := Character_2'val(Character_1'pos(Item(I)));
         end loop;
         return Result;
       end To_String_2;
@@ -219,26 +219,26 @@ package body Neo.Foundation.Data_Types
       Length  : Integer_4_Signed              := 0;
       Pointer : Access_Constant_Character_2_C := Item;
       begin
-        while Pointer.all /= Character_2_C'Val(0) loop
+        while Pointer.all /= Character_2_C'val(0) loop
           Length  := Length + 1;
           Pointer :=
             To_Unchecked_Access_Constant_Character_2_C(
               To_Unchecked_Address(
-                To_Unchecked_Integer_Address(Pointer) + Character_2_C'Size / Byte'Size));
+                To_Unchecked_Integer_Address(Pointer) + Character_2_C'size / Byte'size));
         end loop;
         --------------
         Create_Result:
         --------------
           declare
-          Result : String_2(1..Length) := (others => Character_2'Val(0));
+          Result : String_2(1..Length) := (others => Character_2'val(0));
           begin
             Pointer := Item;
             for I in 1..Result'Length loop
-              Result(I) := Character_2(Pointer.All);
+              Result(I) := Character_2(Pointer.all);
               Pointer   :=
                 To_Unchecked_Access_Constant_Character_2_C(
                   To_Unchecked_Address(
-                    To_Unchecked_Integer_Address(Pointer) + Character_2_C'Size / Byte'Size));
+                    To_Unchecked_Integer_Address(Pointer) + Character_2_C'size / Byte'size));
             end loop;
             return Result;
           end Create_Result;

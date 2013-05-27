@@ -118,11 +118,10 @@ package body Neo.System
   -------------------------
     procedure Execute_Application(
       Executable_Path : in String_2;
-      Do_Fullscreen   : in Boolean := False;
-      Do_Quit         : in Boolean := False)
+      Do_Fullscreen   : in Boolean := False)
       is
       begin
-        Implementation.Execute_Application(Executable_Path, Do_Fullscreen, Do_Quit);
+        Implementation.Execute_Application(Executable_Path, Do_Fullscreen);
       exception
         when System_Call_Failure =>
           null;
