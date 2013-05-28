@@ -134,10 +134,10 @@ with
   Neo.System,
   Neo.System.Text,
   Neo.System.Memory,
-  Neo.System.Processor;--,
+  Neo.System.Processor,
+  Neo.System.Exception_Handling;--,
   --Neo.System.Network,
   --Neo.System.Window,
-  --Neo.System.Exception_Handling,
   --Neo.System.Input;
 procedure Main
   is
@@ -149,4 +149,6 @@ procedure Main
     Neo.System.Processor.Test;
     Neo.System.Memory.Test;
     Neo.System.Text.Test;
+    --Neo.System.Window.Text;
+    Neo.System.Exception_Handling.Test;
   end Main;

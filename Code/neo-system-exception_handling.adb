@@ -16,21 +16,43 @@
 --
 package body Neo.System.Exception_Handling
   is
+  --------------------
+  -- Implementation --
+  --------------------
+    package body Implementation
+      is separate;
   ----------
   -- Test --
   ----------
+    -----------------------
+    procedure Put_Something
+    -----------------------
+      is
+      begin
+        Put_Line("OMG!");
+      end Put_Something;
+    ----------------------------
+    procedure Put_Something_Else
+    ----------------------------
+      is
+      begin
+        Put_Line("???");
+      end Put_Something_Else;
     procedure Test
       is
       begin
         Put_Title("EXCEPTION HANDLING TEST");
-        Start_Alert;
-        while Is_Okay("" & Character_2'Val(16#221E#), "Continue?!") loop
+        --Start_Alert;
+        while Is_Okay("" & Character_2'Val(16#221E#), "Continue?!", Yes_No_Buttons, Warning_Icon) loop
           delay 0.1;
         end loop;
         --Start_Alert; -- Should raise an exception
-        Stop_Alert;
+        --Stop_Alert;
         --Stop_Alert; -- Should also raise an exception
-        --Create_Error_Console("An error occured!", ("OMG DO SOMETING!?", Okay_Button));
+        Spawn_Console(
+          Title   => "Error console",
+          Text    => "An error occured!",
+          Buttons => (("Panic!", Put_Something'access), ("??????", Put_Something_Else'access)));
       end Test;
   -----------------
   -- Start_Alert --
@@ -62,19 +84,24 @@ package body Neo.System.Exception_Handling
         when System_Call_Failure =>
           null;
       end Stop_Alert;
-  --------------------------
-  -- Create_Error_Console --
-  --------------------------
-    procedure Create_Error_Console(
-      Text    : in String_2;
-      Buttons : in Array_Console_Buttons)
+  -------------------
+  -- Spawn_Console --
+  -------------------
+    procedure Spawn_Console(
+      Title     : in String_2;
+      Text      : in String_2;
+      Buttons   : in Array_Record_Console_Button;
+      Icon_Path : in String_2 := NULL_STRING_2)
       is
       begin
-        Implementation.Create_Error_Console(Text, Buttons);
+        if Buttons'length > MAXIMUM_NUMBER_OF_CONSOLE_BUTTONS then
+          raise Too_Many_Buttons_For_Error_Console;
+        end if;
+        Implementation.Spawn_Console(Title, Text, Buttons, Icon_Path);
       exception
         when System_Call_Failure =>
           null;
-      end Create_Error_Console;
+      end Spawn_Console;
   -------------
   -- Is_Okay --
   -------------
@@ -82,20 +109,19 @@ package body Neo.System.Exception_Handling
       Title        : in String_2;
       Message      : in String_2;
       Buttons      : in Enumerated_Buttons := Okay_Button;
-      Icon         : in Enumerated_Icon    := No_Icon;
-      Parent_Title : in String_2           := NULL_STRING_2)
+      Icon         : in Enumerated_Icon    := No_Icon)
       return Boolean
       is
       begin
         if Title = NULL_STRING_2 or Message = NULL_STRING_2 then
           raise Empty_Is_Okay_Message;
         end if;
-        Implementation.Is_Okay(
-          Title        => Title,
-          Message      => Message,
-          Buttons      => Buttons,
-          Icon         => Icon,
-          Parent_Title => Parent_Title);
+        return
+          Implementation.Is_Okay(
+            Title        => Title,
+            Message      => Message,
+            Buttons      => Buttons,
+            Icon         => Icon);
       exception
         when System_Call_Failure =>
           return False;
@@ -105,5 +131,8 @@ package body Neo.System.Exception_Handling
   -----------------
     function Is_Alerting
       return Boolean
-      renames Alert_Status.Is_Doing_Something;
+      is
+      begin
+        return Alert_Status.Is_Doing_Something;
+      end Is_Alerting;
   end Neo.System.Exception_Handling;

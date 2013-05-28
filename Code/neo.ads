@@ -23,6 +23,6 @@ package Neo
   ---------------
   -- Constants --
   ---------------
-    NAME    : constant String := "AdaDoom3";
-    VERSION : constant Float  := -1.0;
+    NAME    : constant Wide_String := "AdaDoom3";
+    VERSION : constant Float       := -1.0;
   end Neo;

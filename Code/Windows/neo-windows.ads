@@ -36,6 +36,8 @@ package Neo.Windows
     GENERIC_ICON                               : constant Integer_Address      := 16#7F00#;
     BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
     ERROR_INSUFFICIENT_BUFFER                  : constant Integer_4_Unsigned_C := 16#0000_007A#;
+    FLASH_CONTINUOUSLY                         : constant Integer_4_Unsigned_C := 16#0000_0004#;
+    FLASH_END                                  : constant Integer_4_Unsigned_C := 16#0000_0000#;
     CORES_SHARE_SINGLE_PROCESSOR               : constant Integer_4_Unsigned_C := 16#0000_0000#;
     STOP_READING_TOP_LEVEL_DEVICES             : constant Integer_4_Unsigned_C := 16#0000_0001#;
     TAKE_INPUT_ON_NON_ACTIVE                   : constant Integer_4_Unsigned_C := 16#0000_0100#;
@@ -727,6 +729,8 @@ package Neo.Windows
       is access all Record_Process_Information;
     type Access_Record_Security_Attributes
       is access all Record_Security_Attributes;
+    type Access_Record_Flash_Information
+      is access all Record_Flash_Information;
   -----------------
   -- Subprograms --
   -----------------
@@ -983,7 +987,7 @@ package Neo.Windows
       Setting : in Integer_4_Unsigned_C)
       return Integer_4_Unsigned_C;
     function Flash_Window(
-      Flash_Information : in Address)
+      Flash_Information : in Access_Record_Flash_Information)
       return Integer_4_Signed_C;
     function Get_Clip_Cursor_Area(
       Rectangle : in Address)--Record_Rectangle)
