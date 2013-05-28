@@ -20,28 +20,6 @@ use
   Neo.Linux;
 separate(Neo.System.Exception_Handling)
 package body Implementation
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  Neo.Linux;
-use
-  Neo.Linux;
-separate(Neo.System.Exception_Handling)
-package body Implementation
   is
   ---------------
   -- Set_Alert --
