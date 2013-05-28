@@ -117,7 +117,7 @@ package body Implementation
         Data :=
 	  Global_Allocate(
 	    Flags => MEMORY_MOVEABLE or MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE,
-	    Bytes => Array_Text'Size / Byte'Size);
+	    Bytes => Array_Text'size / Byte'size);
         if Data = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
@@ -125,7 +125,7 @@ package body Implementation
         if Accessor = null then
           raise System_Call_Failure;
         end if;
-        Accessor(Accessor.all'last) := Character_2_C'val(0);
+        Accessor(Accessor.all'last) := NULL_CHARACTER_2_C;
         for I in Text'range loop
           Accessor(I) := Character_2_C'val(Character_2'pos(Text(I)));
         end loop;
