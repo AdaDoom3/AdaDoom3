@@ -105,7 +105,7 @@ package body Implementation
       Text : in String_2)
       is
       type Array_Text
-        is array(Text'First..Text'Last + 1)
+        is array(Text'first..Text'last + 1)
         of Character_2_C;
       type Access_Array_Text
         is access all Array_Text;
@@ -125,9 +125,9 @@ package body Implementation
         if Accessor = null then
           raise System_Call_Failure;
         end if;
-        Accessor(Accessor.All'Last) := Character_2_C'Val(0);
-        for I in Text'Range loop
-          Accessor(I) := Character_2_C'Val(Character_2'Pos(Text(I)));
+        Accessor(Accessor.all'last) := Character_2_C'val(0);
+        for I in Text'range loop
+          Accessor(I) := Character_2_C'val(Character_2'pos(Text(I)));
         end loop;
         if Global_Unlock(Data) /= 0 then
           raise System_Call_Failure;
