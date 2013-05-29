@@ -38,24 +38,25 @@ package body Implementation
         raise System_Call_Failure;
       end Stop_Alert;
   --------------------------
-  -- Create_Error_Console --
+  -- Spawn_Console --
   --------------------------
-    procedure Create_Error_Console(
-      Text    : in String_2;
-      Buttons : in Array_Console_Buttons)
+    procedure Spawn_Console(
+      Title     : in String_2;
+      Text      : in String_2;
+      Buttons   : in Array_Record_Console_Button;
+      Icon_Path : in String_2 := NULL_STRING_2)
       is
       begin
         raise System_Call_Failure;
-      end Create_Error_Console;
+      end Spawn_Console;
   -------------
   -- Is_Okay --
   -------------
     function Is_Okay(
-      Title        : in String_2;
-      Message      : in String_2;
-      Buttons      : in Enumerated_Buttons;
-      Icon         : in Enumerated_Icon;
-      Parent_Title : in String_2 := NULL_STRING_2)
+      Title   : in String_2;
+      Message : in String_2;
+      Buttons : in Enumerated_Buttons;
+      Icon    : in Enumerated_Icon)
       return Boolean
       is
       begin
