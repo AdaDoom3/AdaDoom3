@@ -142,8 +142,6 @@ The project is planned to be organized into the following layers, currently work
 * Foundation 
 * System
 * Library
-* Video
-* Audio
 * Core
 * Game
 
