@@ -141,12 +141,13 @@ Organization
 The project is planned to be organized into the following layers, currently work is being done on the foundation and system layers for Windows.
 * Foundation 
 * System
+* Renderer
 * Library
 * Core
 * Game
 
 Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
-* Main
+* Main.adb `Secondary execution main loop`
 * Neo
 * Neo.Foundation
 * Neo.Foundation.Text_IO
@@ -163,6 +164,10 @@ Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
 * Neo.System.Text.Implementation
 * Neo.System.Network
 * Neo.System.Network.Implementation
+* Neo.System.Window `Primary execution main loop`
+* Neo.System.Window.Implementation
+* Neo.System.Exception_Handling
+* Neo.System.Exception_Handling.Implementation
 * Neo.System.Input
 * Neo.System.Input.Implementation
 * Neo.System.OpenGL
@@ -195,7 +200,7 @@ Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
 * Neo.Library.Variables
 * Neo.Library.Angles
 * Neo.Library.Radix_64
-* Neo.Library.Assembly
+* Neo.Library.Assembly `Children are separate and not included anywhere`
 * Neo.Library.Assembly.x86_64
 * Neo.Library.Assembly.PowerPC
 * Neo.Library.Assembly.ARM
@@ -204,7 +209,7 @@ Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
 * Neo.Library.Vectors
 * Neo.Library.Compression
 * Neo.Library.Compression.ZIP
-* Neo.Library.Graphics
+* Neo.Library.Graphics `Children are separate and not included anywhere`
 * Neo.Library.Graphics.PNG
 * Neo.Library.Graphics.JPEG
 * Neo.Library.Graphics.TGA
@@ -243,8 +248,8 @@ Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
 * Neo.Renderer.Model.Maya
 * Neo.Renderer.Model.Studio_Max
 * Neo.Renderer.Execution
-* Neo.Renderer.Execution.Front
-* Neo.Renderer.Execution.Back
+* Neo.Renderer.Execution.Secondary
+* Neo.Renderer.Execution.Primary
 * Neo.Core
 * Neo.Core.Debugging
 * Neo.Core.Networking
