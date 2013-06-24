@@ -156,20 +156,15 @@ procedure Main
           end if;
           Exception_Primary := Save_Occurrence(Error);
       end Run;
-    if Exception_Primary /= null then
-      Put_Debug_Line(To_String_2(Exception_Message(Exception_Primary.all)));
+    if
+    (Exception_Primary /= null or Exception_Secondary /= null) and then
+    Neo.System.Exception_Handling.Is_Okay(
+      Title   => NAME & " " & L("Error!"),
+      Buttons => Neo.System.Exception_Handling.Yes_No_Buttons,
+      Icon    => Neo.System.Exception_Handling.Error_Icon,
+      Message => NAME & L(" failed and cannot continue. Would you like to view more information?"))
+    then
+      Neo.System.Exception_Handling.Spawn_Console(DIRECTORY_ASSETS & "ICO/icon.ico");
     end if;
-    --if
-    --(Exception_Primary /= null or Exception_Secondary /= null) and then
-    --Neo.System.Exception_Handling.Is_Okay(
-    --  Title   => NAME & " " & L("Error!"),
-    --  Buttons => Neo.System.Exception_Handling.Yes_No_Buttons,
-    --  Icon    => Neo.System.Exception_Handling.Error_Icon,
-    --  Message => NAME & L(" failed and cannot continue. Would you like to view more information?"))
-    --then
-    --  Neo.System.Exception_Handling.Spawn_Console(
-    --    Text      => Get_Catalog,
-    --    Icon_Path => "./Assets/ICO/icon.ico");
-    --end if;
     Neo.Foundation.Output.Finalize;
   end Main;
