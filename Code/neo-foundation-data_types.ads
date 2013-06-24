@@ -1,6 +1,4 @@
 --
---
---
 --  GLenum            Win32_UINT   Integer_4_Unsigned_C
 --  GLboolean         Win32_UCHAR  Integer_1_Unsigned_C
 --  GLbitfield        Win32_UINT   Integer_4_Unsigned_C
@@ -65,8 +63,6 @@
 --  WIN32_HINSTANCE   Address
 --  WIN32_HMODULE     Address
 --
---
---
 with
   System,
   Interfaces,
@@ -74,6 +70,7 @@ with
   Ada.Text_IO,
   Ada.Strings.Fixed,
   Ada.Strings.Wide_Fixed,
+  Ada.Strings.Wide_Unbounded,
   Ada.Unchecked_Conversion,
   Ada.Unchecked_Deallocation;
 use
@@ -114,7 +111,7 @@ package Neo.Foundation.Data_Types
       is Integer_1_Unsigned;
     subtype Integer_1_Positive
       is Integer_1_Unsigned
-      range 1..Integer_1_Unsigned'Last;
+      range 1..Integer_1_Unsigned'last;
     subtype Integer_2_Unsigned_C
       is Interfaces.C.Unsigned_Short;
     subtype Integer_2_Unsigned
@@ -127,7 +124,7 @@ package Neo.Foundation.Data_Types
       is Integer_2_Unsigned;
     subtype Integer_2_Positive
       is Integer_1_Unsigned
-      range 1..Integer_1_Unsigned'Last;
+      range 1..Integer_1_Unsigned'last;
     subtype Integer_4_Unsigned_C
       is Interfaces.C.Unsigned;
     subtype Integer_4_Unsigned
@@ -152,7 +149,7 @@ package Neo.Foundation.Data_Types
       is Integer_8_Unsigned;
     subtype Integer_8_Positive
       is Integer_8_Unsigned
-      range 1..Integer_8_Unsigned'Last;
+      range 1..Integer_8_Unsigned'last;
     subtype Integer_Size_C
       is Interfaces.C.Size_T;
     subtype Float_8_Real_C
@@ -161,10 +158,10 @@ package Neo.Foundation.Data_Types
       is Long_Float;
     subtype Float_8_Natural
       is Float_8_Real
-      range 0.0..Float_8_Real'Last;
+      range 0.0..Float_8_Real'last;
     subtype Float_8_Positive
       is Float_8_Real
-      range 1.0..Float_8_Real'Last;
+      range 1.0..Float_8_Real'last;
     subtype Float_8_Percent
       is Float_8_Real
       range 0.0..100.0;
@@ -177,10 +174,10 @@ package Neo.Foundation.Data_Types
       is Float;
     subtype Float_4_Natural
       is Float_4_Real
-      range 0.0..Float_4_Real'Last;
+      range 0.0..Float_4_Real'last;
     subtype Float_4_Positive
       is Float_4_Real
-      range 1.0..Float_4_Real'Last;
+      range 1.0..Float_4_Real'last;
     subtype Float_4_Percent
       is Float_4_Real
       range 0.0..100.0;
@@ -200,6 +197,8 @@ package Neo.Foundation.Data_Types
       is Interfaces.C.Char_Array;
     subtype String_2_C
       is Interfaces.C.WChar_Array;
+    subtype String_2_Unbounded
+      is Ada.Strings.Wide_Unbounded.Unbounded_Wide_String;
   ---------------
   -- Accessors --
   ---------------
@@ -475,21 +474,8 @@ package Neo.Foundation.Data_Types
       private
         Status : Boolean := False;
       end Protected_Status;
-  ---------------
-  -- Constants --
-  ---------------
-    C_TRUE             : constant Integer_4_Signed_C := 1;
-    C_FALSE            : constant Integer_4_Signed_C := 0;
-    NULL_CHARACTER_1_C : constant Character_1_C      := Interfaces.C.NUL;
-    NULL_CHARACTER_2_C : constant Character_2_C      := Character_2_C'val(Character_1_C'pos(NULL_CHARACTER_1_C));
-    NULL_CHARACTER_1   : constant Character_1        := Character_1'val(0);
-    NULL_CHARACTER_2   : constant Character_2        := Character_2'val(0);
-    NULL_STRING_1      : constant String_1           := "" & NULL_CHARACTER_1;
-    NULL_STRING_2      : constant String_2           := "" & NULL_CHARACTER_2;
-    END_LINE           : constant String_1(1..2)     := Ascii.CR & Ascii.LF;
-    CHARACTER_2_TO_1_CONVERSION_REPLACEMENT_FOR_EXTENDED_CHARACTER : constant Character_1 := '~';
   -----------------
-  -- Subprograms --
+  -- Subprograms -- Be careful with unchecked conversions
   -----------------
     procedure Finalize
       is new Ada.Unchecked_Deallocation(String_2, Access_String_2);
@@ -511,6 +497,10 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Address, Access_Integer_2_Unsigned_C);
     function To_Unchecked_Access_Integer_2_Unsigned_C
       is new Ada.Unchecked_Conversion(Integer_Address, Access_Integer_2_Unsigned_C);
+    function To_Unchecked_Integer_4_Signed_C
+      is new Ada.Unchecked_Conversion(Integer_Address, Integer_4_Signed_C);
+    function To_Unchecked_Integer_4_Unsigned_C
+      is new Ada.Unchecked_Conversion(Integer_Address, Integer_4_Unsigned_C);
     function To_Unchecked_Access_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Address, Access_Integer_4_Unsigned);
     function To_Unchecked_Float_4_Real
@@ -569,7 +559,15 @@ package Neo.Foundation.Data_Types
     function To_String_2(
       Item : in String_2_C)
       return String_2;
+    function To_String_2_Unbounded(
+      Item : in String_2)
+      return String_2_Unbounded
+      renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
     function To_String_2(
+      Item : in String_2_Unbounded)
+      return String_2
+      renames Ada.Strings.Wide_Unbounded.To_Wide_String;
+    function To_String_2( -- Item must be null terminated
       Item : in Access_Constant_Character_2_C)
       return String_2;
     function Is_High_Order_Byte_First
@@ -582,6 +580,20 @@ package Neo.Foundation.Data_Types
     function Is_Little_Endian
       return Boolean
       renames Is_Low_Order_Byte_First;
+  ---------------
+  -- Constants --
+  ---------------
+    C_TRUE                  : constant Integer_4_Signed_C := 1;
+    C_FALSE                 : constant Integer_4_Signed_C := 0;
+    NULL_CHARACTER_1_C      : constant Character_1_C      := Interfaces.C.NUL;
+    NULL_CHARACTER_2_C      : constant Character_2_C      := Character_2_C'val(Character_1_C'pos(NULL_CHARACTER_1_C));
+    NULL_CHARACTER_1        : constant Character_1        := ASCII.NUL;
+    NULL_CHARACTER_2        : constant Character_2        := Character_2'val(Character_1'pos(NULL_CHARACTER_1));
+    NULL_STRING_1           : constant String_1           := "" & NULL_CHARACTER_1;
+    NULL_STRING_2           : constant String_2           := "" & NULL_CHARACTER_2;
+    NULL_STRING_2_UNBOUNDED : constant String_2_Unbounded := To_String_2_Unbounded(NULL_STRING_2);
+    END_LINE                : constant String_1(1..2)     := ASCII.CR & ASCII.LF;
+    CHARACTER_2_TO_1_CONVERSION_REPLACEMENT_FOR_EXTENDED_CHARACTER : constant Character_1 := '~';
 -------
 private
 -------
@@ -599,7 +611,7 @@ private
         end case;
       end record;
       pragma Unchecked_Union(Record_Endian_Test);
-      for Record_Endian_Test'Size
+      for Record_Endian_Test'size
         use 2 * Byte'size;
   ---------------
   -- Variables --

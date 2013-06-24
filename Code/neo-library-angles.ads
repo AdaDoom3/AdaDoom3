@@ -19,7 +19,7 @@ with
   Neo.Library.Matrices,
   Neo.Library.Rotations,
   Neo.Library.Quaternion,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
@@ -27,7 +27,7 @@ use
   Neo.Library.Matrices,
   Neo.Library.Rotations,
   Neo.Library.Quaternion,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 package Neo.Library.Angles

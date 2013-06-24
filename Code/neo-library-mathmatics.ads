@@ -195,7 +195,7 @@ private
         end case;
       end record;
       pragma Unchecked_Union(Record_);
-      for Record_'Size
+      for Record_'size
         use 4*8;
   ---------------
   -- Variables --

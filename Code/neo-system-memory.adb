@@ -30,19 +30,19 @@ package body Neo.System.Memory
           Item : in out Type_To_Manage)
           is
           begin
-            Implementation.Lock(Item'Address, Item'Size / Byte'Size);
+            Implementation.Lock(Item'address, Item'size / Byte'size);
           exception
             when System_Call_Failure =>
-              null;
+              Put_Debug(FAILED_LOCK);
           end Lock;
         procedure Unlock(
           Item : in out Type_To_Manage)
           is
           begin
-            Implementation.Unlock(Item'Address, Item'Size / Byte'Size);
+            Implementation.Unlock(Item'address, Item'size / Byte'size);
           exception
             when System_Call_Failure =>
-              null;
+              Put_Debug(FAILED_UNLOCK);
           end Unlock;
       end Manager;
   ----------
@@ -91,7 +91,7 @@ package body Neo.System.Memory
         Implementation.Set_Byte_Limits(Minimum, Maximum);
       exception
         when System_Call_Failure =>
-          null;
+          Put_Debug(FAILED_SET_BYTE_LIMITS);
       end Set_Byte_Limits;
   ---------------
   -- Get_State --
@@ -101,9 +101,6 @@ package body Neo.System.Memory
       is
       begin
         return Implementation.Get_State;
-      exception
-        when System_Call_Failure =>
-          return (others => <>);
       end Get_State;
     LAUNCH_STATE : constant Record_State := Get_State; -- Bit of a hack
   -------------------------

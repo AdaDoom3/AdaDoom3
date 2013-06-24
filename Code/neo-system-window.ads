@@ -19,7 +19,7 @@ with
   Interfaces,
   Interfaces.C,
   Ada.Command_Line,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing,
   Neo.Foundation.Generic_Protected;
@@ -28,7 +28,7 @@ use
   Interfaces,
   Interfaces.C,
   Ada.Command_Line,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 package Neo.System.Window

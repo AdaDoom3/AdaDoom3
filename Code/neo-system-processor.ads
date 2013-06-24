@@ -124,7 +124,6 @@ package Neo.System.Processor
     function Is_Stack_Empty
       return Boolean;
     procedure Put_Stack;
-    procedure Put_Trace;
     procedure Set_Rounding(
       Rounding : in Enumerated_Rounding);
     procedure Set_Precision(
@@ -150,15 +149,15 @@ private
   ---------------
   -- Constants --
   ---------------
-    DELAY_FOR_PROCESSOR_SPEED_TIMING : constant Duration         := 0.1;
-    TRACE_LIMIT                      : constant Integer_4_Signed := 1_000;
+    DELAY_FOR_PROCESSOR_SPEED_TIMING    : constant Duration         := 0.1;
+    TRACE_LIMIT                         : constant Integer_4_Signed := 1_000;
+    FAILED_GET_SPEED_IN_MEGAHERTZ_OS    : constant String_2         := "Failed to get os sanctioned MHz!";
+    FAILED_GET_CLOCK_TICKS              : constant String_2         := "Failed to get os sanctioned clock ticks!";
+    FAILED_GET_NUMBER_OF_CORES_OS       : constant String_2         := "Failed to get os sanctioned cores!";
+    FAILED_GET_NUMBER_OF_CORES_ASSEMBLY : constant String_2         := "Failed to get cpuid core count! Intel cpu maybe?";
   --------------------
   -- Implementation --
   --------------------
-    package Implementation_For_Compiler
-      is
-        procedure Put_Trace;
-      end Implementation_For_Compiler;
     package Implementation_For_Operating_System
       is
         function Get_Clock_Ticks
@@ -185,7 +184,6 @@ private
         function Get_Clock_Ticks
           return Integer_8_Unsigned;
         procedure Put_Stack;
-        procedure Put_Trace;
         function Is_Stack_Empty
           return Boolean;
         procedure Clear_Stack;

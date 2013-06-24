@@ -17,14 +17,14 @@
 with
   System,
   Interfaces.C,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
   System,
   Interfaces,
   Interfaces.C,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 package Neo.System.Memory
@@ -73,6 +73,12 @@ package Neo.System.Memory
 -------
 private
 -------
+  ---------------
+  -- Constants --
+  ---------------
+    FAILED_LOCK            : constant String_2 := L("Failed to lock memory location!");
+    FAILED_UNLOCK          : constant String_2 := L("Failed to unlock memory location!");
+    FAILED_SET_BYTE_LIMITS : constant String_2 := L("Failed to set byte limits!");
   --------------------
   -- Implementation --
   --------------------

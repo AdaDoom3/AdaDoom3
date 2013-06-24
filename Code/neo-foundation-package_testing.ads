@@ -15,10 +15,10 @@
 --
 --
 with
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 use
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 package Neo.Foundation.Package_Testing
   is
@@ -39,6 +39,7 @@ private
   ---------------
   -- Constants --
   ---------------
-    TESTING_SEPORATOR    : constant String_2 := "_";
-    TESTING_INPUT_CURSOR : constant String_2 := ">> ";
+    TESTING_SEPORATOR            : constant String_2 := "_";
+    TESTING_INPUT_HANG_INCREMENT : constant String_2 := ">";
+    NUMBER_OF_SECONDS_TO_DELAY   : constant Integer  := 3;
   end Neo.Foundation.Package_Testing;

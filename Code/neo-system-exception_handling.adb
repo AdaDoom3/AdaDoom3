@@ -21,111 +21,79 @@ package body Neo.System.Exception_Handling
   --------------------
     package body Implementation
       is separate;
+  ------------------
+  -- Task_Console --
+  ------------------
+    task body Task_Console
+      is
+      Current_Icon_Path : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+      Current_Title     : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+      begin
+        accept Initialize(
+          Icon_Path : in String_2;
+          Title     : in String_2)
+          do
+            Current_Icon_Path := To_String_2_Unbounded(Icon_Path);
+            Current_Title     := To_String_2_Unbounded(Title);
+          end Initialize;
+        ----
+        Run:
+        ----
+          begin
+            Implementation.Run_Console(To_String_2(Current_Icon_Path), To_String_2(Current_Title));
+          exception
+            when System_Call_Failure =>
+              Put_Debug_Line(L(FAILED_SPAWN_CONSOLE));
+          end Run;
+        Finalize(Console);
+      end Task_Console;
   ----------
   -- Test --
   ----------
-    -----------------------
-    procedure Put_Something
-    -----------------------
-      is
-      begin
-        Put_Line("OMG!");
-      end Put_Something;
-    ----------------------------
-    procedure Put_Something_Else
-    ----------------------------
-      is
-      begin
-        Put_Line("???");
-      end Put_Something_Else;
     procedure Test
       is
       begin
-        Put_Title("EXCEPTION HANDLING TEST");
-        --Start_Alert;
-        while Is_Okay("" & Character_2'Val(16#221E#), "Continue?!", Yes_No_Buttons, Warning_Icon) loop
-          delay 0.1;
+        Put_Title(L("EXCEPTION TEST"));
+        for I in 1..1000 loop
+          exit when not
+            Is_Okay(
+              Title   => "" & Character_2'val(16#221E#),
+              Message => L("Continue?!"),
+              Buttons => Yes_No_Buttons,
+              Icon    => Enumerated_Icon'val(I mod (1 + Enumerated_Icon'pos(Enumerated_Icon'last))));
         end loop;
-        --Start_Alert; -- Should raise an exception
-        --Stop_Alert;
-        --Stop_Alert; -- Should also raise an exception
-        Spawn_Console(
-          Title   => "Error console",
-          Text    => "An error occured!",
-          Buttons => (("Panic!", Put_Something'access), ("??????", Put_Something_Else'access)));
+        if Get_Version in Enumerated_Windows_System'range then
+          Spawn_Console(DIRECTORY_ASSETS & "ICO/icon.ico");
+        end if;
       end Test;
-  -----------------
-  -- Start_Alert --
-  -----------------
-    procedure Start_Alert
-      is
-      begin
-        if Is_Alerting then
-          raise Alert_Started_Before_Stop;
-        end if;
-        Implementation.Start_Alert;
-        Alert_Status.Set_Is_Doing_Something(True);
-      exception
-        when System_Call_Failure =>
-          null;
-      end Start_Alert;
-  ----------------
-  -- Stop_Alert --
-  ----------------
-    procedure Stop_Alert
-      is
-      begin
-        if not Is_Alerting then
-          raise Alert_Stopped_Without_Start;
-        end if;
-        Implementation.Stop_Alert;
-        Alert_Status.Set_Is_Doing_Something(False);
-      exception
-        when System_Call_Failure =>
-          null;
-      end Stop_Alert;
   -------------------
   -- Spawn_Console --
   -------------------
     procedure Spawn_Console(
-      Title     : in String_2;
-      Text      : in String_2;
-      Buttons   : in Array_Record_Console_Button;
-      Icon_Path : in String_2 := NULL_STRING_2)
+      Icon_Path : in String_2 := NULL_STRING_2;
+      Title     : in String_2 := NAME & L(" Console"))
       is
       begin
-        if Buttons'length > MAXIMUM_NUMBER_OF_CONSOLE_BUTTONS then
-          raise Too_Many_Buttons_For_Error_Console;
+        if Console = null then
+          Console := new Task_Console;
+          Console.all.Initialize(Icon_Path, Title);
+        else
+          Put_Debug_Line(L(FAILED_CONSOLE_ALREADY_SPAWNED));
         end if;
-        Implementation.Spawn_Console(Title, Text, Buttons, Icon_Path);
-      exception
-        when System_Call_Failure =>
-          null;
       end Spawn_Console;
-  -------------
-  -- Is_Okay --
-  -------------
-    function Is_Okay(
-      Title        : in String_2;
-      Message      : in String_2;
-      Buttons      : in Enumerated_Buttons := Okay_Button;
-      Icon         : in Enumerated_Icon    := No_Icon)
-      return Boolean
+  ---------------
+  -- Set_Alert --
+  ---------------
+    procedure Set_Alert(
+      Status : in Boolean)
       is
       begin
-        if Title = NULL_STRING_2 or Message = NULL_STRING_2 then
-          raise Empty_Is_Okay_Message;
-        end if;
-        return
-          Implementation.Is_Okay(
-            Title        => Title,
-            Message      => Message,
-            Buttons      => Buttons,
-            Icon         => Icon);
+        Alert_Status.Set_Is_Doing_Something(Status);
+        Implementation.Set_Alert(Status);
       exception
         when System_Call_Failure =>
-          return False;
-      end Is_Okay;
+          Put_Debug(L(FAILED_SET_ALERT));
+      end Set_Alert;
   -----------------
   -- Is_Alerting --
   -----------------
@@ -135,4 +103,53 @@ package body Neo.System.Exception_Handling
       begin
         return Alert_Status.Is_Doing_Something;
       end Is_Alerting;
+  -------------
+  -- Is_Okay --
+  -------------
+    function Is_Okay(
+      Title   : in String_2;
+      Message : in String_2;
+      Buttons : in Enumerated_Buttons := Okay_Button;
+      Icon    : in Enumerated_Icon    := No_Icon)
+      return Boolean
+      is
+      begin
+        if Title = NULL_STRING_2 or Message = NULL_STRING_2 then
+          raise Empty_Is_Okay_Message;
+        end if;
+        return
+          Implementation.Is_Okay(
+            Title   => Title,
+            Message => Message,
+            Buttons => Buttons,
+            Icon    => Icon);
+      exception
+        when System_Call_Failure =>
+          Put_Debug(L(FAILED_IS_OKAY));
+          return False;
+      end Is_Okay;
+  ------------------
+  -- Send_Catalog --
+  ------------------
+    procedure Send_Catalog
+      is
+      begin
+        Open_Webpage("http://www.google.com"); -- To_UTF8
+      end Send_Catalog;
+  ------------------
+  -- Copy_Catalog --
+  ------------------
+    procedure Copy_Catalog
+      is
+      begin
+        Set_Clipboard(Get_Catalog);
+      end Copy_Catalog;
+  ------------------
+  -- Save_Catalog --
+  ------------------
+    procedure Save_Catalog
+      is
+      begin
+        null;
+      end Save_Catalog;
   end Neo.System.Exception_Handling;

@@ -18,14 +18,14 @@ with
   System,
   System.Storage_Elements,
   Neo.System.Processor,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
   System,
   System.Storage_Elements,
   Neo.System.Processor,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 package Neo.Library.Task_Dispatcher
@@ -35,9 +35,9 @@ package Neo.Library.Task_Dispatcher
     RECOMMENDED_JOB_EXECUTION_TICK_MIMIMUM    : constant := 1_000;
     RECOMMENDED_JOB_EXECUTION_TICK_MAXIMUM    : constant := 100_000;
     DO_PUT_WARNING_IF_JOB_VIOLATES_TICK_RANGE : constant Boolean := True;
-    DEFAULT_JOB_PRIORITY                      : 
+    DEFAULT_JOB_PRIORITY                      :
     STORAGE_SIZE                              : constant Storage_Count    := ;
-    PRIORITY_MAXIMUM                          : constant Priority         := Priority'Last;
+    PRIORITY_MAXIMUM                          : constant Priority         := Priority'last;
     WORKER_STORAGE_SIZE_DEFAULT               : constant Integer_4_Signed := 16#200_000#;
     WORKER_STORAGE_SIZE_MINIMUM               : constant Integer_4_Signed := 16#4_000#;
   -------------
@@ -54,7 +54,7 @@ package Neo.Library.Task_Dispatcher
         Worker_Stack_Size            : Storage_Count := ;
       end record;
   -----------------
-  -- Subprograms -- 
+  -- Subprograms --
   -----------------
     procedure Test;
     procedure Submit(

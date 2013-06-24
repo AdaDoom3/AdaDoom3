@@ -17,13 +17,13 @@
 with
   Neo.Library.Vectors,
   Neo.Library.Mathmatics,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 use
   Neo.Library.Vectors,
   Neo.Library.Mathmatics,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
 package Neo.Library.Plucker_Coordinates

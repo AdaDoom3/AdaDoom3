@@ -8,7 +8,7 @@
 -- The windows version of gps does not come with a 64 bit version of gnatmake and when I search for MinGW
 -- builds with 64 bit support they lack support for things like laddr2line (needed for -g flag). This makes
 -- 64 bit builds effectively impossible for Windows users not used to commandline.
---
+--z
 --
 --
 --
@@ -20,16 +20,14 @@ project AdaDoom3 is
   -------------
     type Option_System is(
       "SDL",
-      "Linux",
-      "Macintosh",
+      "X11",
+      "Cocoa",
+      "Wayland",
       "Windows");
     type Option_Processor is(
       "ARM",
       "PowerPC",
       "x86-64");
-    type Option_Compiler is(
-      "ObjectAda",
-      "GNAT");
     type Option_Build is(
       "32-Bit",
       "64-Bit");
@@ -43,28 +41,34 @@ project AdaDoom3 is
     OPTIMIZE  : Option_Boolean   := External("Optimize",  "Yes");
     SAFETY    : Option_Boolean   := External("Safety",    "Yes");
     BUILD     : Option_Build     := External("Build",     "32-Bit");
-    COMPILER  : Option_Compiler  := External("Compiler",  "GNAT");
     PROCESSOR : Option_Processor := External("Processor", "x86-64");
     SYSTEM    : Option_System    := External("System",    "Windows");
   ----------------
   -- Filesystem --
   ----------------
-    Base        := "Code";
-    Directories := ();
-    Separator   := "/";
+    Directories         := ();
+    Directory_System    := "System";
+    Directory_Processor := "Processor";
+    Directory_Windowing := "Windowing";
+    Directory_Base      := "Code";
+    Directory_POSIX     := "POSIX";
+    S                   := "/";
     case SYSTEM is
-      when "Windows"       => Separator := "\";
-      when "Macintosh"     => Separator := ":";
-      when "Linux" | "SDL" => Separator := "/";
+      when "Windows"                 => S := "\";
+      when "Cocoa"                   => S := ":";
+      when "Wayland" | "X11" | "SDL" => S := "/";
     end case;
     Directories :=(
-      Base,
-      Base & Separator & SYSTEM,
-      Base & Separator & COMPILER,
-      Base & Separator & PROCESSOR);
+      Directory_Base,
+      Directory_Base & S & Directory_Processor & S & PROCESSOR);
     case SYSTEM is
-      when "Windows" | "SDL"       => null;
-      when "Linux"   | "Macintosh" => Directories := Directories & (Base & Separator & "POSIX");
+      when "SDL" | "Windows" =>
+        Directories := Directories & (Directory_Base & S & Directory_System & S & SYSTEM);
+      when "X11" | "Wayland" | "Cocoa" =>
+        Directories :=
+          Directories &
+          (Directory_Base & S & Directory_System & S & Directory_POSIX) &
+          (Directory_Base & S & Directory_System & S & Directory_POSIX & S & Directory_Windowing & S & SYSTEM);
     end case;
     for Source_Dirs          use Directories;
     for Exec_Dir             use ".";
@@ -86,7 +90,7 @@ project AdaDoom3 is
     Switch_Linker   :=(
       "-fprofile-generate");                                          -- Generate code coverage
     Switch_Compiler :=(
-      "-gnatW8",                                                      -- Enable unicode identifiers (in GPS a unicode font must be used to view)
+      "-gnatW8",                                                      -- Enable unicode identifiers
       "-gnat2012");                                                   -- Enable the Ada 2012 extensions
     Switch_Builder  :=(
       "-j4",                                                          -- Use four tasks during compilation

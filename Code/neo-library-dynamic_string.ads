@@ -17,11 +17,11 @@
 with
   Ada.Strings,
   Ada.Finalization,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 use
   Ada.Strings,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 package Neo.Library.Dynamic_String
   is
@@ -465,13 +465,13 @@ private
       Amount      : in Integer_4_Positive;
       Do_Keep_Old : in Boolean := True);
     procedure Set_Static_Buffer(
-      Buffer : in 
+      Buffer : in
   void        EnsureAlloced( int amount, bool keepold = true ); -- ensure Source data buffer is large anough
 
   -- sets the data point to the specified buffer... note that this ignores makes the passed buffer empty and ignores
   -- anything currently in the idStr's dynamic buffer.  This method is intended to be called only from a derived class's constructor.
   ID_INLINE void    SetStaticBuffer( char * buffer, const int bufferLength );
-  ID_INLINE void    Construct();                    
+  ID_INLINE void    Construct();
 
 
 

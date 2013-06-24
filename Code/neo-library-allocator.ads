@@ -19,11 +19,11 @@ with
   Ada.Finalization,
   Ada.Unchecked_Conversion,
   Ada.Unchecked_Deallocation,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 use
   System,
-  Neo.Foundation.Text_IO,
+  Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 generic
   type Block;

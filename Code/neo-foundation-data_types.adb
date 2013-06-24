@@ -60,7 +60,7 @@ package body Neo.Foundation.Data_Types
       return Access_Character_1_C
       is
       begin
-        return To_Unchecked_Access_Character_1_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Character_1_C(Item(Item'first)'address);
       end To_Access_Character_1_C;
   -----------------------------
   -- To_Access_Character_2_C --
@@ -70,7 +70,7 @@ package body Neo.Foundation.Data_Types
       return Access_Character_2_C
       is
       begin
-        return To_Unchecked_Access_Character_2_C(To_String_2_C(Item)'Address);
+        return To_Unchecked_Access_Character_2_C(To_String_2_C(Item)'address);
       end To_Access_Character_2_C;
   --------------------------------------
   -- To_Access_Constant_Character_2_C --
@@ -80,7 +80,7 @@ package body Neo.Foundation.Data_Types
       return Access_Constant_Character_2_C
       is
       begin
-        return To_Unchecked_Access_Constant_Character_2_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Constant_Character_2_C(Item(Item'first)'address);
       end To_Access_Constant_Character_2_C;
     function To_Access_Constant_Character_2_C(
       Item : in String_2)
@@ -97,7 +97,7 @@ package body Neo.Foundation.Data_Types
       return Access_Constant_Character_1_C
       is
       begin
-        return To_Unchecked_Access_Constant_Character_1_C(Item(Item'First)'Address);
+        return To_Unchecked_Access_Constant_Character_1_C(Item(Item'first)'address);
       end To_Access_Constant_Character_1_C2;
     function To_Access_Constant_Character_1_C(
       Item : in String_1)
@@ -186,7 +186,7 @@ package body Neo.Foundation.Data_Types
       Last : Integer_Size_C := Item'first;
       begin
         for I in Item'range loop
-          if Item(Integer_Size_C(I)) = NULL_CHARACTER_2_C then
+          if Item(I) = NULL_CHARACTER_2_C then
             if I = Item'first then
               raise C_String_Is_Empty;
             end if;
@@ -213,7 +213,7 @@ package body Neo.Foundation.Data_Types
       Item : in String_1)
       return String_2
       is
-      Result : String_2(Item'range) := (others => Character_2'val(0));
+      Result : String_2(Item'range) := (others => NULL_CHARACTER_2);
       begin
         for I in Item'range loop
           Result(I) := Character_2'val(Character_1'pos(Item(I)));
@@ -238,7 +238,7 @@ package body Neo.Foundation.Data_Types
         Create_Result:
         --------------
           declare
-          Result : String_2(1..Length) := (others => Character_2'val(0));
+          Result : String_2(1..Length) := (others => NULL_CHARACTER_2);
           begin
             Pointer := Item;
             for I in 1..Result'Length loop
@@ -250,6 +250,9 @@ package body Neo.Foundation.Data_Types
             end loop;
             return Result;
           end Create_Result;
+      exception
+      	when others =>
+          raise C_String_Is_Not_Null_Terminated;
       end To_String_2;
   -------------
   -- To_Bits --

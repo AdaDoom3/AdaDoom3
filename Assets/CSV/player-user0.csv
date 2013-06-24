@@ -1,0 +1,5 @@
+"// ""user0""",,
+unbindall,,
+bind,"""1""","""fire"""
+seta  ,g_showProjectilePct,0
+seta,g_showHud,1

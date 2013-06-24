@@ -46,7 +46,7 @@ package body Neo.Library.Allocator
             declare
             Block : aliased Record_Block := Null_Block;
             begin
-              return new Block'Access;
+              return new Block'access;
             end Allocate_Discreetly;
         else
           if Managed_Allocator.Free_Elements = null then
@@ -66,7 +66,7 @@ package body Neo.Library.Allocator
       end Allocate;
     procedure Allocate
       is
-      Block : Access_Block := To_Access_Block(Allocate(Block'Size, Memory_Identifer));
+      Block : Access_Block := To_Access_Block(Allocate(Block'size, Memory_Identifer));
       begin
         Block.Next := Managed_Allocator.Blocks;
         Blocks     := Block;
@@ -210,7 +210,7 @@ package body Neo.Library.Allocator
       return Integer_4_Positive
       is
       begin
-        return Managed_Allocator.Number_Of_Blocks_Allocated * Block'Size;
+        return Managed_Allocator.Number_Of_Blocks_Allocated * Block'size;
       end Get_Number_Of_Bits_Allocated;
   --------------------------------------------
   -- Get_Number_Of_Allocated_Bits_Plus_Size --
@@ -219,6 +219,6 @@ package body Neo.Library.Allocator
       return Integer_4_Positive
       is
       begin
-        return Managed_Allocator'Size + Get_Number_Of_Bits_Allocated;
+        return Managed_Allocator'size + Get_Number_Of_Bits_Allocated;
       end Get_Number_Of_Allocated_Bits_Plus_Size;
   end Neo.Library.Allocator;

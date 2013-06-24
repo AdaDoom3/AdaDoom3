@@ -66,9 +66,9 @@ package body Neo.System.OpenGL
       Item : in Array_Boolean)
       return Array_Integer_1_Unsigned_C
       is
-      Output : Array_Integer_1_Unsigned_C(Item'First..Item'Length);
+      Output : Array_Integer_1_Unsigned_C(Item'first..Item'Length);
       begin
-        for I in range(Item'First..Item'Length) loop
+        for I in range(Item'first..Item'Length) loop
           Output(I) := To_Integer_1_Unsigned_C(Item(I));
         end loop;
         return Output;
@@ -80,9 +80,9 @@ package body Neo.System.OpenGL
       Item : in Array_Integer_1_Unsigned)
       return Array_Integer_1_Unsigned_C
       is
-      Output : Array_Integer_1_Unsigned_C(Item'First .. Item'Last);
+      Output : Array_Integer_1_Unsigned_C(Item'first .. Item'last);
       begin
-        for I in range(Item'First .. Item'Last) loop
+        for I in range(Item'first .. Item'last) loop
           Output(I) := Integer_1_Unsigned_C(Item(I));
         end loop;
         return Output;
@@ -94,9 +94,9 @@ package body Neo.System.OpenGL
       Item : in Array_Integer_1_Unsigned_C)
       return Array_Integer_1_Unsigned
       is
-      Output : Array_Integer_1_Unsigned(Item'First .. Item'Last);
+      Output : Array_Integer_1_Unsigned(Item'first .. Item'last);
       begin
-        for I in range(Item'First .. Item'Last) loop
+        for I in range(Item'first .. Item'last) loop
           Output(I) := Integer_1_Unsigned(Item(I));
         end loop;
         return Output;
@@ -108,9 +108,9 @@ package body Neo.System.OpenGL
       Item : in Array_Integer_1_Unsigned_C)
       return Array_Boolean
       is
-      Output : Array_Boolean(Item'First..Item'Last);
+      Output : Array_Boolean(Item'first..Item'last);
       begin
-        for I in range(Item'First..Item'Last) loop
+        for I in range(Item'first..Item'last) loop
           Output(I) := To_Boolean(Item(I));
         end loop;
         return Output;
@@ -122,9 +122,9 @@ package body Neo.System.OpenGL
       Item : in Array_Float_4_Real_C)
       return Array_Float_4_Real
       is
-      Output : Array_Float_4_Real(Item'First..Item'Last);
+      Output : Array_Float_4_Real(Item'first..Item'last);
       begin
-        for I in range(Item'First..Item'Last) loop
+        for I in range(Item'first..Item'last) loop
           Output(I) := Float_4_Real(Item(I));
         end loop;
         return Output;
@@ -175,7 +175,7 @@ package body Neo.System.OpenGL
       Residences : in Access_Array_Boolean)
       return Boolean
       is
-      Residences_C : Array_Integer_1_Unsigned_C(Residences'First .. Residences'Last) := To_Array_Integer_1_Unsigned_C(Residences.All);
+      Residences_C : Array_Integer_1_Unsigned_C(Residences'first .. Residences'last) := To_Array_Integer_1_Unsigned_C(Residences.All);
       Output       : Boolean                                                         := 0;
       begin
         if glAreTexturesResident = null then
@@ -187,8 +187,8 @@ package body Neo.System.OpenGL
           "'const GLuint * textures' 'GLboolean * residences'" & " )" );
         Output := To_Boolean(glAreTexturesResident.All(
           Integer_4_Unsigned_C(Textures'Length),
-          Textures'Address,
-          Residences_C'Address));
+          Textures'address,
+          Residences_C'address));
         Residences.All := To_Array_Boolean(Residences_C);
         return Output;
       end Are_Textures_Resident;
@@ -275,7 +275,7 @@ package body Neo.System.OpenGL
           Integer_4_Unsigned_C(Y_Origin),
           Integer_4_Unsigned_C(X_Move),
           Integer_4_Unsigned_C(Y_Move),
-          Bitmap'Address);
+          Bitmap'address);
       end Bitmap;
   --------------------
   -- Blend_Function --
@@ -338,7 +338,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(Pairing),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -356,7 +356,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_UNSIGNED_SHORT)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -374,7 +374,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_UNSIGNED_INT)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -392,7 +392,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_BYTE)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -410,7 +410,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_SHORT)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -428,7 +428,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_INT)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
     procedure Call_Lists(
       Number : in Integer_4_Signed;
@@ -446,7 +446,7 @@ package body Neo.System.OpenGL
         glCallLists.All(
           Integer_4_Signed_C(Number),
           Integer_4_Unsigned_C(GL_FLOAT)),
-          Lists'Address);
+          Lists'address);
       end Call_Lists;
   -----------
   -- Clear --
@@ -582,7 +582,7 @@ package body Neo.System.OpenGL
             Float_8_Real'Wide_Image(V(4)) & " )" & " )" );
         glClipPlane.All(
           Integer_4_Unsigned_C(Plane),
-          Equation'Address);
+          Equation'address);
       end Clip_Plane;
   -----------
   -- Color --
@@ -619,7 +619,7 @@ package body Neo.System.OpenGL
             Integer_1_Signed'Wide_Image(V(2)) & ", " &
             Integer_1_Signed'Wide_Image(V(3)) & " )" & " )" );
         glColor3bv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Float_8_Real;
@@ -654,7 +654,7 @@ package body Neo.System.OpenGL
             Float_8_Real'Wide_Image(V(2)) & ", " &
             Float_8_Real'Wide_Image(V(3)) & " )" & " )" );
         glColor3dv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Float_4_Real;
@@ -689,7 +689,7 @@ package body Neo.System.OpenGL
             Float_4_Real'Wide_Image(V(2)) & ", " &
             Float_4_Real'Wide_Image(V(3)) & " )" & " )" );
         glColor3fv.All(
-          V'Address);
+          V'address);
     procedure Color(
       Red   : in Integer_4_Signed;
       Green : in Integer_4_Signed;
@@ -723,7 +723,7 @@ package body Neo.System.OpenGL
             Integer_4_Signed'Wide_Image(V(2)) & ", " &
             Integer_4_Signed'Wide_Image(V(3)) & " )" & " )" );
         glColor3iv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_2_Signed;
@@ -758,7 +758,7 @@ package body Neo.System.OpenGL
             Integer_2_Signed'Wide_Image(V(2)) & ", " &
             Integer_2_Signed'Wide_Image(V(3)) & " )" & " )" );
         glColor3sv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_1_Unsigned;
@@ -792,7 +792,7 @@ package body Neo.System.OpenGL
             Integer_1_Unsigned'Wide_Image(V(2)) & ", " &
             Integer_1_Unsigned'Wide_Image(V(3)) & " )" & " )" );
         glColor3ubv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_4_Unsigned;
@@ -827,7 +827,7 @@ package body Neo.System.OpenGL
             Integer_4_Signed'Wide_Image(V(2)) & ", " &
             Integer_4_Signed'Wide_Image(V(3)) & " )" & " )" );
         glColor3uiv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_2_Unsigned;
@@ -862,7 +862,7 @@ package body Neo.System.OpenGL
             Integer_2_Unsigned'Wide_Image(V(2)) & ", " &
             Integer_2_Unsigned'Wide_Image(V(3)) & " )" & " )" );
         glColor3usv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_1_Signed;
@@ -901,7 +901,7 @@ package body Neo.System.OpenGL
             Integer_1_Signed'Wide_Image(V(3)) & ", " &
             Integer_1_Signed'Wide_Image(V(4)) & " )" & " )" );
         glColor4bv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Float_8_Real;
@@ -940,7 +940,7 @@ package body Neo.System.OpenGL
             Float_8_Real'Wide_Image(V(3)) & ", " &
             Float_8_Real'Wide_Image(V(4)) & " )" & " )" );
         glColor4dv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Float_4_Real;
@@ -979,7 +979,7 @@ package body Neo.System.OpenGL
             Float_4_Real'Wide_Image(V(3)) & ", " &
             Float_4_Real'Wide_Image(V(4)) & " )" & " )" );
         glColor4fv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_4_Signed;
@@ -1018,7 +1018,7 @@ package body Neo.System.OpenGL
             Integer_4_Signed'Wide_Image(V(3)) & ", " &
             Integer_4_Signed'Wide_Image(V(4)) & " )" & " )" );
         glColor4iv(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_2_Signed;
@@ -1057,7 +1057,7 @@ package body Neo.System.OpenGL
             Integer_2_Signed'Wide_Image(V(3)) & ", " &
             Integer_2_Signed'Wide_Image(V(4)) & " )" & " )" );
         glColor4sv(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_1_Unsigned;
@@ -1096,7 +1096,7 @@ package body Neo.System.OpenGL
             Integer_1_Unsigned'Wide_Image(V(3)) & ", " &
             Integer_1_Unsigned'Wide_Image(V(4)) & " )" & " )" );
         glColor4ubv(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_4_Unsigned;
@@ -1135,7 +1135,7 @@ package body Neo.System.OpenGL
             Integer_4_Unsigned'Wide_Image(V(3)) & ", " &
             Integer_4_Unsigned'Wide_Image(V(4)) & " )" & " )" );
         glColor4uiv.All(
-          V'Address);
+          V'address);
       end Color;
     procedure Color(
       Red   : in Integer_2_Unsigned;
@@ -1242,7 +1242,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_UNSIGNED_BYTE),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1263,7 +1263,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_UNSIGNED_SHORT),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1284,7 +1284,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_UNSIGNED_INT),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1305,7 +1305,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_BYTE),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1326,7 +1326,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_SHORT),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1347,7 +1347,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_INT),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1368,7 +1368,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_FLOAT),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
     procedure Color_Pointer(
       Size           : in Integer_4_Signed;
@@ -1389,7 +1389,7 @@ package body Neo.System.OpenGL
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(GL_DOUBLE),
           Integer_4_Signed_C(Stride),
-          Color_Elements'Address);
+          Color_Elements'address);
       end Color_Pointer;
   -----------------
   -- Copy_Pixels --
@@ -1610,7 +1610,7 @@ package body Neo.System.OpenGL
           "'const GLuint * textures'"      & " )" );
         glDeleteTextures.All(
           Integer_4_Signed_C(N),
-          Textures'Address);
+          Textures'address);
       end Delete_Textures;
   --------------------
   -- Depth_Function --
@@ -1754,7 +1754,7 @@ package body Neo.System.OpenGL
           Integer_4_Unsigned_C(Mode),
           Integer_4_Unsigned_C(Indices'Length),
           Integer_4_Unsigned_C(GL_UNSIGNED_BYTE),
-          Indices'Address);
+          Indices'address);
       end Draw_Elements;
     procedure Draw_Elements(
       Mode    : in Integer_4_Unsigned;
@@ -1774,7 +1774,7 @@ package body Neo.System.OpenGL
           Integer_4_Unsigned_C(Mode),
           Integer_4_Unsigned_C(Indices'Length),
           Integer_4_Unsigned_C(GL_UNSIGNED_SHORT),
-          Indices'Address);
+          Indices'address);
       end Draw_Elements;
     procedure Draw_Elements(
       Mode    : in Integer_4_Unsigned;
@@ -1794,7 +1794,7 @@ package body Neo.System.OpenGL
           Integer_4_Unsigned_C(Mode),
           Integer_4_Unsigned_C(Indices'Length),
           Integer_4_Unsigned_C(GL_UNSIGNED_INT),
-          Indices'Address);
+          Indices'address);
       end Draw_Elements;
   -----------------
   -- Draw_Pixels --
@@ -1810,16 +1810,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL_UNSIGNED_BYTE)                     & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_UNSIGNED_BYTE),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
     procedure Draw_Pixels(
       Format : in Integer_4_Unsigned;
@@ -1832,16 +1832,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL__BYTE)                             & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_BYTE),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
     procedure Draw_Pixels(
       Format : in Integer_4_Unsigned;
@@ -1854,16 +1854,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL_UNSIGNED_SHORT)                    & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_UNSIGNED_SHORT),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
     procedure Draw_Pixels(
       Format : in Integer_4_Unsigned;
@@ -1876,16 +1876,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL_SHORT)                             & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_SHORT),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
     procedure Draw_Pixels(
       Format : in Integer_4_Unsigned;
@@ -1898,16 +1898,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL_UNSIGNED_INT)                      & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_UNSIGNED_INT),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
     procedure Draw_Pixels(
       Format : in Integer_4_Unsigned;
@@ -1920,16 +1920,16 @@ package body Neo.System.OpenGL
         Put_Line(
           "glDrawPixels"                                   & "( " &
           Positive'Wide_Image(Pixels'Length)               & ", " &
-          Positive'Wide_Image(Pixels(Pixels'First)'Length) & ", " &
+          Positive'Wide_Image(Pixels(Pixels'first)'Length) & ", " &
           Get_String(Format)                               & ", " &
           Get_String(GL_INT)                               & ", " &
           "'const GLvoid * pixels'"                        & " )" );
         glDrawPixel.All(
           Integer_4_Signed_C(Pixels'Length),
-          Integer_4_Signed_C(Pixels(Pixels'First)'Length),
+          Integer_4_Signed_C(Pixels(Pixels'first)'Length),
           Integer_4_Unsigned_C(Format),
           Integer_4_Unsigned_C(GL_INT),
-          Pixels'Address);
+          Pixels'address);
       end Draw_Pixels;
   ---------------
   -- Edge_Flag --
@@ -1961,7 +1961,7 @@ package body Neo.System.OpenGL
     --       "'const GLvoid * pointer'"            & " )" &);
     --     glEdgeFlagPointer.All(
     --       Integer_4_Signed_C(Offset),
-    --       Pointer'Address);
+    --       Pointer'address);
     --   end Edge_Flag;
     procedure Edge_Flag(
       Flag : Integer_1_Unsigned)
@@ -2059,7 +2059,7 @@ package body Neo.System.OpenGL
           "glEvalCoord1dv"       & "( " &
           "'const GLdouble * u'" & " )" );
         glEvalCoord1dv.All(
-          U'Address);
+          U'address);
       end Evaluate_Coordinate;
     procedure Evaluate_Coordinate(
       U : in Float_4_Real)
@@ -2085,7 +2085,7 @@ package body Neo.System.OpenGL
           "glEvalCoord1fv"      & "( " &
           "'const GLfloat * u'" & " )" );
         glEvalCoord1fv.All(
-          U'Address);
+          U'address);
       end Evaluate_Coordinate;
     procedure Evaluate_Coordinate(
       U : in Float_8_Real;
@@ -2114,7 +2114,7 @@ package body Neo.System.OpenGL
           "glEvalCoord2dv"       & "( " &
           "'const GLdouble * u'" & " )" );
         glEvalCoord2dv.All(
-          U'Address);
+          U'address);
       end Evaluate_Coordinate;
     procedure Evaluate_Coordinate(
       U : in Float_4_Real;
@@ -2143,7 +2143,7 @@ package body Neo.System.OpenGL
           "glEvalCoord2fv"
           "'const GLfloat * u'");
         glEvalCoord2fv.All(
-          U'Address);
+          U'address);
       end Evaluate_Coordinate;
   -------------------
   -- Evaluate_Mesh --
@@ -2241,7 +2241,7 @@ package body Neo.System.OpenGL
         glFeedbackBuffer.All(
           Integer_4_Signed_C(Size),
           Integer_4_Unsigned_C(Kind),
-          Output'Address);
+          Output'address);
         return To_Array_Float_4_Real(Output);
       end Get_Feedback_Buffer;
   ------------
@@ -2301,7 +2301,7 @@ package body Neo.System.OpenGL
           "'const GLfloat * params'" & " )" );
         glFogfv.All(
           Integer_4_Unsigned_C(Name),
-          Parameter'Address);
+          Parameter'address);
       end Fog;
     procedure Fog(
       Name      : in Integer_4_Unsigned;
@@ -2333,7 +2333,7 @@ package body Neo.System.OpenGL
           "'const GLint * params'" & " )" );
         glFogiv.All(
           Integer_4_Unsigned_C(Name),
-          Parameter'Address);
+          Parameter'address);
       end Fog;
   ----------------
   -- Front_Face --
@@ -2415,13 +2415,13 @@ package body Neo.System.OpenGL
         Put_Line(
           "glGenTextures"                     & "( " &
           Integer_4_Positive'Wide_Image(Size) & " )" );
-        if(Size > Integer_4_Signed_C'Last){
-          Put_Line("Warning in function glGenTextures: Parameter 'Size' is greater than Integer_4_Signed'Last.");
-          Size := Integer_4_Positive(Integer_4_Signed_C'Last);
+        if(Size > Integer_4_Signed_C'last){
+          Put_Line("Warning in function glGenTextures: Parameter 'size' is greater than Integer_4_Signed'last.");
+          Size := Integer_4_Positive(Integer_4_Signed_C'last);
         }
         glGenTextures.All(
           Integer_4_Signed_C(Size),
-          Output'Address);
+          Output'address);
         return To_Array_Integer_4_Unsigned(Output);
       end Generate_Textures;
   ---------------
@@ -2442,8 +2442,8 @@ package body Neo.System.OpenGL
           "'GLboolean * params'" & " )" );
         glGetBooleanv.All(
           Integer_4_Unsigned_C(Name),
-          Output'Address);
-        return To_Array_Integer_1_Unsigned(Address_To_Access_Unbounded_Array(Output'Address));
+          Output'address);
+        return To_Array_Integer_1_Unsigned(Address_To_Access_Unbounded_Array(Output'address));
       end Get_Bytes;
   --------------------
   -- Get_Clip_Plane --
@@ -2463,7 +2463,7 @@ package body Neo.System.OpenGL
           "'GLdouble * equation'" & " )" );
         glGetClipPlane.All(
           Integer_4_Unsigned_C(Plane),
-          Equation'Address);
+          Equation'address);
         return To_Vector_4_Float_8_Real_C(Equation);
       end Get_Clip_Plane;
   ----------------
@@ -2484,11 +2484,11 @@ package body Neo.System.OpenGL
           "'GLdouble * params'" & " )" );
         glGetDoublev.All(
           Integer_4_Unsigned_C(Name),
-          Output'Address);
+          Output'address);
         return
           To_Array_Float_8_Real(
             Address_To_Access_Unbounded_Array(
-              Output'Access));
+              Output'access));
       end Get_Double;
   ---------------
   -- Get_Error --
@@ -2522,11 +2522,11 @@ package body Neo.System.OpenGL
           "'GLfloat * params'" & " )" );
         glGetFloatv.All(
           Integer_4_Unsigned(Name),
-          Output'Address);
+          Output'address);
         return
           To_Array_Float_4_Real( 
             Address_To_Access_Unbounded_Array(
-              Output'Access));
+              Output'access));
       end Get_Float;
   -----------------
   -- Get_Integer --

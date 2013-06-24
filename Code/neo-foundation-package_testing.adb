@@ -72,17 +72,16 @@ package body Neo.Foundation.Package_Testing
         end loop;
         New_Line(2);
       end Put_Title;
-    -----------------
-    -- Hang_Window --
-    -----------------
-      procedure Hang_Window
-        is
-        Item : String_2(1..1)    := (others => NULL_CHARACTER_2);
-        Last : Integer_4_Natural := 0;
-        begin
-          New_Line;
-          Put(TESTING_INPUT_CURSOR);
-          Get_Line(Item, Last);
-          Skip_Line;
-        end Hang_Window;
+  -----------------
+  -- Hang_Window --
+  -----------------
+    procedure Hang_Window
+      is
+      begin
+        New_Line;
+        for I in 1..NUMBER_OF_SECONDS_TO_DELAY loop
+          delay 1.0;
+          Put(TESTING_INPUT_HANG_INCREMENT);
+        end loop;
+      end Hang_Window;
   end Neo.Foundation.Package_Testing;

@@ -28,7 +28,7 @@ package body Neo.System.Text
       is
       begin
         Put_Title("TEXT TEST");
-        Put_Line("Language: " & Enumerated_Language'Wide_Image(Get_Language));
+        Put_Line("Language" & ": " & Enumerated_Language'Wide_Image(Get_Language));
         Put_Line(Get_Clipboard);
         Set_Clipboard("Yes");
         Put_Line("But does it work? " & Get_Clipboard & "!");

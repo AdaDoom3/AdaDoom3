@@ -148,10 +148,10 @@ package body Neo.System.Network
       return Record_Network_Address
       is
       Result   : Record_Network_Address := (OTHERS => <>);
-      Previous : Integer_4_Signed       := Item'First;
-      J        : Integer_4_Signed       := Result.IP'First;
+      Previous : Integer_4_Signed       := Item'first;
+      J        : Integer_4_Signed       := Result.IP'first;
       begin
-        for I in Item'Range loop
+        for I in Item'range loop
           if Item(I) = ':' then
 
           elsif Item(I) = '.' then
