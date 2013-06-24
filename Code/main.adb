@@ -159,7 +159,7 @@ procedure Main
     if
     (Exception_Primary /= null or Exception_Secondary /= null) and then
     Neo.System.Exception_Handling.Is_Okay(
-      Title   => NAME & " " & L("Error!"),
+      Title   => NAME & L(" Error!"),
       Buttons => Neo.System.Exception_Handling.Yes_No_Buttons,
       Icon    => Neo.System.Exception_Handling.Error_Icon,
       Message => NAME & L(" failed and cannot continue. Would you like to view more information?"))
