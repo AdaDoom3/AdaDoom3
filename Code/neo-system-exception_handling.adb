@@ -137,14 +137,6 @@ package body Neo.System.Exception_Handling
         Open_Webpage("http://www.google.com"); -- To_UTF8
       end Send_Catalog;
   ------------------
-  -- Copy_Catalog --
-  ------------------
-    procedure Copy_Catalog
-      is
-      begin
-        Set_Clipboard(Get_Catalog);
-      end Copy_Catalog;
-  ------------------
   -- Save_Catalog --
   ------------------
     procedure Save_Catalog

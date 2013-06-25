@@ -105,7 +105,7 @@ private
     FAILED_LOCALIZE_POSTFIX        : constant String_2           := "... without having a Localize function set!";
     FAILED_LOCALIZE_PREVIEW_LENGTH : constant Integer_4_Positive := 10;
     RADIAN_IMAGE_STRING_SIZE       : constant Integer_4_Positive := 256;
-    DEFAULT_LINE_SIZE              : constant Integer_4_Positive := 60;
+    DEFAULT_LINE_SIZE              : constant Integer_4_Positive := 80;
   ---------------
   -- Protected --
   ---------------

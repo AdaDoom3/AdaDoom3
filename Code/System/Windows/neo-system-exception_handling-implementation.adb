@@ -28,33 +28,36 @@ package body Implementation
   ---------------
     NAME_BUTTON      : constant String_2             := "Button";
     NAME_EDIT        : constant String_2             := "Edit";
-    NAME_FONT        : constant String_2             := "Arial";
-    IDENTIFIER_START : constant Integer_4_Signed     := 16#0000_0101#;
+    CONSOLE_YIELD    : constant Duration             := 0.005;
     BORDER_WIDTH     : constant Integer_4_Signed_C   := 3;
     BORDER_HEIGHT    : constant Integer_4_Signed_C   := 22;
-    CONSOLE_WIDTH    : constant Integer_4_Signed_C   := 550 + 2 * BORDER_WIDTH;
+    CONSOLE_WIDTH    : constant Integer_4_Signed_C   := 512 + BORDER_WIDTH * 2;
     CONSOLE_HEIGHT   : constant Integer_4_Signed_C   := 550 + BORDER_WIDTH + BORDER_HEIGHT;
     BUTTON_WIDTH     : constant Integer_4_Signed_C   := 72;
     BUTTON_HEIGHT    : constant Integer_4_Signed_C   := 24;
     PADDING          : constant Integer_4_Signed_C   := 5;
+    FONT_SIZE        : constant Integer_4_Signed_C   := 13;
+    IDENTIFIER_START : constant Integer_4_Signed     := 16#0000_0101#;
+    COLOR_TEXT       : constant Integer_4_Unsigned_C := 16#0080_0000#; -- 16#00BB_GGRR#
+    COLOR_BACKGROUND : constant Integer_4_Unsigned_C := 16#0000_FFFF#; -- 16#00BB_GGRR#
     STYLE_BUTTON     : constant Integer_4_Unsigned_C :=
       STYLE_PUSH_BUTTON                     or
       STYLE_PUSH_BUTTON_PRESELECTED_DEFAULT or
       STYLE_VISIBLE_INITIALLY               or
       STYLE_CHILD;
     STYLE_WINDOW : constant Integer_4_Unsigned_C :=
-      STYLE_TITLEBAR_MENU    or
-      STYLE_BOX_ICONIZE      or
-      STYLE_BORDER_THIN_LINE or
+      STYLE_TITLEBAR_MENU                   or
+      STYLE_BOX_ICONIZE                     or
+      STYLE_BORDER_THIN_LINE                or
       STYLE_TITLEBAR_MENU;
     STYLE_EDIT : constant Integer_4_Unsigned_C :=
-      STYLE_HAS_VERTICAL_SCROLL_BAR   or
-      STYLE_VISIBLE_INITIALLY         or
-      STYLE_BORDER_THIN_LINE          or
-      STYLE_ALIGN_TEXT_TO_LEFT        or
-      STYLE_MULTI_LINE                or
-      STYLE_AUTOMATIC_VERTICAL_SCROLL or
-      STYLE_NO_USER_EDITING           or
+      STYLE_HAS_VERTICAL_SCROLL_BAR         or
+      STYLE_VISIBLE_INITIALLY               or
+      STYLE_BORDER_THIN_LINE                or
+      STYLE_ALIGN_TEXT_TO_LEFT              or
+      STYLE_MULTI_LINE                      or
+      STYLE_AUTOMATIC_VERTICAL_SCROLL       or
+      STYLE_NO_USER_EDITING                 or
       STYLE_CHILD;
   ---------------
   -- Set_Alert --
@@ -83,6 +86,40 @@ package body Implementation
       Icon_Path : in String_2;
       Title     : in String_2)
       is
+      Non_Client_Metrics : aliased Record_Non_Client_Metrics               := (others => <>);
+      Message            : aliased Record_Message                          := (others => <>);
+      Class              : aliased Record_Window_Class                     := (others => <>);
+      Handles            :         array(CONSOLE_BUTTONS'range) of Address := (others => NULL_ADDRESS);
+      Right_Count        :         Integer_4_Signed_C                      := 1;
+      Context            :         Address                                 := Get_Device_Context(Get_Desktop_Window);
+      Text_Box           :         Address                                 := NULL_ADDRESS;
+      Console            :         Address                                 := NULL_ADDRESS;
+      Edit_Background    :         Address                                 := NULL_ADDRESS;
+      Font_Buttons       :         Address                                 := NULL_ADDRESS;
+      Font_Text_Box      :         Address                                 :=
+        Create_Font(
+          Height           => FONT_SIZE,
+          Width            => 0,
+          Escapement       => 0,
+          Orientation      => 0,
+          Weight           => FONT_WEIGHT_LIGHT,
+          Italic           => 0,
+          Underline        => 0,
+          Strike_Out       => 0,
+          Character_Set    => DEFAULT_CHARACTER_SET,
+          Output_Precision => FONT_OUT_DEFAULT_PRECISION,
+          Clip_Precision   => FONT_CLIP_DEFAULT_PRECISION,
+          Quality          => FONT_DEFAULT_QUALITY,
+          Pitch_And_Family => FONT_FAMILY_MODERN or FONT_FIXED_PITCH,
+          Face             => To_Access_Constant_Character_2_C("Courier New"));
+      Icon : Address :=
+        Load_Image(
+          Instance  => Get_Current_Instance,
+          Name      => To_Access_Constant_Character_2_C(Icon_Path),
+          Kind      => LOAD_ICO,
+          Desired_X => 0,
+          Desired_Y => 0,
+          Load      => LOAD_FROM_FILE);
       -------------------------
       function Window_Callback(
       -------------------------
@@ -112,7 +149,30 @@ package body Implementation
                 when others =>
                   null;
               end case;
-            when EVENT_BUTTON_PRESSED =>
+            when EVENT_CREATE =>
+              Edit_Background := Create_Solid_Brush(COLOR_TEXT);
+              if Edit_Background = NULL_ADDRESS then
+                raise System_Call_Failure;
+              end if;
+            when EVENT_CONTROL_STATIC_COLOR =>
+              if To_Unchecked_Address(To_Unchecked_Integer_Address(Data_Signed)) = Text_Box then
+                if
+                Set_Background_Color(
+                  Device_Context => To_Unchecked_Address(To_Unchecked_Integer_Address(Data_Unsigned)),
+                  Color          => COLOR_TEXT) = INVALID_COLOR
+                then
+                  raise System_Call_Failure;
+                end if;
+                if
+                Set_Text_Color(
+                  Device_Context => To_Unchecked_Address(To_Unchecked_Integer_Address(Data_Unsigned)),
+                  Color          => COLOR_BACKGROUND) = INVALID_COLOR
+                then
+                  raise System_Call_Failure;
+                end if;
+		return To_Unchecked_Integer_4_Signed_C(To_Unchecked_Integer_Address(Edit_Background));
+              end if;
+            when EVENT_BUTTON_COMMAND =>
               for I in CONSOLE_BUTTONS'range loop
                 if Data_Unsigned = Integer_4_Unsigned_C(I + IDENTIFIER_START) then
                   if CONSOLE_BUTTONS(I).Action = null then
@@ -129,31 +189,12 @@ package body Implementation
           end case;
           return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed);
         end Window_Callback;
-      Message     : aliased Record_Message                          := (others => <>);
-      Class       : aliased Record_Window_Class                     := (others => <>);
-      Handles     :         array(CONSOLE_BUTTONS'range) of Address := (others => NULL_ADDRESS);
-      Right_Count :         Integer_4_Signed_C                      := 1;
-      Context     :         Address                                 := Get_Device_Context(Get_Desktop_Window);
-      Text_Box    :         Address                                 := NULL_ADDRESS;
-      Console     :         Address                                 := NULL_ADDRESS;
-      Icon        :         Address                                 :=
-        Load_Image(
-          Instance  => Get_Current_Instance,
-          Name      => To_Access_Constant_Character_2_C(Icon_Path),
-          Kind      => LOAD_ICO,
-          Desired_X => 0,
-          Desired_Y => 0,
-          Load      => LOAD_FROM_FILE);
---NONCLIENTMETRICS ncm;
---ncm.cbSize = sizeof(ncm);
---if(_MSC_VER >= 1500 && WINVER >= 0x0600)
---if (!SystemInfo::IsVistaOrLater())
---    // In versions of Windows prior to Vista, the iPaddedBorderWidth member
---    // is not present, so we need to subtract its size from cbSize.
---    ncm.cbSize -= sizeof(ncm.iPaddedBorderWidth);
       -----
       begin
       -----
+        if Font_Text_Box = NULL_ADDRESS then
+          raise System_Call_Failure;
+        end if;
         if Context = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
@@ -168,7 +209,7 @@ package body Implementation
           Icon_Small => Icon,
           Icon_Large => Icon,
           Cursor     => Load_Cursor(NULL_ADDRESS, GENERIC_CURSOR),
-          Background => BRUSH_GRAY,
+          Background => BRUSH_WINDOW,
           Class_Name => To_Access_Constant_Character_2_C(Title),
           others     => <>);
         if Register_Class(Class'unchecked_access) = Integer_2_Unsigned_C(FAILED) then
@@ -191,19 +232,19 @@ package body Implementation
         if Console = NULL_ADDRESS then
           raise System_Call_Failure;
         end if;
-        --if
-        --System_Parameter_Information(
-        --  Action       => SPI_GETNONCLIENTMETRICS,
-        --  Parameter_A  => ncm.cbSize,
-        --  Parameter_B  => &ncm,
-        --  User_Profile => 0) = FAILED
-        --then
-        --  raise System_Call_Failure;
-        --end if;
-        --HFONT hDlgFont = CreateFontIndirect(&(ncm.lfMessageFont));
-        --if Font_GUI = NULL_ADDRESS then
-        --  raise System_Call_Failure;
-        --end if;
+        if
+        System_Parameter_Information(
+          Action       => GET_NON_CLIENT_METRICS,
+          Parameter_A  => Non_Client_Metrics.Size,
+          Parameter_B  => Non_Client_Metrics'address,
+          User_Profile => 0) = FAILED
+        then
+          raise System_Call_Failure;
+        end if;
+        Font_Buttons := Create_Font_Indirect(Non_Client_Metrics.Message_Font'unchecked_access);
+        if Font_Buttons = NULL_ADDRESS then
+          raise System_Call_Failure;
+        end if;
         if Release_Device_Context(Get_Desktop_Window, Context) = FAILED then
           raise System_Call_Failure;
         end if;
@@ -239,25 +280,26 @@ package body Implementation
           if
           Send_Message(
             Window        => Handles(I),
+            Message       => EVENT_SET_FONT,
+            Data_Signed   => 0,
+            Data_Unsigned =>
+              To_Unchecked_Integer_4_Unsigned_C(
+                To_Unchecked_Integer_Address(Font_Buttons))) = FAILED
+          then
+            null; --raise System_Call_Failure; Why does this fail???
+          end if;
+          if
+          Send_Message(
+            Window        => Handles(I),
             Message       => EVENT_SET_TEXT,
             Data_Unsigned => 0,
             Data_Signed   =>
               To_Unchecked_Integer_4_Signed_C(
                 To_Unchecked_Integer_Address(
-                  To_Access_Constant_Character_2_C(CONSOLE_BUTTONS(I).Message)))) = FAILED
+                  To_Access_Constant_Character_2_C(L(CONSOLE_BUTTONS(I).Message))))) = FAILED
           then
             raise System_Call_Failure;
           end if;
-          --if
-          --Send_Message(
-          --  Window        => Handles(I),
-          --  Message       => EVENT_SET_FONT,
-          --  Data_Signed   => 0,
-          --  Data_Unsigned => Shit) = FAILED
-          --then
-          --  Put_Line(Integer_4_Unsigned_C'wide_image(Get_Last_Error));
-          --  raise System_Call_Failure;
-          --end if;
         end loop;
         Text_Box :=
           Create_Window(
@@ -265,8 +307,8 @@ package body Implementation
             Window_Name => To_String_2_C(NULL_STRING_2),
             X           => PADDING,
             Y           => PADDING,
-            Width       => CONSOLE_WIDTH - PADDING * 2 - BORDER_WIDTH * 2,
-            Height      => CONSOLE_HEIGHT - PADDING * 3 - BUTTON_HEIGHT - BORDER_HEIGHT - BORDER_WIDTH,
+            Width       => CONSOLE_WIDTH  - PADDING * 2 - BORDER_WIDTH * 2,
+            Height      => CONSOLE_HEIGHT - PADDING * 3 - BORDER_WIDTH - BUTTON_HEIGHT - BORDER_HEIGHT ,
             Parent      => Console,
             Menu        => 0,
             Instance    => Get_Current_Instance,
@@ -281,37 +323,11 @@ package body Implementation
         Send_Message(
           Window        => Text_Box,
           Message       => EVENT_SET_FONT,
-          Data_Unsigned => 0,
-          Data_Signed   =>
-            To_Unchecked_Integer_4_Signed_C(
-              To_Unchecked_Integer_Address(
-                Create_Font(
-                  Width            => 0,
-                  Escapement       => 0,
-                  Orientation      => 0,
-                  Weight           => FONT_WEIGHT_LIGHT,
-                  Italic           => 0,
-                  Underline        => 0,
-                  Strike_Out       => 0,
-                  Character_Set    => DEFAULT_CHARACTER_SET,
-                  Output_Precision => FONT_OUT_DEFAULT_PRECISION,
-                  Clip_Precision   => FONT_CLIP_DEFAULT_PRECISION,
-                  Quality          => FONT_DEFAULT_QUALITY,
-                  Pitch_And_Family => FONT_FAMILY_SWISS or FONT_FIXED_PITCH,
-                  Face             => To_Access_Constant_Character_2_C("Courier New"),
-                  Height           =>
-                    -1 * Integer_4_Signed_C((
-                      Integer_8_Signed_C(Byte'size) *
-                      Integer_8_Signed_C(Get_Device_Capabilities(Context, DATA_LOGICAL_PIXELS_PER_INCH_HEIGHT))) /
-                      Integer_8_Signed_C(BUTTON_WIDTH)))))) = FAILED
+          Data_Signed   => 0,
+          Data_Unsigned =>
+            To_Unchecked_Integer_4_Unsigned_C(
+              To_Unchecked_Integer_Address(Font_Text_Box))) = FAILED
         then
-          Put_Line(Integer_4_Unsigned_C'wide_image(Get_Last_Error) & "  " & Integer'wide_image(Record_Window_Class'size / Byte'size));
-          raise System_Call_Failure;
-        end if;
-        if Send_Message(Text_Box, MESSAGE_SCROLL_TEXT, 0, 16#0000_FFFF#) = FAILED then
-          raise System_Call_Failure;
-        end if;
-        if Send_Message(Text_Box, MESSAGE_SCROLL_CARET, 0, 0) = FAILED then
           raise System_Call_Failure;
         end if;
         if
@@ -324,7 +340,12 @@ package body Implementation
               To_Unchecked_Integer_Address(
                 To_Access_Constant_Character_2_C(Get_Catalog)))) = FAILED
         then
-          Put_Line(Integer_4_Unsigned_C'wide_image(Get_Last_Error) & "  " & Integer'wide_image(Record_Window_Class'size / Byte'size));
+          raise System_Call_Failure;
+        end if;
+        if Send_Message(Text_Box, MESSAGE_SCROLL_TEXT, 0, 16#0000_FFFF#) = FAILED then
+          raise System_Call_Failure;
+        end if;
+        if Send_Message(Text_Box, MESSAGE_SCROLL_CARET, 0, 0) = FAILED then
           raise System_Call_Failure;
         end if;
         if Show_Window(Console, MAKE_WINDOW_NORMALIZE) = 0 then
@@ -352,6 +373,7 @@ package body Implementation
           then
             null;
           end if;
+          delay CONSOLE_YIELD;
         end loop;
         if Show_Window(Console, MAKE_WINDOW_HIDE) = 0 then
           null;

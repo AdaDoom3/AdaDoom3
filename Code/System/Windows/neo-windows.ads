@@ -20,6 +20,7 @@ with
   Interfaces.C,
   Ada.Command_Line,
   Ada.Unchecked_Conversion,
+  Neo.System,
   Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 use
@@ -27,6 +28,7 @@ use
   Interfaces,
   Interfaces.C,
   Ada.Command_Line,
+  Neo.System,
   Neo.Foundation.Output,
   Neo.Foundation.Data_Types;
 package Neo.Windows
@@ -37,8 +39,10 @@ package Neo.Windows
     GENERIC_CURSOR                             : constant Integer_Address      := 16#7F00#;
     GENERIC_ICON                               : constant Integer_Address      := 16#7F00#;
     BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
+    BRUSH_WINDOW                               : constant Integer_Address      := 16#0005#; -- COLOR_WINDOW
     FONT_WEIGHT_LIGHT                          : constant Integer_4_Signed_C   := 300;
-    FONT_FAMILY_SWISS                          : constant Integer_4_Unsigned_C := 16#0000_0002#;
+    FONT_FAMILY_SWISS                          : constant Integer_4_Unsigned_C := 16#0000_0020#;
+    FONT_FAMILY_MODERN                         : constant Integer_4_Unsigned_C := 16#0000_0030#;
     FONT_FIXED_PITCH                           : constant Integer_4_Unsigned_C := 16#0000_0001#;
     FONT_DEFAULT_CHARACTER_SET                 : constant Integer_4_Unsigned_C := 16#0000_0001#;
     FONT_OUT_DEFAULT_PRECISION                 : constant Integer_4_Unsigned_C := 16#0000_0000#;
@@ -56,6 +60,7 @@ package Neo.Windows
     CODE_PAGE_UTF_8                            : constant Integer_4_Unsigned_C := 16#0000_FDE9#;
     KEY_READ                                   : constant Integer_4_Unsigned_C := 16#0002_0019#;
     HKEY_LOCAL_MACHINE                         : constant Integer_4_Unsigned_C := 16#8000_0002#;
+    INVALID_COLOR                              : constant Integer_4_Unsigned_C := 16#FFFF_FFFF#; -- CLR_INVALID
     GENERIC_READ                               : constant Integer_4_Unsigned_C := 16#8000_0000#;
     GENERIC_WRITE                              : constant Integer_4_Unsigned_C := 16#4000_0000#;
     FILE_SHARE_READ                            : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -65,6 +70,7 @@ package Neo.Windows
     RESTRICT_DEVICES_TO_CURRENT_HARDWARE       : constant Integer_4_Unsigned_C := 16#0000_0002#;
     PROPERTY_FOR_DEVICE_DESCRIPTION            : constant Integer_4_Unsigned_C := 16#0000_0000#;
     PROPERTY_FOR_DEVICE_NAME                   : constant Integer_4_Unsigned_C := 16#0000_000C#;
+    GET_NON_CLIENT_METRICS                     : constant Integer_4_Unsigned_C := 16#0000_0029#; -- SPI_GETNONCLIENTMETRICS
     GET_DEVICE_NAME                            : constant Integer_4_Unsigned_C := 16#2000_0007#;
     GET_DEVICE_HEADER                          : constant Integer_4_Unsigned_C := 16#1000_0005#;
     GET_DEVICE_DATA                            : constant Integer_4_Unsigned_C := 16#1000_0003#;
@@ -81,7 +87,8 @@ package Neo.Windows
     EVENT_KEY_UP                               : constant Integer_4_Unsigned_C := 16#0000_0101#;
     EVENT_SIZING                               : constant Integer_4_Unsigned_C := 16#0000_0214#;
     EVENT_COMMAND                              : constant Integer_4_Unsigned_C := 16#0000_0112#;
-    EVENT_BUTTON_PRESSED                       : constant Integer_4_Unsigned_C := 16#0000_0111#; -- WM_COMMAND
+    EVENT_BUTTON_COMMAND                       : constant Integer_4_Unsigned_C := 16#0000_0111#; -- WM_COMMAND
+    EVENT_CONTROL_STATIC_COLOR                 : constant Integer_4_Unsigned_C := 16#0000_0138#; -- WM_CTLCOLORSTATIC
     EVENT_KEY_DOWN                             : constant Integer_4_Unsigned_C := 16#0000_0100#;
     EVENT_CHARACTER                            : constant Integer_4_Unsigned_C := 16#0000_0102#;
     EVENT_SIZE_CHANGED                         : constant Integer_4_Unsigned_C := 16#0000_0005#;
@@ -101,7 +108,7 @@ package Neo.Windows
     EVENT_MOUSE_WHEEL_HORIZONTAL               : constant Integer_4_Unsigned_C := 16#0000_020E#;
     EVENT_MOUSE_MOVE                           : constant Integer_4_Unsigned_C := 16#0000_0200#;
     EVENT_MOVE                                 : constant Integer_4_Unsigned_C := 16#0000_0003#;
-    EVENT_CREATE                               : constant Integer_4_Unsigned_C := 16#0000_0001#;
+    EVENT_CREATE                               : constant Integer_4_Unsigned_C := 16#0000_0001#; -- WM_CREATE
     EVENT_INPUT_FOCUS_GAINED                   : constant Integer_4_Unsigned_C := 16#0000_0007#;
     EVENT_INPUT_FOCUS_LOST                     : constant Integer_4_Unsigned_C := 16#0000_0008#;
     EVENT_DEVICE_CHANGE                        : constant Integer_4_Unsigned_C := 16#0000_00FE#;
@@ -491,6 +498,46 @@ package Neo.Windows
     --     Information : Address; -- Changes on 64/32 bit systems
     --   end record;
     --   pragma Convention(C, Record_Mouse);
+    type Record_Log_Font                                                           -- LOGFONT
+      is record
+        Height           : Integer_4_Signed_C   := 0;                              -- lfHeight
+        Width            : Integer_4_Signed_C   := 0;                              -- lfWidth
+        Escapement       : Integer_4_Signed_C   := 0;                              -- lfEscapement
+        Orientation      : Integer_4_Signed_C   := 0;                              -- lfOrientation
+        Weight           : Integer_4_Signed_C   := 0;                              -- lfWeight
+        Italic           : Integer_1_Unsigned_C := 0;                              -- lfItalic
+        Underline        : Integer_1_Unsigned_C := 0;                              -- lfUnderline
+        Strike_Out       : Integer_1_Unsigned_C := 0;                              -- lfStrikeOut
+        Character_Set    : Integer_1_Unsigned_C := 0;                              -- lfCharSet
+        Out_Precision    : Integer_1_Unsigned_C := 0;                              -- lfOutPrecision
+        Clip_Precision   : Integer_1_Unsigned_C := 0;                              -- lfClipPrecision
+        Quality          : Integer_1_Unsigned_C := 0;                              -- lfQuality
+        Pitch_And_Family : Integer_1_Unsigned_C := 0;                              -- lfPitchAndFamily
+        Face_Name        : String_2_C(1..32)    := (others => NULL_CHARACTER_2_C); -- lfFaceName
+      end record;
+    type Record_Non_Client_Metrics                                           -- NONCLIENTMETRICS
+      is record
+        Size : Integer_4_Unsigned_C := Record_Non_Client_Metrics'size / Byte'size; --(                                -- cbSize
+          --if Get_Version >= Windows_2_6_System then
+          --  Record_Non_Client_Metrics'size / Byte'size
+          --else
+          --  (Record_Non_Client_Metrics'size - Integer_4_Signed_C) / Byte'size);
+        Border_Width         :         Integer_4_Signed_C := 0;
+        Scroll_Width         :         Integer_4_Signed_C := 0;
+        Scroll_Height        :         Integer_4_Signed_C := 0;
+        Caption_Width        :         Integer_4_Signed_C := 0;
+        Caption_Height       :         Integer_4_Signed_C := 0;
+        Caption_Font         :         Record_Log_Font    := (others => <>); -- lfCaptionFont
+        Small_Caption_Width  :         Integer_4_Signed_C := 0;              -- iSmCaptionWidth
+        Small_Caption_Height :         Integer_4_Signed_C := 0;              -- iSmCaptionHeight
+        Small_Caption_Font   :         Record_Log_Font    := (others => <>); -- lfSmCaptionFont
+        Menu_Width           :         Integer_4_Signed_C := 0;              -- iMenuWidth
+        Menu_Height          :         Integer_4_Signed_C := 0;              -- iMenuHeight
+        Menu_Font            :         Record_Log_Font    := (others => <>); -- lfMenuFont
+        Status_Font          :         Record_Log_Font    := (others => <>); -- lfStatusFont
+        Message_Font         : aliased Record_Log_Font    := (others => <>); -- lfMessageFont
+        Padded_Border_Width  :         Integer_4_Signed_C := 0;              -- iPaddedBorderWidth
+      end record;
     type Record_Device_Header
       is record
         Kind        : Integer_4_Unsigned_C := 0;
@@ -763,6 +810,10 @@ package Neo.Windows
       is access all Record_Window_Class;
     type Access_Record_Message
       is access all Record_Message;
+    type Access_Record_Non_Client_Metrics
+      is access all Record_Non_Client_Metrics;
+    type Access_Record_Log_Font
+      is access all Record_Log_Font;
   -----------------
   -- Subprograms --
   -----------------
@@ -847,6 +898,20 @@ package Neo.Windows
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
     --   return Address;
+    function Create_Font_Indirect(          -- CreateFontIndirect
+      Log_Font : in Access_Record_Log_Font) -- lplf
+      return Address;                       -- HFONT
+    function Create_Solid_Brush(       -- CreateSolidBrush
+      Color : in Integer_4_Unsigned_C) -- crColor
+      return Address;                  -- HBRUSH
+    function Set_Text_Color(                    -- SetTextColor
+      Device_Context : in Address;              -- hdc
+      Color          : in Integer_4_Unsigned_C) -- crColor
+      return Integer_4_Unsigned_C;              -- COLORREF
+    function Set_Background_Color(              -- SetBkColor
+      Device_Context : in Address;              -- hdc
+      Color          : in Integer_4_Unsigned_C) -- crColor
+      return Integer_4_Unsigned_C;              -- COLORREF
     function Get_Stock_Object(        -- GetStockObject
       Object : in Integer_4_Signed_C) -- fnObject
       return Address;                 -- HGDIOBJ
@@ -1381,6 +1446,8 @@ private
     pragma Import(Stdcall, Get_Device_Usages,              "HidP_GetUsages");
     pragma Import(Stdcall, Send_Dialog_Item_Message,       "SendDlgItemMessageW");
     pragma Import(Stdcall, Get_Stock_Object,               "GetStockObject");
+    pragma Import(Stdcall, Create_Solid_Brush,             "CreateSolidBrush");
+    pragma Import(Stdcall, Create_Font_Indirect,           "CreateFontIndirectW");
     --pragma Import(Stdcall, Get_Device_Button_Capabilities, "HidP_GetButtonCaps");
     pragma Import(Stdcall, Get_Device_Input_Data,          "GetRawInputData");
     pragma Import(Stdcall, Get_Device_List,                "GetRawInputDeviceList");
@@ -1388,6 +1455,8 @@ private
     pragma Import(Stdcall, Register_Devices,               "RegisterRawInputDevices");
     pragma Import(Stdcall, Close_Handle,                   "CloseHandle");
     pragma Import(Stdcall, Enumerate_Display_Monitor,      "EnumDisplayMonitors");
+    pragma Import(Stdcall, Set_Text_Color,                 "SetTextColor");
+    pragma Import(Stdcall, Set_Background_Color,           "SetBkColor");
     pragma Import(Stdcall, Get_Clip_Box,                   "GetClipBox");
     pragma Import(Stdcall, Rectangles_Are_Equal,           "EqualRect");
     pragma Import(Stdcall, Find_Intersecting_Rectangle,    "IntersectRect");

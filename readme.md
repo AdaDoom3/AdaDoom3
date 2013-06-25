@@ -90,6 +90,17 @@ Frequent commands:
 
 >    `git push origin master:branch`
 
+Organization
+------------
+The project is organized into the following layers, currently work is being done on the foundation and system layers for Windows.
+* Foundation 
+* System
+* Library
+* Video
+* Audio
+* Core
+* Game
+
 Roadmap
 -------
 * Raw input implementation.
@@ -135,152 +146,3 @@ elementary Ada data types to be more descriptive by including each type’s byte
 with the renamed ones interchangeably, it is not recommended.
 
 More to come…
-
-Organization
-------------
-The project is planned to be organized into the following layers, currently work is being done on the foundation and system layers for Windows.
-* Foundation 
-* System
-* Renderer
-* Library
-* Core
-* Game
-
-Outline of API. For comments see https://github.com/AdaDoom3/AdaDoom3/issues/21
-* Main.adb `Secondary execution main loop`
-* Neo
-* Neo.Foundation
-* Neo.Foundation.Text_IO
-* Neo.Foundation.Data_Types
-* Neo.Foundation.Package_Testing
-* Neo.System
-* Neo.System.Implementation
-* Neo.System.Processor
-* Neo.System.Processor.Implementation_For_Architecture
-* Neo.System.Processor.Implementation_For_Operating_System
-* Neo.System.Memory
-* Neo.System.Memory.Implementation
-* Neo.System.Text
-* Neo.System.Text.Implementation
-* Neo.System.Network
-* Neo.System.Network.Implementation
-* Neo.System.Window `Primary execution main loop`
-* Neo.System.Window.Implementation
-* Neo.System.Exception_Handling
-* Neo.System.Exception_Handling.Implementation
-* Neo.System.Input
-* Neo.System.Input.Implementation
-* Neo.System.OpenGL
-* Neo.System.OpenGL.Implementation
-* Neo.System.OpenGLES
-* Neo.System.OpenGLES.Implementation
-* Neo.System.DirectX
-* Neo.System.DirectX.Implementation
-* Neo.System.Sony
-* Neo.System.Sony.Implementation
-* Neo.System.Nintendo
-* Neo.System.Nintendo.Implementation
-* Neo.System.OpenAL
-* Neo.System.OpenAL.Implementation
-* Neo.System.XAudio
-* Neo.System.XAudio.Implementation
-* Neo.Library
-* Neo.Library.Task_Jobs
-* Neo.Library.Allocator
-* Neo.Library.Byte_Ordering
-* Neo.Library.Dynamic_String
-* ...
-* Neo.Library.Audio
-* Neo.Library.Audio.OGG
-* Neo.Library.Audio.WAV
-* Neo.Library.Video
-* Neo.Library.Video.OGV
-* Neo.Library.Mathmatics
-* Neo.Library.Matricies
-* Neo.Library.Variables
-* Neo.Library.Angles
-* Neo.Library.Radix_64
-* Neo.Library.Assembly `Children are separate and not included anywhere`
-* Neo.Library.Assembly.x86_64
-* Neo.Library.Assembly.PowerPC
-* Neo.Library.Assembly.ARM
-* ...
-* Neo.Library.Timers
-* Neo.Library.Vectors
-* Neo.Library.Compression
-* Neo.Library.Compression.ZIP
-* Neo.Library.Graphics `Children are separate and not included anywhere`
-* Neo.Library.Graphics.PNG
-* Neo.Library.Graphics.JPEG
-* Neo.Library.Graphics.TGA
-* Neo.Library.Graphics.BMP
-* Neo.Library.Graphics.GIF
-* Neo.Library.Graphics.DXT
-* Neo.Renderer
-* Neo.Renderer.Shaders
-* Neo.Renderer.Hardware_Textures
-* Neo.Renderer.Decals
-* Neo.Renderer.Definitions
-* Neo.Renderer.Portals
-* Neo.Renderer.Traces
-* Neo.Renderer.Scene_Recorder
-* Neo.Renderer.Materials
-* Neo.Renderer.Menu
-* Neo.Renderer.Resolution_Scale
-* Neo.Renderer.Compact_Rectangle
-* Neo.Renderer.Entity_Light_Interaction
-* Neo.Renderer.Vertex_Cache
-* Neo.Renderer.Platform
-* Neo.Renderer.Platform.DirectX
-* Neo.Renderer.Platform.OpenGL
-* Neo.Renderer.Platform.OpenGLES
-* Neo.Renderer.Platform.Sony
-* Neo.Renderer.Platform.Nintendo
-* Neo.Renderer.Model
-* Neo.Renderer.Model.Sprites
-* Neo.Renderer.Model.Particles
-* Neo.Renderer.Model.Liquids
-* Neo.Renderer.Model.Beams
-* Neo.Renderer.Model.Players
-* Neo.Renderer.Model.Maps
-* Neo.Renderer.Model.Light_Wave
-* Neo.Renderer.Model.Blender
-* Neo.Renderer.Model.Maya
-* Neo.Renderer.Model.Studio_Max
-* Neo.Renderer.Execution
-* Neo.Renderer.Execution.Secondary
-* Neo.Renderer.Execution.Primary
-* Neo.Core
-* Neo.Core.Debugging
-* Neo.Core.Networking
-* Neo.Core.Console
-* Neo.Core.Commands
-* Neo.Core.Impulses
-* Neo.Core.Particles
-* Neo.Core.Entities
-* Neo.Core.Collisions
-* Neo.Core.Special_Effects
-* Neo.Core.Skins
-* Neo.Core.Menu
-* Neo.Core.Menu.Choices
-* Neo.Core.Menu.Edits
-* Neo.Core.Menu.Fields
-* Neo.Core.Menu.Sliders
-* Neo.Core.Menu.Renderers
-* Neo.Game
-* Neo.Game.Dialogs
-* Neo.Game.Weapons
-* Neo.Game.Triggers
-* Neo.Game.Targets
-* Neo.Game.Players
-* Neo.Game.Achivements
-* Neo.Game.Articulated_Figures
-* Neo.Game.News
-* Neo.Game.Friends
-* Neo.Game.File
-* Neo.Game.File.Bot_Awareness_Maps
-* Neo.Game.File.Saves
-* Neo.Game.File.Recordings
-* Neo.Game.File.Localizations
-* Neo.Game.File.Configurations
-* -- ...

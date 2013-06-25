@@ -501,6 +501,8 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Integer_Address, Integer_4_Signed_C);
     function To_Unchecked_Integer_4_Unsigned_C
       is new Ada.Unchecked_Conversion(Integer_Address, Integer_4_Unsigned_C);
+    function To_Unchecked_Integer_4_Unsigned_C
+      is new Ada.Unchecked_Conversion(Integer_4_Signed_C , Integer_4_Unsigned_C);
     function To_Unchecked_Access_Integer_4_Unsigned
       is new Ada.Unchecked_Conversion(Address, Access_Integer_4_Unsigned);
     function To_Unchecked_Float_4_Real
@@ -513,6 +515,10 @@ package Neo.Foundation.Data_Types
       is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C, Integer_Address);
     function To_Unchecked_Integer_Address
       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
+    function To_Unchecked_Integer_Address
+      is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Integer_Address);
+    function To_Unchecked_Integer_Address
+      is new Ada.Unchecked_Conversion(Integer_4_Unsigned_C, Integer_Address);
     function To_Unchecked_Integer_4_Signed
       is new Ada.Unchecked_Conversion(Integer_4_Unsigned, Integer_4_Signed);
     function To_Unchecked_Integer_4_Address

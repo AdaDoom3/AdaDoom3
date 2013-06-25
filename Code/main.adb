@@ -35,6 +35,7 @@ use
   Ada.Calendar,
   Ada.Calendar.Formatting,
   Neo,
+  Neo.System,
   Neo.Foundation.Output,
   Neo.Foundation.Data_Types,
   Neo.Foundation.Package_Testing;
@@ -57,10 +58,9 @@ procedure Main
   ---------------
   -- Variables --
   ---------------
-    Start_Time_Image       : String_2                    := To_String_2(Image(Clock));
-    Did_Finalize_Secondary : Boolean                     := False;
-    Exception_Secondary    : Exception_Occurrence_Access := null;
-    Exception_Primary      : Exception_Occurrence_Access := null;
+    Start_Time_Image       : String_2                                   := To_String_2(Image(Clock));
+    Did_Finalize_Secondary : Boolean                                    := False;
+    Exceptions             : array(1..2) of Exception_Occurrence_Access := (others => null);
     Secondary              : Task_Secondary;
   --------------------
   -- Task_Secondary --
@@ -97,9 +97,9 @@ procedure Main
             end loop;
           exception
             when Error: others =>
-              Exception_Secondary := Save_Occurrence(Error);
+              Exceptions(2):= Save_Occurrence(Error);
           end Main_Game_Loop;
-        if Exception_Secondary /= null then
+        if Exceptions(2) /= null then
           --Neo.System.Window.Finalize; -- Should kill primary execution (Neo.System.Window.Run)
           ----------------
           accept Finalize;
@@ -154,10 +154,19 @@ procedure Main
           if not Did_Finalize_Secondary then
             Secondary.Finalize;
           end if;
-          Exception_Primary := Save_Occurrence(Error);
+          Exceptions(1) := Save_Occurrence(Error);
       end Run;
+    for I in Exceptions'range loop
+      if Exceptions(I) /= null then
+        Put_Line(L("Error: ") & To_String_2(Exception_Name(Exceptions(I).all)));
+        Put_Line(To_String_2(Exception_Message(Exceptions(I).all)));
+        if Exception_Name(Exceptions(I).all) = "NEO.SYSTEM.SYSTEM_CALL_FAILURE" then
+          Put_Last_Error_Number;
+        end if;
+      end if;
+    end loop;
     if
-    (Exception_Primary /= null or Exception_Secondary /= null) and then
+    (Exceptions(1) /= null or Exceptions(2) /= null) and then
     Neo.System.Exception_Handling.Is_Okay(
       Title   => NAME & L(" Error!"),
       Buttons => Neo.System.Exception_Handling.Yes_No_Buttons,

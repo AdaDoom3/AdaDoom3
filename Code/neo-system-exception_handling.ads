@@ -94,7 +94,6 @@ private
     procedure Finalize
       is new Ada.Unchecked_Deallocation(Task_Console, Access_Task_Console);
     procedure Send_Catalog;
-    procedure Copy_Catalog;
     procedure Save_Catalog;
   ---------------
   -- Constants --
@@ -103,9 +102,8 @@ private
     FAILED_SET_ALERT               : constant String_2                     := "Alert! Failed to start system alert!";
     FAILED_SPAWN_CONSOLE           : constant String_2                     := "Failed to spawn console!";
     FAILED_CONSOLE_ALREADY_SPAWNED : constant String_2                     := "Failed to spawn console because it is already open!";
-    CONSOLE_BUTTONS                : constant array(1..4) of Record_Button :=(
+    CONSOLE_BUTTONS                : constant array(1..3) of Record_Button :=(
       ("Send", Send_Catalog'access),
-      ("Copy", Copy_Catalog'access),
       ("Save", Save_Catalog'access),
       ("Quit", null)); -- A null Access_Procedure creates an exit button
   ---------------
