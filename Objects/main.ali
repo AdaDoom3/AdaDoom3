@@ -1,0 +1,228 @@
+V "GNAT Lib v2013"
+M P W=8
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_NESTED_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_SELECT_STATEMENTS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_TASK_HIERARCHY
+RV NO_TASKING
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK
+RV MAX_SELECT_ALTERNATIVES=1
+RV MAX_TASK_ENTRIES=2
+RV MAX_TASKS=1+
+
+U main%b		main.adb		f416cc4a DE NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W neo%s			neo.adb			neo.ali
+W neo.command%s		neo-command.adb		neo-command.ali
+W neo.system%s		neo-system.adb		neo-system.ali
+W neo.system.community%s  neo-system-community.adb  neo-system-community.ali
+W neo.system.memory%s	neo-system-memory.adb	neo-system-memory.ali
+W neo.system.processor%s  neo-system-processor.adb  neo-system-processor.ali
+W neo.system.text%s	neo-system-text.adb	neo-system-text.ali
+W neo.system.text.console%s  neo-system-text-console.adb  neo-system-text-console.ali
+W system%s		system.ads		system.ali
+W system.parameters%s	s-parame.adb		s-parame.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.task_info%s	s-tasinf.adb		s-tasinf.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.rendezvous%s  s-tasren.adb	s-tasren.ali
+W system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chahan.ads		20130417131018 1d381dcd
+D a-chlat1.ads		20130417131018 2825df20
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-cohama.ads		20130417131018 9f97b812
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-reatim.ads		20130417131020 63f07669
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-widcha.ads		20130417131022 a2b85d3d
+D a-wichha.ads		20130417131022 6011239b
+D a-witeio.ads		20130417131022 551dcbf1
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D main.adb		20131011095430 f72acb38
+D neo.ads		20131010033154 b027011e
+D neo-command.ads	20131011012604 f29b51c3
+D neo-system.ads	20131011012604 02e3e0bb
+D neo-system-community.ads  20131011094616 c1936553
+D neo-system-memory.ads	20131008053820 75f92499
+D neo-system-processor.ads  20131010030552 cc41db08
+D neo-system-text.ads	20131007071644 72761e79
+D neo-system-text-console.ads  20131010030552 59c29dfa
+D system.ads		20130417131036 5fc8ae56
+D s-atacco.ads		20130417131028 4c36d12f
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taprop.ads		20130417131032 1dd2e1b6
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-tpoben.ads		20130417131032 b641f948
+D s-tasren.ads		20130417131032 a67a9949
+D s-tassta.ads		20130417131032 70812003
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-win32.ads		20130417131034 e5a79fe6
+X 1 ada.ads
+16K9*Ada 19e8 33|18r3 34r3 65r23 121r23
+X 9 a-except.ads
+53K13*Exceptions 355e19 33|18w7 34r7 65r27 121r27
+66R9*Exception_Occurrence 332e14 33|65r38 121r38
+75V13*Exception_Name{string} 33|125s56 127s16
+97V13*Exception_Message{string} 33|126s27
+X 12 a-iteint.ads
+24h9 Forward_Iterator
+X 33 main.adb
+35U11*Main 35b11 187l7 187t11
+40b5 DO_DEBUG{boolean} 145r30
+41b5 DO_TEST{boolean} 75r12
+42a5 DIRECTORY_GAMES{34|65A13} 151r52 152r52
+43a5 DIRECTORY_LOGS{34|65A13} 151r98
+44a5 DIRECTORY_ASSETS{34|65A13}
+45a5 DIRECTORY_SETTINGS{34|65A13} 152r98
+49T15 Task_Loop 53l11 53e20 59r22 69b15 116l11 116t20
+51Y15 Initialize 73b16 155s24
+52Y15 Finalize 90b24 112b22 161s28 165s30
+57r5 Path_Settings{34|71R13} 152m9 153r52 167r52
+58r5 Path_Log{34|71R13} 151m9
+59t5 Main_Task_Loop{49T15} 155r9 161r13 165r15
+63U15 Handle_Graphics 135b15 139l11 139t26
+64U15 Handle_Exception 65>7 109s15 120b15 131l11 131t27 164s15 171s11
+65r7 Occurrence{9|66R9} 121b7 125r71 126r45 127r31
+84q9 Run 114l15 114e18
+108r18 Occurrence{9|66R9} 109r32
+142q5 Run 172l11 172e14
+157q9 Finalize 166l15 166e23
+163r18 Occurrence{9|66R9} 164r32
+170r14 Occurrence{9|66R9} 171r28
+X 34 neo.ads
+46K9*Neo 33|19w3 20r3 23r3 27r3 29r3 30r3 31r3 32r3 42r35 43r35 44r35 45r35
+. 57r22 57r48 58r22 58r48 76r11 77r11 78r11 79r11 80r11 81r11 124r9 124r23
+. 125r11 125r40 125r86 126r11 126r60 128r15 128r43 130r15 145r9 146r9 146r28
+. 148r9 148r28 149r9 150r9 151r26 151r76 152r26 152r76 153r9 153r36 154r9
+. 154r28 167r9 167r36 168r9 168r28 173r8 173r25 174r7 174r20 177r11 178r7
+. 179r20 179r42 180r20 180r42 180r55 181r20 182r20 184r9 34|923e10
+65A13*String_2{wide_string}<integer> 33|42r39 43r39 44r39 45r39
+71R13*String_2_Unbounded{20|51R9} 33|57r26 58r26
+505V14*Localize{65A13} 33|125s15 146s32 148s32 154s32 168s32 179s46 180s46
+514U15*Put_Line 33|174s11
+520U15*Put_Debug_Line 33|146s13 148s13 154s13 168s13
+530V14*Get_Error{65A13} 33|124s27 173s12 174s24 180s59
+535U15*Set_Error 33|124s13
+539U15*Set_Do_Put_Debug 33|145s13
+577V14*To_String_2{65A13} 33|125s44 126s15
+583V14*To_String_2_Unbounded=586:42{20|51R9} 33|151s30 152s30
+587V14*To_String_2=590:42{wide_string} 33|153s40 167s40
+744a5*NULL_STRING_2{65A13} 33|130r19 173r29
+745r5*NULL_STRING_2_UNBOUNDED{71R13} 33|57r52 58r52
+747a5*END_LINE_2{65A13} 33|125r90 126r64 128r47
+X 35 neo-command.ads
+27K13*Command 33|20w7 76r15 153r13 167r13 35|159e18
+36U15*Test 33|76s23
+37U15*Load_Variables 33|153s21
+39U15*Save_Variables 33|167s21
+X 36 neo-system.ads
+25K13*System 33|23w7 27r7 29r7 30r7 31r7 32r7 77r15 78r15 79r15 80r15 81r15
+. 128r19 149r13 150r13 151r80 152r80 177r15 178r11 179r24 180r24 181r24 182r24
+. 184r13 36|192e17
+117U15*Test 33|77s22
+122U15*Set_Icon_Path 33|150s20
+124U15*Set_Name 33|149s20
+126V14*Get_Name{34|65A13} 33|151s87 152s87 179s31 180s31
+130V14*Get_Last_Error{34|65A13} 33|128s26
+X 37 neo-system-community.ads
+17K20*Community 33|31w14 37|20e27
+X 38 neo-system-memory.ads
+24K20*Memory 33|27w14 78r22 38|101e24
+62U15*Test 33|78s29
+X 39 neo-system-processor.ads
+27K20*Processor 33|32w14 79r22 39|189e27
+141U15*Test 33|79s32
+X 40 neo-system-text.ads
+17K20*Text 33|29w14 30r14 80r22 81r22 177r22 178r18 181r31 182r31 184r20
+. 40|94e20
+59U15*Test 33|80s27
+X 41 neo-system-text-console.ads
+19K25*Console 33|30w19 81r27 177r27 178r23 181r36 182r36 184r25 41|137e30
+29n7*Error_Icon{24E10} 33|182r44
+32n7*Yes_No_Buttons{30E10} 33|181r44
+39U15*Test 33|81s35
+40U15*Spawn 33|184s33
+47V14*Is_Open{boolean} 33|177s35
+49V14*Is_Okay{boolean} 33|178s31
+50a7 Name{34|65A13} 33|179r9
+51a7 Message{34|65A13} 33|180r9
+52e7 Buttons{30E10} 33|181r9
+53e7 Icon{24E10} 33|182r9
+X 59 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

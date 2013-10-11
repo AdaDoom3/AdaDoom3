@@ -1,0 +1,807 @@
+V "GNAT Lib v2013"
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_CALENDAR
+RV NO_DELAY
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FIXED_POINT
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_HEAP_ALLOCATIONS
+RV NO_IMPLICIT_LOOPS
+RV NO_NESTED_FINALIZATION
+RV NO_PROTECTED_TYPES
+RV NO_RELATIVE_DELAY
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_CONVERSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK
+RV MAX_ENTRY_QUEUE_LENGTH=1+
+
+U neo%b			neo.adb			6cd44ed4 DE NE OO PK
+Z ada%s			ada.ads			ada.ali
+W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.text_io.modular_aux%s  a-timoau.adb	a-timoau.ali
+W ada.text_io.modular_io%s
+W ada.wide_text_io.modular_io%s
+W system%s		system.ads		system.ali
+W system.img_int%s	s-imgint.adb		s-imgint.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+
+U neo%s			neo.ads			ff74aa2f BN DE EE OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.calendar%s	a-calend.adb		a-calend.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.hash_tables%s  a-cohata.ads	a-cohata.ali
+Z ada.containers.hash_tables.generic_keys%s
+Z ada.containers.hash_tables.generic_operations%s
+W ada.containers.hashed_maps%s
+Z ada.containers.prime_numbers%s  a-coprnu.adb	a-coprnu.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.adb		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.fixed%s	a-strfix.adb		a-strfix.ali
+W ada.strings.wide_fixed%s  a-stwifi.adb	a-stwifi.ali
+W ada.strings.wide_unbounded%s  a-stwiun.adb	a-stwiun.ali
+W ada.strings.wide_unbounded.wide_hash%s  a-swuwha.adb  a-swuwha.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.unchecked_conversion%s
+W ada.unchecked_deallocation%s
+W ada.wide_text_io%s	a-witeio.adb		a-witeio.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-caldel.ads		20130417131018 9f20b83d
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chlat1.ads		20130417131018 2825df20
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-chtgke.ads		20130417131018 fba5dead
+D a-chtgke.adb		20130417131018 2dde331d
+D a-chtgop.ads		20130417131018 ee32f6e8
+D a-chtgop.adb		20130417131018 cd0e5151
+D a-cohama.ads		20130417131018 9f97b812
+D a-cohama.adb		20130417131018 ddd40fe7
+D a-coprnu.ads		20130417131018 0cdf1864
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-timoau.ads		20130417131022 01c06610
+D a-timoio.ads		20130417131022 d32407b9
+D a-timoio.adb		20130417131022 de0ea1c6
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-witeio.ads		20130417131022 551dcbf1
+D a-wtmoio.ads		20130417131022 5502ed6b
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D neo.ads		20131010033154 b027011e
+D neo.adb		20131010033154 dcf34fca
+D system.ads		20130417131036 5fc8ae56
+D s-atacco.ads		20130417131028 4c36d12f
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-imgint.ads		20130417131030 02dbe0c2
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-win32.ads		20130417131034 e5a79fe6
+X 1 ada.ads
+16K9*Ada 19e8 40|21r3 22r3 23r3 24r3 25r3 26r3 27r3 28r3 29r3 30r3 31r3 32r3
+. 37r3 38r3 41r3 42r3 43r3 44r3 45r3 72r10 550r20 586r15 590r15 641r14 643r14
+. 645r14 647r14 649r14 651r14 653r14 655r14 657r14 659r14 661r14 663r14 665r14
+. 667r14 669r14 671r14 673r14 675r14 677r14 679r14 681r14 683r14 685r14 687r14
+. 689r14 766r18 911r65 41|243r17 567r20 572r16 577r30 583r39 587r17 588r29
+. 589r54 589r77
+X 2 a-calend.ads
+36K13*Calendar 375e17 40|21w7 37r7
+38I9*Time 40|693r40 829r22
+52V13*Clock{38I9} 40|693s62 41|272s25 287s39 302s13
+97V14*"-"{duration} 41|287s37 302s19
+X 6 a-contai.ads
+16K13*Containers 24e19 40|32r7 766r22
+19M9*Hash_Type
+X 12 a-cohama.ads
+41+9 Key_Type 40|767r13
+42+9 Element_Type 40|768r13
+44V18 Hash{6|19M9} 40|769r13
+45V18 Equivalent_Keys{boolean} 40|770r13
+48k24*Hashed_Maps 441e31 40|32w18 766r33
+52R9 Map 40|791r27[765]
+61R9 Cursor 40|781r29[765] 41|48r29[40|765]
+72V13 Has_Element{boolean} 41|77s31[40|765]
+203U14 Insert 41|33s24[40|765]
+225U14 Replace 41|42s24[40|765]
+244U14 Delete 41|59s24[40|765]
+273V13 Find{61R9[40|765]} 41|51s31[40|765] 77s50[40|765]
+282V13 Element{40|761+12} 41|68s31[40|765]
+X 15 a-except.ads
+53K13*Exceptions 355e19 40|22w7 38r7
+X 18 a-iteint.ads
+24h9 Forward_Iterator
+X 19 a-stream.ads
+36K13*Streams 69e16 40|25w7 41r7
+42M9*Stream_Element
+51A9*Stream_Element_Array(42M9)<44I9> 40|228r30 610r17 611r14 613r17 614r14
+. 616r17 617r14 619r17 620r14 622r17 623r14 625r17 626r14 41|851r17 852r14
+. 861r17 862r14 871r17 872r14 881r17 882r14 891r17 892r14 901r17 902r14
+X 20 a-string.ads
+16K13*Strings 35e16 40|26r7 27r7 28r7 29r7 42r7 43r7 44r7 45r7 72r14 586r19
+. 590r19 41|577r34 583r43 587r21 588r33 589r58
+33n37*Both{33E9} 41|577r60 583r69 589r119
+X 21 a-strfix.ads
+18K21*Fixed 251e22 40|26w15 43r15 41|577r42 583r51 587r29 588r41 589r66
+195V13*Trim{string} 41|577s48 583s57 589s72
+217V13*Head{string} 41|588s47
+228V13*Tail{string} 41|587s35
+229s7 Source{string} 41|588r19
+230i7 Count{natural} 41|589r19
+X 23 a-stwifi.ads
+18K21*Wide_Fixed 254e27 40|27w15 44r15
+X 25 a-stwiun.ads
+48K21*Wide_Unbounded 494e31 40|28w15 29r15 45r15 72r22 586r27 590r27
+51R9*Unbounded_Wide_String 451e14 40|72r37
+66V13*To_Unbounded_Wide_String{51R9} 40|586r42
+72V13*To_Wide_String{wide_string} 40|590r42
+92V14*"&"{51R9} 41|117s40 171s56 179s44
+104V14*"&"{51R9} 41|730s28 759s29
+139V14*"="{boolean} 40|770r33
+X 26 a-swuwha.ads
+20V37*Wide_Hash{6|19M9} 40|29w30 769r32
+X 28 a-textio.ads
+49K13*Text_IO 471e16 40|23w7 41|572r20
+X 30 a-timoio.ads
+45k21*Modular_IO 84e27 41|572r28
+75U14 Put 41|575s29[571]
+X 32 a-unccon.ads
+20v14*Unchecked_Conversion 40|30w7 641r18 643r18 645r18 647r18 649r18 651r18
+. 653r18 655r18 657r18 659r18 661r18 663r18 665r18 667r18 669r18 671r18 673r18
+. 675r18 677r18 679r18 681r18 683r18 685r18 687r18 689r18
+X 33 a-uncdea.ads
+20u15*Unchecked_Deallocation 40|31w7
+X 34 a-witeio.ads
+52K13*Wide_Text_IO 495e21 40|24w7 550r24 911r69 41|243r21 567r24 589r81
+80I12*Number_Base{integer} 40|550r37 41|567r37 589r94
+244U14*Put 40|911r82 41|243r34
+X 36 interfac.ads
+36K9*Interfaces 177e15 40|19w3 20r3 35r3 36r3 68r10 70r10 77r10 81r10 90r10
+. 94r10 103r10 107r10 116r10 120r10 141r10 143r10 159r10 198r21 741r62
+55M9*Unsigned_8 40|92r10
+58M9*Unsigned_16 40|105r10
+61M9*Unsigned_32 40|118r10
+64M9*Unsigned_64 40|128r10
+X 37 i-c.ads
+18K20*C 230e17 40|20w14 36r14 68r21 70r21 77r21 81r21 90r21 94r21 103r21
+. 107r21 116r21 120r21 141r21 143r21 159r21 198r32 741r73
+35I9*int<integer> 40|120r23
+36I9*short<short_integer> 40|107r23
+43M9*unsigned 40|116r23
+44M9*unsigned_short 40|103r23
+47M9*unsigned_char 40|90r23
+60M9*size_t 40|141r23
+64F9*C_float<float> 40|159r23
+65F9*double<long_float> 40|143r23
+72E9*char<character> 40|77r23 94r23 198r34
+74e4*nul{72E9} 40|741r75
+79A9*char_array(72E9)<60M9> 40|68r23
+84V13*To_C{79A9} 41|778s16 845s50
+88V13*To_Ada{string} 41|665s16
+108E9*wchar_t<wide_character> 40|81r23
+116A9*wchar_array(108E9)<60M9> 40|70r23
+120V13*To_C{116A9} 41|705s16 826s49
+X 40 neo.ads
+46K9*Neo 923l7 923e10 41|17b14 925l7 925t10
+55X5*Unimplemented_Feature
+56X5*Timer_Started_Without_Being_Stopped 41|268r17
+57X5*Timer_Stopped_Without_Being_Started 41|283r17
+58X5*Title_Is_Too_Long_To_Fit_On_A_Single_Line 41|366r17
+59X5*Attempted_To_Decode_Non_Valid_Base_64_Digit_To_Data_Stream
+63A13*String_1{string}<integer> 192r21 560r17 567r14 570r14 578r17 601r17
+. 743r40 746r40 750r40 41|573r15 583r27 662r14 671r14 673r16 737r17 774r17
+. 841r17
+65A13*String_2{wide_string}<integer> 181r19 182r16 186r21 222r19 224r30 226r35
+. 506r17 507r14 511r17 513r18 515r17 519r17 521r17 527r14 529r14 531r14 533r17
+. 534r14 536r17 538r17 552r14 563r17 569r17 572r17 576r14 579r14 582r14 584r17
+. 589r14 593r14 598r17 604r17 744r40 747r40 774r29 777r29 780r24 783r24 785r24
+. 788r24 866r50 867r50 868r50 881r21 883r21 884r18 892r18 894r18 896r18 898r28
+. 900r22 41|29r29 38r29 47r24 56r24 64r24 73r24 114r21 123r21 124r18 168r28
+. 176r22 184r18 192r18 200r18 235r17 308r17 309r14 342r17 360r18 404r17 421r17
+. 431r17 450r17 496r17 505r17 514r14 523r14 532r14 550r17 551r14 569r14 670r17
+. 701r17 712r14 721r14 738r14 740r16 751r14 783r17 803r17 822r17
+67A13*String_1_C{37|79A9}<37|60M9> 190r21 561r14 564r14 566r17 575r17 595r17
+. 41|661r17 688r17 711r17 775r14 784r14 793r17 832r17
+69A13*String_2_C{37|116A9}<37|60M9> 194r21 573r14 581r17 41|689r14 691r16
+. 702r14 720r17 813r17
+71R13*String_2_Unbounded{25|51R9} 243r10 585r14 588r17 745r40 767r32 912r32
+. 913r32 914r32 41|724r16 754r17
+76E13*Character_1_C{37|72E9} 196r26 246r10 741r40 742r80 41|694r42
+78E13*Character_1{character} 249r10 694r40 739r40 740r78 870r50 871r81 41|677r43
+. 677r59 680r15 743r40
+80E13*Character_2_C{37|108E9} 200r26 202r21 252r10 742r40 742r62 41|694r24
+. 730r46 763r57
+82E13*Character_2{wide_character} 255r10 509r17 517r17 740r40 740r62 869r50
+. 41|237r17 237r39 412r17 441r17 677r16 680r31 730r30 743r24 759r31
+87M10*Integer_Address 204r21 641r39 653r39 657r39 659r39 661r39 671r48 673r68
+. 675r70 677r59 679r61 683r68 685r70
+89M13*Integer_1_Unsigned_C{37|47M9} 216r21 258r10
+91M13*Integer_1_Unsigned{36|55M9} 98r10 100r10 101r16 113r10 114r16 175r10
+. 261r10 480r17 481r17 482r17
+93E13*Integer_1_Signed_C{37|72E9} 264r10
+95I13*Integer_1_Signed{short_short_integer} 267r10
+97M13*Integer_1_Natural{91M13} 270r10
+99M13*Integer_1_Positive{91M13} 273r10
+102M13*Integer_2_Unsigned_C{37|44M9} 214r21 276r10
+104M13*Integer_2_Unsigned{36|58M9} 111r10 279r10 669r39 821r23
+106I13*Integer_2_Signed_C{37|36I9} 282r10
+108I13*Integer_2_Signed{short_integer} 285r10 669r59
+110M13*Integer_2_Natural{104M13} 288r10
+112M13*Integer_2_Positive{91M13} 291r10
+115M13*Integer_4_Unsigned_C{37|43M9} 208r21 294r10 661r56 663r59 679r39
+117M13*Integer_4_Unsigned{36|61M9} 210r21 297r10 667r53 681r39 687r59 689r53
+. 41|238r17 240r32
+119I13*Integer_4_Signed_C{37|35I9} 212r21 300r10 659r56 663r39 677r39 687r39
+. 748r40 749r40
+121I13*Integer_4_Signed{integer} 303r10 491r22 681r59 41|318r22 362r21 363r21
+. 753r17
+123I13*Integer_4_Natural{natural} 306r10 551r20 890r18 916r32 41|216r18 236r17
+. 568r20
+125I13*Integer_4_Positive{positive} 309r10 523r18 525r14 542r22 863r50 864r50
+. 865r50 888r18 904r26 915r32 41|208r18 224r26 331r18 460r22 541r14
+127M13*Integer_8_Unsigned{36|64M9} 130r10 136r10 138r10 139r16 312r10
+129M13*Integer_8_Unsigned_C{127M13} 206r21 315r10
+131I13*Integer_8_Signed{long_long_integer} 134r10 318r10
+133I13*Integer_8_Signed_C{131I13} 321r10
+135M13*Integer_8_Natural{127M13} 324r10
+137M13*Integer_8_Positive{127M13} 327r10
+140M13*Integer_Size_C{37|60M9} 330r10 41|723r16 730r69
+142F13*Float_8_Real_C{37|65F9} 336r10
+144F13*Float_8_Real{long_float} 147r10 148r18 150r10 151r18 153r10 156r10
+. 339r10
+146F13*Float_8_Natural{144F13} 342r10
+149F13*Float_8_Positive{144F13} 345r10
+152F13*Float_8_Percent{144F13} 348r10
+155F13*Float_8_Degree{144F13} 351r10
+158F13*Float_4_Real_C{37|64F9} 354r10
+160F13*Float_4_Real{float} 163r10 164r18 166r10 167r18 169r10 172r10 357r10
+. 667r39 689r39 862r50
+162F13*Float_4_Natural{160F13} 360r10
+165F13*Float_4_Positive{160F13} 363r10
+168F13*Float_4_Percent{160F13} 366r10
+171F13*Float_4_Degree{160F13} 369r10
+174M13*Byte{91M13} 826r17 41|763r78
+179P10*Access_Function_Localize(wide_string) 181>9 908r25 910r32 41|152r25
+. 478r21
+181a9 Item{65A13}
+183M13*Access_Address{42|64M9} 333r10
+185P10*Access_String_2(65A13) 240r10
+187P10*Access_Procedure
+189P10*Access_String_1_C(67A13)
+191P10*Access_String_1(63A13)
+193P10*Access_String_2_C(69A13)
+195P10*Access_Constant_Character_1_C(76E13) 602r14 649r48 41|833r14 842r14
+197P10*Access_Character_1_C(37|72E9) 596r14 645r48 41|794r14
+199P10*Access_Constant_Character_2_C(80E13) 592r17 605r14 643r39 651r48 653r56
+. 675r39 685r39 41|750r17 755r17 814r14 823r14
+201P10*Access_Character_2_C(80E13) 599r14 647r48 41|804r14
+203P10*Access_Integer_Address(87M10)
+205P10*Access_Integer_8_Unsigned_C(129M13)
+207P10*Access_Integer_4_Unsigned_C(115M13)
+209P10*Access_Integer_4_Unsigned(117M13) 665r48
+211P10*Access_Integer_4_Signed_C(119I13)
+213P10*Access_Integer_2_Unsigned_C(102M13) 655r48 657r56 673r39 683r39
+215P10*Access_Integer_1_Unsigned_C(89M13)
+220P10*Not_Null_Access_Procedure_Put 222>9 544r16 906r20 911r32 41|160r20
+. 469r16
+222a9 Item{65A13}
+223P10*Not_Null_Access_String_2(65A13) 462r26
+225P10*Not_Null_Access_Constant_String_2(65A13)
+227P10*Not_Null_Access_Stream_Element_Array(19|51A9)
+232A10*Array_Duration(duration)<integer>
+235A10*Array_Address(42|64M9)<integer> 374r21
+238A10*Array_Access_String_2(185P10)<integer> 376r21
+241A10*Array_String_2_Unbounded(71R13)<integer>
+244A10*Array_Character_1_C(76E13)<integer> 378r21
+247A10*Array_Character_1(78E13)<integer> 380r21
+250A10*Array_Character_2_C(80E13)<integer> 382r21
+253A10*Array_Character_2(82E13)<integer> 384r21
+256A10*Array_Integer_1_Unsigned_C(89M13)<integer> 386r21
+259A10*Array_Integer_1_Unsigned(91M13)<integer> 388r21 819r21
+262A10*Array_Integer_1_Signed_C(93E13)<integer> 390r21
+265A10*Array_Integer_1_Signed(95I13)<integer> 392r21
+268A10*Array_Integer_1_Natural(97M13)<integer> 394r21
+271A10*Array_Integer_1_Positive(99M13)<integer> 396r21
+274A10*Array_Integer_2_Unsigned_C(102M13)<integer> 398r21
+277A10*Array_Integer_2_Unsigned(104M13)<integer> 400r21
+280A10*Array_Integer_2_Signed_C(106I13)<integer> 402r21
+283A10*Array_Integer_2_Signed(108I13)<integer> 404r21
+286A10*Array_Integer_2_Natural(110M13)<integer> 406r21
+289A10*Array_Integer_2_Positive(112M13)<integer> 408r21
+292A10*Array_Integer_4_Unsigned_C(115M13)<integer> 410r21
+295A10*Array_Integer_4_Unsigned(117M13)<integer> 412r21
+298A10*Array_Integer_4_Signed_C(119I13)<integer> 414r21
+301A10*Array_Integer_4_Signed(121I13)<integer> 416r21
+304A10*Array_Integer_4_Natural(123I13)<integer> 418r21
+307A10*Array_Integer_4_Positive(125I13)<integer> 420r21
+310A10*Array_Integer_8_Unsigned(127M13)<integer> 422r21
+313A10*Array_Integer_8_Unsigned_C(129M13)<integer> 424r21
+316A10*Array_Integer_8_Signed(131I13)<integer> 426r21
+319A10*Array_Integer_8_Signed_C(133I13)<integer> 428r21
+322A10*Array_Integer_8_Natural(135M13)<integer> 430r21
+325A10*Array_Integer_8_Positive(137M13)<integer> 432r21
+328A10*Array_Integer_Size_C(140M13)<integer> 434r21
+331A10*Array_Access_Address(183M13)<integer> 436r21
+334A10*Array_Float_8_Real_C(142F13)<integer> 438r21
+337A10*Array_Float_8_Real(144F13)<integer> 440r21
+340A10*Array_Float_8_Natural(146F13)<integer> 442r21
+343A10*Array_Float_8_Positive(149F13)<integer> 444r21
+346A10*Array_Float_8_Percent(152F13)<integer> 446r21
+349A10*Array_Float_8_Degree(155F13)<integer> 448r21
+352A10*Array_Float_4_Real_C(158F13)<integer> 450r21
+355A10*Array_Float_4_Real(160F13)<integer> 452r21
+358A10*Array_Float_4_Natural(162F13)<integer> 454r21
+361A10*Array_Float_4_Positive(165F13)<integer> 456r21
+364A10*Array_Float_4_Percent(168F13)<integer> 458r21
+367A10*Array_Float_4_Degree(171F13)<integer> 460r21
+373P10*Access_Array_Address(235A10)
+375P10*Access_Array_Access_String_2(238A10)
+377P10*Access_Array_Character_1_C(244A10)
+379P10*Access_Array_Character_1(247A10)
+381P10*Access_Array_Character_2_C(250A10)
+383P10*Access_Array_Character_2(253A10)
+385P10*Access_Array_Integer_1_Unsigned_C(256A10)
+387P10*Access_Array_Integer_1_Unsigned(259A10)
+389P10*Access_Array_Integer_1_Signed_C(262A10)
+391P10*Access_Array_Integer_1_Signed(265A10)
+393P10*Access_Array_Integer_1_Natural(268A10)
+395P10*Access_Array_Integer_1_Positive(271A10)
+397P10*Access_Array_Integer_2_Unsigned_C(274A10)
+399P10*Access_Array_Integer_2_Unsigned(277A10)
+401P10*Access_Array_Integer_2_Signed_C(280A10)
+403P10*Access_Array_Integer_2_Signed(283A10)
+405P10*Access_Array_Integer_2_Natural(286A10)
+407P10*Access_Array_Integer_2_Positive(289A10)
+409P10*Access_Array_Integer_4_Unsigned_C(292A10)
+411P10*Access_Array_Integer_4_Unsigned(295A10)
+413P10*Access_Array_Integer_4_Signed_C(298A10)
+415P10*Access_Array_Integer_4_Signed(301A10)
+417P10*Access_Array_Integer_4_Natural(304A10)
+419P10*Access_Array_Integer_4_Positive(307A10)
+421P10*Access_Array_Integer_8_Unsigned(310A10)
+423P10*Access_Array_Integer_8_Unsigned_C(313A10)
+425P10*Access_Array_Integer_8_Signed(316A10)
+427P10*Access_Array_Integer_8_Signed_C(319A10)
+429P10*Access_Array_Integer_8_Natural(322A10)
+431P10*Access_Array_Integer_8_Positive(325A10)
+433P10*Access_Array_Integer_Size_C(328A10)
+435P10*Access_Array_Access_Address(331A10)
+437P10*Access_Array_Float_8_Real_C(334A10)
+439P10*Access_Array_Float_8_Real(337A10)
+441P10*Access_Array_Float_8_Natural(340A10)
+443P10*Access_Array_Float_8_Positive(343A10)
+445P10*Access_Array_Float_8_Percent(346A10)
+447P10*Access_Array_Float_8_Degree(349A10)
+449P10*Access_Array_Float_4_Real_C(352A10)
+451P10*Access_Array_Float_4_Real(355A10)
+453P10*Access_Array_Float_4_Natural(358A10)
+455P10*Access_Array_Float_4_Positive(361A10)
+457P10*Access_Array_Float_4_Percent(364A10)
+459P10*Access_Array_Float_4_Degree(367A10)
+461P10*Not_Null_Access_Array_Not_Null_Access_String_2(223P10)
+466W20*Protected_Status 474l11 474e27 41|87b20 105l11 105t27
+468V18 Is_Doing_Something{boolean} 41|90b18 96l15 96t33
+470U19 Set_Is_Doing_Something 471>11 41|98b19 104l15 104t37
+471b11 New_Status{boolean} 41|100b11 103r23
+473b9 Status{boolean} 41|95r20 103r13
+478R10*Record_Color 483e17 695r40 696r40 697r40 698r40 699r40 700r40 701r40
+. 702r40 703r40 704r40 705r40 706r40 707r40 708r40 709r40 710r40 711r40 712r40
+. 713r40 714r40 715r40 716r40 717r40 718r40 719r40 720r40 721r40 722r40 723r40
+. 724r40 725r40 726r40 727r40 728r40 729r40 730r40 731r40 732r40 733r40 734r40
+. 735r40 736r40 737r40 738r40
+480m9*Red{91M13}
+481m9*Green{91M13}
+482m9*Blue{91M13}
+484R10*Record_Timer 496r22 498r22 500r18 827c10 832e17 41|264r22 279r22 294r18
+489U15*Test 41|233b15 259l11 259t15
+490U15*Hang 491>7 41|317b15 326l11 326t15
+491i7 Hang_Time{121I13} 41|318b7 322r21
+495U15*Start 496=7 41|263b15 274l11 274t16
+496r7 Timer{484R10} 41|264b7 267r16 270m9
+497U15*Stop 498=7 41|278b15 289l11 289t15
+498r7 Timer{484R10} 41|279b7 282r12 285m9 287r25
+499V14*Get_Duration{duration} 500>7 41|293b14 303l11 303t23
+500r7 Timer{484R10} 41|294b7 299r14 300r13 302r21
+505V14*Localize{65A13} 506>7 41|242s18 244s13 249s18 250s18 251s18 254s18
+. 307b14 313l11 313t19
+506a7 Item{65A13} 41|308b7 312r38
+508U15*Put 509>7 41|246s9 247s9 370s11 396s11 410b15 416l11 416t14
+509e7 Item{82E13} 41|412b7 415r13
+510U15*Put 511>7 41|244s9 245s9 324s11 335s11 380s13 382s11 385s13 388s13
+. 390s15 403b15 408l11 408t14 415s9 424s9
+511a7 Item{65A13} 41|404b7 407r26
+512U15*Put_Title 513>7 41|359b15 399l11 399t20
+513a7 Title{65A13} 41|360b7 363r41 363r60 365r12 373r21 374r14 379r45 382r15
+. 387r23 388r17 389r16
+514U15*Put_Line 515>7 41|242s9 249s9 250s9 251s9 254s9 255s9 256s9 257s9
+. 258s9 420b15 426l11 426t19
+515a7 Item{65A13} 41|421b7 424r13
+516U15*Put_Debug 517>7 41|439b15 445l11 445t20
+517e7 Item{82E13} 41|441b7 444r19
+518U15*Put_Debug 519>7 41|430b15 437l11 437t20 444s9 453s9
+519a7 Item{65A13} 41|431b7 435r28
+520U15*Put_Debug_Line 521>7 41|449b15 455l11 455t25
+521a7 Item{65A13} 41|450b7 453r19
+522U15*New_Line 523>7 41|248s9 252s9 253s9 321s9 330b15 337l11 337t19 368s9
+. 372s9 394s9 398s9 425s9 454s9
+523i7 Lines{125I13} 41|331b7 334r21
+524V14*Get_Line_Size{125I13} 41|365s27 369s21 378s35 379s24 384s24 395s21
+. 540b14 545l11 545t24
+526V14*Get_Log{65A13} 41|258s18 531b14 536l11 536t18
+528V14*Get_Input_Entry{65A13} 41|522b14 527l11 527t26
+530V14*Get_Error{65A13} 41|513b14 518l11 518t20
+532V14*Get_Extension{65A13} 533>7 41|549b14 561l11 561t24
+533a7 Path{65A13} 41|550b7 554r26 555r14 556r27 557r20 557r32
+535U15*Set_Error 536>7 41|504b15 509l11 509t20
+536a7 Text{65A13} 41|505b7
+537U15*Set_Input_Entry 538>7 41|341b15 346l11 346t26
+538a7 Item{65A13} 41|342b7 345r38
+539U15*Set_Do_Put_Debug 540>7 41|350b15 355l11 355t27
+540b7 Do_Put_Debug{boolean} 41|351b7 354r39
+541U15*Set_Line_Size 542>7 41|459b15 464l11 464t24
+542i7 Line_Size{125I13} 41|460b7 463r36
+543U15*Set_Put 544>7 41|243s9 468b15 473l11 473t18
+544p7 Put{220P10} 41|469b7 472r30
+546M12 Type_Number 549r20 41|566r20 572r39
+548v14*To_Radian_Image 549>7 550>7 551>7 41|240r16 565b14 591l11 591t26
+549*7 Item{546M12} 41|566b7 575r40
+550i7 Base{34|80I12} 41|567b7 575r46 576r12 589r112
+551i7 Spacing{123I13} 41|568b7
+559V14*To_String_1_C{67A13} 560>7 41|773b14 779l11 779t24 787s16
+560a7 Item{63A13} 41|774b7 778r21
+562V14*To_String_1_C{67A13} 563>7 41|781b14 788l11 788t24
+563a7 Item{65A13} 41|783b7 787r42
+565V14*To_String_1{63A13} 566>7 41|660b14 666l11 666t22
+566a7 Item{67A13} 41|661b7 665r23
+568V14*To_String_1{63A13} 569>7 41|668b14 683l11 683t22 787s30
+569a7 Item{65A13} 41|670b7 673r25 677r32 680r47
+571V14*To_String_2_C{69A13} 572>7 41|699b14 706l11 706t24 807s50
+572a7 Item{65A13} 41|701b7 705r21
+574V14*To_String_2{65A13} 575>7 41|710b14 716l11 716t22
+575a7 Item{67A13} 41|711b7 715r42
+577V14*To_String_2{65A13} 578>7 747s62 41|577s18 586s15 735b14 746l11 746t22
+578a7 Item{63A13} 41|737b7 740r25 742r18 743r56
+580V14*To_String_2{65A13} 581>7 41|715s16 718b14 733l11 733t22
+581a7 Item{69A13} 41|720b7 723r38 726r18 727r14 730r64
+583V14*To_String_2_Unbounded=586:42{25|51R9} 745s62 41|33s37 42s38 51s42
+. 59s37 68s45 77s61 117s42 171s58 179s46
+584a7 Item{65A13}
+587V14*To_String_2=590:42{wide_string} 41|187s20 195s20 203s20 728s20 732s16
+. 765s16
+588r7 Item{71R13}
+591V14*To_String_2{65A13} 592>7 41|748b14 769l11 769t22
+592p7 Item{199P10} 41|750b7 755r50
+594V14*To_Access_Character_1_C{197P10} 595>7 41|792b14 798l11 798t34
+595a7 Item{67A13} 41|793b7 797r50 797r55
+597V14*To_Access_Character_2_C{201P10} 598>7 41|802b14 808l11 808t34
+598a7 Item{65A13} 41|803b7 807r64
+600V14*To_Access_Constant_Character_1_C{195P10} 601>7 41|839b14 846l11 846t43
+601a7 Item{63A13} 41|841b7 845r55
+603V14*To_Access_Constant_Character_2_C{199P10} 604>7 41|820b14 827l11 827t43
+604a7 Item{65A13} 41|822b7 826r54
+609V14*To_Low_Order_Byte_First{19|51A9} 610>7 41|850b14 856l11 856t34
+610a7 Item{19|51A9} 41|851b7 855r16
+612V14*To_Low_Order_Byte_Then_Low_Order_Bit_First{19|51A9} 613>7 41|860b14
+. 866l11 866t53
+613a7 Item{19|51A9} 41|861b7 865r16
+615V14*To_Low_Order_Byte_Then_High_Order_Bit_First{19|51A9} 616>7 41|870b14
+. 876l11 876t54
+616a7 Item{19|51A9} 41|871b7 875r16
+618V14*To_High_Order_Byte_First{19|51A9} 619>7 41|880b14 886l11 886t35
+619a7 Item{19|51A9} 41|881b7 885r16
+621V14*To_High_Order_Byte_Then_Low_Order_Bit_First{19|51A9} 622>7 41|890b14
+. 896l11 896t54
+622a7 Item{19|51A9} 41|891b7 895r16
+624V14*To_High_Order_Byte_Then_High_Order_Bit_First{19|51A9} 625>7 41|900b14
+. 906l11 906t55
+625a7 Item{19|51A9} 41|901b7 905r16
+627V14*Is_High_Order_Byte_First{boolean} 633r15 41|919b14 924l11 924t35
+629V14*Is_Low_Order_Byte_First{boolean} 636r15 41|910b14 915l11 915t34 923s20
+631V14*Is_Big_Endian=633:15{boolean}
+634V14*Is_Little_Endian=636:15{boolean}
+640V14*To_Unchecked_Address[32|20]{42|64M9} 41|762s15
+642V14*To_Unchecked_Address[32|20]{42|64M9}
+644V14*To_Unchecked_Access_Character_1_C[32|20]{197P10} 41|797s16
+646V14*To_Unchecked_Access_Character_2_C[32|20]{201P10} 41|807s16
+648V14*To_Unchecked_Access_Constant_Character_1_C[32|20]{195P10} 41|836s16
+650V14*To_Unchecked_Access_Constant_Character_2_C[32|20]{199P10} 41|761s13
+. 817s16
+652V14*To_Unchecked_Access_Constant_Character_2_C[32|20]{199P10}
+654V14*To_Unchecked_Access_Integer_2_Unsigned_C[32|20]{213P10}
+656V14*To_Unchecked_Access_Integer_2_Unsigned_C[32|20]{213P10}
+658V14*To_Unchecked_Integer_4_Signed_C[32|20]{37|35I9}
+660V14*To_Unchecked_Integer_4_Unsigned_C[32|20]{37|43M9}
+662V14*To_Unchecked_Integer_4_Unsigned_C[32|20]{37|43M9}
+664V14*To_Unchecked_Access_Integer_4_Unsigned[32|20]{209P10}
+666V14*To_Unchecked_Float_4_Real[32|20]{36|61M9}
+668V14*To_Unchecked_Integer_2_Signed[32|20]{short_integer}
+670V14*To_Unchecked_Integer_Address[32|20]{87M10}
+672V14*To_Unchecked_Integer_Address[32|20]{87M10}
+674V14*To_Unchecked_Integer_Address[32|20]{87M10} 41|763s17
+676V14*To_Unchecked_Integer_Address[32|20]{87M10}
+678V14*To_Unchecked_Integer_Address[32|20]{87M10}
+680V14*To_Unchecked_Integer_4_Signed[32|20]{integer}
+682V14*To_Unchecked_Integer_4_Address[32|20]{87M10}
+684V14*To_Unchecked_Integer_4_Address[32|20]{87M10}
+686V14*To_Unchecked_Integer_4_Unsigned[32|20]{36|61M9}
+688V14*To_Unchecked_Integer_4_Unsigned[32|20]{36|61M9}
+693i5*START_TIME{2|38I9}
+694e5*CHARACTER_2_REPLACEMENT{78E13} 41|678r15
+695r5*COLOR_BLACK{478R10}
+696r5*COLOR_WHITE{478R10}
+697r5*COLOR_RED{478R10}
+698r5*COLOR_GREEN{478R10}
+699r5*COLOR_BLUE{478R10}
+700r5*COLOR_YELLOW{478R10}
+701r5*COLOR_ORANGE{478R10}
+702r5*COLOR_VIOLET{478R10}
+703r5*COLOR_PURPLE{478R10}
+704r5*COLOR_PINK{478R10}
+705r5*COLOR_AQUA{478R10}
+706r5*COLOR_SKY_BLUE{478R10}
+707r5*COLOR_LIGHT_BLUE{478R10}
+708r5*COLOR_MAGENTA{478R10}
+709r5*COLOR_IVORY{478R10}
+710r5*COLOR_BEIGE{478R10}
+711r5*COLOR_WHEAT{478R10}
+712r5*COLOR_TAN{478R10}
+713r5*COLOR_KHAKI{478R10}
+714r5*COLOR_SILVER{478R10}
+715r5*COLOR_GRAY{478R10}
+716r5*COLOR_CHARCOAL{478R10}
+717r5*COLOR_NAVY_BLUE{478R10}
+718r5*COLOR_ROYAL_BLUE{478R10}
+719r5*COLOR_CYAN{478R10}
+720r5*COLOR_AQUAMARINE{478R10}
+721r5*COLOR_TEAL{478R10}
+722r5*COLOR_FOREST_GREEN{478R10}
+723r5*COLOR_OLIVE{478R10}
+724r5*COLOR_CHARTREUSE{478R10}
+725r5*COLOR_LIME{478R10}
+726r5*COLOR_GOLDEN{478R10}
+727r5*COLOR_GOLDENROD{478R10}
+728r5*COLOR_CORAL{478R10}
+729r5*COLOR_SALMON{478R10}
+730r5*COLOR_HOT_PINK{478R10}
+731r5*COLOR_FUCHSIA{478R10}
+732r5*COLOR_PUCE{478R10}
+733r5*COLOR_MAUVE{478R10}
+734r5*COLOR_LAVENDER{478R10}
+735r5*COLOR_PLUM{478R10}
+736r5*COLOR_INDIGO{478R10}
+737r5*COLOR_MAROON{478R10}
+738r5*COLOR_CRIMSON{478R10}
+739e5*NULL_CHARACTER_1{78E13} 740r94 41|573r67 673r51
+740e5*NULL_CHARACTER_2{82E13} 41|235r50 705r28 740r51
+741e5*NULL_CHARACTER_1_C{76E13} 742r98
+742e5*NULL_CHARACTER_2_C{80E13} 41|691r53 727r24 757r30
+743a5*NULL_STRING_1{63A13}
+744a5*NULL_STRING_2{65A13} 745r84 41|496r29 560r16
+745r5*NULL_STRING_2_UNBOUNDED{71R13} 912r65 913r65 914r65 41|724r38 754r50
+746a5*END_LINE_1{63A13} 747r74
+747a5*END_LINE_2{65A13} 41|335r15
+748i5*C_TRUE{119I13}
+749i5*C_FALSE{119I13}
+750a5*WORD_SIZE_IMAGE{63A13}
+761+12 Type_To_Hash 768r32 775r29 778r29 786r22 41|30r29 39r29 65r22
+763k13*Hashed_Maps 761z12 793l11 793e22 41|22b18 80l11 80t22
+765K17*Actual[12|48] 781r22 791r20 41|33r17 42r17 48r22 51r24 59r17 68r24
+. 77r24 77r43
+771W24*Protected_Map 792l15 792e28 41|24b24 79l15 79t28
+773U23 Insert 774>15 775>15 41|27b23 34l19 34t25
+774a15 Key{65A13} 41|29b15 33r59
+775*15 New_Item{761+12} 41|30b15 33r65
+776U23 Replace 777>15 778>15 41|36b23 43l19 43t26
+777a15 Key{65A13} 41|38b15 42r60
+778*15 New_Item{761+12} 41|39b15 42r66
+779V22 Find{12|61R9[765]} 780>15 41|45b22 52l19 52t23
+780a15 Key{65A13} 41|47b15 51r64
+782U23 Delete 783>15 41|54b23 60l19 60t25
+783a15 Key{65A13} 41|56b15 59r59
+784V22 Element{761+12} 785>15 41|62b22 69l19 69t26
+785a15 Key{65A13} 41|64b15 68r67
+787V22 Has_Element{boolean} 788>15 41|71b22 78l19 78t30
+788a15 Key{65A13} 41|73b15 77r83
+791r13 Data{12|52R9[765]} 41|33m31 33r31 42m32 42r32 51r36 59m31 59r31 68r39
+. 77r55
+814R10 Record_Endian_Test 815d7 823e17 824r30 825r11 859r50
+815b7*Do_Initialize_To_Split_Default_Over_Unsplit_Default{boolean} 817r14
+819a13*Split{259A10}
+821m13*Unsplit{104M13} 860r84
+829i9*Start{2|38I9} 41|272m11 287r31 302r27
+830o9*Last{duration} 41|287m11 300r19
+831b9*Is_Stopped{boolean} 41|267r22 271m11 282r18 286m11 299r20
+836M10 Integer_Base64 844r10 871r56
+842A10 Array_Integer_Base64(836M10)<integer> 849r21
+848P10 Access_Array_Integer_Base64(842A10)
+858b5 DO_PUT_LOCALIZE_FAILURE{boolean}
+859r5 ENDIAN_TEST{814R10} 860r72
+860b5 DOES_MACHINE_ORDER_LOW_BYTE_FIRST{boolean} 41|914r16
+861o5 HANG_DELAY{duration}
+862f5 HANG_INDICATORS_DRAWN_PER_SECOND{160F13}
+863i5 FAILED_LOCALIZE_PREVIEW_LENGTH{125I13}
+864i5 RADIAN_IMAGE_STRING_SIZE{125I13} 41|573r27
+865i5 DEFAULT_LINE_SIZE{125I13} 915r65
+866a5 FAILED_SAVE_LOG{65A13}
+867a5 HANG_INDICATOR{65A13}
+868a5 TESTING_INPUT_HANG_INCREMENT{65A13} 41|324r15
+869e5 TESTING_SEPARATOR{82E13} 41|370r15 396r15
+870e5 BASE64_TERMINATOR{78E13}
+871a5 BASE64_ALPHABET(78E13)
+878W20 Protected_Input_Output 918l11 918e33 922r20 41|109b20 229l11 229t33
+880U19 Put 881>11 41|112b19 119l15 119t18 407s22 435s24
+881a11 Item{65A13} 41|114b11 117r64 118r29
+882V18 Localize{65A13} 883>11 41|121b18 132l15 132t23 312s29
+883a11 Item{65A13} 41|123b11 129r17 131r38
+885V18 Do_Put_Debug{boolean} 41|134b18 140l15 140t27 434s25
+887V18 Get_Line_Size{125I13} 41|206b18 212l15 212t28 544s29
+889V18 Get_Number_Of_Lines{123I13} 41|214b18 220l15 220t34
+891V18 Get_Log{65A13} 41|182b18 188l15 188t22 535s29
+893V18 Get_Error{65A13} 41|190b18 196l15 196t24
+895V18 Get_Input_Entry{65A13} 41|198b18 204l15 204t30 526s29
+897U19 Set_Input_Entry 898>11 41|166b19 172l15 172t30 345s22
+898a11 Input_Entry{65A13} 41|168b11 171r80
+899U19 Set_Error 900>11 41|174b19 180l15 180t24
+900a11 Error{65A13} 41|176b11 179r68
+901U19 Set_Do_Put_Debug 902>11 41|142b19 148l15 148t31 354s22 490s22
+902b11 Do_Put_Debug{boolean} 41|144b11 147r37
+903U19 Set_Line_Size 904>11 41|222b19 228l15 228t28 463s22
+904i11 Line_Size{125I13} 41|224b11 227r34
+905U19 Set_Put 906>11 41|158b19 164l15 164t22 472s22
+906p11 Put{220P10} 41|160b11 163r28
+907U19 Set_Localize 908>11 41|150b19 156l15 156t27 481s22
+908p11 Localize{179P10} 41|152b11 155r33
+910p9 Current_Localize{179P10} 41|128r18 131r17 155r13
+911p9 Current_Put{220P10} 41|118r13 163r13
+912r9 Current_Input_Entry{71R13} 41|171r13 171r36 203r32
+913r9 Current_Log{71R13} 41|117r13 117r28 187r32
+914r9 Current_Error{71R13} 41|179r13 179r30 195r32
+915i9 Current_Line_Size{125I13} 41|211r20 227r13
+916i9 Current_Line_Count{123I13} 41|219r20
+917b9 Current_Do_Put_Debug{boolean} 41|139r20 147r13
+922w5 Input_Output{878W20} 41|312r16 345r9 354r9 407r9 434r12 435r11 463r9
+. 472r9 481r9 490r9 526r16 535r16 544r16
+X 41 neo.adb
+235a7 Item{wide_string} 251r41
+236i7 Last{40|123I13}
+237e7 Unicode{40|82E13} 247r13 249r50 250r41
+238m7 Data{40|117M13} 255r34 256r34 257r34
+239V16 To_Image[40|548]{40|65A13} 255s25 256s25 257s25 565b14
+322i13 I{integer}
+334i13 I{integer}
+362i7 Space_Count{40|121I13} 375m13 375r28 378r20 384r53
+363i7 Count{40|121I13} 378r12 384r45
+369i13 I{integer}
+373i13 I{integer} 374r20
+379i15 I{integer}
+384i15 I{integer}
+387i15 I{integer} 388r23 389r22
+395i13 I{integer}
+477U15 Set_Localize 477b15 478>7 482l11 482t23
+478p7 Localize{40|179P10} 481r35
+486U15 Set_Put_Debug 486b15 487>7 491l11 491t24
+487b7 Do_Put_Debug{boolean} 490r39
+495U15 Save_Log 495b15 496>7 500l11 500t19
+496a7 Path{40|65A13}
+554i13 I{integer} 555r19 556r23 557r25
+571K15 Type_Number_Text_IO[30|45] 575r9
+573a7 Input{40|63A13} 575m33 577r53 583r62
+580q9 Remove_Notation 590l15 590e30
+583a11 Trimmed_Input{40|63A13} 588r52 588r67 589r29
+673a7 Result{string} 675r18 676m11 682r16
+675i13 I{integer} 676r18 677r37 680r52
+687V14 To_String_2_C{40|69A13} 687b14 688>7 697l11 697t24 715s28
+688a7 Item{40|67A13} 691r27 694r60
+691a7 Result{37|116A9} 693r18 694m11 696r16
+693m13 I{37|60M9} 694r18 694r65
+723m7 Last{40|140M13}
+724r7 Buffer{40|71R13} 728r32 730m11 730r21 732r28
+726m13 I{37|60M9} 727r19 730r84
+740a7 Result{wide_string} 743m11 745r16
+742i13 I{integer} 743r18 743r61
+753i7 Length{40|121I13} 758m11 758r22
+754r7 Buffer{40|71R13} 759m11 759r22 765r28
+755p7 Pointer{40|199P10} 757r15 759r43 760m11 763r46
+812V14 To_Access_Constant_Character_2_C{40|199P10} 812b14 813>7 818l11 818t43
+. 826s16
+813a7 Item{40|69A13} 817r59 817r64
+831V14 To_Access_Constant_Character_1_C2{40|195P10} 831b14 832>7 837l11 837t44
+. 845s16
+832a7 Item{40|67A13} 836r59 836r64
+X 42 system.ads
+37K9*System 40|18w3 34r3 184r10 42|196e11
+64M9*Address 40|184r17 237r10 641r56 643r70 645r39 647r39 649r39 651r39 655r39
+. 665r39 671r39
+69N4*Word_Size 40|751r12
+70N4*Memory_Size 40|88r14
+X 60 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

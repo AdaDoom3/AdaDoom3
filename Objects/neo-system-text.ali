@@ -1,0 +1,273 @@
+V "GNAT Lib v2013"
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_CALENDAR
+RV NO_ENUMERATION_MAPS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_CONVERSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK
+
+U neo.system.text%b	neo-system-text.adb	cc7edc23 DE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.unchecked_conversion%s
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W neo%s			neo.adb			neo.ali
+W neo.link%s		neo-link.ads		neo-link.ali
+W neo.link.windows%s	neo-link-windows.ads	neo-link-windows.ali
+W neo.system%s		neo-system.adb		neo-system.ali
+W system%s		system.ads		system.ali
+W system.img_enum_new%s	s-imenne.adb		s-imenne.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
+
+U neo.system.text%s	neo-system-text.ads	7095fec2 DE EE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+W neo.system%s		neo-system.adb		neo-system.ali
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chlat1.ads		20130417131018 2825df20
+D a-comlin.ads		20130417131018 e0accaa5
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-cohama.ads		20130417131018 9f97b812
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-witeio.ads		20130417131022 551dcbf1
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D neo.ads		20131010033154 b027011e
+D neo-link.ads		20131007201210 953f25c5
+D neo-link-windows.ads	20131010032234 77b5fca2
+D neo-system.ads	20131011012604 02e3e0bb
+D neo-system-text.ads	20131007071644 72761e79
+D neo-system-text.adb	20131007071644 0dc92bbb
+D neo-system-text-import.adb  20131007071642 b3c1e9e1 neo.system.text.import
+D system.ads		20130417131036 5fc8ae56
+D s-atacco.ads		20130417131028 4c36d12f
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-imenne.ads		20130417131030 8707cbf0
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-wchstw.ads		20130417131034 2d112c01
+D s-win32.ads		20130417131034 e5a79fe6
+X 1 ada.ads
+16K9*Ada 19e8 36|20r3 109r16
+X 12 a-iteint.ads
+24h9 Forward_Iterator
+X 23 a-unccon.ads
+20v14*Unchecked_Conversion 36|20w7 109r20
+X 26 interfac.ads
+36K9*Interfaces 177e15 36|18w3 19r3 23r3 24r3
+55M9*Unsigned_8
+X 27 i-c.ads
+18K20*C 230e17 36|19w14 24r14
+35I9*int<integer>
+43M9*unsigned
+44M9*unsigned_short
+60M9*size_t
+108E9*wchar_t<wide_character>
+X 30 neo.ads
+46K9*Neo 923e10 34|17r9 94r5 35|17r14 98r5 36|21r3 25r3
+65A13*String_2{wide_string}<integer> 34|66r14 68r17 79r37 80r37 81r37 90r21
+. 92r18 35|76r14 89r17 36|101r17 148r14 168r20
+80E13*Character_2_C{27|108E9} 36|105r12 126r26
+82E13*Character_2{wide_character} 36|126r44
+91M13*Integer_1_Unsigned{26|55M9}
+102M13*Integer_2_Unsigned_C{27|44M9}
+115M13*Integer_4_Unsigned_C{27|43M9}
+119I13*Integer_4_Signed_C{27|35I9}
+140M13*Integer_Size_C{27|60M9}
+174M13*Byte{91M13} 36|116r40
+199P10*Access_Constant_Character_2_C(80E13) 36|151r18
+505V14*Localize{65A13} 35|30s19 31s18 33s23 34s18 82s26 95s26
+512U15*Put_Title 35|30s9
+514U15*Put_Line 35|31s9 32s9 34s9
+520U15*Put_Debug_Line 35|69s11 82s11 95s11
+591V14*To_String_2{65A13} 36|168s32
+650V14*To_Unchecked_Access_Constant_Character_2_C[23|20]{199P10} 36|160s21
+742e5*NULL_CHARACTER_2_C{80E13} 36|124r40
+744a5*NULL_STRING_2{65A13} 35|83r18
+X 31 neo-link.ads
+17K13*Link 41e15 36|21r7 25r7
+X 32 neo-link-windows.ads
+28K18*Windows 1573e23 36|21w12 25r12
+148m5*MEMORY_MOVEABLE{30|115M13} 36|115r22
+149m5*MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE{30|115M13} 36|115r41
+154m5*CLIPBOARD_UNICODE_TEXT{30|115M13} 36|137r31 156r36
+215m5*LANGUAGE_ARABIC{30|102M13} 36|37r16
+216m5*LANGUAGE_BASQUE{30|102M13} 36|39r16
+217m5*LANGUAGE_CATALAN{30|102M13} 36|41r16
+218m5*LANGUAGE_CHINESE_SIMPLIFIED{30|102M13} 36|43r16
+219m5*LANGUAGE_CHINESE_TRADITIONAL{30|102M13} 36|45r16
+220m5*LANGUAGE_CZECH{30|102M13} 36|47r16
+221m5*LANGUAGE_DANISH{30|102M13} 36|49r16
+222m5*LANGUAGE_DUTCH{30|102M13} 36|51r16
+223m5*LANGUAGE_ENGLISH{30|102M13} 36|53r16
+224m5*LANGUAGE_FINNISH{30|102M13} 36|55r16
+225m5*LANGUAGE_FRENCH{30|102M13} 36|57r16
+226m5*LANGUAGE_GERMAN{30|102M13} 36|59r16
+227m5*LANGUAGE_GREEK{30|102M13} 36|61r16
+228m5*LANGUAGE_HEBREW{30|102M13} 36|63r16
+229m5*LANGUAGE_HUNGARIAN{30|102M13} 36|65r16
+230m5*LANGUAGE_ITALIAN{30|102M13} 36|67r16
+231m5*LANGUAGE_JAPANESE{30|102M13} 36|69r16
+232m5*LANGUAGE_KOREAN{30|102M13} 36|71r16
+233m5*LANGUAGE_NORWEGIAN{30|102M13} 36|73r16
+234m5*LANGUAGE_POLISH{30|102M13} 36|75r16
+235m5*LANGUAGE_PORTUGUESE{30|102M13} 36|77r16
+236m5*LANGUAGE_PORTUGUESE_BRAZIL{30|102M13} 36|79r16
+237m5*LANGUAGE_RUSSIAN{30|102M13} 36|81r16
+238m5*LANGUAGE_SLOVAKIAN{30|102M13} 36|83r16
+239m5*LANGUAGE_SLOVENIAN{30|102M13} 36|85r16
+240m5*LANGUAGE_SPANISH{30|102M13} 36|87r16
+241m5*LANGUAGE_SWEDISH{30|102M13} 36|89r16
+242m5*LANGUAGE_TURKISH{30|102M13} 36|91r16
+257i5*FAILED{30|119I13} 36|131r43 134r30 140r30 153r43 173r34
+1203V14*Global_Allocate{37|64M9} 36|114s11
+1204m7 Flags{30|115M13} 36|115r13
+1205m7 Bytes{30|140M13} 36|116r13
+1207V14*Get_Clipboard_Data{37|64M9} 36|156s17
+1210V14*Global_Lock{37|64M9} 36|120s52 160s64
+1213V14*Global_Unlock{30|119I13} 36|128s12 170s16
+1216V14*Global_Free{37|64M9} 36|131s59
+1219V14*Open_Clipboard{30|119I13} 36|131s12 153s12
+1222V14*Close_Clipboard{30|119I13} 36|140s12 173s16
+1224V14*Empty_Clipboard{30|119I13} 36|134s12
+1226V14*Set_Clipboard_Data{37|64M9} 36|137s12
+1242V14*Get_System_Default_Language{30|102M13} 36|36s14
+X 33 neo-system.ads
+25K13*System 30|46k9 33|192e17 34|17r13 94r9 35|17r18 98r9
+34X5*Call_Failure 35|68r14 81r14 94r14 36|118r17 122r17 129r17 132r17 135r17
+. 138r17 141r17 154r17 158r17 162r17 174r21
+X 34 neo-system-text.ads
+17K20*Text 33|25k13 34|94l16 94e20 35|17b25 98l16 98t20
+26E10*Enumerated_Language 55e24 64r14 72r25 88r18 35|31r43 63r14 36|33r14
+28n7*Arabic_Language{26E10} 36|38r20
+29n7*Basque_Language{26E10} 36|40r20
+30n7*Catalan_Language{26E10} 36|42r20
+31n7*Simplified_Chinese_Language{26E10} 36|44r20
+32n7*Traditional_Chinese_Language{26E10} 36|46r20
+33n7*Czech_Language{26E10} 36|48r20
+34n7*Danish_Language{26E10} 36|50r20
+35n7*Dutch_Language{26E10} 36|52r20
+36n7*English_Language{26E10} 35|70r18 36|54r20 94r20
+37n7*Finnish_Langauge{26E10} 36|56r20
+38n7*French_Langauge{26E10} 36|58r20
+39n7*German_Language{26E10} 36|60r20
+40n7*Greek_Language{26E10} 36|62r20
+41n7*Hebrew_Language{26E10} 36|64r20
+42n7*Hungarian_Language{26E10} 36|66r20
+43n7*Italian_Language{26E10} 36|68r20
+44n7*Japanese_Language{26E10} 36|70r20
+45n7*Korean_Language{26E10} 36|72r20
+46n7*Norwegian_Language{26E10} 36|74r20
+47n7*Polish_Language{26E10} 36|76r20
+48n7*Portuguese_Language{26E10} 36|78r20
+49n7*Brazilian_Portuguese_Language{26E10} 36|80r20
+50n7*Russian_Language{26E10} 36|82r20
+51n7*Slovakian_Language{26E10} 36|84r20
+52n7*Slovenian_Language{26E10} 36|86r20
+53n7*Spanish_Language{26E10} 36|88r20
+54n7*Swedish_Language{26E10} 36|90r20
+55n7*Turkish_Language{26E10} 36|92r20
+59U15*Test 35|27b15 35l11 35t15
+63V14*Get_Language{26E10} 72s48 35|62b14 71l11 71t23
+65V14*Get_Clipboard{30|65A13} 35|32s18 34s51 75b14 84l11 84t24
+67U15*Set_Clipboard 68>7 35|33s9 88b15 97l11 97t24
+68a7 Text{30|65A13} 35|89b7 92r30
+72e5*LANGUAGE{26E10} 35|31r74
+79a5 FAILED_GET_CLIPBOARD{30|65A13} 35|82r35
+80a5 FAILED_SET_CLIPBOARD{30|65A13} 35|95r35
+81a5 FAILED_GET_LANGUAGE{30|65A13} 35|69r26
+85K13 Import 93l11 93e17 35|22b18 66r16 79r16 92r9 36|27b14 179l7 179t13
+87V18*Get_Language{26E10} 35|66s23 36|32b14 96l11 96t23
+89U19*Set_Clipboard 90>11 35|92s16 36|100b15 143l11 143t24
+90a11 Text{30|65A13} 36|101b7 104r18 104r30 125r18 126r60
+91V18*Get_Clipboard{30|65A13} 35|79s23 36|147b14 178l11 178t24
+X 36 neo-system-text-import.adb
+103A12 Array_Text(30|80E13)<integer> 107r23 116r22
+106P12 Access_Array_Text(103A12) 109r50 111r18
+108V16 To_Unchecked_Access_Array_Text[23|20]{106P12} 120s21
+110m7 Data{37|64M9} 113m9 117r12 120r64 128r26 131r71 137r55
+111p7 Accessor{106P12} 120m9 121r12 124m9 124r9 124r18 126m11 126r11
+125i13 I{integer} 126r20 126r65
+150m7 Data{37|64M9} 156m9 157r12 160r76 170r30
+151p7 Accessor{30|199P10} 160m9 161r12 168r44
+165q9 Compose_Result 177l15 177e29
+168a11 Result{30|65A13} 176r20
+X 37 system.ads
+64M9*Address 36|109r41 110r18 150r18
+66m4*Null_Address{64M9} 36|110r39 117r19 131r27 131r80 137r63 150r51 153r27
+. 157r19
+78V14*"="{boolean} 36|117r17 131r77 137r61 157r17
+X 55 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

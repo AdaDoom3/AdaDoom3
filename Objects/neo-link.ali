@@ -1,0 +1,109 @@
+V "GNAT Lib v2013"
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_CALENDAR
+RV NO_IO
+RV NO_UNCHECKED_CONVERSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK
+
+U neo.link%s		neo-link.ads		251824db DE NE OO PK
+W neo%s			neo.adb			neo.ali
+L "/Windows/System32/gdi32.dll"
+L "/Windows/System32/hid.dll"
+L "/Windows/System32/setupapi.dll"
+L "/Windows/System32/opengl32.dll"
+L "/Windows/System32/XInput9_1_0.dll"
+L "/Windows/System32/D3DX9_42.dll"
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chlat1.ads		20130417131018 2825df20
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-cohama.ads		20130417131018 9f97b812
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-witeio.ads		20130417131022 551dcbf1
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D neo.ads		20131010033154 b027011e
+D neo-link.ads		20131007201210 953f25c5
+D system.ads		20130417131036 5fc8ae56
+D s-atacco.ads		20130417131028 4c36d12f
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-win32.ads		20130417131034 e5a79fe6
+X 11 a-iteint.ads
+24h9 Forward_Iterator
+X 29 neo.ads
+46K9*Neo 923e10 30|17r9 41r7
+63A13*String_1{string}<integer> 30|22r36 23r36 24r36
+X 30 neo-link.ads
+17K13*Link 29|46k9 30|41l11 41e15
+22a5*EXTENSION{29|63A13} 35r67 36r67 37r67 38r67 39r67 40r67
+23a5*DIRECTORY_LIBRARIES{29|63A13} 35r27 36r27 37r27 38r27 39r27 40r27
+24a5*DIRECTORY_STEAM{29|63A13}
+X 31 system.ads
+69N4*Word_Size 30|24r71
+X 48 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

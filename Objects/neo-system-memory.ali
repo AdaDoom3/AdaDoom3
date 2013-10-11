@@ -1,0 +1,257 @@
+V "GNAT Lib v2013"
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_CALENDAR
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_ACCESS
+RV NO_UNCHECKED_CONVERSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK
+
+U neo.system.memory%b	neo-system-memory.adb	404698bd DE NE OO PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W neo%s			neo.adb			neo.ali
+W neo.link%s		neo-link.ads		neo-link.ali
+W neo.link.windows%s	neo-link-windows.ads	neo-link-windows.ali
+W neo.system%s		neo-system.adb		neo-system.ali
+W system%s		system.ads		system.ali
+W system.assertions%s	s-assert.adb		s-assert.ali
+W system.img_llu%s	s-imgllu.adb		s-imgllu.ali
+W system.img_real%s	s-imgrea.adb		s-imgrea.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
+
+U neo.system.memory%s	neo-system-memory.ads	7cf37bef BN DE EE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W neo.system%s		neo-system.adb		neo-system.ali
+W system%s		system.ads		system.ali
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chlat1.ads		20130417131018 2825df20
+D a-comlin.ads		20130417131018 e0accaa5
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-cohama.ads		20130417131018 9f97b812
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-witeio.ads		20130417131022 551dcbf1
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D neo.ads		20131010033154 b027011e
+D neo-link.ads		20131007201210 953f25c5
+D neo-link-windows.ads	20131010032234 77b5fca2
+D neo-system.ads	20131011012604 02e3e0bb
+D neo-system-memory.ads	20131008053820 75f92499
+D neo-system-memory.adb	20131008054058 ee7702fd
+D neo-system-memory-import.adb  20131007071642 dbc8bed9 neo.system.memory.import
+D system.ads		20130417131036 5fc8ae56
+D s-atacco.ads		20130417131028 4c36d12f
+D s-assert.ads		20130417131028 a3a4e6ab
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-imgllu.ads		20130417131030 49c900c3
+D s-imgrea.ads		20130417131030 c7a851e2
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-wchstw.ads		20130417131034 2d112c01
+D s-win32.ads		20130417131034 e5a79fe6
+X 12 a-iteint.ads
+24h9 Forward_Iterator
+X 26 interfac.ads
+36K9*Interfaces 177e15 34|19r3 22r3 23r3 36|18w3 19r3 22r3 23r3
+55M9*Unsigned_8
+64M9*Unsigned_64
+X 27 i-c.ads
+18K20*C 230e17 34|19w14 23r14 36|19w14 23r14
+35I9*int<integer>
+43M9*unsigned
+60M9*size_t
+108E9*wchar_t<wide_character>
+X 30 neo.ads
+46K9*Neo 923e10 34|24r9 101r7 35|17r14 112r7 36|20r3 24r3
+65A13*String_2{wide_string}<integer> 34|79r39 80r39 81r39 82r39
+80E13*Character_2_C{27|108E9}
+91M13*Integer_1_Unsigned{26|55M9}
+115M13*Integer_4_Unsigned_C{27|43M9}
+119I13*Integer_4_Signed_C{27|35I9}
+121I13*Integer_4_Signed{integer} 35|54r24 55r15
+127M13*Integer_8_Unsigned{26|64M9} 34|36r54 37r54 38r54 39r54 40r54 41r54
+. 42r54 43r54 44r54 64r20 65r20 91r24 92r24 96r32 99r32 35|63r61 64r61 65r61
+. 66r61 67r61 68r61 69r61 70r61 71r61 76r61 77r61 78r61 79r61 80r61 81r61
+. 82r61 83r61 84r61 90r20 91r20 36|52r57 53r57 54r57 55r57 56r57 57r57 58r57
+. 59r57 60r57 67r20 68r20 85r28 97r28
+129M13*Integer_8_Unsigned_C{127M13} 36|35r48 36r48
+140M13*Integer_Size_C{27|60M9} 36|74r22 75r22 88r35 100r37
+160F13*Float_4_Real{float}
+168F13*Float_4_Percent{160F13} 34|35r54 35|62r61 75r61 36|61r57
+174M13*Byte{91M13} 35|33r51 42r53 36|52r111
+199P10*Access_Constant_Character_2_C(80E13)
+205P10*Access_Integer_8_Unsigned_C(129M13)
+505V14*Localize{65A13} 35|36s30 45s30 59s19 61s18 62s18 63s18 64s18 65s18
+. 66s18 67s18 68s18 69s18 70s18 71s18 74s18 75s18 76s18 77s18 78s18 79s18
+. 80s18 81s18 82s18 83s18 84s18 97s26 109s26
+512U15*Put_Title 35|59s9
+514U15*Put_Line 35|61s9 62s9 63s9 64s9 65s9 66s9 67s9 68s9 69s9 70s9 71s9
+. 74s9 75s9 76s9 77s9 78s9 79s9 80s9 81s9 82s9 83s9 84s9
+520U15*Put_Debug_Line 35|36s15 45s15 97s11 109s11
+522U15*New_Line 35|72s9
+X 31 neo-link.ads
+17K13*Link 41e15 36|20r7 24r7
+X 32 neo-link-windows.ads
+28K18*Windows 1573e23 36|20w12 24r12
+257i5*FAILED{30|119I13} 36|38r60 46r49 75r49 88r70 100r72
+592R10*Record_Memory_Status 603e17 36|34r48
+595m9*Memory_Load{30|115M13} 36|61r80
+596m9*Total_Physical{30|129M13} 36|52r84
+597m9*Available_Physical{30|129M13} 36|53r83
+598m9*Total_Page_File{30|129M13} 36|56r83
+599m9*Available_Page_File{30|129M13} 36|57r83
+600m9*Total_Virtual{30|129M13} 36|58r83
+601m9*Available_Virtual{30|129M13} 36|59r83
+602m9*Available_Extended_Virtual{30|129M13} 36|60r83
+1176V14*Get_Disk_Free_Space{30|119I13} 36|42s9
+1177p7 Directory{30|199P10} 36|43r11
+1178p7 Free_Bytes_Available{30|205P10} 36|44r11
+1179p7 Total_Number_Of_Bytes{30|205P10} 36|45r11
+1180p7 Total_Number_Of_Free_Bytes{30|205P10} 36|46r11
+1190V14*Set_Process_Working_Set_Size{30|119I13} 36|72s9
+1191m7 Process{37|64M9} 36|73r11
+1192m7 Minimum{30|140M13} 36|74r11
+1193m7 Maximum{30|140M13} 36|75r11
+1195V14*Virtual_Unlock{30|119I13} 36|100s12
+1199V14*Virtual_Lock{30|119I13} 36|88s12
+1239V14*Global_Memory_Status{30|119I13} 36|38s12
+1273V14*Get_Current_Process{37|64M9} 36|73s22
+X 33 neo-system.ads
+25K13*System 30|46k9 33|192e17 34|24r13 101r11 35|17r18 112r11
+34X5*Call_Failure 35|35r18 44r18 96r14 108r14 36|39r17 48r17 77r17 89r17
+. 101r17
+X 34 neo-system-memory.ads
+24K20*Memory 33|25k13 34|101l18 101e24 35|17b25 112l18 112t24
+33R10*Record_State 45e17 68r14 72r30 89r18 35|56r15 103r14 36|32r14
+35f9*Load{30|168F13} 35|62r102 75r94 36|61m11
+36m9*Number_Of_Disk_Bytes_Total{30|127M13} 35|63r105 76r97 36|54m11
+37m9*Number_Of_Disk_Bytes_Available{30|127M13} 35|64r105 77r97 36|55m11
+38m9*Number_Of_Physical_Bytes_Total{30|127M13} 35|65r105 78r97 36|52m11
+39m9*Number_Of_Physical_Bytes_Available{30|127M13} 35|66r105 79r97 36|53m11
+40m9*Number_Of_Page_File_Bytes_Total{30|127M13} 35|67r105 80r97 36|56m11
+41m9*Number_Of_Page_File_Bytes_Available{30|127M13} 35|68r105 81r97 36|57m11
+42m9*Number_Of_Virtual_Bytes_Total{30|127M13} 35|69r105 82r97 36|58m11
+43m9*Number_Of_Virtual_Bytes_Available{30|127M13} 35|70r105 83r97 36|59m11
+44m9*Number_Of_Virtual_Bytes_Available_Extended{30|127M13} 35|71r105 84r97
+. 36|60m11
+50+12 Type_To_Manage 55r25 57r25 35|30r25 39r25
+52k13*Manager 50z12 58l11 58e18 35|27b18 47l11 47t18 54r16
+54U19*Lock 55=11 35|29b19 37l15 37t19 60s21[53]
+55*11 Item{50+12} 35|30b11 33m25 33r25 33r39
+56U19*Unlock 57=11 35|38b19 46l15 46t21 73s21[53]
+57*11 Item{50+12} 35|39b11 42m27 42r27 42r41
+62U15*Test 35|51b15 85l11 85t15
+63U15*Set_Byte_Limits 64>7 65>7 35|89b15 98l11 98t26
+64m7 Minimum{30|127M13} 66r19 35|90b7 94r32
+65m7 Maximum{30|127M13} 66r29 35|91b7 94r41
+67V14*Get_State{33R10} 72s46 35|56s31 102b14 111l11 111t20
+72r5*INITIAL_STATE{33R10} 35|62r88 63r91 64r91 65r91 66r91 67r91 68r91 69r91
+. 70r91 71r91
+79a5 FAILED_LOCK{30|65A13} 35|36r39
+80a5 FAILED_UNLOCK{30|65A13} 35|45r39
+81a5 FAILED_SET_BYTE_LIMITS{30|65A13} 35|97r35
+82a5 FAILED_GET_STATE{30|65A13} 35|109r35
+86K13 Import 100l11 100e17 35|22b18 33r13 42r13 94r9 106r16 36|26b14 104l7
+. 104t13
+88V18*Get_State{33R10} 35|106s23 36|31b14 62l11 62t20
+90U19*Set_Byte_Limits 91>11 92>11 35|94s16 36|66b15 79l11 79t26
+91m11 Minimum{30|127M13} 93r23 36|67b7 74r37
+92m11 Maximum{30|127M13} 93r33 36|68b7 75r37
+94U19*Lock 95>11 96>11 35|33s20 36|83b15 91l11 91t15
+95m11 Location{37|64M9} 36|84b7 88r25
+96m11 Number_Of_Bytes{30|127M13} 36|85b7 88r50
+97U19*Unlock 98>11 99>11 35|42s20 36|95b15 103l11 103t17
+98m11 Location{37|64M9} 36|96b7 100r27
+99m11 Number_Of_Bytes{30|127M13} 36|97b7 100r52
+X 35 neo-system-memory.adb
+53K15 Test_Manage[34|52] 60r9 73r9
+55i7 Test{30|121I13} 60m26 60r26 73m28 73r28
+56r7 State{34|33R10} 75r88 76r91 77r91 78r91 79r91 80r91 81r91 82r91 83r91
+. 84r91
+X 36 neo-system-memory-import.adb
+34r7 Status{32|592R10} 38m33 38r33 52r77 53r76 56r76 57r76 58r76 59r76 60r76
+. 61r73
+35m7 Number_Of_Disk_Bytes_Available{30|129M13} 44m41 44r41 55r76
+36m7 Number_Of_Disk_Bytes_Total{30|129M13} 45m41 45r41 54r76
+X 37 system.ads
+37K9*System 34|18w3 21r3 37|196e11
+64M9*Address 34|95r32 98r32 36|84r28 96r28
+X 57 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

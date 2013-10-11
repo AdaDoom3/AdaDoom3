@@ -1,0 +1,13 @@
+20131011095554
+-c
+-x
+ada
+-gnatA
+-gnatW8
+-gnat2012
+-fstack-check
+-gnato
+-gnatE
+-gnata
+-g
+-O3

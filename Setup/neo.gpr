@@ -1,0 +1,205 @@
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+project Neo is
+  -------------
+  -- Options --
+  -------------
+    type Option_Boolean is(
+      "No",
+      "Yes");
+    type Option_Word_Size is(
+      "32",
+      "64");
+    type Option_Architecture is(
+      "ARM",
+      "PowerPC",
+      "x86-64");
+    type Option_System is(
+      "Windows",
+      "X11",
+      "Cocoa",
+      "Wayland",
+      "SDL",
+      "Xbox",
+      "PlayStation");
+    type Option_Game is(
+      "Doom3");
+  ---------------
+  -- Scenarios -- In the GPS IDE scenarios are displayed with the latest External call on top within the widget
+  ---------------
+    DEBUGGING    : Option_Boolean      := External("Debugging",    "Yes");
+    OPTIMIZE     : Option_Boolean      := External("Optimize",     "Yes");
+    SAFETY       : Option_Boolean      := External("Safety",       "Yes");
+    WORD_SIZE    : Option_Word_Size    := External("Wordsize",     "32");
+    ARCHITECTURE : Option_Architecture := External("Architecture", "x86-64");
+    SYSTEM       : Option_System       := External("System",       "Windows");
+    GAME         : Option_Game         := External("Game",         "Doom3");
+  ------------
+  -- Naming --
+  ------------
+    Casing                           := "Lowercase";
+    Version_Control                  := "Git";
+    Dot_Replacement                  := "-";
+    Suffix_Ada_Specification         := ".ads";
+    Suffix_Ada_Body                  := ".adb";
+    Suffix_C_Specification           := ".h";
+    Suffix_C_Body                    := ".c";
+    Suffix_C_Plus_Plus_Specification := ".hpp";
+    Suffix_C_Plus_Plus_Body          := ".cpp";
+    Suffix_Pascal                    := ".pas";
+    Suffix_Java                      := ".java";
+    Suffix_Shell                     := ".sh";
+    Suffix_Auto_Configure            := ".ac";
+    Suffix_C_For_Graphics            := ".cg";
+    Suffix_Visual_Basic              := ".vbs";
+    Suffix_Apple_Script              := ".APPLESCRIPT";
+    Suffix_Mark_Down                 := ".md"; -- Use - instead of * to avoid changelog syntax highlighting in markdown files
+    Languages                        := ("Ada", "Changelog");-- "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "C for Graphics", "Visual Basic", "Apple Script");
+  -----------------
+  -- Directories --
+  -----------------
+    S                       := "/";
+    Directory_Project       := ".";
+    Directory_Null_API      := "Null";
+    Directory_POSIX         := "POSIX";
+    Directory_Macintosh     := "Macintosh";
+    Directory_Windowing     := "Windowing";
+    Directory_Root          := Directory_Project  & S & ".." ;
+    Directory_Engine        := Directory_Root     & S & "Engine";
+    Directory_Executable    := Directory_Root     & S & "Binaries";
+    Directory_Objects       := Directory_Root     & S & "Objects";
+    Directory_Libraries     := Directory_Root     & S & "Libraries"     & S & "**";
+    Directory_Game          := Directory_Root     & S & "Games"         & S & GAME;
+    Directory_Architectures := Directory_Engine   & S & "Architectures" & S & ARCHITECTURE;
+    Directory_APIs          := Directory_Engine   & S & "APIs";
+    Directory_Systems       := Directory_Engine   & S & "Systems";
+    Directory_SDL           := Directory_Systems  & S & "SDL";
+    Directory_Documentation := Directory_Game     & S & "Documentation";
+    Directory_Direct3D      := Directory_APIs     & S & "Direct3D";
+    Directory_XAudio        := Directory_APIs     & S & "XAudio";
+    Directory_OpenGL        := Directory_APIs     & S & "OpenGL";
+    Directory_GCM           := Directory_APIs     & S & "GCM";
+    Directory_Steam         := Directory_APIs     & S & "Steam";
+    Directory_Null_Direct3D := Directory_Direct3D & S & Directory_Null_API;
+    Directory_Null_XAudio   := Directory_XAudio   & S & Directory_Null_API;
+    Directory_Null_OpenGL   := Directory_APIs     & S & Directory_Null_API;
+    Directory_Null_GCM      := Directory_GCM      & S & Directory_Null_API;
+    Directory_Null_Steam    := Directory_Steam    & S & Directory_Null_API;
+    File_Main               := (Directory_Engine  & S & "main" & Suffix_Ada_Body); -- Has to match casing
+    Directories             := (Directory_Engine, Directory_APIs, Directory_Libraries, Directory_Root, Directory_Game, Directory_Architectures, Directory_Project);
+    case SYSTEM is                     -- Scripts
+      when "X11" | "Wayland" | "SDL"   => Directories := Directories & (Directory_Project & S & Directory_POSIX);
+      when "Cocoa"                     => Directories := Directories & (Directory_Project & S & Directory_Macintosh);
+      when others                      => Directories := Directories & (Directory_Project & S & SYSTEM);
+    end case;
+    case SYSTEM is                     -- Systems
+      when "X11" | "Wayland" | "Cocoa" => Directories := Directories & (Directory_Systems & S & Directory_POSIX);
+                                          Directories := Directories & (Directory_Systems & S & Directory_POSIX & S & Directory_Windowing & S & SYSTEM);
+      when others                      => Directories := Directories & (Directory_Systems & S & SYSTEM);
+    end case;
+    case SYSTEM is                     -- Several APIs are cross compatible between systems
+      when "Windows"                   => Directories := Directories & (                         Directory_OpenGL,      Directory_XAudio,      Directory_Direct3D,      Directory_Steam);
+                                          Directories := Directories & (Directory_Null_GCM                                                                                             );
+      when "Xbox"                      => Directories := Directories & (                                                Directory_XAudio,      Directory_Direct3D                      );
+                                          Directories := Directories & (Directory_Null_GCM, Directory_Null_OpenGL,                                                 Directory_Null_Steam);
+      when "PlayStation"               => Directories := Directories & (     Directory_GCM                                                                                             );
+                                          Directories := Directories & (                    Directory_Null_OpenGL, Directory_Null_XAudio, Directory_Null_Direct3D, Directory_Null_Steam);
+      when others                      => Directories := Directories & (                         Directory_OpenGL,                                                      Directory_Steam);
+                                          Directories := Directories & (Directory_Null_GCM,                        Directory_Null_XAudio, Directory_Null_Direct3D                      );
+    end case;
+  --------------
+  -- Switches --
+  --------------
+    Switch_Binder   :=();
+    Switch_Linker   :=(
+      "-fprofile-generate");                                      -- Generate code coverage
+    Switch_Compiler :=(
+      "-gnatW8",                                                  -- Enable unicode identifiers
+      "-gnat2012");                                               -- Enable the Ada 2012 extensions
+    Switch_Builder  :=(
+      "-j4",                                                      -- Use four tasks during compilation
+      "-k",                                                       -- "Keep going", build as far as possible
+      "-C",                                                       -- Use mapping file
+      "-s");                                                      -- Recompile if switches are changed
+    case SAFETY is
+      when "No"  => null;
+      when "Yes" =>
+        Switch_Compiler := Switch_Compiler &(
+          "-fstack-check",                                        -- Generate checks for exceeding the stack
+          "-gnato",                                               -- Enable overflow checking for numerics
+          "-gnatE",                                               -- Enable dynamic generic elaboration checks
+          "-gnata");                                              -- Enable pre and post conditions
+    end case;
+    case DEBUGGING is
+      when "No"  => null;
+      when "Yes" =>
+        Switch_Binder   := Switch_Binder   & ("-E");              -- Store traceback in exceptions
+        Switch_Compiler := Switch_Compiler & ("-g");              -- Create extended information in stack traces
+    end case;
+    case OPTIMIZE is
+      when "Yes" => Switch_Compiler := Switch_Compiler & ("-O3"); -- Full optimization and automatic inlining
+      when "No"  => null;
+    end case;
+    case WORD_SIZE is
+      when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
+      when "32" => null;
+    end case;
+  --------------
+  -- Packages --
+  --------------
+    for Exec_Dir                        use Directory_Executable;
+    for Object_Dir                      use Directory_Objects;
+    for Languages                       use Languages;
+    for Main                            use File_Main;
+    for Source_Dirs                     use Directories;
+    package IDE is
+      for VCS_Kind                      use Version_Control;
+      for Documentation_Dir             use Directory_Documentation;
+    end Ide;
+    package Builder is
+      for Default_Switches("Ada")       use Switch_Builder;
+    end Builder;
+    package Compiler is
+      for Default_Switches("Ada")       use Switch_Compiler;
+      for Driver("Changelog")           use "";
+    end Compiler;
+    package Binder is
+      for Default_Switches("Ada")       use Switch_Binder;
+    end Binder;
+    package Linker is
+      for Default_Switches("Ada")       use Switch_Linker;
+    end Linker;
+    package Naming is
+      for Dot_Replacement               use Dot_Replacement;
+      for Casing                        use Casing;
+      for Spec_Suffix("Ada")            use Suffix_Ada_Specification;
+      for Body_Suffix("Ada")            use Suffix_Ada_Body;
+      --for Spec_Suffix("C++")            use Suffix_C_Plus_Plus_Specification;
+      --for Body_Suffix("C++")            use Suffix_C_Plus_Plus_Body;
+      --for Spec_Suffix("C")              use Suffix_C_Specification;
+      --for Body_Suffix("C")              use Suffix_C_Body;
+      --for Body_Suffix("Pascal")         use Suffix_Pascal;
+      for Body_Suffix("Changelog")      use Suffix_Mark_Down;
+      --for Body_Suffix("Java")           use Suffix_Java;
+      --for Body_Suffix("Shell")          use Suffix_Shell;
+      --for Body_Suffix("Autoconf")       use Suffix_Auto_Configure;
+      --for Body_Suffix("C for Graphics") use Suffix_C_For_Graphics;
+      --for Body_Suffix("Visual Basic")   use Suffix_Visual_Basic;
+      --for Body_Suffix("Apple Script")   use Suffix_Apple_Script;
+    end Naming;
+end Neo;
+

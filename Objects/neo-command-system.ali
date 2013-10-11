@@ -1,0 +1,398 @@
+V "GNAT Lib v2013"
+A -O3
+A -fstack-check=specific
+A -gnatA
+A -gnatW8
+A -gnat2012
+A -gnato
+A -gnatE
+A -gnata
+A -g
+A -mtune=generic
+A -march=pentiumpro
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_CALENDAR
+RV NO_ENUMERATION_MAPS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FINALIZATION
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_HEAP_ALLOCATIONS
+RV NO_IMPLICIT_LOOPS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_PROTECTED_TYPES
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_ACCESS
+RV NO_UNCHECKED_CONVERSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK
+RV MAX_ENTRY_QUEUE_LENGTH=1+
+
+U neo.command.system%b	neo-command-system.adb	1423618c DE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.wide_fixed%s  a-stwifi.adb	a-stwifi.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W neo%s			neo.adb			neo.ali
+W neo.command%s		neo-command.adb		neo-command.ali
+W neo.link%s		neo-link.ads		neo-link.ali
+W neo.link.windows%s	neo-link-windows.ads	neo-link-windows.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.img_enum_new%s	s-imenne.adb		s-imenne.ali
+W system.img_int%s	s-imgint.adb		s-imgint.ali
+W system.img_uns%s	s-imguns.adb		s-imguns.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+W system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
+
+U neo.command.system%s	neo-command-system.ads	017475ec DE EE OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.wide_fixed%s  a-stwifi.adb	a-stwifi.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W neo.command%s		neo-command.adb		neo-command.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.img_bool%s	s-imgboo.adb		s-imgboo.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.tasking%s	s-taskin.adb		s-taskin.ali
+W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+W system.val_bool%s	s-valboo.adb		s-valboo.ali
+W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
+W system.wch_wts%s	s-wchwts.adb		s-wchwts.ali
+
+D ada.ads		20130417131022 3ffc8e18
+D a-calend.ads		20130417131018 d86d6c8c
+D a-charac.ads		20130417131018 2d3ec45b
+D a-chahan.ads		20130417131018 1d381dcd
+D a-chlat1.ads		20130417131018 2825df20
+D a-comlin.ads		20130417131018 e0accaa5
+D a-contai.ads		20130417131018 61e5e089
+D a-cohata.ads		20130417131018 04abccc5
+D a-cohama.ads		20130417131018 9f97b812
+D a-except.ads		20130417131018 10fcae55
+D a-finali.ads		20130417131020 52ecdc1b
+D a-ioexce.ads		20130417131020 8b9de6cd
+D a-iteint.ads		20130417131020 7c7305e9
+D a-stream.ads		20130417131020 2ca4ee37
+D a-string.ads		20130417131020 90ac6797
+D a-strfix.ads		20130417131020 d07c346e
+D a-strmap.ads		20130417131020 9cb836fb
+D a-stwifi.ads		20130417131020 d82fa5f6
+D a-stwima.ads		20130417131020 09a6f5ac
+D a-stwiun.ads		20130417131020 64ae971d
+D a-swuwha.ads		20130417131022 fd6ee962
+D a-tags.ads		20130417131022 6c0509d0
+D a-textio.ads		20130417131022 386df5d4
+D a-unccon.ads		20130417131022 f9eb8f06
+D a-uncdea.ads		20130417131022 f15a5ed1
+D a-widcha.ads		20130417131022 a2b85d3d
+D a-wichha.ads		20130417131022 6011239b
+D a-witeio.ads		20130417131022 551dcbf1
+D interfac.ads		20130417131026 cb4a8015
+D i-c.ads		20130417131026 5421119b
+D i-cstrin.ads		20130417131026 341d0ddf
+D i-cstrea.ads		20130417131026 8128536b
+D neo.ads		20131005113922 9695e16c
+D neo-command.ads	20131005165624 52a212db
+D neo-command.adb	20131006192634 82c0ea0a
+D neo-command-system.ads  20131006195124 449d0b00
+D neo-command-system.adb  20131006195408 2144e497
+D neo-command-system-import.adb  20131005091342 71fa8e1b neo.command.system.import
+D neo-link.ads		20131005091650 953f25c5
+D neo-link-windows.ads	20130821180422 825cca53
+D system.ads		20130417131036 5fc8ae56
+D s-addima.ads		20130417131028 a1ec9d3a
+D s-atacco.ads		20130417131028 4c36d12f
+D s-assert.ads		20130417131028 a3a4e6ab
+D s-atocou.ads		20130417131028 4a9c6cb4
+D s-atocou.adb		20130417131028 c864ec10
+D s-crtl.ads		20130417131028 dfcfca61
+D s-exctab.ads		20130417131028 66e51330
+D s-ficobl.ads		20130417131028 55a71d43
+D s-finmas.ads		20130417131028 b95bb341
+D s-finroo.ads		20130417131028 4ff27390
+D s-imgboo.ads		20130417131030 f5d971eb
+D s-imenne.ads		20130417131030 8707cbf0
+D s-imgint.ads		20130417131030 02dbe0c2
+D s-imguns.ads		20130417131030 9ff43cf7
+D s-maccod.ads		20130417131030 0fbb7bce
+D s-multip.ads		20130417131030 38ac9f73
+D s-osinte.ads		20130417131030 ecf1fbfd
+D s-parame.ads		20130417131032 b6e20cc0
+D s-pooglo.ads		20130417131032 542f33d0
+D s-secsta.ads		20130417131032 eea35a36
+D s-soflin.ads		20130417131032 24c8153c
+D s-stache.ads		20130417131032 596fc1b4
+D s-stausa.ads		20130417131032 017a0a05
+D s-stalib.ads		20130417131032 f78bcf95
+D s-stoele.ads		20130417131032 facd7d98
+D s-stoele.adb		20130417131032 afc5dc80
+D s-stopoo.ads		20130417131032 7b8fbeee
+D s-stposu.ads		20130417131032 ffeba1c5
+D s-stratt.ads		20130417131032 aedef97e
+D s-tasinf.ads		20130417131032 859198ad
+D s-taspri.ads		20130417131032 196697f7
+D s-taskin.ads		20130417131032 59e95256
+D s-taprob.ads		20130417131032 502249e3
+D s-traent.ads		20130417131032 5221ee41
+D s-unstyp.ads		20130417131034 6ae15c76
+D s-valboo.ads		20130417131034 fa926c1e
+D s-wchcon.ads		20130417131034 bfeb2e3d
+D s-wchstw.ads		20130417131034 2d112c01
+D s-wchwts.ads		20130417131034 b3692fb2
+D s-win32.ads		20130417131034 e5a79fe6
+X 1 ada.ads
+16K9*Ada 19e8 36|19r3 20r3 23r3 24r3 38|20r3 21r3 26r3 27r3
+X 13 a-iteint.ads
+24h9 Forward_Iterator
+X 15 a-string.ads
+16K13*Strings 35e16 36|19w7 20r7 23r7 24r7 38|20w7 21r7 26r7 27r7
+33n37*Both{33E9} 37|150r122
+X 18 a-stwifi.ads
+18K21*Wide_Fixed 254e27 36|20w15 24r15 38|21w15 27r15
+198V13*Trim{wide_string} 37|150s56
+X 29 interfac.ads
+36K9*Interfaces 177e15 38|19r3 25r3
+61M9*Unsigned_32
+X 30 i-c.ads
+18K20*C 230e17 38|19w14 25r14
+35I9*int<integer>
+43M9*unsigned
+44M9*unsigned_short
+60M9*size_t
+108E9*wchar_t<wide_character>
+116A9*wchar_array(108E9)<60M9>
+X 33 neo.ads
+46K9*Neo 921e10 36|25r9 212r7 37|17r14 177r7 38|22r3 28r3
+65A13*String_2{wide_string}<integer> 36|125r17 127r17 129r14 131r14 137r17
+. 139r28 145r32 162r44 163r44 164r44 165r44 166r44 167r44 168r44 169r44 170r44
+. 171r44 172r44 173r44 180r21 182r21 184r18 186r18 207r21 209r32 37|30r21
+. 36r21 42r18 48r18 112r17 121r17 130r14 139r14 156r17 168r28 38|128r17 137r28
+69A13*String_2_C{30|116A9}<30|60M9> 38|63r75
+71R13*String_2_Unbounded{20|51R9} 36|113r20 188r24 189r24
+80E13*Character_2_C{30|108E9}
+102M13*Integer_2_Unsigned_C{30|44M9} 38|147r46
+115M13*Integer_4_Unsigned_C{30|43M9}
+117M13*Integer_4_Unsigned{29|61M9} 36|114r42 203r18 37|150r61 38|40r14 43r16
+119I13*Integer_4_Signed_C{30|35I9} 38|51r24
+121I13*Integer_4_Signed{integer} 37|63r55
+125I13*Integer_4_Positive{positive} 36|114r20 37|64r55
+140M13*Integer_Size_C{30|60M9} 38|63r89
+193P10*Access_String_2_C(69A13) 38|63r41
+199P10*Access_Constant_Character_2_C(80E13)
+201P10*Access_Character_2_C(80E13)
+505V14*Localize{65A13} 37|60s19 61s18 62s18 63s18 64s18 66s20 69s20 72s20
+. 75s18 105s26 150s24 162s26 175s26
+512U15*Put_Title 37|60s9
+514U15*Put_Line 37|61s9 62s9 63s9 64s9 66s11 69s11 72s11 75s9
+520U15*Put_Debug_Line 37|105s11 150s9 162s11 175s11
+580V14*To_String_2{65A13} 38|76s49
+583V14*To_String_2_Unbounded=586:42{20|51R9} 36|113s42 37|33s29 39s29 38|76s27
+587V14*To_String_2=590:42{wide_string} 37|45s20 51s20 62s55
+597V14*To_Access_Character_2_C{201P10} 38|152s34
+748i5*C_TRUE{119I13} 38|77r40
+749i5*C_FALSE{119I13} 38|155r34
+X 34 neo-command.ads
+27K13*Command 33|46k9 34|155e18 36|25r13 212r11 37|17r18 177r11
+48E12 Type_To_Vary 36|151r9
+50*7 Initial{48E12} 36|152r9
+51a7 Name{33|65A13} 36|153r9
+52a7 Description{33|65A13} 36|154r9
+53b7 Is_Saved{boolean} 36|155r9
+59k13*Variable 89e19 36|150r14
+X 36 neo-command-system.ads
+25K21*System 34|27k13 36|212l19 212e25 37|17b26 177l19 177t25
+34X5*Call_Failure 37|104r14 38|57r17 67r21 70r21 73r21 162r17
+35X5*Unsupported
+39E10*Enumerated_System 89e29 91r10 94r10 97r10 112r20 37|61r55
+41n7*Unknown_System{39E10} 112r42
+42n7*Linux_System{39E10} 92r13 104r60
+43n7*Linux_2_System{39E10}
+44n7*Linux_2_1_System{39E10}
+45n7*Linux_2_2_System{39E10}
+46n7*Linux_2_3_System{39E10}
+47n7*Linux_2_4_System{39E10}
+48n7*Linux_2_5_System{39E10}
+49n7*Linux_2_6_System{39E10}
+50n7*Linux_3_System{39E10}
+51n7*Linux_3_1_System{39E10}
+52n7*Linux_3_2_System{39E10}
+53n7*Linux_3_3_System{39E10}
+54n7*Linux_3_4_System{39E10}
+55n7*Linux_3_5_System{39E10}
+56n7*Linux_3_6_System{39E10}
+57n7*Linux_3_7_System{39E10}
+58n7*Linux_3_8_System{39E10}
+59n7*Linux_3_9_System{39E10} 92r27
+60n7*Windows_System{39E10} 95r13 105r60 38|121r21
+61n7*Windows_1_System{39E10} 38|101r25
+62n7*Windows_1_4_System{39E10} 38|99r29
+63n7*Windows_1_4_A_System{39E10} 38|89r33
+64n7*Windows_1_4_B_System{39E10} 38|87r33
+65n7*Windows_1_4_10_A_System{39E10} 38|95r33
+66n7*Windows_1_4_10_B_System{39E10} 38|93r33
+67n7*Windows_1_4_90_System{39E10} 38|97r29
+68n7*Windows_2_System{39E10} 38|119r25
+69n7*Windows_2_5_System{39E10} 38|109r29
+70n7*Windows_2_5_1_System{39E10} 38|107r29
+71n7*Windows_2_6_System{39E10} 38|117r29
+72n7*Windows_2_6_1_System{39E10} 38|113r29
+73n7*Windows_2_6_2_System{39E10} 95r29 38|115r29
+74n7*Macintosh_System{39E10} 98r13 106r60
+75n7*Macintosh_8_System{39E10}
+76n7*Macintosh_8_5_System{39E10}
+77n7*Macintosh_8_6_System{39E10}
+78n7*Macintosh_9_System{39E10}
+79n7*Macintosh_9_1_System{39E10}
+80n7*Macintosh_9_2_System{39E10}
+81n7*Macintosh_10_System{39E10}
+82n7*Macintosh_10_1_System{39E10}
+83n7*Macintosh_10_2_System{39E10}
+84n7*Macintosh_10_3_System{39E10}
+85n7*Macintosh_10_4_System{39E10}
+86n7*Macintosh_10_5_System{39E10}
+87n7*Macintosh_10_6_System{39E10}
+88n7*Macintosh_10_7_System{39E10}
+89n7*Macintosh_10_8_System{39E10} 98r31
+90E13*Enumerated_Linux_System{39E10} 104r29 37|68r36 86r33
+93E13*Enumerated_Windows_System{39E10} 105r29 37|65r33 88r36
+96E13*Enumerated_Macintosh_System{39E10} 106r29 37|71r36 90r36
+102R10*Record_Feature_Requirements 107e17 134r33 37|82r33
+104e9*Minimum_Linux{90E13} 37|87r60
+105e9*Minimum_Windows{93E13} 37|89r60
+106e9*Minimum_Macintosh{96E13} 37|91r60
+108R10*Record_Specifics 115e17 123r14 144r32 205r18 37|99r14 38|49r14
+112e9*Version{39E10} 37|61r94 65r22 68r25 71r25 86r22 87r28 88r25 89r28 90r25
+. 91r28 38|78m15
+113r9*Username{33|71R13} 37|62r77 38|76m15
+114i9*Bit_Size{33|125I13} 37|64r95 38|77m15
+119U15*Test 37|57b15 77l11 77t15
+122V14*Get_Specifics{108R10} 144s52 37|98b14 107l11 107t24
+124U15*Set_Icon_Path 125>7 37|111b15 116l11 116t24
+125a7 Path{33|65A13} 37|112b7 115r28
+126U15*Set_Name 127>7 37|120b15 125l11 125t19
+127a7 Name{33|65A13} 37|121b7 124r23
+128V14*Get_Name{33|65A13} 37|129b14 134l11 134t19
+130V14*Get_Icon_Path{33|65A13} 37|138b14 143l11 143t24
+132U15*Put_Last_Error 37|147b15 151l11 151t25
+133V14*Is_Feature_Supported{boolean} 134>7 37|81b14 94l11 94t31
+134r7 Feature_Requirements{102R10} 37|82b7 87r39 89r39 91r39
+136U15*Open_Webpage 137>7 37|76s9 155b15 163l11 163t23
+137a7 Path{33|65A13} 37|156b7 159r29 162r58
+138U15*Execute_Application 139>7 140>7 37|67s11 167b15 176l11 176t30
+139a7 Executable_Path{33|65A13} 37|168b7 172r36 175r65
+140b7 Do_Fullscreen{boolean} 37|169b7 172r53
+144r5*SPECIFICS{108R10} 37|61r84 62r67 64r85 65r12 68r15 71r15 86r12 87r18
+. 88r15 89r18 90r15 91r18
+145a5*VARIABLE_PREFIX{33|65A13} 153r25
+149K13*Do_Allow_Multiple_Instances[34|59]
+162a5 SYSTEM_ERROR_NUMBER{33|65A13} 37|150r33
+163a5 FAILED_GET_SPECIFICS{33|65A13} 37|105r35
+164a5 FAILED_EXECUTE_APPLICATION{33|65A13} 37|175r35
+165a5 FAILED_OPEN_WEBPAGE{33|65A13} 37|162r35
+166a5 CURSOR_INACTIVE{33|65A13}
+167a5 CURSOR_ACTIVE{33|65A13}
+168a5 ICONS{33|65A13}
+169a5 EXTENSION_MACHINTOSH_ICON{33|65A13}
+170a5 EXTENSION_MACHINTOSH_CURSOR{33|65A13}
+171a5 EXTENSION_WINDOWS_ICON{33|65A13}
+172a5 EXTENSION_WINDOWS_CURSOR{33|65A13}
+173a5 EXTENSION_LINUX{33|65A13}
+177W20 Protected_Data 190l11 190e25 194r12 37|27b20 53l11 53t25
+179U19 Set_Icon_Path 180>11 37|29b19 34l15 34t28 115s14
+180a11 Path{33|65A13} 37|30b11 33r51
+181U19 Set_Name 182>11 37|35b19 40l15 40t23 124s14
+182a11 Name{33|65A13} 37|36b11 39r51
+183V18 Get_Name{33|65A13} 37|41b18 46l15 46t23 133s21
+185V18 Get_Icon_Path{33|65A13} 37|47b18 52l15 52t28 142s21
+188r9 Current_Path{33|71R13} 37|33r13 51r32
+189r9 Current_Name{33|71R13} 37|39r13 45r32
+194w5 Data{177W20} 37|115r9 124r9 133r16 142r16
+198K13 Import 211l11 211e17 37|22b18 102r16 150r91 159r9 172r9 38|30b14 165l7
+. 165t13
+202V18*Get_Last_Error_Number{33|117M13} 37|150s98 38|39b14 44l11 44t32
+204V18*Get_Specifics{108R10} 37|102s23 38|48b14 123l11 123t24
+206U19*Open_Webpage 207>11 37|159s16 38|127b15 132l11 132t23
+207a11 Path{33|65A13} 38|128b7 131r43
+208U19*Execute_Application 209>11 210>11 37|172s16 38|131s9 136b15 164l11
+. 164t30
+209a11 Executable_Path{33|65A13} 38|137b7 143r12 152r58
+210b11 Do_Fullscreen{boolean} 38|138b7 146r12
+X 38 neo-command-system-import.adb
+35X5 Executable_Path_Exceeds_Maximum_Length 144r17
+51i7 Buffer{33|119I13} 54m28 54r28 63r104 66m39 66r39 69m67 69r67 77r31
+60q9 Create_Username 122l15 122e30
+63p11 Username{33|193P10} 66r29 76r61
+64r11 Version_Information{40|585R10} 72m28 72r28 79r22 81r26 83r30 85r34
+. 91r34 103r26 105r30 111r30
+140r7 Startup_Information{40|742R10} 147m11 159m34 159r34
+141r7 Process_Information{40|734R10} 160m34 160r34
+X 39 neo-link.ads
+17K13*Link 38|22r7 28r7 39|39e15
+X 40 neo-link-windows.ads
+28K18*Windows 38|22w12 28r12 40|1553e23
+53m5*ERROR_INSUFFICIENT_BUFFER{33|115M13} 38|55r27
+262i5*FAILED{33|119I13} 38|54r55 66r66 69r94 72r68 160r74
+264i5*MAKE_WINDOW_FULLSCREEN{33|119I13} 38|147r67
+275m5*MAXIMUM_PATH_LENGTH{33|140M13} 38|143r37
+585R10*Record_Version_Information 38|64r41 40|598e17
+588m9*Major{33|115M13} 38|81r46 103r46
+589m9*Minor{33|115M13} 38|83r50 105r50 111r50
+591m9*Platform_Identifier{33|115M13} 38|79r42
+592a9*Service_Pack{wide_string} 38|85r54 91r54
+734R10*Record_Process_Information 38|141r37 40|740e17
+742R10*Record_Startup_Information 38|140r37 40|762e17
+756m9*Show_Window{33|102M13} 38|147m31
+804P10*Access_Record_Startup_Information(742R10)
+806P10*Access_Record_Process_Information(734R10)
+808P10*Access_Record_Security_Attributes(764R10)
+954V14*Create_Process{33|119I13} 38|150s9
+955p7 Application_Name{33|199P10} 38|151r11
+956p7 Command_Line{33|201P10} 38|152r11
+957p7 Process_Attributes{808P10} 38|153r11
+958p7 Thread_Attributes{808P10} 38|154r11
+959i7 Inherit_Handles{33|119I13} 38|155r11
+960m7 Creation_Flags{33|115M13} 38|156r11
+961m7 Environment{41|64M9} 38|157r11
+962p7 Current_Directory{33|199P10} 38|158r11
+963p7 Startup_Information{804P10} 38|159r11
+964p7 Process_Information{806P10} 38|160r11
+970V14*Is_Running_In_Emulated_32_Bit{33|119I13} 38|69s16
+1100V14*Get_Version{33|119I13} 38|72s16
+1103V14*Get_Username{33|119I13} 38|54s9 66s16
+1253V14*Get_Current_Process{41|64M9} 38|69s46
+1268V14*Get_Last_Error{33|115M13} 38|43s35 55s9
+X 41 system.ads
+37K9*System 36|18w3 22r3 38|18w3 24r3 41|196e11
+64M9*Address
+66m4*Null_Address{64M9} 38|157r34
+69N4*Word_Size 37|63r83
+X 64 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+
