@@ -1,21 +1,56 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-package body Neo.System.Graphics.World
-  is
+package body Neo.World is
+  procedure Initialize(Map, Mode) is
+    begin
+      if ( session->GetSignInManager().GetMasterLocalUser() == NULL ) {
+          // For development make sure a controller is registered
+          // Can't just register the local user because it will be removed because of it's persistent state
+          session->GetSignInManager().SetDesiredLocalUsers( 1, 1 );
+          session->GetSignInManager().Pump();
+      }
+
+      idStr mapNameClean = mapName;
+      mapNameClean.StripFileExtension();
+      mapNameClean.BackSlashesToSlashes();
+
+      idMatchParameters matchParameters;
+      matchParameters.mapName = mapNameClean;
+      if ( gameMode == GAME_MODE_SINGLEPLAYER ) {
+          matchParameters.numSlots = 1;
+          matchParameters.gameMode = GAME_MODE_SINGLEPLAYER;
+          matchParameters.gameMap = GAME_MAP_SINGLEPLAYER;
+      } else {
+          matchParameters.gameMap = mpGameMaps.Num(); // If this map isn't found in mpGameMaps, then set it to some undefined value (this happens when, for example, we load a box map with netmap)
+          matchParameters.gameMode = gameMode;
+          matchParameters.matchFlags = DefaultPartyFlags;
+          for ( int i = 0; i < mpGameMaps.Num(); i++ ) {
+              if ( idStr::Icmp( mpGameMaps[i].mapFile, mapNameClean ) == 0 ) {
+                  matchParameters.gameMap = i;
+                  break;
+              }
+          }
+          matchParameters.numSlots = session->GetTitleStorageInt("MAX_PLAYERS_ALLOWED", 4 );
+      }
+
+      cvarSystem->MoveCVarsToDict( CVAR_SERVERINFO, matchParameters.serverInfo );
+      if ( devmap ) {
+          matchParameters.serverInfo.Set( "devmap", "1" );
+      } else {
+          matchParameters.serverInfo.Delete( "devmap" );
+      }
+
+      session->QuitMatchToTitle();
+      if ( WaitForSessionState( idSession::IDLE ) ) {
+          session->CreatePartyLobby( matchParameters );
+          if ( WaitForSessionState( idSession::PARTY_LOBBY ) ) {
+              session->CreateMatch( matchParameters );
+              if ( WaitForSessionState( idSession::GAME_LOBBY ) ) {
+                  cvarSystem->SetCVarBool( "developer", devmap );
+                  session->StartMatch();
+              }
+          }
+      }
+    end Initialize;
+
   end Neo.System.Graphics.World;
 --  /*
 --  ==========================================================================================
@@ -3613,8 +3648,7 @@ package body Neo.System.Graphics.World
 --  static int c_duplicatedEdges, c_tripledEdges;
 --  static const int MAX_SIL_EDGES			= 0x7ffff;
 --
---  static void R_DefineEdge( const int v1, const int v2, const int planeNum, const int numPlanes,
---  	idList<silEdge_t> & silEdges, idHashIndex	& silEdgeHash ) {
+--  static void R_DefineEdge( const int v1, const int v2, const int planeNum, const int numPlanes,idList<silEdge_t> & silEdges, idHashIndex	& silEdgeHash ) {
 --  	int		i, hashKey;
 --
 --  	// check for degenerate edge
@@ -4791,8 +4825,7 @@ package body Neo.System.Graphics.World
 --  R_BuildDeformInfo
 --  ===================
 --  */
---  deformInfo_t *R_BuildDeformInfo( int numVerts, const idDrawVert *verts, int numIndexes, const int *indexes,
---  									bool useUnsmoothedTangents ) {
+--  deformInfo_t *R_BuildDeformInfo( int numVerts, const idDrawVert *verts, int numIndexes, const int *indexes,bool useUnsmoothedTangents ) {
 --  	srfTriangles_t	tri;
 --  	memset( &tri, 0, sizeof( srfTriangles_t ) );
 --

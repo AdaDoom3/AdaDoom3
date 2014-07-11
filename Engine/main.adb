@@ -1,95 +1,57 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  Ada.Exceptions,
-  Neo,
-  Neo.Command,
-  --Neo.File.Image,
-  --Neo.File.Model,
-  Neo.System,
-  --Neo.System.Input,
-  --Neo.System.Sound,
-  --Neo.System.Window,
-  Neo.System.Memory,
-  --Neo.System.Network,
-  Neo.System.Text,
-  Neo.System.Text.Console,
-  Neo.System.Community,
-  Neo.System.Processor;
-use
-  Ada.Exceptions;
-procedure Main
-  is
-  ---------------
-  -- Constants -- The directory constants must be the same as in the project file neo.gpr
-  ---------------
-    DO_DEBUG           : constant Boolean      := True;
-    DO_TEST            : constant Boolean      := True;
-    DIRECTORY_GAMES    : constant Neo.String_2 := "../Games";
-    DIRECTORY_LOGS     : constant Neo.String_2 := "/Logs";
-    DIRECTORY_ASSETS   : constant Neo.String_2 := "/Assets";
-    DIRECTORY_SETTINGS : constant Neo.String_2 := "/Settings";
-  -----------
-  -- Tasks --
-  -----------
-    task type Task_Loop
-      is
+with Neo.Command;
+with Neo.System.Memory;
+with Neo.System.Text;
+with Neo.System.Text.Console;
+with Neo.System.Community;
+with Neo.System.Processor;
+--with Neo.System.Input;
+--with Neo.System.Sound;
+--with Neo.System.Window;
+--with Neo.System.Network;
+--with Neo.File.Image;
+--with Neo.File.Model;
+with Ada.Exceptions;          use Ada.Exceptions;
+with Neo;                     use Neo;
+with Neo.System;              use Neo.System;
+with Neo.System.Text.Console; use Neo.System.Text.Console;
+procedure Main is
+    -- The directory constants must be the same as in the project file neo.gpr
+    DO_DEBUG           : constant Boolean  := True;
+    DO_TEST            : constant Boolean  := True;
+    DIRECTORY_GAMES    : constant String_2 := "../Games";
+    DIRECTORY_LOGS     : constant String_2 := "/Logs";
+    DIRECTORY_ASSETS   : constant String_2 := "/Assets";
+    DIRECTORY_SETTINGS : constant String_2 := "/Settings";
+    task type Task_Loop is
         entry Initialize;
         entry Finalize;
       end Task_Loop;
-  ---------------
-  -- Variables --
-  ---------------
-    Path_Settings  : Neo.String_2_Unbounded := Neo.NULL_STRING_2_UNBOUNDED;
-    Path_Log       : Neo.String_2_Unbounded := Neo.NULL_STRING_2_UNBOUNDED;
+    Path_Log       : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+    Path_Settings  : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
     Main_Task_Loop : Task_Loop;
-  -----------------
-  -- Subprograms --
-  -----------------
-    procedure Handle_Graphics;
-    procedure Handle_Exception(
-      Occurrence : in Ada.Exceptions.Exception_Occurrence);
-  ---------------
-  -- Task_Loop --
-  ---------------
-    task body Task_Loop
-      is
+    procedure Handle_Exception(Occurrence : in Exception_Occurrence) is
       begin
-        ------------------
+        Set_Errors(
+          Get_Errors & Neo.Localize("Exception:") & To_String_2(Exception_Name(Occurrence)) & END_LINE_2 &
+          To_String_2(Exception_Message(Occurrence)) & END_LINE_2 &(
+          if Exception_Name(Occurrence) = "NEO.SYSTEM.CALL_FAILURE" then Neo.System.Get_Last_Error & END_LINE_2 else NULL_STRING_2));
+      end Handle_Exception;
+    task body Task_Loop is
+      begin
+        --Add_Thread;
         accept Initialize;
-        ------------------
         if DO_TEST then
           Neo.Command.Test;
           Neo.System.Test;
           Neo.System.Memory.Test;
-          Neo.System.Processor.Test;
+          --Neo.System.Processor.Test;
           Neo.System.Text.Test;
           Neo.System.Text.Console.Test;
         end if;
-        ----
-        Run:
-        ----
-          begin
-            loop
-              select
-                ----------------
-                accept Finalize;
-                ----------------
-                exit;
+        begin
+          loop
+            select
+              accept Finalize; exit;
               else null;
                 -- Neo.Game.Run;
                 -- Timing
@@ -102,89 +64,103 @@ procedure Main
                 -- Render the sound system using the latest commands from the game thread
                 -- process the game return for map changes, etc
                 -- report timing information
-              end select;
-            end loop;
-          exception
-            when Occurrence: others =>
-              Handle_Exception(Occurrence);
-              --Neo.System.Window.Finalize;
-              ----------------
-              accept Finalize;
-              ----------------
-          end Run;
-        --Neo.Game.Finalize;
-      end Task_Loop;
-  ----------------------
-  -- Handle_Exception --
-  ----------------------
-    procedure Handle_Exception(
-      Occurrence : in Ada.Exceptions.Exception_Occurrence)
-      is
-      begin
-        Neo.Set_Error(Neo.Get_Error &
-          Neo.Localize("Exception:") & Neo.To_String_2(Exception_Name(Occurrence)) & Neo.END_LINE_2 &
-          Neo.To_String_2(Exception_Message(Occurrence)) & Neo.END_LINE_2 &(
-            if Exception_Name(Occurrence) = "NEO.SYSTEM.CALL_FAILURE" then
-              Neo.System.Get_Last_Error & Neo.END_LINE_2
-            else
-              Neo.NULL_STRING_2));
-      end Handle_Exception;
-  ---------------------
-  -- Handle_Graphics --
-  ---------------------
-    procedure Handle_Graphics
-      is
-      begin
-        null;
-      end Handle_Graphics;
-  begin
-    ----
-    Run:
-    ----
-      begin
-        Neo.Set_Do_Put_Debug(DO_DEBUG);
-        Neo.Put_Debug_Line(Neo.Localize("Ready?"));
-        --Neo.Game.Initialize;
-        Neo.Put_Debug_Line(Neo.Localize("Set"));
-        Neo.System.Set_Name("Doom3");
-        Neo.System.Set_Icon_Path("../Games/Doom3/Assets/icon.ico");
-        Path_Log      := Neo.To_String_2_Unbounded(DIRECTORY_GAMES & "/" & Neo.System.Get_Name & DIRECTORY_LOGS);--     & Neo.System.Community.Get_Name & ".txt");
-        Path_Settings := Neo.To_String_2_Unbounded(DIRECTORY_GAMES & "/" & Neo.System.Get_Name & DIRECTORY_SETTINGS);-- & Neo.System.Community.Get_Name & ".csv");
-        Neo.Command.Load_Variables(Neo.To_String_2(Path_Settings));
-        Neo.Put_Debug_Line(Neo.Localize("Run"));
-        Main_Task_Loop.Initialize;
-        ---------
-        Finalize:
-        ---------
-          begin
-            --Neo.System.Window.Run;
-            Main_Task_Loop.Finalize;
-          exception
-            when Occurrence: others =>
-              Handle_Exception(Occurrence);
-              Main_Task_Loop.Finalize;
-          end Finalize;
-        Neo.Command.Save_Variables(Neo.To_String_2(Path_Settings));
-        Neo.Put_Debug_Line(Neo.Localize("Goodbye"));
-      exception
-        when Occurrence: others =>
+            end select;
+          end loop;
+        exception when Occurrence: others =>
           Handle_Exception(Occurrence);
-      end Run;
-    if Neo.Get_Error /= Neo.NULL_STRING_2 then
-      Neo.Put_Line(Neo.Get_Error);
-      --Neo.Save_Log(Neo.To_String_2(Path_Log));
-      if
-      not Neo.System.Text.Console.Is_Open and then
-      Neo.System.Text.Console.Is_Okay(
-        Name    => Neo.System.Get_Name & Neo.Localize(" Error!"),
-        Message => Neo.System.Get_Name & Neo.Localize(Neo.Get_Error),
-        Buttons => Neo.System.Text.Console.Yes_No_Buttons,
-        Icon    => Neo.System.Text.Console.Error_Icon)
-      then
-        Neo.System.Text.Console.Spawn;
-      end if;
-    end if;
+          --Neo.System.Window.Finalize;
+          accept Finalize;
+        end;
+        --Neo.Game.Finalize;
+        --Remove_Thread;
+      end Task_Loop;
+  begin
+    begin
+      Neo.Set_Do_Put_Debug(DO_DEBUG);
+      Neo.Set_Put(null);
+      Neo.Put_Debug_Line(Neo.Localize("Ready?"));
+      --Neo.Game.Initialize;
+      Neo.Put_Debug_Line(Neo.Localize("Set"));
+      Neo.System.Set_Icon("Assets/icon.ico");
+      Neo.Command.Load_Variables(Neo.To_String_2(Path_Settings));
+      Neo.Put_Debug_Line(Neo.Localize("Run"));
+      Main_Task_Loop.Initialize;
+      begin
+        --Neo.System.Window.Run;
+        Main_Task_Loop.Finalize;
+      exception when Occurrence: others =>
+        Handle_Exception(Occurrence);
+        Main_Task_Loop.Finalize;
+      end;
+      Neo.Command.Save_Variables(Neo.To_String_2(Path_Settings));
+      Neo.Put_Debug_Line(Neo.Localize("Goodbye"));
+    exception when Occurrence: others => Handle_Exception(Occurrence); end;
+    --if Get_Errors /= NULL_STRING_2 then
+    --  Put_Line(Get_Errors);
+    --  --Neo.Save_Log(Neo.To_String_2(Path_Log));
+    --  if not Neo.System.Text.Console.Is_Running and then Is_Okay(To_String_2(Neo.System.SPECIFICS.Name), Localize(Get_Errors), Yes_No_Buttons, Error_Icon)
+    --  then null; end if; --Neo.System.Text.Console.Initialize; end if;
+    --end if;
   end Main;
+
+  -- procedure Process_Return is
+  --   begin
+  --     // set joystick rumble
+  --     if ( in_useJoystick.GetBool() && in_joystickRumble.GetBool() && !game->Shell_IsActive() && session->GetSignInManager().GetMasterInputDevice() >= 0 ) {
+  --       Sys_SetRumble( session->GetSignInManager().GetMasterInputDevice(), ret.vibrationLow, ret.vibrationHigh );   // Only set the rumble on the active controller
+  --     } else {
+  --       for ( int i = 0; i < MAX_INPUT_DEVICES; i++ ) {
+  --         Sys_SetRumble( i, 0, 0 );
+  --       }
+  --     }
+
+  --     syncNextGameFrame = ret.syncNextGameFrame;
+
+  --     if ( ret.sessionCommand[0] ) {
+  --       idCmdArgs args;
+
+  --       args.TokenizeString( ret.sessionCommand, false );
+
+  --       if ( !idStr::Icmp( args.Argv(0), "map" ) ) {
+  --         MoveToNewMap( args.Argv( 1 ), false );
+  --       } else if ( !idStr::Icmp( args.Argv(0), "devmap" ) ) {
+  --         MoveToNewMap( args.Argv( 1 ), true );
+  --         idMatchParameters matchParameters;
+  --         matchParameters.numSlots = 1;
+  --         matchParameters.gameMode = GAME_MODE_SINGLEPLAYER;
+  --         matchParameters.gameMap = GAME_MAP_SINGLEPLAYER;
+  --         matchParameters.mapName = mapName;
+  --         cvarSystem->MoveCVarsToDict( CVAR_SERVERINFO, matchParameters.serverInfo );
+  --         if ( devmap ) {
+  --           matchParameters.serverInfo.Set( "devmap", "1" );
+  --           mapSpawnData.persistentPlayerInfo.Clear();
+  --         } else {
+  --           matchParameters.serverInfo.Delete( "devmap" );
+  --           mapSpawnData.persistentPlayerInfo = game->GetPersistentPlayerInfo( 0 );
+  --         }
+  --         session->QuitMatchToTitle();
+  --         if ( WaitForSessionState( idSession::IDLE ) ) {
+  --           session->CreatePartyLobby( matchParameters );
+  --           if ( WaitForSessionState( idSession::PARTY_LOBBY ) ) {
+  --             session->CreateMatch( matchParameters );
+  --             if ( WaitForSessionState( idSession::GAME_LOBBY ) ) {
+  --               session->StartMatch();
+  --             }
+  --           }
+  --         }
+  --       } else if ( !idStr::Icmp( args.Argv(0), "died" ) ) {
+  --         if ( !IsMultiplayer() ) {
+  --           game->Shell_Show( true );
+  --         }
+  --       } else if ( !idStr::Icmp( args.Argv(0), "disconnect" ) ) {
+  --         cmdSystem->BufferCommandText( CMD_EXEC_INSERT, "stoprecording ; disconnect" );
+  --       } else if ( !idStr::Icmp( args.Argv(0), "endOfDemo" ) ) {
+  --         cmdSystem->BufferCommandText( CMD_EXEC_NOW, "endOfDemo" );
+  --       }
+  --     }
+  --   }
+
+
 --        Time_Current   : Duration := 0.0;
 --        Time_Last      : Duration := 0.0;
 --        Time_Remainder : Duration := 0.0;
@@ -266,16 +242,16 @@ procedure Main
 --                    end if;
 --                    if Do_Sync_Game_Frame.Get then
 --                      Do_Sync_Game_Frame.Set(False);
---                      Frames_Total   := Frames_Total   + 1;
---                      Frames_Current := Frames_Current + 1;
+--                      Frames_Total   := 1 + Frames_Total;
+--                      Frames_Current := 1 + Frames_Current;
 --                      exit;
 --                    end if;
 --                    loop
 --                      Time_Frame     := Duration_Of_Frames(Frames_Total + 1) - Duration_Of_Frames(Frames_Total);
 --                      exit when Time_Remainder < Time_Frame;
 --                      Time_Remainder := Time_Remainder - Time_Frame;
---                      Frames_Total   := Frames_Total   + 1;
---                      Frames_Current := Frames_Current + 1;
+--                      Frames_Total   := 1 + Frames_Total;
+--                      Frames_Current := 1 + Frames_Current;
 --                    end loop;
 --                    exit when Frames_Current > 0;
 --                    if not Do_Sleep.Get then

@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 separate(Neo.System.Sound)
 package body OpenAL
   is 

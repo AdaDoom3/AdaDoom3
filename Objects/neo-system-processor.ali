@@ -1,4 +1,4 @@
-V "GNAT Lib v2013"
+V "GNAT Lib v2014"
 A -O3
 A -fstack-check=specific
 A -gnatA
@@ -33,9 +33,9 @@ RV NO_DEFAULT_INITIALIZATION
 RV NO_IMPLEMENTATION_ATTRIBUTES
 RV NO_IMPLEMENTATION_PRAGMAS
 RV NO_ELABORATION_CODE
-RV SPARK
+RV SPARK_05
 
-U neo.system.processor%b  neo-system-processor.adb  c8b20734 DE OO PK
+U neo.system.processor%b  neo-system-processor.adb  b9aba000 DE OO PK
 Z ada%s			ada.ads			ada.ali
 W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
 W ada.exceptions%s	a-except.adb		a-except.ali
@@ -59,7 +59,7 @@ W system.standard_library%s  s-stalib.adb	s-stalib.ali
 Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
 W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
 
-U neo.system.processor%s  neo-system-processor.ads  01ba7fa5 DE EE OO PK
+U neo.system.processor%s  neo-system-processor.ads  e515b006 DE EE OO PK
 W ada.tags%s		a-tags.adb		a-tags.ali
 W interfaces%s		interfac.ads		interfac.ali
 W interfaces.c%s	i-c.adb			i-c.ali
@@ -70,371 +70,364 @@ W system.machine_code%s	s-maccod.ads		s-maccod.ali
 W system.standard_library%s  s-stalib.adb	s-stalib.ali
 W system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
 
-D ada.ads		20130417131022 3ffc8e18
-D a-calend.ads		20130417131018 d86d6c8c
-D a-caldel.ads		20130417131018 9f20b83d
-D a-charac.ads		20130417131018 2d3ec45b
-D a-chlat1.ads		20130417131018 2825df20
-D a-contai.ads		20130417131018 61e5e089
-D a-cohata.ads		20130417131018 04abccc5
-D a-cohama.ads		20130417131018 9f97b812
-D a-except.ads		20130417131018 10fcae55
-D a-finali.ads		20130417131020 52ecdc1b
-D a-ioexce.ads		20130417131020 8b9de6cd
-D a-iteint.ads		20130417131020 7c7305e9
-D a-stream.ads		20130417131020 2ca4ee37
-D a-string.ads		20130417131020 90ac6797
-D a-strfix.ads		20130417131020 d07c346e
-D a-strmap.ads		20130417131020 9cb836fb
-D a-stwifi.ads		20130417131020 d82fa5f6
-D a-stwima.ads		20130417131020 09a6f5ac
-D a-stwiun.ads		20130417131020 64ae971d
-D a-swuwha.ads		20130417131022 fd6ee962
-D a-tags.ads		20130417131022 6c0509d0
-D a-textio.ads		20130417131022 386df5d4
-D a-timoau.ads		20130417131022 01c06610
-D a-timoio.ads		20130417131022 d32407b9
-D a-timoio.adb		20130417131022 de0ea1c6
-D a-unccon.ads		20130417131022 f9eb8f06
-D a-uncdea.ads		20130417131022 f15a5ed1
-D a-witeio.ads		20130417131022 551dcbf1
-D a-wtmoio.ads		20130417131022 5502ed6b
-D interfac.ads		20130417131026 cb4a8015
-D i-c.ads		20130417131026 5421119b
-D i-cstrin.ads		20130417131026 341d0ddf
-D i-cstrea.ads		20130417131026 8128536b
-D neo.ads		20131010033154 b027011e
-D neo.adb		20131010033154 dcf34fca
-D neo-system.ads	20131011012604 02e3e0bb
-D neo-system-processor.ads  20131010030552 cc41db08
-D neo-system-processor.adb  20131007071644 03040c54
-D neo-system-processor-import.adb  20131008165056 07f7d068 neo.system.processor.import
-D system.ads		20130417131036 5fc8ae56
-D s-atacco.ads		20130417131028 4c36d12f
-D s-assert.ads		20130417131028 a3a4e6ab
-D s-atocou.ads		20130417131028 4a9c6cb4
-D s-atocou.adb		20130417131028 c864ec10
-D s-crtl.ads		20130417131028 dfcfca61
-D s-exctab.ads		20130417131028 66e51330
-D s-ficobl.ads		20130417131028 55a71d43
-D s-finmas.ads		20130417131028 b95bb341
-D s-finroo.ads		20130417131028 4ff27390
-D s-imenne.ads		20130417131030 8707cbf0
-D s-imgint.ads		20130417131030 02dbe0c2
-D s-imgllu.ads		20130417131030 49c900c3
-D s-imgrea.ads		20130417131030 c7a851e2
-D s-maccod.ads		20130417131030 0fbb7bce
-D s-multip.ads		20130417131030 38ac9f73
-D s-osinte.ads		20130417131030 ecf1fbfd
-D s-parame.ads		20130417131032 b6e20cc0
-D s-pooglo.ads		20130417131032 542f33d0
-D s-secsta.ads		20130417131032 eea35a36
-D s-soflin.ads		20130417131032 24c8153c
-D s-stache.ads		20130417131032 596fc1b4
-D s-stausa.ads		20130417131032 017a0a05
-D s-stalib.ads		20130417131032 f78bcf95
-D s-stoele.ads		20130417131032 facd7d98
-D s-stoele.adb		20130417131032 afc5dc80
-D s-stopoo.ads		20130417131032 7b8fbeee
-D s-stposu.ads		20130417131032 ffeba1c5
-D s-stratt.ads		20130417131032 aedef97e
-D s-tasinf.ads		20130417131032 859198ad
-D s-taspri.ads		20130417131032 196697f7
-D s-taskin.ads		20130417131032 59e95256
-D s-taprob.ads		20130417131032 502249e3
-D s-traent.ads		20130417131032 5221ee41
-D s-unstyp.ads		20130417131034 6ae15c76
-D s-wchcon.ads		20130417131034 bfeb2e3d
-D s-wchstw.ads		20130417131034 2d112c01
-D s-win32.ads		20130417131034 e5a79fe6
-X 12 a-iteint.ads
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-caldel.ads		20140406181354 9f20b83d ada.calendar.delays%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-convec.ads		20140406181358 0aaf3975 ada.containers.vectors%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strfix.ads		20140406181356 d07c346e ada.strings.fixed%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-stwifi.ads		20140406181354 d82fa5f6 ada.strings.wide_fixed%s
+D a-stwima.ads		20140406181358 09a6f5ac ada.strings.wide_maps%s
+D a-stwiun.ads		20140406181358 64ae971d ada.strings.wide_unbounded%s
+D a-swuwha.ads		20140406181354 fd6ee962 ada.strings.wide_unbounded.wide_hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-timoau.ads		20140406181356 01c06610 ada.text_io.modular_aux%s
+D a-timoio.ads		20140406181358 d32407b9 ada.text_io.modular_io%s
+D a-timoio.adb		20140406181358 de0ea1c6 ada.text_io.modular_io%b
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D a-witeio.ads		20140406181356 551dcbf1 ada.wide_text_io%s
+D a-wtmoio.ads		20140406181358 5502ed6b ada.wide_text_io.modular_io%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-c.ads		20140406181358 5421119b interfaces.c%s
+D i-cstrin.ads		20140406181356 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D neo.ads		20140708181816 ab640e15 neo%s
+D neo.adb		20140708182040 687210af neo%b
+D neo-system.ads	20140706171124 11fb6e3d neo.system%s
+D neo-system-processor.ads  20140704050226 9911ab81 neo.system.processor%s
+D neo-system-processor.adb  20131220162734 e2661087 neo.system.processor%b
+D neo-system-processor-import.adb  20140703220610 c2dc1b06 neo.system.processor.import
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atacco.ads		20140406181354 4c36d12f system.address_to_access_conversions%s
+D s-assert.ads		20140406181354 cd8d2c94 system.assertions%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-imenne.ads		20140406181354 614c06c0 system.img_enum_new%s
+D s-imgint.ads		20140406181358 02dbe0c2 system.img_int%s
+D s-imgllu.ads		20140406181356 49c900c3 system.img_llu%s
+D s-imgrea.ads		20140406181356 c7a851e2 system.img_real%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-multip.ads		20140406181358 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20140406181354 ecf1fbfd system.os_interface%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stausa.ads		20140406181354 017a0a05 system.stack_usage%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-tasinf.ads		20140406181356 601f6b72 system.task_info%s
+D s-taspri.ads		20140406181356 196697f7 system.task_primitives%s
+D s-taskin.ads		20140406181354 3f821f32 system.tasking%s
+D s-taprob.ads		20140406181354 502249e3 system.tasking.protected_objects%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D s-wchstw.ads		20140406181354 2d112c01 system.wch_stw%s
+D s-win32.ads		20140406181354 b7f96285 system.win32%s
+X 13 a-iteint.ads
 24h9 Forward_Iterator
-X 30 interfac.ads
-36K9*Interfaces 177e15 37|18w3 19r3 23r3 24r3
-55M9*Unsigned_8
-58M9*Unsigned_16
-61M9*Unsigned_32
-64M9*Unsigned_64
-111V13*Shift_Right{61M9} 39|274s26 644s54
-127V13*Shift_Left{64M9} 39|336s16
-X 31 i-c.ads
-18K20*C 230e17 37|19w14 24r14
-X 34 neo.ads
-46K9*Neo 923e10 37|27r9 158r26 189r7 38|17r14 239r7 39|405r4 540r12 542r15
-63A13*String_1{string}<integer> 39|56r25 57r25 58r25 59r25 60r25 61r25 62r25
-. 63r25 64r25 65r25 77r18 84r15 85r15 86r15
-65A13*String_2{wide_string}<integer>
-78E13*Character_1{character}
-91M13*Integer_1_Unsigned{30|55M9} 39|576r18
-104M13*Integer_2_Unsigned{30|58M9} 39|39r27 40r27 41r27 42r27 43r27 44r27
-. 46r27 47r27 49r27 50r27 172r31 249r31 296r30 396r32 621r45
-117M13*Integer_4_Unsigned{30|61M9} 39|45r27 48r27 81r25 97r26 101r27 103r26
-. 108r52 112r25 115r15 116r15 117r15 118r15 122r27 159r25 161r25 171r31 184r46
-. 190r39 250r31 251r31 263r15 279r13 302r13 323r19 324r19 334r13 335r13 336r58
-. 344r24 357r23 394r32 397r38 398r38 508r13 538r22 564r25 590r29 622r45 629r19
-. 644r17
-123I13*Integer_4_Natural{natural} 39|99r26 105r26
-125I13*Integer_4_Positive{positive}
-127M13*Integer_8_Unsigned{30|64M9} 37|90r30 154r14 183r18 38|34r52 37r52
-. 40r52 41r52 197r11 204r14 39|321r14 336r27 336r85
-144F13*Float_8_Real{long_float} 39|399r53 511r63
-174M13*Byte{91M13} 39|52r25
-505V14*Localize{65A13} 38|30s19 34s18 35s18 37s18 38s18 40s18 41s18 42s18
-. 46s24 49s24 53s24 56s24 59s24 62s24 67s26 70s26 73s26 76s26 80s24 83s24
-. 86s24 89s24 92s24 95s24 98s24 101s24 104s24 107s24 110s24 113s19 115s26
-. 121s19 124s28 126s28 133s24 136s24 139s24 142s24 145s24 148s24 151s24 154s24
-. 157s24 160s24 163s24 166s24 172s20 177s22 183s26
-510U15*Put 38|113s15 121s15
-512U15*Put_Title 38|30s9
-514U15*Put_Line 38|34s9 35s9 37s9 38s9 40s9 41s9 42s9 46s15 49s15 53s15 56s15
-. 59s15 62s15 67s17 70s17 73s17 76s17 80s15 83s15 86s15 89s15 92s15 95s15
-. 98s15 101s15 104s15 107s15 110s15 115s17 124s19 126s19 133s15 136s15 139s15
-. 142s15 145s15 148s15 151s15 154s15 157s15 160s15 163s15 166s15 172s11 177s13
-. 39|405s45 511s13 519s11 521s9 522s9 523s9 524s9 525s9 526s9 527s9 528s9
-520U15*Put_Debug_Line 38|183s11
-522U15*New_Line 38|117s17 129s17
-548v14*To_Radian_Image 39|394r16 396r16
-739e5*NULL_CHARACTER_1{78E13} 39|77r48
-746a5*END_LINE_1{63A13} 39|199r56 200r56 201r56 202r56 203r56 266r50 267r50
-. 268r50 269r50 270r50 271r50 282r43 283r43 284r43 285r43 286r43 287r43 309r43
-. 310r43 311r43 312r43 313r43 314r43 330r25 331r25 352r46 353r46 354r46 355r46
-. 372r48 373r48 374r48 375r48 377r48 378r48 379r48 380r48 381r48 382r48 383r48
-. 385r48 413r48 414r48 415r48 416r48 417r48 418r48 419r48 420r48 421r48 423r48
-. 424r48 425r48 426r48 427r48 428r48 446r48 447r48 448r48 449r48 450r48 451r48
-. 452r48 453r48 455r48 456r48 457r48 458r48 459r48 460r48 461r48 462r48 464r48
-. 465r48 466r48 467r48 468r48 469r48 470r48 471r48 473r48 474r48 475r48 476r48
-. 477r48 478r48 479r48 480r48 482r48 483r48 484r48 485r48 486r48 487r48 488r48
-. 489r48 491r48 492r48 493r48 494r48 495r48 496r48 497r48 498r48 500r48 501r48
-. 502r48 503r48 505r48 554r47 555r47 556r47 557r47 558r47 559r47 560r47 561r47
-. 562r47 587r49 588r49 597r52 598r52 599r52 600r52 601r52 610r46 611r46 612r46
-. 613r46 614r46 632r54 633r54 634r54 635r54 636r54 637r54 647r47 648r47 649r47
-. 650r47 651r47 652r47
-X 36 neo-system.ads
-25K13*System 34|46k9 36|192e17 37|27r13 158r30 189r11 38|17r18 239r11 39|405r8
-. 540r16 542r19
-35X5*Unsupported 38|182r14
-50n7*Linux_3_System{39E10} 37|167r28
-72n7*Windows_2_6_1_System{39E10} 37|168r28
-87n7*Macintosh_10_6_System{39E10} 37|169r28
-102R10*Record_Feature_Requirements 107e17 37|166r51
-104e9*Minimum_Linux{90E13} 37|167m7
-105e9*Minimum_Windows{93E13} 37|168m7
-106e9*Minimum_Macintosh{96E13} 37|169m7
-112i9*Bit_Size{34|125I13} 39|405r25 540r33 542r36
-132V14*Is_Feature_Supported{boolean} 39|156s65
-143r5*SPECIFICS{108R10} 39|405r15 540r23 542r26
-X 37 neo-system-processor.ads
-27K20*Processor 36|25k13 37|158r37 189l18 189e27 38|17b25 239l18 239t27
-36X5*Invalid_Operation 39|221r19
-37X5*Denormalized_Operand 39|224r19
-38X5*Divide_By_Zero 39|227r19
-39X5*Numeric_Overflow 39|230r19
-40X5*Numeric_Underflow 39|233r19
-41X5*Inexact_Result 39|236r19
-42X5*Stack_Fault 39|239r19
-46E10*Enumerated_Vendor 63e33 88r16 38|42r52 39|75r16
-48n7*Intel_Vendor{46E10} 100r16 38|64r16 39|90r20
-53n7*Advanced_Micro_Devices_Vendor{46E10} 100r31 128r20 38|64r31 65r35 39|88r20
-. 126r31
-58n7*Advanced_RISC_Machines_Vendor{46E10} 92r16 38|44r16
-63n7*Apple_IBM_Motorola_Vendor{46E10} 95r16 38|51r16
-68E10*Enumerated_Precision 72e33 73r9 150r22 181r26 38|216r22 39|294r22
-70n7*Single_Precision{68E10} 75r7 39|304r22
-71n7*Double_Precision{68E10} 76r7 39|305r22
-72n7*Double_Extended_Precision{68E10} 77r7 38|31r23 39|306r22
-78E10*Enumerated_Rounding 83e25 148r21 179r25 38|210r21 39|247r22
-80n7*Up_Rounding{78E10} 39|255r16
-81n7*Down_Rounding{78E10} 39|254r16
-82n7*Nearest_Rounding{78E10} 38|32r22 39|253r16
-83n7*Truncate_Rounding{78E10} 39|256r16
-87R10*Record_Specifics 88d7 137e17 152r14 158r47 176r18 38|189r14 191r19
-. 39|70r14 121r27
-88e7*Vendor{46E10} 91r14 127r18
-90m9*Speed_In_Megahertz{34|127M13} 38|41r92 193m19 195m19 196r40
-93b13*Has_NEON{boolean} 38|45r26
-94b13*Has_Vector_Floating_Point{boolean} 38|48r26
-96b13*Has_Vector_Multimedia_Instructions{boolean} 38|52r26
-97b13*Has_Vector_Scalar_Instructions{boolean} 38|55r26
-98b13*Has_Altivec_Additional_Registers{boolean} 38|58r26
-99b13*Has_Altivec{boolean} 38|61r26
-101b13*Has_Multi_Media_Extensions{boolean} 38|79r26 39|134m19
-102b13*Has_Streaming_SIMD_Extensions_1{boolean} 38|88r26 39|135m19
-103b13*Has_Streaming_SIMD_Extensions_2{boolean} 38|91r26 39|136m19
-104b13*Has_Streaming_SIMD_Extensions_3{boolean} 38|94r26 39|137m19
-105b13*Has_Streaming_SIMD_Extensions_3_Supplement{boolean} 38|97r26 39|138m19
-106b13*Has_Streaming_SIMD_Extensions_4_1{boolean} 38|100r26 39|139m19
-107b13*Has_Streaming_SIMD_Extensions_4_2{boolean} 38|103r26 39|140m19 156r22
-108b13*Has_Carryless_Multiplication_Of_Two_64_Bit{boolean} 38|141r26 39|141m19
-109b13*Has_Advanced_Vector_Extensions_Enabled{boolean} 38|114r32 122r32 39|162m21
-110b13*Has_Advanced_Vector_Extensions_1{boolean} 38|112r26 123r34 39|144m19
-111b13*Has_Advanced_Vector_Extensions_2{boolean} 38|120r26 39|145m19
-112b13*Has_Advanced_Encryption_Service{boolean} 38|153r26 39|146m19
-113b13*Has_Advanced_State_Operations{boolean} 38|156r26 39|150m19 174r22
-. 193r28 258r22 514r22 569r22 624r26
-114b13*Has_Bit_Manipulation_Extensions_1{boolean} 38|106r26 39|142m19
-115b13*Has_Bit_Manipulation_Extensions_2{boolean} 38|109r26 39|143m19
-116b13*Has_Fused_Multiply_Add_3{boolean} 38|82r26 39|151m19
-117b13*Has_Fused_Multiply_Add_4{boolean} 38|85r26 39|152m19
-118b13*Has_Hyperthreading{boolean} 38|162r26 39|149m19
-119b13*Has_High_Precision_Convert{boolean} 38|150r26 39|153m19
-120b13*Has_Half_Precision_Floating_Point_Convert{boolean} 38|147r26 39|147m19
-121b13*Has_Extended_States_Enabled{boolean} 38|144r26 39|132m19
-122b13*Has_Population_Count{boolean} 38|135r26 39|133m19
-123b13*Has_Context_ID_Manager{boolean} 38|132r26
-124b13*Has_Conditional_Move{boolean} 38|165r26 39|148m19
-125b13*Has_Leading_Zero_Count{boolean} 38|138r26 39|155m19
-126b13*Has_Extended_Operation_Support{boolean} 38|159r26 39|154m19
-129b17*Has_Streaming_SIMD_Extensions_4_Supplement{boolean} 38|72r28 39|130m21
-130b17*Has_3DNow{boolean} 38|66r28 39|127m21
-131b17*Has_3DNow_Supplement{boolean} 38|69r28 39|128m21
-132b17*Has_Multi_Media_Extensions_Supplement{boolean} 38|75r28 39|129m21
-141U15*Test 38|27b15 184l11 184t15
-142U15*Check_Exceptions 38|33s9 226b15
-143U15*Clear_Stack 38|175s11 231b15
-144V14*Is_Stack_Empty{boolean} 38|171s12 176s14 236b14
-146U15*Put_Stack 38|174s11 180s9 221b15
-147U15*Set_Rounding 148>7 38|32s9 209b15
-148e7 Rounding{78E10} 38|210b7
-149U15*Set_Precision 150>7 38|31s9 215b15
-150e7 Precision{68E10} 38|216b7
-151V14*Get_Specifics{87R10} 158s67 38|188b14 199l11 199t24
-153V14*Get_Clock_Ticks{34|127M13} 38|34s82 37s82 40s82 193s41 196s12 203b14
-158r5*SPECIFICS{87R10} 38|41r82 42r81 43r14 45r16 48r16 52r16 55r16 58r16
-. 61r16 65r16 66r18 69r18 72r18 75r18 79r16 82r16 85r16 88r16 91r16 94r16
-. 97r16 100r16 103r16 106r16 109r16 112r16 114r22 120r16 122r22 123r24 132r16
-. 135r16 138r16 141r16 144r16 147r16 150r16 153r16 156r16 159r16 162r16 165r16
-. 39|174r12 193r18 258r12 514r12 569r12 624r16
-165o5 SECONDS_FOR_PROCESSOR_SPEED_TIMING{duration} 38|194r15 197r36
-166r5 REQUIREMENTS_FOR_AVX{36|102R10} 39|156r86
-173K13 Import 188l11 188e17 38|22b18 191r39 205r15 211r15 217r15 222r15 227r15
-. 232r15 238r15 39|18b14 656l7 656t13
-175V18*Get_Specifics{87R10} 38|191s46 39|69b14 165l11 165t24
-177U19*Check_Exceptions 38|227r22 39|169b15 242l11 242t27
-178U19*Set_Rounding 179>11 38|211r22 39|246b15 289l11 289t23
-179e11 Rounding{78E10} 39|247b7 252r14
-180U19*Set_Precision 181>11 38|217r22 39|293b15 316l11 316t24
-181e11 Precision{68E10} 39|294b7 303r20
-182V18*Get_Clock_Ticks{34|127M13} 38|205r22 39|320b14 337l11 337t26
-184U19*Put_Stack 38|222r22 39|391b15 530l11 530t20
-185V18*Is_Stack_Empty{boolean} 38|238r22 39|341b14 359l9 359t23
-187U19*Clear_Stack 38|232r22 39|363b15 387l11 387t22
-X 38 neo-system-processor.adb
-191r7 Specifics{37|87R10} 193r9 195r9 196r30 198r16
-X 39 neo-system-processor-import.adb
-23X5 CPUID_Is_Not_Supported 541r17 566r19
-24X5 Unknown 92r17
-28E10 Enumerated_Register 33e20 98r26 104r26 108r22
-30n7 EAX_Register{28E10} 115r60
-31n7 EBX_Register{28E10} 116r60 142r93 143r93 145r93
-32n7 ECX_Register{28E10} 117r60 130r93 132r93 133r93 137r93 138r93 139r93
-. 140r93 141r93 144r93 146r93 147r93 151r93 152r93 153r93 154r93 155r93
-33n7 EDX_Register{28E10} 118r60 127r93 128r93 129r93 134r93 135r93 136r93
-. 148r93 149r93 150r93
-37R10 Record_x86_Environment 52e7 191r39 345r24 365r22 400r38
-39m9*Control_Word{34|104M13} 521r61
-40m9*Unused_A{34|104M13}
-41m9*Status_Word{34|104M13} 211m31 211r62 522r61
-42m9*Unused_B{34|104M13}
-43m9*Tags{34|104M13} 524r61
-44m9*Unused_C{34|104M13}
-45m9*Program_Counter{34|117M13} 528r61
-46m9*CS_Selector{34|104M13} 523r61
-47m9*Operation_Code{34|104M13} 527r61
-48m9*Data_Offset{34|117M13} 525r61
-49m9*Data_Selector{34|104M13} 526r61
-50m9*Unused_D{34|104M13}
-56a5 TO_ESI{34|63A13}
-57a5 TO_EDI{34|63A13} 410r31
-58a5 TO_EAX{34|63A13} 81r54 112r54 177r43 182r41 196r49 208r47 214r47 262r33
-. 278r31 301r42 349r41 369r41 409r31 518r43 584r62 594r49 607r43 628r37 643r35
-59a5 TO_EBX{34|63A13}
-60a5 TO_ECX{34|63A13} 159r54 263r44 279r42 302r42 629r48 644r46
-61a5 TO_EDX{34|63A13}
-62a5 FROM_EAX{34|63A13} 115r45 161r55 334r43 357r53 508r43 564r55
-63a5 FROM_EBX{34|63A13} 84r35 116r45 590r59
-64a5 FROM_ECX{34|63A13} 85r35 117r45
-65a5 FROM_EDX{34|63A13} 86r35 118r45 335r43
-73V16 Get_Vendor{37|46E10} 73b16 93l13 93t23 121s44
-77a9 Vendor{string} 84m45 84r45 85m45 85r45 86m45 86r45 87r14 89r17
-95V16 Is_Enabled{boolean} 97>9 98>9 99>9 102b16 120l13 120t23 127s67 128s67
-. 129s67 130s67 132s67 133s67 134s67 135s67 136s67 137s67 138s67 139s67 140s67
-. 141s67 142s67 143s67 144s67 145s67 146s67 147s67 148s67 149s67 150s67 151s67
-. 152s67 153s67 154s67 155s67
-97m9 Function_ID{34|117M13} 103b9 112r62
-98e9 Register{28E10} 104b9 119r24
-99i9 Bit{34|123I13} 101r21 105b9 119r41
-108a9 Data(34|117M13) 115m55 115r55 116m55 116r55 117m55 117r55 118m55 118r55
-. 119r19
-121r7 Specifics{37|87R10} 126r12 127m11 128m11 129m11 130m11 132m9 133m9
-. 134m9 135m9 136m9 137m9 138m9 139m9 140m9 141m9 142m9 143m9 144m9 145m9
-. 146m9 147m9 148m9 149m9 150m9 151m9 152m9 153m9 154m9 155m9 156r12 162m11
-. 164r16
-122m7 Data{34|117M13} 161m65 161r65 162r64
-171m7 Data{34|117M13} 177m51 177r51 184m9 184r18 185r12 220r15 223r15 226r15
-. 229r15 232r15 235r15 238r15
-172m7 Data_From_x87{34|104M13} 182m49 182r49 184r65
-187q11 Clear_Exception_Bits 219l17 219e37
-190m13 Data_From_SIMD{34|117M13} 196m57 196r57
-191r13 x86_Environment{37R10} 208m55 208r55 211m15 211r46 214m55 214r55
-249m7 Other_Data{34|104M13} 278m39 278r39
-250m7 Data{34|117M13} 262m41 262r41
-251m7 Rounding_Mask{34|117M13} 263r52 274m9 274r38 279r50
-296m7 Blank_Memory{34|104M13} 301m50 301r50
-323m7 Low_Part{34|117M13} 334m53 334r53 336r104
-324m7 High_Part{34|117M13} 335m53 335r53 336r46
-344m7 Result{34|117M13} 357m63 357r63 358r16
-345r7 Data{37R10} 349m49 349r49
-365r7 Data{37R10} 369m49 369r49
-393V16 To_Image[34|548]{34|65A13} 35|565b14 39|519s36 525s40 528s40
-395V16 To_Image[34|548]{34|65A13} 35|565b14 39|521s40 522s40 523s40 524s40
-. 526s40 527s40
-397m7 Number_Of_Values{34|117M13} 508m53 508r53 509r12 510r31
-398m7 Data_From_Extensions{34|117M13} 518m51 518r51 519r45
-399a7 Stack(34|144F13) 410m39 410r39 509r32 511r87
-400r7 Environment{37R10} 409m39 409r39 521r49 522r49 523r49 524r49 525r49
-. 526r49 527r49 528r49
-402X1 Disable_Put_Stack 405r136 529r16
-510i15 I{integer} 511r51 511r93
-535q5 Initialize 655l11 655e21
-538m7 Data{34|117M13} 564m65 564r65 565r14 590m69 590r69 591r19 594m57 594r57
-. 607m51 607r51 628m45 628r45
-571q11 Enable_Denormals_Are_Zero 604l17 604e42
-574A18 Array_Save_Area(34|91M13)<integer> 579r29 580r33
-578P18 Access_Array_Save_Area(574A18) 584r29
-580a13 Save_Area{574A18} 584m70 584r70
-618q9 Set_Exceptions 654l15 654e29
-621m11 Other_Data{34|104M13} 643m43 643r43
-622m11 EXCEPTION_MASK{34|117M13} 629r56 644r66
-X 40 system.ads
-37K9*System 37|20w3 21r3 25r3 26r3 40|196e11
-64M9*Address 39|177r25 182r23 196r31 208r29 214r29 262r15 278r13 301r13 349r23
-. 369r23 409r13 410r13 518r25 594r31 607r25 628r19 643r17
-X 54 s-maccod.ads
-36K16*Machine_Code 37|21w10 26r10 54|130e24
-43I9*Asm_Input_Operand
-44I9*Asm_Output_Operand
+X 31 interfac.ads
+38K9*Interfaces 179e15 38|1w6 1r31 2r6 2r31
+57M9*Unsigned_8
+60M9*Unsigned_16
+63M9*Unsigned_32
+66M9*Unsigned_64
+113V13*Shift_Right{63M9} 40|186s26 513s52
+129V13*Shift_Left{66M9} 40|238s16
+X 32 i-c.ads
+18K20*C 230e17 38|2w17 2r42
+X 35 neo.ads
+20K9*Neo 391e10 38|5r9 87r26 101r7 39|1r14 88r7 40|1r10 292r4 418r10 420r13
+27E13*Character_1{character}
+31A13*String_1{string}<integer> 40|18r25 19r25 20r25 21r25 22r25 23r25 24r25
+. 25r25 26r25 27r25 30r18 37r15 38r15 39r15
+33A13*String_2{wide_string}<integer>
+36M13*Integer_1_Unsigned{31|57M9} 40|450r59
+42M13*Integer_2_Unsigned{31|60M9} 40|5r27 6r27 7r27 8r27 9r27 10r27 12r27
+. 13r27 15r27 16r27 105r31 161r31 203r30 283r55 490r43
+48M13*Integer_4_Unsigned{31|63M9} 40|11r27 14r27 34r25 45r44 45r160 46r44
+. 47r52 51r25 54r15 55r15 56r15 57r15 61r27 96r25 98r25 104r31 117r46 121r39
+. 162r31 163r31 175r15 191r13 209r13 225r19 226r19 236r13 237r13 238r58 241r24
+. 254r23 282r55 284r38 285r38 395r13 417r28 442r23 462r27 491r43 498r17 513r15
+52I13*Integer_4_Natural{natural} 40|45r108 46r108
+53I13*Integer_4_Positive{positive}
+54M13*Integer_8_Unsigned{31|66M9} 38|30r62 85r37 98r41 39|16r52 18r52 20r52
+. 21r52 78r37 85r92 40|224r37 238r27 238r85
+61F13*Float_8_Real{long_float} 40|286r53 397r103
+73M13*Byte{36M13} 40|17r36
+197U15*New_Line 39|63s124 66s124
+200U15*Put 39|62s76 65s76
+201U15*Put_Title 39|4s9
+202U15*Put_Line 39|10s11 14s34 16s9 17s9 18s9 19s9 20s9 21s9 22s9 25s76 26s76
+. 28s76 29s76 30s76 31s76 34s76 35s76 36s76 37s76 39s76 40s76 41s76 42s76
+. 43s76 44s76 45s76 46s76 47s76 48s76 49s76 50s76 51s76 52s76 53s76 54s76
+. 55s76 56s76 57s76 58s76 59s76 60s76 61s76 63s76 66s76 40|292s45 397s54
+. 404s11 406s9 407s9 408s9 409s9 410s9 411s9 412s9 413s9
+204U15*Put_Debug_Line 39|70s37
+210V14*Localize{33A13} 39|4s19 10s20 14s43 16s18 17s18 18s18 19s18 20s18
+. 21s18 22s18 25s85 26s85 28s85 29s85 30s85 31s85 34s85 35s85 36s85 37s85
+. 39s85 40s85 41s85 42s85 43s85 44s85 45s85 46s85 47s85 48s85 49s85 50s85
+. 51s85 52s85 53s85 54s85 55s85 56s85 57s85 58s85 59s85 60s85 61s85 62s80
+. 63s85 65s80 66s85 70s52
+234v14*Generic_To_String_2 40|282r35 283r35
+297a5*END_LINE_1{31A13} 40|130r56 131r56 132r56 133r56 134r56 178r50 179r50
+. 180r50 181r50 182r50 183r50 194r43 195r43 196r43 197r43 198r43 199r43 216r43
+. 217r43 218r43 219r43 220r43 221r43 232r25 233r25 249r46 250r46 251r46 252r46
+. 265r48 266r48 267r48 268r48 270r48 271r48 272r48 273r48 274r48 275r48 276r48
+. 278r48 300r48 301r48 302r48 303r48 304r48 305r48 306r48 307r48 308r48 310r48
+. 311r48 312r48 313r48 314r48 315r48 333r48 334r48 335r48 336r48 337r48 338r48
+. 339r48 340r48 342r48 343r48 344r48 345r48 346r48 347r48 348r48 349r48 351r48
+. 352r48 353r48 354r48 355r48 356r48 357r48 358r48 360r48 361r48 362r48 363r48
+. 364r48 365r48 366r48 367r48 369r48 370r48 371r48 372r48 373r48 374r48 375r48
+. 376r48 378r48 379r48 380r48 381r48 382r48 383r48 384r48 385r48 387r48 388r48
+. 389r48 390r48 392r48 432r45 433r45 434r45 435r45 436r45 437r45 438r45 439r45
+. 440r45 459r47 460r47 469r50 470r50 471r50 472r50 473r50 482r44 483r44 484r44
+. 485r44 486r44 501r52 502r52 503r52 504r52 505r52 506r52 516r45 517r45 518r45
+. 519r45 520r45 521r45
+303e5*NULL_CHARACTER_1{27E13} 40|30r48
+X 37 neo-system.ads
+4K13*System 35|20k9 37|106e17 38|5r13 87r30 101r11 39|1r18 88r11 40|1r14
+. 292r8 418r14 420r17
+7X5*Unsupported 39|70r22
+13n7*Linux_3_System{10E10} 38|90r75
+18n80*Macintosh_10_6_System{10E10} 38|90r113
+22n57*Windows_2_6_1_System{10E10} 38|90r91
+28i9*Bit_Size{35|53I13} 40|292r25 418r31 420r34
+33R10*Record_Requirements 37e17 38|90r51
+71V14*Is_Supported{boolean} 40|93s65
+75r5*SPECIFICS{26R10} 40|292r15 418r21 420r24
+X 38 neo-system-processor.ads
+5K20*Processor 37|4k13 38|87r37 89E5 101l18 101e27 39|1b25 88l18 88t27 40|1r21
+7X5*Denormalized_Operand 40|152r55
+8X5*Invalid_Operation 40|151r55
+9X5*Numeric_Underflow 40|155r55
+10X5*Numeric_Overflow 40|154r55
+11X5*Divide_By_Zero 40|153r55
+12X5*Inexact_Result 40|156r55
+13X5*Stack_Fault 40|157r55
+14E10*Enumerated_Precision 14e97 14r103 83r46 96r50 39|77r46 40|202r44
+14n35*Single_Precision{14E10} 40|211r22
+14n53*Double_Precision{14E10} 40|212r22
+14n71*Double_Extended_Precision{14E10} 39|8r23 40|213r22
+15E10*Enumerated_Rounding 15e99 82r46 95r50 39|76r46 40|160r42
+15n35*Up_Rounding{15E10} 40|167r16
+15n48*Down_Rounding{15E10} 40|166r16
+15n63*Nearest_Rounding{15E10} 39|7r22 40|165r16
+15n81*Truncate_Rounding{15E10} 40|168r16
+16E10*Enumerated_Vendor 26e33 29r36 39|22r52 40|29r34
+16n35*Unknown_Vendor{16E10} 75r16 40|43r48
+17n7*Intel_Vendor{16E10} 40r16 39|32r16 40|42r48
+20n7*Advanced_Micro_Devices_Vendor{16E10} 40r31 68r20 39|32r31 33r35 40|41r48
+. 63r31
+23n7*Advanced_RISC_Machines_Vendor{16E10} 32r16 39|24r16
+26n7*Apple_IBM_Motorola_Vendor{16E10} 35r16 39|27r16
+29R10*Record_Specifics 29d27 77e17 84r37 87r47 97r41 39|80r35 81r19 40|28r35
+. 60r27
+29e27*Vendor{16E10} 31r14 67r18
+30m9*Speed_In_Megahertz{35|54M13} 39|21r92 83m19 85m19 85r70
+33b13*Has_NEON{boolean} 39|25r26
+34b13*Has_Vector_Floating_Point{boolean} 39|26r26
+36b13*Has_Vector_Multimedia_Instructions{boolean} 39|28r26
+37b13*Has_Vector_Scalar_Instructions{boolean} 39|29r26
+38b13*Has_Altivec_Additional_Registers{boolean} 39|30r26
+39b13*Has_Altivec{boolean} 39|31r26
+41b13*Has_Multi_Media_Extensions{boolean} 39|51r26 40|71m19
+42b13*Has_Streaming_SIMD_Extensions_1{boolean} 39|54r26 40|72m19
+43b13*Has_Streaming_SIMD_Extensions_2{boolean} 39|55r26 40|73m19
+44b13*Has_Streaming_SIMD_Extensions_3{boolean} 39|56r26 40|74m19
+45b13*Has_Streaming_SIMD_Extensions_3_Supplement{boolean} 39|57r26 40|75m19
+46b13*Has_Streaming_SIMD_Extensions_4_1{boolean} 39|58r26 40|76m19
+47b13*Has_Streaming_SIMD_Extensions_4_2{boolean} 39|59r26 40|77m19 93r22
+48b13*Has_Carryless_Multiplication_Of_Two_64_Bit{boolean} 39|42r26 40|78m19
+49b13*Has_Advanced_Vector_Extensions_Enabled{boolean} 39|63r32 66r32 40|99m21
+50b13*Has_Advanced_Vector_Extensions_1{boolean} 39|62r26 40|81m19
+51b13*Has_Advanced_Vector_Extensions_2{boolean} 39|65r26 40|82m19
+52b13*Has_Advanced_Encryption_Service{boolean} 39|46r26 40|83m19
+53b13*Has_Advanced_State_Operations{boolean} 39|47r26 40|87m19 107r22 124r28
+. 170r22 399r22 447r20 493r24
+54b13*Has_Bit_Manipulation_Extensions_1{boolean} 39|60r26 40|79m19
+55b13*Has_Bit_Manipulation_Extensions_2{boolean} 39|61r26 40|80m19
+56b13*Has_Fused_Multiply_Add_3{boolean} 39|52r26 40|88m19
+57b13*Has_Fused_Multiply_Add_4{boolean} 39|53r26 40|89m19
+58b13*Has_Hyperthreading{boolean} 39|49r26 40|86m19
+59b13*Has_High_Precision_Convert{boolean} 39|45r26 40|90m19
+60b13*Has_Half_Precision_Floating_Point_Convert{boolean} 39|44r26 40|84m19
+61b13*Has_Extended_States_Enabled{boolean} 39|43r26 40|69m19
+62b13*Has_Population_Count{boolean} 39|40r26 40|70m19
+63b13*Has_Context_ID_Manager{boolean} 39|39r26
+64b13*Has_Conditional_Move{boolean} 39|50r26 40|85m19
+65b13*Has_Leading_Zero_Count{boolean} 39|41r26 40|92m19
+66b13*Has_Extended_Operation_Support{boolean} 39|48r26 40|91m19
+69b17*Has_Streaming_SIMD_Extensions_4_Supplement{boolean} 39|36r28 40|67m21
+70b17*Has_3DNow{boolean} 39|34r28 40|64m21
+71b17*Has_3DNow_Supplement{boolean} 39|35r28 40|65m21
+72b17*Has_Multi_Media_Extensions_Supplement{boolean} 39|37r28 40|66m21
+78U15*Test 39|2b15 71l11 71t15
+79U15*Put_Stack 39|5s9 12s11 73b15
+80U15*Clear_Stack 39|13s11 74b15
+81U15*Check_Exceptions 39|6s9 75b15
+82U15*Set_Rounding 82>31 39|7s9 76b15
+82e31 Rounding{15E10} 39|76b31
+83U15*Set_Precision 83>31 39|8s9 77b15
+83e31 Precision{14E10} 39|77b31
+84V14*Get_Specifics{29R10} 87s67 39|80b14 87l11 87t24
+85V14*Get_Clock_Ticks{35|54M13} 39|16s82 18s82 20s82 78b14 83s41 85s42
+86V14*Is_Stack_Empty{boolean} 39|9s12 14s14 79b14
+87r5*SPECIFICS{29R10} 39|21r82 22r82 23r14 25r16 26r16 28r16 29r16 30r16
+. 31r16 33r16 34r18 35r18 36r18 37r18 39r16 40r16 41r16 42r16 43r16 44r16
+. 45r16 46r16 47r16 48r16 49r16 50r16 51r16 52r16 53r16 54r16 55r16 56r16
+. 57r16 58r16 59r16 60r16 61r16 62r16 63r22 65r16 66r22 40|107r12 124r18
+. 170r12 399r12 447r10 493r14
+89o5 SECONDS_FOR_PROCESSOR_SPEED_TIMING{duration} 39|84r15 85r117
+90r5 REQUIREMENTS_FOR_AVX{37|33R10} 40|93r78
+91K13 Import 100l11 100e17 39|72b18 73r76 74r76 75r76 76r76 77r76 78r76 79r76
+. 81r39 40|1b45 525l7 525t13
+92U19*Put_Stack 39|73r83 40|281b15 415l11 415t20
+93U19*Clear_Stack 39|74r83 40|257b15 280l11 280t22
+94U19*Check_Exceptions 39|75r83 40|103b15 159l11 159t27
+95U19*Set_Rounding 95>35 39|76r83 40|160b15 201l11 201t23
+95e35 Rounding{15E10} 40|160b28 164r14
+96U19*Set_Precision 96>35 39|77r83 40|202b15 223l11 223t24
+96e35 Precision{14E10} 40|202b29 210r20
+97V18*Get_Specifics{29R10} 39|81s46 40|28b14 102l11 102t24
+98V18*Get_Clock_Ticks{35|54M13} 39|78r83 40|224b14 239l11 239t26
+99V18*Is_Stack_Empty{boolean} 39|79r83 40|240b14 256l9 256t23
+X 39 neo-system-processor.adb
+81r7 Specifics{38|29R10} 83r9 85r9 85r60 86r16
+X 40 neo-system-processor-import.adb
+2X5 CPUID_Is_Not_Supported 419r15 444r17
+3E10 Enumerated_Register 3e89 45r78 46r78 47r22
+3n34 EAX_Register{3E10} 54r60
+3n48 EBX_Register{3E10} 55r60 79r93 80r93 82r93
+3n62 ECX_Register{3E10} 56r60 67r93 69r93 70r93 74r93 75r93 76r93 77r93 78r93
+. 81r93 83r93 84r93 88r93 89r93 90r93 91r93 92r93
+3n76 EDX_Register{3E10} 57r60 64r93 65r93 66r93 71r93 72r93 73r93 85r93 86r93
+. 87r93
+4R10 Record_x86_Environment 17e18 122r39 242r24 258r22 287r38
+5m9*Control_Word{35|42M13} 406r64
+6m9*Unused_A{35|42M13}
+7m9*Status_Word{35|42M13} 142m31 142r62 407r64
+8m9*Unused_B{35|42M13}
+9m9*Tags{35|42M13} 409r64
+10m9*Unused_C{35|42M13}
+11m9*Program_Counter{35|48M13} 413r64
+12m9*CS_Selector{35|42M13} 408r64
+13m9*Operation_Code{35|42M13} 412r64
+14m9*Data_Offset{35|48M13} 410r64
+15m9*Data_Selector{35|42M13} 411r64
+16m9*Unused_D{35|42M13}
+18a5 TO_ESI{35|31A13}
+19a5 TO_EDI{35|31A13} 297r31
+20a5 TO_EAX{35|31A13} 34r54 51r54 110r43 115r41 127r49 139r47 145r47 174r33
+. 190r31 208r42 246r41 262r41 296r31 403r43 456r60 466r47 479r41 497r35 512r33
+21a5 TO_EBX{35|31A13}
+22a5 TO_ECX{35|31A13} 96r54 175r44 191r42 209r42 498r46 513r44
+23a5 TO_EDX{35|31A13}
+24a5 FROM_EAX{35|31A13} 54r45 98r55 236r43 254r53 395r43 442r53
+25a5 FROM_EBX{35|31A13} 37r35 55r45 462r57
+26a5 FROM_ECX{35|31A13} 39r35 56r45
+27a5 FROM_EDX{35|31A13} 38r35 57r45 237r43
+29V16 Get_Vendor{38|16E10} 29b16 44l13 44t23 60s44
+30a9 Vendor{string} 37m45 37r45 38m45 38r45 39m45 39r45 41r19 42r19
+45V16 Is_Enabled{boolean} 45>27 45>64 45>99 46b16 59l13 59t23 64s67 65s67
+. 66s67 67s67 69s67 70s67 71s67 72s67 73s67 74s67 75s67 76s67 77s67 78s67
+. 79s67 80s67 81s67 82s67 83s67 84s67 85s67 86s67 87s67 88s67 89s67 90s67
+. 91s67 92s67
+45m27 Function_ID{35|48M13} 46b27 51r62
+45e64 Register{3E10} 46b64 58r24
+45i99 Bit{35|52I13} 45r154 46b99 58r41
+47a9 Data(35|48M13) 54m55 54r55 55m55 55r55 56m55 56r55 57m55 57r55 58r19
+60r7 Specifics{38|29R10} 63r12 64m11 65m11 66m11 67m11 69m9 70m9 71m9 72m9
+. 73m9 74m9 75m9 76m9 77m9 78m9 79m9 80m9 81m9 82m9 83m9 84m9 85m9 86m9 87m9
+. 88m9 89m9 90m9 91m9 92m9 93r12 99m11 101r16
+61m7 Data{35|48M13} 98m65 98r65 99r64
+104m7 Data{35|48M13} 110m51 110r51 117m9 117r18 118r12 151r15 152r15 153r15
+. 154r15 155r15 156r15 157r15
+105m7 Data_From_x87{35|42M13} 115m49 115r49 117r65
+119q11 Clear_Exception_Bits 150l17 150e37
+121m13 Data_From_SIMD{35|48M13} 127m57 127r57
+122r13 x86_Environment{4R10} 139m55 139r55 142m15 142r46 145m55 145r55
+161m7 Other_Data{35|42M13} 190m39 190r39
+162m7 Data{35|48M13} 174m41 174r41
+163m7 Rounding_Mask{35|48M13} 175r52 186m9 186r38 191r50
+203m7 Blank_Memory{35|42M13} 208m50 208r50
+225m7 Low_Part{35|48M13} 236m53 236r53 238r104
+226m7 High_Part{35|48M13} 237m53 237r53 238r46
+241m7 Result{35|48M13} 254m63 254r63 255r16
+242r7 Data{4R10} 246m49 246r49
+258r7 Data{4R10} 262m49 262r49
+282V16 To_String_2[35|234]{35|33A13} 36|142b14 40|404s36 410s40 413s40
+283V16 To_String_2[35|234]{35|33A13} 36|142b14 40|406s40 407s40 408s40 409s40
+. 411s40 412s40
+284m7 Number_Of_Values{35|48M13} 395m53 395r53 396r12 397r31
+285m7 Data_From_Extensions{35|48M13} 403m51 403r51 404r48
+286a7 Stack(35|61F13) 297m39 297r39 396r32 397r127
+287r7 Environment{4R10} 296m39 296r39 406r52 407r52 408r52 409r52 410r52
+. 411r52 412r52 413r52
+289X1 Disable_Put_Stack 292r136 414r16
+397i15 I{integer} 397r92 397r133
+417m13 Data{35|48M13} 442m63 442r63 443r12 462m67 462r67 463r17 466m55 466r55
+. 479m49 479r49 497m43 497r43
+448q9 Enable_Denormals_Are_Zero 476l15 476e40
+450A16 Array_Save_Area(35|36M13)<integer> 451r53 452r31
+451P16 Access_Array_Save_Area(450A16) 456r27
+452a11 Save_Area{450A16} 456m68 456r68
+490m9 Other_Data{35|42M13} 512m41 512r41
+491m9 EXCEPTION_MASK{35|48M13} 498r54 513r64
+X 41 system.ads
+37K9*System 38|3w6 3r31 4r6 4r31 41|196e11
+64M9*Address 40|110r25 115r23 127r31 139r29 145r29 174r15 190r13 208r13 246r23
+. 262r23 296r13 297r13 403r25 466r29 479r23 497r17 512r15
+X 55 s-maccod.ads
+36K16*Machine_Code 38|4w13 4r38 55|130e24
+43I9*Asm_Input_Operand<integer>
+44I9*Asm_Output_Operand<integer>
 51A9*Asm_Input_Operand_List(43I9)<integer>
 54A9*Asm_Output_Operand_List(44I9)<integer>
-68U14*Asm 39|259s11 275s9 298s9 406s9 625s15 640s13
-69s6 Template{string} 39|264r13 280r11 307r11 411r11 630r17 645r15
-70i6 Outputs{44I9} 39|507r11
-71a6 Inputs{51A9} 39|261r13 277r11 300r11 408r11 627r17 642r15
-73b6 Volatile{boolean} 39|260r13 276r11 299r11 407r11 626r17 641r15
-75U14*Asm 39|79s11 110s11 326s9
-76s6 Template{string} 39|82r13 113r13 328r11
-77a6 Outputs{54A9} 39|83r13 114r13 333r11
-78i6 Inputs{43I9} 39|81r13 112r13
-80b6 Volatile{boolean} 39|80r13 111r13 327r11
-82U14*Asm 39|157s11 175s11 180s9 194s17 206s15 212s15 216s15 347s9 367s9
-. 515s11 543s11 582s15 592s17 605s11
-83s6 Template{string} 39|160r13 178r13 183r11 197r19 209r17 215r17 218r17
-. 350r11 370r11 516r13 545r13 585r17 595r19 608r13
-84i6 Outputs{44I9} 39|161r13 357r11 564r13 590r17
-85i6 Inputs{43I9} 39|159r13 177r13 182r11 196r19 208r17 214r17 349r11 369r11
-. 518r13 584r17 594r19 607r13
-87b6 Volatile{boolean} 39|158r13 176r13 181r11 195r19 207r17 213r17 217r17
-. 348r11 368r11 517r13 544r13 583r17 593r19 606r13
-X 62 s-stausa.ads
+68U14*Asm 40|171s11 187s9 205s9 293s9 494s13 509s11
+69a6 Template{string} 40|176r13 192r11 214r11 298r11 499r15 514r13
+70i6 Outputs{44I9} 40|394r11
+71a6 Inputs{51A9} 40|173r13 189r11 207r11 295r11 496r15 511r13
+73b6 Volatile{boolean} 40|172r13 188r11 206r11 294r11 495r15 510r13
+75U14*Asm 40|32s11 49s11 228s9
+76a6 Template{string} 40|35r13 52r13 230r11
+77a6 Outputs{54A9} 40|36r13 53r13 235r11
+78i6 Inputs{43I9} 40|34r13 51r13
+80b6 Volatile{boolean} 40|33r13 50r13 229r11
+82U14*Asm 40|94s11 108s11 113s9 125s17 137s15 143s15 147s15 244s9 260s9 400s11
+. 421s9 454s13 464s15 477s9
+83a6 Template{string} 40|97r13 111r13 116r11 128r19 140r17 146r17 149r17
+. 247r11 263r11 401r13 423r11 457r15 467r17 480r11
+84i6 Outputs{44I9} 40|98r13 254r11 442r11 462r15
+85i6 Inputs{43I9} 40|96r13 110r13 115r11 127r19 139r17 145r17 246r11 262r11
+. 403r13 456r15 466r17 479r11
+87b6 Volatile{boolean} 40|95r13 109r13 114r11 126r19 138r17 144r17 148r17
+. 245r11 261r11 402r13 422r11 455r15 465r17 478r11
+X 63 s-stausa.ads
 203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
 268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
 

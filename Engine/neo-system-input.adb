@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package body Neo.System.Input
   is
   ------------
@@ -23,16 +7,16 @@ package body Neo.System.Input
       is separate;
     package Implementation
       is new Import(
-      Add_Device     => ,
-      Remove_Device  => ,
-      Get_Device     => ,
-      Handle_Key     => ,
-      Handle_Key     => ,
-      Handle_Mouse   => ,
-      Handle_Stick   => ,
-      Handle_Stick   => ,
-      Handle_Trigger => ,
-      Handle_Trigger => );
+        Add_Device     => ,
+        Remove_Device  => ,
+        Get_Device     => ,
+        Handle_Key     => ,
+        Handle_Key     => ,
+        Handle_Mouse   => ,
+        Handle_Stick   => ,
+        Handle_Stick   => ,
+        Handle_Trigger => ,
+        Handle_Trigger => );
   ----------------
   -- Task_Input --
   ----------------

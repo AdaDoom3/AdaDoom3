@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 with
   Interfaces,
   Interfaces.C,
@@ -25,8 +9,7 @@ use
   System,
   System.Machine_Code;
 separate(Neo.System.Processor)
-package body Implementation_For_Architecture
-  is
+package body Implementation_For_Architecture is
   ------------------
   -- Enumerations --
   ------------------
@@ -106,143 +89,81 @@ package body Implementation_For_Architecture
       end record;
     for Record_Version'Size
       use 32;
-    type Record_Processor
-      is record
-        Core_Guess : Integer_8_Unsigned := 1;
-        Extensions : Record_Extensions  := (others => <>);
-      end record;
   ---------------
   -- Constants --
   ---------------
-    POWERPC_PROCESSORS : constant array(Enumerated_Processor_Version'Range) of Record_Extensions :=(
+    POWERPC_PROCESSORS : constant array(Enumerated_Processor_Version'Range) of Record_Processor :=(
       IBM_Cell_Broadband_Engine_Version =>(
-        Core_Guess => 8,
-        Extensions =>(
           --Has_Vector_Multimedia_Instructions => True, ???
           --Has_Vector_Scalar_Instructions     => True, ???
           Has_Altivec                        => True,
           others                             => False)),
       IBM_Xenon_Version =>(
-        Core_Guess => 3,
-        Extensions =>(
           --Has_Vector_Multimedia_Instructions => True, ???
           --Has_Vector_Scalar_Instructions     => True, ???
           Has_Altivec                        => True,
           Has_Altivec_Additional_Registers   => True,
           others                             => False),
       Power_8_Compliant_Version =>(
-        Core_Guess => 16, -- ???
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
           others                             => False),
       Power_7_Plus_Compliant_Version =>(
-        Core_Guess => 8,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
           others                             => False),
       Power_7_Compliant_Version =>(
-        Core_Guess => 8,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           Has_Vector_Scalar_Instructions     => True,
           others                             => False),
       Power_6_Compliant_Version =>(
-        Core_Guess => 2,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           others                             => False),
       IBM_970_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           others                             => False),
       IBM_970FX_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           others                             => False),
       IBM_970GX_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           others                             => False),
       IBM_970MP_Version =>(
-        Core_Guess => 2,
-        Extensions =>(
           Has_Altivec                        => True,
           Has_Vector_Multimedia_Instructions => True,
           others                             => False),
       Motorola_7400_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7410_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7450_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7455_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7457_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7447A_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       Motorola_7448_Version =>(
-        Core_Guess => 1,
-        Extensions =>(
           Has_Altivec                        => True,
           others                             => False),
       others =>(
-        Core_Guess => 1,
-        Extensions =>(
           others                             => False));
-  ----------------
-  -- Initialize --
-  ----------------
-    procedure Initialize
-      is
-      begin
-        null;
-      end Initialize;
-  ----------------
-  -- Get_Vendor --
-  ----------------
-    function Get_Vendor
-      return Enumerated_Vendor
-      is
-      begin
-        return Apple_IBM_Motorola;
-      end Get_Vendor;
-  -----------------
-  -- Get_Version --
-  -----------------
-    function Get_Version
-      return Enumerated_Version
-      is
+    function Get_Vendor return Enumerated_Vendor is begin return Apple_IBM_Motorola; end Get_Vendor;
+    function Get_Version return Enumerated_Version is
       Version : aliased Record_Version := (others => <>);
       begin
         Asm(
@@ -250,24 +171,8 @@ package body Implementation_For_Architecture
           Volatile => True,
           Inputs   => Access_Record_Version'asm_input(TO_R0, Version'access));
         return Enumerated_Processor_Version'val(Version.Major);
-      exception
-        when  =>
-          raise Unsupported_Feature;
+      exception when others => raise Unsupported_Feature;
       end Get_Version;
-  -------------------------
-  -- Get_Number_Of_Cores --
-  -------------------------
-    function Get_Number_Of_Cores
-      return Integer_8_Natural
-      is
-      begin
-        raise System_Call_Failure;
-        return 1;
-        --return POWERPC_PROCESSORS(Get_Version).Core_Guess;
-      end Get_Number_Of_Cores;
-  -------------------
-  -- Get_Specifics --
-  -------------------
     function Get_Specifics
       return Record_Specifics
       is
@@ -296,9 +201,6 @@ package body Implementation_For_Architecture
         --  raise Unsupported_Feature;
         --end if;
       end Set_Rounding;
-  -------------------
-  -- Set_Precision --
-  -------------------
     procedure Set_Precision(
       Precision : in Enumerated_Precision)
       is
@@ -367,27 +269,18 @@ package body Implementation_For_Architecture
 --             raise Unsupported_Feature;
 --         end case;
          return 0;
-      end Get_Clock_Ticks;
-  --------------------
-  -- Is_Stack_Empty --
-  --------------------
+      end Get_Clock_Ticks
     function Is_Stack_Empty
       return Boolean
       is
       begin
         raise System_Call_Failure;
       end Is_Stack_Empty;
-  -----------------
-  -- Clear_Stack --
-  -----------------
     procedure Clear_Stack
       is
       begin
         raise Unsupported_Feature;
       end Clear_Stack;
-  --------------------------
-  -- Compare_And_Exchange --
-  --------------------------
     function Compare_And_Exchange(
       Destination : out Integer_4_Unsigned;
       Comparand   : in  Integer_4_Unsigned;
@@ -397,9 +290,6 @@ package body Implementation_For_Architecture
       begin
         raise System_Call_Failure;
       end Compare_And_Exchange;
-  ---------------
-  -- Put_Stack --
-  ---------------
     procedure Put_Stack
       is
       begin

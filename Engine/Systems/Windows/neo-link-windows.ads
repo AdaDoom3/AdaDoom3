@@ -1,35 +1,12 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  System,
-  Interfaces,
-  Interfaces.C,
-  Ada.Command_Line,
-  Ada.Unchecked_Conversion;
-use
-  System,
-  Interfaces,
-  Interfaces.C,
-  Ada.Command_Line;
-package Neo.Link.Windows
-  is
-  ---------------
-  -- Constants --
-  ---------------
+with Ada.Unchecked_Conversion;
+with System;       use System;
+with Interfaces;   use Interfaces;
+with Interfaces.C; use Interfaces.C;
+package Neo.Link.Windows is
+WTF : Integer_4_Signed_C := -1;
+WTF2 : Integer_4_Signed_C := -2;
+    INSERT_ON_TOP_OF_EVERYTHING : constant Address := To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned_C(WTF)));
+    REMOVE_ON_TOP_OF_EVERYTHING : constant Address := To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned_C(WTF2)));
     GENERIC_CURSOR                             : constant Integer_Address      := 16#7F00#;
     GENERIC_ICON                               : constant Integer_Address      := 16#7F00#;
     BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
@@ -77,13 +54,16 @@ package Neo.Link.Windows
     FORMAT_MESSAGE_FROM_SYSTEM                 : constant Integer_4_Unsigned_C := 16#0000_1000#;
     FORMAT_MESSAGE_IGNORE_INSERTS              : constant Integer_4_Unsigned_C := 16#0000_0200#;
     FORMAT_MESSAGE_MAX_WIDTH_MASK              : constant Integer_4_Unsigned_C := 16#0000_00FF#;
+    EVENT_SET_REDRAW                           : constant Integer_4_Unsigned_C := 16#0000_000B#; -- WM_SETREDRAW
     EVENT_SET_TEXT                             : constant Integer_4_Unsigned_C := 16#0000_000C#;
     EVENT_INITIALIZE_DIALOG                    : constant Integer_4_Unsigned_C := 16#0000_0028#; -- WM_NEXTDLGCTL
     EVENT_CLOSE                                : constant Integer_4_Unsigned_C := 16#0000_0010#;
     EVENT_KEY_UP                               : constant Integer_4_Unsigned_C := 16#0000_0101#;
     EVENT_SIZING                               : constant Integer_4_Unsigned_C := 16#0000_0214#;
     EVENT_COMMAND                              : constant Integer_4_Unsigned_C := 16#0000_0112#;
+    EVENT_SCROLL_VERTICALLY                    : constant Integer_4_Unsigned_C := 16#0000_0115#; -- WM_VSCROLL
     EVENT_BUTTON_COMMAND                       : constant Integer_4_Unsigned_C := 16#0000_0111#; -- WM_COMMAND
+    EVENT_CONTROL_DYNAMIC_COLOR                : constant Integer_4_Unsigned_C := 16#0000_0133#; --
     EVENT_CONTROL_STATIC_COLOR                 : constant Integer_4_Unsigned_C := 16#0000_0138#; -- WM_CTLCOLORSTATIC
     EVENT_KEY_DOWN                             : constant Integer_4_Unsigned_C := 16#0000_0100#;
     EVENT_CHARACTER                            : constant Integer_4_Unsigned_C := 16#0000_0102#;
@@ -104,32 +84,36 @@ package Neo.Link.Windows
     EVENT_MOUSE_WHEEL_HORIZONTAL               : constant Integer_4_Unsigned_C := 16#0000_020E#;
     EVENT_MOUSE_MOVE                           : constant Integer_4_Unsigned_C := 16#0000_0200#;
     EVENT_MOVE                                 : constant Integer_4_Unsigned_C := 16#0000_0003#;
+    EVENT_GET_MINIMUM_MAXIMUM_SIZE_INFORMATION : constant Integer_4_Unsigned_C := 16#0000_0024#; -- WM_GETMINMAXINFO
     EVENT_CREATE                               : constant Integer_4_Unsigned_C := 16#0000_0001#; -- WM_CREATE
     EVENT_INPUT_FOCUS_GAINED                   : constant Integer_4_Unsigned_C := 16#0000_0007#;
     EVENT_INPUT_FOCUS_LOST                     : constant Integer_4_Unsigned_C := 16#0000_0008#;
     EVENT_DEVICE_CHANGE                        : constant Integer_4_Unsigned_C := 16#0000_00FE#;
     EVENT_SET_FONT                             : constant Integer_4_Unsigned_C := 16#0000_0030#;
-    STYLE_EXTRA_ALWAYS_ON_TOP                  : constant Integer_4_Unsigned_C := 16#0000_0008#;
-    STYLE_EXTRA_NOTHING                        : constant Integer_4_Unsigned_C := 16#0000_0000#;
-    STYLE_NOTHING                              : constant Integer_4_Unsigned_C := 16#0000_0000#;
+    STYLE_GROUP_BOX                            : constant Integer_4_Unsigned_C := 16#0000_0007#; -- BS_GROUPBOX
+    STYLE_EXTRA_COMPOSITED                     : constant Integer_4_Unsigned_C := 16#0200_0000#; -- WS_EX_COMPOSITED
+    STYLE_EXTRA_ALWAYS_ON_TOP                  : constant Integer_4_Unsigned_C := 16#0000_0008#; -- WS_
+    STYLE_EXTRA_NOTHING                        : constant Integer_4_Unsigned_C := 16#0000_0000#; -- WS_
+    STYLE_NOTHING                              : constant Integer_4_Unsigned_C := 16#0000_0000#; -- WS_
     STYLE_TITLEBAR                             : constant Integer_4_Unsigned_C := 16#00C0_0000#; -- WS_CAPTION
     STYLE_TITLEBAR_MENU                        : constant Integer_4_Unsigned_C := 16#0008_0000#; -- WS_SYSMENU
     STYLE_TITLEBARLESS_AND_BORDERLESS          : constant Integer_4_Unsigned_C := 16#8000_0000#; -- WS_POPUP
-    STYLE_VISIBLE_INITIALLY                    : constant Integer_4_Unsigned_C := 16#1000_0000#;
+    STYLE_VISIBLE_INITIALLY                    : constant Integer_4_Unsigned_C := 16#1000_0000#; -- WS_
+    STYLE_ICONIC_INITIALLY                     : constant Integer_4_Unsigned_C := 16#2000_0000#; -- WS_ICONIC??
     STYLE_BORDER_THIN_LINE                     : constant Integer_4_Unsigned_C := 16#0080_0000#; -- WS_BORDER
-    STYLE_BORDER_SIZABLE                       : constant Integer_4_Unsigned_C := 16#0004_0000#;
-    STYLE_BOX_FULLSCREEN                       : constant Integer_4_Unsigned_C := 16#0001_0000#;
-    STYLE_BOX_ICONIZE                          : constant Integer_4_Unsigned_C := 16#0002_0000#;
-    STYLE_NO_ACTIVATE                          : constant Integer_4_Unsigned_C := 16#0800_0000#;
-    STYLE_CHILD                                : constant Integer_4_Unsigned_C := 16#4000_0000#;
-    STYLE_VERTICAL_SCROLL                      : constant Integer_4_Unsigned_C := 16#0020_0000#;
-    STYLE_ALIGN_TEXT_TO_LEFT                   : constant Integer_4_Unsigned_C := 16#0000_0000#;
-    STYLE_MULTI_LINE                           : constant Integer_4_Unsigned_C := 16#0000_0004#;
-    STYLE_AUTOMATIC_VERTICAL_SCROLL            : constant Integer_4_Unsigned_C := 16#0000_0040#;
+    STYLE_BORDER_SIZABLE                       : constant Integer_4_Unsigned_C := 16#0004_0000#; -- WS_
+    STYLE_BOX_FULLSCREEN                       : constant Integer_4_Unsigned_C := 16#0001_0000#; -- WS_
+    STYLE_BOX_ICONIZE                          : constant Integer_4_Unsigned_C := 16#0002_0000#; -- WS_MAXIMIZEBOX
+    STYLE_NO_ACTIVATE                          : constant Integer_4_Unsigned_C := 16#0800_0000#; -- WS_
+    STYLE_CHILD                                : constant Integer_4_Unsigned_C := 16#4000_0000#; -- WS_
+    STYLE_VERTICAL_SCROLL                      : constant Integer_4_Unsigned_C := 16#0020_0000#; -- WS_
+    STYLE_ALIGN_TEXT_TO_LEFT                   : constant Integer_4_Unsigned_C := 16#0000_0000#; -- WS_
+    STYLE_MULTI_LINE                           : constant Integer_4_Unsigned_C := 16#0000_0004#; -- WS_
+    STYLE_AUTOMATIC_VERTICAL_SCROLL            : constant Integer_4_Unsigned_C := 16#0000_0040#; -- WS_
     STYLE_HAS_VERTICAL_SCROLL_BAR              : constant Integer_4_Unsigned_C := 16#0020_0000#; -- WS_VSCROLL
-    STYLE_NO_USER_EDITING                      : constant Integer_4_Unsigned_C := 16#0000_0800#;
-    STYLE_PUSH_BUTTON                          : constant Integer_4_Unsigned_C := 16#0000_0000#;
-    STYLE_PUSH_BUTTON_PRESELECTED_DEFAULT      : constant Integer_4_Unsigned_C := 16#0000_0001#;
+    STYLE_NO_USER_EDITING                      : constant Integer_4_Unsigned_C := 16#0000_0800#; -- WS_
+    STYLE_PUSH_BUTTON                          : constant Integer_4_Unsigned_C := 16#0000_0000#; -- WS_
+    STYLE_PUSH_BUTTON_PRESELECTED_DEFAULT      : constant Integer_4_Unsigned_C := 16#0000_0001#; -- WS_
     STYLE_TAB_SELECTED                         : constant Integer_4_Unsigned_C := 16#0001_0000#; -- WS_TABSTOP
     STYLE_BEGINNING_OF_TAB_GROUP               : constant Integer_4_Unsigned_C := 16#0002_0000#; -- WS_GROUP
     ICON_INFORMATION                           : constant Integer_4_Unsigned_C := 16#0000_0040#;
@@ -145,12 +129,16 @@ package Neo.Link.Windows
     BUTTONS_YES_NO                             : constant Integer_4_Unsigned_C := 16#0000_0004#;
     BUTTONS_CANCEL_OKAY                        : constant Integer_4_Unsigned_C := 16#0000_0001#;
     BUTTONS_CANCEL_RETRY                       : constant Integer_4_Unsigned_C := 16#0000_0005#;
+    GDI_FAILURE                                : constant Integer_4_Unsigned_C := 16#FFFF_FFFF#; -- HGDI_ERROR
     MEMORY_MOVEABLE                            : constant Integer_4_Unsigned_C := 16#0000_0002#;
     MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Integer_4_Unsigned_C := 16#0000_2000#;
+    MESSAGE_SET_ICON                           : constant Integer_4_Unsigned_C := 16#0000_0080#;
+    MESSAGE_GET_FONT                           : constant Integer_4_Unsigned_C := 16#0000_0031#;
     MESSAGE_SCROLL_TEXT                        : constant Integer_4_Unsigned_C := 16#0000_00B6#; -- EM_LINESCROLL
     MESSAGE_SCROLL_CARET                       : constant Integer_4_Unsigned_C := 16#0000_00B7#; -- EM_SCROLLCARET
     MESSAGE_REPLACE_TEXT                       : constant Integer_4_Unsigned_C := 16#0000_00C2#; -- EM_REPLACESEL
     MESSAGE_QUIT                               : constant Integer_4_Unsigned_C := 16#0000_0012#;
+    MESSAGE_GET_TEXT_LENGTH                    : constant Integer_4_Unsigned_C := 16#0000_000D#;
     CLIPBOARD_UNICODE_TEXT                     : constant Integer_4_Unsigned_C := 16#0000_000D#;
     REMOVE_MESSAGES_AFTER_PROCESSING           : constant Integer_4_Unsigned_C := 16#0000_0001#;
     NO_ERROR                                   : constant Integer_4_Unsigned_C := 16#0000_0000#;
@@ -261,28 +249,28 @@ package Neo.Link.Windows
     MAKE_WINDOW_RESTORE                        : constant Integer_4_Signed_C   := 9;
     MAKE_WINDOW_NORMALIZE                      : constant Integer_4_Signed_C   := 1;
     MAKE_WINDOW_GO_TO_ICONIC                   : constant Integer_4_Signed_C   := 2;
-    DATA_HORZONTAL_RESOLUTION                  : constant Integer_4_Signed_C   := 8;
-    DATA_NUMBER_OF_BITS_PER_PIXEL              : constant Integer_4_Signed_C   := 12;
+    DATA_TITLE_BAR_HEIGHT                      : constant Integer_4_Signed_C   := 31;
+    DATA_BORDER_WIDTH                          : constant Integer_4_Signed_C   := 32;
+    DATA_BORDER_HEIGHT                         : constant Integer_4_Signed_C   := 33;
+    DATA_SCROLL_BAR_WIDTH                      : constant Integer_4_Signed_C   := 9;
+    DATA_HORIZONTAL_RESOLUTION                 : constant Integer_4_Signed_C   := 8;
     DATA_VERTICAL_RESOLUTION                   : constant Integer_4_Signed_C   := 10;
+    DATA_NUMBER_OF_BITS_PER_PIXEL              : constant Integer_4_Signed_C   := 12;
     DATA_LOGICAL_PIXELS_PER_INCH_HEIGHT        : constant Integer_4_Signed_C   := 90;
+    COMPUTER_BASED_TRAINING_ACTIVATE : constant Integer_4_Signed_C := 5; -- HCBT_ACTIVATE
+    COMPUTER_BASED_TRAINING_HOOK     : constant Integer_4_Signed_C := 5; -- WH_CBT
     MILLISECOND_TIMEOUT_FORCE_WRITE            : constant Integer_4_Signed_C   := 500;
     MOUSE_WHEEL_DELTA                          : constant Integer_2_Signed     := 120;
     MAXIMUM_PATH_LENGTH                        : constant Integer_Size_C       := 32_768 - 1; -- Minus one to account for null terminator
-  -------------
-  -- Arrays --
-  ------------
-    type Reserved_Capabilities
-      is array(1..17)
-      of Integer_2_Unsigned_C;
-    type Reserved_Button_Capabilities
-      is array(1..10)
-      of Integer_4_Unsigned_C;
-    type Reserved_Shit
-      is array(1..5)
-      of Integer_2_Unsigned_C;
-  -------------
-  -- Records --
-  -------------
+    CLASS_NAME_DIALOG                          : constant String_2           := "#32770";
+    type Reserved_Capabilities        is array(1..17) of Integer_2_Unsigned_C;
+    type Reserved_Button_Capabilities is array(1..10) of Integer_4_Unsigned_C;
+    type Reserved_Shit                is array(1..5)  of Integer_2_Unsigned_C;
+    type Access_Function_Hook is access function(
+      Code : in Integer_4_Signed_C; -- nCode
+      Data_Unsigned : in Integer_4_Signed_C; -- wParam
+      Data_Signed : in Integer_4_Unsigned_C) -- lParam
+      return Integer_4_Signed_C; -- LRESULT
 -- #ifndef _MSC_VER
 -- typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 -- #endif
@@ -496,8 +484,31 @@ package Neo.Link.Windows
     --     Information : Address; -- Changes on 64/32 bit systems
     --   end record;
     --   pragma Convention(C, Record_Mouse);
-    type Record_Text_Metric                                                 -- TEXTMETRIC
-      is record
+    type Record_Scroll_Information is record -- SCROLLINFO
+        Size : Integer_4_Unsigned_C := Record_Scroll_Information'size / Byte'size; -- cbSize
+        Mask : Integer_4_Unsigned_C := 0; -- fMask
+        Minimum : Integer_4_Signed_C := 0; -- nMin
+        Maximum : Integer_4_Signed_C := 0; -- nMax
+        Page : Integer_4_Unsigned_C := 0; -- nPage
+        Position : Integer_4_Signed_C := 0; -- nPos
+        Track_Position : Integer_4_Signed_C := 0; -- nTrackPos
+      end record; pragma Convention(C, Record_Scroll_Information);
+    type Record_Send_Keyboard_Input is record -- INPUT
+        Kind  : Integer_4_Unsigned_C := 0; --type
+        -- KEYBDINPUT is rest of record
+        Key   : Integer_2_Unsigned_C := 0; -- wVk
+        Scan  : Integer_2_Unsigned_C := 0; -- wScan
+        Flags : Integer_4_Unsigned_C := 0; -- dwFlags
+        Time  : Integer_4_Unsigned_C := 0; -- time
+        Extra : Integer_Address := 0; -- dwExtraInfo
+      end record;
+      pragma Convention(C, Record_Send_Keyboard_Input);
+    type Record_Size is record    -- SIZE
+        X : Integer_4_Unsigned_C; -- cx
+        Y : Integer_4_Unsigned_C; -- cy
+      end record;
+      pragma Convention(C, Record_Size);
+    type Record_Text_Metric is record                                       -- TEXTMETRIC
         Height                  : Integer_4_Signed_C := 0;                  -- tmHeight
         Ascent                  : Integer_4_Signed_C := 0;                  -- tmAscent
         Descent                 : Integer_4_Signed_C := 0;                  -- tmDescent
@@ -520,8 +531,7 @@ package Neo.Link.Windows
         Character_Set           : Integer_1_Unsigned := 0;                  -- tmCharSet
       end record;
       pragma Convention(C, Record_Text_Metric);
-    type Record_Log_Font                                                           -- LOGFONT
-      is record
+    type Record_Log_Font is record                                                 -- LOGFONT
         Height           : Integer_4_Signed_C   := 0;                              -- lfHeight
         Width            : Integer_4_Signed_C   := 0;                              -- lfWidth
         Escapement       : Integer_4_Signed_C   := 0;                              -- lfEscapement
@@ -538,8 +548,7 @@ package Neo.Link.Windows
         Face_Name        : String_2_C(1..32)    := (others => NULL_CHARACTER_2_C); -- lfFaceName
       end record;
       pragma Convention(C, Record_Log_Font);
-    type Record_Non_Client_Metrics                                           -- NONCLIENTMETRICS
-      is record
+    type Record_Non_Client_Metrics is record                                -- NONCLIENTMETRICS
         Size : Integer_4_Unsigned_C := Record_Non_Client_Metrics'size / Byte'size; --(                                -- cbSize
           --if Get_Version >= Windows_2_6_System then
           --  Record_Non_Client_Metrics'size / Byte'size
@@ -550,27 +559,26 @@ package Neo.Link.Windows
         Scroll_Height        :         Integer_4_Signed_C := 0;
         Caption_Width        :         Integer_4_Signed_C := 0;
         Caption_Height       :         Integer_4_Signed_C := 0;
-        Caption_Font         :         Record_Log_Font    := (others => <>); -- lfCaptionFont
+        Caption_Font         : aliased Record_Log_Font    := (others => <>); -- lfCaptionFont
         Small_Caption_Width  :         Integer_4_Signed_C := 0;              -- iSmCaptionWidth
         Small_Caption_Height :         Integer_4_Signed_C := 0;              -- iSmCaptionHeight
-        Small_Caption_Font   :         Record_Log_Font    := (others => <>); -- lfSmCaptionFont
+        Small_Caption_Font   : aliased Record_Log_Font    := (others => <>); -- lfSmCaptionFont
         Menu_Width           :         Integer_4_Signed_C := 0;              -- iMenuWidth
         Menu_Height          :         Integer_4_Signed_C := 0;              -- iMenuHeight
-        Menu_Font            :         Record_Log_Font    := (others => <>); -- lfMenuFont
-        Status_Font          :         Record_Log_Font    := (others => <>); -- lfStatusFont
+        Menu_Font            : aliased Record_Log_Font    := (others => <>); -- lfMenuFont
+        Status_Font          : aliased Record_Log_Font    := (others => <>); -- lfStatusFont
         Message_Font         : aliased Record_Log_Font    := (others => <>); -- lfMessageFont
         Padded_Border_Width  :         Integer_4_Signed_C := 0;              -- iPaddedBorderWidth
       end record;
-    type Record_Device_Header
-      is record
+      pragma Convention(C, Record_Non_Client_Metrics);
+    type Record_Device_Header is record
         Kind        : Integer_4_Unsigned_C := 0;
         Size        : Integer_4_Unsigned_C := 0;
         Device      : Address              := NULL_ADDRESS;
         Data_Signed : Integer_4_Signed_C   := 0;
       end record;
       pragma Convention(C, Record_Device_Header);
-    type Record_Mouse
-      is record
+    type Record_Mouse is record
         Flags             : Integer_2_Unsigned_C := 0;
         Button_Flags      : Integer_4_Unsigned_C := 0;
         Buttons           : Integer_4_Unsigned_C := 0;
@@ -579,8 +587,7 @@ package Neo.Link.Windows
         Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Mouse);
-    type Record_Keyboard
-      is record
+    type Record_Keyboard is record
         Make_Code         : Integer_2_Unsigned_C := 0;
         Flags             : Integer_2_Unsigned_C := 0;
         Reserved          : Integer_2_Unsigned_C := 0;
@@ -589,8 +596,7 @@ package Neo.Link.Windows
         Extra_Information : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Keyboard);
-    type Record_Memory_Status
-      is record
+    type Record_Memory_Status is record
         Size                       : Integer_4_Unsigned_C := Record_Memory_Status'size / Byte'size;
         Memory_Load                : Integer_4_Unsigned_C := 0;
         Total_Physical             : Integer_8_Unsigned_C := 0;
@@ -602,8 +608,7 @@ package Neo.Link.Windows
         Available_Extended_Virtual : Integer_8_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Memory_Status);
-    type Record_Version_Information
-      is record
+    type Record_Version_Information is record
         Size                : Integer_4_Unsigned_C := Record_Version_Information'size / Byte'size;
         Major               : Integer_4_Unsigned_C := 0;
         Minor               : Integer_4_Unsigned_C := 0;
@@ -617,15 +622,13 @@ package Neo.Link.Windows
         Reserved            : Integer_1_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Version_Information);
-    type Record_Device_Interface
-      is record
+    type Record_Device_Interface is record
         Size     : Integer_4_Unsigned_C        := Record_Device_Interface'size / Byte'size;
         Class_ID : Integer_4_Unsigned_C        := 0;
         Flags    : Integer_4_Unsigned_C        := 0;
         Reserved : Access_Integer_4_Unsigned_C := null; -- ULONG_PTR
       end record;
-    type Record_Flash_Information
-      is record
+    type Record_Flash_Information is record
         Size     : Integer_4_Unsigned_C := Record_Flash_Information'size / Byte'size;
         Window   : Address              := NULL_ADDRESS;
         Flags    : Integer_4_Unsigned_C := 0;
@@ -633,24 +636,19 @@ package Neo.Link.Windows
         Time_Out : Integer_4_Unsigned_C := 0;
       end record;
       pragma Convention(C, Record_Flash_Information);
-    type Record_Rectangle
-      is record
+    type Record_Rectangle is record
         Left   : Integer_4_Signed_C := 0;
         Top    : Integer_4_Signed_C := 0;
         Right  : Integer_4_Signed_C := 0;
         Bottom : Integer_4_Signed_C := 0;
-      end record;
-      pragma Convention(C, Record_Rectangle);
-    type Record_Monitor_Information
-      is record
+      end record; pragma Convention(C, Record_Rectangle);
+    type Record_Monitor_Information is record
         Size      : Integer_4_Unsigned_C := Record_Monitor_Information'size / Byte'size;
         Monitor   : Record_Rectangle     := (others => <>);
         Work_Area : Record_Rectangle     := (others => <>);
         Flags     : Integer_4_Unsigned_C := 0;
-      end record;
-      pragma Convention(C, Record_Monitor_Information);
-    type Record_Window_Class
-      is record
+      end record; pragma Convention(C, Record_Monitor_Information);
+    type Record_Window_Class is record
         Size       : Integer_4_Unsigned_C          := Record_Window_Class'size / Byte'size;
         Style      : Integer_4_Unsigned_C          := 0;
         Callback   : Address                       := NULL_ADDRESS;
@@ -663,77 +661,64 @@ package Neo.Link.Windows
         Menu_Name  : Access_Constant_Character_2_C := null;
         Class_Name : Access_Constant_Character_2_C := null;
         Icon_Small : Address                       := NULL_ADDRESS;
-      end record;
-      pragma Convention(C, Record_Window_Class);
-    type Record_Point
-      is record
-        X : Integer_4_Signed_C := 0;
-        Y : Integer_4_Signed_C := 0;
-      end record;
-      pragma Convention(C, Record_Point);
-    type Record_Message
-      is record
+      end record; pragma Convention(C, Record_Window_Class);
+    type Record_Point is record -- POINT
+        X : Integer_4_Signed_C := 0; -- x
+        Y : Integer_4_Signed_C := 0; -- y
+      end record; pragma Convention(C, Record_Point);
+    type Record_Minimum_Maximum_Information is record -- MINMAXINFO
+        Reserved : Record_Point := (others => <>); -- ptReserved
+        Maximum_Size : Record_Point := (others => <>); -- ptMaxSize
+        Maximum_Position : Record_Point := (others => <>); -- ptMaxPosition
+        Minimum_Track_Size : Record_Point := (others => <>); -- ptMinTrackSize
+        Maximum_Track_Size : Record_Point := (others => <>); -- ptMaxTrackSize
+      end record; pragma Convention(C, Record_Minimum_Maximum_Information);
+    type Record_Message is record
         Window        : Address              := NULL_ADDRESS;
         Data          : Integer_4_Unsigned_C := 0;
         Data_Unsigned : Integer_4_Unsigned_C := 0;
         Data_Signed   : Integer_4_Signed_C   := 0;
         Time          : Integer_4_Unsigned_C := 0;
         Point         : Record_Point         := (others => <>);
-      end record;
-      pragma Convention(C, Record_Message);
-    type Record_Key
-      is record
+      end record; pragma Convention(C, Record_Message);
+    type Record_Key is record
         Code        : Integer_4_Unsigned_C := 0;
         Scan_Code   : Integer_4_Unsigned_C := 0;
         Flags       : Integer_4_Unsigned_C := 0;
         Time        : Integer_4_Unsigned_C := 0;
         Information : Address              := NULL_ADDRESS; -- Changes on 64/32 bit systems
-      end record;
-      pragma Convention(C, Record_Key);
-    type Record_GUID
-      is record
+      end record; pragma Convention(C, Record_Key);
+    type Record_GUID is record
         First_Eight_Hex   : Integer_4_Unsigned_C             := 0;
         Second_Four_Hex   : Integer_2_Unsigned_C             := 0;
         Third_Four_Hex    : Integer_2_Unsigned_C             := 0;
         Final_Sixteen_Hex : Array_Integer_1_Unsigned_C(1..8) := (others => 0);
-      end record;
-      pragma Convention(C, Record_GUID);
-    type Record_Device_Information
-      is record
+      end record; pragma Convention(C, Record_GUID);
+    type Record_Device_Information is record
         Size       : Integer_4_Unsigned_C := Record_Device_Information'size / Byte'size;
         Class_GUID : Record_GUID          := (others => <>);
         Instance   : Integer_4_Unsigned_C := 0;
         Reserved   : Address              := NULL_ADDRESS; -- ULONG_PTR
-      end record;
-      pragma Convention(C, Record_Device_Information);
-    type Record_Device_Setup
-      is record
+      end record; pragma Convention(C, Record_Device_Information);
+    type Record_Device_Setup is record
         Page   : Integer_2_Unsigned_C := 0;
         Usage  : Integer_2_Unsigned_C := 0;
         Flags  : Integer_4_Unsigned_C := 0;
         Target : Address              := NULL_ADDRESS;
-      end record;
-      pragma Convention(C, Record_Device_Setup);
-    type Record_Device_List_Element
-      is record
+      end record; pragma Convention(C, Record_Device_Setup);
+    type Record_Device_List_Element is record
         Handle : Address              := NULL_ADDRESS;
         Kind   : Integer_4_Unsigned_C := 0;
-      end record;
-      pragma Convention(C, Record_Device_List_Element);
-    type Record_Device_Keyboard
-      is record
+      end record; pragma Convention(C, Record_Device_List_Element);
+    type Record_Device_Keyboard is record
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Keyboard      := (others => <>);
-      end record;
-      pragma Convention(C, Record_Device_Keyboard);
-    type Record_Device_Mouse
-      is record
+      end record; pragma Convention(C, Record_Device_Keyboard);
+    type Record_Device_Mouse is record
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Mouse         := (others => <>);
-      end record;
-      pragma Convention(C, Record_Device_Mouse);
-    type Record_Core_Information
-      is record
+      end record; pragma Convention(C, Record_Device_Mouse);
+    type Record_Core_Information is record
         Processor_Mask : Integer_Address                 := 0;
         Relationship   : Integer_4_Unsigned_C            := 0;
         Union_Bullshit : Array_Integer_1_Unsigned(1..16) := (others => 0);
@@ -749,18 +734,14 @@ package Neo.Link.Windows
         --    DWORD                Size;
         --    PROCESSOR_CACHE_TYPE Type; -- Enumerated type
         --  ULONGLONG[2] Reserved -- ULONGLONG is 8 bytes
-      end record;
-      pragma Convention(C, Record_Core_Information);
-    type Record_Process_Information
-      is record
+      end record; pragma Convention(C, Record_Core_Information);
+    type Record_Process_Information is record
         Process            : Address              := NULL_ADDRESS;
         Thread             : Address              := NULL_ADDRESS;
         Process_Identifier : Integer_4_Unsigned_C := 0;
         Thread_Identifier  : Integer_4_Unsigned_C := 0;
-      end record;
-      pragma Convention(C, Record_Process_Information);
-    type Record_Startup_Information
-      is record
+      end record; pragma Convention(C, Record_Process_Information);
+    type Record_Startup_Information is record
         Size               : Integer_4_Unsigned_C        := Record_Startup_Information'size / Byte'size;
         Reserved           : Access_String_2_C           := null;
         Desktop            : Access_String_2_C           := null;
@@ -779,18 +760,13 @@ package Neo.Link.Windows
         Standard_Input     : Address                     := NULL_ADDRESS;
         Standard_Output    : Address                     := NULL_ADDRESS;
         Standard_Error     : Address                     := NULL_ADDRESS;
-      end record;
-      pragma Convention(C, Record_Startup_Information);
-    type Record_Security_Attributes
-      is record
+      end record; pragma Convention(C, Record_Startup_Information);
+    type Record_Security_Attributes is record
         Length         : Integer_4_Unsigned_C := 0;
         Descriptor     : Address              := NULL_ADDRESS;
         Inherit_Handle : Integer_4_Signed_C   := 0;
       end record;
       pragma Convention(C, Record_Security_Attributes);
-  ------------
-  -- Arrays --
-  ------------
     type Array_Record_Device_List_Element
       is array(Positive range <>)
       of Record_Device_List_Element;
@@ -800,56 +776,33 @@ package Neo.Link.Windows
     type Array_Record_Core_Information
       is array(Positive range <>)
       of Record_Core_Information;
-  ---------------
-  -- Accessors --
-  ---------------
     -- type Access_Record_Device_List
     --   is access all Record_Device_List;
     -- type Access_Array_Record_Device_List
     --   is access all Array_Record_Device_List;
-    type Access_Record_Version_Information
-      is access all Record_Version_Information;
-    type Access_Record_Memory_Status
-      is access all Record_Memory_Status;
-    type Access_Record_Key
-      is access all Record_Key;
-    type Access_Record_Mouse
-      is access all Record_Mouse;
-    type Access_Record_Rectangle
-      is access all Record_Rectangle;
-    type Access_Record_Monitor_Information
-      is access all Record_Monitor_Information;
-    type Access_Array_Record_Core_Information
-      is access all Array_Record_Core_Information;
-    type Access_Record_Startup_Information
-      is access all Record_Startup_Information;
-    type Access_Record_Process_Information
-      is access all Record_Process_Information;
-    type Access_Record_Security_Attributes
-      is access all Record_Security_Attributes;
-    type Access_Record_Flash_Information
-      is access all Record_Flash_Information;
-    type Access_Record_Window_Class
-      is access all Record_Window_Class;
-    type Access_Record_Message
-      is access all Record_Message;
-    type Access_Record_Non_Client_Metrics
-      is access all Record_Non_Client_Metrics;
-    type Access_Record_Log_Font
-      is access all Record_Log_Font;
-  -----------------
-  -- Subprograms --
-  -----------------
-    function To_Integer_4_Signed_C
-      is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
-    function To_Integer_4_Signed_C
-      is new Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
-    function To_Access_Record_Rectangle
-      is new Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
-    function To_Access_Record_Key
-      is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
-    function To_Access_Record_Rectangle
-      is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
+    type Access_Record_Version_Information is access all Record_Version_Information;
+    type Access_Record_Memory_Status is access all Record_Memory_Status;
+    type Access_Record_Key is access all Record_Key;
+    type Access_Record_Mouse is access all Record_Mouse;
+    type Access_Record_Rectangle is access all Record_Rectangle;
+    type Access_Record_Monitor_Information is access all Record_Monitor_Information;
+    type Access_Array_Record_Core_Information is access all Array_Record_Core_Information;
+    type Access_Record_Startup_Information is access all Record_Startup_Information;
+    type Access_Record_Process_Information is access all Record_Process_Information;
+    type Access_Record_Security_Attributes is access all Record_Security_Attributes;
+    type Access_Record_Flash_Information is access all Record_Flash_Information;
+    type Access_Record_Window_Class is access all Record_Window_Class;
+    type Access_Record_Message is access all Record_Message;
+    type Access_Record_Non_Client_Metrics is access all Record_Non_Client_Metrics;
+    type Access_Record_Log_Font is access all Record_Log_Font;
+    type Access_Record_Minimum_Maximum_Information is access all Record_Minimum_Maximum_Information;
+    type Access_Record_Scroll_Information is access all Record_Scroll_Information;
+    function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
+    function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
+    function To_Access_Record_Minimum_Maximum_Information is new Ada.Unchecked_Conversion(Address, Access_Record_Minimum_Maximum_Information);
+    function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
+    function To_Access_Record_Key is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
+    function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
     -- DWORD WINAPI XInputGetState
     -- (
     --     DWORD         dwUserIndex,  // Index of the gamer associated WITH the device
@@ -920,7 +873,29 @@ package Neo.Link.Windows
     --   Enumerator    : in Address;
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
-    --   return Address;
+    function Get_Window_Text( -- GetWindowText
+      Window : in Address; -- hWnd
+      Text   : in Access_String_2_C; -- lpString
+      Maximum_Count : in Integer_4_Signed_C) -- nMaxCount
+      return Integer_4_Signed_C; -- int
+    function Get_Text_Extent_Point(             -- GetTextExtentPoint32
+      Device_Context : in Address;              -- hdc
+      Text           : in Access_Character_2_C; -- lpString
+      Count          : in Integer_4_Signed_C;   -- c
+      Size           : in Address)              -- lpSize
+      return Integer_4_Signed_C;
+    function Get_System_Metrics(
+      Index : in Integer_4_Signed_C)
+      return Integer_4_Signed_C
+     ;-- with Import, Convention => StdCall, Link_Name => "GetSystemMetrics";
+    function Get_Text_Metrics(     -- GetTextMetrics
+      Device_Context : in Address; -- hdc
+      Text_Metrics   : in Address) -- lptm
+      return Integer_4_Signed_C;   -- BOOL
+    function Select_Object(        -- SelectObject
+      Device_Context : in Address; -- hdc
+      GDI_Object     : in Address) -- hgdiobj
+      return Address;              -- HGDIOBJ
     function Post_Message(                     -- PostMessage
       Window        : in Address;              -- hWnd
       Message       : in Integer_4_Unsigned_C; -- Msg
@@ -937,6 +912,11 @@ package Neo.Link.Windows
     function Create_Solid_Brush(       -- CreateSolidBrush
       Color : in Integer_4_Unsigned_C) -- crColor
       return Address;                  -- HBRUSH
+    function Get_Current_Directory(            -- GetCurrentDirectory
+      Buffer_Length : in Integer_4_Unsigned_C; -- nBufferLength
+      Buffer        : in Access_String_2_C)    -- lpBuffer
+      return Integer_4_Unsigned_C;             -- DWORD
+      -- with Import, Convention => StdCall, Link_Name => "GetCurrentDirectoryW";
     function Set_Text_Color(                    -- SetTextColor
       Device_Context : in Address;              -- hdc
       Color          : in Integer_4_Unsigned_C) -- crColor
@@ -1305,6 +1285,11 @@ package Neo.Link.Windows
     function Show_Cursor(
       Do_Show : in Integer_4_Signed_C)
       return Integer_4_Signed_C;
+    function Get_Class_Name( -- GetClassName
+      Window : in Address; -- hWnd
+      Class_Name : in Access_String_2_C; -- lpClassName
+      Maximum_Count : in Integer_4_Signed_C) -- nMaxCount
+      return Integer_4_Signed_C; -- int
     function Load_Cursor(
       Instance    : in Address;
       Cursor_Name : in Integer_Address)
@@ -1335,8 +1320,8 @@ package Neo.Link.Windows
     function Call_Next_Hook(
       Hook          : in Address;
       Code          : in Integer_4_Signed_C;
-      Data_Signed   : in Integer_4_Signed_C;
-      Data_Unsigned : in Integer_4_Unsigned_C)
+      Data_Unsigned   : in Integer_4_Unsigned_C;
+      Data_Signed : in Integer_4_Signed_C)
       return Integer_4_Signed_C;
     function Set_Windows_Hook(
       Hook      : in Integer_4_Signed_C;
@@ -1344,6 +1329,10 @@ package Neo.Link.Windows
       Modifier  : in Address;
       Thread_Id : in Integer_4_Unsigned_C)
       return Address;
+    function Map_Dialog_Rectangle(            -- MapDialogRect
+      Dialog    : in Address;                 -- hDlg
+      Rectangle : in Access_Record_Rectangle) -- lpRect
+      return Integer_4_Signed_C;              -- BOOL
     function Set_Focus(
       Window : in Address)
       return Address;
@@ -1441,13 +1430,79 @@ package Neo.Link.Windows
     function Close_Handle(
       Object : in Address)
       return Integer_4_Signed_C;
--------
+    function Multiply_Divide( -- MulDiv
+      Number : in Integer_4_Signed_C; -- nNumber
+      Numerator : in Integer_4_Signed_C; -- nNumerator
+      Denominator : in Integer_4_Signed_C) -- nDenominator
+      return Integer_4_Signed_C;
+    function Enumerate_Child_Windows( -- EnumChildWindows
+      Window_Parent : in Address; -- hWndParent
+      Enumerate_Function : in Address; -- lpEnumFunc
+      Data_Signed : in Integer_4_Signed_C) -- lParam
+      return Integer_4_Signed_C; -- BOOL
+    function Get_Module_File_Name( -- GetModuleFileName
+      Module : in Address; -- hModule
+      File_Name : in Access_String_2_C; -- lpFilename
+      Size : in Integer_4_Unsigned_C) -- nSize
+      return Integer_4_Unsigned_C; -- DWORD
+    function Redraw_Window( -- RedrawWindow
+      Window : in Address; -- hWnd
+      Parameter_Update : in Address; -- lprcUpdate
+      Region_Update : in Address; -- hrgnUpdate
+      Flags : in Integer_4_Unsigned_C) -- lprcUpdate
+      return Integer_4_Signed_C; -- BOOL
+    function Send_Input( -- SendInput
+      Number_Of_Inputs : in Integer_4_Unsigned_C; -- nInputs
+      Inputs           : access Record_Send_Keyboard_Input; -- pInputs
+      Size             : in Integer_4_Signed_C) -- cbSize
+      return Integer_4_Unsigned_C; -- UINT
+    function Get_Focus -- GetFocus
+      return Address;  -- HWND
+    function Set_Scroll_Position( -- SetScrollPos
+      Window : in Address; -- hWnd
+      Bar    : in Integer_4_Signed_C; -- nBar
+      Position : in Integer_4_Signed_C; -- nPos
+      Redraw   : in Integer_4_Signed_C) -- bRedraw
+      return Integer_4_Signed_C; -- int
+    function Get_Scroll_Range( -- GetScrollRange
+      Window : in Address; -- hWnd
+      Bar    : in Integer_4_Signed_C; -- nBar
+      Minimum_Position : in Access_Integer_4_Signed_C; -- lpMinPos
+      Maximum_Position : in Access_Integer_4_Signed_C) -- lpMaxPos
+      return Integer_4_Signed_C; -- BOOL
+    function Get_Scroll_Position( -- GetScrollPos
+      Window : in Address; -- hWnd
+      Bar    : in Integer_4_Signed_C) -- nBar
+      return Integer_4_Signed_C; -- GetScrollPos
+    function Get_Window_Text_Length( -- GetWindowTextLength
+      Window : in Address) -- hWnd
+      return Integer_4_Signed_C; -- int
+    function Get_Scroll_Information( -- GetScrollInfo
+      Window : in Address; -- hwnd
+      Bar    : in Integer_4_Signed_C; -- fnBar
+      Data   : in Access_Record_Scroll_Information) -- lpsi
+      return Integer_4_Signed_C; -- BOOL
 private
--------
-  ----------------
-  -- Directives --
-  ----------------
+    pragma Import(Stdcall, Get_Scroll_Information, "GetScrollInfo");
+    pragma Import(Stdcall, Get_Window_Text_Length, "GetWindowTextLengthW");
+    pragma Import(Stdcall, Get_Scroll_Range, "GetScrollRange");
+    pragma Import(Stdcall, Get_Scroll_Position, "GetScrollPos");
+    pragma Import(Stdcall, Set_Scroll_Position, "SetScrollPos");
+    pragma Import(Stdcall, Get_Focus, "GetFocus");
+    pragma Import(Stdcall, Send_Input, "SendInput");
+    pragma Import(Stdcall, Redraw_Window, "RedrawWindow");
+  pragma Import(Stdcall, Get_Module_File_Name, "GetModuleFileNameW");
+  pragma Import(Stdcall, Enumerate_Child_Windows, "EnumChildWindows");
+   pragma Import(Stdcall, Multiply_Divide, "MulDiv");
+   pragma Import(Stdcall, Get_Window_Text, "GetWindowTextW");
+   pragma Import(Stdcall, Get_Class_Name, "GetClassNameW");
+      pragma Import(Stdcall, Get_Current_Directory, "GetCurrentDirectoryW");
+    pragma Import(Stdcall, Map_Dialog_Rectangle,           "MapDialogRect");
+    pragma Import(Stdcall, Get_System_Metrics,             "GetSystemMetrics");
     pragma Import(C,       Get_Current_Instance,           "rts_get_hInstance");
+    pragma Import(Stdcall, Get_Text_Metrics,               "GetTextMetricsW");
+    pragma Import(Stdcall, Select_Object,                  "SelectObject");
+    pragma Import(Stdcall, Get_Text_Extent_Point,          "GetTextExtentPoint32W");
     pragma Import(Stdcall, Is_Running_In_Emulated_32_Bit,  "IsWow64Process");
     --pragma Import(Stdcall, Write_File,                     "WriteFile");
     --pragma Import(Stdcall, Convert_String_2_C_To_UTF_8,    "WideCharToMultiByte");
@@ -1571,4 +1626,3 @@ private
     pragma Import(Stdcall, Release_Device_Context,         "ReleaseDC");
     pragma Import(Stdcall, Get_Device_Capabilities,        "GetDeviceCaps");
   end Neo.Link.Windows;
-

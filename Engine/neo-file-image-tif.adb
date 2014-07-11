@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 separate(Neo.File.Image)
 package body TIF
   is

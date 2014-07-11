@@ -1,35 +1,12 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  System,
-  Interfaces,
-  Interfaces.C,
-  Neo.Windows;
-use
-  System,
-  Interfaces,
-  Interfaces.C,
-  Neo.Windows;
+with Neo.Link.Windows; use Neo.Link.Windows;
+with Interfaces.C;     use Interfaces.C;
+with Interfaces;       use Interfaces;
+with System;           use System;
 separate (Neo.System.Input)
 generic
   with
   with
   with
-
 package body Implementation
   is
   ---------------
@@ -155,18 +132,18 @@ package body Implementation
   -- Lookup_Character --
   ----------------------
     function Lookup_Character(
-      Key                                : in Enumerated_Key;
-      Is_Capital_Lock_Enabled            : in Boolean;
-      Is_Number_Lock_Enabled             : in Boolean;
-      Is_Left_Shift_Key_Pressed          : in Boolean;
-      Is_Right_Shift_Key_Pressed         : in Boolean;
-      Is_Left_Control_Key_Pressed        : in Boolean;
-      Is_Right_Control_Key_Pressed       : in Boolean;
-      Is_Left_Alternative_Key_Pressed    : in Boolean;
-      Is_Right_Alternative_Key_Pressed   : in Boolean;
-      Is_Left_System_Key_Pressed         : in Boolean;
-      Is_Right_System_Key_Pressed        : in Boolean;
-      Is_Application_Menu_Key_Pressed    : in Boolean)
+      Key                              : in Enumerated_Key;
+      Is_Capital_Lock_Enabled          : in Boolean;
+      Is_Number_Lock_Enabled           : in Boolean;
+      Is_Left_Shift_Key_Pressed        : in Boolean;
+      Is_Right_Shift_Key_Pressed       : in Boolean;
+      Is_Left_Control_Key_Pressed      : in Boolean;
+      Is_Right_Control_Key_Pressed     : in Boolean;
+      Is_Left_Alternative_Key_Pressed  : in Boolean;
+      Is_Right_Alternative_Key_Pressed : in Boolean;
+      Is_Left_System_Key_Pressed       : in Boolean;
+      Is_Right_System_Key_Pressed      : in Boolean;
+      Is_Application_Menu_Key_Pressed  : in Boolean)
       return Character_2
       is
       -- int charCount = 0;
@@ -539,8 +516,7 @@ package body Implementation
                         Command     => GET_DEVICE_DATA,
                         Data        => Keyboard'access,
                         Size        => Number_Of_Bytes'access,
-                        Header_Size => Record_Device_Header'size / Byte'size)
-                          /= Record_Device_Keyboard'size / Byte'size
+                        Header_Size => Record_Device_Header'size / Byte'size) /= Record_Device_Keyboard'size / Byte'size
                       then
                         raise Call_Failure;
                       end if;
@@ -760,8 +736,8 @@ package body Implementation
       begin
         if
         Peek_Message(
-          Message        => Message'address,
           Window         => Window,
+          Message        => Message'address,
           Filter_Minimum => IGNORE_MESSAGE_FILTER_MINIMUM,
           Filter_Maximum => IGNORE_MESSAGE_FILTER_MAXIMUM,
           Command        => REMOVE_MESSAGES_AFTER_PROCESSING) /= FAILED

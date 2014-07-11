@@ -1,31 +1,27 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-package body Neo.File
-  is
-  --------------------------
-  -- Get_Possible_Formats --
-  --------------------------
-    procedure Get_Possible_Formats(
-      Path    : in String_2;
-      Formats : in Array_Record_Format)
-      return Array_Integer_4_Signed
-      is
-      type Vector_Enumerated_Format
-        is new Ada.Containers.Vector;
+package body Neo.File is
+    package body Handler is
+      procedure Save    (Path : in String_2; Item : in Type_To_Handle);
+      procedure Save    (Path : in String_2; Item : in Array_Type_To_Handle);
+      procedure Convert (Path : in String_2;             Format : in Discrete_Format);
+      function Convert  (Path : in String_2;             Format : in Discrete_Format) return Type_To_Handle;
+      function Convert  (Path : in String_2;             Format : in Discrete_Format) return Array_Type_To_Handle;
+      function Convert  (Item : in Type_To_Handle;       Format : in Discrete_Format) return Array_Stream_Element;
+      function Convert  (Item : in Type_To_Handle;       Format : in Discrete_Format) return Type_To_Handle;
+      function Convert  (Item : in Array_Type_To_Handle; Format : in Discrete_Format) return Array_Type_To_Handle;
+      function Load     (Item : in Stream_Element_Array)                              return Type_To_Handle;
+      function Load     (Item : in Stream_Element_Array)                              return Array_Type_To_Handle;
+      function Load     (Path : in String_2)                                          return Type_To_Handle;
+      function Load     (Path : in String_2)                                          return Array_Type_To_Handle;
+    end Handler;
+
+
+
+
+
+
+    
+    procedure Get_Possible_Formats(Path    : in String_2;  Formats : in Array_Record_Format) return Array_Integer_4_Signed is
+      type Vector_Enumerated_Format is new Ada.Containers.Vector;
       Matching_Formats : Vector_Enumerated_Format;
       Extension        : String_2       := Get_Extension(Path);
       Header           : String_1(1..8) := (others => NULL_CHARACTER_1);

@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package Neo.Link.Opus
   is
   end Neo.Link.Opus;

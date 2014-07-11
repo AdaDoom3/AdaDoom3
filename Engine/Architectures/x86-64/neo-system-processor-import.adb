@@ -1,41 +1,7 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-separate(Neo.System.Processor)
-package body Import
-  is
-  ----------------
-  -- Exceptions --
-  ----------------
+separate(Neo.System.Processor) package body Import is
     CPUID_Is_Not_Supported : Exception;
-    Unknown                : Exception;
-  ------------------
-  -- Enumerations --
-  ------------------
-    type Enumerated_Register
-      is(
-      EAX_Register,
-      EBX_Register,
-      ECX_Register,
-      EDX_Register);
-  -------------
-  -- Records --
-  -------------
-    type Record_x86_Environment
-      is record
+    type Enumerated_Register is (EAX_Register, EBX_Register, ECX_Register, EDX_Register);
+    type Record_x86_Environment is record
         Control_Word    : Integer_2_Unsigned := 0;
         Unused_A        : Integer_2_Unsigned := 0;
         Status_Word     : Integer_2_Unsigned := 0;
@@ -44,15 +10,11 @@ package body Import
         Unused_C        : Integer_2_Unsigned := 0;
         Program_Counter : Integer_4_Unsigned := 0;
         CS_Selector     : Integer_2_Unsigned := 0;
-        Operation_Code  : Integer_2_Unsigned := 0; -- 11 + 5 Unused
+        Operation_Code  : Integer_2_Unsigned := 0; -- Consists of 11 used + 5 unused bits
         Data_Offset     : Integer_4_Unsigned := 0;
         Data_Selector   : Integer_2_Unsigned := 0;
         Unused_D        : Integer_2_Unsigned := 0;
-      end record
-      with Size => 28 * Byte'size;
-  ---------------
-  -- Constants --
-  ---------------
+      end record with size => 28 * Byte'size;
     TO_ESI   : constant String_1 := "s";
     TO_EDI   : constant String_1 := "d";
     TO_EAX   : constant String_1 := "a";
@@ -63,17 +25,8 @@ package body Import
     FROM_EBX : constant String_1 := "=b";
     FROM_ECX : constant String_1 := "=c";
     FROM_EDX : constant String_1 := "=d";
-  -------------------
-  -- Get_Specifics --
-  -------------------
-    function Get_Specifics
-      return Record_Specifics
-      is
-      -------------------
-      function Get_Vendor -- "Oh, such a sweet sweet trick, just not very useful. :)"
-      -------------------
-        return Enumerated_Vendor
-        is
+    function Get_Specifics return Record_Specifics is
+      function Get_Vendor return Enumerated_Vendor is -- "Oh, such a sweet sweet trick, just not very useful. :)"
         Vendor : String_1(1..12) := (others => NULL_CHARACTER_1);
         begin
           Asm(
@@ -82,29 +35,15 @@ package body Import
             Template => "cpuid",
             Outputs  =>(
               String_1'Asm_Output(FROM_EBX, Vendor(1..4)),
-              String_1'Asm_Output(FROM_ECX, Vendor(9..12)),
-              String_1'Asm_Output(FROM_EDX, Vendor(5..8))));
-          if Vendor = "AuthenticAMD" then
-            return Advanced_Micro_Devices_Vendor;
-          elsif Vendor = "GenuineIntel" then
-            return Intel_Vendor;
-          end if;
-          raise Unknown;
+              String_1'Asm_Output(FROM_EDX, Vendor(5..8)),
+              String_1'Asm_Output(FROM_ECX, Vendor(9..12))));
+          return(
+            if    Vendor = "AuthenticAMD" then Advanced_Micro_Devices_Vendor
+            elsif Vendor = "GenuineIntel" then Intel_Vendor
+            else                               Unknown_Vendor);
         end Get_Vendor;
-      --------------------
-      function Is_Enabled(
-      --------------------
-        Function_ID : in Integer_4_Unsigned;
-        Register    : in Enumerated_Register;
-        Bit         : in Integer_4_Natural)
-        return Boolean
-        with pre => Bit < Integer_4_Unsigned'size;
-      function Is_Enabled(
-        Function_ID : in Integer_4_Unsigned;
-        Register    : in Enumerated_Register;
-        Bit         : in Integer_4_Natural)
-        return Boolean
-        is
+      function Is_Enabled(Function_ID : in Integer_4_Unsigned; Register : in Enumerated_Register; Bit : in Integer_4_Natural) return Boolean with pre => Bit < Integer_4_Unsigned'size;
+      function Is_Enabled(Function_ID : in Integer_4_Unsigned; Register : in Enumerated_Register; Bit : in Integer_4_Natural) return Boolean is
         Data : array(Enumerated_Register'range) of Integer_4_Unsigned := (others => 0);
         begin
           Asm(
@@ -120,9 +59,7 @@ package body Import
         end Is_Enabled;
       Specifics :         Record_Specifics(Get_Vendor);
       Data      : aliased Integer_4_Unsigned := 0;
-      -----
       begin
-      -----
         if Specifics.Vendor = Advanced_Micro_Devices_Vendor then
           Specifics.Has_3DNow                                  := Is_Enabled(16#8000_0001#, EDX_Register, 31); -- 3DNow!
           Specifics.Has_3DNow_Supplement                       := Is_Enabled(16#8000_0001#, EDX_Register, 30); -- 3DNow!+
@@ -153,7 +90,7 @@ package body Import
         Specifics.Has_High_Precision_Convert                   := Is_Enabled(16#8000_0001#, ECX_Register, 19); -- CVT16
         Specifics.Has_Extended_Operation_Support               := Is_Enabled(16#8000_0001#, ECX_Register, 11); -- XOP
         Specifics.Has_Leading_Zero_Count                       := Is_Enabled(16#8000_0001#, ECX_Register,  5); -- ABM
-        if Specifics.Has_Streaming_SIMD_Extensions_4_2 and then Is_Feature_Supported(REQUIREMENTS_FOR_AVX) then
+        if Specifics.Has_Streaming_SIMD_Extensions_4_2 and then Is_Supported(REQUIREMENTS_FOR_AVX) then
           Asm( -- Check if the operating system will save the YMM registers
             Volatile => True,
             Inputs   => Integer_4_Unsigned'Asm_Input(TO_ECX, 0),
@@ -163,11 +100,7 @@ package body Import
         end if;
         return Specifics;
       end Get_Specifics;
-  ----------------------
-  -- Check_Exceptions --
-  ----------------------
-    procedure Check_Exceptions
-      is
+    procedure Check_Exceptions is
       Data          : aliased Integer_4_Unsigned := 0;
       Data_From_x87 : aliased Integer_2_Unsigned := 0;
       begin
@@ -183,9 +116,7 @@ package body Import
           Template => "fnstsw (%%eax)");
         Data := (Data and 16#0000_003F#) and Integer_4_Unsigned(Data_From_x87);
         if Data /= 0 then -- Raise the first error found
-          ---------------------
           Clear_Exception_Bits:
-          ---------------------
             declare
             Data_From_SIMD  :         Integer_4_Unsigned     := 0;
             x86_Environment : aliased Record_x86_Environment := (others => <>);
@@ -217,35 +148,16 @@ package body Import
                 Volatile => True,
                 Template => "fnclex");
             end Clear_Exception_Bits;
-          if (Data and 16#0000_0001#) /= 0 then
-            raise Invalid_Operation;
-          end if;
-          if (Data and 16#0000_0002#) /= 0 then
-            raise Denormalized_Operand;
-          end if;
-          if (Data and 16#0000_0004#) /= 0 then
-            raise Divide_By_Zero;
-          end if;
-          if (Data and 16#0000_0008#) /= 0 then
-            raise Numeric_Overflow;
-          end if;
-          if (Data and 16#0000_0010#) /= 0 then
-            raise Numeric_Underflow;
-          end if;
-          if (Data and 16#0000_0020#) /= 0 then
-            raise Inexact_Result;
-          end if;
-          if (Data and 16#0000_0040#) /= 0 then
-            raise Stack_Fault;
-          end if;
+          if (Data and 16#0000_0001#) /= 0 then raise Invalid_Operation;    end if;
+          if (Data and 16#0000_0002#) /= 0 then raise Denormalized_Operand; end if;
+          if (Data and 16#0000_0004#) /= 0 then raise Divide_By_Zero;       end if;
+          if (Data and 16#0000_0008#) /= 0 then raise Numeric_Overflow;     end if;
+          if (Data and 16#0000_0010#) /= 0 then raise Numeric_Underflow;    end if;
+          if (Data and 16#0000_0020#) /= 0 then raise Inexact_Result;       end if;
+          if (Data and 16#0000_0040#) /= 0 then raise Stack_Fault;          end if;
         end if;
       end Check_Exceptions;
-  ------------------
-  -- Set_Rounding --
-  ------------------
-    procedure Set_Rounding(
-      Rounding  : in Enumerated_Rounding)
-      is
+    procedure Set_Rounding(Rounding : in Enumerated_Rounding) is
       Other_Data    : aliased Integer_2_Unsigned := 0;
       Data          : aliased Integer_4_Unsigned := 0;
       Rounding_Mask :         Integer_4_Unsigned :=(
@@ -287,12 +199,7 @@ package body Import
             " fldcw  (%%eax)          " & END_LINE_1);
             ------------------------------------------
       end Set_Rounding;
-  -------------------
-  -- Set_Precision --
-  -------------------
-    procedure Set_Precision(
-      Precision : in Enumerated_Precision)
-      is
+    procedure Set_Precision(Precision : in Enumerated_Precision) is
       Blank_Memory : aliased Integer_2_Unsigned := 0;
       begin
         Asm(
@@ -314,12 +221,7 @@ package body Import
             " fldcw  (%%eax)          " & END_LINE_1);
             ------------------------------------------
       end Set_Precision;
-  --------------------
-  -- Get_Clock_Tics --
-  --------------------
-    function Get_Clock_Ticks
-      return Integer_8_Unsigned
-      is
+    function Get_Clock_Ticks return Integer_8_Unsigned is
       Low_Part  : Integer_4_Unsigned := 0;
       High_Part : Integer_4_Unsigned := 0;
       begin
@@ -335,12 +237,7 @@ package body Import
             Integer_4_Unsigned'Asm_Output(FROM_EDX, High_Part)));
         return Shift_Left(Integer_8_Unsigned(High_Part), Integer_4_Unsigned'size) + Integer_8_Unsigned(Low_Part);
       end Get_Clock_Ticks;
-  --------------------
-  -- Is_Stack_Empty --
-  --------------------
-    function Is_Stack_Empty
-      return Boolean
-      is
+    function Is_Stack_Empty return Boolean is
       Result :         Integer_4_Unsigned     := 0;
       Data   : aliased Record_x86_Environment := (others => <>);
       begin
@@ -357,11 +254,7 @@ package body Import
           Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Result));
         return Result = 0;
     end Is_Stack_Empty;
-  -----------------
-  -- Clear_Stack --
-  -----------------
-    procedure Clear_Stack
-      is
+    procedure Clear_Stack is
       Data : aliased Record_x86_Environment := (others => <>);
       begin
         Asm(
@@ -385,15 +278,9 @@ package body Import
             " 1:                           " & END_LINE_1);
             -----------------------------------------------
       end Clear_Stack;
-  ---------------
-  -- Put_Stack --
-  ---------------
-    procedure Put_Stack
-      is
-      function To_Image
-        is new To_Radian_Image(Integer_4_Unsigned);
-      function To_Image
-        is new To_Radian_Image(Integer_2_Unsigned);
+    procedure Put_Stack is
+      function To_String_2 is new Generic_To_String_2(Integer_4_Unsigned);
+      function To_String_2 is new Generic_To_String_2(Integer_2_Unsigned);
       Number_Of_Values     : aliased Integer_4_Unsigned          := 0;
       Data_From_Extensions : aliased Integer_4_Unsigned          := 0;
       Stack                : aliased array(1..8) of Float_8_Real := (others => 0.0);
@@ -507,150 +394,132 @@ if Neo.System.SPECIFICS.Bit_Size >= 64 then Put_Line("Put_Stack is disabled due 
           Outputs =>
             Integer_4_Unsigned'Asm_Output(FROM_EAX, Number_Of_Values));
         if Number_Of_Values <= Stack'size then
-          for I in 1..Integer(Number_Of_Values) loop
-            Put_Line("Stack" & Integer'Wide_Image(I) & ": " & Float_8_Real'Wide_Image(Stack(I)));
-          end loop;
+          for I in 1..Integer(Number_Of_Values) loop Put_Line("Stack" & Integer'wide_image(I) & ":" & Float_8_Real'wide_image(Stack(I))); end loop;
         end if;
         if SPECIFICS.Has_Advanced_State_Operations then
           Asm(
             Template => "stmxcsr (%%eax)",
             Volatile => True,
             Inputs   => Address'Asm_Input(TO_EAX, Data_From_Extensions'address));
-          Put_Line("Specifics: " & To_Image(Data_From_Extensions, 2));
+          Put_Line("Specifics: " & To_String_2(Data_From_Extensions, 2));
         end if;
-        Put_Line("Control word: "    & To_Image(Environment.Control_Word,   16));
-        Put_Line("Status word: "     & To_Image(Environment.Status_Word,     2));
-        Put_Line("Selector: "        & To_Image(Environment.CS_Selector,     2));
-        Put_Line("Tags: "            & To_Image(Environment.Tags,            2));
-        Put_Line("Data offset: "     & To_Image(Environment.Data_Offset,     2));
-        Put_Line("Data selector: "   & To_Image(Environment.Data_Selector,   2));
-        Put_Line("Operation code: "  & To_Image(Environment.Operation_Code,  2));
-        Put_Line("Program counter: " & To_Image(Environment.Program_Counter, 2));
+        Put_Line("Control word: "    & To_String_2(Environment.Control_Word,   16));
+        Put_Line("Status word: "     & To_String_2(Environment.Status_Word,     2));
+        Put_Line("Selector: "        & To_String_2(Environment.CS_Selector,     2));
+        Put_Line("Tags: "            & To_String_2(Environment.Tags,            2));
+        Put_Line("Data offset: "     & To_String_2(Environment.Data_Offset,     2));
+        Put_Line("Data selector: "   & To_String_2(Environment.Data_Selector,   2));
+        Put_Line("Operation code: "  & To_String_2(Environment.Operation_Code,  2));
+        Put_Line("Program counter: " & To_String_2(Environment.Program_Counter, 2));
 exception when Disable_Put_Stack => null;
       end Put_Stack;
-  -----
   begin
-  -----
-    -----------
-    Initialize:
-    -----------
-      declare
-      Data : aliased Integer_4_Unsigned := 0;
-      begin
-        if Neo.System.SPECIFICS.Bit_Size < 32 then
+    declare Data : aliased Integer_4_Unsigned := 0; begin
+      if Neo.System.SPECIFICS.Bit_Size < 32 then
+        raise CPUID_Is_Not_Supported;
+      elsif Neo.System.SPECIFICS.Bit_Size = 32 then
+        Asm( -- Check for cpuid
+          Volatile => True,
+          Template =>
+            --------------------------------------
+	            --" pushfl              " & END_LINE_1 &
+            --" orl     %1, (%%esp) " & END_LINE_1 &
+            --" popfl               " & END_LINE_1 &
+            --" pushfl              " & END_LINE_1 &
+            --" pop     %0          " & END_LINE_1 ,
+            ---------------------------------------
+            --------------------------------------------
+            " pushfl                    " & END_LINE_1 & -- Get original extended flags
+            " popl   %%eax              " & END_LINE_1 &
+            " movl   %%eax,       %%ecx " & END_LINE_1 &
+            " xorl   $0x00200000, %%eax " & END_LINE_1 & -- Flip identifier bit in the extended flags
+            " pushl  %%eax              " & END_LINE_1 & -- Save new extended flag value on stack
+            " popfl                     " & END_LINE_1 & -- Replace current value
+            " pushfl                    " & END_LINE_1 & -- Get new extended flags
+            " popl   %%eax              " & END_LINE_1 & -- Store new in EAX register
+            " xorl   %%ecx,       %%eax " & END_LINE_1 , -- Can we toggle the identifier bit?
+            --------------------------------------------
+          Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
+        if Data = 0 then -- No we cannot, cpuid command isn't supported (processor is probably 80486)
           raise CPUID_Is_Not_Supported;
-        elsif Neo.System.SPECIFICS.Bit_Size = 32 then
-          Asm( -- Check for cpuid
-            Volatile => True,
-            Template =>
-              --------------------------------------
- 	      --" pushfl              " & END_LINE_1 &
-	      --" orl     %1, (%%esp) " & END_LINE_1 &
-	      --" popfl               " & END_LINE_1 &
-	      --" pushfl              " & END_LINE_1 &
-	      --" pop     %0          " & END_LINE_1 ,
-              ---------------------------------------
-              --------------------------------------------
-              " pushfl                    " & END_LINE_1 & -- Get original extended flags
-              " popl   %%eax              " & END_LINE_1 &
-              " movl   %%eax,       %%ecx " & END_LINE_1 &
-              " xorl   $0x00200000, %%eax " & END_LINE_1 & -- Flip identifier bit in the extended flags
-              " pushl  %%eax              " & END_LINE_1 & -- Save new extended flag value on stack
-              " popfl                     " & END_LINE_1 & -- Replace current value
-              " pushfl                    " & END_LINE_1 & -- Get new extended flags
-              " popl   %%eax              " & END_LINE_1 & -- Store new in EAX register
-              " xorl   %%ecx,       %%eax " & END_LINE_1 , -- Can we toggle the identifier bit?
-              --------------------------------------------
-            Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EAX, Data));
-          if Data = 0 then -- No we cannot, cpuid command isn't supported (processor is probably 80486)
-            raise CPUID_Is_Not_Supported;
-          end if;
         end if;
-        if SPECIFICS.Has_Advanced_State_Operations then
-          --------------------------
-          Enable_Denormals_Are_Zero:
-          --------------------------
-            declare
-            type Array_Save_Area
-              is array(1..512)
-              of Integer_1_Unsigned
-              with Alignment => 16;
-            type Access_Array_Save_Area
-              is access all Array_Save_Area;
-            Save_Area : aliased Array_Save_Area := (others => 0);
-            begin
-              Asm(
-                Volatile => True,
-                Inputs   => Access_Array_Save_Area'Asm_Input(TO_EAX, Save_Area'access),
-                Template =>
-                  ------------------------------------------
-                  " fxsave (%%eax)          " & END_LINE_1 &
-                  " movl   28(%%eax), %%ebx " & END_LINE_1 ,
-                  ------------------------------------------
-                Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data));
-              if (Data and 16#20#) /= 0 then
-                Asm(
-                  Volatile => True,
-                  Inputs   => Address'Asm_Input(TO_EAX, Data'address),
-                  Template =>
-                    -------------------------------------------
-                    " stmxcsr (%%eax)          " & END_LINE_1 &
-                    " movl    (%%eax), %%ebx   " & END_LINE_1 &
-                    " or      $0x40,   %%bx    " & END_LINE_1 &
-                    " movl    %%ebx,   (%%eax) " & END_LINE_1 &
-                    " ldmxcsr (%%eax)          " & END_LINE_1);
-                    -------------------------------------------
-              end if;
-            end Enable_Denormals_Are_Zero;
-          Asm(
-            Volatile => True,
-            Inputs   => Address'Asm_Input(TO_EAX, Data'address),
-            Template =>
-              -------------------------------------------
-              " stmxcsr (%%eax)          " & END_LINE_1 &
-              " movl    (%%eax), %%ebx   " & END_LINE_1 &
-              " or      $0x8000, %%ebx   " & END_LINE_1 &
-              " movl    %%ebx,   (%%eax) " & END_LINE_1 &
-              " ldmxcsr (%%eax)          " & END_LINE_1);
-              -------------------------------------------
-        end if;
-        ---------------
-        Set_Exceptions:
-        ---------------
+      end if;
+      if SPECIFICS.Has_Advanced_State_Operations then
+        Enable_Denormals_Are_Zero:
           declare
-          Other_Data     : aliased          Integer_2_Unsigned := 0;
-          EXCEPTION_MASK : aliased constant Integer_4_Unsigned := 16#0000_1F00#; -- Do not crash on any error
+          type Array_Save_Area        is array(1..512) of Integer_1_Unsigned  with Alignment => 16;
+          type Access_Array_Save_Area is access all Array_Save_Area;
+          Save_Area : aliased Array_Save_Area := (others => 0);
           begin
-            if SPECIFICS.Has_Advanced_State_Operations then
+            Asm(
+              Volatile => True,
+              Inputs   => Access_Array_Save_Area'Asm_Input(TO_EAX, Save_Area'access),
+              Template =>
+                ------------------------------------------
+                " fxsave (%%eax)          " & END_LINE_1 &
+                " movl   28(%%eax), %%ebx " & END_LINE_1 ,
+                ------------------------------------------
+              Outputs  => Integer_4_Unsigned'Asm_Output(FROM_EBX, Data));
+            if (Data and 16#20#) /= 0 then
               Asm(
                 Volatile => True,
-                Inputs   =>(
-                  Address'Asm_Input(TO_EAX, Data'address),
-                  Integer_4_Unsigned'Asm_Input(TO_ECX, EXCEPTION_MASK)),
+                Inputs   => Address'Asm_Input(TO_EAX, Data'address),
                 Template =>
-                  -----------------------------------------------
-                  " stmxcsr (%%eax)              " & END_LINE_1 &
-                  " movl    (%%eax),     %%ebx   " & END_LINE_1 &
-                  " and     $0xffffe07f, %%ebx   " & END_LINE_1 &
-                  " or      %%ecx,       %%ebx   " & END_LINE_1 &
-                  " movl    %%ebx,       (%%eax) " & END_LINE_1 &
-                  " ldmxcsr (%%eax)              " & END_LINE_1);
-                  -----------------------------------------------
+                  -------------------------------------------
+                  " stmxcsr (%%eax)          " & END_LINE_1 &
+                  " movl    (%%eax), %%ebx   " & END_LINE_1 &
+                  " or      $0x40,   %%bx    " & END_LINE_1 &
+                  " movl    %%ebx,   (%%eax) " & END_LINE_1 &
+                  " ldmxcsr (%%eax)          " & END_LINE_1);
+                  -------------------------------------------
             end if;
+          end Enable_Denormals_Are_Zero;
+        Asm(
+          Volatile => True,
+          Inputs   => Address'Asm_Input(TO_EAX, Data'address),
+          Template =>
+            -------------------------------------------
+            " stmxcsr (%%eax)          " & END_LINE_1 &
+            " movl    (%%eax), %%ebx   " & END_LINE_1 &
+            " or      $0x8000, %%ebx   " & END_LINE_1 &
+            " movl    %%ebx,   (%%eax) " & END_LINE_1 &
+            " ldmxcsr (%%eax)          " & END_LINE_1);
+            -------------------------------------------
+      end if;
+      declare
+        Other_Data     : aliased          Integer_2_Unsigned := 0;
+        EXCEPTION_MASK : aliased constant Integer_4_Unsigned := 16#0000_1F00#; -- Do not crash on any error
+        begin
+          if SPECIFICS.Has_Advanced_State_Operations then
             Asm(
               Volatile => True,
               Inputs   =>(
-                Address'Asm_Input(TO_EAX, Other_Data'address),
-                Integer_4_Unsigned'Asm_Input(TO_ECX, Shift_Right(EXCEPTION_MASK, 7))),
+                Address'Asm_Input(TO_EAX, Data'address),
+                Integer_4_Unsigned'Asm_Input(TO_ECX, EXCEPTION_MASK)),
               Template =>
-                ------------------------------------------
-                " fnstcw (%%eax)          " & END_LINE_1 &
-                " movw   (%%eax), %%bx    " & END_LINE_1 &
-                " and    $0xffc0, %%bx    " & END_LINE_1 &
-                " or     %%cx,    %%bx    " & END_LINE_1 &
-                " movw   %%bx,    (%%eax) " & END_LINE_1 &
-                " fldcw  (%%eax)          " & END_LINE_1);
-                ------------------------------------------
-          end Set_Exceptions;
-      end Initialize;
+                -----------------------------------------------
+                " stmxcsr (%%eax)              " & END_LINE_1 &
+                " movl    (%%eax),     %%ebx   " & END_LINE_1 &
+                " and     $0xffffe07f, %%ebx   " & END_LINE_1 &
+                " or      %%ecx,       %%ebx   " & END_LINE_1 &
+                " movl    %%ebx,       (%%eax) " & END_LINE_1 &
+                " ldmxcsr (%%eax)              " & END_LINE_1);
+                -----------------------------------------------
+          end if;
+          Asm(
+            Volatile => True,
+            Inputs   =>(
+              Address'Asm_Input(TO_EAX, Other_Data'address),
+              Integer_4_Unsigned'Asm_Input(TO_ECX, Shift_Right(EXCEPTION_MASK, 7))),
+            Template =>
+              ------------------------------------------
+              " fnstcw (%%eax)          " & END_LINE_1 &
+              " movw   (%%eax), %%bx    " & END_LINE_1 &
+              " and    $0xffc0, %%bx    " & END_LINE_1 &
+              " or     %%cx,    %%bx    " & END_LINE_1 &
+              " movw   %%bx,    (%%eax) " & END_LINE_1 &
+              " fldcw  (%%eax)          " & END_LINE_1);
+              ------------------------------------------
+        end;
+    end;
   end Import;

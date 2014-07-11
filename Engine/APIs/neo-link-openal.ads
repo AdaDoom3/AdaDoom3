@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package Neo.Link.OpenAL
   is
   end Neo.Link.OpenAL;

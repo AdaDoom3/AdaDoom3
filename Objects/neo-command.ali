@@ -1,4 +1,4 @@
-V "GNAT Lib v2013"
+V "GNAT Lib v2014"
 A -O3
 A -fstack-check=specific
 A -gnatA
@@ -15,6 +15,7 @@ P SS ZX
 RN
 RV NO_ACCESS_SUBPROGRAMS
 RV NO_CALENDAR
+RV NO_DIRECT_BOOLEAN_OPERATORS
 RV NO_DISPATCHING_CALLS
 RV NO_ENUMERATION_MAPS
 RV NO_EXCEPTION_HANDLERS
@@ -36,17 +37,16 @@ RV NO_DEFAULT_INITIALIZATION
 RV NO_IMPLEMENTATION_ATTRIBUTES
 RV NO_IMPLEMENTATION_PRAGMAS
 RV NO_ELABORATION_CODE
-RV SPARK
+RV SPARK_05
 RV MAX_ENTRY_QUEUE_LENGTH=1+
 
-U neo.command%b		neo-command.adb		568aa377 DE NE OO PK
+U neo.command%b		neo-command.adb		72e0265b DE NE OO PK
 W ada.exceptions%s	a-except.adb		a-except.ali
-W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.streams%s		a-stream.adb		a-stream.ali
 W ada.tags%s		a-tags.adb		a-tags.ali
 W neo%s			neo.adb			neo.ali
 W system%s		system.ads		system.ali
 W system.address_image%s  s-addima.adb		s-addima.ali
-W system.assertions%s	s-assert.adb		s-assert.ali
 W system.img_bool%s	s-imgboo.adb		s-imgboo.ali
 W system.img_int%s	s-imgint.adb		s-imgint.ali
 W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
@@ -61,7 +61,7 @@ W system.val_int%s	s-valint.adb		s-valint.ali
 W system.wch_stw%s	s-wchstw.adb		s-wchstw.ali
 W system.wch_wts%s	s-wchwts.adb		s-wchwts.ali
 
-U neo.command%s		neo-command.ads		25fa70f1 BN DE EE OO PF PK
+U neo.command%s		neo-command.ads		55a0184a BN DE EE OO PF PK
 W ada%s			ada.ads			ada.ali
 W ada.characters%s	a-charac.ads		a-charac.ali
 W ada.characters.handling%s  a-chahan.adb	a-chahan.ali
@@ -73,7 +73,8 @@ Z ada.containers.prime_numbers%s  a-coprnu.adb	a-coprnu.ali
 W ada.exceptions%s	a-except.adb		a-except.ali
 W ada.finalization%s	a-finali.adb		a-finali.ali
 Z ada.iterator_interfaces%s
-W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.locales%s		a-locale.adb		a-locale.ali
+W ada.streams%s		a-stream.adb		a-stream.ali
 W ada.strings%s		a-string.ads		a-string.ali
 W ada.strings.wide_fixed%s  a-stwifi.adb	a-stwifi.ali
 W ada.tags%s		a-tags.adb		a-tags.ali
@@ -97,251 +98,252 @@ W system.strings.stream_ops%s  s-ststop.adb	s-ststop.ali
 W system.tasking%s	s-taskin.adb		s-taskin.ali
 W system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
 
-D ada.ads		20130417131022 3ffc8e18
-D a-calend.ads		20130417131018 d86d6c8c
-D a-caldel.ads		20130417131018 9f20b83d
-D a-charac.ads		20130417131018 2d3ec45b
-D a-chahan.ads		20130417131018 1d381dcd
-D a-chlat1.ads		20130417131018 2825df20
-D a-contai.ads		20130417131018 61e5e089
-D a-cohata.ads		20130417131018 04abccc5
-D a-chtgke.ads		20130417131018 fba5dead
-D a-chtgke.adb		20130417131018 2dde331d
-D a-chtgop.ads		20130417131018 ee32f6e8
-D a-chtgop.adb		20130417131018 cd0e5151
-D a-cohama.ads		20130417131018 9f97b812
-D a-cohama.adb		20130417131018 ddd40fe7
-D a-coprnu.ads		20130417131018 0cdf1864
-D a-except.ads		20130417131018 10fcae55
-D a-finali.ads		20130417131020 52ecdc1b
-D a-ioexce.ads		20130417131020 8b9de6cd
-D a-iteint.ads		20130417131020 7c7305e9
-D a-stream.ads		20130417131020 2ca4ee37
-D a-string.ads		20130417131020 90ac6797
-D a-strfix.ads		20130417131020 d07c346e
-D a-strmap.ads		20130417131020 9cb836fb
-D a-stwifi.ads		20130417131020 d82fa5f6
-D a-stwima.ads		20130417131020 09a6f5ac
-D a-stwiun.ads		20130417131020 64ae971d
-D a-swuwha.ads		20130417131022 fd6ee962
-D a-tags.ads		20130417131022 6c0509d0
-D a-textio.ads		20130417131022 386df5d4
-D a-timoio.ads		20130417131022 d32407b9
-D a-unccon.ads		20130417131022 f9eb8f06
-D a-uncdea.ads		20130417131022 f15a5ed1
-D a-widcha.ads		20130417131022 a2b85d3d
-D a-wichha.ads		20130417131022 6011239b
-D a-witeio.ads		20130417131022 551dcbf1
-D a-wtmoio.ads		20130417131022 5502ed6b
-D interfac.ads		20130417131026 cb4a8015
-D i-c.ads		20130417131026 5421119b
-D i-cstrin.ads		20130417131026 341d0ddf
-D i-cstrea.ads		20130417131026 8128536b
-D neo.ads		20131010033154 b027011e
-D neo.adb		20131010033154 dcf34fca
-D neo-command.ads	20131011012604 f29b51c3
-D neo-command.adb	20131011012604 a411f2b4
-D system.ads		20130417131036 5fc8ae56
-D s-addima.ads		20130417131028 a1ec9d3a
-D s-atacco.ads		20130417131028 4c36d12f
-D s-assert.ads		20130417131028 a3a4e6ab
-D s-atocou.ads		20130417131028 4a9c6cb4
-D s-atocou.adb		20130417131028 c864ec10
-D s-crtl.ads		20130417131028 dfcfca61
-D s-exctab.ads		20130417131028 66e51330
-D s-ficobl.ads		20130417131028 55a71d43
-D s-finmas.ads		20130417131028 b95bb341
-D s-finroo.ads		20130417131028 4ff27390
-D s-imgboo.ads		20130417131030 f5d971eb
-D s-imgint.ads		20130417131030 02dbe0c2
-D s-maccod.ads		20130417131030 0fbb7bce
-D s-multip.ads		20130417131030 38ac9f73
-D s-osinte.ads		20130417131030 ecf1fbfd
-D s-parame.ads		20130417131032 b6e20cc0
-D s-pooglo.ads		20130417131032 542f33d0
-D s-secsta.ads		20130417131032 eea35a36
-D s-soflin.ads		20130417131032 24c8153c
-D s-stache.ads		20130417131032 596fc1b4
-D s-stausa.ads		20130417131032 017a0a05
-D s-stalib.ads		20130417131032 f78bcf95
-D s-stoele.ads		20130417131032 facd7d98
-D s-stoele.adb		20130417131032 afc5dc80
-D s-stopoo.ads		20130417131032 7b8fbeee
-D s-stposu.ads		20130417131032 ffeba1c5
-D s-stratt.ads		20130417131032 aedef97e
-D s-string.ads		20130417131032 46b01415
-D s-ststop.ads		20130417131032 ee472be4
-D s-tasinf.ads		20130417131032 859198ad
-D s-taspri.ads		20130417131032 196697f7
-D s-taskin.ads		20130417131032 59e95256
-D s-taprob.ads		20130417131032 502249e3
-D s-traent.ads		20130417131032 5221ee41
-D s-unstyp.ads		20130417131034 6ae15c76
-D s-valboo.ads		20130417131034 fa926c1e
-D s-valint.ads		20130417131034 48a52a3f
-D s-wchcon.ads		20130417131034 bfeb2e3d
-D s-wchstw.ads		20130417131034 2d112c01
-D s-wchwts.ads		20130417131034 b3692fb2
-D s-win32.ads		20130417131034 e5a79fe6
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chahan.ads		20140406181358 1601a50f ada.characters.handling%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-chtgke.ads		20140406181358 a7b0f3a2 ada.containers.hash_tables.generic_keys%s
+D a-chtgke.adb		20140406181358 ee7af212 ada.containers.hash_tables.generic_keys%b
+D a-chtgop.ads		20140406181358 b47ea0e7 ada.containers.hash_tables.generic_operations%s
+D a-chtgop.adb		20140406181358 c00683b2 ada.containers.hash_tables.generic_operations%b
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-cohama.adb		20140406181358 55a9a6dc ada.containers.hashed_maps%b
+D a-coprnu.ads		20140406181356 0cdf1864 ada.containers.prime_numbers%s
+D a-convec.ads		20140406181358 0aaf3975 ada.containers.vectors%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-locale.ads		20140406181358 f14a139d ada.locales%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strfix.ads		20140406181356 d07c346e ada.strings.fixed%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-stwifi.ads		20140406181354 d82fa5f6 ada.strings.wide_fixed%s
+D a-stwima.ads		20140406181358 09a6f5ac ada.strings.wide_maps%s
+D a-stwiun.ads		20140406181358 64ae971d ada.strings.wide_unbounded%s
+D a-swuwha.ads		20140406181354 fd6ee962 ada.strings.wide_unbounded.wide_hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-timoio.ads		20140406181358 d32407b9 ada.text_io.modular_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D a-widcha.ads		20140406181358 a2b85d3d ada.wide_characters%s
+D a-wichha.ads		20140406181356 c738003c ada.wide_characters.handling%s
+D a-witeio.ads		20140406181356 551dcbf1 ada.wide_text_io%s
+D a-wtmoio.ads		20140406181358 5502ed6b ada.wide_text_io.modular_io%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-c.ads		20140406181358 5421119b interfaces.c%s
+D i-cstrin.ads		20140406181356 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D neo.ads		20140708181816 ab640e15 neo%s
+D neo.adb		20140708182040 687210af neo%b
+D neo-command.ads	20140708050916 ffcdfbd2 neo.command%s
+D neo-command.adb	20140708230912 8d2ddd89 neo.command%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-addima.ads		20140406181356 a1ec9d3a system.address_image%s
+D s-atacco.ads		20140406181354 4c36d12f system.address_to_access_conversions%s
+D s-assert.ads		20140406181354 cd8d2c94 system.assertions%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-imgboo.ads		20140406181354 f5d971eb system.img_bool%s
+D s-imgint.ads		20140406181358 02dbe0c2 system.img_int%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-multip.ads		20140406181358 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20140406181354 ecf1fbfd system.os_interface%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stausa.ads		20140406181354 017a0a05 system.stack_usage%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-string.ads		20140406181358 8fe54fb7 system.strings%s
+D s-ststop.ads		20140406181356 e6693757 system.strings.stream_ops%s
+D s-tasinf.ads		20140406181356 601f6b72 system.task_info%s
+D s-taspri.ads		20140406181356 196697f7 system.task_primitives%s
+D s-taskin.ads		20140406181354 3f821f32 system.tasking%s
+D s-taprob.ads		20140406181354 502249e3 system.tasking.protected_objects%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-valboo.ads		20140406181356 fa926c1e system.val_bool%s
+D s-valint.ads		20140406181356 48a52a3f system.val_int%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D s-wchstw.ads		20140406181354 2d112c01 system.wch_stw%s
+D s-wchwts.ads		20140406181354 b3692fb2 system.wch_wts%s
+D s-win32.ads		20140406181354 b7f96285 system.win32%s
 X 1 ada.ads
-16K9*Ada 19e8 43|18r3 19r3 20r3 21r3 22r3 24r3 25r3 26r3 72r18 104r18
-X 4 a-charac.ads
-16K13*Characters 18e19 43|21r7 25r7
-X 5 a-chahan.ads
-36K24*Handling 150e28 43|21w18 25r18
+16K9*Ada 19e8 44|1r6 2r6 3r6 3r40 4r6 4r40 5r6 5r40 6r6 6r40 30r39 50r39
+X 3 a-charac.ads
+16K13*Characters 18e19 44|5r10 5r44
+X 4 a-chahan.ads
+36K24*Handling 159e28 44|5w21 5r55
 X 17 a-finali.ads
-40K13*Finalization 73e21 43|20w7 72r22 104r22
-48H9*Controlled 64e72 43|72r35 104r35
-52U14*Adjust<55|42p14>
+40K13*Finalization 68e21 44|2w10 30r43 50r43
+43H9*Controlled<56|40R9> 59e72 44|30r56 50r56
+47U14*Adjust<56|42p14>
 X 19 a-iteint.ads
 24h9 Forward_Iterator
-X 21 a-string.ads
-16K13*Strings 35e16 43|18w7 19r7 24r7
-33n37*Both{33E9} 43|47r31 44|58r96 90r114 93r90 96r98 101r83 226r62 229r114
-X 24 a-stwifi.ads
-18K21*Wide_Fixed 254e27 43|19w15 24r15
-36V13*Index{natural} 44|227s41
-198V13*Trim{wide_string} 43|47s19 44|58s56 90s64 93s41 96s65 101s43 226s50
-. 229s79
-X 26 a-stwiun.ads
-92V14*"&"{51R9} 44|96s41
-96V14*"&"{51R9} 44|93s32 93s39 96s34
-X 33 a-widcha.ads
-19K13*Wide_Characters 21e24 43|22r7 26r7
-X 34 a-wichha.ads
-16K29*Handling 125e33 43|22w23 26r23
-107V13*To_Lower{wide_string} 43|70s43 102s43 44|226s41
-X 41 neo.ads
-46K9*Neo 923e10 43|27r9 159r7 44|17r14 274r7
-65A13*String_2{wide_string}<integer> 43|38r17 40r17 42r18 46r18 55r30 56r30
-. 70r31 84r18 86r22 97r27 98r14 102r31 107r27 122r50 123r50 124r50 125r50
-. 131r16 134r19 137r19 44|88r18 107r22 177r25 224r18 226r29 228r29 229r29
-. 249r18 260r17 269r17
-71R13*String_2_Unbounded{26|51R9} 43|143r23 44|90r20
-125I13*Integer_4_Positive{positive} 43|43r18 121r50 44|250r18
-241A10*Array_String_2_Unbounded(71R13)<integer> 43|44r14 44|251r14
-505V14*Localize{65A13} 44|100s35 101s15 102s15 118s28 180s20 187s20 187s96
-. 208s19 209s13 213s18 215s18 217s13 242s20
-510U15*Put 44|209s9 217s9
-512U15*Put_Title 44|208s9
-514U15*Put_Line 44|118s19 119s19 180s11 187s11 213s9 215s9 236s15 242s11
-583V14*To_String_2_Unbounded=586:42{26|51R9} 44|58s34 90s42 96s43
-587V14*To_String_2=590:42{wide_string} 44|32s26 102s43
-744a5*NULL_STRING_2{65A13} 44|229r60
-745r5*NULL_STRING_2_UNBOUNDED{71R13} 43|143r47 44|43r34 254r17 254r42
-747a5*END_LINE_2{65A13} 44|100r91 101r91
-763k13*Hashed_Maps 793e22 43|151r14 153r14
-771W24*Protected_Map 43|157r31[150] 158r33[152]
-773U23 Insert 44|40s25[43|152] 160s21[43|150]
-774a15 Key{65A13} 44|41r17[43|152]
-775r15 New_Item{43|141R10} 44|42r17[43|152]
-776U23 Replace 44|33s25[43|152] 55s25[43|152]
-777a15 Key{65A13} 44|34r17[43|152] 56r17[43|152]
-778r15 New_Item{43|141R10} 44|35r17[43|152] 57r17[43|152]
-782U23 Delete 44|62s25[43|152] 168s21[43|150]
-784V22 Element{43|141R10} 44|32s48[43|152] 36s44[43|152] 232s19[43|150] 235s26[43|152]
-. 236s34[43|152] 238s27[43|152] 239s23[43|152]
-787V22 Has_Element{boolean} 44|31s24[43|150] 157s26[43|152] 231s20[43|150]
-. 233s25[43|152]
-X 43 neo-command.ads
-27K13*Command 41|46k9 43|159l11 159e18 44|17b18 274l11 274t18
-32X5*Duplicate 44|158r21
-36U15*Test 44|174b15 219l11 219t15
-37U15*Load_Variables 38>7 44|259b15 264l11 264t25
-38a7 Path{41|65A13} 44|260b7
-39U15*Save_Variables 40>7 44|268b15 273l11 273t25
-40a7 Path{41|65A13} 44|269b7
-41V14*Autocomplete{41|241A10} 42>7 43>7 44|248b14 255l11 255t23
-42a7 Input{41|65A13} 44|249b7
-43i7 Limit{41|125I13} 44|250b7
-45U15*Handle 46>7 44|210s9 211s9 212s9 216s9 218s9 223b15 244l11 244t17
-46a7 Input{41|65A13} 47r24 44|224b7 226r55
-52E12 Type_To_Vary 54r30 61r22 62r22 66r22 68r18 77r22 79r25 81r23 44|58r61
-. 68r22 70r22 80r18 90r69 90r93 92r16 92r33 92r54 92r71 93r46 93r70 95r24
-. 95r41 95r58 95r84 96r70 101r48 110r17 113r24 114r28 117r27 130r22 138r25
-. 195r11 203r11
-54*7 Initial{52E12} 81r39 44|196r11 204r11
-55a7 Name{41|65A13} 70r52 44|197r11 205r11
-56a7 Description{41|65A13} 44|100r44 198r11 206r11
-57b7 Is_Saved{boolean} 44|54r16 199r11
-58b7 Is_User_Settable{boolean}
-59b7 Is_Server_Overridden{boolean}
-61*9 Prevous{52E12}
-62*9 Current{52E12}
-63k13*Variable 52z12 54z7 55z7 56z7 57z7 58z7 59z7 60z7 93l11 93e19 44|22b18
-. 144l11 144t19 194r16 202r16
-65U19*Set 66>11 44|66b19 76l15 76t18 110s13 115s19 214s11[193]
-66*11 Value{52E12} 44|68b11 72r22
-67V18*Get{52E12} 44|70s38 74s36 78b18 84l15 84t18 213s74[193] 215s71[193]
-70a9 LOWER_NAME{41|65A13} 44|31r36 32r56 34r29 36r52 41r29 56r30 62r32 100r15
-. 118r60
-71R14 Record_Controller<17|48R9> 17|52P14 43|73e27 87P30 88r31 89P30 90r31
-. 92r22 44|28r31 51r31
-74W24 Protected_Type_To_Vary 82l15 82e37 91r22 44|124b24 143l15 143t37
-76V22 Get{52E12} 44|58s90 83s25 101s77 128b22 134l19 134t22
-78U23 Set 79>15 44|72s18 136b23 142l19 142t22
-79*15 Item{52E12} 44|138b15 141r28
-81*13 Current{52E12} 44|133r24 141m17
-83V18 Handle_Get{41|65A13} 44|37r34 44r34 86b18 103l15 103t25 119s28
-85U19 Handle_Set 86>11 44|32s15 38r34 45r34 105b19 122l15 122t25
-86a11 Value{41|65A13} 44|107b11 110r41 114r20 118r80
-87U30 Initialize<17|51p14> 88=11 44|26b30 47l15 47t25
-88r11 Controller{71R14} 44|28b11
-89U30 Finalize<17|53p14> 90=11 44|49b30 64l15 64t23
-90r11 Controller{71R14} 44|51b11
-91w9 Data{74W24} 44|58r85 72r13 83r20 101r72
-92r9 Controller{71R14}
-96U19 Perform 97>11 108r19 44|191r11
-97a11 Parameters{41|65A13}
-98a7 Name{41|65A13} 102r52 44|192r11
-99k13*Action 96z19 98z7 114l11 114e17 44|148b18 170l11 170t17 190r16
-102a9 LOWER_NAME{41|65A13} 44|157r38 160r28 168r28
-103R14 Record_Controller<17|48R9> 17|52P14 43|105e27 109P30 110r31 111P30
-. 112r31 113r22 44|154r31 165r31
-106U19 Not_A_Formal_Subprogram=108:19 44|160r40
-107a11 Parameters{41|65A13}
-109U30 Initialize<17|51p14> 110=11 44|152b30 161l15 161t25
-110r11 Controller{103R14} 44|154b11
-111U30 Finalize<17|53p14> 112=11 44|163b30 169l15 169t23
-112r11 Controller{103R14} 44|165b11
-113r9 Controller{103R14}
-121i5 MAXIMUM_POSSIBLE_VALUES_DISPLAYED{41|125I13} 44|92r93
-122a5 CURRENT_VALUE{41|65A13} 44|101r24
-123a5 POSSIBLE_VALUES{41|65A13} 44|102r24
-124a5 INCORRECT_PARAMETER{41|65A13} 44|118r37
-125a5 NO_SUCH_VARIABLE_OR_COMMAND{41|65A13} 44|242r29
-129P10 Access_Function_Get(wide_string) 144r23
-132P10 Access_Procedure_Set 134>9 145r23
-134a9 Item{41|65A13}
-135P10 Access_Procedure_Perform 137>9 151r26
-137a9 Item{41|65A13}
-141R10 Record_Variable 146e17 153r26
-143r9*Saved_Value{41|71R13} 44|32r68 36m19 36r64 43m19 58m19
-144p9*Get{129P10} 44|37m19 44m19 59m19 235r43 236r51
-145p9*Set{132P10} 44|38m19 45m19 60m19 238r44 239r40
-150K13 Hashed_Action[41|763] 157r17 44|150r13
-152K13 Hashed_Variable[41|763] 158r17 44|24r13
-157w5 Actions{41|771W24[150]} 44|31r16 160r13 168r13 231r12 232r11
-158w5 Variables{41|771W24[152]} 44|32r38 33r15 36r34 40r15 55r15 62r15 157r16
-. 233r15 235r16 236r24 238r17 239r13
-X 44 neo-command.adb
-70*11 Previous{43|52E12} 74r26
-90r11 Values{41|71R13} 93m15 93r25 96m17 96r27 102r55
-95e19 I 96r94
-113*19 I{43|52E12} 114r52 115r23 117r23
-176U17 Put_Success 176b17 177>9 181l13 181t24 191r22
-177a9 Parameters{41|65A13} 180r42
-182U17 Adjust 182b17 183>9 184>9 188l13 188t19 200r27
-183b9 P{boolean} 187r91
-184b9 C{boolean} 187r134
-189K15 Y[43|99]
-193K15 X[43|63] 213r72 214r9 215r69
-201K15 Z[43|63]
-226a7 TRIMMED{41|65A13} 227r47 228r41 228r49 228r83 229r84 229r99
-227i7 SPLIT{natural} 228r68 228r101 229r45 229r92
-228a7 COMMAND{41|65A13} 231r32 232r27 233r37 235r34 236r42 238r35 239r31
-229a7 PARAMETERS{41|65A13} 232r40 234r14 239r48
-X 66 s-stausa.ads
+X 20 a-locale.ads
+18K13*Locales 31e16 44|3w10 3r44
+X 22 a-string.ads
+16K13*Strings 35e16 44|1w10 4r10 4r44
+33n37*Both{33E9} 45|39r114 42r90 45r98 49r88 81r108 98r62 101r114
+X 25 a-stwifi.ads
+18K21*Wide_Fixed 254e27 44|4w18 4r52
+36V13*Index{natural} 45|99s41
+198V13*Trim{wide_string} 45|39s64 42s41 45s65 49s48 81s68 98s50 101s79
+X 27 a-stwiun.ads
+92V14*"&"{51R9} 45|45s41
+96V14*"&"{51R9} 45|42s32 42s39 45s34
+X 34 a-widcha.ads
+19K13*Wide_Characters 21e24 44|6r10 6r44
+X 35 a-wichha.ads
+16K29*Handling 127e33 44|6w26 6r60
+109V13*To_Lower{wide_string} 44|29s43 49s43 45|98s41
+X 42 neo.ads
+20K9*Neo 391e10 44|7r9 77r7 45|1r14 148r7
+33A13*String_2{wide_string}<integer> 44|11r42 12r42 14r42 15r42 17r30 18r30
+. 29r31 34r42 35r37 45r14 46r46 49r31 54r59 57r50 58r50 59r50 60r50 61r50
+. 63r61 64r65 65r65 45|3r45 38r36 52r41 97r33 98r29 100r29 101r29 136r38
+. 140r40 144r40
+34R13*String_2_Unbounded{27|51R9} 44|67r23 73r42 45|39r20
+53I13*Integer_4_Positive{positive} 44|15r63 62r50 45|136r59
+96A10*Array_String_2_Unbounded(34R13)<integer> 44|15r95 45|136r91
+200U15*Put 45|13s9 21s9
+201U15*Put_Title 45|12s9
+202U15*Put_Line 45|3s64 6s11 17s9 19s9 62s19 63s19 107s60 114s32
+204U15*Put_Debug_Line 45|85s13
+210V14*Localize{33A13} 45|3s73 6s20 6s96 12s19 13s13 17s18 19s18 21s13 48s40
+. 49s20 50s20 62s28 85s28 114s41
+224V14*To_String_2=224:150{wide_string} 45|50s48 72s24
+225V14*To_String_2_Unbounded=225:150{27|51R9} 45|39s42 45s43 81s46
+280k13*Maps 291e15 44|71r37 72r37 73r37
+282W24*Protected_Map 44|74r30[73] 75r32[72] 76r34[71]
+283U23 Delete 45|83s25[44|71] 90s95[44|72]
+284U23 Insert 45|76s38[44|71] 94s21[44|72]
+285U23 Replace 45|73s23[44|71] 81s25[44|71]
+286V22 Element{44|66R10} 45|69s67[44|71] 69s112[44|71] 72s46[44|71] 73s54[44|71]
+. 104s19[44|72] 107s26[44|71] 107s79[44|71] 108s27[44|71] 109s23[44|71]
+287V22 Has_Element{boolean} 45|69s24[44|72] 93s24[44|72] 103s20[44|72] 105s25[44|71]
+298a5*END_LINE_2{33A13} 45|48r96 49r96
+300a5*NULL_STRING_2{33A13} 45|101r60
+302r5*NULL_STRING_2_UNBOUNDED{34R13} 44|67r47 45|76r58 138r17 138r42
+X 44 neo-command.ads
+7K13*Command 42|20k9 44|57E5 77l11 77e18 45|1b18 148l11 148t18
+8X5*Duplicate 45|70r21 93r59
+9X5*Parse
+10U15*Test 45|2b15 23l11 23t15
+11U15*Save_Variables 11>31 45|144b15 147l11 147t25
+11a31 Path{42|33A13} 45|144b30
+12U15*Load_Variables 12>31 45|140b15 143l11 143t25
+12a31 Path{42|33A13} 45|140b30
+14U15*Handle 14>31 45|14s9 15s9 16s9 20s9 22s9 97b15 115l11 115t17
+14a31 Input{42|33A13} 45|97b22 98r55
+15V14*Autocomplete{42|96A10} 15>31 15>52 45|136b14 139l11 139t23
+15a31 Input{42|33A13} 45|136b27
+15i52 Limit{42|53I13} 45|136b48
+17a7 Name{42|33A13} 29r52
+18a7 Description{42|33A13} 45|48r49
+19E12 Type_To_Vary 20r30 20r86 24r69 26r34 27r29 37r38 38r34 40r23 45|27r33
+. 28r37 30r29 31r34 31r62 39r69 39r93 41r16 41r33 41r54 41r71 42r46 42r70
+. 44r24 44r41 44r58 44r84 45r70 49r53 54r17 57r24 58r28 61r27 81r73
+20*7 Initial{19E12} 40r39
+21b7 Is_Saved{boolean} 45|80r16
+22b7 Is_User_Settable{boolean}
+23b7 Is_Server_Overridden{boolean}
+24*47 Prevous{19E12}
+24*56 Current{19E12}
+25k13*Variable 17z7 18z7 19z12 20z7 21z7 22z7 23z7 24z7 29E9 43l11 43e19
+. 45|9r24 10r24 24b18 87l11 87t19
+26U19*Set 26>23 45|18s11[9] 31b19 37l15 37t18 54s13 59s19
+26*23 Value{19E12} 45|31b23 33r22
+27V18*Get{19E12} 45|17s74[9] 19s71[9] 30b18 30l72 30t75 31s78 35s36
+29a9 LOWER_NAME{42|33A13} 45|48r20 62r60 69r36 69r75 69r120 72r54 73r31 73r62
+. 76r45 81r33 83r32 85r62
+30R14 Record_Controller<17|43R9> 17|47P14 44|30e83 31P30 31r62 32P30 32r62
+. 33r22 45|67r61 78r59
+31U30 Initialize<17|46p14> 31=42 45|67b30 77l15 77t25
+31r42 Controller{30R14} 45|67b41
+32U30 Finalize<17|48p14> 32=42 45|78b30 86l15 86t23
+32r42 Controller{30R14} 45|78b39
+33r9 Controller{30R14}
+34U19 Handle_Set 34>31 45|52b19 66l15 66t25 72s13 73r119 76r115
+34a31 Value{42|33A13} 45|52b30 54r41 58r20 62r80
+35V18 Handle_Get{42|33A13} 45|38b18 51l15 51t25 63s28 73r87 76r83
+36W24 Protected_Type_To_Vary 40E13 41l15 41e37 42r16 45|26b24 29l15 29t37
+37U23 Set 37>28 45|28b23 28l81 28t84 33s18
+37*28 Item{19E12} 45|28b27 28r71
+38V22 Get{19E12} 45|27b22 27l75 27t78 30s63 49s82 81s102
+40*13 Current{19E12} 45|27r62 28m60
+42w9 Data{36W24} 45|30r58 33r13 49r77 81r97
+45a7 Name{42|33A13} 49r52
+46U22 Perform 46>30 54r77
+46a30 Parameters{42|33A13}
+47k13*Action 45z7 46z22 49E9 55l11 55e17 45|8r24 88b18 96l11 96t17
+49a9 LOWER_NAME{42|33A13} 45|90r102 93r36 94r28
+50R14 Record_Controller<17|43R9> 17|47P14 44|50e83 51P30 51r62 52P30 52r62
+. 53r22 45|90r59 91r61
+51U30 Initialize<17|46p14> 51=42 45|91b30 95l15 95t25
+51r42 Controller{50R14} 45|91b41
+52U30 Finalize<17|48p14> 52=42 45|90b30 90l119 90t127
+52r42 Controller{50R14} 45|90b39
+53r9 Controller{50R14}
+54U19 Not_A_Formal_Subprogram=54:77 45|94r40
+54a43 Parameters{42|33A13}
+57a5 CURRENT_VALUE{42|33A13} 45|49r29
+58a5 POSSIBLE_VALUES{42|33A13} 45|50r29
+59a5 INCORRECT_PARAMETER{42|33A13} 45|62r37
+60a5 VARIABLE_OUT_OF_SCOPE{42|33A13} 45|85r37
+61a5 NO_SUCH_VARIABLE_OR_ACTION{42|33A13} 45|114r50
+62i5 MAXIMUM_POSSIBLE_VALUES_DISPLAYED{42|53I13} 45|41r93
+63P10 Access_Function_Get(wide_string) 68r23
+64P10 Access_Procedure_Set 64>55 69r23
+64a55 Item{42|33A13}
+65P10 Access_Procedure_Perform 65>55 72r42
+65a55 Item{42|33A13}
+66R10 Record_Variable 70e17 71r42
+67r9*Saved_Value{42|34R13} 45|72r66 73r74
+68p9*Get{63P10} 45|69r132 107r43 107r96
+69p9*Set{64P10} 45|69r87 108r44 109r40
+71K13 Mapped_Variables[42|280] 76r17 45|25r13
+72K13 Mapped_Actions[42|280] 75r17 45|89r13
+73K13 Mapped_Names[42|280] 74r17
+74w5 Names{42|282W24[73]}
+75w5 Actions{42|282W24[72]} 45|69r16 90r87 93r16 94r13 103r12 104r11
+76w5 Variables{42|282W24[71]} 45|69r57 69r102 72r36 73r13 73r44 76r28 81r15
+. 83r15 105r15 107r16 107r69 108r17 109r13
+X 45 neo-command.adb
+3U17 Put_Success 3b17 3>29 3l112 3t123 8r47
+3a29 Parameters{42|33A13} 3r95
+4U17 Adjust 4b17 4>24 4>27 7l13 7t19 9r97
+4b24 P{boolean} 6r91
+4b27 C{boolean} 6r134
+8K15 Y[44|47]
+9K15 X[44|25] 17r72 18r9 19r69
+10K15 Z[44|25]
+31*51 Previous{44|19E12} 35r26
+39r11 Values{42|34R13} 42m15 42r25 45m17 45r27 50r60
+44e19 I 45r94
+57*19 I{44|19E12} 58r52 59r23 61r23
+98a7 TRIMMED{42|33A13} 99r47 100r41 100r49 100r83 101r84 101r99
+99i7 SPLIT{natural} 100r68 100r101 101r45 101r92
+100a7 COMMAND{42|33A13} 103r32 104r27 105r37 107r34 107r87 108r35 109r31
+101a7 PARAMETERS{42|33A13} 104r40 106r14 109r48
+X 67 s-stausa.ads
 203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
 268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
 

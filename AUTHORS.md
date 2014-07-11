@@ -1,7 +1,4 @@
-Contributions
-=============
-
-- Lumen:
+> neo-file-image-bmp.adb, neo-file-image-ppx.adb
 
     Lumen -- A simple graphical user interface library based on OpenGL
 
@@ -26,7 +23,7 @@ Contributions
     action of contract, negligence or other tortious action, arising out of or
     in connection with the use or performance of this software.
 
-- GID:
+> neo-file-image-png.adb, neo-file-image-gif.adb, neo-file-image-tga.adb, neo-file-image-jpeg.adb
 
     ---------------------------------
     -- GID - Generic Image Decoder --
@@ -78,4 +75,3 @@ Contributions
 
     NB: this is the MIT License, as found 2-May-2010 on the site
     http://www.opensource.org/licenses/mit-license.php
-

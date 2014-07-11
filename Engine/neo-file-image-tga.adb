@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 separate(Neo.File.Image)
 package body TGA
   is
@@ -120,8 +104,7 @@ package body TGA
 --          --
 --          if Header.Alpha_Bits = Header.Bits_Per_Pixel then
 --            Header.Alpha_Bits := 0; -- http://web.archive.org/liveweb/https://bugzilla.gnome.org/show_bug.cgi?id=306675
---          end if;
---          if
+--          elsif
 --          Header.Alpha_Bits = 0 and then(
 --          (Header.Color = Multi_Color     and Colors = Alpha_With_Two_Hundred_Fifty_Six_Per_Colors) or
 --          (Header.Color = Grayscale_Color and Colors = Thirty_Two_Per_Colors))

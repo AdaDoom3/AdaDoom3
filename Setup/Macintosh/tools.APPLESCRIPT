@@ -1,1 +1,1 @@
-stub
+MsgBox "Hello World"

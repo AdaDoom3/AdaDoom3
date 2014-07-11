@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package Neo.Link.Vorbis
   is
   end Neo.Link.Vorbis;

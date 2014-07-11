@@ -54,6 +54,7 @@ project Neo is
     Casing                           := "Lowercase";
     Version_Control                  := "Git";
     Dot_Replacement                  := "-";
+    Prefix_Executable                := "game";
     Suffix_Ada_Specification         := ".ads";
     Suffix_Ada_Body                  := ".adb";
     Suffix_C_Specification           := ".h";
@@ -68,7 +69,7 @@ project Neo is
     Suffix_Visual_Basic              := ".vbs";
     Suffix_Apple_Script              := ".APPLESCRIPT";
     Suffix_Mark_Down                 := ".md"; -- Use - instead of * to avoid changelog syntax highlighting in markdown files
-    Languages                        := ("Ada", "Changelog");-- "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "C for Graphics", "Visual Basic", "Apple Script");
+    Languages                        := ("Ada", "Project File");--, "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "Changelog", "C for Graphics", "Visual Basic", "Apple Script");
   -----------------
   -- Directories --
   -----------------
@@ -80,7 +81,6 @@ project Neo is
     Directory_Windowing     := "Windowing";
     Directory_Root          := Directory_Project  & S & ".." ;
     Directory_Engine        := Directory_Root     & S & "Engine";
-    Directory_Executable    := Directory_Root     & S & "Binaries";
     Directory_Objects       := Directory_Root     & S & "Objects";
     Directory_Libraries     := Directory_Root     & S & "Libraries"     & S & "**";
     Directory_Game          := Directory_Root     & S & "Games"         & S & GAME;
@@ -89,6 +89,7 @@ project Neo is
     Directory_Systems       := Directory_Engine   & S & "Systems";
     Directory_SDL           := Directory_Systems  & S & "SDL";
     Directory_Documentation := Directory_Game     & S & "Documentation";
+    Directory_Base          := Directory_Game     & S & "Base";
     Directory_Direct3D      := Directory_APIs     & S & "Direct3D";
     Directory_XAudio        := Directory_APIs     & S & "XAudio";
     Directory_OpenGL        := Directory_APIs     & S & "OpenGL";
@@ -99,8 +100,8 @@ project Neo is
     Directory_Null_OpenGL   := Directory_APIs     & S & Directory_Null_API;
     Directory_Null_GCM      := Directory_GCM      & S & Directory_Null_API;
     Directory_Null_Steam    := Directory_Steam    & S & Directory_Null_API;
-    File_Main               := (Directory_Engine  & S & "main" & Suffix_Ada_Body); -- Has to match casing
-    Directories             := (Directory_Engine, Directory_APIs, Directory_Libraries, Directory_Root, Directory_Game, Directory_Architectures, Directory_Project);
+    File_Main               := (Directory_Engine  & S & "main" & Suffix_Ada_Body); -- Has to match Executable name in Builder package!
+    Directories             := (Directory_Engine, Directory_APIs, Directory_Libraries, Directory_Root, Directory_Base, Directory_Architectures, Directory_Project);
     case SYSTEM is                     -- Scripts
       when "X11" | "Wayland" | "SDL"   => Directories := Directories & (Directory_Project & S & Directory_POSIX);
       when "Cocoa"                     => Directories := Directories & (Directory_Project & S & Directory_Macintosh);
@@ -126,42 +127,45 @@ project Neo is
   --------------
     Switch_Binder   :=();
     Switch_Linker   :=(
-      "-fprofile-generate");                                      -- Generate code coverage
+      "-fprofile-generate");                                            -- Generate code coverage
     Switch_Compiler :=(
-      "-gnatW8",                                                  -- Enable unicode identifiers
-      "-gnat2012");                                               -- Enable the Ada 2012 extensions
+      "-gnatW8",                                                        -- Enable unicode identifiers
+      "-gnat2012");                                                     -- Enable the Ada 2012 extensions
     Switch_Builder  :=(
-      "-j4",                                                      -- Use four tasks during compilation
-      "-k",                                                       -- "Keep going", build as far as possible
-      "-C",                                                       -- Use mapping file
-      "-s");                                                      -- Recompile if switches are changed
+      "-j4",                                                            -- Use four tasks during compilation
+      "-k",                                                             -- "Keep going", build as far as possible
+      "-C",                                                             -- Use mapping file
+      "-s");                                                            -- Recompile if switches are changed
     case SAFETY is
       when "No"  => null;
       when "Yes" =>
         Switch_Compiler := Switch_Compiler &(
-          "-fstack-check",                                        -- Generate checks for exceeding the stack
-          "-gnato",                                               -- Enable overflow checking for numerics
-          "-gnatE",                                               -- Enable dynamic generic elaboration checks
-          "-gnata");                                              -- Enable pre and post conditions
+          "-fstack-check",                                              -- Generate checks for exceeding the stack
+          "-gnato",                                                     -- Enable overflow checking for numerics
+          "-gnatE",                                                     -- Enable dynamic generic elaboration checks
+          "-gnata");                                                    -- Enable pre and post conditions
     end case;
     case DEBUGGING is
       when "No"  => null;
       when "Yes" =>
-        Switch_Binder   := Switch_Binder   & ("-E");              -- Store traceback in exceptions
-        Switch_Compiler := Switch_Compiler & ("-g");              -- Create extended information in stack traces
+        Switch_Binder   := Switch_Binder   & ("-E");                    -- Store traceback in exceptions
+        Switch_Compiler := Switch_Compiler & ("-g");                    -- Create extended information in stack traces
     end case;
     case OPTIMIZE is
-      when "Yes" => Switch_Compiler := Switch_Compiler & ("-O3"); -- Full optimization and automatic inlining
+      when "Yes" => Switch_Compiler := Switch_Compiler & ("-O3");       -- Full optimization and automatic inlining
       when "No"  => null;
     end case;
     case WORD_SIZE is
-      when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
+      when "64" => Switch_Compiler := Switch_Compiler & ("-m64");       -- Try 64 bit compilation
       when "32" => null;
+    end case;
+    case SYSTEM is
+      when "Windows" => Switch_Linker := Switch_Linker & ("-mwindows"); -- Remove the command console in Windows
     end case;
   --------------
   -- Packages --
   --------------
-    for Exec_Dir                        use Directory_Executable;
+    for Exec_Dir                        use Directory_Game;
     for Object_Dir                      use Directory_Objects;
     for Languages                       use Languages;
     for Main                            use File_Main;
@@ -170,19 +174,6 @@ project Neo is
       for VCS_Kind                      use Version_Control;
       for Documentation_Dir             use Directory_Documentation;
     end Ide;
-    package Builder is
-      for Default_Switches("Ada")       use Switch_Builder;
-    end Builder;
-    package Compiler is
-      for Default_Switches("Ada")       use Switch_Compiler;
-      for Driver("Changelog")           use "";
-    end Compiler;
-    package Binder is
-      for Default_Switches("Ada")       use Switch_Binder;
-    end Binder;
-    package Linker is
-      for Default_Switches("Ada")       use Switch_Linker;
-    end Linker;
     package Naming is
       for Dot_Replacement               use Dot_Replacement;
       for Casing                        use Casing;
@@ -201,5 +192,17 @@ project Neo is
       --for Body_Suffix("Visual Basic")   use Suffix_Visual_Basic;
       --for Body_Suffix("Apple Script")   use Suffix_Apple_Script;
     end Naming;
+    package Builder is
+      for Executable("main.adb")        use Prefix_Executable; -- I can't send in a variable in the call to "Executable"!
+      for Default_Switches("Ada")       use Switch_Builder;
+    end Builder;
+    package Compiler is
+      for Default_Switches("Ada")       use Switch_Compiler;
+    end Compiler;
+    package Binder is
+      for Default_Switches("Ada")       use Switch_Binder;
+    end Binder;
+    package Linker is
+      for Default_Switches("Ada")       use Switch_Linker;
+    end Linker;
 end Neo;
-

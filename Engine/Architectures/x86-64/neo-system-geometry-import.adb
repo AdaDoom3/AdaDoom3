@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 separate(Neo.System.Geometry)
 package body Import
   is

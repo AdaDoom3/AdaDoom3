@@ -18,9 +18,9 @@ package body Neo.System.Graphics is
         Status.Set_Busy(True);
         declare Frame := API.Get_Frame; begin
           Status.Set_Busy(False);
-          return Frame
+          return Frame;
         end; 
-      end Get_Frame; 
+      end Get_Frame;
     procedure Post_Process(Card : in Integer_4_Positive := 1) is-- resolve the scaled rendering to a temporary texture
       begin
         Status.Set_Busy(True);
@@ -51,10 +51,19 @@ package body Neo.System.Graphics is
       procedure Texture(Surface : in Record_Surface) is
         begin
           case Surface.Texture.Generator is
-            when Sky_Box_Generator =>
-              renderProgManager.BindShader_SkyBox();
-            when Diffuse_Cube_Generator | Glass_Warp_Generator =>
-              Put_Debug_Line(Localize("Using ") & Enumerated_Generator'wide_image(Surface.Texture.Generator) & Localize("! Please contact Brian!"));
+            when Diffuse_Cube_Generator | Glass_Warp_Generator => raise Unimplemented;
+            when Sky_Box_Generator => renderProgManager.BindShader_SkyBox();
+            when Screen_Generator =>
+              useTexGenParm[0] = 1.0f;
+              useTexGenParm[1] = 1.0f;
+              useTexGenParm[2] = 1.0f;
+              useTexGenParm[3] = 1.0f;
+              float mat[16];
+              R_MatrixMultiply( surf->space->modelViewMatrix, backEnd.viewDef->projectionMatrix, mat );
+              float plane[4];
+              SetVertexParm( RENDERPARM_TEXGEN_0_S, mat[0*4+0];mat[1*4+0];mat[2*4+0];mat[3*4+0];
+              SetVertexParm( RENDERPARM_TEXGEN_0_T, mat[0*4+1]; mat[1*4+1];mat[2*4+1]; mat[3*4+1];
+              SetVertexParm( RENDERPARM_TEXGEN_0_Q, mat[0*4+3];mat[1*4+3];mat[2*4+3];mat[3*4+3];
             when Reflect_Cube_Generator => 
               const shaderStage_t *bumpStage = surf->material->GetBumpStage();
               if bumpStage != NULL then
@@ -104,17 +113,6 @@ package body Neo.System.Graphics is
               transform[2*4+3] = 0.0f;
               SetVertexParms( RENDERPARM_WOBBLESKY_X, transform, 3 );
               renderProgManager.BindShader_WobbleSky();
-            when Screen_Generator =>
-              useTexGenParm[0] = 1.0f;
-              useTexGenParm[1] = 1.0f;
-              useTexGenParm[2] = 1.0f;
-              useTexGenParm[3] = 1.0f;
-              float mat[16];
-              R_MatrixMultiply( surf->space->modelViewMatrix, backEnd.viewDef->projectionMatrix, mat );
-              float plane[4];
-              SetVertexParm( RENDERPARM_TEXGEN_0_S, mat[0*4+0];mat[1*4+0];mat[2*4+0];mat[3*4+0];
-              SetVertexParm( RENDERPARM_TEXGEN_0_T, mat[0*4+1]; mat[1*4+1];mat[2*4+1]; mat[3*4+1];
-              SetVertexParm( RENDERPARM_TEXGEN_0_Q, mat[0*4+3];mat[1*4+3];mat[2*4+3];mat[3*4+3];
           end case;
           SetVertexParm( RENDERPARM_TEXGEN_0_ENABLED, useTexGenParm );
           Draw();
@@ -552,35 +550,18 @@ package body Neo.System.Graphics is
         end loop;
         -- Post processing
         if ( processed < numDrawSurfs && !r_skipPostProcess.GetBool() ) {
-          int x = backEnd.viewDef->viewport.x1;
-          int y = backEnd.viewDef->viewport.y1;
-          int w = backEnd.viewDef->viewport.x2 - backEnd.viewDef->viewport.x1 + 1;
-          int h = backEnd.viewDef->viewport.y2 - backEnd.viewDef->viewport.y1 + 1;
-          RENDERLOG_PRINTF( "Resolve to %i x %i buffer\n", w, h );
-          GL_SelectTexture( 0 );
+          GL_SelectTexture(0);
           -- resolve the screen
-          globalImages->currentRenderImage->CopyFramebuffer( x, y, w, h );
+          globalImages->currentRenderImage->CopyFramebuffer(view.port.x1, view.port.y1, view.port.x2 - view.port.x1 + 1, view.port.y2 - view.port.y1 + 1);
           backEnd.currentRenderCopied = true;
           -- RENDERPARM_SCREENCORRECTIONFACTOR amd RENDERPARM_WINDOWCOORD overlap
           -- diffuseScale and specularScale
           -- screen power of two correction factor (no longer relevant now)
-          float screenCorrectionParm[4];
-          screenCorrectionParm[0] = 1.0f;
-          screenCorrectionParm[1] = 1.0f;
-          screenCorrectionParm[2] = 0.0f;
-          screenCorrectionParm[3] = 1.0f;
-          SetFragmentParm( RENDERPARM_SCREENCORRECTIONFACTOR, screenCorrectionParm ); -- rpScreenCorrectionFactor
+          SetFragmentParm(RENDERPARM_SCREENCORRECTIONFACTOR, (1.0, 1.0, 0.0, 1.0))); -- rpScreenCorrectionFactor
           -- window coord to 0.0 to 1.0 conversion
-          float windowCoordParm[4];
-          windowCoordParm[0] = 1.0f / w;
-          windowCoordParm[1] = 1.0f / h;
-          windowCoordParm[2] = 0.0f;
-          windowCoordParm[3] = 1.0f;
-          SetFragmentParm( RENDERPARM_WINDOWCOORD, windowCoordParm ); -- rpWindowCoord
+          SetFragmentParm(RENDERPARM_WINDOWCOORD, (1.0 / view.port.x2 - view.port.x1 + 1, 1.0 / view.port.y2 - view.port.y1 + 1, 0.0, 1.0)); -- rpWindowCoord
           -- render the remaining surfaces
-          renderLog.OpenMainBlock( MRB_DRAW_SHADER_PASSES_POST );
-          RB_DrawShaderPasses( drawSurfs + processed, numDrawSurfs - processed, 0.0f /* definitely not a gui */, stereoEye );
-          renderLog.CloseMainBlock();
+          RB_DrawShaderPasses( drawSurfs + processed, numDrawSurfs - processed, 0.0, stereoEye );
         end ;
       end Draw;
   end Neo.System.Graphics;

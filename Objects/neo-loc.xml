@@ -1,0 +1,591 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project >
+    <file_marker column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1" >
+      <vfs_file>C:\Users\User0\Desktop\Neo\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Setup\neo.gpr</vfs_file>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 88" line=" 233">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 89" line=" 239">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 242">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 89" line=" 251">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 83" line=" 385">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 408">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 83" line=" 439">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 82" line=" 446">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 470">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 79" line=" 498">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 379">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 349">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 55" line=" 110">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 283">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 19" line=" 78">
+      <vfs_file >C:\Documents and Settings\SLS12563\Desktop\Neo\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >C:\Neo\Setup\neo.gpr</vfs_file>
+    <file_marker current="true" column=" 75" line=" 67">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 40" line=" 106">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Setup\neo.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Setup\neo.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Setup\neo.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-graphics-window-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 51" line=" 101">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 254">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 138" line=" 57">
+      <vfs_file >C:\Neo\Engine\neo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 366">
+      <vfs_file >C:\Neo\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 48" line=" 79">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 67">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Setup\neo.gpr</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-graphics-window-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 63" line=" 600">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 8">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 46" line=" 291">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 67" line=" 602">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 1102">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 79" line=" 8">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 81">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 85" line=" 37">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 78">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 90" line=" 80">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 81">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 69">
+      <vfs_file >C:\Neo\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 84">
+      <vfs_file >C:\Neo\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 1234">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 28" line=" 1525">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 381">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-graphics-window-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 7">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 73" line=" 103">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 56" line=" 306">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-input-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 85" line=" 37">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 78">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-command.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Neo\Engine\neo.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <vfs_file >C:\Engine\Setup\neo.gpr</vfs_file>
+    <file_marker column=" 62" line=" 4">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-world-menu-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 61" line=" 66">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-file-archive.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 62" line=" 4">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-graphics-window-import.adb</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 62" line=" 4">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 93" line=" 166">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 17">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+  </Project>
+  <Project >
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 43" line=" 35">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 36">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-processor.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-text-console-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-command.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-text-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 44" line=" 843">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 46" line=" 876">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link-windows.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-graphics-window-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-system-import.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo-system-text-console.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\Systems\Windows\neo-link.ads</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1">
+      <vfs_file >C:\Engine\Engine\neo.ads</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

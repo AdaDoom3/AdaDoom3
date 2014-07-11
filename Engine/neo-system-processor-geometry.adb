@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package body Neo.System.Processor.Geometry
   is
   --------------

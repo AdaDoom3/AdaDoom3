@@ -1,19 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
 package Neo.Link.Theora
   is
   end Neo.Link.Theora;

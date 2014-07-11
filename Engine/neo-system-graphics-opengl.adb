@@ -1,46 +1,9 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  System,
-  Ada.Wide_Text_IO,
-  Ada.Characters.Handling;
-use
-  System,
-  Ada.Wide_Text_IO,
-  Ada.Characters.Handling;
-separate(Neo.System.Graphics)
-package body OpenGL
-  is
-  ------------
-  -- Import --
-  ------------
-    package Import
-      is separate;
-      use Import;
-  ---------------
-  -- Constants --
-  ---------------
-    MINIMUM_VERSION : constant Float_4_Real := 2.0;
-  -------------------
-  -- Get_Specifics --
-  -------------------
-    function Get_Specifics
-      return Record_Specifics
-      is
+with System;                  use System;
+with Ada.Wide_Text_IO;        use Ada.Wide_Text_IO;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
+separate(Neo.System.Graphics) package body OpenGL is
+    package Import is separate;
+    function Get_Specifics  return Record_Specifics is
       Extensions : constant String_2 := To_String_2(Get_String(EXTENSIONS));
       begin
         return new Record_Specifics(Get_Inteface) :=(
@@ -68,11 +31,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Has_Timer_Query                  => Index(Extensions, "ARB_timer_query")                /= 0,    --
           Has_Occlusion_Query              => Index(Extensions, "ARB_occlusion_query")            /= 0);   --
       end Get_Specifics;
-  -----------
-  -- Reset --
-  -----------
-    procedure Reset
-      is
+    procedure Reset is
       begin
         Clear_Depth(1.0);
         Cull_Face(FRONT_AND_BACK);
@@ -91,15 +50,9 @@ and SPECIFICS.Vendor /= Intel_Vendor,
         Enable(SCISSOR_TEST);
         Draw_Buffer(BACK);
         Read_Buffer(BACK);
-        if Do_Use_Scissor.Get then
-          Scissor(0, 0, Widht, Height);
-        end if;
+        if Do_Use_Scissor.Get then Scissor(0, 0, Widht, Height); end if;
       end Reset;
-  ----------------------
-  -- Check_Exceptions --
-  ----------------------
-    procedure Check_Exceptions
-      is
+    procedure Check_Exceptions is
       begin
         case Get_Error is
           when INVALID_ENUMERATION => raise Invalid_Enumeration;
@@ -111,13 +64,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           when others              => null;
         end case;
       end Check_Exceptions;
-  ----------
-  -- Cull --
-  ----------
-    procedure Cull(
-      Kind      : in Enumerated_Cull;
-      Is_Mirror : in Boolean := False)
-      is
+    procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
       begin
         case Kind is
           when Face_Culling    => null;
@@ -125,15 +72,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           when Back_Sided_Cull => Cull_Face((if Is_Mirror then FRONT else BACK));
         end case;
       end Cull;
-  -------------
-  -- Scissor --
-  -------------
-    procedure Scissor(
-      X      : in Integer_4_Signed;
-      Y      : in Integer_4_Signed;
-      Width  : in Integer_4_Signed;
-      Height : in Integer_4_Signed)
-      is
+    procedure Scissor(X, Y, Width, Height : in Integer_4_Signed) is
       begin
         Scissor(
           X      => Integer_4_Signed_C(X),
@@ -141,15 +80,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Width  => Integer_4_Signed_C(Width),
           Height => Integer_4_Signed_C(Height));
       end Scissor;
-  ---------------
-  -- View_Port --
-  ---------------
-    procedure View_Port(
-      X      : in Integer_4_Signed;
-      Y      : in Integer_4_Signed;
-      Width  : in Integer_4_Signed;
-      Height : in Integer_4_Signed)
-      is
+    procedure View_Port(X, Y, Width, Height : in Integer_4_Signed) is
       begin
         Viewport(
           X      => Integer_4_Signed_C(X),
@@ -157,27 +88,13 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Width  => Integer_4_Signed_C(Width),
           Height => Integer_4_Signed_C(Height));
       end View_Port;
-  --------------------
-  -- Polygon_Offset --
-  --------------------
-    procedure Polygon_Offset(
-      Scale : in Float_4_Real;
-      Bias  : in Float_4_Real)
-      is
+    procedure Polygon_Offset(Scale, Bias : in Float_4_Real) is
       begin
-        PolyOfsScale := Scale;
-        PolyOfsBias  := Bias;
-        if (State_Bits and POLYGON_OFFSET) /= 0 then
-          PolygonOffset(Scale, Bias);
-        end if;
+        PolygonOffset(
+          Scale => Integer_4_Signed_C(Scale),
+          Bias  => Integer_4_Signed_C(Bias));
       end Polygon_Offset;
-  -----------------------
-  -- Depth_Bounds_Test --
-  -----------------------
-    procedure Depth_Bounds_Test(
-      Z_Minimum : in Float_4_Real := 0.0;
-      Z_Maximum : in Float_4_Real := 0.0)
-      is
+    procedure Depth_Bounds_Test(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) is
       begin
         if Z_Minimum = 0.0 and Z_Maximum = 0.0 then
           Disable(DEPTH_BOUNDS_TEST);
@@ -186,39 +103,19 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Depth_Bounds(Float_4_Real_C(Z_Minimum), Float_4_Real_C(Z_Maximum));
         end if;
       end Depth_Bounds_Test;
-  ----------------------
-  -- Start_Depth_Pass --
-  ----------------------
-    procedure Start_Depth_Pass(
-      Rectane : in Record_Rectane)
-      is
+    procedure Start_Depth_Pass(Rectane : in Record_Rectane) is
       begin
         null;
       end Start_Depth_Pass;
-  -----------------------
-  -- Finish_Depth_Pass --
-  -----------------------
-    procedure Finish_Depth_Pass(
-      Rectane : in Record_Rectane)
-      is
+    procedure Finish_Depth_Pass(Rectane : in Record_Rectane)  is
       begin
         null;
       end Finish_Depth_Pass;
-  --------------------
-  -- Get_Depth_Pass --
-  --------------------
-    procedure Get_Depth_Pass(
-      Rectane : in out Record_Rectane)
-      is
+    procedure Get_Depth_Pass(Rectane : in out Record_Rectane) is
       begin
         Rectane := (others => <>);
       end Get_Depth_Pass;
-  -----------
-  -- Color --
-  -----------
-    procedure Color(
-      Pixel : in Record_Pixel)
-      is
+    procedure Color(Pixel : in Record_Pixel)  is
       begin
         Color(
           Red   => Float_4_Real_C(Pixel.Color.Red)   / Pixel.Color.Red'size,
@@ -226,11 +123,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Blue  => Float_4_Real_C(Pixel.Color.Blue)  / Pixel.Color.Blue'size,
           Alpha => Float_4_Real_C(Pixel.Alpha)       / Pixel.Color.Alpha'size);
       end Color;
-    ----------------
-    procedure Color(
-    ----------------
-      Color : in Record_Color)
-      is
+    procedure Color(Color : in Record_Color) is
       begin
         Color(
           Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
@@ -238,74 +131,38 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
           Alpha => 1.0);
       end Color;
-  -----------
-  -- Clear --
-  -----------
-    procedure Clear
-      is
+    procedure Clear is
       begin
         Clear(DEPTH_BUFFER_BIT);
       end Clear;
-    ----------------
-    procedure Clear(
-    ----------------
-      Stencil_Value  : in Integer_1_Unsigned;
-      Do_Clear_Depth : in Boolean := False)
-      is
-      begin
-        Clear_Stencil(Stencil_Value);
-        Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT);
-      end Clear;
-    ----------------
-    procedure Clear(
-    ----------------
-      Color          : in Record_Pixel;
-      Do_Clear_Depth : in Boolean := False)
-      is
+    procedure Clear(Color : in Record_Pixel; Do_Clear_Depth : in Boolean := False) is
       begin
         Clear_Color(Red, Green, Blue, Alpha);
         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or COLOR_BUFFER_BIT);
       end Clear;
-    ----------------
-    procedure Clear(
-    ----------------
-      Color          : in Record_Pixel;
-      Stencil_Value  : in Integer_1_Unsigned;
-      Do_Clear_Depth : in Boolean := False)
-      is
+    procedure Clear(Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
+      begin
+        Clear_Stencil(Stencil_Value);
+        Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT);
+      end Clear;
+    procedure Clear(Color : in Record_Pixel; Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
       begin
         Clear_Stencil(Stencil_Value);
         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT or COLOR_BUFFER_BIT);
       end Clear;
-  ----------------------
-  -- Set_Stereo_Depth --
-  ----------------------
-    procedure Set_Stereo_Depth(
-      Stereo_Depth : in Item_Stereo_Depth.Variable)
-      is
+    procedure Set_Stereo_Depth(Stereo_Depth : in Item_Stereo_Depth.Variable) is
       begin
         Depth((
           case Depth_Function is
             when Less_Depth_Function   => LESS--LESS_THAN_OR_EQUAL
             when Equal_Depth_Function  => EQUAL
             when Always_Depth_Function => ALWAYS
-            when Greater_Than_Or_Equal => GREATER_THAN_OR_EQUAL))
+            when Greater_Than_Or_Equal => GREATER_THAN_OR_EQUAL));
       end Set_Stereo_Depth;
-  -------------------
-  -- Set_Stereo_3D --
-  -------------------
-    procedure Set_Stereo_3D(
-      Stereo_3D : in Enumerated_Stereo_3D)
-      is
+    procedure Set_Stereo_3D(Stereo_3D : in Enumerated_Stereo_3D) is
       begin
       end Set_Stereo_3D;
-  ---------------
-  -- Set_Blend --
-  ---------------
-    procedure Set_Blend(
-      Source      : in Enumerated_Blend := One_Blend;
-      Destination : in Enumerated_Blend := Zero_Blend)
-      is
+    procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
       BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
         One_Blend                         => ZERO,
         Zero_Blend                        => ONE,
@@ -323,30 +180,13 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Blend_Function(BLENDS(Source), BLENDS(Destination));
         end if;
       end Set_Blend;
-  -------------------------
-  -- Set_Blend_Operation --
-  -------------------------
-    procedure Set_Blend_Operation(
-      Blend_Operation : in Enumerated_Blend_Operation)
-      is
+    procedure Set_Blend_Operation(Blend_Operation : in Enumerated_Blend_Operation) is
       begin
       end Set_Blend_Operation;
-  -----------------
-  -- Set_Stencil --
-  -----------------
-    procedure Set_Stencil(
-      Stencil : in Enumerated_Stencil)
-      is
+    procedure Set_Stencil(Stencil : in Enumerated_Stencil) is
       begin
       end Set_Stencil;
-  ---------------------------
-  -- Set_Stencil_Operation --
-  ---------------------------
-    procedure Set_Stencil_Operation(
-      Fail   : in Enumerated_Stencil_Operation;
-      Fail_Z : in Enumerated_Stencil_Operation;
-      Pass   : in Enumerated_Stencil_Operation)
-      is
+    procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
       OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
         Keep_Stencil_Operation           => KEEP,
         Zero_Stencil_Operation           => ZERO,
@@ -359,12 +199,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
       begin
         Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
       end Set_Stencil_Operation;
-  --------------------------
-  -- Set_Stencil_Function --
-  --------------------------
-    procedure Set_Stencil_Function(
-      Stencil : in Enumerated_Stencil_Function)
-      is
+    procedure Set_Stencil_Function(Stencil : in Enumerated_Stencil_Function) is
       begin
         if (diff & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) then
           if (stateBits & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) != 0 then
@@ -387,35 +222,18 @@ and SPECIFICS.Vendor /= Intel_Vendor,
               when Less_Than_Or_Equal_To_Stencil           => LESS_THAN_OR_EQUAL
               when Greater_Than_Or_Equal_Stencil_Operation => GREATER_THAN_OR_EQUAL));
       end Set_Stencil_Function;
-  ------------------------
-  -- Set_Depth_Function --
-  ------------------------
-    procedure Set_Depth_Function(
-      Depth_Function : in Enumerated_Depth_Function)
-      is
+    procedure Set_Depth_Function(Value : in Enumerated_Depth_Function) is
       begin
       end Set_Depth_Function;
-  --------------
-  -- Set_Mask --
-  --------------
-    procedure Set_Mask(
-      Do_Mask_Red   : in Boolean;
-      Do_Mask_Green : in Boolean;
-      Do_Mask_Blue  : in Boolean;
-      Do_Mask_Alpha : in Boolean)
-      is
+    procedure Set_Mask(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean) is
       begin
         ColorMask(
-          Red   => (if Do_Mask_Red then C_FALSE else C_TRUE),
-          Green => (if Do_Mask_Red then C_FALSE else C_TRUE),
-          Blue  => (if Do_Mask_Red then C_FALSE else C_TRUE),
-          Alpha => (if Do_Mask_Red then C_FALSE else C_TRUE));
+          Red   => (if Do_Mask_Red   then C_FALSE else C_TRUE),
+          Green => (if Do_Mask_Green then C_FALSE else C_TRUE),
+          Blue  => (if Do_Mask_Blue  then C_FALSE else C_TRUE),
+          Alpha => (if Do_Mask_Alpha then C_FALSE else C_TRUE));
       end Set_Mask;
-  --------------------
-  -- Set_Depth_Mask --
-  --------------------
-    procedure Set_Depth_Mask(
-      is
+    procedure Set_Depth_Mask( is
       begin
         if (diff & GLS_DEPTHMASK ) then
           if (stateBits & GLS_DEPTHMASK ) then
@@ -425,11 +243,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           end if;
         end if;
       end Set_Depth_Mask;
-  -----------------------
-  -- Set_Polymode_Line --
-  -----------------------
-    procedure Set_Polymode_Line(
-      is
+    procedure Set_Polymode_Line( is
       begin
         if (diff & GLS_POLYMODE_LINE ) then
           if (stateBits & GLS_POLYMODE_LINE ) then
@@ -439,12 +253,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           end if;
         end if;
       end Set_Polymode_Line;
-  ------------------------
-  -- Set_Polygon_Offset --
-  ------------------------
-    procedure Set_Polygon_Offset(
-      Do_Enable : in Boolean)
-      is
+    procedure Set_Polygon_Offset(Do_Enable : in Boolean) is
       begin
         if Do_Enable then
           PolygonOffset(backEnd.State.polyOfsScale, backEnd.State.polyOfsBias);
@@ -455,12 +264,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           Disable(POLYGON_OFFSET_LINE);
         end if;
       end Set_Polygon_Offset;
-  ----------------
-  -- Set_Buffer --
-  ----------------
-    procedure Set_Buffer(
-      const void *data )
-      is
+    procedure Set_Buffer(const void *data ) is
       -- see which draw buffer we want to render the frame to
       const setBufferCommand_t * cmd = (const setBufferCommand_t *)data;
       begin
@@ -472,20 +276,15 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           if sscanf(r_clear.GetString, "%f %f %f", &c[0], &c[1], &c[2] ) = 3 then
             Clear(true, false, false, 0, c[0], c[1], c[2], 1.0f);
           elsif r_clear.GetInteger = 2 then
-            Clear(true, false, false, 0, 0.0f, 0.0f,  0.0f, 1.0f);
+            Clear(true, false, false, 0, 0.0, 0.0, 0.0, 1.0);
           elsif r_showOverDraw.GetBool then
-            Clear(true, false, false, 0, 1.0f, 1.0f, 1.0f, 1.0f);
+            Clear(true, false, false, 0, 1.0, 1.0, 1.0, 1.0);
           else
-            Clear(true, false, false, 0, 0.4f, 0.0f, 0.25f, 1.0f);
+            Clear(true, false, false, 0, 0.4, 0.0, 0.25, 1.0);
           end if;
         end if;
       end Set_Buffer;
-  ------------------------------
-  -- Make_Stereo_Render_Image --
-  ------------------------------
-    procedure Make_Stereo_Render_Image(
-      Graphic : in Record_Graphic)
-      is
+    procedure Make_Stereo_Render_Image(Graphic : in Record_Graphic) is
       idImageOpts opts;
       begin
         opts.width := renderSystem->GetWidth;
@@ -494,170 +293,13 @@ and SPECIFICS.Vendor /= Intel_Vendor,
         opts.format := FMT_RGBA8;
         image->AllocImage(opts, TF_LINEAR, TR_CLAMP);
       end Make_Stereo_Render_Image;
-  --------------------
-  -- Render_Headset --
-  --------------------
-    procedure Render_Headset(
-      is
+    procedure Render_Headset( is
       begin
-        for I in Commands'range loop
-          case  is
-            when RC_DRAW_VIEW_3D | RC_DRAW_VIEW_GUI =>
-              RB_DrawView(cmds, 0);
-              if ((const drawSurfsCommand_t *)cmds)->viewDef->viewEntitys then
-                c_draw3d := c_draw3d + 1;
-              else
-                c_draw2d := c_draw2d + 1;
-              end if;
-            when RC_POST_PROCESS =>
-              RB_PostProcess(cmds);
-            when others =>
-              postProcessCommand_t * cmd = (postProcessCommand_t *)cmds;
-              if cmd->viewDef->renderView.viewEyeBuffer = stereoEye then
-                RB_PostProcess(cmds);
-              end if;
-          end case;
-        end loop;
-        for I in 1..2 loop
-          Reset;
-          renderProgManager.Unbind;
-          renderProgManager.ZeroUniforms;
-          for I in Commands'range loop
-            if (eyeViewDef.renderView.viewEyeBuffer && eyeViewDef.renderView.viewEyeBuffer != stereoEye ) {
-              continue;
-            end if;
-            foundEye[ targetEye ] = true;
-            RB_DrawView(dsc, stereoEye);
-          end loop;
-        end loop;
-        stereoRenderImages[ targetEye ]->CopyFramebuffer(0, 0, renderSystem->GetWidth, renderSystem->GetHeight);
-    }
-    assert(foundEye[0] && foundEye[1]);
-    SetDefaultState;
-    RB_SetMVP(renderMatrix_identity);
-    if (renderSystem->GetStereo3DMode != STEREO3D_QUAD_BUFFER ) {
-        DrawBuffer(BACK);
-    }
-    State(GLS_DEPTHFUNC_ALWAYS);
-    Cull(CT_TWO_SIDED);
-    const float texS[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
-    const float texT[4] = { 0.0f, 1.0f, 0.0f, 0.0f };
-    renderProgManager.SetRenderParm(RENDERPARM_TEXTUREMATRIX_S, texS);
-    renderProgManager.SetRenderParm(RENDERPARM_TEXTUREMATRIX_T, texT);
-    -- disable any texgen
-    const float texGenEnabled[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    renderProgManager.SetRenderParm(RENDERPARM_TEXGEN_0_ENABLED, texGenEnabled);
-    renderProgManager.BindShader_Texture;
-    Color(1, 1, 1, 1);
-        case Kind is
-          when STEREO3D_QUAD_BUFFER =>
-            DrawBuffer(BACK_RIGHT);
-            SelectTexture(0);
-            stereoRenderImages[1]->Bind;
-            SelectTexture(1);
-            stereoRenderImages[0]->Bind;
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            DrawBuffer(BACK_LEFT);
-            SelectTexture(1);
-            stereoRenderImages[1]->Bind;
-            SelectTexture(0);
-            stereoRenderImages[0]->Bind;
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-          when STEREO3D_HDMI_720 =>
-            SelectTexture(0);
-            stereoRenderImages[1]->Bind;
-            SelectTexture(1);
-            stereoRenderImages[0]->Bind;
-            ViewportAndScissor(0, 0, 1280, 720);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            SelectTexture(0);
-            stereoRenderImages[0]->Bind;
-            SelectTexture(1);
-            stereoRenderImages[1]->Bind;
-            ViewportAndScissor(0, 750, 1280, 720);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            -- Force the HDMI 720P 3D guard band to a constant color
-            Scissor(0, 720, 1280, 30);
-            Clear(COLOR_BUFFER_BIT);
-          when STEREO3D_SIDE_BY_SIDE_COMPRESSED:
-            SelectTexture(0);
-            stereoRenderImages[0]->Bind;
-            SelectTexture(1);
-            stereoRenderImages[1]->Bind;
-            ViewportAndScissor(0, 0, renderSystem->GetWidth, renderSystem->GetHeight);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            SelectTexture(0);
-            stereoRenderImages[1]->Bind;
-            SelectTexture(1);
-            stereoRenderImages[0]->Bind;
-            ViewportAndScissor(renderSystem->GetWidth, 0, renderSystem->GetWidth, renderSystem->GetHeight);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-          when STEREO3D_TOP_AND_BOTTOM_COMPRESSED:
-            SelectTexture(1);
-            stereoRenderImages[0]->Bind;
-            SelectTexture(0);
-            stereoRenderImages[1]->Bind;
-            ViewportAndScissor(0, 0, renderSystem->GetWidth, renderSystem->GetHeight);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            SelectTexture(1);
-            stereoRenderImages[1]->Bind;
-            SelectTexture(0);
-            stereoRenderImages[0]->Bind;
-            ViewportAndScissor(0, renderSystem->GetHeight, renderSystem->GetWidth, renderSystem->GetHeight);
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-          when STEREO3D_INTERLACED:
-            SelectTexture(0);
-            stereoRenderImages[0]->Bind;
-            TexParameterf(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-            TexParameterf(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-            SelectTexture(1);
-            stereoRenderImages[1]->Bind;
-            TexParameterf(TEXTURE_2D, TEXTURE_MIN_FILTER, NEAREST);
-            TexParameterf(TEXTURE_2D, TEXTURE_MAG_FILTER, NEAREST);
-            ViewportAndScissor(0, 0, renderSystem->GetWidth, renderSystem->GetHeight*2);
-            renderProgManager.BindShader_StereoInterlace;
-            RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            SelectTexture(0);
-            TexParameterf(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR);
-            TexParameterf(TEXTURE_2D, TEXTURE_MAG_FILTER, LINEAR);
-            SelectTexture(1);
-            TexParameterf(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR);
-            TexParameterf(TEXTURE_2D, TEXTURE_MAG_FILTER, LINEAR);
-          when STEREO3D_SIDE_BY_SIDE =>
-            if stereoRender_warp.GetBool then
-              renderProgManager.BindShader_StereoWarp;
-              Scissor (0, 0, Config.nativeScreenWidth, Config.nativeScreenHeight);
-              ClearColor(0, 0, 0, 0);
-              Clear(COLOR_BUFFER_BIT);
-              const int pixelDimensions = (Config.nativeScreenWidth >> 1 ) * stereoRender_warpTargetFraction.GetFloat;
-              Viewport((Config.nativeScreenWidth >> 1 ) - pixelDimensions, (Config.nativeScreenHeight >> 1 ) - (pixelDimensions >> 1 ), pixelDimensions, pixelDimensions);
-              Scissor (0, 0, Config.nativeScreenWidth >> 1, Config.nativeScreenHeight);
-              idVec4  color(stereoRender_warpCenterX.GetFloat, stereoRender_warpCenterY.GetFloat, stereoRender_warpParmZ.GetFloat, stereoRender_warpParmW.GetFloat);
-              -- don't use Color, because we don't want to clamp
-              renderProgManager.SetRenderParm(RENDERPARM_COLOR, color.ToFloatPtr);
-              SelectTexture(0);
-              stereoRenderImages[0]->Bind;
-              TexParameterf(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_BORDER);
-              TexParameterf(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_BORDER);
-              RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-              idVec4  color2(stereoRender_warpCenterX.GetFloat, stereoRender_warpCenterY.GetFloat, stereoRender_warpParmZ.GetFloat, stereoRender_warpParmW.GetFloat);
-              renderProgManager.SetRenderParm(RENDERPARM_COLOR, color2.ToFloatPtr);
-              Viewport((Config.nativeScreenWidth >> 1 ), (Config.nativeScreenHeight >> 1 ) - (pixelDimensions >> 1 ), pixelDimensions, pixelDimensions);
-              Scissor (Config.nativeScreenWidth >> 1, 0, Config.nativeScreenWidth >> 1, Config.nativeScreenHeight);
-              SelectTexture(0);
-              stereoRenderImages[1]->Bind;
-              TexParameterf(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_BORDER);
-              TexParameterf(TEXTURE_2D, TEXTURE_WRAP_T, CLAMP_TO_BORDER);
-              RB_DrawElementsWithCounters(&backEnd.unitSquareSurface);
-            end if;
-        end case;
       end Render;
-  ----------------
-  -- Initialize --
-  ----------------
-    overriding procedure Initialize(
-      Texture : in out Record_Texture)
-      is
+    procedure Initialize_Texture(Texture : in out Record_Texture) is
+      int numSides;
+      int target;
+      int uploadTarget;
       begin
         CheckErrors;
         PurgeImage;
@@ -711,19 +353,10 @@ and SPECIFICS.Vendor /= Intel_Vendor,
             dataFormat := LUMINANCE_ALPHA;
             dataType := UNSIGNED_SHORT;
         end case;
-        -- if we don't have a rendering context, just return after we
-        -- have filled in the parms.  We must have the values set, or
-        -- an image match from a shader before OpenGL starts would miss
-        -- the generated texture
-        --if (!R_IsInitialized )
-        --  return;
         -- generate the texture number
         GenTextures(1, (GLuint *)&texnum);
-        assert(texnum != TEXTURE_NOT_LOADED);
+        if texnum != TEXTURE_NOT_LOADED then raise Texture_Load_Failure; end if;
         -- allocate all the mip levels with NULL data
-        int numSides;
-        int target;
-        int uploadTarget;
         if (opts.textureType == TT_2D ) {
           target = uploadTarget = TEXTURE_2D;
           numSides = 1;
@@ -775,12 +408,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
         SetTexParameters;
         CheckErrors;
       end Initialize_Texture;
-  --------------
-  -- Finalize --
-  --------------
-    overriding procedure Finalize(
-      Texture : in out Record_Texture)
-      is
+    procedure Finalize_Texture(Texture : in out Record_Texture) is
       begin
         if (texnum != TEXTURE_NOT_LOADED ) then
           DeleteTextures(1, (GLuint *)&texnum); -- this should be the ONLY place it is ever called!
@@ -792,93 +420,61 @@ and SPECIFICS.Vendor /= Intel_Vendor,
           backEnd.State.tmu[i].currentCubeMap = TEXTURE_NOT_LOADED;
         end loop;
       end Finalize;
-   ---------------------
-   -- Upload_Subimage --
-   ---------------------
-     procedure Upload_Subimage(
---         int mipLevel,
---         int x,
---         int y,
---         int z,
---         int width,
---         int height,
---         const void * pic,
---         int pixelPitch)
---         is
---         begin
---
---  int compressedSize = 0;
---
---  if ( IsCompressed ) {
---      assert( !(x&3) && !(y&3) );
---
---      // compressed size may be larger than the dimensions due to padding to quads
---      int quadW = ( width + 3 ) & ~3;
---      int quadH = ( height + 3 ) & ~3;
---      compressedSize = quadW * quadH * BitsForFormat( opts.format ) / 8;
---
---      int padW = ( opts.width + 3 ) & ~3;
---      int padH = ( opts.height + 3 ) & ~3;
---      (void)padH;
---      (void)padW;
---      assert( x + width <= padW && y + height <= padH );
---      // upload the non-aligned value, OpenGL understands that there
---      // will be padding
---      if ( x + width > opts.width ) {
---        width = opts.width - x;
---      }
---      if ( y + height > opts.height ) {
---        height = opts.height - x;
---      }
---    } else {
---      assert( x + width <= opts.width && y + height <= opts.height );
---    }
---
---    int target;
---    int uploadTarget;
---    if ( opts.textureType == TT_2D ) {
---      target = TEXTURE_2D;
---      uploadTarget = TEXTURE_2D;
---    } else if ( opts.textureType == TT_CUBIC ) {
---      target = TEXTURE_CUBE_MAP_EXT;
---      uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
---    } else {
---      assert( !"invalid opts.textureType" );
---      target = TEXTURE_2D;
---      uploadTarget = TEXTURE_2D;
---    }
---
---    glBindTexture( target, texnum );
---
---    if ( pixelPitch != 0 ) {
---      glPixelStorei( UNPACK_ROW_LENGTH, pixelPitch );
---    }
---    if ( opts.format == FMT_RGB565 ) {
---      glPixelStorei( UNPACK_SWAP_BYTES, TRUE );
---    }
---    if ( IsCompressed ) {
---      glCompressedTexSubImage2DARB( uploadTarget, mipLevel, x, y, width, height, internalFormat, compressedSize, pic );
---    } else {
---
---      // make sure the pixel store alignment is correct so that lower mips get created
---      // properly for odd shaped textures - this fixes the mip mapping issues with
---      // fonts
---      int unpackAlignment = width * BitsForFormat( (textureFormat_t)opts.format ) / 8;
---      if ( ( unpackAlignment & 3 ) == 0 ) {
---        glPixelStorei( UNPACK_ALIGNMENT, 4 );
---      } else {
---        glPixelStorei( UNPACK_ALIGNMENT, 1 );
---      }
---
---      glTexSubImage2D( uploadTarget, mipLevel, x, y, width, height, dataFormat, dataType, pic );
---    }
---    if ( opts.format == FMT_RGB565 ) {
---      glPixelStorei( UNPACK_SWAP_BYTES, FALSE );
---    }
---    if ( pixelPitch != 0 ) {
---      glPixelStorei( UNPACK_ROW_LENGTH, 0 );
---    }
---  }
+    procedure Upload_Subimage (mipLevel, x, y, z, width, height, const void * pic, int pixelPitch) is
+      int compressedSize = 0;
+      begin
+        if Is_Compressed then
+          assert( !(x&3) && !(y&3) );
+          -- The compressed size may be larger than the dimensions due to padding to quads
+          compressedSize = ( width + 3 ) & ~3 * ( height + 3 ) & ~3 * BitsForFormat( opts.format ) / 8;
+          assert( x + width <= ( opts.width + 3 ) & ~3 && y + height <= ( opts.height + 3 ) & ~3);
+          -- OpenGL understands that there will be padding
+          if x + width > opts.width then width = opts.width - x; end if;
+          if y + height > opts.height then height = opts.height - x; end if;
+        else
+          assert( x + width <= opts.width && y + height <= opts.height );
+        end if;
+        int target;
+        int uploadTarget;
+        if ( opts.textureType == TT_2D ) {
+          target = TEXTURE_2D;
+          uploadTarget = TEXTURE_2D;
+        } else if ( opts.textureType == TT_CUBIC ) {
+          target = TEXTURE_CUBE_MAP_EXT;
+          uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
+        } else {
+          assert( !"invalid opts.textureType" );
+          target = TEXTURE_2D;
+          uploadTarget = TEXTURE_2D;
+        }
+        glBindTexture( target, texnum );
+        if ( pixelPitch != 0 ) {
+          glPixelStorei( UNPACK_ROW_LENGTH, pixelPitch );
+        }
+        if ( opts.format == FMT_RGB565 ) {
+          glPixelStorei( UNPACK_SWAP_BYTES, TRUE );
+        }
+        if ( IsCompressed ) {
+          glCompressedTexSubImage2DARB( uploadTarget, mipLevel, x, y, width, height, internalFormat, compressedSize, pic );
+        } else {
+          // make sure the pixel store alignment is correct so that lower mips get created
+          // properly for odd shaped textures - this fixes the mip mapping issues with
+          // fonts
+          int unpackAlignment = width * BitsForFormat( (textureFormat_t)opts.format ) / 8;
+          if ( ( unpackAlignment & 3 ) == 0 ) {
+            glPixelStorei( UNPACK_ALIGNMENT, 4 );
+          } else {
+            glPixelStorei( UNPACK_ALIGNMENT, 1 );
+          }
+          glTexSubImage2D( uploadTarget, mipLevel, x, y, width, height, dataFormat, dataType, pic );
+        }
+        if ( opts.format == FMT_RGB565 ) {
+          glPixelStorei( UNPACK_SWAP_BYTES, FALSE );
+        }
+        if ( pixelPitch != 0 ) {
+          glPixelStorei( UNPACK_ROW_LENGTH, 0 );
+        }
+      end Upload_Subimage;
 --
 --  /*
 --  ========================
@@ -908,8 +504,7 @@ and SPECIFICS.Vendor /= Intel_Vendor,
 --        return;
 --    }
 --
---    -- ALPHA, LUMINANCE, LUMINANCE_ALPHA, and INTENSITY have been removed
---    -- in OpenGL 3.2. In order to mimic those modes, we use the swizzle operators
+--    -- ALPHA, LUMINANCE, LUMINANCE_ALPHA, and INTENSITY have been removed in OpenGL 3.2. In order to mimic those modes, we use the swizzle operators
 --
 --    if ( opts.colorFormat == CFM_GREEN_ALPHA ) {
 --      glTexParameteri( target, TEXTURE_SWIZZLE_R, ONE );
@@ -1217,10 +812,6 @@ and SPECIFICS.Vendor /= Intel_Vendor,
 --    // two-sided stencil test
 --    glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_REPLACE, GL_ZERO );
 --    glStencilOpSeparate( GL_BACK, GL_KEEP, GL_ZERO, GL_REPLACE );
-  -----
   begin
-  -----
-    if SPECIFICS.Version < MINIMUM_VERSION then
-      raise Unsupported;
-    end if;
+    if SPECIFICS.Version < 2.0 then raise Unsupported; end if;
   end OpenGL

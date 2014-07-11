@@ -1,57 +1,6 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-package body Neo.System.Memory
-  is
-  ------------
-  -- Import --
-  ------------
-    package body Import
-      is separate;
-  -------------
-  -- Manager --
-  -------------
-    package body Manager
-      is
-        procedure Lock(
-          Item : in out Type_To_Manage)
-          is
-          begin
-            Import.Lock(Item'address, Item'size / Byte'size);
-          exception
-            when Call_Failure =>
-              Put_Debug_Line(Localize(FAILED_LOCK));
-          end Lock;
-        procedure Unlock(
-          Item : in out Type_To_Manage)
-          is
-          begin
-            Import.Unlock(Item'address, Item'size / Byte'size);
-          exception
-            when Call_Failure =>
-              Put_Debug_Line(Localize(FAILED_UNLOCK));
-          end Unlock;
-      end Manager;
-  ----------
-  -- Test --
-  ----------
-    procedure Test
-      is
-      package Test_Manage
-        is new Manager(Integer_4_Signed);
+package body Neo.System.Memory is
+    procedure Test is
+      package Test_Manage is new Manager(Integer_4_Signed);
       Test  : Integer_4_Signed := 1;
       State : Record_State := Get_State;
       begin
@@ -83,31 +32,30 @@ package body Neo.System.Memory
         Put_Line(Localize("Virtual available: ")          & Integer_8_Unsigned'Wide_Image(State.Number_Of_Virtual_Bytes_Available));
         Put_Line(Localize("Virtual available extended: ") & Integer_8_Unsigned'Wide_Image(State.Number_Of_Virtual_Bytes_Available_Extended));
       end Test;
-  ---------------------
-  -- Set_Byte_Limits --
-  ---------------------
-    procedure Set_Byte_Limits(
-      Minimum : in Integer_8_Unsigned;
-      Maximum : in Integer_8_Unsigned)
-      is
+    package body Import is separate;
+    package body Manager is
+        procedure Lock(Item : in out Type_To_Manage) is
+          begin
+            Import.Lock(Item'address, Item'size / Byte'size);
+          exception when Call_Failure => Put_Debug_Line(Localize(FAILED_LOCK));
+          end Lock;
+        procedure Unlock(Item : in out Type_To_Manage) is
+          begin
+            Import.Unlock(Item'address, Item'size / Byte'size);
+          exception when Call_Failure => Put_Debug_Line(Localize(FAILED_UNLOCK));
+          end Unlock;
+      end Manager;
+    procedure Set_Byte_Limits(Minimum : in Integer_8_Unsigned;
+      Maximum : in Integer_8_Unsigned) is
       begin
         Import.Set_Byte_Limits(Minimum, Maximum);
-      exception
-        when Call_Failure =>
-          Put_Debug_Line(Localize(FAILED_SET_BYTE_LIMITS));
+      exception when Call_Failure => Put_Debug_Line(Localize(FAILED_SET_BYTE_LIMITS));
       end Set_Byte_Limits;
-  ---------------
-  -- Get_State --
-  ---------------
-    function Get_State
-      return Record_State
-      is
+    function Get_State return Record_State is
       begin
         return Import.Get_State;
-      exception
-        when Call_Failure =>
-          Put_Debug_Line(Localize(FAILED_GET_STATE));
-          return (others => <>);
+      exception when Call_Failure =>
+        Put_Debug_Line(Localize(FAILED_GET_STATE));
+        return (others => <>);
       end Get_State;
   end Neo.System.Memory;
-

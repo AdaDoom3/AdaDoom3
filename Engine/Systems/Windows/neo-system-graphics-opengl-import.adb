@@ -32,12 +32,8 @@ package Import
       Depth_Bits   => 24,
       Stencil_Bits => 8,
       Layer_Type   => PIXEL_LAYER, -- PFD_MAIN_PLANE
-      Pixel_Type   => PIXEL_TYPE or(
-        if Do_Use_Stereo then
-          PFD_STEREO
-        else
-          0);
-      others => <>);
+      Pixel_Type   => PIXEL_TYPE or(if Do_Use_Stereo then PFD_STEREO else 0);
+      others       => <>);
   ----------------
   -- Initialize --
   ----------------
@@ -59,15 +55,15 @@ package Import
             Pixel_Format       => Pixel_Format'address,
             Number_Of_Formats  => null,
             Attributes_Integer =>(
-              OPENGL_SAMPLE_BUFFERS, 1,
-              OPENGL_SAMPLES,        Multi_Samples,
-              OPENGL_DOUBLE_BUFFER,  1,
-              OPENGL_STENCIL_BITS,   8,
-              OPENGL_DEPTH_BITS,     24,
-              OPENGL_RED_BITS,       8,
-              OPENGL_BLUE_BITS,      8,
-              OPENGL_GREEN_BITS,     8,
-              OPENGL_ALPHA_BITS,     8, 0, 0));
+              SAMPLE_BUFFERS, 1,
+              SAMPLES,        Multi_Samples,
+              DOUBLE_BUFFER,  1,
+              STENCIL_BITS,   8,
+              DEPTH_BITS,     24,
+              RED_BITS,       8,
+              BLUE_BITS,      8,
+              GREEN_BITS,     8,
+              ALPHA_BITS,     8, 0, 0));
         elsif Choose_Pixel_Format(Device_Context, FORMAT'address) = FAILED then
           raise Call_Failure;
         end if;
