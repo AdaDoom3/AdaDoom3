@@ -11,7 +11,7 @@ separate(Neo.System.Text.Console) package body Import is -- "Abandon all hope, y
       is
       DO_DISABLE_RESIZE       : constant Boolean                  := False;
       FONT_GROUP_BOX_SIZE     : constant Float                    := 1.2;
-      FONT_CONSOLE_SIZE       : constant Float                    := 1.1; -- The amount to divide 1 pt size by
+      FONT_CONSOLE_SIZE       : constant Float                    := 1.2; -- The amount to divide 1 pt size by
       FONT_CONSOLE            : constant String_2                 := "Courier New";
       FONT_DIALOG             : constant String_2                 := "Tahoma";
       NAME_BUTTON             : constant String_2_C               := To_String_2_C("Button");
@@ -118,7 +118,7 @@ separate(Neo.System.Text.Console) package body Import is -- "Abandon all hope, y
           No_Output_Width   := Console_Width - Output_Box_Width;
           No_Output_Height  := Console_Height - Output_Box_Height;
         end Set_Sizes;
-      procedure Set_Text_Box_Font is
+      procedure Set_Text_Box_Font is 
         begin
         Font_Text_Box :=
           Create_Font(
