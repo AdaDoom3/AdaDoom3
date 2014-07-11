@@ -16,7 +16,7 @@ private
     procedure Send_Log;
     procedure Save_Log;
     procedure Copy_Log;
-    NUMBER_OF_OUTPUT_ROWS  : constant Integer_4_Unsigned_C := 8;
+    NUMBER_OF_OUTPUT_ROWS  : constant Integer_4_Unsigned_C := 30;
     COLOR_BACKGROUND       : constant Record_Color         := COLOR_NAVY_BLUE;
     COLOR_TEXT             : constant Record_Color         := COLOR_YELLOW;
     ERROR_REPORTING_URL    : constant String_2             := "http://www.google.com";
