@@ -1,0 +1,5035 @@
+package body Neo.World is
+  procedure Initialize(Map, Mode) is
+    begin
+      if ( session->GetSignInManager().GetMasterLocalUser() == NULL ) {
+          // For development make sure a controller is registered
+          // Can't just register the local user because it will be removed because of it's persistent state
+          session->GetSignInManager().SetDesiredLocalUsers( 1, 1 );
+          session->GetSignInManager().Pump();
+      }
+
+      idStr mapNameClean = mapName;
+      mapNameClean.StripFileExtension();
+      mapNameClean.BackSlashesToSlashes();
+
+      idMatchParameters matchParameters;
+      matchParameters.mapName = mapNameClean;
+      if ( gameMode == GAME_MODE_SINGLEPLAYER ) {
+          matchParameters.numSlots = 1;
+          matchParameters.gameMode = GAME_MODE_SINGLEPLAYER;
+          matchParameters.gameMap = GAME_MAP_SINGLEPLAYER;
+      } else {
+          matchParameters.gameMap = mpGameMaps.Num(); // If this map isn't found in mpGameMaps, then set it to some undefined value (this happens when, for example, we load a box map with netmap)
+          matchParameters.gameMode = gameMode;
+          matchParameters.matchFlags = DefaultPartyFlags;
+          for ( int i = 0; i < mpGameMaps.Num(); i++ ) {
+              if ( idStr::Icmp( mpGameMaps[i].mapFile, mapNameClean ) == 0 ) {
+                  matchParameters.gameMap = i;
+                  break;
+              }
+          }
+          matchParameters.numSlots = session->GetTitleStorageInt("MAX_PLAYERS_ALLOWED", 4 );
+      }
+
+      cvarSystem->MoveCVarsToDict( CVAR_SERVERINFO, matchParameters.serverInfo );
+      if ( devmap ) {
+          matchParameters.serverInfo.Set( "devmap", "1" );
+      } else {
+          matchParameters.serverInfo.Delete( "devmap" );
+      }
+
+      session->QuitMatchToTitle();
+      if ( WaitForSessionState( idSession::IDLE ) ) {
+          session->CreatePartyLobby( matchParameters );
+          if ( WaitForSessionState( idSession::PARTY_LOBBY ) ) {
+              session->CreateMatch( matchParameters );
+              if ( WaitForSessionState( idSession::GAME_LOBBY ) ) {
+                  cvarSystem->SetCVarBool( "developer", devmap );
+                  session->StartMatch();
+              }
+          }
+      }
+    end Initialize;
+
+  end Neo.System.Graphics.World;
+--  /*
+--  ==========================================================================================
+--
+--  DEFORM SURFACES
+--
+--  ==========================================================================================
+--  */
+--
+--  /*
+--  =================
+--  R_FinishDeform
+--  =================
+--  */
+--  static drawSurf_t * R_FinishDeform( drawSurf_t * surf, srfTriangles_t * newTri, const idDrawVert * newVerts, const triIndex_t * newIndexes ) {
+--  	newTri->ambientCache = vertexCache.AllocVertex( newVerts, ALIGN( newTri->numVerts * sizeof( idDrawVert ), VERTEX_CACHE_ALIGN ) );
+--  	newTri->indexCache = vertexCache.AllocIndex( newIndexes, ALIGN( newTri->numIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--
+--  	surf->frontEndGeo = newTri;
+--  	surf->numIndexes = newTri->numIndexes;
+--  	surf->ambientCache = newTri->ambientCache;
+--  	surf->indexCache = newTri->indexCache;
+--  	surf->shadowCache = 0;
+--  	surf->jointCache = 0;
+--  	surf->nextOnLight = NULL;
+--
+--  	return surf;
+--  }
+--
+--  /*
+--  =====================
+--  R_AutospriteDeform
+--
+--  Assuming all the triangles for this shader are independant
+--  quads, rebuild them as forward facing sprites.
+--  =====================
+--  */
+--  static drawSurf_t * R_AutospriteDeform( drawSurf_t *surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	if ( srcTri->numVerts & 3 ) {
+--  		common->Warning( "R_AutospriteDeform: shader had odd vertex count" );
+--  		return NULL;
+--  	}
+--  	if ( srcTri->numIndexes != ( srcTri->numVerts >> 2 ) * 6 ) {
+--  		common->Warning( "R_AutospriteDeform: autosprite had odd index count" );
+--  		return NULL;
+--  	}
+--
+--  	const idJointMat * joints = ( srcTri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() ) ? srcTri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	idVec3 leftDir;
+--  	idVec3 upDir;
+--  	R_GlobalVectorToLocal( surf->space->modelMatrix, tr.viewDef->renderView.viewaxis[1], leftDir );
+--  	R_GlobalVectorToLocal( surf->space->modelMatrix, tr.viewDef->renderView.viewaxis[2], upDir );
+--
+--  	if ( tr.viewDef->isMirror ) {
+--  		leftDir = vec3_origin - leftDir;
+--  	}
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert * newVerts = (idDrawVert *)_alloca16( ALIGN( srcTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--  	triIndex_t * newIndexes = (triIndex_t *)_alloca16( ALIGN( srcTri->numIndexes * sizeof( triIndex_t ), 16 ) );
+--
+--  	for ( int i = 0; i < srcTri->numVerts; i += 4 ) {
+--  		// find the midpoint
+--  		newVerts[i+0] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i + 0], joints );
+--  		newVerts[i+1] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i + 1], joints );
+--  		newVerts[i+2] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i + 2], joints );
+--  		newVerts[i+3] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i + 3], joints );
+--
+--  		idVec3 mid;
+--  		mid[0] = 0.25f * ( newVerts[i+0].xyz[0] + newVerts[i+1].xyz[0] + newVerts[i+2].xyz[0] + newVerts[i+3].xyz[0] );
+--  		mid[1] = 0.25f * ( newVerts[i+0].xyz[1] + newVerts[i+1].xyz[1] + newVerts[i+2].xyz[1] + newVerts[i+3].xyz[1] );
+--  		mid[2] = 0.25f * ( newVerts[i+0].xyz[2] + newVerts[i+1].xyz[2] + newVerts[i+2].xyz[2] + newVerts[i+3].xyz[2] );
+--
+--  		const idVec3 delta = newVerts[i+0].xyz - mid;
+--  		const float radius = delta.Length() * idMath::SQRT_1OVER2;
+--
+--  		const idVec3 left = leftDir * radius;
+--  		const idVec3 up = upDir * radius;
+--
+--  		newVerts[i+0].xyz = mid + left + up;
+--  		newVerts[i+0].SetTexCoord( 0, 0 );
+--  		newVerts[i+1].xyz = mid - left + up;
+--  		newVerts[i+1].SetTexCoord( 1, 0 );
+--  		newVerts[i+2].xyz = mid - left - up;
+--  		newVerts[i+2].SetTexCoord( 1, 1 );
+--  		newVerts[i+3].xyz = mid + left - up;
+--  		newVerts[i+3].SetTexCoord( 0, 1 );
+--
+--  		newIndexes[6*(i>>2)+0] = i+0;
+--  		newIndexes[6*(i>>2)+1] = i+1;
+--  		newIndexes[6*(i>>2)+2] = i+2;
+--
+--  		newIndexes[6*(i>>2)+3] = i+0;
+--  		newIndexes[6*(i>>2)+4] = i+2;
+--  		newIndexes[6*(i>>2)+5] = i+3;
+--  	}
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, newIndexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_TubeDeform
+--
+--  Will pivot a rectangular quad along the center of its long axis.
+--
+--  Note that a geometric tube with even quite a few sides will almost certainly render
+--  much faster than this, so this should only be for faked volumetric tubes.
+--  Make sure this is used with twosided translucent shaders, because the exact side
+--  order may not be correct.
+--  =====================
+--  */
+--  static drawSurf_t * R_TubeDeform( drawSurf_t * surf ) {
+--  	static int edgeVerts[6][2] = {
+--  		{ 0, 1 },
+--  		{ 1, 2 },
+--  		{ 2, 0 },
+--  		{ 3, 4 },
+--  		{ 4, 5 },
+--  		{ 5, 3 }
+--  	};
+--
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	if ( srcTri->numVerts & 3 ) {
+--  		common->Error( "R_TubeDeform: shader had odd vertex count" );
+--  	}
+--  	if ( srcTri->numIndexes != ( srcTri->numVerts >> 2 ) * 6 ) {
+--  		common->Error( "R_TubeDeform: autosprite had odd index count" );
+--  	}
+--
+--  	const idJointMat * joints = ( srcTri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() ) ? srcTri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	// we need the view direction to project the minor axis of the tube
+--  	// as the view changes
+--  	idVec3	localView;
+--  	R_GlobalPointToLocal( surf->space->modelMatrix, tr.viewDef->renderView.vieworg, localView );
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert * newVerts = (idDrawVert *)_alloca16( ALIGN( srcTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--  	for ( int i = 0; i < srcTri->numVerts; i++ ) {
+--  		newVerts[i].Clear();
+--  	}
+--
+--  	// this is a lot of work for two triangles...
+--  	// we could precalculate a lot if it is an issue, but it would mess up the shader abstraction
+--  	for ( int i = 0, indexes = 0; i < srcTri->numVerts; i += 4, indexes += 6 ) {
+--  		// identify the two shortest edges out of the six defined by the indexes
+--  		int nums[2] = { 0, 0 };
+--  		float lengths[2] = { 999999.0f, 999999.0f };
+--
+--  		for ( int j = 0; j < 6; j++ ) {
+--  			const idVec3 v1 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[i + edgeVerts[j][0]]], joints );
+--  			const idVec3 v2 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[i + edgeVerts[j][1]]], joints );
+--
+--  			const float l = ( v1 - v2 ).Length();
+--  			if ( l < lengths[0] ) {
+--  				nums[1] = nums[0];
+--  				lengths[1] = lengths[0];
+--  				nums[0] = j;
+--  				lengths[0] = l;
+--  			} else if ( l < lengths[1] ) {
+--  				nums[1] = j;
+--  				lengths[1] = l;
+--  			}
+--  		}
+--
+--  		// find the midpoints of the two short edges, which
+--  		// will give us the major axis in object coordinates
+--  		idVec3 mid[2];
+--  		for ( int j = 0; j < 2; j++ ) {
+--  			const idVec3 v1 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[i+edgeVerts[nums[j]][0]]], joints );
+--  			const idVec3 v2 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[i+edgeVerts[nums[j]][1]]], joints );
+--
+--  			mid[j][0] = 0.5f * ( v1[0] + v2[0] );
+--  			mid[j][1] = 0.5f * ( v1[1] + v2[1] );
+--  			mid[j][2] = 0.5f * ( v1[2] + v2[2] );
+--  		}
+--
+--  		// find the vector of the major axis
+--  		const idVec3 major = mid[1] - mid[0];
+--
+--  		// re-project the points
+--  		for ( int j = 0; j < 2; j++ ) {
+--  			const int i1 = srcTri->indexes[i+edgeVerts[nums[j]][0]];
+--  			const int i2 = srcTri->indexes[i+edgeVerts[nums[j]][1]];
+--
+--  			newVerts[i1] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i1], joints );
+--  			newVerts[i2] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[i2], joints );
+--
+--  			const float l = 0.5f * lengths[j];
+--
+--  			// cross this with the view direction to get minor axis
+--  			idVec3 dir = mid[j] - localView;
+--  			idVec3 minor;
+--  			minor.Cross( major, dir );
+--  			minor.Normalize();
+--
+--  			if ( j ) {
+--  				newVerts[i1].xyz = mid[j] - l * minor;
+--  				newVerts[i2].xyz = mid[j] + l * minor;
+--  			} else {
+--  				newVerts[i1].xyz = mid[j] + l * minor;
+--  				newVerts[i2].xyz = mid[j] - l * minor;
+--  			}
+--  		}
+--  	}
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, srcTri->indexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_WindingFromTriangles
+--  =====================
+--  */
+--  #define	MAX_TRI_WINDING_INDEXES		16
+--  int	R_WindingFromTriangles( const srfTriangles_t *tri, triIndex_t indexes[MAX_TRI_WINDING_INDEXES] ) {
+--  	int i, j, k, l;
+--
+--  	indexes[0] = tri->indexes[0];
+--  	int numIndexes = 1;
+--  	int	numTris = tri->numIndexes / 3;
+--
+--  	do {
+--  		// find an edge that goes from the current index to another
+--  		// index that isn't already used, and isn't an internal edge
+--  		for ( i = 0; i < numTris; i++ ) {
+--  			for ( j = 0; j < 3; j++ ) {
+--  				if ( tri->indexes[i*3+j] != indexes[numIndexes-1] ) {
+--  					continue;
+--  				}
+--  				int next = tri->indexes[i*3+(j+1)%3];
+--
+--  				// make sure it isn't already used
+--  				if ( numIndexes == 1 ) {
+--  					if ( next == indexes[0] ) {
+--  						continue;
+--  					}
+--  				} else {
+--  					for ( k = 1; k < numIndexes; k++ ) {
+--  						if ( indexes[k] == next ) {
+--  							break;
+--  						}
+--  					}
+--  					if ( k != numIndexes ) {
+--  						continue;
+--  					}
+--  				}
+--
+--  				// make sure it isn't an interior edge
+--  				for ( k = 0; k < numTris; k++ ) {
+--  					if ( k == i ) {
+--  						continue;
+--  					}
+--  					for ( l = 0; l < 3; l++ ) {
+--  						int	a, b;
+--
+--  						a = tri->indexes[k*3+l];
+--  						if ( a != next ) {
+--  							continue;
+--  						}
+--  						b = tri->indexes[k*3+(l+1)%3];
+--  						if ( b != indexes[numIndexes-1] ) {
+--  							continue;
+--  						}
+--
+--  						// this is an interior edge
+--  						break;
+--  					}
+--  					if ( l != 3 ) {
+--  						break;
+--  					}
+--  				}
+--  				if ( k != numTris ) {
+--  					continue;
+--  				}
+--
+--  				// add this to the list
+--  				indexes[numIndexes] = next;
+--  				numIndexes++;
+--  				break;
+--  			}
+--  			if ( j != 3 ) {
+--  				break;
+--  			}
+--  		}
+--  		if ( numIndexes == tri->numVerts ) {
+--  			break;
+--  		}
+--  	} while ( i != numTris );
+--
+--  	return numIndexes;
+--  }
+--
+--  /*
+--  =====================
+--  R_FlareDeform
+--  =====================
+--  */
+--  static drawSurf_t * R_FlareDeform( drawSurf_t * surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	assert( srcTri->staticModelWithJoints == NULL );
+--
+--  	if ( srcTri->numVerts != 4 || srcTri->numIndexes != 6 ) {
+--  		// FIXME: temp hack for flares on tripleted models
+--  		common->Warning( "R_FlareDeform: not a single quad" );
+--  		return NULL;
+--  	}
+--
+--  	// find the plane
+--  	idPlane	plane;
+--  	plane.FromPoints( srcTri->verts[srcTri->indexes[0]].xyz, srcTri->verts[srcTri->indexes[1]].xyz, srcTri->verts[srcTri->indexes[2]].xyz );
+--
+--  	// if viewer is behind the plane, draw nothing
+--  	idVec3 localViewer;
+--  	R_GlobalPointToLocal( surf->space->modelMatrix, tr.viewDef->renderView.vieworg, localViewer );
+--  	float distFromPlane = localViewer * plane.Normal() + plane[3];
+--  	if ( distFromPlane <= 0 ) {
+--  		return NULL;
+--  	}
+--
+--  	idVec3 center = srcTri->verts[0].xyz;
+--  	for ( int i = 1; i < srcTri->numVerts; i++ ) {
+--  		center += srcTri->verts[i].xyz;
+--  	}
+--  	center *= 1.0f / srcTri->numVerts;
+--
+--  	idVec3 dir = localViewer - center;
+--  	dir.Normalize();
+--
+--  	const float dot = dir * plane.Normal();
+--
+--  	// set vertex colors based on plane angle
+--  	int color = idMath::Ftoi( dot * 8 * 256 );
+--  	if ( color > 255 ) {
+--  		color = 255;
+--  	}
+--
+--  	triIndex_t indexes[MAX_TRI_WINDING_INDEXES];
+--  	int numIndexes = R_WindingFromTriangles( srcTri, indexes );
+--
+--  	// only deal with quads
+--  	if ( numIndexes != 4 ) {
+--  		return NULL;
+--  	}
+--
+--  	const int maxVerts = 16;
+--  	const int maxIndexes = 18 * 3;
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = maxVerts;
+--  	newTri->numIndexes = maxIndexes;
+--
+--  	idDrawVert *newVerts = (idDrawVert *)_alloca16( ALIGN( maxVerts * sizeof( idDrawVert ), 16 ) );
+--
+--  	idVec3 edgeDir[4][3];
+--
+--  	// calculate vector directions
+--  	for ( int i = 0; i < 4; i++ ) {
+--  		newVerts[i].Clear();
+--  		newVerts[i].xyz = srcTri->verts[ indexes[i] ].xyz;
+--  		newVerts[i].SetTexCoord( 0.5f, 0.5f );
+--  		newVerts[i].color[0] = color;
+--  		newVerts[i].color[1] = color;
+--  		newVerts[i].color[2] = color;
+--  		newVerts[i].color[3] = 255;
+--
+--  		idVec3 toEye = srcTri->verts[ indexes[i] ].xyz - localViewer;
+--  		toEye.Normalize();
+--
+--  		idVec3 d1 = srcTri->verts[ indexes[(i+1)%4] ].xyz - localViewer;
+--  		d1.Normalize();
+--  		edgeDir[i][2].Cross( toEye, d1 );
+--  		edgeDir[i][2].Normalize();
+--  		edgeDir[i][2] = vec3_origin - edgeDir[i][2];
+--
+--  		idVec3 d2 = srcTri->verts[ indexes[(i+3)%4] ].xyz - localViewer;
+--  		d2.Normalize();
+--  		edgeDir[i][0].Cross( toEye, d2 );
+--  		edgeDir[i][0].Normalize();
+--
+--  		edgeDir[i][1] = edgeDir[i][0] + edgeDir[i][2];
+--  		edgeDir[i][1].Normalize();
+--  	}
+--
+--  	const float spread = surf->shaderRegisters[ surf->material->GetDeformRegister(0) ] * r_flareSize.GetFloat();
+--
+--  	for ( int i = 4; i < 16; i++ ) {
+--  		const int index = ( i - 4 ) / 3;
+--  		idVec3 v = srcTri->verts[indexes[index]].xyz + spread * edgeDir[index][( i - 4 ) % 3];
+--
+--  		idVec3 dir = v - localViewer;
+--  		const float len = dir.Normalize();
+--  		const float ang = dir * plane.Normal();
+--  		const float newLen = -( distFromPlane / ang );
+--  		if ( newLen > 0.0f && newLen < len ) {
+--  			v = localViewer + dir * newLen;
+--  		}
+--
+--  		newVerts[i].Clear();
+--  		newVerts[i].xyz = v;
+--  		newVerts[i].SetTexCoord( 0.0f, 0.5f );
+--  		newVerts[i].color[0] = color;
+--  		newVerts[i].color[1] = color;
+--  		newVerts[i].color[2] = color;
+--  		newVerts[i].color[3] = 255;
+--  	}
+--
+--  	ALIGNTYPE16 static triIndex_t triIndexes[18*3 + 10] = {
+--  		 0, 4,5,  0,5, 6,  0,6,7,  0,7, 1,  1,7, 8,  1,8, 9,
+--  		15, 4,0, 15,0, 3,  3,0,1,  3,1, 2,  2,1, 9,  2,9,10,
+--  		14,15,3, 14,3,13, 13,3,2, 13,2,12, 12,2,11, 11,2,10,
+--  		0, 0, 0, 0, 0, 0, 0, 0, 0, 0	// to make this a multiple of 16 bytes
+--  	};
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, triIndexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_ExpandDeform
+--
+--  Expands the surface along it's normals by a shader amount
+--  =====================
+--  */
+--  static drawSurf_t * R_ExpandDeform( drawSurf_t * surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	assert( srcTri->staticModelWithJoints == NULL );
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert *newVerts = (idDrawVert *)_alloca16( ALIGN( newTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--
+--  	const float dist = surf->shaderRegisters[ surf->material->GetDeformRegister(0) ];
+--  	for ( int i = 0; i < srcTri->numVerts; i++ ) {
+--  		newVerts[i] = srcTri->verts[i];
+--  		newVerts[i].xyz = srcTri->verts[i].xyz + srcTri->verts[i].GetNormal() * dist;
+--  	}
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, srcTri->indexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_MoveDeform
+--
+--  Moves the surface along the X axis, mostly just for demoing the deforms
+--  =====================
+--  */
+--  static drawSurf_t * R_MoveDeform( drawSurf_t * surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	assert( srcTri->staticModelWithJoints == NULL );
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert *newVerts = (idDrawVert *)_alloca16( ALIGN( newTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--
+--  	const float dist = surf->shaderRegisters[ surf->material->GetDeformRegister(0) ];
+--  	for ( int i = 0; i < srcTri->numVerts; i++ ) {
+--  		newVerts[i] = srcTri->verts[i];
+--  		newVerts[i].xyz[0] += dist;
+--  	}
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, srcTri->indexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_TurbulentDeform
+--
+--  Turbulently deforms the texture coordinates.
+--  =====================
+--  */
+--  static drawSurf_t * R_TurbulentDeform( drawSurf_t * surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	assert( srcTri->staticModelWithJoints == NULL );
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert *newVerts = (idDrawVert *)_alloca16( ALIGN( newTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--
+--  	const idDeclTable * table = (const idDeclTable *)surf->material->GetDeformDecl();
+--  	const float range = surf->shaderRegisters[ surf->material->GetDeformRegister(0) ];
+--  	const float timeOfs = surf->shaderRegisters[ surf->material->GetDeformRegister(1) ];
+--  	const float domain = surf->shaderRegisters[ surf->material->GetDeformRegister(2) ];
+--  	const float tOfs = 0.5f;
+--
+--  	for ( int i = 0; i < srcTri->numVerts; i++ ) {
+--  		float f = srcTri->verts[i].xyz[0] * 0.003f + srcTri->verts[i].xyz[1] * 0.007f + srcTri->verts[i].xyz[2] * 0.011f;
+--
+--  		f = timeOfs + domain * f;
+--  		f += timeOfs;
+--
+--  		idVec2 tempST = srcTri->verts[i].GetTexCoord();
+--  		tempST[0] += range * table->TableLookup( f );
+--  		tempST[1] += range * table->TableLookup( f + tOfs );
+--
+--  		newVerts[i] = srcTri->verts[i];
+--  		newVerts[i].SetTexCoord( tempST );
+--  	}
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, srcTri->indexes );
+--  }
+--
+--  /*
+--  =====================
+--  AddTriangleToIsland_r
+--  =====================
+--  */
+--  #define	MAX_EYEBALL_TRIS	10
+--  #define	MAX_EYEBALL_ISLANDS	6
+--
+--  typedef struct {
+--  	int			tris[MAX_EYEBALL_TRIS];
+--  	int			numTris;
+--  	idBounds	bounds;
+--  	idVec3		mid;
+--  } eyeIsland_t;
+--
+--  static void AddTriangleToIsland_r( const srfTriangles_t *tri, int triangleNum, bool *usedList, eyeIsland_t *island ) {
+--  	usedList[triangleNum] = true;
+--
+--  	// add to the current island
+--  	if ( island->numTris >= MAX_EYEBALL_TRIS ) {
+--  		common->Error( "MAX_EYEBALL_TRIS" );
+--  		return;
+--  	}
+--  	island->tris[island->numTris] = triangleNum;
+--  	island->numTris++;
+--
+--  	const idJointMat * joints = ( tri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() ) ? tri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	// recurse into all neighbors
+--  	const int a = tri->indexes[triangleNum*3+0];
+--  	const int b = tri->indexes[triangleNum*3+1];
+--  	const int c = tri->indexes[triangleNum*3+2];
+--
+--  	const idVec3 va = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[a], joints );
+--  	const idVec3 vb = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[b], joints );
+--  	const idVec3 vc = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[c], joints );
+--
+--  	island->bounds.AddPoint( va );
+--  	island->bounds.AddPoint( vb );
+--  	island->bounds.AddPoint( vc );
+--
+--  	int	numTri = tri->numIndexes / 3;
+--  	for ( int i = 0; i < numTri; i++ ) {
+--  		if ( usedList[i] ) {
+--  			continue;
+--  		}
+--  		if ( tri->indexes[i*3+0] == a
+--  			|| tri->indexes[i*3+1] == a
+--  			|| tri->indexes[i*3+2] == a
+--  			|| tri->indexes[i*3+0] == b
+--  			|| tri->indexes[i*3+1] == b
+--  			|| tri->indexes[i*3+2] == b
+--  			|| tri->indexes[i*3+0] == c
+--  			|| tri->indexes[i*3+1] == c
+--  			|| tri->indexes[i*3+2] == c ) {
+--  			AddTriangleToIsland_r( tri, i, usedList, island );
+--  		}
+--  	}
+--  }
+--
+--  /*
+--  =====================
+--  R_EyeballDeform
+--
+--  Each eyeball surface should have an separate upright triangle behind it, long end
+--  pointing out the eye, and another single triangle in front of the eye for the focus point.
+--  =====================
+--  */
+--  static drawSurf_t * R_EyeballDeform( drawSurf_t * surf ) {
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	// separate all the triangles into islands
+--  	const int numTri = srcTri->numIndexes / 3;
+--  	if ( numTri > MAX_EYEBALL_ISLANDS * MAX_EYEBALL_TRIS ) {
+--  		common->Printf( "R_EyeballDeform: too many triangles in surface" );
+--  		return NULL;
+--  	}
+--
+--  	eyeIsland_t islands[MAX_EYEBALL_ISLANDS];
+--  	bool triUsed[MAX_EYEBALL_ISLANDS*MAX_EYEBALL_TRIS];
+--  	memset( triUsed, 0, sizeof( triUsed ) );
+--
+--  	int numIslands = 0;
+--  	for ( ; numIslands < MAX_EYEBALL_ISLANDS; numIslands++ ) {
+--  		islands[numIslands].numTris = 0;
+--  		islands[numIslands].bounds.Clear();
+--  		int i;
+--  		for ( i = 0; i < numTri; i++ ) {
+--  			if ( !triUsed[i] ) {
+--  				AddTriangleToIsland_r( srcTri, i, triUsed, &islands[numIslands] );
+--  				break;
+--  			}
+--  		}
+--  		if ( i == numTri ) {
+--  			break;
+--  		}
+--  	}
+--
+--  	// assume we always have two eyes, two origins, and two targets
+--  	if ( numIslands != 3 ) {
+--  		common->Printf( "R_EyeballDeform: %i triangle islands\n", numIslands );
+--  		return NULL;
+--  	}
+--
+--  	const idJointMat * joints = ( srcTri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() ) ? srcTri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	// the srfTriangles_t are in frame memory and will be automatically disposed of
+--  	srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  	newTri->numVerts = srcTri->numVerts;
+--  	newTri->numIndexes = srcTri->numIndexes;
+--
+--  	idDrawVert *newVerts = (idDrawVert *)_alloca16( ALIGN( srcTri->numVerts * sizeof( idDrawVert ), 16 ) );
+--  	triIndex_t *newIndexes = (triIndex_t *)_alloca16( ALIGN( srcTri->numIndexes * sizeof( triIndex_t ), 16 ) );
+--
+--  	// decide which islands are the eyes and points
+--  	for ( int i = 0; i < numIslands; i++ ) {
+--  		islands[i].mid = islands[i].bounds.GetCenter();
+--  	}
+--
+--  	int numIndexes = 0;
+--  	for ( int i = 0; i < numIslands; i++ ) {
+--  		eyeIsland_t * island = &islands[i];
+--
+--  		if ( island->numTris == 1 ) {
+--  			continue;
+--  		}
+--
+--  		// the closest single triangle point will be the eye origin
+--  		// and the next-to-farthest will be the focal point
+--  		idVec3 origin;
+--  		idVec3 focus;
+--  		int originIsland = 0;
+--  		float dist[MAX_EYEBALL_ISLANDS];
+--  		int sortOrder[MAX_EYEBALL_ISLANDS];
+--
+--  		for ( int j = 0; j < numIslands; j++ ) {
+--  			idVec3 dir = islands[j].mid - island->mid;
+--  			dist[j] = dir.Length();
+--  			sortOrder[j] = j;
+--  			for ( int k = j - 1; k >= 0; k-- ) {
+--  				if ( dist[k] > dist[k+1] ) {
+--  					int temp = sortOrder[k];
+--  					sortOrder[k] = sortOrder[k+1];
+--  					sortOrder[k+1] = temp;
+--  					float ftemp = dist[k];
+--  					dist[k] = dist[k+1];
+--  					dist[k+1] = ftemp;
+--  				}
+--  			}
+--  		}
+--
+--  		originIsland = sortOrder[1];
+--  		origin = islands[originIsland].mid;
+--
+--  		focus = islands[sortOrder[2]].mid;
+--
+--  		// determine the projection directions based on the origin island triangle
+--  		idVec3 dir = focus - origin;
+--  		dir.Normalize();
+--
+--  		const idVec3 p1 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[islands[originIsland].tris[0] + 0]], joints );
+--  		const idVec3 p2 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[islands[originIsland].tris[0] + 1]], joints );
+--  		const idVec3 p3 = idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[srcTri->indexes[islands[originIsland].tris[0] + 2]], joints );
+--
+--  		idVec3 v1 = p2 - p1;
+--  		v1.Normalize();
+--  		idVec3 v2 = p3 - p1;
+--  		v2.Normalize();
+--
+--  		// texVec[0] will be the normal to the origin triangle
+--  		idVec3 texVec[2];
+--  		texVec[0].Cross( v1, v2 );
+--  		texVec[1].Cross( texVec[0], dir );
+--
+--  		for ( int j = 0; j < 2; j++ ) {
+--  			texVec[j] -= dir * ( texVec[j] * dir );
+--  			texVec[j].Normalize();
+--  		}
+--
+--  		// emit these triangles, generating the projected texcoords
+--  		for ( int j = 0; j < islands[i].numTris; j++ ) {
+--  			for ( int k = 0; k < 3; k++ ) {
+--  				int	index = islands[i].tris[j] * 3;
+--
+--  				index = srcTri->indexes[index + k];
+--  				newIndexes[numIndexes++] = index;
+--
+--  				newVerts[index] = idDrawVert::GetSkinnedDrawVert( srcTri->verts[index], joints );
+--
+--  				const idVec3 local = newVerts[index].xyz - origin;
+--  				newVerts[index].SetTexCoord( 0.5f + local * texVec[0], 0.5f + local * texVec[1] );
+--  			}
+--  		}
+--  	}
+--
+--  	newTri->numIndexes = numIndexes;
+--
+--  	return R_FinishDeform( surf, newTri, newVerts, newIndexes );
+--  }
+--
+--  /*
+--  =====================
+--  R_ParticleDeform
+--
+--  Emit particles from the surface.
+--  =====================
+--  */
+--  static drawSurf_t * R_ParticleDeform( drawSurf_t *surf, bool useArea ) {
+--  	const renderEntity_t * renderEntity = &surf->space->entityDef->parms;
+--  	const viewDef_t * viewDef = tr.viewDef;
+--  	const idDeclParticle * particleSystem = (const idDeclParticle *)surf->material->GetDeformDecl();
+--  	const srfTriangles_t * srcTri = surf->frontEndGeo;
+--
+--  	if ( r_skipParticles.GetBool() ) {
+--  		return NULL;
+--  	}
+--
+--  	//
+--  	// calculate the area of all the triangles
+--  	//
+--  	int numSourceTris = surf->frontEndGeo->numIndexes / 3;
+--  	float totalArea = 0.0f;
+--  	float * sourceTriAreas = NULL;
+--
+--  	const idJointMat * joints = ( ( srcTri->staticModelWithJoints != NULL ) && r_useGPUSkinning.GetBool() ) ? srcTri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	if ( useArea ) {
+--  		sourceTriAreas = (float *)_alloca( sizeof( *sourceTriAreas ) * numSourceTris );
+--  		int	triNum = 0;
+--  		for ( int i = 0; i < srcTri->numIndexes; i += 3, triNum++ ) {
+--  			float area = idWinding::TriangleArea(	idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[ srcTri->indexes[ i+0 ] ], joints ),
+--  													idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[ srcTri->indexes[ i+1 ] ], joints ),
+--  													idDrawVert::GetSkinnedDrawVertPosition( srcTri->verts[ srcTri->indexes[ i+2 ] ], joints ) );
+--  			sourceTriAreas[triNum] = totalArea;
+--  			totalArea += area;
+--  		}
+--  	}
+--
+--  	//
+--  	// create the particles almost exactly the way idRenderModelPrt does
+--  	//
+--  	particleGen_t g;
+--
+--  	g.renderEnt = renderEntity;
+--  	g.renderView = &viewDef->renderView;
+--  	g.origin.Zero();
+--  	g.axis = mat3_identity;
+--
+--  	int maxStageParticles[MAX_PARTICLE_STAGES] = { 0 };
+--  	int maxStageQuads[MAX_PARTICLE_STAGES] = { 0 };
+--  	int maxQuads = 0;
+--
+--  	for ( int stageNum = 0; stageNum < particleSystem->stages.Num(); stageNum++ ) {
+--  		idParticleStage *stage = particleSystem->stages[stageNum];
+--
+--  		if ( stage->material == NULL ) {
+--  			continue;
+--  		}
+--  		if ( stage->cycleMsec == 0 ) {
+--  			continue;
+--  		}
+--  		if ( stage->hidden ) {		// just for gui particle editor use
+--  			continue;
+--  		}
+--
+--  		// we interpret stage->totalParticles as "particles per map square area"
+--  		// so the systems look the same on different size surfaces
+--  		const int totalParticles = ( useArea ) ? idMath::Ftoi( stage->totalParticles * totalArea * ( 1.0f / 4096.0f ) ) : ( stage->totalParticles );
+--  		const int numQuads = totalParticles * stage->NumQuadsPerParticle() * ( ( useArea ) ? 1 : numSourceTris );
+--
+--  		maxStageParticles[stageNum] = totalParticles;
+--  		maxStageQuads[stageNum] = numQuads;
+--  		maxQuads = Max( maxQuads, numQuads );
+--  	}
+--
+--  	if ( maxQuads == 0 ) {
+--  		return NULL;
+--  	}
+--
+--  	idTempArray<byte> tempVerts( ALIGN( maxQuads * 4 * sizeof( idDrawVert ), 16 ) );
+--  	idDrawVert *newVerts = (idDrawVert *) tempVerts.Ptr();
+--  	idTempArray<byte> tempIndex( ALIGN( maxQuads * 6 * sizeof( triIndex_t ), 16 ) );
+--  	triIndex_t *newIndexes = (triIndex_t *) tempIndex.Ptr();
+--
+--  	drawSurf_t * drawSurfList = NULL;
+--
+--  	for ( int stageNum = 0; stageNum < particleSystem->stages.Num(); stageNum++ ) {
+--  		if ( maxStageQuads[stageNum] == 0 ) {
+--  			continue;
+--  		}
+--
+--  		idParticleStage *stage = particleSystem->stages[stageNum];
+--
+--  		int numVerts = 0;
+--  		for ( int currentTri = 0; currentTri < ( ( useArea ) ? 1 : numSourceTris ); currentTri++ ) {
+--
+--  			idRandom steppingRandom;
+--  			idRandom steppingRandom2;
+--
+--  			int stageAge = g.renderView->time[renderEntity->timeGroup] + idMath::Ftoi( renderEntity->shaderParms[SHADERPARM_TIMEOFFSET] * 1000.0f - stage->timeOffset * 1000.0f );
+--  			int stageCycle = stageAge / stage->cycleMsec;
+--
+--  			// some particles will be in this cycle, some will be in the previous cycle
+--  			steppingRandom.SetSeed( ( ( stageCycle << 10 ) & idRandom::MAX_RAND ) ^ idMath::Ftoi( renderEntity->shaderParms[SHADERPARM_DIVERSITY] * idRandom::MAX_RAND )  );
+--  			steppingRandom2.SetSeed( ( ( ( stageCycle - 1 ) << 10 ) & idRandom::MAX_RAND ) ^ idMath::Ftoi( renderEntity->shaderParms[SHADERPARM_DIVERSITY] * idRandom::MAX_RAND )  );
+--
+--  			for ( int index = 0; index < maxStageParticles[stageNum]; index++ ) {
+--  				g.index = index;
+--
+--  				// bump the random
+--  				steppingRandom.RandomInt();
+--  				steppingRandom2.RandomInt();
+--
+--  				// calculate local age for this index
+--  				int bunchOffset = idMath::Ftoi( stage->particleLife * 1000 * stage->spawnBunching * index / maxStageParticles[stageNum] );
+--
+--  				int particleAge = stageAge - bunchOffset;
+--  				int particleCycle = particleAge / stage->cycleMsec;
+--  				if ( particleCycle < 0 ) {
+--  					// before the particleSystem spawned
+--  					continue;
+--  				}
+--  				if ( stage->cycles != 0.0f && particleCycle >= stage->cycles ) {
+--  					// cycled systems will only run cycle times
+--  					continue;
+--  				}
+--
+--  				int inCycleTime = particleAge - particleCycle * stage->cycleMsec;
+--
+--  				if ( renderEntity->shaderParms[SHADERPARM_PARTICLE_STOPTIME] != 0.0f &&
+--  					g.renderView->time[renderEntity->timeGroup] - inCycleTime >= renderEntity->shaderParms[SHADERPARM_PARTICLE_STOPTIME] * 1000.0f ) {
+--  					// don't fire any more particles
+--  					continue;
+--  				}
+--
+--  				// supress particles before or after the age clamp
+--  				g.frac = (float)inCycleTime / ( stage->particleLife * 1000.0f );
+--  				if ( g.frac < 0.0f ) {
+--  					// yet to be spawned
+--  					continue;
+--  				}
+--  				if ( g.frac > 1.0f ) {
+--  					// this particle is in the deadTime band
+--  					continue;
+--  				}
+--
+--  				if ( particleCycle == stageCycle ) {
+--  					g.random = steppingRandom;
+--  				} else {
+--  					g.random = steppingRandom2;
+--  				}
+--
+--  				//---------------
+--  				// locate the particle origin and axis somewhere on the surface
+--  				//---------------
+--
+--  				int pointTri = currentTri;
+--
+--  				if ( useArea ) {
+--  					// select a triangle based on an even area distribution
+--  					pointTri = idBinSearch_LessEqual<float>( sourceTriAreas, numSourceTris, g.random.RandomFloat() * totalArea );
+--  				}
+--
+--  				// now pick a random point inside pointTri
+--  				const idDrawVert v1 = idDrawVert::GetSkinnedDrawVert( srcTri->verts[ srcTri->indexes[ pointTri * 3 + 0 ] ], joints );
+--  				const idDrawVert v2 = idDrawVert::GetSkinnedDrawVert( srcTri->verts[ srcTri->indexes[ pointTri * 3 + 1 ] ], joints );
+--  				const idDrawVert v3 = idDrawVert::GetSkinnedDrawVert( srcTri->verts[ srcTri->indexes[ pointTri * 3 + 2 ] ], joints );
+--
+--  				float f1 = g.random.RandomFloat();
+--  				float f2 = g.random.RandomFloat();
+--  				float f3 = g.random.RandomFloat();
+--
+--  				float ft = 1.0f / ( f1 + f2 + f3 + 0.0001f );
+--
+--  				f1 *= ft;
+--  				f2 *= ft;
+--  				f3 *= ft;
+--
+--  				g.origin = v1.xyz * f1 + v2.xyz * f2 + v3.xyz * f3;
+--  				g.axis[0] = v1.GetTangent() * f1 + v2.GetTangent() * f2 + v3.GetTangent() * f3;
+--  				g.axis[1] = v1.GetBiTangent() * f1 + v2.GetBiTangent() * f2 + v3.GetBiTangent() * f3;
+--  				g.axis[2] = v1.GetNormal() * f1 + v2.GetNormal() * f2 + v3.GetNormal() * f3;
+--
+--  				// this is needed so aimed particles can calculate origins at different times
+--  				g.originalRandom = g.random;
+--
+--  				g.age = g.frac * stage->particleLife;
+--
+--  				// if the particle doesn't get drawn because it is faded out or beyond a kill region,
+--  				// don't increment the verts
+--  				numVerts += stage->CreateParticle( &g, newVerts + numVerts );
+--  			}
+--  		}
+--
+--  		if ( numVerts == 0 ) {
+--  			continue;
+--  		}
+--
+--  		// build the index list
+--  		int numIndexes = 0;
+--  		for ( int i = 0; i < numVerts; i += 4 ) {
+--  			newIndexes[numIndexes + 0] = i + 0;
+--  			newIndexes[numIndexes + 1] = i + 2;
+--  			newIndexes[numIndexes + 2] = i + 3;
+--  			newIndexes[numIndexes + 3] = i + 0;
+--  			newIndexes[numIndexes + 4] = i + 3;
+--  			newIndexes[numIndexes + 5] = i + 1;
+--  			numIndexes += 6;
+--  		}
+--
+--  		// allocate a srfTriangles in temp memory that can hold all the particles
+--  		srfTriangles_t * newTri = (srfTriangles_t *)R_ClearedFrameAlloc( sizeof( *newTri ), FRAME_ALLOC_SURFACE_TRIANGLES );
+--  		newTri->bounds = stage->bounds;		// just always draw the particles
+--  		newTri->numVerts = numVerts;
+--  		newTri->numIndexes = numIndexes;
+--  		newTri->ambientCache = vertexCache.AllocVertex( newVerts, ALIGN( numVerts * sizeof( idDrawVert ), VERTEX_CACHE_ALIGN ) );
+--  		newTri->indexCache = vertexCache.AllocIndex( newIndexes, ALIGN( numIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--
+--  		drawSurf_t * drawSurf = (drawSurf_t *)R_FrameAlloc( sizeof( *drawSurf ), FRAME_ALLOC_DRAW_SURFACE );
+--  		drawSurf->frontEndGeo = newTri;
+--  		drawSurf->numIndexes = newTri->numIndexes;
+--  		drawSurf->ambientCache = newTri->ambientCache;
+--  		drawSurf->indexCache = newTri->indexCache;
+--  		drawSurf->shadowCache = 0;
+--  		drawSurf->jointCache = 0;
+--  		drawSurf->space = surf->space;
+--  		drawSurf->scissorRect = surf->scissorRect;
+--  		drawSurf->extraGLState = 0;
+--  		drawSurf->renderZFail = 0;
+--
+--  		R_SetupDrawSurfShader( drawSurf, stage->material, renderEntity );
+--
+--  		drawSurf->linkChain = NULL;
+--  		drawSurf->nextOnLight = drawSurfList;
+--  		drawSurfList = drawSurf;
+--  	}
+--
+--  	return drawSurfList;
+--  }
+--
+--  /*
+--  =================
+--  R_DeformDrawSurf
+--  =================
+--  */
+--  drawSurf_t * R_DeformDrawSurf( drawSurf_t * drawSurf ) {
+--  	if ( drawSurf->material == NULL ) {
+--  		return NULL;
+--  	}
+--
+--  	if ( r_skipDeforms.GetBool() ) {
+--  		return drawSurf;
+--  	}
+--  	switch ( drawSurf->material->Deform() ) {
+--  		case DFRM_SPRITE:		return R_AutospriteDeform( drawSurf );
+--  		case DFRM_TUBE:			return R_TubeDeform( drawSurf );
+--  		case DFRM_FLARE:		return R_FlareDeform( drawSurf );
+--  		case DFRM_EXPAND:		return R_ExpandDeform( drawSurf );
+--  		case DFRM_MOVE:			return R_MoveDeform( drawSurf );
+--  		case DFRM_TURB:			return R_TurbulentDeform( drawSurf );
+--  		case DFRM_EYEBALL:		return R_EyeballDeform( drawSurf );
+--  		case DFRM_PARTICLE:		return R_ParticleDeform( drawSurf, true );
+--  		case DFRM_PARTICLE2:	return R_ParticleDeform( drawSurf, false );
+--  		default:				return NULL;
+--  	}
+--  }
+--
+--  #pragma hdrstop
+--  #include "../idlib/precompiled.h"
+--
+--  #include "tr_local.h"
+--  #include "Model_local.h"
+--
+--  idCVar r_skipStaticShadows( "r_skipStaticShadows", "0", CVAR_RENDERER | CVAR_BOOL, "skip static shadows" );
+--  idCVar r_skipDynamicShadows( "r_skipDynamicShadows", "0", CVAR_RENDERER | CVAR_BOOL, "skip dynamic shadows" );
+--  idCVar r_useParallelAddModels( "r_useParallelAddModels", "1", CVAR_RENDERER | CVAR_BOOL, "add all models in parallel with jobs" );
+--  idCVar r_useParallelAddShadows( "r_useParallelAddShadows", "1", CVAR_RENDERER | CVAR_INTEGER, "0 = off, 1 = threaded", 0, 1 );
+--  idCVar r_useShadowPreciseInsideTest( "r_useShadowPreciseInsideTest", "1", CVAR_RENDERER | CVAR_BOOL, "use a precise and more expensive test to determine whether the view is inside a shadow volume" );
+--  idCVar r_cullDynamicShadowTriangles( "r_cullDynamicShadowTriangles", "1", CVAR_RENDERER | CVAR_BOOL, "cull occluder triangles that are outside the light frustum so they do not contribute to the dynamic shadow volume" );
+--  idCVar r_cullDynamicLightTriangles( "r_cullDynamicLightTriangles", "1", CVAR_RENDERER | CVAR_BOOL, "cull surface triangles that are outside the light frustum so they do not get rendered for interactions" );
+--  idCVar r_forceShadowCaps( "r_forceShadowCaps", "0", CVAR_RENDERER | CVAR_BOOL, "0 = skip rendering shadow caps if view is outside shadow volume, 1 = always render shadow caps" );
+--
+--  static const float CHECK_BOUNDS_EPSILON = 1.0f;
+--
+--  /*
+--  ==================
+--  R_SortViewEntities
+--  ==================
+--  */
+--  viewEntity_t * R_SortViewEntities( viewEntity_t * vEntities ) {
+--  	SCOPED_PROFILE_EVENT( "R_SortViewEntities" );
+--
+--  	// We want to avoid having a single AddModel for something complex be
+--  	// the last thing processed and hurt the parallel occupancy, so
+--  	// sort dynamic models first, _area models second, then everything else.
+--  	viewEntity_t * dynamics = NULL;
+--  	viewEntity_t * areas = NULL;
+--  	viewEntity_t * others = NULL;
+--  	for ( viewEntity_t * vEntity = vEntities; vEntity != NULL; ) {
+--  		viewEntity_t * next = vEntity->next;
+--  		const idRenderModel * model = vEntity->entityDef->parms.hModel;
+--  		if ( model->IsDynamicModel() != DM_STATIC ) {
+--  			vEntity->next = dynamics;
+--  			dynamics = vEntity;
+--  		} else if ( model->IsStaticWorldModel() ) {
+--  			vEntity->next = areas;
+--  			areas = vEntity;
+--  		} else {
+--  			vEntity->next = others;
+--  			others = vEntity;
+--  		}
+--  		vEntity = next;
+--  	}
+--
+--  	// concatenate the lists
+--  	viewEntity_t * all = others;
+--
+--  	for ( viewEntity_t * vEntity = areas; vEntity != NULL; ) {
+--  		viewEntity_t * next = vEntity->next;
+--  		vEntity->next = all;
+--  		all = vEntity;
+--  		vEntity = next;
+--  	}
+--
+--  	for ( viewEntity_t * vEntity = dynamics; vEntity != NULL; ) {
+--  		viewEntity_t * next = vEntity->next;
+--  		vEntity->next = all;
+--  		all = vEntity;
+--  		vEntity = next;
+--  	}
+--
+--  	return all;
+--  }
+--
+--  /*
+--  ==================
+--  R_ClearEntityDefDynamicModel
+--
+--  If we know the reference bounds stays the same, we
+--  only need to do this on entity update, not the full
+--  R_FreeEntityDefDerivedData
+--  ==================
+--  */
+--  void R_ClearEntityDefDynamicModel( idRenderEntityLocal *def ) {
+--  	// free all the interaction surfaces
+--  	for ( idInteraction *inter = def->firstInteraction; inter != NULL && !inter->IsEmpty(); inter = inter->entityNext ) {
+--  		inter->FreeSurfaces();
+--  	}
+--
+--  	// clear the dynamic model if present
+--  	if ( def->dynamicModel ) {
+--  		// this is copied from cachedDynamicModel, so it doesn't need to be freed
+--  		def->dynamicModel = NULL;
+--  	}
+--  	def->dynamicModelFrameCount = 0;
+--  }
+--
+--  /*
+--  ==================
+--  R_IssueEntityDefCallback
+--  ==================
+--  */
+--  bool R_IssueEntityDefCallback( idRenderEntityLocal *def ) {
+--  	idBounds oldBounds = def->localReferenceBounds;
+--
+--  	def->archived = false;		// will need to be written to the demo file
+--
+--  	bool update;
+--  	if ( tr.viewDef != NULL ) {
+--  		update = def->parms.callback( &def->parms, &tr.viewDef->renderView );
+--  	} else {
+--  		update = def->parms.callback( &def->parms, NULL );
+--  	}
+--  	tr.pc.c_entityDefCallbacks++;
+--
+--  	if ( def->parms.hModel == NULL ) {
+--  		common->Error( "R_IssueEntityDefCallback: dynamic entity callback didn't set model" );
+--  	}
+--
+--  	if ( r_checkBounds.GetBool() ) {
+--  		if (	oldBounds[0][0] > def->localReferenceBounds[0][0] + CHECK_BOUNDS_EPSILON ||
+--  				oldBounds[0][1] > def->localReferenceBounds[0][1] + CHECK_BOUNDS_EPSILON ||
+--  				oldBounds[0][2] > def->localReferenceBounds[0][2] + CHECK_BOUNDS_EPSILON ||
+--  				oldBounds[1][0] < def->localReferenceBounds[1][0] - CHECK_BOUNDS_EPSILON ||
+--  				oldBounds[1][1] < def->localReferenceBounds[1][1] - CHECK_BOUNDS_EPSILON ||
+--  				oldBounds[1][2] < def->localReferenceBounds[1][2] - CHECK_BOUNDS_EPSILON ) {
+--  			common->Printf( "entity %i callback extended reference bounds\n", def->index );
+--  		}
+--  	}
+--
+--  	return update;
+--  }
+--
+--  /*
+--  ===================
+--  R_EntityDefDynamicModel
+--
+--  This is also called by the game code for idRenderWorldLocal::ModelTrace(), and idRenderWorldLocal::Trace() which is bad for performance...
+--
+--  Issues a deferred entity callback if necessary.
+--  If the model isn't dynamic, it returns the original.
+--  Returns the cached dynamic model if present, otherwise creates it.
+--  ===================
+--  */
+--  idRenderModel *R_EntityDefDynamicModel( idRenderEntityLocal *def ) {
+--  	if ( def->dynamicModelFrameCount == tr.frameCount ) {
+--  		return def->dynamicModel;
+--  	}
+--
+--  	// allow deferred entities to construct themselves
+--  	bool callbackUpdate;
+--  	if ( def->parms.callback != NULL ) {
+--  		SCOPED_PROFILE_EVENT( "R_IssueEntityDefCallback" );
+--  		callbackUpdate = R_IssueEntityDefCallback( def );
+--  	} else {
+--  		callbackUpdate = false;
+--  	}
+--
+--  	idRenderModel *model = def->parms.hModel;
+--
+--  	if ( model == NULL ) {
+--  		common->Error( "R_EntityDefDynamicModel: NULL model" );
+--  		return NULL;
+--  	}
+--
+--  	if ( model->IsDynamicModel() == DM_STATIC ) {
+--  		def->dynamicModel = NULL;
+--  		def->dynamicModelFrameCount = 0;
+--  		return model;
+--  	}
+--
+--  	// continously animating models (particle systems, etc) will have their snapshot updated every single view
+--  	if ( callbackUpdate || ( model->IsDynamicModel() == DM_CONTINUOUS && def->dynamicModelFrameCount != tr.frameCount ) ) {
+--  		R_ClearEntityDefDynamicModel( def );
+--  	}
+--
+--  	// if we don't have a snapshot of the dynamic model, generate it now
+--  	if ( def->dynamicModel == NULL ) {
+--
+--  		SCOPED_PROFILE_EVENT( "InstantiateDynamicModel" );
+--
+--  		// instantiate the snapshot of the dynamic model, possibly reusing memory from the cached snapshot
+--  		def->cachedDynamicModel = model->InstantiateDynamicModel( &def->parms, tr.viewDef, def->cachedDynamicModel );
+--
+--  		if ( def->cachedDynamicModel != NULL && r_checkBounds.GetBool() ) {
+--  			idBounds b = def->cachedDynamicModel->Bounds();
+--  			if (	b[0][0] < def->localReferenceBounds[0][0] - CHECK_BOUNDS_EPSILON ||
+--  					b[0][1] < def->localReferenceBounds[0][1] - CHECK_BOUNDS_EPSILON ||
+--  					b[0][2] < def->localReferenceBounds[0][2] - CHECK_BOUNDS_EPSILON ||
+--  					b[1][0] > def->localReferenceBounds[1][0] + CHECK_BOUNDS_EPSILON ||
+--  					b[1][1] > def->localReferenceBounds[1][1] + CHECK_BOUNDS_EPSILON ||
+--  					b[1][2] > def->localReferenceBounds[1][2] + CHECK_BOUNDS_EPSILON ) {
+--  				common->Printf( "entity %i dynamic model exceeded reference bounds\n", def->index );
+--  			}
+--  		}
+--
+--  		def->dynamicModel = def->cachedDynamicModel;
+--  		def->dynamicModelFrameCount = tr.frameCount;
+--  	}
+--
+--  	// set model depth hack value
+--  	if ( def->dynamicModel != NULL && model->DepthHack() != 0.0f && tr.viewDef != NULL ) {
+--  		idPlane eye, clip;
+--  		idVec3 ndc;
+--  		R_TransformModelToClip( def->parms.origin, tr.viewDef->worldSpace.modelViewMatrix, tr.viewDef->projectionMatrix, eye, clip );
+--  		R_TransformClipToDevice( clip, ndc );
+--  		def->parms.modelDepthHack = model->DepthHack() * ( 1.0f - ndc.z );
+--  	} else {
+--  		def->parms.modelDepthHack = 0.0f;
+--  	}
+--
+--  	return def->dynamicModel;
+--  }
+--
+--  /*
+--  ===================
+--  R_SetupDrawSurfShader
+--  ===================
+--  */
+--  void R_SetupDrawSurfShader( drawSurf_t * drawSurf, const idMaterial * shader, const renderEntity_t * renderEntity ) {
+--  	drawSurf->material = shader;
+--  	drawSurf->sort = shader->GetSort();
+--
+--  	// process the shader expressions for conditionals / color / texcoords
+--  	const float	*constRegs = shader->ConstantRegisters();
+--  	if ( likely( constRegs != NULL ) ) {
+--  		// shader only uses constant values
+--  		drawSurf->shaderRegisters = constRegs;
+--  	} else {
+--  		// by default evaluate with the entityDef's shader parms
+--  		const float * shaderParms = renderEntity->shaderParms;
+--
+--  		// a reference shader will take the calculated stage color value from another shader
+--  		// and use that for the parm0-parm3 of the current shader, which allows a stage of
+--  		// a light model and light flares to pick up different flashing tables from
+--  		// different light shaders
+--  		float generatedShaderParms[MAX_ENTITY_SHADER_PARMS];
+--  		if ( unlikely( renderEntity->referenceShader != NULL ) ) {
+--  			// evaluate the reference shader to find our shader parms
+--  			float refRegs[MAX_EXPRESSION_REGISTERS];
+--  			renderEntity->referenceShader->EvaluateRegisters( refRegs, renderEntity->shaderParms,
+--  																tr.viewDef->renderView.shaderParms,
+--  																tr.viewDef->renderView.time[renderEntity->timeGroup] * 0.001f, renderEntity->referenceSound );
+--
+--  			const shaderStage_t * pStage = renderEntity->referenceShader->GetStage( 0 );
+--
+--  			memcpy( generatedShaderParms, renderEntity->shaderParms, sizeof( generatedShaderParms ) );
+--  			generatedShaderParms[0] = refRegs[ pStage->color.registers[0] ];
+--  			generatedShaderParms[1] = refRegs[ pStage->color.registers[1] ];
+--  			generatedShaderParms[2] = refRegs[ pStage->color.registers[2] ];
+--
+--  			shaderParms = generatedShaderParms;
+--  		}
+--
+--  		// allocte frame memory for the shader register values
+--  		float * regs = (float *)R_FrameAlloc( shader->GetNumRegisters() * sizeof( float ), FRAME_ALLOC_SHADER_REGISTER );
+--  		drawSurf->shaderRegisters = regs;
+--
+--  		// process the shader expressions for conditionals / color / texcoords
+--  		shader->EvaluateRegisters( regs, shaderParms, tr.viewDef->renderView.shaderParms,
+--  										tr.viewDef->renderView.time[renderEntity->timeGroup] * 0.001f, renderEntity->referenceSound );
+--  	}
+--  }
+--
+--  /*
+--  ===================
+--  R_SetupDrawSurfJoints
+--  ===================
+--  */
+--  void R_SetupDrawSurfJoints( drawSurf_t * drawSurf, const srfTriangles_t * tri, const idMaterial * shader ) {
+--  	if ( tri->staticModelWithJoints == NULL || !r_useGPUSkinning.GetBool() ) {
+--  		drawSurf->jointCache = 0;
+--  		return;
+--  	}
+--
+--  	idRenderModelStatic * model = tri->staticModelWithJoints;
+--  	assert( model->jointsInverted != NULL );
+--
+--  	if ( !vertexCache.CacheIsCurrent( model->jointsInvertedBuffer ) ) {
+--  		const int alignment = glConfig.uniformBufferOffsetAlignment;
+--  		model->jointsInvertedBuffer = vertexCache.AllocJoint( model->jointsInverted, ALIGN( model->numInvertedJoints * sizeof( idJointMat ), alignment ) );
+--  	}
+--  	drawSurf->jointCache = model->jointsInvertedBuffer;
+--  }
+--
+--  /*
+--  ===================
+--  R_AddSingleModel
+--
+--  May be run in parallel.
+--
+--  Here is where dynamic models actually get instantiated, and necessary
+--  interaction surfaces get created. This is all done on a sort-by-model
+--  basis to keep source data in cache (most likely L2) as any interactions
+--  and shadows are generated, since dynamic models will typically be lit by
+--  two or more lights.
+--  ===================
+--  */
+--  void R_AddSingleModel( viewEntity_t * vEntity ) {
+--  	// we will add all interaction surfs here, to be chained to the lights in later serial code
+--  	vEntity->drawSurfs = NULL;
+--  	vEntity->staticShadowVolumes = NULL;
+--  	vEntity->dynamicShadowVolumes = NULL;
+--
+--  	// globals we really should pass in...
+--  	const viewDef_t * viewDef = tr.viewDef;
+--
+--  	idRenderEntityLocal * entityDef = vEntity->entityDef;
+--  	const renderEntity_t * renderEntity = &entityDef->parms;
+--  	const idRenderWorldLocal * world = entityDef->world;
+--
+--  	if ( viewDef->isXraySubview && entityDef->parms.xrayIndex == 1 ) {
+--  		return;
+--  	} else if ( !viewDef->isXraySubview && entityDef->parms.xrayIndex == 2 ) {
+--  		return;
+--  	}
+--
+--  	SCOPED_PROFILE_EVENT( renderEntity->hModel == NULL ? "Unknown Model" : renderEntity->hModel->Name() );
+--
+--  	// calculate the znear for testing whether or not the view is inside a shadow projection
+--  	const float znear = ( viewDef->renderView.cramZNear ) ? ( r_znear.GetFloat() * 0.25f ) : r_znear.GetFloat();
+--
+--  	// if the entity wasn't seen through a portal chain, it was added just for light shadows
+--  	const bool modelIsVisible = !vEntity->scissorRect.IsEmpty();
+--  	const bool addInteractions = modelIsVisible && ( !viewDef->isXraySubview || entityDef->parms.xrayIndex == 2 );
+--  	const int entityIndex = entityDef->index;
+--
+--  	//---------------------------
+--  	// Find which of the visible lights contact this entity
+--  	//
+--  	// If the entity doesn't accept light or cast shadows from any surface,
+--  	// this can be skipped.
+--  	//
+--  	// OPTIMIZE: world areas can assume all referenced lights are used
+--  	//---------------------------
+--  	int	numContactedLights = 0;
+--  	static const int MAX_CONTACTED_LIGHTS = 128;
+--  	viewLight_t * contactedLights[MAX_CONTACTED_LIGHTS];
+--  	idInteraction * staticInteractions[MAX_CONTACTED_LIGHTS];
+--
+--  	if ( renderEntity->hModel == NULL ||
+--  			renderEntity->hModel->ModelHasInteractingSurfaces() ||
+--  			renderEntity->hModel->ModelHasShadowCastingSurfaces() ) {
+--  		SCOPED_PROFILE_EVENT( "Find lights" );
+--  		for ( viewLight_t * vLight = viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  			if ( vLight->scissorRect.IsEmpty() ) {
+--  				continue;
+--  			}
+--  			if ( vLight->entityInteractionState != NULL ) {
+--  				// new code path, everything was done in AddLight
+--  				if ( vLight->entityInteractionState[entityIndex] == viewLight_t::INTERACTION_YES ) {
+--  					contactedLights[numContactedLights] = vLight;
+--  					staticInteractions[numContactedLights] = world->interactionTable[vLight->lightDef->index * world->interactionTableWidth + entityIndex];
+--  					if ( ++numContactedLights == MAX_CONTACTED_LIGHTS ) {
+--  						break;
+--  					}
+--  				}
+--  				continue;
+--  			}
+--
+--  			const idRenderLightLocal * lightDef = vLight->lightDef;
+--
+--  			if ( !lightDef->globalLightBounds.IntersectsBounds( entityDef->globalReferenceBounds ) ) {
+--  				continue;
+--  			}
+--
+--  			if ( R_CullModelBoundsToLight( lightDef, entityDef->localReferenceBounds, entityDef->modelRenderMatrix ) ) {
+--  				continue;
+--  			}
+--
+--  			if ( !modelIsVisible ) {
+--  				// some lights have their center of projection outside the world
+--  				if ( lightDef->areaNum != -1 ) {
+--  					// if no part of the model is in an area that is connected to
+--  					// the light center (it is behind a solid, closed door), we can ignore it
+--  					bool areasConnected = false;
+--  					for ( areaReference_t *ref = entityDef->entityRefs; ref != NULL; ref = ref->ownerNext ) {
+--  						if ( world->AreasAreConnected( lightDef->areaNum, ref->area->areaNum, PS_BLOCK_VIEW ) ) {
+--  							areasConnected = true;
+--  							break;
+--  						}
+--  					}
+--  					if ( areasConnected == false ) {
+--  						// can't possibly be seen or shadowed
+--  						continue;
+--  					}
+--  				}
+--
+--  				// check more precisely for shadow visibility
+--  				idBounds shadowBounds;
+--  				R_ShadowBounds( entityDef->globalReferenceBounds, lightDef->globalLightBounds, lightDef->globalLightOrigin, shadowBounds );
+--
+--  				// this doesn't say that the shadow can't effect anything, only that it can't
+--  				// effect anything in the view
+--  				if ( idRenderMatrix::CullBoundsToMVP( viewDef->worldSpace.mvp, shadowBounds ) ) {
+--  					continue;
+--  				}
+--  			}
+--  			contactedLights[numContactedLights] = vLight;
+--  			staticInteractions[numContactedLights] = world->interactionTable[vLight->lightDef->index * world->interactionTableWidth + entityIndex];
+--  			if ( ++numContactedLights == MAX_CONTACTED_LIGHTS ) {
+--  				break;
+--  			}
+--  		}
+--  	}
+--
+--  	// if we aren't visible and none of the shadows stretch into the view,
+--  	// we don't need to do anything else
+--  	if ( !modelIsVisible && numContactedLights == 0 ) {
+--  		return;
+--  	}
+--
+--  	//---------------------------
+--  	// create a dynamic model if the geometry isn't static
+--  	//---------------------------
+--  	idRenderModel * model = R_EntityDefDynamicModel( entityDef );
+--  	if ( model == NULL || model->NumSurfaces() <= 0 ) {
+--  		return;
+--  	}
+--
+--  	// add the lightweight blood decal surfaces if the model is directly visible
+--  	if ( modelIsVisible ) {
+--  		assert( !vEntity->scissorRect.IsEmpty() );
+--
+--  		if ( entityDef->decals != NULL && !r_skipDecals.GetBool() ) {
+--  			entityDef->decals->CreateDeferredDecals( model );
+--
+--  			unsigned int numDrawSurfs = entityDef->decals->GetNumDecalDrawSurfs();
+--  			for ( unsigned int i = 0; i < numDrawSurfs; i++ ) {
+--  				drawSurf_t * decalDrawSurf = entityDef->decals->CreateDecalDrawSurf( vEntity, i );
+--  				if ( decalDrawSurf != NULL ) {
+--  					decalDrawSurf->linkChain = NULL;
+--  					decalDrawSurf->nextOnLight = vEntity->drawSurfs;
+--  					vEntity->drawSurfs = decalDrawSurf;
+--  				}
+--  			}
+--  		}
+--
+--  		if ( entityDef->overlays != NULL && !r_skipOverlays.GetBool() ) {
+--  			entityDef->overlays->CreateDeferredOverlays( model );
+--
+--  			unsigned int numDrawSurfs = entityDef->overlays->GetNumOverlayDrawSurfs();
+--  			for ( unsigned int i = 0; i < numDrawSurfs; i++ ) {
+--  				drawSurf_t * overlayDrawSurf = entityDef->overlays->CreateOverlayDrawSurf( vEntity, model, i );
+--  				if ( overlayDrawSurf != NULL ) {
+--  					overlayDrawSurf->linkChain = NULL;
+--  					overlayDrawSurf->nextOnLight = vEntity->drawSurfs;
+--  					vEntity->drawSurfs = overlayDrawSurf;
+--  				}
+--  			}
+--  		}
+--  	}
+--
+--  	//---------------------------
+--  	// copy matrix related stuff for back-end use
+--  	// and setup a render matrix for faster culling
+--  	//---------------------------
+--  	vEntity->modelDepthHack = renderEntity->modelDepthHack;
+--  	vEntity->weaponDepthHack = renderEntity->weaponDepthHack;
+--  	vEntity->skipMotionBlur = renderEntity->skipMotionBlur;
+--
+--  	memcpy( vEntity->modelMatrix, entityDef->modelMatrix, sizeof( vEntity->modelMatrix ) );
+--  	R_MatrixMultiply( entityDef->modelMatrix, viewDef->worldSpace.modelViewMatrix, vEntity->modelViewMatrix );
+--
+--  	idRenderMatrix viewMat;
+--  	idRenderMatrix::Transpose( *(idRenderMatrix *)vEntity->modelViewMatrix, viewMat );
+--  	idRenderMatrix::Multiply( viewDef->projectionRenderMatrix, viewMat, vEntity->mvp );
+--  	if ( renderEntity->weaponDepthHack ) {
+--  		idRenderMatrix::ApplyDepthHack( vEntity->mvp );
+--  	}
+--  	if ( renderEntity->modelDepthHack != 0.0f ) {
+--  		idRenderMatrix::ApplyModelDepthHack( vEntity->mvp, renderEntity->modelDepthHack );
+--  	}
+--
+--  	// local light and view origins are used to determine if the view is definitely outside
+--  	// an extruded shadow volume, which means we can skip drawing the end caps
+--  	idVec3 localViewOrigin;
+--  	R_GlobalPointToLocal( vEntity->modelMatrix, viewDef->renderView.vieworg, localViewOrigin );
+--
+--  	//---------------------------
+--  	// add all the model surfaces
+--  	//---------------------------
+--  	for ( int surfaceNum = 0; surfaceNum < model->NumSurfaces(); surfaceNum++ ) {
+--  		const modelSurface_t *surf = model->Surface( surfaceNum );
+--
+--  		// for debugging, only show a single surface at a time
+--  		if ( r_singleSurface.GetInteger() >= 0 && surfaceNum != r_singleSurface.GetInteger() ) {
+--  			continue;
+--  		}
+--
+--  		srfTriangles_t * tri = surf->geometry;
+--  		if ( tri == NULL ) {
+--  			continue;
+--  		}
+--  		if ( tri->numIndexes == NULL ) {
+--  			continue;		// happens for particles
+--  		}
+--  		const idMaterial * shader = surf->shader;
+--  		if ( shader == NULL ) {
+--  			continue;
+--  		}
+--  		if ( !shader->IsDrawn() ) {
+--  			continue;		// collision hulls, etc
+--  		}
+--
+--  		// RemapShaderBySkin
+--  		if ( entityDef->parms.customShader != NULL ) {
+--  			// this is sort of a hack, but causes deformed surfaces to map to empty surfaces,
+--  			// so the item highlight overlay doesn't highlight the autosprite surface
+--  			if ( shader->Deform() ) {
+--  				continue;
+--  			}
+--  			shader = entityDef->parms.customShader;
+--  		} else if ( entityDef->parms.customSkin ) {
+--  			shader = entityDef->parms.customSkin->RemapShaderBySkin( shader );
+--  			if ( shader == NULL ) {
+--  				continue;
+--  			}
+--  			if ( !shader->IsDrawn() ) {
+--  				continue;
+--  			}
+--  		}
+--
+--  		// optionally override with the renderView->globalMaterial
+--  		if ( tr.primaryRenderView.globalMaterial != NULL ) {
+--  			shader = tr.primaryRenderView.globalMaterial;
+--  		}
+--
+--  		SCOPED_PROFILE_EVENT( shader->GetName() );
+--
+--  		// debugging tool to make sure we have the correct pre-calculated bounds
+--  		if ( r_checkBounds.GetBool() ) {
+--  			for ( int j = 0; j < tri->numVerts; j++ ) {
+--  				int k;
+--  				for ( k = 0; k < 3; k++ ) {
+--  					if ( tri->verts[j].xyz[k] > tri->bounds[1][k] + CHECK_BOUNDS_EPSILON
+--  						|| tri->verts[j].xyz[k] < tri->bounds[0][k] - CHECK_BOUNDS_EPSILON ) {
+--  						common->Printf( "bad tri->bounds on %s:%s\n", entityDef->parms.hModel->Name(), shader->GetName() );
+--  						break;
+--  					}
+--  					if ( tri->verts[j].xyz[k] > entityDef->localReferenceBounds[1][k] + CHECK_BOUNDS_EPSILON
+--  						|| tri->verts[j].xyz[k] < entityDef->localReferenceBounds[0][k] - CHECK_BOUNDS_EPSILON ) {
+--  						common->Printf( "bad referenceBounds on %s:%s\n", entityDef->parms.hModel->Name(), shader->GetName() );
+--  						break;
+--  					}
+--  				}
+--  				if ( k != 3 ) {
+--  					break;
+--  				}
+--  			}
+--  		}
+--
+--  		// view frustum culling for the precise surface bounds, which is tighter
+--  		// than the entire entity reference bounds
+--  		// If the entire model wasn't visible, there is no need to check the
+--  		// individual surfaces.
+--  		const bool surfaceDirectlyVisible = modelIsVisible && !idRenderMatrix::CullBoundsToMVP( vEntity->mvp, tri->bounds );
+--  		const bool gpuSkinned = ( tri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() );
+--
+--  		//--------------------------
+--  		// base drawing surface
+--  		//--------------------------
+--  		drawSurf_t * baseDrawSurf = NULL;
+--  		if ( surfaceDirectlyVisible ) {
+--  			// make sure we have an ambient cache and all necessary normals / tangents
+--  			if ( !vertexCache.CacheIsCurrent( tri->indexCache ) ) {
+--  				tri->indexCache = vertexCache.AllocIndex( tri->indexes, ALIGN( tri->numIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--  			}
+--  			if ( !vertexCache.CacheIsCurrent( tri->ambientCache ) ) {
+--  				// we are going to use it for drawing, so make sure we have the tangents and normals
+--  				if ( shader->ReceivesLighting() && !tri->tangentsCalculated ) {
+--  					assert( tri->staticModelWithJoints == NULL );
+--  					R_DeriveTangents( tri );
+--  					assert( false );	// this should no longer be hit
+--  				}
+--  				tri->ambientCache = vertexCache.AllocVertex( tri->verts, ALIGN( tri->numVerts * sizeof( idDrawVert ), VERTEX_CACHE_ALIGN ) );
+--  			}
+--
+--  			// add the surface for drawing
+--  			// we can re-use some of the values for light interaction surfaces
+--  			baseDrawSurf = (drawSurf_t *)R_FrameAlloc( sizeof( *baseDrawSurf ), FRAME_ALLOC_DRAW_SURFACE );
+--  			baseDrawSurf->frontEndGeo = tri;
+--  			baseDrawSurf->space = vEntity;
+--  			baseDrawSurf->scissorRect = vEntity->scissorRect;
+--  			baseDrawSurf->extraGLState = 0;
+--  			baseDrawSurf->renderZFail = 0;
+--
+--  			R_SetupDrawSurfShader( baseDrawSurf, shader, renderEntity );
+--
+--  			// Check for deformations (eyeballs, flares, etc)
+--  			const deform_t shaderDeform = shader->Deform();
+--  			if ( shaderDeform != DFRM_NONE ) {
+--  				drawSurf_t * deformDrawSurf = R_DeformDrawSurf( baseDrawSurf );
+--  				if ( deformDrawSurf != NULL ) {
+--  					// any deforms may have created multiple draw surfaces
+--  					for ( drawSurf_t * surf = deformDrawSurf, * next = NULL; surf != NULL; surf = next ) {
+--  						next = surf->nextOnLight;
+--
+--  						surf->linkChain = NULL;
+--  						surf->nextOnLight = vEntity->drawSurfs;
+--  						vEntity->drawSurfs = surf;
+--  					}
+--  				}
+--  			}
+--
+--  			// Most deform source surfaces do not need to be rendered.
+--  			// However, particles are rendered in conjunction with the source surface.
+--  			if ( shaderDeform == DFRM_NONE || shaderDeform == DFRM_PARTICLE || shaderDeform == DFRM_PARTICLE2 ) {
+--  				// copy verts and indexes to this frame's hardware memory if they aren't already there
+--  				if ( !vertexCache.CacheIsCurrent( tri->ambientCache ) ) {
+--  					tri->ambientCache = vertexCache.AllocVertex( tri->verts, ALIGN( tri->numVerts * sizeof( tri->verts[0] ), VERTEX_CACHE_ALIGN ) );
+--  				}
+--  				if ( !vertexCache.CacheIsCurrent( tri->indexCache ) ) {
+--  					tri->indexCache = vertexCache.AllocIndex( tri->indexes, ALIGN( tri->numIndexes * sizeof( tri->indexes[0] ), INDEX_CACHE_ALIGN ) );
+--  				}
+--
+--  				R_SetupDrawSurfJoints( baseDrawSurf, tri, shader );
+--
+--  				baseDrawSurf->numIndexes = tri->numIndexes;
+--  				baseDrawSurf->ambientCache = tri->ambientCache;
+--  				baseDrawSurf->indexCache = tri->indexCache;
+--  				baseDrawSurf->shadowCache = 0;
+--
+--  				baseDrawSurf->linkChain = NULL;		// link to the view
+--  				baseDrawSurf->nextOnLight = vEntity->drawSurfs;
+--  				vEntity->drawSurfs = baseDrawSurf;
+--  			}
+--  		}
+--
+--  		//----------------------------------------
+--  		// add all light interactions
+--  		//----------------------------------------
+--  		for ( int contactedLight = 0; contactedLight < numContactedLights; contactedLight++ ) {
+--  			viewLight_t * vLight = contactedLights[contactedLight];
+--  			const idRenderLightLocal * lightDef = vLight->lightDef;
+--  			const idInteraction * interaction = staticInteractions[contactedLight];
+--
+--  			// check for a static interaction
+--  			surfaceInteraction_t *surfInter = NULL;
+--  			if ( interaction > INTERACTION_EMPTY && interaction->staticInteraction ) {
+--  				// we have a static interaction that was calculated accurately
+--  				assert( model->NumSurfaces() == interaction->numSurfaces );
+--  				surfInter = &interaction->surfaces[surfaceNum];
+--  			} else {
+--  				// try to do a more precise cull of this model surface to the light
+--  				if ( R_CullModelBoundsToLight( lightDef, tri->bounds, entityDef->modelRenderMatrix ) ) {
+--  					continue;
+--  				}
+--  			}
+--
+--  			// "invisible ink" lights and shaders (imp spawn drawing on walls, etc)
+--  			if ( shader->Spectrum() != lightDef->lightShader->Spectrum() ) {
+--  				continue;
+--  			}
+--
+--  			// Calculate the local light origin to determine if the view is inside the shadow
+--  			// projection and to calculate the triangle facing for dynamic shadow volumes.
+--  			idVec3 localLightOrigin;
+--  			R_GlobalPointToLocal( vEntity->modelMatrix, lightDef->globalLightOrigin, localLightOrigin );
+--
+--  			//--------------------------
+--  			// surface light interactions
+--  			//--------------------------
+--
+--  			dynamicShadowVolumeParms_t * dynamicShadowParms = NULL;
+--
+--  			if ( addInteractions && surfaceDirectlyVisible && shader->ReceivesLighting() ) {
+--  				// static interactions can commonly find that no triangles from a surface
+--  				// contact the light, even when the total model does
+--  				if ( surfInter == NULL || surfInter->lightTrisIndexCache > 0 ) {
+--  					// create a drawSurf for this interaction
+--  					drawSurf_t * lightDrawSurf = (drawSurf_t *)R_FrameAlloc( sizeof( *lightDrawSurf ), FRAME_ALLOC_DRAW_SURFACE );
+--
+--  					if ( surfInter != NULL ) {
+--  						// optimized static interaction
+--  						lightDrawSurf->numIndexes = surfInter->numLightTrisIndexes;
+--  						lightDrawSurf->indexCache = surfInter->lightTrisIndexCache;
+--  					} else {
+--  						// throw the entire source surface at it without any per-triangle culling
+--  						lightDrawSurf->numIndexes = tri->numIndexes;
+--  						lightDrawSurf->indexCache = tri->indexCache;
+--
+--  						// optionally cull the triangles to the light volume
+--  						if ( r_cullDynamicLightTriangles.GetBool() ) {
+--
+--  							vertCacheHandle_t lightIndexCache = vertexCache.AllocIndex( NULL, ALIGN( lightDrawSurf->numIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--  							if ( vertexCache.CacheIsCurrent( lightIndexCache ) ) {
+--  								lightDrawSurf->indexCache = lightIndexCache;
+--
+--  								dynamicShadowParms = (dynamicShadowVolumeParms_t *)R_FrameAlloc( sizeof( dynamicShadowParms[0] ), FRAME_ALLOC_SHADOW_VOLUME_PARMS );
+--
+--  								dynamicShadowParms->verts = tri->verts;
+--  								dynamicShadowParms->numVerts = tri->numVerts;
+--  								dynamicShadowParms->indexes = tri->indexes;
+--  								dynamicShadowParms->numIndexes = tri->numIndexes;
+--  								dynamicShadowParms->silEdges = tri->silEdges;
+--  								dynamicShadowParms->numSilEdges = tri->numSilEdges;
+--  								dynamicShadowParms->joints = gpuSkinned ? tri->staticModelWithJoints->jointsInverted : NULL;
+--  								dynamicShadowParms->numJoints = gpuSkinned ? tri->staticModelWithJoints->numInvertedJoints : 0;
+--  								dynamicShadowParms->triangleBounds = tri->bounds;
+--  								dynamicShadowParms->triangleMVP = vEntity->mvp;
+--  								dynamicShadowParms->localLightOrigin = localLightOrigin;
+--  								dynamicShadowParms->localViewOrigin = localViewOrigin;
+--  								idRenderMatrix::Multiply( vLight->lightDef->baseLightProject, entityDef->modelRenderMatrix, dynamicShadowParms->localLightProject );
+--  								dynamicShadowParms->zNear = znear;
+--  								dynamicShadowParms->lightZMin = vLight->scissorRect.zmin;
+--  								dynamicShadowParms->lightZMax = vLight->scissorRect.zmax;
+--  								dynamicShadowParms->cullShadowTrianglesToLight = false;
+--  								dynamicShadowParms->forceShadowCaps = false;
+--  								dynamicShadowParms->useShadowPreciseInsideTest = false;
+--  								dynamicShadowParms->useShadowDepthBounds = false;
+--  								dynamicShadowParms->tempFacing = NULL;
+--  								dynamicShadowParms->tempCulled = NULL;
+--  								dynamicShadowParms->tempVerts = NULL;
+--  								dynamicShadowParms->indexBuffer = NULL;
+--  								dynamicShadowParms->shadowIndices = NULL;
+--  								dynamicShadowParms->maxShadowIndices = 0;
+--  								dynamicShadowParms->numShadowIndices = NULL;
+--  								dynamicShadowParms->lightIndices = (triIndex_t *)vertexCache.MappedIndexBuffer( lightIndexCache );
+--  								dynamicShadowParms->maxLightIndices = lightDrawSurf->numIndexes;
+--  								dynamicShadowParms->numLightIndices = &lightDrawSurf->numIndexes;
+--  								dynamicShadowParms->renderZFail = NULL;
+--  								dynamicShadowParms->shadowZMin = NULL;
+--  								dynamicShadowParms->shadowZMax = NULL;
+--  								dynamicShadowParms->shadowVolumeState = & lightDrawSurf->shadowVolumeState;
+--
+--  								lightDrawSurf->shadowVolumeState = SHADOWVOLUME_UNFINISHED;
+--
+--  								dynamicShadowParms->next = vEntity->dynamicShadowVolumes;
+--  								vEntity->dynamicShadowVolumes = dynamicShadowParms;
+--  							}
+--  						}
+--  					}
+--  					lightDrawSurf->ambientCache = tri->ambientCache;
+--  					lightDrawSurf->shadowCache = 0;
+--  					lightDrawSurf->frontEndGeo = tri;
+--  					lightDrawSurf->space = vEntity;
+--  					lightDrawSurf->material = shader;
+--  					lightDrawSurf->extraGLState = 0;
+--  					lightDrawSurf->scissorRect = vLight->scissorRect; // interactionScissor;
+--  					lightDrawSurf->sort = 0.0f;
+--  					lightDrawSurf->renderZFail = 0;
+--  					lightDrawSurf->shaderRegisters = baseDrawSurf->shaderRegisters;
+--
+--  					R_SetupDrawSurfJoints( lightDrawSurf, tri, shader );
+--
+--  					// Determine which linked list to add the light surface to.
+--  					// There will only be localSurfaces if the light casts shadows and
+--  					// there are surfaces with NOSELFSHADOW.
+--  					if ( shader->Coverage() == MC_TRANSLUCENT ) {
+--  						lightDrawSurf->linkChain = &vLight->translucentInteractions;
+--  					} else if ( !lightDef->parms.noShadows && shader->TestMaterialFlag( MF_NOSELFSHADOW ) ) {
+--  						lightDrawSurf->linkChain = &vLight->localInteractions;
+--  					} else {
+--  						lightDrawSurf->linkChain = &vLight->globalInteractions;
+--  					}
+--  					lightDrawSurf->nextOnLight = vEntity->drawSurfs;
+--  					vEntity->drawSurfs = lightDrawSurf;
+--  				}
+--  			}
+--
+--  			//--------------------------
+--  			// surface shadows
+--  			//--------------------------
+--
+--  			if ( !shader->SurfaceCastsShadow() ) {
+--  				continue;
+--  			}
+--  			if ( !lightDef->LightCastsShadows() ) {
+--  				continue;
+--  			}
+--  			if ( tri->silEdges == NULL ) {
+--  				continue;		// can happen for beam models (shouldn't use a shadow casting material, though...)
+--  			}
+--
+--  			// if the static shadow does not have any shadows
+--  			if ( surfInter != NULL && surfInter->numShadowIndexes == 0 ) {
+--  				continue;
+--  			}
+--
+--  			// some entities, like view weapons, don't cast any shadows
+--  			if ( entityDef->parms.noShadow ) {
+--  				continue;
+--  			}
+--
+--  			// No shadow if it's suppressed for this light.
+--  			if ( entityDef->parms.suppressShadowInLightID && entityDef->parms.suppressShadowInLightID == lightDef->parms.lightId ) {
+--  				continue;
+--  			}
+--
+--  			if ( lightDef->parms.prelightModel && lightDef->lightHasMoved == false &&
+--  					entityDef->parms.hModel->IsStaticWorldModel() && !r_skipPrelightShadows.GetBool() ) {
+--  				// static light / world model shadow interacitons
+--  				// are always captured in the prelight shadow volume
+--  				continue;
+--  			}
+--
+--  			// If the shadow is drawn (or translucent), but the model isn't, we must include the shadow caps
+--  			// because we may be able to see into the shadow volume even though the view is outside it.
+--  			// This happens for the player world weapon and possibly some animations in multiplayer.
+--  			const bool forceShadowCaps = !addInteractions || r_forceShadowCaps.GetBool();
+--
+--  			drawSurf_t * shadowDrawSurf = (drawSurf_t *)R_FrameAlloc( sizeof( *shadowDrawSurf ), FRAME_ALLOC_DRAW_SURFACE );
+--
+--  			if ( surfInter != NULL ) {
+--  				shadowDrawSurf->numIndexes = 0;
+--  				shadowDrawSurf->indexCache = surfInter->shadowIndexCache;
+--  				shadowDrawSurf->shadowCache = tri->shadowCache;
+--  				shadowDrawSurf->scissorRect = vLight->scissorRect;		// default to the light scissor and light depth bounds
+--  				shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_DONE;	// assume the shadow volume is done in case r_skipStaticShadows is set
+--
+--  				if ( !r_skipStaticShadows.GetBool() ) {
+--  					staticShadowVolumeParms_t * staticShadowParms = (staticShadowVolumeParms_t *)R_FrameAlloc( sizeof( staticShadowParms[0] ), FRAME_ALLOC_SHADOW_VOLUME_PARMS );
+--
+--  					staticShadowParms->verts = tri->staticShadowVertexes;
+--  					staticShadowParms->numVerts = tri->numVerts * 2;
+--  					staticShadowParms->indexes = surfInter->shadowIndexes;
+--  					staticShadowParms->numIndexes = surfInter->numShadowIndexes;
+--  					staticShadowParms->numShadowIndicesWithCaps = surfInter->numShadowIndexes;
+--  					staticShadowParms->numShadowIndicesNoCaps = surfInter->numShadowIndexesNoCaps;
+--  					staticShadowParms->triangleBounds = tri->bounds;
+--  					staticShadowParms->triangleMVP = vEntity->mvp;
+--  					staticShadowParms->localLightOrigin = localLightOrigin;
+--  					staticShadowParms->localViewOrigin = localViewOrigin;
+--  					staticShadowParms->zNear = znear;
+--  					staticShadowParms->lightZMin = vLight->scissorRect.zmin;
+--  					staticShadowParms->lightZMax = vLight->scissorRect.zmax;
+--  					staticShadowParms->forceShadowCaps = forceShadowCaps;
+--  					staticShadowParms->useShadowPreciseInsideTest = r_useShadowPreciseInsideTest.GetBool();
+--  					staticShadowParms->useShadowDepthBounds = r_useShadowDepthBounds.GetBool();
+--  					staticShadowParms->numShadowIndices = & shadowDrawSurf->numIndexes;
+--  					staticShadowParms->renderZFail = & shadowDrawSurf->renderZFail;
+--  					staticShadowParms->shadowZMin = & shadowDrawSurf->scissorRect.zmin;
+--  					staticShadowParms->shadowZMax = & shadowDrawSurf->scissorRect.zmax;
+--  					staticShadowParms->shadowVolumeState = & shadowDrawSurf->shadowVolumeState;
+--
+--  					shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_UNFINISHED;
+--
+--  					staticShadowParms->next = vEntity->staticShadowVolumes;
+--  					vEntity->staticShadowVolumes = staticShadowParms;
+--  				}
+--
+--  			} else {
+--  				// When CPU skinning the dynamic shadow verts of a dynamic model may not have been copied to buffer memory yet.
+--  				if ( !vertexCache.CacheIsCurrent( tri->shadowCache ) ) {
+--  					assert( !gpuSkinned );	// the shadow cache should be static when using GPU skinning
+--  					// Extracts just the xyz values from a set of full size drawverts, and
+--  					// duplicates them with w set to 0 and 1 for the vertex program to project.
+--  					// This is constant for any number of lights, the vertex program takes care
+--  					// of projecting the verts to infinity for a particular light.
+--  					tri->shadowCache = vertexCache.AllocVertex( NULL, ALIGN( tri->numVerts * 2 * sizeof( idShadowVert ), VERTEX_CACHE_ALIGN ) );
+--  					idShadowVert * shadowVerts = (idShadowVert *)vertexCache.MappedVertexBuffer( tri->shadowCache );
+--  					idShadowVert::CreateShadowCache( shadowVerts, tri->verts, tri->numVerts );
+--  				}
+--
+--  				const int maxShadowVolumeIndexes = tri->numSilEdges * 6 + tri->numIndexes * 2;
+--
+--  				shadowDrawSurf->numIndexes = 0;
+--  				shadowDrawSurf->indexCache = vertexCache.AllocIndex( NULL, ALIGN( maxShadowVolumeIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--  				shadowDrawSurf->shadowCache = tri->shadowCache;
+--  				shadowDrawSurf->scissorRect = vLight->scissorRect;		// default to the light scissor and light depth bounds
+--  				shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_DONE;	// assume the shadow volume is done in case the index cache allocation failed
+--
+--  				// if the index cache was successfully allocated then setup the parms to create a shadow volume in parallel
+--  				if ( vertexCache.CacheIsCurrent( shadowDrawSurf->indexCache ) && !r_skipDynamicShadows.GetBool() ) {
+--
+--  					// if the parms were not already allocated for culling interaction triangles to the light frustum
+--  					if ( dynamicShadowParms == NULL ) {
+--  						dynamicShadowParms = (dynamicShadowVolumeParms_t *)R_FrameAlloc( sizeof( dynamicShadowParms[0] ), FRAME_ALLOC_SHADOW_VOLUME_PARMS );
+--  					} else {
+--  						// the shadow volume will be rendered first so when the interaction surface is drawn the triangles have been culled for sure
+--  						*dynamicShadowParms->shadowVolumeState = SHADOWVOLUME_DONE;
+--  					}
+--
+--  					dynamicShadowParms->verts = tri->verts;
+--  					dynamicShadowParms->numVerts = tri->numVerts;
+--  					dynamicShadowParms->indexes = tri->indexes;
+--  					dynamicShadowParms->numIndexes = tri->numIndexes;
+--  					dynamicShadowParms->silEdges = tri->silEdges;
+--  					dynamicShadowParms->numSilEdges = tri->numSilEdges;
+--  					dynamicShadowParms->joints = gpuSkinned ? tri->staticModelWithJoints->jointsInverted : NULL;
+--  					dynamicShadowParms->numJoints = gpuSkinned ? tri->staticModelWithJoints->numInvertedJoints : 0;
+--  					dynamicShadowParms->triangleBounds = tri->bounds;
+--  					dynamicShadowParms->triangleMVP = vEntity->mvp;
+--  					dynamicShadowParms->localLightOrigin = localLightOrigin;
+--  					dynamicShadowParms->localViewOrigin = localViewOrigin;
+--  					idRenderMatrix::Multiply( vLight->lightDef->baseLightProject, entityDef->modelRenderMatrix, dynamicShadowParms->localLightProject );
+--  					dynamicShadowParms->zNear = znear;
+--  					dynamicShadowParms->lightZMin = vLight->scissorRect.zmin;
+--  					dynamicShadowParms->lightZMax = vLight->scissorRect.zmax;
+--  					dynamicShadowParms->cullShadowTrianglesToLight = r_cullDynamicShadowTriangles.GetBool();
+--  					dynamicShadowParms->forceShadowCaps = forceShadowCaps;
+--  					dynamicShadowParms->useShadowPreciseInsideTest = r_useShadowPreciseInsideTest.GetBool();
+--  					dynamicShadowParms->useShadowDepthBounds = r_useShadowDepthBounds.GetBool();
+--  					dynamicShadowParms->tempFacing = NULL;
+--  					dynamicShadowParms->tempCulled = NULL;
+--  					dynamicShadowParms->tempVerts = NULL;
+--  					dynamicShadowParms->indexBuffer = NULL;
+--  					dynamicShadowParms->shadowIndices = (triIndex_t *)vertexCache.MappedIndexBuffer( shadowDrawSurf->indexCache );
+--  					dynamicShadowParms->maxShadowIndices = maxShadowVolumeIndexes;
+--  					dynamicShadowParms->numShadowIndices = & shadowDrawSurf->numIndexes;
+--  					// dynamicShadowParms->lightIndices may have already been set for the interaction surface
+--  					// dynamicShadowParms->maxLightIndices may have already been set for the interaction surface
+--  					// dynamicShadowParms->numLightIndices may have already been set for the interaction surface
+--  					dynamicShadowParms->renderZFail = & shadowDrawSurf->renderZFail;
+--  					dynamicShadowParms->shadowZMin = & shadowDrawSurf->scissorRect.zmin;
+--  					dynamicShadowParms->shadowZMax = & shadowDrawSurf->scissorRect.zmax;
+--  					dynamicShadowParms->shadowVolumeState = & shadowDrawSurf->shadowVolumeState;
+--
+--  					shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_UNFINISHED;
+--
+--  					// if the parms we not already linked for culling interaction triangles to the light frustum
+--  					if ( dynamicShadowParms->lightIndices == NULL ) {
+--  						dynamicShadowParms->next = vEntity->dynamicShadowVolumes;
+--  						vEntity->dynamicShadowVolumes = dynamicShadowParms;
+--  					}
+--
+--  					tr.pc.c_createShadowVolumes++;
+--  				}
+--  			}
+--
+--  			assert( vertexCache.CacheIsCurrent( shadowDrawSurf->shadowCache ) );
+--  			assert( vertexCache.CacheIsCurrent( shadowDrawSurf->indexCache ) );
+--
+--  			shadowDrawSurf->ambientCache = 0;
+--  			shadowDrawSurf->frontEndGeo = NULL;
+--  			shadowDrawSurf->space = vEntity;
+--  			shadowDrawSurf->material = NULL;
+--  			shadowDrawSurf->extraGLState = 0;
+--  			shadowDrawSurf->sort = 0.0f;
+--  			shadowDrawSurf->shaderRegisters = NULL;
+--
+--  			R_SetupDrawSurfJoints( shadowDrawSurf, tri, NULL );
+--
+--  			// determine which linked list to add the shadow surface to
+--  			shadowDrawSurf->linkChain = shader->TestMaterialFlag( MF_NOSELFSHADOW ) ? &vLight->localShadows : &vLight->globalShadows;
+--  			shadowDrawSurf->nextOnLight = vEntity->drawSurfs;
+--  			vEntity->drawSurfs = shadowDrawSurf;
+--  		}
+--  	}
+--  }
+--
+--  REGISTER_PARALLEL_JOB( R_AddSingleModel, "R_AddSingleModel" );
+--
+--  /*
+--  =================
+--  R_LinkDrawSurfToView
+--
+--  Als called directly by GuiModel
+--  =================
+--  */
+--  void R_LinkDrawSurfToView( drawSurf_t * drawSurf, viewDef_t * viewDef ) {
+--  	// if it doesn't fit, resize the list
+--  	if ( viewDef->numDrawSurfs == viewDef->maxDrawSurfs ) {
+--  		drawSurf_t **old = viewDef->drawSurfs;
+--  		int count;
+--
+--  		if ( viewDef->maxDrawSurfs == 0 ) {
+--  			viewDef->maxDrawSurfs = INITIAL_DRAWSURFS;
+--  			count = 0;
+--  		} else {
+--  			count = viewDef->maxDrawSurfs * sizeof( viewDef->drawSurfs[0] );
+--  			viewDef->maxDrawSurfs *= 2;
+--  		}
+--  		viewDef->drawSurfs = (drawSurf_t **)R_FrameAlloc( viewDef->maxDrawSurfs * sizeof( viewDef->drawSurfs[0] ), FRAME_ALLOC_DRAW_SURFACE_POINTER );
+--  		memcpy( viewDef->drawSurfs, old, count );
+--  	}
+--
+--  	viewDef->drawSurfs[viewDef->numDrawSurfs] = drawSurf;
+--  	viewDef->numDrawSurfs++;
+--  }
+--
+--  /*
+--  ===================
+--  R_AddModels
+--
+--  The end result of running this is the addition of drawSurf_t to the
+--  tr.viewDef->drawSurfs[] array and light link chains, along with
+--  frameData and vertexCache allocations to support the drawSurfs.
+--  ===================
+--  */
+--  void R_AddModels() {
+--  	SCOPED_PROFILE_EVENT( "R_AddModels" );
+--
+--  	tr.viewDef->viewEntitys = R_SortViewEntities( tr.viewDef->viewEntitys );
+--
+--  	//-------------------------------------------------
+--  	// Go through each view entity that is either visible to the view, or to
+--  	// any light that intersects the view (for shadows).
+--  	//-------------------------------------------------
+--
+--  	if ( r_useParallelAddModels.GetBool() ) {
+--  		for ( viewEntity_t * vEntity = tr.viewDef->viewEntitys; vEntity != NULL; vEntity = vEntity->next ) {
+--  			tr.frontEndJobList->AddJob( (jobRun_t)R_AddSingleModel, vEntity );
+--  		}
+--  		tr.frontEndJobList->Submit();
+--  		tr.frontEndJobList->Wait();
+--  	} else {
+--  		for ( viewEntity_t * vEntity = tr.viewDef->viewEntitys; vEntity != NULL; vEntity = vEntity->next ) {
+--  			R_AddSingleModel( vEntity );
+--  		}
+--  	}
+--
+--  	//-------------------------------------------------
+--  	// Kick off jobs to setup static and dynamic shadow volumes.
+--  	//-------------------------------------------------
+--
+--  	if ( r_useParallelAddShadows.GetInteger() == 1 ) {
+--  		for ( viewEntity_t * vEntity = tr.viewDef->viewEntitys; vEntity != NULL; vEntity = vEntity->next ) {
+--  			for ( staticShadowVolumeParms_t * shadowParms = vEntity->staticShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				tr.frontEndJobList->AddJob( (jobRun_t)StaticShadowVolumeJob, shadowParms );
+--  			}
+--  			for ( dynamicShadowVolumeParms_t * shadowParms = vEntity->dynamicShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				tr.frontEndJobList->AddJob( (jobRun_t)DynamicShadowVolumeJob, shadowParms );
+--  			}
+--  			vEntity->staticShadowVolumes = NULL;
+--  			vEntity->dynamicShadowVolumes = NULL;
+--  		}
+--  		tr.frontEndJobList->Submit();
+--  		// wait here otherwise the shadow volume index buffer may be unmapped before all shadow volumes have been constructed
+--  		tr.frontEndJobList->Wait();
+--  	} else {
+--  		int start = Sys_Microseconds();
+--
+--  		for ( viewEntity_t * vEntity = tr.viewDef->viewEntitys; vEntity != NULL; vEntity = vEntity->next ) {
+--  			for ( staticShadowVolumeParms_t * shadowParms = vEntity->staticShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				StaticShadowVolumeJob( shadowParms );
+--  			}
+--  			for ( dynamicShadowVolumeParms_t * shadowParms = vEntity->dynamicShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				DynamicShadowVolumeJob( shadowParms );
+--  			}
+--  			vEntity->staticShadowVolumes = NULL;
+--  			vEntity->dynamicShadowVolumes = NULL;
+--  		}
+--
+--  		int end = Sys_Microseconds();
+--  		backEnd.pc.shadowMicroSec += end - start;
+--  	}
+--
+--  	//-------------------------------------------------
+--  	// Move the draw surfs to the view.
+--  	//-------------------------------------------------
+--
+--  	tr.viewDef->numDrawSurfs = 0;	// clear the ambient surface list
+--  	tr.viewDef->maxDrawSurfs = 0;	// will be set to INITIAL_DRAWSURFS on R_LinkDrawSurfToView
+--
+--  	for ( viewEntity_t * vEntity = tr.viewDef->viewEntitys; vEntity != NULL; vEntity = vEntity->next ) {
+--  		for ( drawSurf_t * ds = vEntity->drawSurfs; ds != NULL; ) {
+--  			drawSurf_t * next = ds->nextOnLight;
+--  			if ( ds->linkChain == NULL ) {
+--  				R_LinkDrawSurfToView( ds, tr.viewDef );
+--  			} else {
+--  				ds->nextOnLight = *ds->linkChain;
+--  				*ds->linkChain = ds;
+--  			}
+--  			ds = next;
+--  		}
+--  		vEntity->drawSurfs = NULL;
+--  	}
+--  }
+--
+--  /*
+--  ============================
+--  R_ShadowBounds
+--
+--  Even though the extruded shadows are drawn projected to infinity, their effects are limited
+--  to a fraction of the light's volume.  An extruded box would require 12 faces to specify and
+--  be a lot of trouble, but an axial bounding box is quick and easy to determine.
+--
+--  If the light is completely contained in the view, there is no value in trying to cull the
+--  shadows, as they will all pass.
+--
+--  Pure function.
+--  ============================
+--  */
+--  void R_ShadowBounds( const idBounds & modelBounds, const idBounds & lightBounds, const idVec3 & lightOrigin, idBounds & shadowBounds ) {
+--  	for ( int i = 0; i < 3; i++ ) {
+--  		shadowBounds[0][i] = __fsels( modelBounds[0][i] - lightOrigin[i], modelBounds[0][i], lightBounds[0][i] );
+--  		shadowBounds[1][i] = __fsels( lightOrigin[i] - modelBounds[1][i], modelBounds[1][i], lightBounds[1][i] );
+--  	}
+--  }
+--
+--  /*
+--  ============================
+--  idRenderEntityLocal::IsDirectlyVisible()
+--  ============================
+--  */
+--  bool idRenderEntityLocal::IsDirectlyVisible() const {
+--  	if ( viewCount != tr.viewCount ) {
+--  		return false;
+--  	}
+--  	if ( viewEntity->scissorRect.IsEmpty() ) {
+--  		// a viewEntity was created for shadow generation, but the
+--  		// model global reference bounds isn't directly visible
+--  		return false;
+--  	}
+--  	return true;
+--  }
+--
+--  /*
+--  ===================
+--  R_AddSingleLight
+--
+--  May be run in parallel.
+--
+--  Sets vLight->removeFromList to true if the light should be removed from the list.
+--  Builds a chain of entities that need to be added for shadows only off vLight->shadowOnlyViewEntities.
+--  Allocates and fills in vLight->entityInteractionState.
+--
+--  Calc the light shader values, removing any light from the viewLight list
+--  if it is determined to not have any visible effect due to being flashed off or turned off.
+--
+--  Add any precomputed shadow volumes.
+--  ===================
+--  */
+--  static void R_AddSingleLight( viewLight_t * vLight ) {
+--  	// until proven otherwise
+--  	vLight->removeFromList = true;
+--  	vLight->shadowOnlyViewEntities = NULL;
+--  	vLight->preLightShadowVolumes = NULL;
+--
+--  	// globals we really should pass in...
+--  	const viewDef_t * viewDef = tr.viewDef;
+--
+--  	const idRenderLightLocal *light = vLight->lightDef;
+--  	const idMaterial * lightShader = light->lightShader;
+--  	if ( lightShader == NULL ) {
+--  		common->Error( "R_AddSingleLight: NULL lightShader" );
+--  		return;
+--  	}
+--
+--  	SCOPED_PROFILE_EVENT( lightShader->GetName() );
+--
+--  	// see if we are suppressing the light in this view
+--  	if ( !r_skipSuppress.GetBool() ) {
+--  		if ( light->parms.suppressLightInViewID && light->parms.suppressLightInViewID == viewDef->renderView.viewID ) {
+--  			return;
+--  		}
+--  		if ( light->parms.allowLightInViewID && light->parms.allowLightInViewID != viewDef->renderView.viewID ) {
+--  			return;
+--  		}
+--  	}
+--
+--  	// evaluate the light shader registers
+--  	float * lightRegs = (float *)R_FrameAlloc( lightShader->GetNumRegisters() * sizeof( float ), FRAME_ALLOC_SHADER_REGISTER );
+--  	lightShader->EvaluateRegisters( lightRegs, light->parms.shaderParms, viewDef->renderView.shaderParms,
+--  		tr.viewDef->renderView.time[0] * 0.001f, light->parms.referenceSound );
+--
+--  	// if this is a purely additive light and no stage in the light shader evaluates
+--  	// to a positive light value, we can completely skip the light
+--  	if ( !lightShader->IsFogLight() && !lightShader->IsBlendLight() ) {
+--  		int lightStageNum;
+--  		for ( lightStageNum = 0; lightStageNum < lightShader->GetNumStages(); lightStageNum++ ) {
+--  			const shaderStage_t	*lightStage = lightShader->GetStage( lightStageNum );
+--
+--  			// ignore stages that fail the condition
+--  			if ( !lightRegs[ lightStage->conditionRegister ] ) {
+--  				continue;
+--  			}
+--
+--  			const int * registers = lightStage->color.registers;
+--
+--  			// snap tiny values to zero
+--  			if ( lightRegs[ registers[0] ] < 0.001f ) {
+--  				lightRegs[ registers[0] ] = 0.0f;
+--  			}
+--  			if ( lightRegs[ registers[1] ] < 0.001f ) {
+--  				lightRegs[ registers[1] ] = 0.0f;
+--  			}
+--  			if ( lightRegs[ registers[2] ] < 0.001f ) {
+--  				lightRegs[ registers[2] ] = 0.0f;
+--  			}
+--
+--  			if ( lightRegs[ registers[0] ] > 0.0f ||
+--  					lightRegs[ registers[1] ] > 0.0f ||
+--  						lightRegs[ registers[2] ] > 0.0f ) {
+--  				break;
+--  			}
+--  		}
+--  		if ( lightStageNum == lightShader->GetNumStages() ) {
+--  			// we went through all the stages and didn't find one that adds anything
+--  			// remove the light from the viewLights list, and change its frame marker
+--  			// so interaction generation doesn't think the light is visible and
+--  			// create a shadow for it
+--  			return;
+--  		}
+--  	}
+--
+--  	//--------------------------------------------
+--  	// copy data used by backend
+--  	//--------------------------------------------
+--  	vLight->globalLightOrigin = light->globalLightOrigin;
+--  	vLight->lightProject[0] = light->lightProject[0];
+--  	vLight->lightProject[1] = light->lightProject[1];
+--  	vLight->lightProject[2] = light->lightProject[2];
+--  	vLight->lightProject[3] = light->lightProject[3];
+--
+--  	// the fog plane is the light far clip plane
+--  	idPlane fogPlane(	light->baseLightProject[2][0] - light->baseLightProject[3][0],
+--  						light->baseLightProject[2][1] - light->baseLightProject[3][1],
+--  						light->baseLightProject[2][2] - light->baseLightProject[3][2],
+--  						light->baseLightProject[2][3] - light->baseLightProject[3][3] );
+--  	const float planeScale = idMath::InvSqrt( fogPlane.Normal().LengthSqr() );
+--  	vLight->fogPlane[0] = fogPlane[0] * planeScale;
+--  	vLight->fogPlane[1] = fogPlane[1] * planeScale;
+--  	vLight->fogPlane[2] = fogPlane[2] * planeScale;
+--  	vLight->fogPlane[3] = fogPlane[3] * planeScale;
+--
+--  	// copy the matrix for deforming the 'zeroOneCubeModel' to exactly cover the light volume in world space
+--  	vLight->inverseBaseLightProject = light->inverseBaseLightProject;
+--
+--  	vLight->falloffImage = light->falloffImage;
+--  	vLight->lightShader = light->lightShader;
+--  	vLight->shaderRegisters = lightRegs;
+--
+--  	if ( r_useLightScissors.GetInteger() != 0 ) {
+--  		// Calculate the matrix that projects the zero-to-one cube to exactly cover the
+--  		// light frustum in clip space.
+--  		idRenderMatrix invProjectMVPMatrix;
+--  		idRenderMatrix::Multiply( viewDef->worldSpace.mvp, light->inverseBaseLightProject, invProjectMVPMatrix );
+--
+--  		// Calculate the projected bounds, either not clipped at all, near clipped, or fully clipped.
+--  		idBounds projected;
+--  		if ( r_useLightScissors.GetInteger() == 1 ) {
+--  			idRenderMatrix::ProjectedBounds( projected, invProjectMVPMatrix, bounds_zeroOneCube );
+--  		} else if ( r_useLightScissors.GetInteger() == 2 ) {
+--  			idRenderMatrix::ProjectedNearClippedBounds( projected, invProjectMVPMatrix, bounds_zeroOneCube );
+--  		} else {
+--  			idRenderMatrix::ProjectedFullyClippedBounds( projected, invProjectMVPMatrix, bounds_zeroOneCube );
+--  		}
+--
+--  		if ( projected[0][2] >= projected[1][2] ) {
+--  			// the light was culled to the view frustum
+--  			return;
+--  		}
+--
+--  		float screenWidth = (float)viewDef->viewport.x2 - (float)viewDef->viewport.x1;
+--  		float screenHeight = (float)viewDef->viewport.y2 - (float)viewDef->viewport.y1;
+--
+--  		idScreenRect lightScissorRect;
+--  		lightScissorRect.x1 = idMath::Ftoi( projected[0][0] * screenWidth );
+--  		lightScissorRect.x2 = idMath::Ftoi( projected[1][0] * screenWidth );
+--  		lightScissorRect.y1 = idMath::Ftoi( projected[0][1] * screenHeight );
+--  		lightScissorRect.y2 = idMath::Ftoi( projected[1][1] * screenHeight );
+--  		lightScissorRect.Expand();
+--
+--  		vLight->scissorRect.Intersect( lightScissorRect );
+--  		vLight->scissorRect.zmin = projected[0][2];
+--  		vLight->scissorRect.zmax = projected[1][2];
+--  	}
+--
+--  	// this one stays on the list
+--  	vLight->removeFromList = false;
+--
+--  	//--------------------------------------------
+--  	// create interactions with all entities the light may touch, and add viewEntities
+--  	// that may cast shadows, even if they aren't directly visible.  Any real work
+--  	// will be deferred until we walk through the viewEntities
+--  	//--------------------------------------------
+--  	const int renderViewID = viewDef->renderView.viewID;
+--
+--  	// this bool array will be set true whenever the entity will visibly interact with the light
+--  	vLight->entityInteractionState = (byte *)R_ClearedFrameAlloc( light->world->entityDefs.Num() * sizeof( vLight->entityInteractionState[0] ), FRAME_ALLOC_INTERACTION_STATE );
+--
+--  	const bool lightCastsShadows = light->LightCastsShadows();
+--  	idInteraction * * const interactionTableRow = light->world->interactionTable + light->index * light->world->interactionTableWidth;
+--
+--  	for ( areaReference_t * lref = light->references; lref != NULL; lref = lref->ownerNext ) {
+--  		portalArea_t *area = lref->area;
+--
+--  		// some lights have their center of projection outside the world, but otherwise
+--  		// we want to ignore areas that are not connected to the light center due to a closed door
+--  		if ( light->areaNum != -1 && r_useAreasConnectedForShadowCulling.GetInteger() == 2 ) {
+--  			if ( !light->world->AreasAreConnected( light->areaNum, area->areaNum, PS_BLOCK_VIEW ) ) {
+--  				// can't possibly be seen or shadowed
+--  				continue;
+--  			}
+--  		}
+--
+--  		// check all the models in this area
+--  		for ( areaReference_t * eref = area->entityRefs.areaNext; eref != &area->entityRefs; eref = eref->areaNext ) {
+--  			idRenderEntityLocal * edef = eref->entity;
+--
+--  			if ( vLight->entityInteractionState[ edef->index ] != viewLight_t::INTERACTION_UNCHECKED ) {
+--  				continue;
+--  			}
+--  			// until proven otherwise
+--  			vLight->entityInteractionState[ edef->index ] = viewLight_t::INTERACTION_NO;
+--
+--  			// The table is updated at interaction::AllocAndLink() and interaction::UnlinkAndFree()
+--  			const idInteraction * inter = interactionTableRow[ edef->index ];
+--
+--  			const renderEntity_t & eParms = edef->parms;
+--  			const idRenderModel * eModel = eParms.hModel;
+--
+--  			// a large fraction of static entity / light pairs will still have no interactions even though
+--  			// they are both present in the same area(s)
+--  			if ( eModel != NULL && !eModel->IsDynamicModel() && inter == INTERACTION_EMPTY ) {
+--  				// the interaction was statically checked, and it didn't generate any surfaces,
+--  				// so there is no need to force the entity onto the view list if it isn't
+--  				// already there
+--  				continue;
+--  			}
+--
+--  			// We don't want the lights on weapons to illuminate anything else.
+--  			// There are two assumptions here -- that allowLightInViewID is only
+--  			// used for weapon lights, and that all weapons will have weaponDepthHack.
+--  			// A more general solution would be to have an allowLightOnEntityID field.
+--  			// HACK: the armor-mounted flashlight is a private spot light, which is probably
+--  			// wrong -- you would expect to see them in multiplayer.
+--  			if ( light->parms.allowLightInViewID && light->parms.pointLight && !eParms.weaponDepthHack ) {
+--  				continue;
+--  			}
+--
+--  			// non-shadow casting entities don't need to be added if they aren't
+--  			// directly visible
+--  			if ( ( eParms.noShadow || ( eModel && !eModel->ModelHasShadowCastingSurfaces() ) ) && !edef->IsDirectlyVisible() ) {
+--  				continue;
+--  			}
+--
+--  			// if the model doesn't accept lighting or cast shadows, it doesn't need to be added
+--  			if ( eModel && !eModel->ModelHasInteractingSurfaces() && !eModel->ModelHasShadowCastingSurfaces() ) {
+--  				continue;
+--  			}
+--
+--  			// no interaction present, so either the light or entity has moved
+--  			// assert( lightHasMoved || edef->entityHasMoved );
+--  			if ( inter == NULL ) {
+--  				// some big outdoor meshes are flagged to not create any dynamic interactions
+--  				// when the level designer knows that nearby moving lights shouldn't actually hit them
+--  				if ( eParms.noDynamicInteractions ) {
+--  					continue;
+--  				}
+--
+--  				// do a check of the entity reference bounds against the light frustum to see if they can't
+--  				// possibly interact, despite sharing one or more world areas
+--  				if ( R_CullModelBoundsToLight( light, edef->localReferenceBounds, edef->modelRenderMatrix ) ) {
+--  					continue;
+--  				}
+--  			}
+--
+--  			// we now know that the entity and light do overlap
+--
+--  			if ( edef->IsDirectlyVisible() ) {
+--  				// entity is directly visible, so the interaction is definitely needed
+--  				vLight->entityInteractionState[ edef->index ] = viewLight_t::INTERACTION_YES;
+--  				continue;
+--  			}
+--
+--  			// the entity is not directly visible, but if we can tell that it may cast
+--  			// shadows onto visible surfaces, we must make a viewEntity for it
+--  			if ( !lightCastsShadows ) {
+--  				// surfaces are never shadowed in this light
+--  				continue;
+--  			}
+--  			// if we are suppressing its shadow in this view (player shadows, etc), skip
+--  			if ( !r_skipSuppress.GetBool() ) {
+--  				if ( eParms.suppressShadowInViewID && eParms.suppressShadowInViewID == renderViewID ) {
+--  					continue;
+--  				}
+--  				if ( eParms.suppressShadowInLightID && eParms.suppressShadowInLightID == light->parms.lightId ) {
+--  					continue;
+--  				}
+--  			}
+--
+--  			// should we use the shadow bounds from pre-calculated interactions?
+--  			idBounds shadowBounds;
+--  			R_ShadowBounds( edef->globalReferenceBounds, light->globalLightBounds, light->globalLightOrigin, shadowBounds );
+--
+--  			// this test is pointless if we knew the light was completely contained
+--  			// in the view frustum, but the entity would also be directly visible in most
+--  			// of those cases.
+--
+--  			// this doesn't say that the shadow can't effect anything, only that it can't
+--  			// effect anything in the view, so we shouldn't set up a view entity
+--  			if ( idRenderMatrix::CullBoundsToMVP( viewDef->worldSpace.mvp, shadowBounds ) ) {
+--  				continue;
+--  			}
+--
+--  			// debug tool to allow viewing of only one entity at a time
+--  			if ( r_singleEntity.GetInteger() >= 0 && r_singleEntity.GetInteger() != edef->index ) {
+--  				continue;
+--  			}
+--
+--  			// we do need it for shadows
+--  			vLight->entityInteractionState[ edef->index ] = viewLight_t::INTERACTION_YES;
+--
+--  			// we will need to create a viewEntity_t for it in the serial code section
+--  			shadowOnlyEntity_t * shadEnt = (shadowOnlyEntity_t *)R_FrameAlloc( sizeof( shadowOnlyEntity_t ), FRAME_ALLOC_SHADOW_ONLY_ENTITY );
+--  			shadEnt->next = vLight->shadowOnlyViewEntities;
+--  			shadEnt->edef = edef;
+--  			vLight->shadowOnlyViewEntities = shadEnt;
+--  		}
+--  	}
+--
+--  	//--------------------------------------------
+--  	// add the prelight shadows for the static world geometry
+--  	//--------------------------------------------
+--  	if ( light->parms.prelightModel != NULL ) {
+--  		srfTriangles_t * tri = light->parms.prelightModel->Surface( 0 )->geometry;
+--
+--  		// these shadows will have valid bounds, and can be culled normally,
+--  		// but they will typically cover most of the light's bounds
+--  		if ( idRenderMatrix::CullBoundsToMVP( viewDef->worldSpace.mvp, tri->bounds ) ) {
+--  			return;
+--  		}
+--
+--  		// prelight models should always have static data that never gets purged
+--  		assert( vertexCache.CacheIsCurrent( tri->shadowCache ) );
+--  		assert( vertexCache.CacheIsCurrent( tri->indexCache ) );
+--
+--  		drawSurf_t * shadowDrawSurf = (drawSurf_t *)R_FrameAlloc( sizeof( *shadowDrawSurf ), FRAME_ALLOC_DRAW_SURFACE );
+--
+--  		shadowDrawSurf->frontEndGeo = tri;
+--  		shadowDrawSurf->ambientCache = 0;
+--  		shadowDrawSurf->indexCache = tri->indexCache;
+--  		shadowDrawSurf->shadowCache = tri->shadowCache;
+--  		shadowDrawSurf->jointCache = 0;
+--  		shadowDrawSurf->numIndexes = 0;
+--  		shadowDrawSurf->space = &viewDef->worldSpace;
+--  		shadowDrawSurf->material = NULL;
+--  		shadowDrawSurf->extraGLState = 0;
+--  		shadowDrawSurf->shaderRegisters = NULL;
+--  		shadowDrawSurf->scissorRect = vLight->scissorRect;		// default to the light scissor and light depth bounds
+--  		shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_DONE;	// assume the shadow volume is done in case r_skipPrelightShadows is set
+--
+--  		if ( !r_skipPrelightShadows.GetBool() ) {
+--  			preLightShadowVolumeParms_t * shadowParms = (preLightShadowVolumeParms_t *)R_FrameAlloc( sizeof( shadowParms[0] ), FRAME_ALLOC_SHADOW_VOLUME_PARMS );
+--
+--  			shadowParms->verts = tri->preLightShadowVertexes;
+--  			shadowParms->numVerts = tri->numVerts * 2;
+--  			shadowParms->indexes = tri->indexes;
+--  			shadowParms->numIndexes = tri->numIndexes;
+--  			shadowParms->triangleBounds = tri->bounds;
+--  			shadowParms->triangleMVP = viewDef->worldSpace.mvp;
+--  			shadowParms->localLightOrigin = vLight->globalLightOrigin;
+--  			shadowParms->localViewOrigin = viewDef->renderView.vieworg;
+--  			shadowParms->zNear = r_znear.GetFloat();
+--  			shadowParms->lightZMin = vLight->scissorRect.zmin;
+--  			shadowParms->lightZMax = vLight->scissorRect.zmax;
+--  			shadowParms->forceShadowCaps = r_forceShadowCaps.GetBool();
+--  			shadowParms->useShadowPreciseInsideTest = r_useShadowPreciseInsideTest.GetBool();
+--  			shadowParms->useShadowDepthBounds = r_useShadowDepthBounds.GetBool();
+--  			shadowParms->numShadowIndices = & shadowDrawSurf->numIndexes;
+--  			shadowParms->renderZFail = & shadowDrawSurf->renderZFail;
+--  			shadowParms->shadowZMin = & shadowDrawSurf->scissorRect.zmin;
+--  			shadowParms->shadowZMax = & shadowDrawSurf->scissorRect.zmax;
+--  			shadowParms->shadowVolumeState = & shadowDrawSurf->shadowVolumeState;
+--
+--  			// the pre-light shadow volume "_prelight_light_3297" in "d3xpdm2" is malformed in that it contains the light origin so the precise inside test always fails
+--  			if ( tr.primaryWorld->mapName.IcmpPath( "maps/game/mp/d3xpdm2.map" ) == 0 && idStr::Icmp( light->parms.prelightModel->Name(), "_prelight_light_3297" ) == 0 ) {
+--  				shadowParms->useShadowPreciseInsideTest = false;
+--  			}
+--
+--  			shadowDrawSurf->shadowVolumeState = SHADOWVOLUME_UNFINISHED;
+--
+--  			shadowParms->next = vLight->preLightShadowVolumes;
+--  			vLight->preLightShadowVolumes = shadowParms;
+--  		}
+--
+--  		// actually link it in
+--  		shadowDrawSurf->nextOnLight = vLight->globalShadows;
+--  		vLight->globalShadows = shadowDrawSurf;
+--  	}
+--  }
+--
+--  REGISTER_PARALLEL_JOB( R_AddSingleLight, "R_AddSingleLight" );
+--
+--  /*
+--  =================
+--  R_AddLights
+--  =================
+--  */
+--  void R_AddLights() {
+--  	SCOPED_PROFILE_EVENT( "R_AddLights" );
+--
+--  	//-------------------------------------------------
+--  	// check each light individually, possibly in parallel
+--  	//-------------------------------------------------
+--
+--  	if ( r_useParallelAddLights.GetBool() ) {
+--  		for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  			tr.frontEndJobList->AddJob( (jobRun_t)R_AddSingleLight, vLight );
+--  		}
+--  		tr.frontEndJobList->Submit();
+--  		tr.frontEndJobList->Wait();
+--  	} else {
+--  		for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  			R_AddSingleLight( vLight );
+--  		}
+--  	}
+--
+--  	//-------------------------------------------------
+--  	// cull lights from the list if they turned out to not be needed
+--  	//-------------------------------------------------
+--
+--  	tr.pc.c_viewLights = 0;
+--  	viewLight_t **ptr = &tr.viewDef->viewLights;
+--  	while ( *ptr != NULL ) {
+--  		viewLight_t *vLight = *ptr;
+--
+--  		if ( vLight->removeFromList ) {
+--  			vLight->lightDef->viewCount = -1;	// this probably doesn't matter with current code
+--  			*ptr = vLight->next;
+--  			continue;
+--  		}
+--
+--  		ptr = &vLight->next;
+--
+--  		// serial work
+--  		tr.pc.c_viewLights++;
+--
+--  		for ( shadowOnlyEntity_t * shadEnt = vLight->shadowOnlyViewEntities; shadEnt != NULL; shadEnt = shadEnt->next ) {
+--  			// this will add it to the viewEntities list, but with an empty scissor rect
+--  			R_SetEntityDefViewEntity( shadEnt->edef );
+--  		}
+--
+--  		if ( r_showLightScissors.GetBool() ) {
+--  			R_ShowColoredScreenRect( vLight->scissorRect, vLight->lightDef->index );
+--  		}
+--  	}
+--
+--  	//-------------------------------------------------
+--  	// Add jobs to setup pre-light shadow volumes.
+--  	//-------------------------------------------------
+--
+--  	if ( r_useParallelAddShadows.GetInteger() == 1 ) {
+--  		for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  			for ( preLightShadowVolumeParms_t * shadowParms = vLight->preLightShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				tr.frontEndJobList->AddJob( (jobRun_t)PreLightShadowVolumeJob, shadowParms );
+--  			}
+--  			vLight->preLightShadowVolumes = NULL;
+--  		}
+--  	} else {
+--  		int start = Sys_Microseconds();
+--
+--  		for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  			for ( preLightShadowVolumeParms_t * shadowParms = vLight->preLightShadowVolumes; shadowParms != NULL; shadowParms = shadowParms->next ) {
+--  				PreLightShadowVolumeJob( shadowParms );
+--  			}
+--  			vLight->preLightShadowVolumes = NULL;
+--  		}
+--
+--  		int end = Sys_Microseconds();
+--  		backEnd.pc.shadowMicroSec += end - start;
+--  	}
+--  }
+--
+--  /*
+--  =====================
+--  R_OptimizeViewLightsList
+--  =====================
+--  */
+--  void R_OptimizeViewLightsList() {
+--  	// go through each visible light
+--  	int numViewLights = 0;
+--  	for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  		numViewLights++;
+--  		// If the light didn't have any lit surfaces visible, there is no need to
+--  		// draw any of the shadows.  We still keep the vLight for debugging draws.
+--  		if ( !vLight->localInteractions && !vLight->globalInteractions && !vLight->translucentInteractions ) {
+--  			vLight->localShadows = NULL;
+--  			vLight->globalShadows = NULL;
+--  		}
+--  	}
+--
+--  	if ( r_useShadowSurfaceScissor.GetBool() ) {
+--  		// shrink the light scissor rect to only intersect the surfaces that will actually be drawn.
+--  		// This doesn't seem to actually help, perhaps because the surface scissor
+--  		// rects aren't actually the surface, but only the portal clippings.
+--  		for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight; vLight = vLight->next ) {
+--  			drawSurf_t * surf;
+--  			idScreenRect surfRect;
+--
+--  			if ( !vLight->lightShader->LightCastsShadows() ) {
+--  				continue;
+--  			}
+--
+--  			surfRect.Clear();
+--
+--  			for ( surf = vLight->globalInteractions; surf != NULL; surf = surf->nextOnLight ) {
+--  				surfRect.Union( surf->scissorRect );
+--  			}
+--  			for ( surf = vLight->localShadows; surf != NULL; surf = surf->nextOnLight ) {
+--  				surf->scissorRect.Intersect( surfRect );
+--  			}
+--
+--  			for ( surf = vLight->localInteractions; surf != NULL; surf = surf->nextOnLight ) {
+--  				surfRect.Union( surf->scissorRect );
+--  			}
+--  			for ( surf = vLight->globalShadows; surf != NULL; surf = surf->nextOnLight ) {
+--  				surf->scissorRect.Intersect( surfRect );
+--  			}
+--
+--  			for ( surf = vLight->translucentInteractions; surf != NULL; surf = surf->nextOnLight ) {
+--  				surfRect.Union( surf->scissorRect );
+--  			}
+--
+--  			vLight->scissorRect.Intersect( surfRect );
+--  		}
+--  	}
+--
+--  	// sort the viewLights list so the largest lights come first, which will reduce
+--  	// the chance of GPU pipeline bubbles
+--  	struct sortLight_t {
+--  		viewLight_t *	vLight;
+--  		int				screenArea;
+--  		static int sort( const void * a, const void * b ) {
+--  			return ((sortLight_t *)a)->screenArea - ((sortLight_t *)b)->screenArea;
+--  		}
+--  	};
+--  	sortLight_t * sortLights = (sortLight_t *)_alloca( sizeof( sortLight_t ) * numViewLights );
+--  	int	numSortLightsFilled = 0;
+--  	for ( viewLight_t * vLight = tr.viewDef->viewLights; vLight != NULL; vLight = vLight->next ) {
+--  		sortLights[ numSortLightsFilled ].vLight = vLight;
+--  		sortLights[ numSortLightsFilled ].screenArea = vLight->scissorRect.GetArea();
+--  		numSortLightsFilled++;
+--  	}
+--
+--  	qsort( sortLights, numSortLightsFilled, sizeof( sortLights[0] ), sortLight_t::sort );
+--
+--  	// rebuild the linked list in order
+--  	tr.viewDef->viewLights = NULL;
+--  	for ( int i = 0; i < numSortLightsFilled; i++ ) {
+--  		sortLights[i].vLight->next = tr.viewDef->viewLights;
+--  		tr.viewDef->viewLights = sortLights[i].vLight;
+--  	}
+--  }
+--
+--  /*
+--  ==========================================================================================
+--
+--  SUBVIEW SURFACES
+--
+--  ==========================================================================================
+--  */
+--
+--  struct orientation_t {
+--  	idVec3		origin;
+--  	idMat3		axis;
+--  };
+--
+--  /*
+--  =================
+--  R_MirrorPoint
+--  =================
+--  */
+--  static void R_MirrorPoint( const idVec3 in, orientation_t *surface, orientation_t *camera, idVec3 &out ) {
+--  	const idVec3 local = in - surface->origin;
+--
+--  	idVec3 transformed( 0.0f );
+--  	for ( int i = 0; i < 3; i++ ) {
+--  		const float d = local * surface->axis[i];
+--  		transformed += d * camera->axis[i];
+--  	}
+--
+--  	out = transformed + camera->origin;
+--  }
+--
+--  /*
+--  =================
+--  R_MirrorVector
+--  =================
+--  */
+--  static void R_MirrorVector( const idVec3 in, orientation_t *surface, orientation_t *camera, idVec3 &out ) {
+--  	out.Zero();
+--  	for ( int i = 0; i < 3; i++ ) {
+--  		const float d = in * surface->axis[i];
+--  		out += d * camera->axis[i];
+--  	}
+--  }
+--
+--  /*
+--  =============
+--  R_PlaneForSurface
+--
+--  Returns the plane for the first triangle in the surface
+--  FIXME: check for degenerate triangle?
+--  =============
+--  */
+--  static void R_PlaneForSurface( const srfTriangles_t *tri, idPlane &plane ) {
+--  	idDrawVert * v1 = tri->verts + tri->indexes[0];
+--  	idDrawVert * v2 = tri->verts + tri->indexes[1];
+--  	idDrawVert * v3 = tri->verts + tri->indexes[2];
+--  	plane.FromPoints( v1->xyz, v2->xyz, v3->xyz );
+--  }
+--
+--  /*
+--  =========================
+--  R_PreciseCullSurface
+--
+--  Check the surface for visibility on a per-triangle basis
+--  for cases when it is going to be VERY expensive to draw (subviews)
+--
+--  If not culled, also returns the bounding box of the surface in
+--  Normalized Device Coordinates, so it can be used to crop the scissor rect.
+--
+--  OPTIMIZE: we could also take exact portal passing into consideration
+--  =========================
+--  */
+--  bool R_PreciseCullSurface( const drawSurf_t *drawSurf, idBounds &ndcBounds ) {
+--  	const srfTriangles_t * tri = drawSurf->frontEndGeo;
+--
+--  	unsigned int pointOr = 0;
+--  	unsigned int pointAnd = (unsigned int)~0;
+--
+--  	// get an exact bounds of the triangles for scissor cropping
+--  	ndcBounds.Clear();
+--
+--  	const idJointMat * joints = ( tri->staticModelWithJoints != NULL && r_useGPUSkinning.GetBool() ) ? tri->staticModelWithJoints->jointsInverted : NULL;
+--
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		const idVec3 vXYZ = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[i], joints );
+--
+--  		idPlane eye, clip;
+--  		R_TransformModelToClip( vXYZ, drawSurf->space->modelViewMatrix, tr.viewDef->projectionMatrix, eye, clip );
+--
+--  		unsigned int pointFlags = 0;
+--  		for ( int j = 0; j < 3; j++ ) {
+--  			if ( clip[j] >= clip[3] ) {
+--  				pointFlags |= ( 1 << (j*2+0) );
+--  			} else if ( clip[j] <= -clip[3] ) {	// FIXME: the D3D near clip plane is at zero instead of -1
+--  				pointFlags |= ( 1 << (j*2+1) );
+--  			}
+--  		}
+--
+--  		pointAnd &= pointFlags;
+--  		pointOr |= pointFlags;
+--  	}
+--
+--  	// trivially reject
+--  	if ( pointAnd != 0 ) {
+--  		return true;
+--  	}
+--
+--  	// backface and frustum cull
+--  	idVec3 localViewOrigin;
+--  	R_GlobalPointToLocal( drawSurf->space->modelMatrix, tr.viewDef->renderView.vieworg, localViewOrigin );
+--
+--  	for ( int i = 0; i < tri->numIndexes; i += 3 ) {
+--  		const idVec3 v1 = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[ tri->indexes[ i+0 ] ], joints );
+--  		const idVec3 v2 = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[ tri->indexes[ i+1 ] ], joints );
+--  		const idVec3 v3 = idDrawVert::GetSkinnedDrawVertPosition( tri->verts[ tri->indexes[ i+2 ] ], joints );
+--
+--  		// this is a hack, because R_GlobalPointToLocal doesn't work with the non-normalized
+--  		// axis that we get from the gui view transform.  It doesn't hurt anything, because
+--  		// we know that all gui generated surfaces are front facing
+--  		if ( tr.guiRecursionLevel == 0 ) {
+--  			// we don't care that it isn't normalized,
+--  			// all we want is the sign
+--  			const idVec3 d1 = v2 - v1;
+--  			const idVec3 d2 = v3 - v1;
+--  			const idVec3 normal = d2.Cross( d1 );
+--
+--  			const idVec3 dir = v1 - localViewOrigin;
+--
+--  			const float dot = normal * dir;
+--  			if ( dot >= 0.0f ) {
+--  				return true;
+--  			}
+--  		}
+--
+--  		// now find the exact screen bounds of the clipped triangle
+--  		idFixedWinding w;
+--  		w.SetNumPoints( 3 );
+--  		R_LocalPointToGlobal( drawSurf->space->modelMatrix, v1, w[0].ToVec3() );
+--  		R_LocalPointToGlobal( drawSurf->space->modelMatrix, v2, w[1].ToVec3() );
+--  		R_LocalPointToGlobal( drawSurf->space->modelMatrix, v3, w[2].ToVec3() );
+--  		w[0].s = w[0].t = w[1].s = w[1].t = w[2].s = w[2].t = 0.0f;
+--
+--  		for ( int j = 0; j < 4; j++ ) {
+--  			if ( !w.ClipInPlace( -tr.viewDef->frustum[j], 0.1f ) ) {
+--  				break;
+--  			}
+--  		}
+--  		for ( int j = 0; j < w.GetNumPoints(); j++ ) {
+--  			idVec3 screen;
+--
+--  			R_GlobalToNormalizedDeviceCoordinates( w[j].ToVec3(), screen );
+--  			ndcBounds.AddPoint( screen );
+--  		}
+--  	}
+--
+--  	// if we don't enclose any area, return
+--  	if ( ndcBounds.IsCleared() ) {
+--  		return true;
+--  	}
+--
+--  	return false;
+--  }
+--
+--  /*
+--  ========================
+--  R_MirrorViewBySurface
+--  ========================
+--  */
+--  static viewDef_t *R_MirrorViewBySurface( const drawSurf_t *drawSurf ) {
+--  	// copy the viewport size from the original
+--  	viewDef_t * parms = (viewDef_t *)R_FrameAlloc( sizeof( *parms ) );
+--  	*parms = *tr.viewDef;
+--  	parms->renderView.viewID = 0;	// clear to allow player bodies to show up, and suppress view weapons
+--
+--  	parms->isSubview = true;
+--  	parms->isMirror = true;
+--
+--  	// create plane axis for the portal we are seeing
+--  	idPlane originalPlane, plane;
+--  	R_PlaneForSurface( drawSurf->frontEndGeo, originalPlane );
+--  	R_LocalPlaneToGlobal( drawSurf->space->modelMatrix, originalPlane, plane );
+--
+--  	orientation_t surface;
+--  	surface.origin = plane.Normal() * -plane[3];
+--  	surface.axis[0] = plane.Normal();
+--  	surface.axis[0].NormalVectors( surface.axis[1], surface.axis[2] );
+--  	surface.axis[2] = -surface.axis[2];
+--
+--  	orientation_t camera;
+--  	camera.origin = surface.origin;
+--  	camera.axis[0] = -surface.axis[0];
+--  	camera.axis[1] = surface.axis[1];
+--  	camera.axis[2] = surface.axis[2];
+--
+--  	// set the mirrored origin and axis
+--  	R_MirrorPoint( tr.viewDef->renderView.vieworg, &surface, &camera, parms->renderView.vieworg );
+--
+--  	R_MirrorVector( tr.viewDef->renderView.viewaxis[0], &surface, &camera, parms->renderView.viewaxis[0] );
+--  	R_MirrorVector( tr.viewDef->renderView.viewaxis[1], &surface, &camera, parms->renderView.viewaxis[1] );
+--  	R_MirrorVector( tr.viewDef->renderView.viewaxis[2], &surface, &camera, parms->renderView.viewaxis[2] );
+--
+--  	// make the view origin 16 units away from the center of the surface
+--  	const idVec3 center = ( drawSurf->frontEndGeo->bounds[0] + drawSurf->frontEndGeo->bounds[1] ) * 0.5f;
+--  	const idVec3 viewOrigin = center + ( originalPlane.Normal() * 16.0f );
+--
+--  	R_LocalPointToGlobal( drawSurf->space->modelMatrix, viewOrigin, parms->initialViewAreaOrigin );
+--
+--  	// set the mirror clip plane
+--  	parms->numClipPlanes = 1;
+--  	parms->clipPlanes[0] = -camera.axis[0];
+--
+--  	parms->clipPlanes[0][3] = -( camera.origin * parms->clipPlanes[0].Normal() );
+--
+--  	return parms;
+--  }
+--
+--  /*
+--  ========================
+--  R_XrayViewBySurface
+--  ========================
+--  */
+--  static viewDef_t *R_XrayViewBySurface( const drawSurf_t *drawSurf ) {
+--  	// copy the viewport size from the original
+--  	viewDef_t * parms = (viewDef_t *)R_FrameAlloc( sizeof( *parms ) );
+--  	*parms = *tr.viewDef;
+--  	parms->renderView.viewID = 0;	// clear to allow player bodies to show up, and suppress view weapons
+--
+--  	parms->isSubview = true;
+--  	parms->isXraySubview = true;
+--
+--  	return parms;
+--  }
+--
+--  /*
+--  ===============
+--  R_RemoteRender
+--  ===============
+--  */
+--  static void R_RemoteRender( const drawSurf_t *surf, textureStage_t *stage ) {
+--  	// remote views can be reused in a single frame
+--  	if ( stage->dynamicFrameCount == tr.frameCount ) {
+--  		return;
+--  	}
+--
+--  	// if the entity doesn't have a remoteRenderView, do nothing
+--  	if ( !surf->space->entityDef->parms.remoteRenderView ) {
+--  		return;
+--  	}
+--
+--  	int stageWidth = stage->width;
+--  	int stageHeight = stage->height;
+--
+--  	// copy the viewport size from the original
+--  	viewDef_t * parms = (viewDef_t *)R_FrameAlloc( sizeof( *parms ) );
+--  	*parms = *tr.viewDef;
+--
+--  	parms->renderView = *surf->space->entityDef->parms.remoteRenderView;
+--  	parms->renderView.viewID = 0;	// clear to allow player bodies to show up, and suppress view weapons
+--  	parms->initialViewAreaOrigin = parms->renderView.vieworg;
+--  	parms->isSubview = true;
+--  	parms->isMirror = false;
+--
+--
+--  	tr.CropRenderSize( stageWidth, stageHeight );
+--
+--  	tr.GetCroppedViewport( &parms->viewport );
+--
+--  	parms->scissor.x1 = 0;
+--  	parms->scissor.y1 = 0;
+--  	parms->scissor.x2 = parms->viewport.x2 - parms->viewport.x1;
+--  	parms->scissor.y2 = parms->viewport.y2 - parms->viewport.y1;
+--
+--  	parms->superView = tr.viewDef;
+--  	parms->subviewSurface = surf;
+--
+--  	// generate render commands for it
+--  	R_RenderView( parms );
+--
+--  	// copy this rendering to the image
+--  	stage->dynamicFrameCount = tr.frameCount;
+--  	if ( stage->image == NULL ) {
+--  		stage->image = globalImages->scratchImage;
+--  	}
+--
+--  	tr.CaptureRenderToImage( stage->image->GetName(), true );
+--  	tr.UnCrop();
+--  }
+--
+--  /*
+--  =================
+--  R_MirrorRender
+--  =================
+--  */
+--  void R_MirrorRender( const drawSurf_t *surf, textureStage_t *stage, idScreenRect scissor ) {
+--  	// remote views can be reused in a single frame
+--  	if ( stage->dynamicFrameCount == tr.frameCount ) {
+--  		return;
+--  	}
+--
+--  	// issue a new view command
+--  	viewDef_t * parms = R_MirrorViewBySurface( surf );
+--  	if ( parms == NULL ) {
+--  		return;
+--  	}
+--
+--  	tr.CropRenderSize( stage->width, stage->height );
+--
+--  	tr.GetCroppedViewport( &parms->viewport );
+--
+--  	parms->scissor.x1 = 0;
+--  	parms->scissor.y1 = 0;
+--  	parms->scissor.x2 = parms->viewport.x2 - parms->viewport.x1;
+--  	parms->scissor.y2 = parms->viewport.y2 - parms->viewport.y1;
+--
+--  	parms->superView = tr.viewDef;
+--  	parms->subviewSurface = surf;
+--
+--  	// triangle culling order changes with mirroring
+--  	parms->isMirror = ( ( (int)parms->isMirror ^ (int)tr.viewDef->isMirror ) != 0 );
+--
+--  	// generate render commands for it
+--  	R_RenderView( parms );
+--
+--  	// copy this rendering to the image
+--  	stage->dynamicFrameCount = tr.frameCount;
+--  	stage->image = globalImages->scratchImage;
+--
+--  	tr.CaptureRenderToImage( stage->image->GetName() );
+--  	tr.UnCrop();
+--  }
+--
+--  /*
+--  =================
+--  R_XrayRender
+--  =================
+--  */
+--  void R_XrayRender( const drawSurf_t *surf, textureStage_t *stage, idScreenRect scissor ) {
+--  	// remote views can be reused in a single frame
+--  	if ( stage->dynamicFrameCount == tr.frameCount ) {
+--  		return;
+--  	}
+--
+--  	// issue a new view command
+--  	viewDef_t * parms = R_XrayViewBySurface( surf );
+--  	if ( parms == NULL ) {
+--  		return;
+--  	}
+--
+--  	int stageWidth = stage->width;
+--  	int stageHeight = stage->height;
+--
+--  	tr.CropRenderSize( stageWidth, stageHeight );
+--
+--  	tr.GetCroppedViewport( &parms->viewport );
+--
+--  	parms->scissor.x1 = 0;
+--  	parms->scissor.y1 = 0;
+--  	parms->scissor.x2 = parms->viewport.x2 - parms->viewport.x1;
+--  	parms->scissor.y2 = parms->viewport.y2 - parms->viewport.y1;
+--
+--  	parms->superView = tr.viewDef;
+--  	parms->subviewSurface = surf;
+--
+--  	// triangle culling order changes with mirroring
+--  	parms->isMirror = ( ( (int)parms->isMirror ^ (int)tr.viewDef->isMirror ) != 0 );
+--
+--  	// generate render commands for it
+--  	R_RenderView( parms );
+--
+--  	// copy this rendering to the image
+--  	stage->dynamicFrameCount = tr.frameCount;
+--  	stage->image = globalImages->scratchImage2;
+--
+--  	tr.CaptureRenderToImage( stage->image->GetName(), true );
+--  	tr.UnCrop();
+--  }
+--
+--  /*
+--  ==================
+--  R_GenerateSurfaceSubview
+--  ==================
+--  */
+--  bool R_GenerateSurfaceSubview( const drawSurf_t *drawSurf ) {
+--  	// for testing the performance hit
+--  	if ( r_skipSubviews.GetBool() ) {
+--  		return false;
+--  	}
+--
+--  	idBounds ndcBounds;
+--  	if ( R_PreciseCullSurface( drawSurf, ndcBounds ) ) {
+--  		return false;
+--  	}
+--
+--  	const idMaterial * shader = drawSurf->material;
+--
+--  	// never recurse through a subview surface that we are
+--  	// already seeing through
+--  	viewDef_t * parms = NULL;
+--  	for ( parms = tr.viewDef; parms != NULL; parms = parms->superView ) {
+--  		if ( parms->subviewSurface != NULL
+--  			&& parms->subviewSurface->frontEndGeo == drawSurf->frontEndGeo
+--  			&& parms->subviewSurface->space->entityDef == drawSurf->space->entityDef ) {
+--  			break;
+--  		}
+--  	}
+--  	if ( parms ) {
+--  		return false;
+--  	}
+--
+--  	// crop the scissor bounds based on the precise cull
+--  	assert( tr.viewDef != NULL );
+--  	idScreenRect * v = &tr.viewDef->viewport;
+--  	idScreenRect scissor;
+--  	scissor.x1 = v->x1 + idMath::Ftoi( ( v->x2 - v->x1 + 1 ) * 0.5f * ( ndcBounds[0][0] + 1.0f ) );
+--  	scissor.y1 = v->y1 + idMath::Ftoi( ( v->y2 - v->y1 + 1 ) * 0.5f * ( ndcBounds[0][1] + 1.0f ) );
+--  	scissor.x2 = v->x1 + idMath::Ftoi( ( v->x2 - v->x1 + 1 ) * 0.5f * ( ndcBounds[1][0] + 1.0f ) );
+--  	scissor.y2 = v->y1 + idMath::Ftoi( ( v->y2 - v->y1 + 1 ) * 0.5f * ( ndcBounds[1][1] + 1.0f ) );
+--
+--  	// nudge a bit for safety
+--  	scissor.Expand();
+--
+--  	scissor.Intersect( tr.viewDef->scissor );
+--
+--  	if ( scissor.IsEmpty() ) {
+--  		// cropped out
+--  		return false;
+--  	}
+--
+--  	// see what kind of subview we are making
+--  	if ( shader->GetSort() != SS_SUBVIEW ) {
+--  		for ( int i = 0; i < shader->GetNumStages(); i++ ) {
+--  			const shaderStage_t	*stage = shader->GetStage( i );
+--  			switch ( stage->texture.dynamic ) {
+--  			case DI_REMOTE_RENDER:
+--  				R_RemoteRender( drawSurf, const_cast<textureStage_t *>(&stage->texture) );
+--  				break;
+--  			case DI_MIRROR_RENDER:
+--  				R_MirrorRender( drawSurf, const_cast<textureStage_t *>(&stage->texture), scissor );
+--  				break;
+--  			case DI_XRAY_RENDER:
+--  				R_XrayRender( drawSurf, const_cast<textureStage_t *>(&stage->texture), scissor );
+--  				break;
+--  			}
+--  		}
+--  		return true;
+--  	}
+--
+--  	// issue a new view command
+--  	parms = R_MirrorViewBySurface( drawSurf );
+--  	if ( parms == NULL ) {
+--  		return false;
+--  	}
+--
+--  	parms->scissor = scissor;
+--  	parms->superView = tr.viewDef;
+--  	parms->subviewSurface = drawSurf;
+--
+--  	// triangle culling order changes with mirroring
+--  	parms->isMirror = ( ( (int)parms->isMirror ^ (int)tr.viewDef->isMirror ) != 0 );
+--
+--  	// generate render commands for it
+--  	R_RenderView( parms );
+--
+--  	return true;
+--  }
+--
+--  /*
+--  ================
+--  R_GenerateSubViews
+--
+--  If we need to render another view to complete the current view,
+--  generate it first.
+--
+--  It is important to do this after all drawSurfs for the current
+--  view have been generated, because it may create a subview which
+--  would change tr.viewCount.
+--  ================
+--  */
+--  bool R_GenerateSubViews( const drawSurf_t * const drawSurfs[], const int numDrawSurfs ) {
+--  	SCOPED_PROFILE_EVENT( "R_GenerateSubViews" );
+--
+--  	// for testing the performance hit
+--  	if ( r_skipSubviews.GetBool() ) {
+--  		return false;
+--  	}
+--
+--  	// scan the surfaces until we either find a subview, or determine
+--  	// there are no more subview surfaces.
+--  	bool subviews = false;
+--  	for ( int i = 0; i < numDrawSurfs; i++ ) {
+--  		const drawSurf_t * drawSurf = drawSurfs[i];
+--
+--  		if ( !drawSurf->material->HasSubview() ) {
+--  			continue;
+--  		}
+--
+--  		if ( R_GenerateSurfaceSubview( drawSurf ) ) {
+--  			subviews = true;
+--  		}
+--  	}
+--
+--  	return subviews;
+--  }
+--
+--  /*
+--  =================
+--  R_TriSurfMemory
+--
+--  For memory profiling
+--  =================
+--  */
+--  int R_TriSurfMemory( const srfTriangles_t *tri ) {
+--  	int total = 0;
+--
+--  	if ( tri == NULL ) {
+--  		return total;
+--  	}
+--
+--  	if ( tri->preLightShadowVertexes != NULL ) {
+--  		total += tri->numVerts * 2 * sizeof( tri->preLightShadowVertexes[0] );
+--  	}
+--  	if ( tri->staticShadowVertexes != NULL ) {
+--  		total += tri->numVerts * 2 * sizeof( tri->staticShadowVertexes[0] );
+--  	}
+--  	if ( tri->verts != NULL ) {
+--  		if ( tri->ambientSurface == NULL || tri->verts != tri->ambientSurface->verts ) {
+--  			total += tri->numVerts * sizeof( tri->verts[0] );
+--  		}
+--  	}
+--  	if ( tri->indexes != NULL ) {
+--  		if ( tri->ambientSurface == NULL || tri->indexes != tri->ambientSurface->indexes ) {
+--  			total += tri->numIndexes * sizeof( tri->indexes[0] );
+--  		}
+--  	}
+--  	if ( tri->silIndexes != NULL ) {
+--  		total += tri->numIndexes * sizeof( tri->silIndexes[0] );
+--  	}
+--  	if ( tri->silEdges != NULL ) {
+--  		total += tri->numSilEdges * sizeof( tri->silEdges[0] );
+--  	}
+--  	if ( tri->dominantTris != NULL ) {
+--  		total += tri->numVerts * sizeof( tri->dominantTris[0] );
+--  	}
+--  	if ( tri->mirroredVerts != NULL ) {
+--  		total += tri->numMirroredVerts * sizeof( tri->mirroredVerts[0] );
+--  	}
+--  	if ( tri->dupVerts != NULL ) {
+--  		total += tri->numDupVerts * sizeof( tri->dupVerts[0] );
+--  	}
+--
+--  	total += sizeof( *tri );
+--
+--  	return total;
+--  }
+--
+--  /*
+--  ==============
+--  R_FreeStaticTriSurfVertexCaches
+--  ==============
+--  */
+--  void R_FreeStaticTriSurfVertexCaches( srfTriangles_t * tri ) {
+--  	// we don't support reclaiming static geometry memory
+--  	// without a level change
+--  	tri->ambientCache = 0;
+--  	tri->indexCache = 0;
+--  	tri->shadowCache = 0;
+--  }
+--
+--  /*
+--  ==============
+--  R_FreeStaticTriSurf
+--  ==============
+--  */
+--  void R_FreeStaticTriSurf( srfTriangles_t *tri ) {
+--  	if ( !tri ) {
+--  		return;
+--  	}
+--
+--  	R_FreeStaticTriSurfVertexCaches( tri );
+--
+--  	if ( !tri->referencedVerts ) {
+--  		if ( tri->verts != NULL ) {
+--  			// R_CreateLightTris points tri->verts at the verts of the ambient surface
+--  			if ( tri->ambientSurface == NULL || tri->verts != tri->ambientSurface->verts ) {
+--  				Mem_Free( tri->verts );
+--  			}
+--  		}
+--  	}
+--
+--  	if ( !tri->referencedIndexes ) {
+--  		if ( tri->indexes != NULL ) {
+--  			// if a surface is completely inside a light volume R_CreateLightTris points tri->indexes at the indexes of the ambient surface
+--  			if ( tri->ambientSurface == NULL || tri->indexes != tri->ambientSurface->indexes ) {
+--  				Mem_Free( tri->indexes );
+--  			}
+--  		}
+--  		if ( tri->silIndexes != NULL ) {
+--  			Mem_Free( tri->silIndexes );
+--  		}
+--  		if ( tri->silEdges != NULL ) {
+--  			Mem_Free( tri->silEdges );
+--  		}
+--  		if ( tri->dominantTris != NULL ) {
+--  			Mem_Free( tri->dominantTris );
+--  		}
+--  		if ( tri->mirroredVerts != NULL ) {
+--  			Mem_Free( tri->mirroredVerts );
+--  		}
+--  		if ( tri->dupVerts != NULL ) {
+--  			Mem_Free( tri->dupVerts );
+--  		}
+--  	}
+--
+--  	if ( tri->preLightShadowVertexes != NULL ) {
+--  		Mem_Free( tri->preLightShadowVertexes );
+--  	}
+--  	if ( tri->staticShadowVertexes != NULL ) {
+--  		Mem_Free( tri->staticShadowVertexes );
+--  	}
+--
+--  	// clear the tri out so we don't retain stale data
+--  	memset( tri, 0, sizeof( srfTriangles_t ) );
+--
+--  	Mem_Free( tri );
+--  }
+--
+--  /*
+--  ==============
+--  R_FreeStaticTriSurfVerts
+--  ==============
+--  */
+--  void R_FreeStaticTriSurfVerts( srfTriangles_t *tri ) {
+--  	// we don't support reclaiming static geometry memory
+--  	// without a level change
+--  	tri->ambientCache = 0;
+--
+--  	if ( tri->verts != NULL ) {
+--  		// R_CreateLightTris points tri->verts at the verts of the ambient surface
+--  		if ( tri->ambientSurface == NULL || tri->verts != tri->ambientSurface->verts ) {
+--  			Mem_Free( tri->verts );
+--  		}
+--  	}
+--  }
+--
+--  /*
+--  ==============
+--  R_AllocStaticTriSurf
+--  ==============
+--  */
+--  srfTriangles_t *R_AllocStaticTriSurf() {
+--  	srfTriangles_t *tris = (srfTriangles_t *)Mem_ClearedAlloc( sizeof( srfTriangles_t ), TAG_SRFTRIS );
+--  	return tris;
+--  }
+--
+--  /*
+--  =================
+--  R_CopyStaticTriSurf
+--
+--  This only duplicates the indexes and verts, not any of the derived data.
+--  =================
+--  */
+--  srfTriangles_t *R_CopyStaticTriSurf( const srfTriangles_t *tri ) {
+--  	srfTriangles_t	*newTri;
+--
+--  	newTri = R_AllocStaticTriSurf();
+--  	R_AllocStaticTriSurfVerts( newTri, tri->numVerts );
+--  	R_AllocStaticTriSurfIndexes( newTri, tri->numIndexes );
+--  	newTri->numVerts = tri->numVerts;
+--  	newTri->numIndexes = tri->numIndexes;
+--  	memcpy( newTri->verts, tri->verts, tri->numVerts * sizeof( newTri->verts[0] ) );
+--  	memcpy( newTri->indexes, tri->indexes, tri->numIndexes * sizeof( newTri->indexes[0] ) );
+--
+--  	return newTri;
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfVerts
+--  =================
+--  */
+--  void R_AllocStaticTriSurfVerts( srfTriangles_t *tri, int numVerts ) {
+--  	assert( tri->verts == NULL );
+--  	tri->verts = (idDrawVert *)Mem_Alloc16( numVerts * sizeof( idDrawVert ), TAG_TRI_VERTS );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfIndexes
+--  =================
+--  */
+--  void R_AllocStaticTriSurfIndexes( srfTriangles_t *tri, int numIndexes ) {
+--  	assert( tri->indexes == NULL );
+--  	tri->indexes = (triIndex_t *)Mem_Alloc16( numIndexes * sizeof( triIndex_t ), TAG_TRI_INDEXES );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfSilIndexes
+--  =================
+--  */
+--  void R_AllocStaticTriSurfSilIndexes( srfTriangles_t *tri, int numIndexes ) {
+--  	assert( tri->silIndexes == NULL );
+--  	tri->silIndexes = (triIndex_t *)Mem_Alloc16( numIndexes * sizeof( triIndex_t ), TAG_TRI_SIL_INDEXES );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfDominantTris
+--  =================
+--  */
+--  void R_AllocStaticTriSurfDominantTris( srfTriangles_t *tri, int numVerts ) {
+--  	assert( tri->dominantTris == NULL );
+--  	tri->dominantTris = (dominantTri_t *)Mem_Alloc16( numVerts * sizeof( dominantTri_t ), TAG_TRI_DOMINANT_TRIS );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfMirroredVerts
+--  =================
+--  */
+--  void R_AllocStaticTriSurfMirroredVerts( srfTriangles_t *tri, int numMirroredVerts ) {
+--  	assert( tri->mirroredVerts == NULL );
+--  	tri->mirroredVerts = (int *)Mem_Alloc16( numMirroredVerts * sizeof( *tri->mirroredVerts ), TAG_TRI_MIR_VERT );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfDupVerts
+--  =================
+--  */
+--  void R_AllocStaticTriSurfDupVerts( srfTriangles_t *tri, int numDupVerts ) {
+--  	assert( tri->dupVerts == NULL );
+--  	tri->dupVerts = (int *)Mem_Alloc16( numDupVerts * 2 * sizeof( *tri->dupVerts ), TAG_TRI_DUP_VERT );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfSilEdges
+--  =================
+--  */
+--  void R_AllocStaticTriSurfSilEdges( srfTriangles_t *tri, int numSilEdges ) {
+--  	assert( tri->silEdges == NULL );
+--  	tri->silEdges = (silEdge_t *)Mem_Alloc16( numSilEdges * sizeof( silEdge_t ), TAG_TRI_SIL_EDGE );
+--  }
+--
+--  /*
+--  =================
+--  R_AllocStaticTriSurfPreLightShadowVerts
+--  =================
+--  */
+--  void R_AllocStaticTriSurfPreLightShadowVerts( srfTriangles_t *tri, int numVerts ) {
+--  	assert( tri->preLightShadowVertexes == NULL );
+--  	tri->preLightShadowVertexes = (idShadowVert *)Mem_Alloc16( numVerts * sizeof( idShadowVert ), TAG_TRI_SHADOW );
+--  }
+--
+--  /*
+--  =================
+--  R_ResizeStaticTriSurfVerts
+--  =================
+--  */
+--  void R_ResizeStaticTriSurfVerts( srfTriangles_t *tri, int numVerts ) {
+--  	idDrawVert * newVerts = (idDrawVert *)Mem_Alloc16( numVerts * sizeof( idDrawVert ), TAG_TRI_VERTS );
+--  	const int copy = std::min( numVerts, tri->numVerts );
+--  	memcpy( newVerts, tri->verts, copy * sizeof( idDrawVert ) );
+--  	Mem_Free( tri->verts );
+--  	tri->verts = newVerts;
+--  }
+--
+--  /*
+--  =================
+--  R_ResizeStaticTriSurfIndexes
+--  =================
+--  */
+--  void R_ResizeStaticTriSurfIndexes( srfTriangles_t *tri, int numIndexes ) {
+--  	triIndex_t * newIndexes = (triIndex_t *)Mem_Alloc16( numIndexes * sizeof( triIndex_t ), TAG_TRI_INDEXES );
+--  	const int copy = std::min( numIndexes, tri->numIndexes );
+--  	memcpy( newIndexes, tri->indexes, copy * sizeof( triIndex_t ) );
+--  	Mem_Free( tri->indexes );
+--  	tri->indexes = newIndexes;
+--  }
+--
+--  /*
+--  =================
+--  R_ReferenceStaticTriSurfVerts
+--  =================
+--  */
+--  void R_ReferenceStaticTriSurfVerts( srfTriangles_t *tri, const srfTriangles_t *reference ) {
+--  	tri->verts = reference->verts;
+--  }
+--
+--  /*
+--  =================
+--  R_ReferenceStaticTriSurfIndexes
+--  =================
+--  */
+--  void R_ReferenceStaticTriSurfIndexes( srfTriangles_t *tri, const srfTriangles_t *reference ) {
+--  	tri->indexes = reference->indexes;
+--  }
+--
+--  /*
+--  =================
+--  R_FreeStaticTriSurfSilIndexes
+--  =================
+--  */
+--  void R_FreeStaticTriSurfSilIndexes( srfTriangles_t *tri ) {
+--  	Mem_Free( tri->silIndexes );
+--  	tri->silIndexes = NULL;
+--  }
+--
+--  /*
+--  ===============
+--  R_RangeCheckIndexes
+--
+--  Check for syntactically incorrect indexes, like out of range values.
+--  Does not check for semantics, like degenerate triangles.
+--
+--  No vertexes is acceptable if no indexes.
+--  No indexes is acceptable.
+--  More vertexes than are referenced by indexes are acceptable.
+--  ===============
+--  */
+--  void R_RangeCheckIndexes( const srfTriangles_t *tri ) {
+--  	int		i;
+--
+--  	if ( tri->numIndexes < 0 ) {
+--  		common->Error( "R_RangeCheckIndexes: numIndexes < 0" );
+--  	}
+--  	if ( tri->numVerts < 0 ) {
+--  		common->Error( "R_RangeCheckIndexes: numVerts < 0" );
+--  	}
+--
+--  	// must specify an integral number of triangles
+--  	if ( tri->numIndexes % 3 != 0 ) {
+--  		common->Error( "R_RangeCheckIndexes: numIndexes %% 3" );
+--  	}
+--
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		if ( tri->indexes[i] >= tri->numVerts ) {
+--  			common->Error( "R_RangeCheckIndexes: index out of range" );
+--  		}
+--  	}
+--
+--  	// this should not be possible unless there are unused verts
+--  	if ( tri->numVerts > tri->numIndexes ) {
+--  		// FIXME: find the causes of these
+--  		// common->Printf( "R_RangeCheckIndexes: tri->numVerts > tri->numIndexes\n" );
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_BoundTriSurf
+--  =================
+--  */
+--  void R_BoundTriSurf( srfTriangles_t *tri ) {
+--  	SIMDProcessor->MinMax( tri->bounds[0], tri->bounds[1], tri->verts, tri->numVerts );
+--  }
+--
+--  /*
+--  =================
+--  R_CreateSilRemap
+--  =================
+--  */
+--  static int *R_CreateSilRemap( const srfTriangles_t *tri ) {
+--  	int		c_removed, c_unique;
+--  	int		*remap;
+--  	int		i, j, hashKey;
+--  	const idDrawVert *v1, *v2;
+--
+--  	remap = (int *)R_ClearedStaticAlloc( tri->numVerts * sizeof( remap[0] ) );
+--
+--  	if ( !r_useSilRemap.GetBool() ) {
+--  		for ( i = 0; i < tri->numVerts; i++ ) {
+--  			remap[i] = i;
+--  		}
+--  		return remap;
+--  	}
+--
+--  	idHashIndex		hash( 1024, tri->numVerts );
+--
+--  	c_removed = 0;
+--  	c_unique = 0;
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		v1 = &tri->verts[i];
+--
+--  		// see if there is an earlier vert that it can map to
+--  		hashKey = hash.GenerateKey( v1->xyz );
+--  		for ( j = hash.First( hashKey ); j >= 0; j = hash.Next( j ) ) {
+--  			v2 = &tri->verts[j];
+--  			if ( v2->xyz[0] == v1->xyz[0]
+--  				&& v2->xyz[1] == v1->xyz[1]
+--  				&& v2->xyz[2] == v1->xyz[2] ) {
+--  				c_removed++;
+--  				remap[i] = j;
+--  				break;
+--  			}
+--  		}
+--  		if ( j < 0 ) {
+--  			c_unique++;
+--  			remap[i] = i;
+--  			hash.Add( hashKey, i );
+--  		}
+--  	}
+--
+--  	return remap;
+--  }
+--
+--  /*
+--  =================
+--  R_CreateSilIndexes
+--
+--  Uniquing vertexes only on xyz before creating sil edges reduces
+--  the edge count by about 20% on Q3 models
+--  =================
+--  */
+--  void R_CreateSilIndexes( srfTriangles_t *tri ) {
+--  	int		i;
+--  	int		*remap;
+--
+--  	if ( tri->silIndexes ) {
+--  		Mem_Free( tri->silIndexes );
+--  		tri->silIndexes = NULL;
+--  	}
+--
+--  	remap = R_CreateSilRemap( tri );
+--
+--  	// remap indexes to the first one
+--  	R_AllocStaticTriSurfSilIndexes( tri, tri->numIndexes );
+--  	assert( tri->silIndexes != NULL );
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		tri->silIndexes[i] = remap[tri->indexes[i]];
+--  	}
+--
+--  	R_StaticFree( remap );
+--  }
+--
+--  /*
+--  =====================
+--  R_CreateDupVerts
+--  =====================
+--  */
+--  void R_CreateDupVerts( srfTriangles_t *tri ) {
+--  	int i;
+--
+--  	idTempArray<int> remap( tri->numVerts );
+--
+--  	// initialize vertex remap in case there are unused verts
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		remap[i] = i;
+--  	}
+--
+--  	// set the remap based on how the silhouette indexes are remapped
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		remap[tri->indexes[i]] = tri->silIndexes[i];
+--  	}
+--
+--  	// create duplicate vertex index based on the vertex remap
+--  	idTempArray<int> tempDupVerts( tri->numVerts * 2 );
+--  	tri->numDupVerts = 0;
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		if ( remap[i] != i ) {
+--  			tempDupVerts[tri->numDupVerts*2+0] = i;
+--  			tempDupVerts[tri->numDupVerts*2+1] = remap[i];
+--  			tri->numDupVerts++;
+--  		}
+--  	}
+--
+--  	R_AllocStaticTriSurfDupVerts( tri, tri->numDupVerts );
+--  	memcpy( tri->dupVerts, tempDupVerts.Ptr(), tri->numDupVerts * 2 * sizeof( tri->dupVerts[0] ) );
+--  }
+--
+--  /*
+--  ===============
+--  R_DefineEdge
+--  ===============
+--  */
+--  static int c_duplicatedEdges, c_tripledEdges;
+--  static const int MAX_SIL_EDGES			= 0x7ffff;
+--
+--  static void R_DefineEdge( const int v1, const int v2, const int planeNum, const int numPlanes,idList<silEdge_t> & silEdges, idHashIndex	& silEdgeHash ) {
+--  	int		i, hashKey;
+--
+--  	// check for degenerate edge
+--  	if ( v1 == v2 ) {
+--  		return;
+--  	}
+--  	hashKey = silEdgeHash.GenerateKey( v1, v2 );
+--  	// search for a matching other side
+--  	for ( i = silEdgeHash.First( hashKey ); i >= 0 && i < MAX_SIL_EDGES; i = silEdgeHash.Next( i ) ) {
+--  		if ( silEdges[i].v1 == v1 && silEdges[i].v2 == v2 ) {
+--  			c_duplicatedEdges++;
+--  			// allow it to still create a new edge
+--  			continue;
+--  		}
+--  		if ( silEdges[i].v2 == v1 && silEdges[i].v1 == v2 ) {
+--  			if ( silEdges[i].p2 != numPlanes )  {
+--  				c_tripledEdges++;
+--  				// allow it to still create a new edge
+--  				continue;
+--  			}
+--  			// this is a matching back side
+--  			silEdges[i].p2 = planeNum;
+--  			return;
+--  		}
+--
+--  	}
+--
+--  	// define the new edge
+--  	silEdgeHash.Add( hashKey, silEdges.Num() );
+--
+--  	silEdge_t silEdge;
+--
+--  	silEdge.p1 = planeNum;
+--  	silEdge.p2 = numPlanes;
+--  	silEdge.v1 = v1;
+--  	silEdge.v2 = v2;
+--
+--  	silEdges.Append( silEdge );
+--  }
+--
+--  /*
+--  =================
+--  SilEdgeSort
+--  =================
+--  */
+--  static int SilEdgeSort( const void *a, const void *b ) {
+--  	if ( ((silEdge_t *)a)->p1 < ((silEdge_t *)b)->p1 ) {
+--  		return -1;
+--  	}
+--  	if ( ((silEdge_t *)a)->p1 > ((silEdge_t *)b)->p1 ) {
+--  		return 1;
+--  	}
+--  	if ( ((silEdge_t *)a)->p2 < ((silEdge_t *)b)->p2 ) {
+--  		return -1;
+--  	}
+--  	if ( ((silEdge_t *)a)->p2 > ((silEdge_t *)b)->p2 ) {
+--  		return 1;
+--  	}
+--  	return 0;
+--  }
+--
+--  /*
+--  =================
+--  R_IdentifySilEdges
+--
+--  If the surface will not deform, coplanar edges (polygon interiors)
+--  can never create silhouette plains, and can be omited
+--  =================
+--  */
+--  int	c_coplanarSilEdges;
+--  int	c_totalSilEdges;
+--
+--  void R_IdentifySilEdges( srfTriangles_t *tri, bool omitCoplanarEdges ) {
+--  	int		i;
+--  	int		shared, single;
+--
+--  	omitCoplanarEdges = false;	// optimization doesn't work for some reason
+--
+--  	static const int SILEDGE_HASH_SIZE		= 1024;
+--
+--  	const int numTris = tri->numIndexes / 3;
+--
+--  	idList<silEdge_t>	silEdges( MAX_SIL_EDGES );
+--  	idHashIndex	silEdgeHash( SILEDGE_HASH_SIZE, MAX_SIL_EDGES );
+--  	int			numPlanes = numTris;
+--
+--
+--  	silEdgeHash.Clear();
+--
+--  	c_duplicatedEdges = 0;
+--  	c_tripledEdges = 0;
+--
+--  	for ( i = 0; i < numTris; i++ ) {
+--  		int		i1, i2, i3;
+--
+--  		i1 = tri->silIndexes[ i*3 + 0 ];
+--  		i2 = tri->silIndexes[ i*3 + 1 ];
+--  		i3 = tri->silIndexes[ i*3 + 2 ];
+--
+--  		// create the edges
+--  		R_DefineEdge( i1, i2, i, numPlanes, silEdges, silEdgeHash );
+--  		R_DefineEdge( i2, i3, i, numPlanes, silEdges, silEdgeHash );
+--  		R_DefineEdge( i3, i1, i, numPlanes, silEdges, silEdgeHash );
+--  	}
+--
+--  	if ( c_duplicatedEdges || c_tripledEdges ) {
+--  		common->DWarning( "%i duplicated edge directions, %i tripled edges", c_duplicatedEdges, c_tripledEdges );
+--  	}
+--
+--  	// if we know that the vertexes aren't going
+--  	// to deform, we can remove interior triangulation edges
+--  	// on otherwise planar polygons.
+--  	// I earlier believed that I could also remove concave
+--  	// edges, because they are never silhouettes in the conventional sense,
+--  	// but they are still needed to balance out all the true sil edges
+--  	// for the shadow algorithm to function
+--  	int		c_coplanarCulled;
+--
+--  	c_coplanarCulled = 0;
+--  	if ( omitCoplanarEdges ) {
+--  		for ( i = 0; i < silEdges.Num(); i++ ) {
+--  			int			i1, i2, i3;
+--  			idPlane		plane;
+--  			int			base;
+--  			int			j;
+--  			float		d;
+--
+--  			if ( silEdges[i].p2 == numPlanes ) {	// the fake dangling edge
+--  				continue;
+--  			}
+--
+--  			base = silEdges[i].p1 * 3;
+--  			i1 = tri->silIndexes[ base + 0 ];
+--  			i2 = tri->silIndexes[ base + 1 ];
+--  			i3 = tri->silIndexes[ base + 2 ];
+--
+--  			plane.FromPoints( tri->verts[i1].xyz, tri->verts[i2].xyz, tri->verts[i3].xyz );
+--
+--  			// check to see if points of second triangle are not coplanar
+--  			base = silEdges[i].p2 * 3;
+--  			for ( j = 0; j < 3; j++ ) {
+--  				i1 = tri->silIndexes[ base + j ];
+--  				d = plane.Distance( tri->verts[i1].xyz );
+--  				if ( d != 0 ) {		// even a small epsilon causes problems
+--  					break;
+--  				}
+--  			}
+--
+--  			if ( j == 3 ) {
+--  				// we can cull this sil edge
+--  				memmove( &silEdges[i], &silEdges[i+1], (silEdges.Num()-i-1) * sizeof( silEdges[i] ) );
+--  				c_coplanarCulled++;
+--  				silEdges.SetNum( silEdges.Num() - 1 );
+--  				i--;
+--  			}
+--  		}
+--  		if ( c_coplanarCulled ) {
+--  			c_coplanarSilEdges += c_coplanarCulled;
+--  //			common->Printf( "%i of %i sil edges coplanar culled\n", c_coplanarCulled,
+--  //				c_coplanarCulled + numSilEdges );
+--  		}
+--  	}
+--  	c_totalSilEdges += silEdges.Num();
+--
+--  	// sort the sil edges based on plane number
+--  	qsort( silEdges.Ptr(), silEdges.Num(), sizeof( silEdges[0] ), SilEdgeSort );
+--
+--  	// count up the distribution.
+--  	// a perfectly built model should only have shared
+--  	// edges, but most models will have some interpenetration
+--  	// and dangling edges
+--  	shared = 0;
+--  	single = 0;
+--  	for ( i = 0; i < silEdges.Num(); i++ ) {
+--  		if ( silEdges[i].p2 == numPlanes ) {
+--  			single++;
+--  		} else {
+--  			shared++;
+--  		}
+--  	}
+--
+--  	if ( !single ) {
+--  		tri->perfectHull = true;
+--  	} else {
+--  		tri->perfectHull = false;
+--  	}
+--
+--  	tri->numSilEdges = silEdges.Num();
+--  	R_AllocStaticTriSurfSilEdges( tri, silEdges.Num() );
+--  	memcpy( tri->silEdges, silEdges.Ptr(), silEdges.Num() * sizeof( tri->silEdges[0] ) );
+--  }
+--
+--  /*
+--  ===============
+--  R_FaceNegativePolarity
+--
+--  Returns true if the texture polarity of the face is negative, false if it is positive or zero
+--  ===============
+--  */
+--  static bool R_FaceNegativePolarity( const srfTriangles_t *tri, int firstIndex ) {
+--  	const idDrawVert * a = tri->verts + tri->indexes[firstIndex + 0];
+--  	const idDrawVert * b = tri->verts + tri->indexes[firstIndex + 1];
+--  	const idDrawVert * c = tri->verts + tri->indexes[firstIndex + 2];
+--
+--  	const idVec2 aST = a->GetTexCoord();
+--  	const idVec2 bST = b->GetTexCoord();
+--  	const idVec2 cST = c->GetTexCoord();
+--
+--  	float d0[5];
+--  	d0[3] = bST[0] - aST[0];
+--  	d0[4] = bST[1] - aST[1];
+--
+--  	float d1[5];
+--  	d1[3] = cST[0] - aST[0];
+--  	d1[4] = cST[1] - aST[1];
+--
+--  	const float area = d0[3] * d1[4] - d0[4] * d1[3];
+--  	if ( area >= 0 ) {
+--  		return false;
+--  	}
+--  	return true;
+--  }
+--
+--  /*
+--  ===================
+--  R_DuplicateMirroredVertexes
+--
+--  Modifies the surface to bust apart any verts that are shared by both positive and
+--  negative texture polarities, so tangent space smoothing at the vertex doesn't
+--  degenerate.
+--
+--  This will create some identical vertexes (which will eventually get different tangent
+--  vectors), so never optimize the resulting mesh, or it will get the mirrored edges back.
+--
+--  Reallocates tri->verts and changes tri->indexes in place
+--  Silindexes are unchanged by this.
+--
+--  sets mirroredVerts and mirroredVerts[]
+--  ===================
+--  */
+--  struct tangentVert_t {
+--  	bool	polarityUsed[2];
+--  	int		negativeRemap;
+--  };
+--
+--  static void	R_DuplicateMirroredVertexes( srfTriangles_t *tri ) {
+--  	tangentVert_t	*vert;
+--  	int				i, j;
+--  	int				totalVerts;
+--  	int				numMirror;
+--
+--  	idTempArray<tangentVert_t> tverts( tri->numVerts );
+--  	tverts.Zero();
+--
+--  	// determine texture polarity of each surface
+--
+--  	// mark each vert with the polarities it uses
+--  	for ( i = 0; i < tri->numIndexes; i+=3 ) {
+--  		int	polarity = R_FaceNegativePolarity( tri, i );
+--  		for ( j = 0; j < 3; j++ ) {
+--  			tverts[tri->indexes[i+j]].polarityUsed[ polarity ] = true;
+--  		}
+--  	}
+--
+--  	// now create new vertex indices as needed
+--  	totalVerts = tri->numVerts;
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		vert = &tverts[i];
+--  		if ( vert->polarityUsed[0] && vert->polarityUsed[1] ) {
+--  			vert->negativeRemap = totalVerts;
+--  			totalVerts++;
+--  		}
+--  	}
+--
+--  	tri->numMirroredVerts = totalVerts - tri->numVerts;
+--
+--  	if ( tri->numMirroredVerts == 0 ) {
+--  		tri->mirroredVerts = NULL;
+--  		return;
+--  	}
+--
+--  	// now create the new list
+--  	R_AllocStaticTriSurfMirroredVerts( tri, tri->numMirroredVerts );
+--  	R_ResizeStaticTriSurfVerts( tri, totalVerts );
+--
+--  	// create the duplicates
+--  	numMirror = 0;
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		j = tverts[i].negativeRemap;
+--  		if ( j ) {
+--  			tri->verts[j] = tri->verts[i];
+--  			tri->mirroredVerts[numMirror] = i;
+--  			numMirror++;
+--  		}
+--  	}
+--  	tri->numVerts = totalVerts;
+--
+--  	// change the indexes
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		if ( tverts[tri->indexes[i]].negativeRemap && R_FaceNegativePolarity( tri, 3 * ( i / 3 ) ) ) {
+--  			tri->indexes[i] = tverts[tri->indexes[i]].negativeRemap;
+--  		}
+--  	}
+--  }
+--
+--  /*
+--  ============
+--  R_DeriveNormalsAndTangents
+--
+--  Derives the normal and orthogonal tangent vectors for the triangle vertices.
+--  For each vertex the normal and tangent vectors are derived from all triangles
+--  using the vertex which results in smooth tangents across the mesh.
+--  ============
+--  */
+--  void R_DeriveNormalsAndTangents( srfTriangles_t *tri ) {
+--  	idTempArray< idVec3 > vertexNormals( tri->numVerts );
+--  	idTempArray< idVec3 > vertexTangents( tri->numVerts );
+--  	idTempArray< idVec3 > vertexBitangents( tri->numVerts );
+--
+--  	vertexNormals.Zero();
+--  	vertexTangents.Zero();
+--  	vertexBitangents.Zero();
+--
+--  	for ( int i = 0; i < tri->numIndexes; i += 3 ) {
+--  		const int v0 = tri->indexes[i + 0];
+--  		const int v1 = tri->indexes[i + 1];
+--  		const int v2 = tri->indexes[i + 2];
+--
+--  		const idDrawVert * a = tri->verts + v0;
+--  		const idDrawVert * b = tri->verts + v1;
+--  		const idDrawVert * c = tri->verts + v2;
+--
+--  		const idVec2 aST = a->GetTexCoord();
+--  		const idVec2 bST = b->GetTexCoord();
+--  		const idVec2 cST = c->GetTexCoord();
+--
+--  		float d0[5];
+--  		d0[0] = b->xyz[0] - a->xyz[0];
+--  		d0[1] = b->xyz[1] - a->xyz[1];
+--  		d0[2] = b->xyz[2] - a->xyz[2];
+--  		d0[3] = bST[0] - aST[0];
+--  		d0[4] = bST[1] - aST[1];
+--
+--  		float d1[5];
+--  		d1[0] = c->xyz[0] - a->xyz[0];
+--  		d1[1] = c->xyz[1] - a->xyz[1];
+--  		d1[2] = c->xyz[2] - a->xyz[2];
+--  		d1[3] = cST[0] - aST[0];
+--  		d1[4] = cST[1] - aST[1];
+--
+--  		idVec3 normal;
+--  		normal[0] = d1[1] * d0[2] - d1[2] * d0[1];
+--  		normal[1] = d1[2] * d0[0] - d1[0] * d0[2];
+--  		normal[2] = d1[0] * d0[1] - d1[1] * d0[0];
+--
+--  		const float f0 = idMath::InvSqrt( normal.x * normal.x + normal.y * normal.y + normal.z * normal.z );
+--
+--  		normal.x *= f0;
+--  		normal.y *= f0;
+--  		normal.z *= f0;
+--
+--  		// area sign bit
+--  		const float area = d0[3] * d1[4] - d0[4] * d1[3];
+--  		unsigned int signBit = ( *(unsigned int *)&area ) & ( 1 << 31 );
+--
+--  		idVec3 tangent;
+--  		tangent[0] = d0[0] * d1[4] - d0[4] * d1[0];
+--  		tangent[1] = d0[1] * d1[4] - d0[4] * d1[1];
+--  		tangent[2] = d0[2] * d1[4] - d0[4] * d1[2];
+--
+--  		const float f1 = idMath::InvSqrt( tangent.x * tangent.x + tangent.y * tangent.y + tangent.z * tangent.z );
+--  		*(unsigned int *)&f1 ^= signBit;
+--
+--  		tangent.x *= f1;
+--  		tangent.y *= f1;
+--  		tangent.z *= f1;
+--
+--  		idVec3 bitangent;
+--  		bitangent[0] = d0[3] * d1[0] - d0[0] * d1[3];
+--  		bitangent[1] = d0[3] * d1[1] - d0[1] * d1[3];
+--  		bitangent[2] = d0[3] * d1[2] - d0[2] * d1[3];
+--
+--  		const float f2 = idMath::InvSqrt( bitangent.x * bitangent.x + bitangent.y * bitangent.y + bitangent.z * bitangent.z );
+--  		*(unsigned int *)&f2 ^= signBit;
+--
+--  		bitangent.x *= f2;
+--  		bitangent.y *= f2;
+--  		bitangent.z *= f2;
+--
+--  		vertexNormals[v0] += normal;
+--  		vertexTangents[v0] += tangent;
+--  		vertexBitangents[v0] += bitangent;
+--
+--  		vertexNormals[v1] += normal;
+--  		vertexTangents[v1] += tangent;
+--  		vertexBitangents[v1] += bitangent;
+--
+--  		vertexNormals[v2] += normal;
+--  		vertexTangents[v2] += tangent;
+--  		vertexBitangents[v2] += bitangent;
+--  	}
+--
+--  	// add the normal of a duplicated vertex to the normal of the first vertex with the same XYZ
+--  	for ( int i = 0; i < tri->numDupVerts; i++ ) {
+--  		vertexNormals[tri->dupVerts[i*2+0]] += vertexNormals[tri->dupVerts[i*2+1]];
+--  	}
+--
+--  	// copy vertex normals to duplicated vertices
+--  	for ( int i = 0; i < tri->numDupVerts; i++ ) {
+--  		vertexNormals[tri->dupVerts[i*2+1]] = vertexNormals[tri->dupVerts[i*2+0]];
+--  	}
+--
+--  	// Project the summed vectors onto the normal plane and normalize.
+--  	// The tangent vectors will not necessarily be orthogonal to each
+--  	// other, but they will be orthogonal to the surface normal.
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		const float normalScale = idMath::InvSqrt( vertexNormals[i].x * vertexNormals[i].x + vertexNormals[i].y * vertexNormals[i].y + vertexNormals[i].z * vertexNormals[i].z );
+--  		vertexNormals[i].x *= normalScale;
+--  		vertexNormals[i].y *= normalScale;
+--  		vertexNormals[i].z *= normalScale;
+--
+--  		vertexTangents[i] -= ( vertexTangents[i] * vertexNormals[i] ) * vertexNormals[i];
+--  		vertexBitangents[i] -= ( vertexBitangents[i] * vertexNormals[i] ) * vertexNormals[i];
+--
+--  		const float tangentScale = idMath::InvSqrt( vertexTangents[i].x * vertexTangents[i].x + vertexTangents[i].y * vertexTangents[i].y + vertexTangents[i].z * vertexTangents[i].z );
+--  		vertexTangents[i].x *= tangentScale;
+--  		vertexTangents[i].y *= tangentScale;
+--  		vertexTangents[i].z *= tangentScale;
+--
+--  		const float bitangentScale = idMath::InvSqrt( vertexBitangents[i].x * vertexBitangents[i].x + vertexBitangents[i].y * vertexBitangents[i].y + vertexBitangents[i].z * vertexBitangents[i].z );
+--  		vertexBitangents[i].x *= bitangentScale;
+--  		vertexBitangents[i].y *= bitangentScale;
+--  		vertexBitangents[i].z *= bitangentScale;
+--  	}
+--
+--  	// compress the normals and tangents
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		tri->verts[i].SetNormal( vertexNormals[i] );
+--  		tri->verts[i].SetTangent( vertexTangents[i] );
+--  		tri->verts[i].SetBiTangent( vertexBitangents[i] );
+--  	}
+--  }
+--
+--  /*
+--  ============
+--  R_DeriveUnsmoothedNormalsAndTangents
+--  ============
+--  */
+--  void R_DeriveUnsmoothedNormalsAndTangents( srfTriangles_t * tri ) {
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		float d0, d1, d2, d3, d4;
+--  		float d5, d6, d7, d8, d9;
+--  		float s0, s1, s2;
+--  		float n0, n1, n2;
+--  		float t0, t1, t2;
+--  		float t3, t4, t5;
+--
+--  		const dominantTri_t &dt = tri->dominantTris[i];
+--
+--  		idDrawVert *a = tri->verts + i;
+--  		idDrawVert *b = tri->verts + dt.v2;
+--  		idDrawVert *c = tri->verts + dt.v3;
+--
+--  		const idVec2 aST = a->GetTexCoord();
+--  		const idVec2 bST = b->GetTexCoord();
+--  		const idVec2 cST = c->GetTexCoord();
+--
+--  		d0 = b->xyz[0] - a->xyz[0];
+--  		d1 = b->xyz[1] - a->xyz[1];
+--  		d2 = b->xyz[2] - a->xyz[2];
+--  		d3 = bST[0] - aST[0];
+--  		d4 = bST[1] - aST[1];
+--
+--  		d5 = c->xyz[0] - a->xyz[0];
+--  		d6 = c->xyz[1] - a->xyz[1];
+--  		d7 = c->xyz[2] - a->xyz[2];
+--  		d8 = cST[0] - aST[0];
+--  		d9 = cST[1] - aST[1];
+--
+--  		s0 = dt.normalizationScale[0];
+--  		s1 = dt.normalizationScale[1];
+--  		s2 = dt.normalizationScale[2];
+--
+--  		n0 = s2 * ( d6 * d2 - d7 * d1 );
+--  		n1 = s2 * ( d7 * d0 - d5 * d2 );
+--  		n2 = s2 * ( d5 * d1 - d6 * d0 );
+--
+--  		t0 = s0 * ( d0 * d9 - d4 * d5 );
+--  		t1 = s0 * ( d1 * d9 - d4 * d6 );
+--  		t2 = s0 * ( d2 * d9 - d4 * d7 );
+--
+--  #ifndef DERIVE_UNSMOOTHED_BITANGENT
+--  		t3 = s1 * ( d3 * d5 - d0 * d8 );
+--  		t4 = s1 * ( d3 * d6 - d1 * d8 );
+--  		t5 = s1 * ( d3 * d7 - d2 * d8 );
+--  #else
+--  		t3 = s1 * ( n2 * t1 - n1 * t2 );
+--  		t4 = s1 * ( n0 * t2 - n2 * t0 );
+--  		t5 = s1 * ( n1 * t0 - n0 * t1 );
+--  #endif
+--
+--  		a->SetNormal( n0, n1, n2 );
+--  		a->SetTangent( t0, t1, t2 );
+--  		a->SetBiTangent( t3, t4, t5 );
+--  	}
+--  }
+--
+--  /*
+--  =====================
+--  R_CreateVertexNormals
+--
+--  Averages together the contributions of all faces that are
+--  used by a vertex, creating drawVert->normal
+--  =====================
+--  */
+--  void R_CreateVertexNormals( srfTriangles_t *tri ) {
+--  	if ( tri->silIndexes == NULL ) {
+--  		R_CreateSilIndexes( tri );
+--  	}
+--
+--  	idTempArray< idVec3 > vertexNormals( tri->numVerts );
+--  	vertexNormals.Zero();
+--
+--  	assert( tri->silIndexes != NULL );
+--  	for ( int i = 0; i < tri->numIndexes; i += 3 ) {
+--  		const int i0 = tri->silIndexes[i + 0];
+--  		const int i1 = tri->silIndexes[i + 1];
+--  		const int i2 = tri->silIndexes[i + 2];
+--
+--  		const idDrawVert & v0 = tri->verts[i0];
+--  		const idDrawVert & v1 = tri->verts[i1];
+--  		const idDrawVert & v2 = tri->verts[i2];
+--
+--  		const idPlane plane( v0.xyz, v1.xyz, v2.xyz );
+--
+--  		vertexNormals[i0] += plane.Normal();
+--  		vertexNormals[i1] += plane.Normal();
+--  		vertexNormals[i2] += plane.Normal();
+--  	}
+--
+--  	// replicate from silIndexes to all indexes
+--  	for ( int i = 0; i < tri->numIndexes; i++ ) {
+--  		vertexNormals[tri->indexes[i]] = vertexNormals[tri->silIndexes[i]];
+--  	}
+--
+--  	// normalize
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		vertexNormals[i].Normalize();
+--  	}
+--
+--  	// compress the normals
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		tri->verts[i].SetNormal( vertexNormals[i] );
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_DeriveTangentsWithoutNormals
+--
+--  Build texture space tangents for bump mapping
+--  If a surface is deformed, this must be recalculated
+--
+--  This assumes that any mirrored vertexes have already been duplicated, so
+--  any shared vertexes will have the tangent spaces smoothed across.
+--
+--  Texture wrapping slightly complicates this, but as long as the normals
+--  are shared, and the tangent vectors are projected onto the normals, the
+--  separate vertexes should wind up with identical tangent spaces.
+--
+--  mirroring a normalmap WILL cause a slightly visible seam unless the normals
+--  are completely flat around the edge's full bilerp support.
+--
+--  Vertexes which are smooth shaded must have their tangent vectors
+--  in the same plane, which will allow a seamless
+--  rendering as long as the normal map is even on both sides of the
+--  seam.
+--
+--  A smooth shaded surface may have multiple tangent vectors at a vertex
+--  due to texture seams or mirroring, but it should only have a single
+--  normal vector.
+--
+--  Each triangle has a pair of tangent vectors in it's plane
+--
+--  Should we consider having vertexes point at shared tangent spaces
+--  to save space or speed transforms?
+--
+--  this version only handles bilateral symetry
+--  =================
+--  */
+--  void R_DeriveTangentsWithoutNormals( srfTriangles_t *tri ) {
+--  	idTempArray< idVec3 > triangleTangents( tri->numIndexes / 3 );
+--  	idTempArray< idVec3 > triangleBitangents( tri->numIndexes / 3 );
+--
+--  	//
+--  	// calculate tangent vectors for each face in isolation
+--  	//
+--  	int c_positive = 0;
+--  	int c_negative = 0;
+--  	int c_textureDegenerateFaces = 0;
+--  	for ( int i = 0; i < tri->numIndexes; i += 3 ) {
+--  		idVec3	temp;
+--
+--  		idDrawVert * a = tri->verts + tri->indexes[i + 0];
+--  		idDrawVert * b = tri->verts + tri->indexes[i + 1];
+--  		idDrawVert * c = tri->verts + tri->indexes[i + 2];
+--
+--  		const idVec2 aST = a->GetTexCoord();
+--  		const idVec2 bST = b->GetTexCoord();
+--  		const idVec2 cST = c->GetTexCoord();
+--
+--  		float d0[5];
+--  		d0[0] = b->xyz[0] - a->xyz[0];
+--  		d0[1] = b->xyz[1] - a->xyz[1];
+--  		d0[2] = b->xyz[2] - a->xyz[2];
+--  		d0[3] = bST[0] - aST[0];
+--  		d0[4] = bST[1] - aST[1];
+--
+--  		float d1[5];
+--  		d1[0] = c->xyz[0] - a->xyz[0];
+--  		d1[1] = c->xyz[1] - a->xyz[1];
+--  		d1[2] = c->xyz[2] - a->xyz[2];
+--  		d1[3] = cST[0] - aST[0];
+--  		d1[4] = cST[1] - aST[1];
+--
+--  		const float area = d0[3] * d1[4] - d0[4] * d1[3];
+--  		if ( fabs( area ) < 1e-20f ) {
+--  			triangleTangents[i / 3].Zero();
+--  			triangleBitangents[i / 3].Zero();
+--  			c_textureDegenerateFaces++;
+--  			continue;
+--  		}
+--  		if ( area > 0.0f ) {
+--  			c_positive++;
+--  		} else {
+--  			c_negative++;
+--  		}
+--
+--  #ifdef USE_INVA
+--  		float inva = ( area < 0.0f ) ? -1.0f : 1.0f;		// was = 1.0f / area;
+--
+--          temp[0] = ( d0[0] * d1[4] - d0[4] * d1[0] ) * inva;
+--          temp[1] = ( d0[1] * d1[4] - d0[4] * d1[1] ) * inva;
+--          temp[2] = ( d0[2] * d1[4] - d0[4] * d1[2] ) * inva;
+--  		temp.Normalize();
+--  		triangleTangents[i / 3] = temp;
+--
+--          temp[0] = ( d0[3] * d1[0] - d0[0] * d1[3] ) * inva;
+--          temp[1] = ( d0[3] * d1[1] - d0[1] * d1[3] ) * inva;
+--          temp[2] = ( d0[3] * d1[2] - d0[2] * d1[3] ) * inva;
+--  		temp.Normalize();
+--  		triangleBitangents[i / 3] = temp;
+--  #else
+--          temp[0] = ( d0[0] * d1[4] - d0[4] * d1[0] );
+--          temp[1] = ( d0[1] * d1[4] - d0[4] * d1[1] );
+--          temp[2] = ( d0[2] * d1[4] - d0[4] * d1[2] );
+--  		temp.Normalize();
+--  		triangleTangents[i / 3] = temp;
+--
+--          temp[0] = ( d0[3] * d1[0] - d0[0] * d1[3] );
+--          temp[1] = ( d0[3] * d1[1] - d0[1] * d1[3] );
+--          temp[2] = ( d0[3] * d1[2] - d0[2] * d1[3] );
+--  		temp.Normalize();
+--  		triangleBitangents[i / 3] = temp;
+--  #endif
+--  	}
+--
+--  	idTempArray< idVec3 > vertexTangents( tri->numVerts );
+--  	idTempArray< idVec3 > vertexBitangents( tri->numVerts );
+--
+--  	// clear the tangents
+--  	for ( int i = 0; i < tri->numVerts; ++i ) {
+--  		vertexTangents[i].Zero();
+--  		vertexBitangents[i].Zero();
+--  	}
+--
+--  	// sum up the neighbors
+--  	for ( int i = 0; i < tri->numIndexes; i += 3 ) {
+--  		// for each vertex on this face
+--  		for ( int j = 0; j < 3; j++ ) {
+--  			vertexTangents[tri->indexes[i+j]] += triangleTangents[i / 3];
+--  			vertexBitangents[tri->indexes[i+j]] += triangleBitangents[i / 3];
+--  		}
+--  	}
+--
+--  	// Project the summed vectors onto the normal plane and normalize.
+--  	// The tangent vectors will not necessarily be orthogonal to each
+--  	// other, but they will be orthogonal to the surface normal.
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		idVec3 normal = tri->verts[i].GetNormal();
+--  		normal.Normalize();
+--
+--  		vertexTangents[i] -= ( vertexTangents[i] * normal ) * normal;
+--  		vertexTangents[i].Normalize();
+--
+--  		vertexBitangents[i] -= ( vertexBitangents[i] * normal ) * normal;
+--  		vertexBitangents[i].Normalize();
+--  	}
+--
+--  	for ( int i = 0; i < tri->numVerts; i++ ) {
+--  		tri->verts[i].SetTangent( vertexTangents[i] );
+--  		tri->verts[i].SetBiTangent( vertexBitangents[i] );
+--  	}
+--
+--  	tri->tangentsCalculated = true;
+--  }
+--
+--  /*
+--  ===================
+--  R_BuildDominantTris
+--
+--  Find the largest triangle that uses each vertex
+--  ===================
+--  */
+--  typedef struct {
+--  	int		vertexNum;
+--  	int		faceNum;
+--  } indexSort_t;
+--
+--  static int IndexSort( const void *a, const void *b ) {
+--  	if ( ((indexSort_t *)a)->vertexNum < ((indexSort_t *)b)->vertexNum ) {
+--  		return -1;
+--  	}
+--  	if ( ((indexSort_t *)a)->vertexNum > ((indexSort_t *)b)->vertexNum ) {
+--  		return 1;
+--  	}
+--  	return 0;
+--  }
+--
+--  void R_BuildDominantTris( srfTriangles_t *tri ) {
+--  	int i, j;
+--  	dominantTri_t *dt;
+--  	const int numIndexes = tri->numIndexes;
+--  	indexSort_t *ind = (indexSort_t *)R_StaticAlloc( numIndexes * sizeof( indexSort_t ) );
+--  	if ( ind == NULL ) {
+--  		idLib::Error( "Couldn't allocate index sort array" );
+--  		return;
+--  	}
+--
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		ind[i].vertexNum = tri->indexes[i];
+--  		ind[i].faceNum = i / 3;
+--  	}
+--  	qsort( ind, tri->numIndexes, sizeof( *ind ), IndexSort );
+--
+--  	R_AllocStaticTriSurfDominantTris( tri, tri->numVerts );
+--  	dt = tri->dominantTris;
+--  	memset( dt, 0, tri->numVerts * sizeof( dt[0] ) );
+--
+--  	for ( i = 0; i < numIndexes; i += j ) {
+--  		float	maxArea = 0;
+--  #pragma warning( disable: 6385 ) // This is simply to get pass a false defect for /analyze -- if you can figure out a better way, please let Shawn know...
+--  		int		vertNum = ind[i].vertexNum;
+--  #pragma warning( default: 6385 )
+--  		for ( j = 0; i + j < tri->numIndexes && ind[i+j].vertexNum == vertNum; j++ ) {
+--  			float		d0[5], d1[5];
+--  			idDrawVert	*a, *b, *c;
+--  			idVec3		normal, tangent, bitangent;
+--
+--  			int	i1 = tri->indexes[ind[i+j].faceNum * 3 + 0];
+--  			int	i2 = tri->indexes[ind[i+j].faceNum * 3 + 1];
+--  			int	i3 = tri->indexes[ind[i+j].faceNum * 3 + 2];
+--
+--  			a = tri->verts + i1;
+--  			b = tri->verts + i2;
+--  			c = tri->verts + i3;
+--
+--  			const idVec2 aST = a->GetTexCoord();
+--  			const idVec2 bST = b->GetTexCoord();
+--  			const idVec2 cST = c->GetTexCoord();
+--
+--  			d0[0] = b->xyz[0] - a->xyz[0];
+--  			d0[1] = b->xyz[1] - a->xyz[1];
+--  			d0[2] = b->xyz[2] - a->xyz[2];
+--  			d0[3] = bST[0] - aST[0];
+--  			d0[4] = bST[1] - aST[1];
+--
+--  			d1[0] = c->xyz[0] - a->xyz[0];
+--  			d1[1] = c->xyz[1] - a->xyz[1];
+--  			d1[2] = c->xyz[2] - a->xyz[2];
+--  			d1[3] = cST[0] - aST[0];
+--  			d1[4] = cST[1] - aST[1];
+--
+--  			normal[0] = ( d1[1] * d0[2] - d1[2] * d0[1] );
+--  			normal[1] = ( d1[2] * d0[0] - d1[0] * d0[2] );
+--  			normal[2] = ( d1[0] * d0[1] - d1[1] * d0[0] );
+--
+--  			float area = normal.Length();
+--
+--  			// if this is smaller than what we already have, skip it
+--  			if ( area < maxArea ) {
+--  				continue;
+--  			}
+--  			maxArea = area;
+--
+--  			if ( i1 == vertNum ) {
+--  				dt[vertNum].v2 = i2;
+--  				dt[vertNum].v3 = i3;
+--  			} else if ( i2 == vertNum ) {
+--  				dt[vertNum].v2 = i3;
+--  				dt[vertNum].v3 = i1;
+--  			} else {
+--  				dt[vertNum].v2 = i1;
+--  				dt[vertNum].v3 = i2;
+--  			}
+--
+--  			float	len = area;
+--  			if ( len < 0.001f ) {
+--  				len = 0.001f;
+--  			}
+--  			dt[vertNum].normalizationScale[2] = 1.0f / len;		// normal
+--
+--  			// texture area
+--  			area = d0[3] * d1[4] - d0[4] * d1[3];
+--
+--  			tangent[0] = ( d0[0] * d1[4] - d0[4] * d1[0] );
+--  			tangent[1] = ( d0[1] * d1[4] - d0[4] * d1[1] );
+--  			tangent[2] = ( d0[2] * d1[4] - d0[4] * d1[2] );
+--  			len = tangent.Length();
+--  			if ( len < 0.001f ) {
+--  				len = 0.001f;
+--  			}
+--  			dt[vertNum].normalizationScale[0] = ( area > 0 ? 1 : -1 ) / len;	// tangents[0]
+--
+--  			bitangent[0] = ( d0[3] * d1[0] - d0[0] * d1[3] );
+--  			bitangent[1] = ( d0[3] * d1[1] - d0[1] * d1[3] );
+--  			bitangent[2] = ( d0[3] * d1[2] - d0[2] * d1[3] );
+--  			len = bitangent.Length();
+--  			if ( len < 0.001f ) {
+--  				len = 0.001f;
+--  			}
+--  #ifdef DERIVE_UNSMOOTHED_BITANGENT
+--  			dt[vertNum].normalizationScale[1] = ( area > 0 ? 1 : -1 );
+--  #else
+--  			dt[vertNum].normalizationScale[1] = ( area > 0 ? 1 : -1 ) / len;	// tangents[1]
+--  #endif
+--  		}
+--  	}
+--
+--  	R_StaticFree( ind );
+--  }
+--
+--  /*
+--  ==================
+--  R_DeriveTangents
+--
+--  This is called once for static surfaces, and every frame for deforming surfaces
+--
+--  Builds tangents, normals, and face planes
+--  ==================
+--  */
+--  void R_DeriveTangents( srfTriangles_t *tri ) {
+--  	if ( tri->tangentsCalculated ) {
+--  		return;
+--  	}
+--
+--  	tr.pc.c_tangentIndexes += tri->numIndexes;
+--
+--  	if ( tri->dominantTris != NULL ) {
+--  		R_DeriveUnsmoothedNormalsAndTangents( tri );
+--  	} else {
+--  		R_DeriveNormalsAndTangents( tri );
+--  	}
+--  	tri->tangentsCalculated = true;
+--  }
+--
+--  /*
+--  =================
+--  R_RemoveDuplicatedTriangles
+--
+--  silIndexes must have already been calculated
+--
+--  silIndexes are used instead of indexes, because duplicated
+--  triangles could have different texture coordinates.
+--  =================
+--  */
+--  void R_RemoveDuplicatedTriangles( srfTriangles_t *tri ) {
+--  	int		c_removed;
+--  	int		i, j, r;
+--  	int		a, b, c;
+--
+--  	c_removed = 0;
+--
+--  	// check for completely duplicated triangles
+--  	// any rotation of the triangle is still the same, but a mirroring
+--  	// is considered different
+--  	for ( i = 0; i < tri->numIndexes; i+=3 ) {
+--  		for ( r = 0; r < 3; r++ ) {
+--  			a = tri->silIndexes[i+r];
+--  			b = tri->silIndexes[i+(r+1)%3];
+--  			c = tri->silIndexes[i+(r+2)%3];
+--  			for ( j = i + 3; j < tri->numIndexes; j+=3 ) {
+--  				if ( tri->silIndexes[j] == a && tri->silIndexes[j+1] == b && tri->silIndexes[j+2] == c ) {
+--  					c_removed++;
+--  					memmove( tri->indexes + j, tri->indexes + j + 3, ( tri->numIndexes - j - 3 ) * sizeof( tri->indexes[0] ) );
+--  					memmove( tri->silIndexes + j, tri->silIndexes + j + 3, ( tri->numIndexes - j - 3 ) * sizeof( tri->silIndexes[0] ) );
+--  					tri->numIndexes -= 3;
+--  					j -= 3;
+--  				}
+--  			}
+--  		}
+--  	}
+--
+--  	if ( c_removed ) {
+--  		common->Printf( "removed %i duplicated triangles\n", c_removed );
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_RemoveDegenerateTriangles
+--
+--  silIndexes must have already been calculated
+--  =================
+--  */
+--  void R_RemoveDegenerateTriangles( srfTriangles_t *tri ) {
+--  	int		c_removed;
+--  	int		i;
+--  	int		a, b, c;
+--
+--  	assert( tri->silIndexes != NULL );
+--
+--  	// check for completely degenerate triangles
+--  	c_removed = 0;
+--  	for ( i = 0; i < tri->numIndexes; i += 3 ) {
+--  		a = tri->silIndexes[i];
+--  		b = tri->silIndexes[i+1];
+--  		c = tri->silIndexes[i+2];
+--  		if ( a == b || a == c || b == c ) {
+--  			c_removed++;
+--  			memmove( tri->indexes + i, tri->indexes + i + 3, ( tri->numIndexes - i - 3 ) * sizeof( tri->indexes[0] ) );
+--  			memmove( tri->silIndexes + i, tri->silIndexes + i + 3, ( tri->numIndexes - i - 3 ) * sizeof( tri->silIndexes[0] ) );
+--  			tri->numIndexes -= 3;
+--  			i -= 3;
+--  		}
+--  	}
+--
+--  	// this doesn't free the memory used by the unused verts
+--
+--  	if ( c_removed ) {
+--  		common->Printf( "removed %i degenerate triangles\n", c_removed );
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_TestDegenerateTextureSpace
+--  =================
+--  */
+--  void R_TestDegenerateTextureSpace( srfTriangles_t *tri ) {
+--  	int		c_degenerate;
+--  	int		i;
+--
+--  	// check for triangles with a degenerate texture space
+--  	c_degenerate = 0;
+--  	for ( i = 0; i < tri->numIndexes; i += 3 ) {
+--  		const idDrawVert &a = tri->verts[tri->indexes[i+0]];
+--  		const idDrawVert &b = tri->verts[tri->indexes[i+1]];
+--  		const idDrawVert &c = tri->verts[tri->indexes[i+2]];
+--
+--  		if ( a.st == b.st || b.st == c.st || c.st == a.st ) {
+--  			c_degenerate++;
+--  		}
+--  	}
+--
+--  	if ( c_degenerate ) {
+--  //		common->Printf( "%d triangles with a degenerate texture space\n", c_degenerate );
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_RemoveUnusedVerts
+--  =================
+--  */
+--  void R_RemoveUnusedVerts( srfTriangles_t *tri ) {
+--  	int		i;
+--  	int		*mark;
+--  	int		index;
+--  	int		used;
+--
+--  	mark = (int *)R_ClearedStaticAlloc( tri->numVerts * sizeof( *mark ) );
+--
+--  	for ( i = 0; i < tri->numIndexes; i++ ) {
+--  		index = tri->indexes[i];
+--  		if ( index < 0 || index >= tri->numVerts ) {
+--  			common->Error( "R_RemoveUnusedVerts: bad index" );
+--  		}
+--  		mark[ index ] = 1;
+--
+--  		if ( tri->silIndexes ) {
+--  			index = tri->silIndexes[i];
+--  			if ( index < 0 || index >= tri->numVerts ) {
+--  				common->Error( "R_RemoveUnusedVerts: bad index" );
+--  			}
+--  			mark[ index ] = 1;
+--  		}
+--  	}
+--
+--  	used = 0;
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		if ( !mark[i] ) {
+--  			continue;
+--  		}
+--  		mark[i] = used + 1;
+--  		used++;
+--  	}
+--
+--  	if ( used != tri->numVerts ) {
+--  		for ( i = 0; i < tri->numIndexes; i++ ) {
+--  			tri->indexes[i] = mark[ tri->indexes[i] ] - 1;
+--  			if ( tri->silIndexes ) {
+--  				tri->silIndexes[i] = mark[ tri->silIndexes[i] ] - 1;
+--  			}
+--  		}
+--  		tri->numVerts = used;
+--
+--  		for ( i = 0; i < tri->numVerts; i++ ) {
+--  			index = mark[ i ];
+--  			if ( !index ) {
+--  				continue;
+--  			}
+--  			tri->verts[ index - 1 ] = tri->verts[i];
+--  		}
+--
+--  		// this doesn't realloc the arrays to save the memory used by the unused verts
+--  	}
+--
+--  	R_StaticFree( mark );
+--  }
+--
+--  /*
+--  =================
+--  R_MergeSurfaceList
+--
+--  Only deals with vertexes and indexes, not silhouettes, planes, etc.
+--  Does NOT perform a cleanup triangles, so there may be duplicated verts in the result.
+--  =================
+--  */
+--  srfTriangles_t * R_MergeSurfaceList( const srfTriangles_t **surfaces, int numSurfaces ) {
+--  	srfTriangles_t	*newTri;
+--  	const srfTriangles_t	*tri;
+--  	int				i, j;
+--  	int				totalVerts;
+--  	int				totalIndexes;
+--
+--  	totalVerts = 0;
+--  	totalIndexes = 0;
+--  	for ( i = 0; i < numSurfaces; i++ ) {
+--  		totalVerts += surfaces[i]->numVerts;
+--  		totalIndexes += surfaces[i]->numIndexes;
+--  	}
+--
+--  	newTri = R_AllocStaticTriSurf();
+--  	newTri->numVerts = totalVerts;
+--  	newTri->numIndexes = totalIndexes;
+--  	R_AllocStaticTriSurfVerts( newTri, newTri->numVerts );
+--  	R_AllocStaticTriSurfIndexes( newTri, newTri->numIndexes );
+--
+--  	totalVerts = 0;
+--  	totalIndexes = 0;
+--  	for ( i = 0; i < numSurfaces; i++ ) {
+--  		tri = surfaces[i];
+--  		memcpy( newTri->verts + totalVerts, tri->verts, tri->numVerts * sizeof( *tri->verts ) );
+--  		for ( j = 0; j < tri->numIndexes; j++ ) {
+--  			newTri->indexes[ totalIndexes + j ] = totalVerts + tri->indexes[j];
+--  		}
+--  		totalVerts += tri->numVerts;
+--  		totalIndexes += tri->numIndexes;
+--  	}
+--
+--  	return newTri;
+--  }
+--
+--  /*
+--  =================
+--  R_MergeTriangles
+--
+--  Only deals with vertexes and indexes, not silhouettes, planes, etc.
+--  Does NOT perform a cleanup triangles, so there may be duplicated verts in the result.
+--  =================
+--  */
+--  srfTriangles_t * R_MergeTriangles( const srfTriangles_t *tri1, const srfTriangles_t *tri2 ) {
+--  	const srfTriangles_t	*tris[2];
+--
+--  	tris[0] = tri1;
+--  	tris[1] = tri2;
+--
+--  	return R_MergeSurfaceList( tris, 2 );
+--  }
+--
+--  /*
+--  =================
+--  R_ReverseTriangles
+--
+--  Lit two sided surfaces need to have the triangles actually duplicated,
+--  they can't just turn on two sided lighting, because the normal and tangents
+--  are wrong on the other sides.
+--
+--  This should be called before R_CleanupTriangles
+--  =================
+--  */
+--  void R_ReverseTriangles( srfTriangles_t *tri ) {
+--  	int			i;
+--
+--  	// flip the normal on each vertex
+--  	// If the surface is going to have generated normals, this won't matter,
+--  	// but if it has explicit normals, this will keep it on the correct side
+--  	for ( i = 0; i < tri->numVerts; i++ ) {
+--  		tri->verts[i].SetNormal( vec3_origin - tri->verts[i].GetNormal() );
+--  	}
+--
+--  	// flip the index order to make them back sided
+--  	for ( i = 0; i < tri->numIndexes; i+= 3 ) {
+--  		triIndex_t	temp;
+--
+--  		temp = tri->indexes[ i + 0 ];
+--  		tri->indexes[ i + 0 ] = tri->indexes[ i + 1 ];
+--  		tri->indexes[ i + 1 ] = temp;
+--  	}
+--  }
+--
+--  /*
+--  =================
+--  R_CleanupTriangles
+--
+--  FIXME: allow createFlat and createSmooth normals, as well as explicit
+--  =================
+--  */
+--  void R_CleanupTriangles( srfTriangles_t *tri, bool createNormals, bool identifySilEdges, bool useUnsmoothedTangents ) {
+--  	R_RangeCheckIndexes( tri );
+--
+--  	R_CreateSilIndexes( tri );
+--
+--  //	R_RemoveDuplicatedTriangles( tri );	// this may remove valid overlapped transparent triangles
+--
+--  	R_RemoveDegenerateTriangles( tri );
+--
+--  	R_TestDegenerateTextureSpace( tri );
+--
+--  //	R_RemoveUnusedVerts( tri );
+--
+--  	if ( identifySilEdges ) {
+--  		R_IdentifySilEdges( tri, true );	// assume it is non-deformable, and omit coplanar edges
+--  	}
+--
+--  	// bust vertexes that share a mirrored edge into separate vertexes
+--  	R_DuplicateMirroredVertexes( tri );
+--
+--  	R_CreateDupVerts( tri );
+--
+--  	R_BoundTriSurf( tri );
+--
+--  	if ( useUnsmoothedTangents ) {
+--  		R_BuildDominantTris( tri );
+--  		R_DeriveTangents( tri );
+--  	} else if ( !createNormals ) {
+--  		R_DeriveTangentsWithoutNormals( tri );
+--  	} else {
+--  		R_DeriveTangents( tri );
+--  	}
+--  }
+--
+--  /*
+--  ===================================================================================
+--
+--  DEFORMED SURFACES
+--
+--  ===================================================================================
+--  */
+--
+--  /*
+--  ===================
+--  R_BuildDeformInfo
+--  ===================
+--  */
+--  deformInfo_t *R_BuildDeformInfo( int numVerts, const idDrawVert *verts, int numIndexes, const int *indexes,bool useUnsmoothedTangents ) {
+--  	srfTriangles_t	tri;
+--  	memset( &tri, 0, sizeof( srfTriangles_t ) );
+--
+--  	tri.numVerts = numVerts;
+--  	R_AllocStaticTriSurfVerts( &tri, tri.numVerts );
+--  	SIMDProcessor->Memcpy( tri.verts, verts, tri.numVerts * sizeof( tri.verts[0] ) );
+--
+--  	tri.numIndexes = numIndexes;
+--  	R_AllocStaticTriSurfIndexes( &tri, tri.numIndexes );
+--
+--  	// don't memcpy, so we can change the index type from int to short without changing the interface
+--  	for ( int i = 0; i < tri.numIndexes; i++ ) {
+--  		tri.indexes[i] = indexes[i];
+--  	}
+--
+--  	R_RangeCheckIndexes( &tri );
+--  	R_CreateSilIndexes( &tri );
+--  	R_IdentifySilEdges( &tri, false );			// we cannot remove coplanar edges, because they can deform to silhouettes
+--  	R_DuplicateMirroredVertexes( &tri );		// split mirror points into multiple points
+--  	R_CreateDupVerts( &tri );
+--  	if ( useUnsmoothedTangents ) {
+--  		R_BuildDominantTris( &tri );
+--  	}
+--  	R_DeriveTangents( &tri );
+--
+--  	deformInfo_t * deform = (deformInfo_t *)R_ClearedStaticAlloc( sizeof( *deform ) );
+--
+--  	deform->numSourceVerts = numVerts;
+--  	deform->numOutputVerts = tri.numVerts;
+--  	deform->verts = tri.verts;
+--
+--  	deform->numIndexes = numIndexes;
+--  	deform->indexes = tri.indexes;
+--
+--  	deform->silIndexes = tri.silIndexes;
+--
+--  	deform->numSilEdges = tri.numSilEdges;
+--  	deform->silEdges = tri.silEdges;
+--
+--  	deform->numMirroredVerts = tri.numMirroredVerts;
+--  	deform->mirroredVerts = tri.mirroredVerts;
+--
+--  	deform->numDupVerts = tri.numDupVerts;
+--  	deform->dupVerts = tri.dupVerts;
+--
+--  	if ( tri.dominantTris != NULL ) {
+--  		Mem_Free( tri.dominantTris );
+--  		tri.dominantTris = NULL;
+--  	}
+--
+--  	idShadowVertSkinned * shadowVerts = (idShadowVertSkinned *) Mem_Alloc16( ALIGN( deform->numOutputVerts * 2 * sizeof( idShadowVertSkinned ), 16 ), TAG_MODEL );
+--  	idShadowVertSkinned::CreateShadowCache( shadowVerts, deform->verts, deform->numOutputVerts );
+--
+--  	deform->staticAmbientCache = vertexCache.AllocStaticVertex( deform->verts, ALIGN( deform->numOutputVerts * sizeof( idDrawVert ), VERTEX_CACHE_ALIGN ) );
+--  	deform->staticIndexCache = vertexCache.AllocStaticIndex( deform->indexes, ALIGN( deform->numIndexes * sizeof( triIndex_t ), INDEX_CACHE_ALIGN ) );
+--  	deform->staticShadowCache = vertexCache.AllocStaticVertex( shadowVerts, ALIGN( deform->numOutputVerts * 2 * sizeof( idShadowVertSkinned ), VERTEX_CACHE_ALIGN ) );
+--
+--  	Mem_Free( shadowVerts );
+--
+--  	return deform;
+--  }
+--
+--  /*
+--  ===================
+--  R_FreeDeformInfo
+--  ===================
+--  */
+--  void R_FreeDeformInfo( deformInfo_t *deformInfo ) {
+--  	if ( deformInfo->verts != NULL ) {
+--  		Mem_Free( deformInfo->verts );
+--  	}
+--  	if ( deformInfo->indexes != NULL ) {
+--  		Mem_Free( deformInfo->indexes );
+--  	}
+--  	if ( deformInfo->silIndexes != NULL ) {
+--  		Mem_Free( deformInfo->silIndexes );
+--  	}
+--  	if ( deformInfo->silEdges != NULL ) {
+--  		Mem_Free( deformInfo->silEdges );
+--  	}
+--  	if ( deformInfo->mirroredVerts != NULL ) {
+--  		Mem_Free( deformInfo->mirroredVerts );
+--  	}
+--  	if ( deformInfo->dupVerts != NULL ) {
+--  		Mem_Free( deformInfo->dupVerts );
+--  	}
+--  	R_StaticFree( deformInfo );
+--  }
+--
+--  /*
+--  ===================
+--  R_DeformInfoMemoryUsed
+--  ===================
+--  */
+--  int R_DeformInfoMemoryUsed( deformInfo_t *deformInfo ) {
+--  	int total = 0;
+--
+--  	if ( deformInfo->verts != NULL ) {
+--  		total += deformInfo->numOutputVerts * sizeof( deformInfo->verts[0] );
+--  	}
+--  	if ( deformInfo->indexes != NULL ) {
+--  		total += deformInfo->numIndexes * sizeof( deformInfo->indexes[0] );
+--  	}
+--  	if ( deformInfo->mirroredVerts != NULL ) {
+--  		total += deformInfo->numMirroredVerts * sizeof( deformInfo->mirroredVerts[0] );
+--  	}
+--  	if ( deformInfo->dupVerts != NULL ) {
+--  		total += deformInfo->numDupVerts * sizeof( deformInfo->dupVerts[0] );
+--  	}
+--  	if ( deformInfo->silIndexes != NULL ) {
+--  		total += deformInfo->numIndexes * sizeof( deformInfo->silIndexes[0] );
+--  	}
+--  	if ( deformInfo->silEdges != NULL ) {
+--  		total += deformInfo->numSilEdges * sizeof( deformInfo->silEdges[0] );
+--  	}
+--
+--  	total += sizeof( *deformInfo );
+--  	return total;
+--  }
+--
+--  /*
+--  ===================================================================================
+--
+--  VERTEX / INDEX CACHING
+--
+--  ===================================================================================
+--  */
+--
+--  /*
+--  ===================
+--  R_InitDrawSurfFromTri
+--  ===================
+--  */
+--  void R_InitDrawSurfFromTri( drawSurf_t & ds, srfTriangles_t & tri ) {
+--  	if ( tri.numIndexes == 0 ) {
+--  		ds.numIndexes = 0;
+--  		return;
+--  	}
+--
+--  	// copy verts and indexes to this frame's hardware memory if they aren't already there
+--  	//
+--  	// deformed surfaces will not have any vertices but the ambient cache will have already
+--  	// been created for them.
+--  	if ( ( tri.verts == NULL ) && !tri.referencedIndexes ) {
+--  		// pre-generated shadow models will not have any verts, just shadowVerts
+--  		tri.ambientCache = 0;
+--  	} else if ( !vertexCache.CacheIsCurrent( tri.ambientCache ) ) {
+--  		tri.ambientCache = vertexCache.AllocVertex( tri.verts, ALIGN( tri.numVerts * sizeof( tri.verts[0] ), VERTEX_CACHE_ALIGN ) );
+--  	}
+--  	if ( !vertexCache.CacheIsCurrent( tri.indexCache ) ) {
+--  		tri.indexCache = vertexCache.AllocIndex( tri.indexes, ALIGN( tri.numIndexes * sizeof( tri.indexes[0] ), INDEX_CACHE_ALIGN ) );
+--  	}
+--
+--  	ds.numIndexes = tri.numIndexes;
+--  	ds.ambientCache = tri.ambientCache;
+--  	ds.indexCache = tri.indexCache;
+--  	ds.shadowCache = tri.shadowCache;
+--  	ds.jointCache = 0;
+--  }
+--
+--  /*
+--  ===================
+--  R_CreateStaticBuffersForTri
+--
+--  For static surfaces, the indexes, ambient, and shadow buffers can be pre-created at load
+--  time, rather than being re-created each frame in the frame temporary buffers.
+--  ===================
+--  */
+--  void R_CreateStaticBuffersForTri( srfTriangles_t & tri ) {
+--  	tri.indexCache = 0;
+--  	tri.ambientCache = 0;
+--  	tri.shadowCache = 0;
+--
+--  	// index cache
+--  	if ( tri.indexes != NULL ) {
+--  		tri.indexCache = vertexCache.AllocStaticIndex( tri.indexes, ALIGN( tri.numIndexes * sizeof( tri.indexes[0] ), INDEX_CACHE_ALIGN ) );
+--  	}
+--
+--  	// vertex cache
+--  	if ( tri.verts != NULL ) {
+--  		tri.ambientCache = vertexCache.AllocStaticVertex( tri.verts, ALIGN( tri.numVerts * sizeof( tri.verts[0] ), VERTEX_CACHE_ALIGN ) );
+--  	}
+--
+--  	// shadow cache
+--  	if ( tri.preLightShadowVertexes != NULL ) {
+--  		// this should only be true for the _prelight<NAME> pre-calculated shadow volumes
+--  		assert( tri.verts == NULL );	// pre-light shadow volume surfaces don't have ambient vertices
+--  		const int shadowSize = ALIGN( tri.numVerts * 2 * sizeof( idShadowVert ), VERTEX_CACHE_ALIGN );
+--  		tri.shadowCache = vertexCache.AllocStaticVertex( tri.preLightShadowVertexes, shadowSize );
+--  	} else if ( tri.verts != NULL ) {
+--  		// the shadowVerts for normal models include all the xyz values duplicated
+--  		// for a W of 1 (near cap) and a W of 0 (end cap, projected to infinity)
+--  		const int shadowSize = ALIGN( tri.numVerts * 2 * sizeof( idShadowVert ), VERTEX_CACHE_ALIGN );
+--  		if ( tri.staticShadowVertexes == NULL ) {
+--  			tri.staticShadowVertexes = (idShadowVert *) Mem_Alloc16( shadowSize, TAG_TEMP );
+--  			idShadowVert::CreateShadowCache( tri.staticShadowVertexes, tri.verts, tri.numVerts );
+--  		}
+--  		tri.shadowCache = vertexCache.AllocStaticVertex( tri.staticShadowVertexes, shadowSize );
+--
+--  #if !defined( KEEP_INTERACTION_CPU_DATA )
+--  		Mem_Free( tri.staticShadowVertexes );
+--  		tri.staticShadowVertexes = NULL;
+--  #endif
+--  	}
+--  }
+
+  end Neo.System.Graphics.World;

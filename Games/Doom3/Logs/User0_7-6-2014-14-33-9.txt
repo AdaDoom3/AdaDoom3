@@ -1,0 +1,83 @@
+Ready?
+Set
+Run
+
+________________________________________________________________________________
+
+                       C  O  M  M  A  N  D      T  E  S  T  
+________________________________________________________________________________
+
+An error message for unknown command: No such variable or action!
+Incorrect parameter for variable_test: true123
+variable_test: Its a test
+Current value: FALSE
+Possible values: FALSE, TRUE
+Variable_Test is being adjusted from FALSE to TRUE
+Value after handle: TRUE
+Variable_Test is being adjusted from TRUE to FALSE
+Value after set: FALSE
+variable_test2: Its another test
+Current value: 0
+Possible values: -2147483648..2147483647
+The command system executed with success!
+Variable out of scope: variable_test2
+Variable out of scope: variable_test
+
+________________________________________________________________________________
+
+                        S  Y  S  T  E  M      T  E  S  T  
+________________________________________________________________________________
+
+Version: WINDOWS_2_6_1_SYSTEM
+Username: User0
+Directory: C:\Neo\Games\Doom3
+Name: Doom3
+Application bit size 32
+System bit size: 64
+Launching task manager...
+Opening google.com...
+
+________________________________________________________________________________
+
+                        M  E  M  O  R  Y      T  E  S  T  
+________________________________________________________________________________
+
+State at launch: 
+Load:  4.40000E+01
+Disk total:  109997715456
+Disk available:  3653709824
+Physical total:  8144
+Physical available:  4740325376
+Page file total:  11250581504
+Page file available:  6614577152
+Virtual total:  4294836224
+Virtual available:  4236480512
+Virtual available extended:  0
+
+State currently: 
+Load:  4.40000E+01
+Disk total:  109997715456
+Disk available:  3653709824
+Physical total:  8144
+Physical available:  4738174976
+Page file total:  11250581504
+Page file available:  6611611648
+Virtual total:  4294836224
+Virtual available:  4209516544
+Virtual available extended:  0
+
+________________________________________________________________________________
+
+                           T  E  X  T      T  E  S  T  
+________________________________________________________________________________
+
+Yes
+But does it work? Yes!
+
+________________________________________________________________________________
+
+               T  E  X  T      C  O  N  S  O  L  E      T  E  S  T  
+________________________________________________________________________________
+
+Goodbye
+
