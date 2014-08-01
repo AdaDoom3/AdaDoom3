@@ -4,12 +4,14 @@ package body Neo.System.Text.Console is
         Put_Title(Localize("TEXT CONSOLE TEST"));
         Initialize;
         --Finalize;
+        --delay 1000.0;
+        --Finalize;
       end Test;
     package body Import is separate;
     package Instantiation is new Import(Save_Log, Send_Log, Save_Log);
-    function Is_Running return Boolean is begin return Console.Is_Running;                                                                             end Is_Running;
-    procedure Send_Log                 is begin Open_Webpage(ERROR_REPORTING_URL); exception when others => Put_Debug_Line(Localize(FAILED_SEND_LOG)); end Send_Log;
-    procedure Copy_Log                 is begin Set_Clipboard(Get_Log);            exception when others => Put_Debug_Line(Localize(FAILED_COPY_LOG)); end Copy_Log;
+    function Is_Running return Boolean is begin return Main_Task.Is_Running; end Is_Running;
+    procedure Send_Log is begin Open_Webpage(ERROR_REPORTING_URL); exception when others => Put_Debug_Line(Localize(FAILED_SEND_LOG)); end Send_Log;
+    procedure Copy_Log is begin Set_Clipboard(Get_Log);            exception when others => Put_Debug_Line(Localize(FAILED_COPY_LOG)); end Copy_Log;
     procedure Save_Log is
       File   : File_Type;
       Offset : Time_Offset := UTC_Time_Offset(Clock);
@@ -25,18 +27,18 @@ package body Neo.System.Text.Console is
       end Save_Log;
     procedure Initialize is
       begin
-        if not Is_Running then Console.Initialize; else Put_Debug_Line(Localize(FAILED_ALREADY_OPEN)); end if;
+        if not Is_Running then Main_Task.Initialize; else Put_Debug_Line(Localize(FAILED_ALREADY_OPEN)); end if;
       end Initialize;
     procedure Finalize is
       begin
-        if Is_Running then Console.Finalize; else Put_Debug_Line(Localize(FAILED_NOT_OPEN)); end if;
+        if Is_Running then Main_Task.Finalize; else Put_Debug_Line(Localize(FAILED_NOT_OPEN)); end if;
       end Finalize;
     procedure Run is
       begin
         begin
           Instantiation.Run;
-        exception when Call_Failure => Put_Debug_Line(Localize(FAILED_INITIALIZE));
+        --exception when Call_Failure => Put_Debug_Line(Localize(FAILED_INITIALIZE));
         end;
-        Console.Finalize;
+        Main_Task.Finalize;
       end Run;
   end Neo.System.Text.Console;

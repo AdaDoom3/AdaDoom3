@@ -1,6 +1,7 @@
 with System;                 use System;
 with Ada.Strings;            use Ada.Strings;
 with Ada.Strings.Wide_Fixed; use Ada.Strings.Wide_Fixed;
+with Neo.Command;            use Neo.Command;
 package Neo.System is
     pragma Suppress(Elaboration_Check);
     Call_Failure : Exception;
@@ -35,43 +36,25 @@ package Neo.System is
         Minimum_Windows   : Enumerated_Windows_System   := Windows_System;
         Minimum_Macintosh : Enumerated_Macintosh_System := Macintosh_System;
       end record;
-    generic
-      with procedure Run;
-    package Threads is
-        task type Task_Unsafe is end Task_Unsafe;
-        type Access_Task_Unsafe is access all Task_Unsafe;
-        procedure Finalize is new Ada.Unchecked_Deallocation(Task_Unsafe, Access_Task_Unsafe);
-        protected type Protected_Thread is
-            procedure Initialize;
-            procedure Finalize;
-            function Is_Running return Boolean;
-          private
-            Thread : access Task_Unsafe := null;
-          end Protected_Thread;
-      end Threads;
     procedure Test;
-    procedure Increment_Thread_Count;
-    procedure Decrement_Thread_Count;
-    procedure Assert_Dummy    (Value : in Boolean);
-    procedure Assert_Dummy    (Value : in Address);
-    procedure Assert_Dummy    (Value : in Integer_4_Signed_C);
-    procedure Assert          (Value : in Boolean);
-    procedure Assert          (Value : in Address);
-    procedure Assert          (Value : in Integer_4_Signed_C);
-    procedure Set_Alert       (Value : in Boolean);
-    procedure Set_Icon        (Path : in String_2);
-    procedure Open_Text       (Path : in String_2);
-    procedure Open_Webpage    (Path : in String_2);
-    procedure Execute         (Path : in String_2; Do_Fullscreen : in Boolean := False);
-    function Get_Thread_Count return Integer_4_Positive;
-    function Get_Specifics    return Record_Specifics;
-    function Get_Icon         return String_2;
-    function Get_Last_Error   return String_2;
-    function Is_Alerting      return Boolean;
-    function Is_Supported     (Requirements : in Record_Requirements) return Boolean;
+    procedure Assert_Dummy  (Value : in Boolean);
+    procedure Assert_Dummy  (Value : in Address);
+    procedure Assert_Dummy  (Value : in Integer_4_Signed_C);
+    procedure Assert        (Value : in Boolean);
+    procedure Assert        (Value : in Address);
+    procedure Assert        (Value : in Integer_4_Signed_C);
+    procedure Set_Alert     (Value : in Boolean);
+    procedure Open_Text     (Path : in String_2);
+    procedure Open_Webpage  (Path : in String_2);
+    procedure Execute       (Path : in String_2; Do_Fullscreen : in Boolean := False);
+    function Get_Specifics  return Record_Specifics;
+    function Get_Last_Error return String_2;
+    function Is_Alerting    return Boolean;
+    function Is_Supported   (Requirements : in Record_Requirements) return Boolean;
     function Is_Okay
       (Name, Message : in String_2; Buttons : in Enumerated_Buttons := Okay_Button; Icon : in Enumerated_Icon := No_Icon) 
       return Boolean with pre => Name'length > 0 and Message'length > 0;
+    package Is_Running is new Variable("Is_Running", "Controls state - set to False to quit.", Boolean, True);
     SPECIFICS : constant Record_Specifics := Get_Specifics;
 private
     package Import is
@@ -85,22 +68,16 @@ private
         function Is_Okay(Name, Message : in String_2; Buttons : in Enumerated_Buttons; Icon : in Enumerated_Icon)
                         return Boolean with pre => Name'length > 0 and Message'length > 0;
        end Import;
+    --function Localize(Item : in String_2) return String_2;
+    FAILED_SAVE_LOG      : constant String_2 := "Failed to save log!";
+    FAILED_SEND_LOG      : constant String_2 := "Failed to send log!";
+    FAILED_COPY_LOG      : constant String_2 := "Failed to copy log!";
     FAILED_GET_SPECIFICS : constant String_2 := "Failed to get specifics!";
     FAILED_OPEN          : constant String_2 := "Failed to open ";
     FAILED_SET_ALERT     : constant String_2 := "Failed to alert!";
     FAILED_IS_OKAY       : constant String_2 := "Failed is okay!";
     FAILED_EXECUTE       : constant String_2 := "Failed to execute ";
     PREFIX_ERROR_NUMBER  : constant String_2 := "Error number: ";
-    protected type Protected_Data is
-        procedure Set_Thread_Count(Value : in Integer_4_Positive);
-        procedure Set_Icon (Path  : in String_2);
-        function Get_Thread_Count return Integer_4_Positive;
-        function Get_Icon         return String_2;
-      private
-        Thread_Count : Integer_4_Positive := 1;
-        Name         : String_2_Unbounded := To_String_2_Unbounded("Untitled");
-        Icon         : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
-      end Protected_Data;
     Data         : Protected_Data;
     Alert_Status : Protected_Status;
   end Neo.System;

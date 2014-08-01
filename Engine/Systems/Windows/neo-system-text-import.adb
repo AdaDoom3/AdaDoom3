@@ -1,7 +1,7 @@
 with Ada.Unchecked_Conversion;
-with Interfaces;       use Interfaces; 
-with Interfaces.C;     use Interfaces.C;
-with Neo.Link.Windows; use Neo.Link.Windows;
+with Interfaces;   use Interfaces; 
+with Interfaces.C; use Interfaces.C;
+with Neo.Windows;  use Neo.Windows;
 separate(Neo.System.Text) package body Import is
     procedure Set_Clipboard(Item : in String_2) is
       type Array_Text is array(Item'first..Item'last + 1) of Character_2_C;

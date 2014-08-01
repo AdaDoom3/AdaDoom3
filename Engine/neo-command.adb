@@ -22,7 +22,7 @@ package body Neo.Command is
         Handle("Command_Test !");
       end Test;
     package body Variable is
-        use Mapped_Variables;
+        use Map_Variables;
         protected body Protected_Type_To_Vary is
             function Get return Type_To_Vary is begin return Current; end Get;
             procedure Set(Item : in Type_To_Vary) is begin Current := Item; end Set;
@@ -86,7 +86,7 @@ package body Neo.Command is
           end Finalize;
       end Variable;
     package body Action is
-        use Mapped_Actions;
+        use Map_Actions;
         overriding procedure Finalize(Controller : in out Record_Controller) is begin Actions.Delete(LOWER_NAME); end Finalize;
         overriding procedure Initialize(Controller : in out Record_Controller) is
           begin
@@ -113,26 +113,6 @@ package body Neo.Command is
         end if;
       exception when others => Put_Line(Localize(NO_SUCH_VARIABLE_OR_ACTION));
       end Handle;
-  --  function Localize(
-  --    Item : in String_2)
-  --    return String_2
-  --    is
-  --    Result : String_2 := Input_Output.Localize(Item);
-  --    begin
-  --      if Result = NULL_STRING_2 then
-  --        if DO_PUT_LOCALIZE_FAILURE then
-  --          Put_Debug_Line(
-  --            FAILED_LOCALIZE_PREFIX & Item(Item'first..(
-  --              if Item'length >= FAILED_LOCALIZE_PREVIEW_LENGTH then
-  --                Item'first + FAILED_LOCALIZE_PREVIEW_LENGTH - 1
-  --              else
-  --                Item'last)) &
-  --            FAILED_LOCALIZE_POSTFIX);
-  --        end if;
-  --        return Item;
-  --      end if;
-  --      return Result;
-  --   end Localize;
     function Autocomplete(Input : in String_2; Limit : in Integer_4_Positive := 1) return Array_String_2_Unbounded is
       begin
         return (NULL_STRING_2_UNBOUNDED, NULL_STRING_2_UNBOUNDED);

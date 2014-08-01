@@ -415,9 +415,9 @@ exception when Disable_Put_Stack => null;
       end Put_Stack;
   begin
     declare Data : aliased Integer_4_Unsigned := 0; begin
-      if Neo.System.SPECIFICS.Bit_Size < 32 then
+      if WORD_SIZE < 32 then
         raise CPUID_Is_Not_Supported;
-      elsif Neo.System.SPECIFICS.Bit_Size = 32 then
+      elsif WORD_SIZE = 32 then
         Asm( -- Check for cpuid
           Volatile => True,
           Template =>

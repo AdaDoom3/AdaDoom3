@@ -1,3 +1,3 @@
-package Neo.System.Graphics.Menu
-  is
-  end Neo.System.Graphics.Menu;
+package Neo.World.Menu is
+
+  end Neo.World.Menu;

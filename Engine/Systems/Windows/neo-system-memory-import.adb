@@ -1,4 +1,4 @@
-with Neo.Link.Windows; use Neo.Link.Windows;
+with Neo.Windows; use Neo.Windows;
 with Interfaces.C;     use Interfaces.C;
 with Interfaces;       use Interfaces;
 separate(Neo.System.Memory) package body Import is

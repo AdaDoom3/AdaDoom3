@@ -35,31 +35,12 @@ package body Neo.System is
         --Open_Webpage("http://www.google.com");
       end Test;
     package body Import is separate;
-    protected body Protected_Data is
-        procedure Set_Thread_Count(Value : in Integer_4_Positive) is begin Thread_Count := Value;                end Set_Thread_Count;
-        procedure Set_Icon        (Path : in String_2)            is begin Icon := To_String_2_Unbounded(Path);  end Set_Icon;
-        function Get_Icon         return String_2                 is begin return To_String_2(Icon);             end Get_Icon;
-        function Get_Thread_Count return Integer_4_Positive       is begin return Thread_Count;                  end Get_Thread_Count;
-      end Protected_Data;
-    package body Threads is
-        task body Task_Unsafe is begin Run; end Task_Unsafe;
-        protected body Protected_Thread is
-            procedure Initialize               is begin Thread := new Task_Unsafe; Increment_Thread_Count;        end Initialize;
-            procedure Finalize                 is begin Finalize(Thread); Thread := null; Decrement_Thread_Count; end Finalize;
-            function Is_Running return Boolean is begin return Thread /= null;                                    end Is_Running;
-          end Protected_Thread;
-      end Threads;
     procedure Assert          (Value : in Integer_4_Signed_C) renames Import.Assert;
     procedure Assert          (Value : in Address)            is begin if Value = NULL_ADDRESS then raise Call_Failure; end if; end Assert;
     procedure Assert          (Value : in Boolean)            is begin if not Value then raise Call_Failure; end if;            end Assert;
     procedure Assert_Dummy    (Value : in Integer_4_Signed_C) is begin null;                                                    end Assert_Dummy;
     procedure Assert_Dummy    (Value : in Boolean)            is begin null;                                                    end Assert_Dummy;
     procedure Assert_Dummy    (Value : in Address)            is begin null;                                                    end Assert_Dummy;
-    procedure Set_Icon        (Path : in String_2)            is begin Data.Set_Icon(Path);                                     end Set_Icon;
-    function Get_Icon         return String_2                 is begin return Data.Get_Icon;                                    end Get_Icon;
-    function Get_Thread_Count return Integer_4_Positive       is begin return Data.Get_Thread_Count;                            end Get_Thread_Count;
-    procedure Increment_Thread_Count                          is begin Data.Set_Thread_Count(Get_Thread_Count + 1);             end Increment_Thread_Count;
-    procedure Decrement_Thread_Count                          is begin Data.Set_Thread_Count(Get_Thread_Count - 1);             end Decrement_Thread_Count;
     function Is_Okay(Name : in String_2; Message : in String_2; Buttons : in Enumerated_Buttons := Okay_Button; Icon : in Enumerated_Icon := No_Icon) return Boolean is
       begin
         return Import.Is_Okay(Name, Message, Buttons, Icon);
@@ -106,4 +87,18 @@ package body Neo.System is
         elsif SPECIFICS.Version in Enumerated_Macintosh_System'range then return SPECIFICS.Version >= Requirements.Minimum_Macintosh; end if;
         return False;
       end Is_Supported;
+    --function Localize(Item : in String_2) return String_2 is
+    --  Result : String_2 := Input_Output.Localize(Item);
+    --  begin
+    --    if Result = NULL_STRING_2 then
+    --      if DO_PUT_LOCALIZE_FAILURE then
+    --        Put_Debug_Line(FAILED_LOCALIZE_PREFIX & Item(Item'first..(
+    --          if Item'length >= FAILED_LOCALIZE_PREVIEW_LENGTH then Item'first + FAILED_LOCALIZE_PREVIEW_LENGTH - 1 else Item'last)) & FAILED_LOCALIZE_POSTFIX);
+    --      end if;
+    --      return Item;
+    --    end if;
+    --    return Result;
+    -- end Localize;
+  begin
+    null;--Set_Localize(Localize'access);
   end Neo.System;

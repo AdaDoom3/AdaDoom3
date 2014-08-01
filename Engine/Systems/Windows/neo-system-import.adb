@@ -2,12 +2,12 @@ with System;                 use System;
 with Interfaces.C;           use Interfaces.C;
 with Ada.Strings;            use Ada.Strings;
 with Ada.Strings.Wide_Fixed; use Ada.Strings.Wide_Fixed;
-with Neo.Link.Windows;       use Neo.Link.Windows;
+with Neo.Windows;            use Neo.Windows;
 separate(Neo.System) package body Import is
-    function Get_Last_Error return Integer_4_Unsigned       is begin return Integer_4_Unsigned(Neo.Link.Windows.Get_Last_Error); end Get_Last_Error;
-    procedure Open_Text     (Path : in String_2)            is begin Execute("explorer """ & Path & """", False);                end Open_Text;
-    procedure Open_Webpage  (Path : in String_2)            is begin Execute("explorer " & Path, True);                          end Open_Webpage;
-    procedure Assert        (Value : in Integer_4_Signed_C) is begin if Value = FAILED then raise Call_Failure; end if;          end Assert;
+    function Get_Last_Error return Integer_4_Unsigned       is begin return Integer_4_Unsigned(Neo.Windows.Get_Last_Error); end Get_Last_Error;
+    procedure Open_Text     (Path : in String_2)            is begin Execute("explorer """ & Path & """", False);           end Open_Text;
+    procedure Open_Webpage  (Path : in String_2)            is begin Execute("explorer " & Path, True);                     end Open_Webpage;
+    procedure Assert        (Value : in Integer_4_Signed_C) is begin if Value = FAILED then raise Call_Failure; end if;     end Assert;
     procedure Set_Alert(Value : in Boolean) is
       Window            :         Address                  := Find_Window(To_String_2_C(SPECIFICS.Name), NULL_ADDRESS);
       Flash_Information : aliased Record_Flash_Information :=
@@ -51,7 +51,7 @@ separate(Neo.System) package body Import is
             Icon :=
               Load_Image(
                 Instance  => NULL_ADDRESS,
-                Name      => To_Access_Constant_Character_2_C(Get_Icon),
+                Name      => To_Access_Constant_Character_2_C(PATH_PREFIX_ICON & ".ico"),
                 Kind      => LOAD_ICO,
                 Desired_X => 0,
                 Desired_Y => 0,
@@ -61,9 +61,7 @@ separate(Neo.System) package body Import is
               Window        => Window,
               Message       => MESSAGE_SET_ICON,
               Data_Unsigned => 0,
-              Data_Signed   =>
-                To_Unchecked_Integer_4_Signed_C(
-                  To_Unchecked_Integer_Address(Icon))) = 0);
+              Data_Signed   => To_Unchecked_Integer_Address(Icon)) = 0);
             Assert(Unhook_Windows_Hook(Temporary_Hook));
           else Assert_Dummy(Call_Next_Hook(Temporary_Hook, Code, Data_Unsigned, Data_Signed) = 0); end if;
           return 0;

@@ -1,3 +1,21 @@
+#############################
+## GNAT Programming Studio ##
+#############################
+
+*.TMP
+*.cgpr
+*.db
+*.db-shm
+*.db-wal
+*.ali
+*.bexch
+*.o
+*.ali
+*.cswi
+*.xml
+
+
+
 #############
 ## Eclipse ##
 #############

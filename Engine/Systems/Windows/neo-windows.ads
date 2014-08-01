@@ -2,7 +2,7 @@ with Ada.Unchecked_Conversion;
 with System;       use System;
 with Interfaces;   use Interfaces;
 with Interfaces.C; use Interfaces.C;
-package Neo.Link.Windows is
+package Neo.Windows is
 WTF : Integer_4_Signed_C := -1;
 WTF2 : Integer_4_Signed_C := -2;
     INSERT_ON_TOP_OF_EVERYTHING : constant Address := To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned_C(WTF)));
@@ -12,6 +12,9 @@ WTF2 : Integer_4_Signed_C := -2;
     BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
     BRUSH_WINDOW                               : constant Integer_Address      := 16#0005#; -- COLOR_WINDOW
     FONT_WEIGHT_LIGHT                          : constant Integer_4_Signed_C   := 300;
+    CAPITAL_LOCK                               : constant Integer_1_Unsigned_C := 1;
+    KEYBOARD_DEAD_CHARACTER                    : constant Character_2_C        := CHaracter_2_C'val(61440); -- 16#F000#
+    KEYBOARD_NO_CHARACTER                      : constant Character_2_C        := CHaracter_2_C'val(61441);-- 16#F001#
     FONT_FAMILY_SWISS                          : constant Integer_4_Unsigned_C := 16#0000_0020#;
     FONT_FAMILY_MODERN                         : constant Integer_4_Unsigned_C := 16#0000_0030#;
     FONT_FIXED_PITCH                           : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -31,6 +34,7 @@ WTF2 : Integer_4_Signed_C := -2;
     TAKE_INPUT_ON_NON_ACTIVE                   : constant Integer_4_Unsigned_C := 16#0000_0100#;
     CODE_PAGE_UTF_8                            : constant Integer_4_Unsigned_C := 16#0000_FDE9#;
     KEY_READ                                   : constant Integer_4_Unsigned_C := 16#0002_0019#;
+    KEY_QUERY_VALUE                            : constant Integer_4_Unsigned_C := 16#0000_0001#;
     HKEY_LOCAL_MACHINE                         : constant Integer_4_Unsigned_C := 16#8000_0002#;
     INVALID_COLOR                              : constant Integer_4_Unsigned_C := 16#FFFF_FFFF#; -- CLR_INVALID
     GENERIC_READ                               : constant Integer_4_Unsigned_C := 16#8000_0000#;
@@ -186,6 +190,8 @@ WTF2 : Integer_4_Signed_C := -2;
     SUBEVENT_SHORT_LOW                         : constant Integer_2_Unsigned_C := 16#00FF#;
     SUBEVENT_KEY_IS_LEFT_SIDED                 : constant Integer_2_Unsigned_C := 16#0002#;
     SUBEVENT_KEY_IS_RIGHT_SIDED                : constant Integer_2_Unsigned_C := 16#0004#;
+    VIRTUAL_KEY_V                              : constant Integer_2_Unsigned_C := 16#0056#;
+    VIRTUAL_KEY_CONTROL                        : constant Integer_2_Unsigned_C := 16#0011#;
     VIRTUAL_KEY_LEFT_MOUSE                     : constant Integer_2_Unsigned_C := 16#0001#;
     VIRTUAL_KEY_CLEAR                          : constant Integer_2_Unsigned_C := 16#00FE#;
     KEY_IS_DOWN                                : constant Integer_2_Unsigned_C := 16#0000#;
@@ -230,6 +236,7 @@ WTF2 : Integer_4_Signed_C := -2;
     LANGUAGE_TURKISH                           : constant Integer_2_Unsigned_C := 16#041F#;
     LANGUAGE_NEUTRAL                           : constant Integer_1_Unsigned_C := 16#00#;
     SUBLANGUAGE_DEFAULT                        : constant Integer_1_Unsigned_C := 16#01#;
+    PATH_SYSTEM_X86                            : constant Integer_4_Signed_C   := To_Unchecked_Integer_4_SIgned_C(16#0000_0029#); -- CSIDL_SYSTEMX86
     GET_CLASS_CURSOR                           : constant Integer_4_Signed_C   := -12;
     SET_WINDOW_STYLE                           : constant Integer_4_Signed_C   := -16;
     SET_WINDOW_STYLE_EXTRA                     : constant Integer_4_Signed_C   := -20;
@@ -243,6 +250,7 @@ WTF2 : Integer_4_Signed_C := -2;
     PRESSED_RETRY                              : constant Integer_4_Signed_C   := 4;
     PRESSED_YES                                : constant Integer_4_Signed_C   := 6;
     FAILED                                     : constant Integer_4_Signed_C   := 0;
+    REG_SZ                                     : constant Integer_4_Unsigned_C := 1;
     AN_ACTION_OCCURED                          : constant Integer_4_Signed_C   := 0;
     MAKE_WINDOW_FULLSCREEN                     : constant Integer_4_Signed_C   := 3;
     MAKE_WINDOW_HIDE                           : constant Integer_4_Signed_C   := 0;
@@ -676,8 +684,8 @@ WTF2 : Integer_4_Signed_C := -2;
     type Record_Message is record
         Window        : Address              := NULL_ADDRESS;
         Data          : Integer_4_Unsigned_C := 0;
-        Data_Unsigned : Integer_4_Unsigned_C := 0;
-        Data_Signed   : Integer_4_Signed_C   := 0;
+        Data_Unsigned : Integer_Address := 0;
+        Data_Signed   : Integer_Address   := 0;
         Time          : Integer_4_Unsigned_C := 0;
         Point         : Record_Point         := (others => <>);
       end record; pragma Convention(C, Record_Message);
@@ -710,6 +718,7 @@ WTF2 : Integer_4_Signed_C := -2;
         Handle : Address              := NULL_ADDRESS;
         Kind   : Integer_4_Unsigned_C := 0;
       end record; pragma Convention(C, Record_Device_List_Element);
+
     type Record_Device_Keyboard is record
         Header : Record_Device_Header := (others => <>);
         Data   : Record_Keyboard      := (others => <>);
@@ -765,8 +774,69 @@ WTF2 : Integer_4_Signed_C := -2;
         Length         : Integer_4_Unsigned_C := 0;
         Descriptor     : Address              := NULL_ADDRESS;
         Inherit_Handle : Integer_4_Signed_C   := 0;
-      end record;
-      pragma Convention(C, Record_Security_Attributes);
+      end record; pragma Convention(C, Record_Security_Attributes);
+
+    type Record_Virtual_Key_To_Bit is record       -- VK_TO_BIT
+        Virtual_Key   : Integer_1_Unsigned_C := 0; -- Vk
+        Modifier_Bits : Integer_1_Unsigned_C := 0; -- ModBits
+      end record; pragma Convention(C, Record_Virtual_Key_To_Bit);
+      type Array_Record_Virtual_Key_To_Bit is array(1..1000) of Record_Virtual_Key_To_Bit;
+      type Access_Array_Record_Virtual_Key_To_Bit is access all Array_Record_Virtual_Key_To_Bit; pragma Convention(C, Array_Record_Virtual_Key_To_Bit);
+    type Record_Modifiers is record                                             -- MODIFIERS
+        Virtual_Key_To_Bit    : Access_Array_Record_Virtual_Key_To_Bit := null; -- pVkToBit
+        Maximum_Modifier_Bits : Integer_2_Unsigned_C                   := 0;    -- wMaxModBits
+        Mod_Number            : Integer_1_Unsigned_C                   := 0;    -- ModNumber
+      end record; pragma Convention(C, Record_Modifiers);
+      type Access_Record_Modifiers is access all Record_Modifiers; pragma Convention(C, Access_Record_Modifiers);
+    type Record_Virtual_Key_To_Character_2_C is record                              -- VK_TO_WCHARS10
+        Virtual_Key : Integer_1_Unsigned_C       := 0;                              -- VirtualKey
+        Attributes  : Integer_1_Unsigned_C       := 0;                              -- Attributes
+        Characters  : Array_Character_2_C(1..10) := (others => NULL_CHARACTER_2_C); -- wch
+      end record; pragma Convention(C, Record_Virtual_Key_To_Character_2_C);
+      type Array_Record_Virtual_Key_To_Character_2_C is array(1..1000) of Record_Virtual_Key_To_Character_2_C;
+      type Access_Record_Virtual_Key_To_Character_2_C is access all Record_Virtual_Key_To_Character_2_C; pragma Convention(C, Access_Record_Virtual_Key_To_Character_2_C);
+      type Access_Array_Record_Virtual_Key_To_Character_2_C is access all Array_Record_Virtual_Key_To_Character_2_C; pragma Convention(C, Access_Array_Record_Virtual_Key_To_Character_2_C);
+    type Record_Virtual_Key_To_Character_2_Table is record                               -- VK_TO_WCHAR_TABLE
+        Virtual_Key_To_Character_2_C : Integer_Address := 0;--Access_Array_Record_Virtual_Key_To_Character_2_C := null; -- pVkToWchars
+        Modifications                : Integer_1_Unsigned_C                       := 0;    -- nModifications
+        Size                         : Integer_1_Unsigned_C                       := 0;    -- cbSize
+      end record; pragma Convention(C, Record_Virtual_Key_To_Character_2_Table);
+      type Array_Record_Virtual_Key_To_Character_2_Table is array(1..1000) of Record_Virtual_Key_To_Character_2_Table;
+      type Access_Array_Record_Virtual_Key_To_Character_2_Table is access all Array_Record_Virtual_Key_To_Character_2_Table; pragma Convention(C, Access_Array_Record_Virtual_Key_To_Character_2_Table);
+    type Record_Virtual_Scancode_To_Virtual_Key is record -- VSC_VK
+        Virtual_Scancode : Integer_1_Unsigned_C := 0;     -- Vsc
+        Virtual_Key      : Integer_2_Unsigned_C := 0;     -- Vk
+      end record; pragma Convention(C, Record_Virtual_Scancode_To_Virtual_Key);
+      type Access_Record_Virtual_Scancode_To_Virtual_Key is access all Record_Virtual_Scancode_To_Virtual_Key; pragma Convention(C, Access_Record_Virtual_Scancode_To_Virtual_Key);
+    type Record_Dead_Key is record                             -- DEADKEY
+        Both     : Integer_4_Unsigned_C := 0;                  -- dwBoth
+        Composed : Character_2_C        := NULL_CHARACTER_2_C; -- wchComposed
+        Flags    : Integer_2_Unsigned_C := 0;                  -- uFlags
+      end record; pragma Convention(C, Record_Dead_Key);
+      type Array_Record_Dead_Key is array(1..1000) of Record_Dead_Key;
+      type Access_Array_Record_Dead_Key is access all Array_Record_Dead_Key; pragma Convention(C, Access_Array_Record_Dead_Key);
+    type Record_Virtual_Scancode_To_String_2_C is record -- VSC_LPWSTR
+        Virtual_Scancode : Integer_1_Unsigned_C := 0;    -- vsc
+        String_Value     : Access_Character_2_C := null; -- pwsz
+      end record; pragma Convention(C, Record_Virtual_Scancode_To_String_2_C);
+      type Access_Record_Virtual_Scancode_To_String_2_C is access all Record_Virtual_Scancode_To_String_2_C; pragma Convention(C, Access_Record_Virtual_Scancode_To_String_2_C);
+    type Record_Keyboard_Tables is record                                                                      -- KBDTABLES
+        Character_Modifiers                     : Access_Record_Modifiers                              := null; -- pCharModifiers
+        Virtual_Key_To_Character_2_C_Table      : Access_Array_Record_Virtual_Key_To_Character_2_Table := null; -- pVkToWcharTable
+        Dead_Keys                               : Access_Array_Record_Dead_Key                         := null; -- pDeadKey
+        Key_Names                               : Access_Record_Virtual_Scancode_To_String_2_C         := null; -- pKeyNames
+        Key_Names_Extension                     : Access_Record_Virtual_Scancode_To_String_2_C         := null; -- pKeyNamesExt
+        Key_Names_Dead                          : Access_Character_2_C                                 := null; -- pKeyNamesDead? WCHAR *KBD_LONG_POINTER *KBD_LONG_POINTER pKeyNamesDead;
+        Virtual_Scancode_To_Virtual_Key         : Access_Integer_2_Unsigned_C                          := null; -- pusVSCtoVK? USHORT  *KBD_LONG_POINTER pusVSCtoVK;
+        Maximum_Virtual_Scancode_To_Virtual_Key : Integer_1_Unsigned_C                                 := 0;    -- bMaxVSCtoVK
+        Virtual_Scancode_To_Virtual_Key_E0      : Access_Record_Virtual_Scancode_To_Virtual_Key        := null; -- pVSCtoVK_E0
+        Virtual_Scancode_To_Virtual_Key_E1      : Access_Record_Virtual_Scancode_To_Virtual_Key        := null; -- pVSCtoVK_E1
+        Local_Flags                             : Integer_4_Unsigned_C                                 := 0;    -- fLocaleFlags
+        Ligature_Maximum                        : Integer_1_Unsigned_C                                 := 0;    -- nLgMax
+        Kind                                    : Integer_4_Unsigned_C                                 := 0;    -- dwType
+        Subkind                                 : Integer_4_Unsigned_C                                 := 0;    -- dwSubType
+      end record; pragma Convention(C, Record_Keyboard_Tables);
+      type Access_Record_Keyboard_Tables is access all Record_Keyboard_Tables;
     type Array_Record_Device_List_Element
       is array(Positive range <>)
       of Record_Device_List_Element;
@@ -780,6 +850,7 @@ WTF2 : Integer_4_Signed_C := -2;
     --   is access all Record_Device_List;
     -- type Access_Array_Record_Device_List
     --   is access all Array_Record_Device_List;
+    type Access_Function_Get_Keyboard_Layer_Descriptor is access function return Access_Record_Keyboard_Tables;
     type Access_Record_Version_Information is access all Record_Version_Information;
     type Access_Record_Memory_Status is access all Record_Memory_Status;
     type Access_Record_Key is access all Record_Key;
@@ -797,12 +868,14 @@ WTF2 : Integer_4_Signed_C := -2;
     type Access_Record_Log_Font is access all Record_Log_Font;
     type Access_Record_Minimum_Maximum_Information is access all Record_Minimum_Maximum_Information;
     type Access_Record_Scroll_Information is access all Record_Scroll_Information;
-    function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
-    function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
+    function To_Unchecked_Access_Record_Virtual_Key_To_Character_2_C is new Ada.Unchecked_Conversion(Integer_Address, Access_Record_Virtual_Key_To_Character_2_C);
+    function To_Unchecked_Access_Function_Get_Keyboard_Layer_Descriptor is new Ada.Unchecked_Conversion(Address, Access_Function_Get_Keyboard_Layer_Descriptor);
+    --function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
+    --function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Key, Integer_4_Signed_C);
     function To_Access_Record_Minimum_Maximum_Information is new Ada.Unchecked_Conversion(Address, Access_Record_Minimum_Maximum_Information);
     function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
-    function To_Access_Record_Key is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
-    function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
+    --function To_Access_Record_Key is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
+    --function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
     -- DWORD WINAPI XInputGetState
     -- (
     --     DWORD         dwUserIndex,  // Index of the gamer associated WITH the device
@@ -1066,7 +1139,7 @@ WTF2 : Integer_4_Signed_C := -2;
       List  : in Address;
       Count : in Address;
       Size  : in Integer_4_Unsigned_C)
-      return Integer_4_Unsigned_C;
+      return Integer_4_Signed_C; --Integer_4_Unsigned_C;
     function Destroy_Device_List(
       List : in Address)
       return Integer_4_Signed_C;
@@ -1140,16 +1213,16 @@ WTF2 : Integer_4_Signed_C := -2;
       return Integer_4_Unsigned_C;
     function Get_Procedure_Address(
       Module         : in Address;
-      Procedure_Name : in Access_Constant_Character_2_C)
+      Procedure_Name : in String_1_C)
       return Address;
     function Get_Key_State(
-      Virtual_Key : in Integer_4_Unsigned_C)
+      Virtual_Key : in Integer_4_Signed_C)
       return Integer_2_Unsigned_C;
     function Free_Library(
       Module : in Address)
       return Integer_4_Signed_C;
     function Load_Library(
-      Name : in Access_Constant_Character_2_C)
+      Name : in String_2_C)--Access_Constant_Character_2_C)
       return Address;
     function Get_Foreground_Window
       return Address;
@@ -1236,6 +1309,23 @@ WTF2 : Integer_4_Signed_C := -2;
       Height       : in Integer_4_Signed_C;
       Flags        : in Integer_4_Unsigned_C)
       return Integer_4_Signed_C;
+--BOOL WINAPI MoveWindow(
+--  _In_  HWND hWnd,
+--  _In_  int X,
+--  _In_  int Y,
+--  _In_  int nWidth,
+--  _In_  int nHeight,
+--  _In_  BOOL bRepaint
+--);
+    function Move_Window(
+      Window  : in Address;
+      X       : in Integer_4_Signed_C;
+      Y       : in Integer_4_Signed_C;
+      Width   : in Integer_4_Signed_C;
+      Height  : in Integer_4_Signed_C;
+      Repaint : in Integer_4_Signed_C)
+      return Integer_4_Signed_C;
+    pragma Import(Stdcall, Move_Window, "MoveWindow");
     procedure Post_Quit_Message(
       Exit_Code : in Integer_4_Signed_C);
     function Monitor_From_Window(
@@ -1245,8 +1335,8 @@ WTF2 : Integer_4_Signed_C := -2;
     function Send_Message(
       Window        : in Address;
       Message       : in Integer_4_Unsigned_C;
-      Data_Unsigned : in Integer_4_Unsigned_C;
-      Data_Signed   : in Integer_4_Signed_C)
+      Data_Unsigned : in Integer_Address;
+      Data_Signed   : in Integer_Address)
       return Integer_4_Signed_C;
     function Get_Desktop_Window
       return Address;
@@ -1356,9 +1446,9 @@ WTF2 : Integer_4_Signed_C := -2;
     function Define_Window_Procedure(
       Window        : in Address;
       Message       : in Integer_4_Unsigned_C;
-      Data_Unsigned : in Integer_4_Unsigned_C;
-      Data_Signed   : in Integer_4_Signed_C)
-      return Integer_4_Signed_C;
+      Data_Unsigned : in Integer_Address;
+      Data_Signed   : in Integer_Address)
+      return Integer_Address;
     function Create_Window(
       Style_Extra : in Integer_4_Unsigned_C;
       Class_Name  : in String_2_C;
@@ -1482,7 +1572,29 @@ WTF2 : Integer_4_Signed_C := -2;
       Bar    : in Integer_4_Signed_C; -- fnBar
       Data   : in Access_Record_Scroll_Information) -- lpsi
       return Integer_4_Signed_C; -- BOOL
+    function Get_Keyboard_Layout_Name(                -- GetKeyboardLayoutName
+      Keyboard_Layout_Identifier : in Address)--Access_String_2_C) -- pwszKLID
+      return Integer_4_Signed_C;                      -- BOOL
+    function Get_System_Directory( -- GetSystemDirectory
+      Buffer : in Address; -- lpBuffer
+      Size   : in Integer_4_Unsigned_C) -- uSize
+      return Integer_4_Unsigned_C; -- UINT
+    function Get_Folder_Path( -- SHGetFolderPath
+      Owner  : in Address; -- hwndOwner
+      Folder : in Integer_4_Signed_C; -- nFolder
+      Token  : in Address; -- hToken
+      Flags  : in Integer_4_Unsigned_C; -- dwFlags
+      Path   : in Address)--String_2_C) -- pszPath
+      return Address; -- HRESULT
+    function Flash_Window_B( -- FlashWindow
+      Window : in Address; -- hWnd,
+      Invert : in Integer_4_Signed_C) -- bInvert
+      return Integer_4_Signed_C; -- BOOL
 private
+    pragma Import(Stdcall, Flash_Window_B, "FlashWindow");
+    pragma Import(Stdcall, Get_Folder_Path, "SHGetFolderPathW");
+    pragma Import(Stdcall, Get_System_Directory, "GetSystemDirectoryW");
+    pragma Import(Stdcall, Get_Keyboard_Layout_Name, "GetKeyboardLayoutNameW");
     pragma Import(Stdcall, Get_Scroll_Information, "GetScrollInfo");
     pragma Import(Stdcall, Get_Window_Text_Length, "GetWindowTextLengthW");
     pragma Import(Stdcall, Get_Scroll_Range, "GetScrollRange");
@@ -1625,4 +1737,4 @@ private
     pragma Import(Stdcall, Get_Device_Context,             "GetDC");
     pragma Import(Stdcall, Release_Device_Context,         "ReleaseDC");
     pragma Import(Stdcall, Get_Device_Capabilities,        "GetDeviceCaps");
-  end Neo.Link.Windows;
+  end Neo.Windows;

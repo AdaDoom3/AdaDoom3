@@ -25,10 +25,10 @@ To compile with GPRBuild:
 Or the Gnat Programming Studio IDE may be used (email is optional):
 http://libre.adacore.com/download/
 
-To compile with GPS click the gear and hammer button `✹` after ensuring the
+To compile with GPS click the gear and hammer button after ensuring the
 scenario drop boxes are correct.
 
-After successfully compiling press play `▶` to run.
+After successfully compiling press play ▶ to run.
 
 ## Using Git
 
@@ -36,14 +36,23 @@ Github's tutorial on installing and using commandline git:
 https://help.github.com/categories/54/articles
 
 Frequent commands:
+
 `git init`
+
 `git config --global user.email ""`
+
 `git config --global user.name ""`
+
 `git remote add origin https://github.com/AdaDoom3/AdaDoom3.git`
+
 `git pull origin master`
+
 `git pull origin branch`
+
 `git commit -am ''`
+
 `git push origin master`
+
 `git push origin master:branch`
 
 ## Contributing

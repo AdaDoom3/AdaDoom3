@@ -2,8 +2,9 @@ with Ada.Text_IO;
 with Ada.Wide_Text_IO;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
-with Ada.Containers.Hashed_Maps;
-with Ada.Containers.Vectors;
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers.Indefinite_Ordered_Maps;
+with Ada.Containers.Indefinite_Vectors;
 with Ada.Characters.Latin_1; 
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
 with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
@@ -14,6 +15,7 @@ with Ada.Streams;                use Ada.Streams;
 with Ada.Calendar;               use Ada.Calendar;
 with Ada.Containers;             use Ada.Containers;
 with Ada.Exceptions;             use Ada.Exceptions;
+with Ada.Task_Identification;    use Ada.Task_Identification;
 with Interfaces.C;               use Interfaces.C;
 with Interfaces;                 use Interfaces;
 with System;                     use System;
@@ -98,6 +100,7 @@ package Neo is
     type Array_Character_1          is array(Positive range <>) of Character_1;
     type Array_Character_2_C        is array(Positive range <>) of Character_2_C;
     type Array_Character_2          is array(Positive range <>) of Character_2;
+    type Array_Integer_Address      is array(Positive range <>) of Integer_Address;
     type Array_Integer_1_Unsigned_C is array(Positive range <>) of Integer_1_Unsigned_C;
     type Array_Integer_1_Unsigned   is array(Positive range <>) of Integer_1_Unsigned;
     type Array_Integer_1_Signed_C   is array(Positive range <>) of Integer_1_Signed_C;
@@ -210,6 +213,7 @@ package Neo is
     function Localize          (Item  : in String_2) return String_2;
     function Get_Extension     (Path  : in String_2) return String_2;
     function Get_Line_Size                           return Integer_4_Positive;
+    function Get_Number_Of_Lines                     return Integer_8_Natural;
     function Get_Log                                 return String_2;
     function Get_Input_Entry                         return String_2;
     function Get_Errors                              return String_2;
@@ -217,7 +221,7 @@ package Neo is
     function To_Access_Constant_Character_2_C (Item : in String_2)                      return Access_Constant_Character_2_C;
     function To_Access_Character_1_C          (Item : in String_1_C)                    return Access_Character_1_C;
     function To_Access_Character_2_C          (Item : in String_2)                      return Access_Character_2_C;
-    function To_String_1_C                    (Item : in String_2)                      return String_1_C;
+    --function To_String_1_C                    (Item : in String_2)                      return String_1_C;
     function To_String_1                      (Item : in String_2)                      return String_1;
     function To_String_1_C                    (Item : in String_1)                      return String_1_C;
     function To_String_1                      (Item : in String_1_C)                    return String_1;
@@ -242,53 +246,115 @@ package Neo is
     function To_Unchecked_Access_Constant_Character_2_C is new Ada.Unchecked_Conversion(Integer_Address,               Access_Constant_Character_2_C);
     function To_Unchecked_Address                       is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Address);
     function To_Unchecked_Address                       is new Ada.Unchecked_Conversion(Integer_Address,               Address);
-    function To_Unchecked_Integer_4_Unsigned_C          is new Ada.Unchecked_Conversion(Integer_Address,               Integer_4_Unsigned_C);
     function To_Unchecked_Integer_4_Unsigned_C          is new Ada.Unchecked_Conversion(Integer_4_Signed_C,            Integer_4_Unsigned_C);
     function To_Unchecked_Integer_4_Unsigned            is new Ada.Unchecked_Conversion(Integer_4_Signed_C,            Integer_4_Unsigned);
     function To_Unchecked_Integer_4_Unsigned            is new Ada.Unchecked_Conversion(Float_4_Real,                  Integer_4_Unsigned);
-    function To_Unchecked_Integer_4_Signed_C            is new Ada.Unchecked_Conversion(Integer_Address,               Integer_4_Signed_C);
-    function To_Unchecked_Integer_2_Signed              is new Ada.Unchecked_Conversion(Integer_2_Unsigned,            Integer_2_Signed);
+    function To_Unchecked_Integer_4_Signed_C            is new Ada.Unchecked_Conversion(Integer_4_Unsigned_C,          Integer_4_Signed_C);
     function To_Unchecked_Integer_4_Signed              is new Ada.Unchecked_Conversion(Integer_4_Unsigned,            Integer_4_Signed);
-    function To_Unchecked_Integer_4_Address             is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C,   Integer_Address);
-    function To_Unchecked_Integer_4_Address             is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
+    function To_Unchecked_Integer_2_Signed              is new Ada.Unchecked_Conversion(Integer_2_Unsigned,            Integer_2_Signed);
     function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C,   Integer_Address);
     function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
-    function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Integer_4_Unsigned_C,          Integer_Address);
-    function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Integer_4_Signed_C,            Integer_Address);
     function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Address,                       Integer_Address);
     function To_Unchecked_Float_4_Real                  is new Ada.Unchecked_Conversion(Float_4_Real,                  Integer_4_Unsigned);
     generic
+      with procedure Run;
+    package Tasks is
+        task type Task_Unsafe is entry Initialize(Id : in out Task_Id); end Task_Unsafe;
+        type Access_Task_Unsafe is access all Task_Unsafe;
+        procedure Finalize is new Ada.Unchecked_Deallocation(Task_Unsafe, Access_Task_Unsafe);
+        protected type Protected_Task is
+            procedure Initialize;
+            procedure Finalize;
+            function Is_Running return Boolean;
+          private
+            Current_Task : Access_Task_Unsafe := null;
+            Current_Id   : Task_Id            := NULL_TASK_ID;
+          end Protected_Task;
+      end Tasks;
+    generic
       type Type_To_Vector is private;
     package Vectors is
-        type Array_Type_To_Vector is array(Positive range <>) of Type_To_Vector;
-        package Unsafe is new Ada.Containers.Vectors(Integer_4_Positive, Type_To_Vector, "=");
+        package Unsafe is new Ada.Containers.Indefinite_Vectors(Integer_4_Positive, Type_To_Vector);
+        subtype Cursor is Unsafe.Cursor;
         protected type Protected_Vector is
             procedure Clear;
-            procedure Append                                 (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-            procedure Prepend                                (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-            procedure Insert (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-            procedure Delete (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1);
-            function Element (Index  : in Integer_4_Positive) return Type_To_Vector;
-            function To_Array                                 return Array_Type_To_Vector;
-            function Length                                   return Integer_4_Positive;
+            procedure Set        (Data : in Unsafe.Vector);
+            procedure Next       (Position : in out Cursor);
+            procedure Replace    (Position : in Cursor; New_Item : in Type_To_Vector);
+            procedure Append                                     (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+            procedure Prepend                                    (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+            procedure Insert     (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+            procedure Delete     (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1);
+            function Element     (Index  : in Integer_4_Positive) return Type_To_Vector;
+            function Element     (Position : in Cursor)           return Type_To_Vector;
+            function Has_Element (Position : in Cursor)           return Boolean;
+            function First                                        return Cursor;
+            function Length                                       return Integer_4_Positive;
+            function Get                                          return Unsafe.Vector;
           private
-            Data : Unsafe.Vector;
+            Current_Data : Unsafe.Vector;
           end Protected_Vector;
       end Vectors;
     generic
       type Type_To_Map is private;
-    package Maps is
-        package Unsafe is new Ada.Containers.Hashed_Maps(String_2_Unbounded, Type_To_Map, Wide_Hash, "=");
+    package Hashed_Maps is
+        package Unsafe is new Ada.Containers.Indefinite_Hashed_Maps(String_2_Unbounded, Type_To_Map, Wide_Hash, "="); use Unsafe;
+        subtype Cursor is Unsafe.Cursor;
         protected type Protected_Map is
+            procedure Clear;
+            procedure Set        (Data : in Unsafe.Map);
+            procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
+            procedure Next       (Position : in out Cursor);
+            procedure Delete     (Position : in out Cursor);
             procedure Delete     (Key : in String_2);
             procedure Insert     (Key : in String_2; New_Item : in Type_To_Map);
             procedure Replace    (Key : in String_2; New_Item : in Type_To_Map);
-            function Element     (Key : in String_2) return Type_To_Map;
-            function Has_Element (Key : in String_2) return Boolean;
+            function Element     (Key : in String_2)    return Type_To_Map;
+            function Element     (Position : in Cursor) return Type_To_Map;
+            function Has_Element (Key : in String_2)    return Boolean;
+            function Has_Element (Position : in Cursor) return Boolean;
+            function Key         (Position : Cursor)    return String_2;
+            function First                              return Cursor;
+            function Get                                return Unsafe.Map;
           private
-            Data : Unsafe.Map;
+            Current_Data : Map;
           end Protected_Map;
-      end Maps;
+      end Hashed_Maps; 
+    generic
+      type Type_To_Key is (<>);
+      type Type_To_Map is private;
+    package Ordered_Maps is
+        package Unsafe is new Ada.Containers.Indefinite_Ordered_Maps(Type_To_Key, Type_To_Map, "<", "="); use Unsafe;
+        subtype Cursor is Unsafe.Cursor;
+        protected type Protected_Map is
+            procedure Clear;
+            procedure Set        (Data : in Unsafe.Map);
+            procedure Next       (Position : in out Cursor);
+            procedure Delete     (Position : in out Cursor);
+            procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
+            procedure Delete     (Key : in Type_To_Key);
+            procedure Insert     (Key : in Type_To_Key; New_Item : in Type_To_Map);
+            procedure Replace    (Key : in Type_To_Key; New_Item : in Type_To_Map);
+            function Element     (Key : in Type_To_Key) return Type_To_Map;
+            function Element     (Position : in Cursor) return Type_To_Map;
+            function Has_Element (Key : in Type_To_Key) return Boolean;
+            function Has_Element (Position : in Cursor) return Boolean;
+            function Key         (Position : Cursor)    return Type_To_Key;
+            function First                              return Cursor;
+            function Get                                return Unsafe.Map;
+          private
+            Current_Data : Map;
+          end Protected_Map;
+      end Ordered_Maps; 
+    PATH_LOGS               : constant String_2           := "Logs/";
+    PATH_SETTINGS           : constant String_2           := "Settings/";
+    PATH_ASSETS             : constant String_2           := "Assets/";
+    PATH_DOCUMENTS          : constant String_2           := "Documents/";
+    PATH_REPLAYS            : constant String_2           := "Replays/";
+    PATH_VARIABLES          : constant String_2           := PATH_SETTINGS & "variables.csv";
+    PATH_LOCALS             : constant String_2           := PATH_SETTINGS & "locals.csv";
+    PATH_PREFIX_ICON        : constant String_2           := PATH_ASSETS & "icon";
+    PATH_PREFIX_CURSOR      : constant String_2           := PATH_ASSETS & "cursor";
     C_TRUE                  : constant Integer_4_Signed_C := 1;
     C_FALSE                 : constant Integer_4_Signed_C := 0;
     INITIAL_TIME            : constant Time               := Clock;
@@ -362,21 +428,23 @@ private
     DEFAULT_LINE_SIZE                 : constant Integer_4_Positive := 80;
     HANG_INDICATOR                    : constant String_2           := "_";
     TESTING_SEPARATOR                 : constant Character_2        := '_';
-    protected type Protected_Input_Output is
-        procedure Set_Input_Entry  (Value : in String_2);
-        procedure Set_Errors       (Value : in String_2);
-        procedure Set_Do_Put_Debug (Value : in Boolean);
-        procedure Set_Line_Size    (Value : in Integer_4_Positive);
-        procedure Set_Put          (Value : in Access_Procedure_Put);
-        procedure Set_Localize     (Value : in Access_Function_Localize);
-        procedure Put              (Item  : in String_2);
-        function Localize          (Item  : in String_2) return String_2;
-        function Get_Log                                 return String_2;
-        function Get_Errors                              return String_2;
-        function Get_Input_Entry                         return String_2;
-        function Do_Put_Debug                            return Boolean;
-        function Get_Line_Size                           return Integer_4_Positive;
-        function Get_Number_Of_Lines                     return Integer_4_Natural;
+    protected type Protected_Data is
+        procedure Set_Input_Entry     (Value : in String_2);
+        procedure Set_Errors          (Value : in String_2);
+        procedure Set_Do_Put_Debug    (Value : in Boolean);
+        procedure Set_Line_Size       (Value : in Integer_4_Positive);
+        procedure Set_Number_Of_Tasks (Value : in Integer_4_Positive);
+        procedure Set_Put             (Value : in Access_Procedure_Put);
+        procedure Set_Localize        (Value : in Access_Function_Localize);
+        procedure Put                 (Item  : in String_2);
+        function Localize             (Item  : in String_2) return String_2;
+        function Get_Log                                    return String_2;
+        function Get_Errors                                 return String_2;
+        function Get_Input_Entry                            return String_2;
+        function Get_Line_Size                              return Integer_4_Positive;
+        function Get_Number_Of_Tasks                        return Integer_4_Positive;
+        function Get_Number_Of_Lines                        return Integer_8_Natural;
+        function Do_Put_Debug                               return Boolean;
       private
         Current_Put             : Access_Procedure_Put     := Ada.Wide_Text_IO.Put'access;
         Current_Localize        : Access_Function_Localize := null;
@@ -384,8 +452,9 @@ private
         Current_Errors          : String_2_Unbounded       := NULL_STRING_2_UNBOUNDED;
         Current_Input_Entry     : String_2_Unbounded       := NULL_STRING_2_UNBOUNDED;
         Current_Line_Size       : Integer_4_Positive       := DEFAULT_LINE_SIZE;
-        Current_Number_Of_Lines : Integer_4_Natural        := 0;
+        Current_Number_of_Tasks : Integer_4_Positive       := 1;
+        Current_Number_Of_Lines : Integer_8_Natural        := 0;
         Current_Do_Put_Debug    : Boolean                  := False;
-      end Protected_Input_Output;
-    Input_Output : Protected_Input_Output;
+      end Protected_Data;
+    Data : Protected_Data;
   end Neo;
