@@ -20,7 +20,7 @@ Planned Features:
 ## Compiling
 
 To compile with GPRBuild:
-`gprbuild adadoom3.gpr`
+`gprbuild setup/neo.gpr`
 
 Or the Gnat Programming Studio IDE may be used (email is optional):
 http://libre.adacore.com/download/
