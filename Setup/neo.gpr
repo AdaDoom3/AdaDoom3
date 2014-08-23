@@ -37,6 +37,7 @@ project Neo is
   ------------
   -- Naming --
   ------------
+    S                                   := "/";
     Languages                           := ("Ada", "Project File");--, "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "Changelog", "C for Graphics", "Visual Basic", "Apple Script");
     Casing                              := "Lowercase";
     Version_Control                     := "Git";
@@ -58,13 +59,12 @@ project Neo is
     Extension_Mark_Down                 := ".md"; -- Use - instead of * to avoid changelog syntax highlighting in markdown files
     Extension_Library                   := ".lib";
     case SYSTEM is
-      when "Windows" | "WindowsSDL" => Extension_Library := ".dll";
+      when "Windows" | "WindowsSDL" => Extension_Library := ".dll"; S := "\";
       when others                   => null;
     end case;
   -----------------
   -- Directories --
   -----------------
-    S                       := "/";
     Directory_Project       := ".";
     Directory_Null_API      := "Null";
     Directory_POSIX         := "POSIX";
@@ -120,7 +120,8 @@ project Neo is
   --------------
   -- Switches --
   --------------
-    Switch_Binder   :=();
+    Switch_Binder   :=(
+      "-E");
     Switch_Linker   :=(
       "-fprofile-generate");--,                                                             -- Generate code coverage                                                                         
       --Directory_Binaries & S & "libopus"       & WORD_SIZE & Extension_Library,         --
@@ -129,6 +130,7 @@ project Neo is
       --Directory_Binaries & S & "libvorbis"     & WORD_SIZE & Extension_Library,         --
       --Directory_Binaries & S & "libvorbisfile" & WORD_SIZE & Extension_Library);        --
     Switch_Compiler :=(
+      "-gnateE",
       "-gnatW8",                                                                        -- Enable unicode identifiers
       "-gnat2012");                                                                     -- Enable the Ada 2012 extensions
     Switch_Builder  :=(
@@ -151,31 +153,28 @@ project Neo is
         Switch_Compiler := Switch_Compiler & ("-g");                                    -- Create extended information in stack traces
       when "No"  => null;
     end case;
-    case OPTIMIZE is
-      when "Yes" => Switch_Compiler := Switch_Compiler & ("-O3");                       -- Full optimization and automatic inlining
-      when "No"  => null;
-    end case;
     case WORD_SIZE is
       when "64" => Switch_Compiler := Switch_Compiler & ("-m64");                       -- Try 64 bit compilation
       when "32" => null;
     end case;
     case SYSTEM is
       when "Windows" =>
-        case WORD_SIZE is
-          when "64" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles(x86)") & S & "Steam" & Extension_Library); 
-          when "32" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles")      & S & "Steam" & Extension_Library);
-        end case;
         case DEBUG is
           when "Yes" =>
           when "No"  => Switch_Linker := Switch_Linker & ("-mwindows");                 -- Remove the command console in Windows
         end case;
         Switch_Linker := Switch_Linker &(
+          External("WinDir") & S & "System32" & S & "comctl32"    & Extension_Library,
           External("WinDir") & S & "System32" & S & "D3DX9_42"    & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "gdi32"       & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "hid"         & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "setupapi"    & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "XInput9_1_0" & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "opengl32"    & Extension_Library); --
+        case WORD_SIZE is
+          when "64" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles(x86)") & S & "Steam" & Extension_Library); 
+          when "32" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles")      & S & "Steam" & Extension_Library);
+        end case;
       when "WindowsSDL" | "UnixSDL" => Switch_Linker := Switch_Linker &(Directory_Binaries & "libsdl" & WORD_SIZE & Extension_Library);
       when others => null;
     end case;
@@ -210,16 +209,25 @@ project Neo is
       --for Body_Suffix("Apple Script")   use Extension_Apple_Script;
     end Naming;
     package Builder is
-      for Executable("main.adb")        use Executable; -- I can't send in a variable in the call to "Executable"!
+      for Executable("main.adb")        use Executable;
       for Default_Switches("Ada")       use Switch_Builder;
     end Builder;
-    package Compiler is
-      for Default_Switches("Ada")       use Switch_Compiler;
-    end Compiler;
     package Binder is
       for Default_Switches("Ada")       use Switch_Binder;
     end Binder;
     package Linker is
       for Default_Switches("Ada")       use Switch_Linker;
     end Linker;
+  ------------------
+  -- Optimization --
+  ------------------
+    package Compiler is
+      case OPTIMIZE is
+        when "No"  => for Default_Switches("Ada")    use Switch_Compiler;
+        when "Yes" => for Default_Switches("Ada")    use Switch_Compiler & ("-O3");
+          for Switches("neo-command.adb")            use Switch_Compiler & ("-O2");  
+      end case;
+      for Switches("neo-system-processor.adb")       use Switch_Compiler & ("-O1"); 
+      for Switches("neo-system-graphics-window.adb") use Switch_Compiler & ("-O3"); 
+    end Compiler;
 end Neo;

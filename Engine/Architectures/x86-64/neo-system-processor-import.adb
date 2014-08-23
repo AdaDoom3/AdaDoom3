@@ -26,7 +26,7 @@ separate(Neo.System.Processor) package body Import is
     FROM_ECX : constant String_1 := "=c";
     FROM_EDX : constant String_1 := "=d";
     function Get_Specifics return Record_Specifics is
-      function Get_Vendor return Enumerated_Vendor is -- "Oh, such a sweet sweet trick, just not very useful. :)"
+      function Get_Vendor return Enumerated_Vendor is -- "Oh, such a sweet sweet trick, just not very useful. :)" I don't even..
         Vendor : String_1(1..12) := (others => NULL_CHARACTER_1);
         begin
           Asm(
@@ -221,9 +221,10 @@ separate(Neo.System.Processor) package body Import is
             " fldcw  (%%eax)          " & END_LINE_1);
             ------------------------------------------
       end Set_Precision;
-    function Get_Clock_Ticks return Integer_8_Unsigned is
+    function Get_Clock_Ticks return Integer_8_Unsigned is -- This function will fail O3 optimization in SOME gnat compilers! GAH!
       Low_Part  : Integer_4_Unsigned := 0;
       High_Part : Integer_4_Unsigned := 0;
+      function To_String_2 is new Generic_To_String_2(Integer_4_Unsigned);
       begin
         Asm(
           Volatile => True,
@@ -413,6 +414,7 @@ if Neo.System.SPECIFICS.Bit_Size >= 64 then Put_Line("Put_Stack is disabled due 
         Put_Line("Program counter: " & To_String_2(Environment.Program_Counter, 2));
 exception when Disable_Put_Stack => null;
       end Put_Stack;
+   procedure Initialize is begin null; end Initialize;
   begin
     declare Data : aliased Integer_4_Unsigned := 0; begin
       if WORD_SIZE < 32 then

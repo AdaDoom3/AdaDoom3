@@ -1,8 +1,9 @@
-with Neo.Windows; use Neo.Windows;
-with Interfaces.C;     use Interfaces.C;
-with Interfaces;       use Interfaces;
-with System;           use System;
-with Ada.Exceptions; use Ada.Exceptions;
+with Ada.Finalization;
+with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
+with Interfaces.C;                 use Interfaces.C;
+with Interfaces;                   use Interfaces;
+with System;                       use System;
+with Neo.Windows;                  use Neo.Windows;
 separate (Neo.System.Input) package body Import is
   MAP_KEY : constant array(VIRTUAL_KEY_LEFT_MOUSE..VIRTUAL_KEY_CLEAR) of Enumerated_Key :=(
     Left_Mouse_Key,        Right_Mouse_Key,       Cancel_Key,            Middle_Mouse_Key,
@@ -69,361 +70,36 @@ separate (Neo.System.Input) package body Import is
     OEM_Specific_24_Key,   Attention_Key,         Clear_Selection_Key,   Exsel_Key,
     Erase_EOF_Key,         Play_Key,              Zoom_Key,              Null_Key,
     PA1_Key,               Clear_Key);
-  MAP_VIRTUAL_KEY : array(Enumerated_Keyboard_Key'range) of Integer_2_Unsigned_C := (others => 0);
-  Current_Library_Path      : aliased String_2_C(1..9)              := (others => NULL_CHARACTER_2_C);
-  Keyboard_Library          : aliased Address                       := NULL_ADDRESS;
-  Window                    :         Address                       := NULL_ADDRESS;
-  Keyboard_Layer_Descriptor :         Access_Record_Keyboard_Tables := null;
-  Keyboard_Table            :         Array_Integer_Address(1..10)  := (others => 0);
-  function Lookup_Character(Keyboard : in Array_Keyboard_Keys) return Character_2 is -- This is a key logger
-    Result                 :         Character_2_C        := NULL_CHARACTER_2_C;
-    Dead                   :         Character_2_C        := NULL_CHARACTER_2_C;
-    Base                   :         Character_2_C        := NULL_CHARACTER_2_C;
-    Diacritic              :         Character_2_C        := NULL_CHARACTER_2_C;
-    Result_Length          :         Integer_4_Signed_C   := 0;
-    Shift                  :         Integer_4_Signed     := -1;
-    Modifiers              :         Integer_4_Signed     := 1;
-    Virtual_Key            :         Integer_2_Unsigned_C := 0;
-    Current_Keyboard_Table :         Access_Record_Virtual_Key_To_Character_2_C := null;
-    Library_Path           : aliased String_2_C(1..9)     := (others => NULL_CHARACTER_2_C);
-    State                  :         Record_State         := (others => <>);
-    Key                    :         Enumerated_Key       := Null_Key;
-    J                      :         Integer              := 0;
-    Is_Capital_Locked      :         Boolean              :=(
-      if (Get_Key_State(Integer_4_Signed_C(Integer_4_Unsigned_C(MAP_VIRTUAL_KEY(Capital_Lock_Key)))) and 16#0001#) > 0 then True
-      else False);
-    begin
-      Assert(Get_Keyboard_Layout_Name(Library_Path'address));
-      if Current_Library_Path /= Library_Path then
-        if Current_Library_Path(1) /= NULL_CHARACTER_2_C then Assert(Free_Library(Keyboard_Library)); end if;
-        Current_Library_Path := Library_Path;
-        declare
-        Get_Keyboard_Layer_Descriptor :         Access_Function_Get_Keyboard_Layer_Descriptor := null;
-        Key                           : aliased Address                                       := NULL_ADDRESS;
-        Variable_Kind                 : aliased Integer_4_Unsigned_C                          := REG_SZ;
-        Maximum_Path                  : aliased Integer_4_Unsigned_C                          := Integer_4_Unsigned_C(MAXIMUM_PATH_LENGTH);
-        Layout_Path                   : aliased String_2_C(1..MAXIMUM_PATH_LENGTH)            := (others => NULL_CHARACTER_2_C);
-        System_Path                   : aliased String_2_C(1..MAXIMUM_PATH_LENGTH)            := (others => NULL_CHARACTER_2_C);
-        begin
-          Assert(Registry_Open_Key(
-            Key     => HKEY_LOCAL_MACHINE,
-            Sub_Key => To_String_2_C("SYSTEM\CurrentControlSet\Control\Keyboard Layouts\" & To_String_2(Library_Path)),
-            Options => 0,
-            Desired => KEY_QUERY_VALUE,
-            Result  => Key'address) = 0);
-          Assert(Registry_Query_Value(
-            Key        => Key,
-            Value_Name => To_String_2_C("Layout File"),
-            Reserved   => null,
-            Kind       => Variable_Kind'unchecked_access,
-            Data       => Layout_Path'address,
-            Data_Size  => Maximum_Path'unchecked_access) = 0);
-          Assert(Registry_Close_Key(Key) = 0);
-          if Neo.System.SPECIFICS.Bit_Size = 64 and WORD_SIZE = 32 then -- WOW! 64
-            Assert(Get_Folder_Path(NULL_ADDRESS, PATH_SYSTEM_X86, NULL_ADDRESS, 0, System_Path'address) = NULL_ADDRESS);
-          else
-            Assert(Get_System_Directory(System_Path'address, Integer_4_Unsigned_C(MAXIMUM_PATH_LENGTH)) /= 0);
-          end if;
-          Keyboard_Library := Load_Library(To_String_2_C(To_String_2(System_Path)  & "\" & To_String_2(Layout_Path)));
-          Assert(Keyboard_Library);
-          Get_Keyboard_Layer_Descriptor := To_Unchecked_Access_Function_Get_Keyboard_Layer_Descriptor(
-            Get_Procedure_Address(Keyboard_Library, To_String_1_C("KbdLayerDescriptor")));
-          Assert(Get_Keyboard_Layer_Descriptor /= null);
-          Keyboard_Layer_Descriptor := Get_Keyboard_Layer_Descriptor.all;
-          Assert(Keyboard_Layer_Descriptor /= null);
-          for I in Keyboard_Layer_Descriptor.Virtual_Key_To_Character_2_C_Table.all'range loop
-            exit when Keyboard_Layer_Descriptor.Virtual_Key_To_Character_2_C_Table(I).Size = 0;
-            for J in Keyboard_Table'range loop
-              if (Keyboard_Layer_Descriptor.Virtual_Key_To_Character_2_C_Table(I).Size - 2) / 2 = Integer_1_Unsigned_C(J) then
-                Keyboard_Table(J) := Keyboard_Layer_Descriptor.Virtual_Key_To_Character_2_C_Table(I).Virtual_Key_To_Character_2_C;
-              end if;
-            end loop;
-          end loop;
-        end;
-      end if;
-      for I in Keyboard'range loop
-        if Keyboard(I).Is_Pressed and (Keyboard(I).Last > State.Last or Key = Null_Key) then
-          Key   := I;
-          State := Keyboard(I);
-        end if;
-      end loop;
-      Virtual_Key := MAP_VIRTUAL_KEY(Key);
-      for I in Keyboard_Layer_Descriptor.Character_Modifiers.Virtual_Key_To_Bit'range loop
-        exit when Keyboard_Layer_Descriptor.Character_Modifiers.Virtual_Key_To_Bit(I).Virtual_Key = 0;
-        Key := MAP_KEY(Integer_2_Unsigned_C(Keyboard_Layer_Descriptor.Character_Modifiers.Virtual_Key_To_Bit(I).Virtual_Key));
-        if Key = Shift_Key then
-          --Put_Line("Found shift!");
-          Shift := I + 1;
-        end if;
-        if Keyboard(Key).Is_Pressed then
-          --Put_Line("Modified!");
-          modifiers := I + 1;
-        end if;
-      end loop;
-      for I in Keyboard_Table'range loop
-        if Keyboard_Table(I) /= 0 then--and Integer_4_Signed(Modifiers) <= I then
-          Current_Keyboard_Table := To_Unchecked_Access_Record_Virtual_Key_To_Character_2_C(Keyboard_Table(I));
-          J := 0;
-          loop
-            if Integer_2_Unsigned_C(Current_Keyboard_Table.Virtual_Key) = Virtual_Key then
-              if Current_Keyboard_Table.Attributes = CAPITAL_LOCK and Is_Capital_Locked then
-                Modifiers := (if Modifiers = Shift then 1 else Shift);
-              end if;
-              Result        := Current_Keyboard_Table.Characters(Modifiers);
-              Result_Length := 1;
-              if Result = KEYBOARD_NO_CHARACTER then Result_Length := 0;
-              elsif Result = KEYBOARD_DEAD_CHARACTER then
-                Result_Length  := 0;
-                --Dead_Character := Keyboard_Table(I).all(J + 1).Characters(Integer_4_Signed(Modifiers));
-              end if;
-              exit;
-            end if;
-            J := J + 1;
-            Current_Keyboard_Table := To_Unchecked_Access_Record_Virtual_Key_To_Character_2_C( -- Pointer arithmetic!
-              Keyboard_Table(I) + Integer_Address((Record_Virtual_Key_To_Character_2_C'object_size - (10 - I) * Character_2_C'object_size) / 8 * J));
-            exit when Current_Keyboard_Table.Virtual_Key = 0;
-          end loop;
-        end if;
-      end loop;
-      if Result_Length = 0 then raise No_Printable_Character; end if;
-      if Dead /= NULL_CHARACTER_2_C then -- "I see dead characters..."
-        for I in Keyboard_Layer_Descriptor.Dead_Keys'range loop
-          exit when Keyboard_Layer_Descriptor.Dead_Keys(I).Both = 0;
-          Base := Character_2_C'val(Integer_4_Signed(Keyboard_Layer_Descriptor.Dead_Keys(I).Both and 16#0000_FFFF#));
-          Diacritic := Character_2_C'val(Integer_4_Signed(Shift_Right(Integer_4_Unsigned(Keyboard_Layer_Descriptor.Dead_Keys(I).Both), 16)));
-          if Base = Result and Diacritic = Dead then
-            return Character_2(Keyboard_Layer_Descriptor.Dead_Keys(I).Composed);
-          end if;
-        end loop;
-      end if;
-      return Character_2(Result);
-    end Lookup_Character;
+  Gamepad_States : aliased array(0..3) of Record_Gamepad := (others => <>);
+  Name_Class     : aliased String_2_C                    := To_String_2_C(SPECIFICS.Name & " " & Localize(NAME_POSTFIX));
+  Window         :         Address                       := NULL_ADDRESS;
+  function Does_Support_Playstation_Devices return Boolean is begin return False; end Does_Support_Playstation_Devices;
+  function Does_SUpport_Xbox_Devices        return Boolean is begin return True;  end Does_Support_Xbox_Devices;
   procedure Set_Vibration(Identifier : in Integer_Address; Frequency_High, Frequency_Low : in Float_4_Percent) is
+    Vibration : aliased Record_Vibration := (
+      Left_Motor_Speed  => Integer_2_Unsigned_C(Frequency_Low  / 100.0 * Float_4_Real(Integer_2_Unsigned_C'last)),
+      Right_Motor_Speed => Integer_2_Unsigned_C(Frequency_High / 100.0 * Float_4_Real(Integer_2_Unsigned_C'last)));
     begin
-      null;
+      if Identifier in 0..3 then Assert(Set_XInput_State(Integer_4_Unsigned_C(Identifier), Vibration'unchecked_access) = 0); end if;
     end Set_Vibration;
-  procedure Update_Devices is
-    --Product      : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
-    --Manufacturer : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
-    --Capabilities : aliased Record_Device_Capabilities                 := (others => <>);
-    Number_Of_X  : aliased Integer_4_Unsigned_C                       := 0;
-    Device       :         Record_Device                              := (others => <>);
-    File         :         Address                                    := NULL_ADDRESS;
-    begin
-      Assert(Get_Device_List(
-        List  => NULL_ADDRESS,
-        Count => Number_Of_X'address,
-        Size  => Record_Device_List_Element'Object_Size / Byte'object_size) /= -1);
-      Assert(Number_Of_X /= 0);
-        declare
-        List : aliased Array_Record_Device_List_Element(1..Integer(Number_Of_X)) := (others => <>);
-        begin
-          Assert(Get_Device_List(
-            List  => List(List'first)'address,
-            Count => Number_Of_X'address,
-            Size  => Record_Device_List_Element'Object_Size / Byte'object_size) /= -1);
-          for I in List'range loop
-            if not Has_Element(To_Unchecked_Integer_Address(List(I).Handle)) then
-              case List(I).Kind is
-                when KIND_IS_KEYBOARD =>
-                  Add_Device(To_Unchecked_Integer_Address(List(I).Handle), (Keyboard_Device, others => <>));
-                when KIND_IS_MOUSE =>
-                  Add_Device(To_Unchecked_Integer_Address(List(I).Handle), (Mouse_Device, others => <>));
-                when others => null;
-              end case;
-            end if;
-          end loop;
-          --for I in Devices'range loop
-          --  for J in List'range loop
-          --    if Devices(I).Identifier = List(J).Handle then
-          --      exit;
-          --    end if;
-          --    if J = List'last then
-          --      Remove_Device(Devices(I).Identifier);
-          --    end if;
-          --  end loop;
-          --end loop;
-        end;
-    -- Product      : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
-    -- Manufacturer : aliased String_2(1..MAXIMUM_DESCRIPTION_CHRACTERS) := (Others => NULL_CHARACTER_2);
-    -- Capabilities : aliased Record_Device_Capabilities                 := (others => <>);
-    -- Number_Of_X  : aliased Integer_4_Unsigned_C                       := 0;
-    -- Device       :         Record_Device                              := (others => <>);
-    -- File         :         Address                                    := NULL_ADDRESS;
-    -- begin
-    --   Assert(Get_Device_List(
-    --     List  => NULL_ADDRESS,
-    --     Count => Number_Of_X'address,
-    --     Size  => Record_Device_List_Element'object_size / Byte'object_size) /= -1);
-    --   Assert(Number_Of_X /= 0);
-    --     declare
-    --     List : aliased Array_Record_Device_List_Element(1..Integer(Number_Of_X)) := (others => <>);
-    --     begin
-    --       Assert(Get_Device_List(
-    --         List  => List(List'first)'address,
-    --         Count => Number_Of_X'address,
-    --         Size  => Record_Device_List_Element'object_size / Byte'object_size) /= -1);
-    --       for I in List'range loop
-    --         if not Is_Device_Present(Handle) then
-    --           case List(I).Kind is
-    --             when KIND_IS_KEYBOARD | KIND_IS_MOUSE =>
-    --               Add_Device((Handle, others => <>));
-    --             when KIND_IS_HUMAN_INTERFACE_DEVICE =>
-    --               Device := (others => <>);
-    --               Assert(Get_Device_Information(
-    --                 Device  => Handle,
-    --                 Command => GET_DEVICE_NAME,
-    --                 Data    => NULL_ADDRESS,
-    --                 Size    => Number_Of_X'access) = 0);
-    --               Assert(Number_Of_X >= 2);
-    --                 declare
-    --                 Identifier : aliased String_2(1..Integer(Number_Of_X)) := (Others => NULL_CHARACTER_2);
-    --                 begin
-    --                   if
-    --                   Get_Device_Information(
-    --                     Device  => Handle,
-    --                     Command => GET_DEVICE_NAME,
-    --                     Data    => Identifier'access,
-    --                     Size    => Number_Of_X'access) < 0
-    --                   then
-    --                     raise Call_Failure;
-    --                   end if;
-    --                   File :=
-    --                     Create_File(
-    --                       Name                 => Identifier'access,
-    --                       Desired_Access       => GENERIC_READ or GENERIC_WRITE,
-    --                       Share_Mode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
-    --                       Security_Attributes  => NULL_ADDRESS,
-    --                       Creation_Desposition => OPEN_EXISTING,
-    --                       Flags_And_Attributes => 0,
-    --                       Template_File        => NULL_ADDRESS);
-    --                   Assert(File);
-    --                   Assert(Get_Device_Product(
-    --                     File   => File,
-    --                     Buffer => Product'access,
-    --                     Size   => Product'object_size / Byte'object_size));
-    --                   Assert(Get_Device_Manufacturer(
-    --                     File   => File,
-    --                     Buffer => Manufacturer'access,
-    --                     Size   => Manufacturer'object_size / Byte'object_size));
-    --                   Assert(Close_Handle(File));
-    --                   Assert(Get_Device_Information(
-    --                     Device  => Handle,
-    --                     Command => GET_PREPARSED_DATA,
-    --                     Data    => NULL_ADDRESS,
-    --                     Size    => Number_Of_X'access) /= 0);
-    --                   Assert(Number_Of_X > 1);
-    --                     declare
-    --                     Data : aliased Array_Integer_1_Unsigned_C(1..Integer(Number_Of_X)) := (others => 0);
-    --                     begin
-    --                       Assert(Get_Device_Information(
-    --                         Device  => Handle,
-    --                         Command => GET_PREPARSED_DATA,
-    --                         Data    => Data'access,
-    --                         Size    => Number_Of_X'access) /= 0);
-    --                       Assert(Get_Device_Capabilities(Data'access, Capabilities'access));
-    --                       if Number_Of_X > 0 then
-    --                           declare
-    --                           Buttons : aliased Array_Record_Button_Capability(1..Integer(Number_Of_X)) := (others => <>);
-    --                           begin
-    --                             if
-    --                             Get_Device_Buttons(
-    --                               Report_Kind => DEVICE_INPUT,
-    --                               Buttons     => Buttons'access,
-    --                               Length      => Number_Of_X'access,
-    --                               Data        => Data'access) = FAILED
-    --                             then
-    --                               raise Call_Failure;
-    --                             end if;
-    --                             Device.Number_Of_Generic_Buttons := Buttons.Bounds.Usage_Maximum - Buttons.Bounds.Usage_Minimum + 1;
-    --                               declare
-    --                               Button_Values : aliased Array_Record_Button_Values(1..Integer(Number_Of_X)) := (others => <>);
-    --                               begin
-    --                                 if
-    --                                 Get_Device_Button_Values(
-    --                                   Report_Kind   => DEVICE_INPUT,
-    --                                   Button_Values => Button_Values'access,
-    --                                   Length        => Number_Of_X'access,
-    --                                   Data          => Data'access) = FAILED
-    --                                 then
-    --                                   raise Call_Failure;
-    --                                 end if;
-    --                                 -- ???
-    --                               end;
-    --                           end;
-    --                       end if;
-    --                 end;
-    --             when others =>
-    --               raise Call_Failure;
-    --           end case;
-    --       end loop;
-    --       for I in Devices'range loop
-    --         for J in List'range loop
-    --           if Devices(I).Identifier = List(J).Handle then
-    --             exit;
-    --           end if;
-    --           if J = List'last then
-    --             Remove_Device(Devices(I).Identifier);
-    --           end if;
-    --         end loop;
-    --       end loop;
-    --     end Build_List;
-    end Update_Devices;
-  procedure Handle_Events is
-    Message : aliased Record_Message := (others => <>);
-    --XINPUT_STATE  joyData[MAX_JOYSTICKS];
-    begin
-      if Peek_Message(
-        Window         => Window,
-        Message        => Message'unchecked_access,
-        Filter_Minimum => IGNORE_MESSAGE_FILTER_MINIMUM,
-        Filter_Maximum => IGNORE_MESSAGE_FILTER_MAXIMUM,
-        Command        => REMOVE_MESSAGES_AFTER_PROCESSING) /= FAILED
-      then
-        if Message.Data = MESSAGE_QUIT then
-          Put_Line("WHAT?!");
-        end if;
-        Assert_Dummy(Translate_Message(Message'unchecked_access));
-        Assert_Dummy(Dispatch_Message(Message'unchecked_access));
-      end if;
-      --for I in 1..NUMBER_OF_GAMEPADS loop
-      --  Get_(I);
-      --end loop;
-    end Handle_Events;
-  procedure Finalize is
-    Empty_Device_Setup : aliased Record_Device_Setup :=(
-      Page   => GENERIC_DESKTOP_CONTROL,
-      Usage  => USE_RAW_MOUSE,
-      Flags  => STOP_READING_TOP_LEVEL_DEVICES,
-      Target => NULL_ADDRESS);
-    begin
-      Assert(Register_Devices(
-        Devices => Empty_Device_Setup'address,
-        Number  => Empty_Device_Setup'size / Record_Device'object_size,
-        Size    => Record_Device'object_size / Byte'object_size));
-      if Window /= NULL_ADDRESS then
-        Assert(Destroy_Window(Window));
-      end if;
-      Window := NULL_ADDRESS;
-    end Finalize;
-  function Window_Callback(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned : in Integer_4_Unsigned_C; Data_Signed : in Integer_4_Signed_C) return Integer_4_Signed_C; pragma Convention(Stdcall, Window_Callback);
-  function Window_Callback(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned : in Integer_4_Unsigned_C; Data_Signed : in Integer_4_Signed_C) return Integer_4_Signed_C is
+  function Window_Callback(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned : in Integer_Address; Data_Signed : in Integer_Address) return Integer_Address; pragma Convention(Stdcall, Window_Callback);
+  function Window_Callback(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned : in Integer_Address; Data_Signed : in Integer_Address) return Integer_Address is
+    Identifier      :         Integer_Address      := 0;
     Player          :         Integer_4_Positive   := 1;
     Number_Of_Bytes : aliased Integer_4_Unsigned_C := 0;
     Header          : aliased Record_Device_Header := (others => <>);
     begin
       case Message is
-        when EVENT_CLOSE =>
-          Post_Quit_Message(0);
-          return C_FALSE;
+        when EVENT_CLOSE => Post_Quit_Message(0); return Integer_Address(C_FALSE);
         when EVENT_INPUT =>
           Number_Of_Bytes := Record_Device_Header'object_size / Byte'object_size;
           Assert(Get_Device_Input_Data(
-            Device      => To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned(Data_Signed))),
+            Device      => To_Unchecked_Address(Data_Signed),
             Command     => GET_DEVICE_HEADER,
             Data        => Header'address,
             Size        => Number_Of_Bytes'address,
             Header_Size => Record_Device_Header'object_size / Byte'object_size) = Record_Device_Header'object_size / Byte'object_size);
+          Identifier := To_Unchecked_Integer_Address(Header.Device);
           case Header.Kind is
             when KIND_IS_KEYBOARD =>
               declare
@@ -432,37 +108,18 @@ separate (Neo.System.Input) package body Import is
               begin
                 Number_Of_Bytes := Integer_4_Unsigned_C(Record_Device_Keyboard'object_size / Byte'object_size);
                 Assert(Get_Device_Input_Data(
-                  Device      => To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned(Data_Signed))),
+                  Device      => To_Unchecked_Address(Data_Signed),
                   Command     => GET_DEVICE_DATA,
                   Data        => Keyboard'address,
                   Size        => Number_Of_Bytes'address,
                   Header_Size => Record_Device_Header'object_size / Byte'object_size) = Record_Device_Keyboard'object_size / Byte'object_size);
                 if Keyboard.Data.Key <= MAP_KEY'last and Keyboard.Data.Key >= MAP_KEY'first then
-                  if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then
-                    Is_Pressed := True;
-                  end if;
-                  case MAP_KEY(Keyboard.Data.Key) is
-                    when Shift_Key =>
-                      if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Left_Shift_Key, Is_Pressed);
-                      else
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Right_Shift_Key, Is_Pressed);
-                      end if;
-                    when Control_Key =>
-                      if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0 then
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Right_Control_Key, Is_Pressed);
-                      else
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Left_Control_Key, Is_Pressed);
-                      end if;
-                    when Alternative_Key =>
-                      if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_LEFT_SIDED) > 0  then
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Right_Alternative_Key, Is_Pressed);
-                      else
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Left_Alternative_Key, Is_Pressed);
-                      end if;
-                    when others =>
-                      Handle_Key(To_Unchecked_Integer_Address(Header.Device), MAP_KEY(Keyboard.Data.Key), Is_Pressed);
-                  end case;
+                  if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then Is_Pressed := True; end if;
+                  Inject_Key(Identifier, Is_Pressed => Is_Pressed, Key => (case MAP_KEY(Keyboard.Data.Key) is
+                    when Shift_Key       => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Shift_Key       else Right_Shift_Key),
+                    when Control_Key     => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Control_Key     else Right_Control_Key),
+                    when Alternative_Key => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Alternative_Key else Right_Alternative_Key),
+                    when others          => MAP_KEY(Keyboard.Data.Key)));
                 end if;
               end;
             when KIND_IS_MOUSE =>
@@ -471,106 +128,61 @@ separate (Neo.System.Input) package body Import is
               begin
                 Number_Of_Bytes := Integer_4_Unsigned_C(Record_Device_Mouse'object_size / Byte'object_size);
                 Assert(Get_Device_Input_Data(
-                  Device      => To_Unchecked_Address(Integer_Address(To_Unchecked_Integer_4_Unsigned(Data_Signed))),
+                  Device      => To_Unchecked_Address(Data_Signed),
                   Command     => GET_DEVICE_DATA,
                   Data        => Mouse'address,
                   Size        => Number_Of_Bytes'address,
                   Header_Size => Record_Device_Header'object_size / Byte'object_size) = Record_Device_Mouse'object_size / Byte'object_size);
-                if Mouse.Data.Last_X /= 0 or Mouse.Data.Last_Y /= 0 then
-                  Handle_Mouse(To_Unchecked_Integer_Address(Header.Device), (Integer_8_Signed(Mouse.Data.Last_X), Integer_8_Signed(Mouse.Data.Last_Y)));
-                end if;
-                if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_DOWN) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Left_Mouse_Key, True);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_UP) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Left_Mouse_Key, False);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_DOWN) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Right_Mouse_Key, True);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_UP) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Right_Mouse_Key, False);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_DOWN) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Middle_Mouse_Key, True);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_UP) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Middle_Mouse_Key, False);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_DOWN) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Auxiliary_1_Mouse_Key, True);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_UP) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Auxiliary_1_Mouse_Key, False);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_DOWN) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Auxiliary_2_Mouse_Key, True);
-                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_UP) > 0 then
-                  Handle_Key(To_Unchecked_Integer_Address(Header.Device), Auxiliary_2_Mouse_Key, False);
-                elsif
-                (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_VERTICAL) > 0 or
-                (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0
-                then
-                  declare
-                  Wheel_Delta : Integer_2_Signed :=
-                    To_Unchecked_Integer_2_Signed(
-                      Integer_2_Unsigned(
-                        Shift_Right(
-                          Value  => Integer_4_Unsigned(Mouse.Data.Button_Flags),
-                          Amount => Integer_4_Unsigned'object_size - Integer_2_Unsigned'object_size)))
-                    / MOUSE_WHEEL_DELTA;
-                  begin
-                    if Wheel_Delta < 0 then
-                      if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Horizontal_Wheel_Left_Key, True);
-                      else
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Vertical_Wheel_Down_Key, True);
-                      end if;
-                    elsif Wheel_Delta > 0 then
-                      if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Horizontal_Wheel_Right_Key, True);
-                      else
-                        Handle_Key(To_Unchecked_Integer_Address(Header.Device), Vertical_Wheel_Up_Key, True);
-                      end if;
-                    end if;
-                  end;
+                if Mouse.Data.Last_X /= 0 or Mouse.Data.Last_Y /= 0 then Inject_Mouse(Identifier, (Integer_8_Signed(Mouse.Data.Last_X), Integer_8_Signed(Mouse.Data.Last_Y))); end if;
+                if    (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_DOWN)       > 0 then Inject_Key(Identifier, Left_Mouse_Key,        True);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_LEFT_UP)         > 0 then Inject_Key(Identifier, Left_Mouse_Key,        False);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_DOWN)      > 0 then Inject_Key(Identifier, Right_Mouse_Key,       True);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_RIGHT_UP)        > 0 then Inject_Key(Identifier, Right_Mouse_Key,       False);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_DOWN)     > 0 then Inject_Key(Identifier, Middle_Mouse_Key,      True);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_UP)       > 0 then Inject_Key(Identifier, Middle_Mouse_Key,      False);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_DOWN)    > 0 then Inject_Key(Identifier, Auxiliary_1_Mouse_Key, True);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_1_UP)      > 0 then Inject_Key(Identifier, Auxiliary_1_Mouse_Key, False);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_DOWN)    > 0 then Inject_Key(Identifier, Auxiliary_2_Mouse_Key, True);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_UP)      > 0 then Inject_Key(Identifier, Auxiliary_2_Mouse_Key, False);
+                elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_VERTICAL) > 0 or (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then
+                  Inject_Key(Identifier, Is_Pressed => True, Key =>(
+                    if To_Unchecked_Integer_2_Signed(Integer_2_Unsigned(
+                      Shift_Right(Amount => 16, Value => Integer_8_Unsigned(Data_Unsigned) and 16#0000_0000_FFFF_0000#))) / MOUSE_WHEEL_DELTA < 0
+                    then (if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then Horizontal_Wheel_Left_Key else Vertical_Wheel_Down_Key)
+                    else (if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then Horizontal_Wheel_Right_Key else Vertical_Wheel_Up_Key)));
                 end if;
               end;
-            --when KIND_IS_GAMEPAD_OR_JOYSTICK => null;
-              --Assert(Get_Device_Button_Usages(
-              --  Report_Kind     => DEVICE_INPUT,
-              --  Usage_Page      => Buttons(1).Usage_Page,
-              --  Link_Collection => 0,
-              --  Usage_List      => ,
-              --  Usage_Length    => Number_Of_X'access,
-              --  Data            => Data'access,
-              --  Report          => Data.Hid.Raw_Data'access,
-              --  Report_Length   => Data.Hid.Size_Of_Hid'access));
-              --for I in 1..Integer(Number_Of_X) loop
-              --  null;
-              --end loop;
-            when others =>
-              null;
-          end case;
-        when others =>
-          null;
-      end case;
+          when others => null; end case;
+      when others => null; end case;
       return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed);
     end Window_Callback;
+  function Get_Cursor return Record_Location is
+    Point : aliased Record_Point := (others => <>);
+    begin
+      Assert(Get_Cursor_Position(Point'address));
+      return (Integer_8_Signed(Point.X), Integer_8_Signed(Point.Y));
+    end Get_Cursor;
   procedure Initialize is
-  Current_Virtual_Key : Integer_2_Unsigned_C := 0;
-  Class : aliased Record_Window_Class :=(
-    Size       => Record_Window_Class'object_size / Byte'object_size,
-    Style      => 0,
-    Callback   => Window_Callback'address,
-    Extra_A    => 0,
-    Extra_B    => 0,
-    Instance   => Get_Current_Instance,
-    Icon_Small => Load_Icon(Get_Current_Instance, GENERIC_ICON),
-    Icon_Large => Load_Icon(Get_Current_Instance, GENERIC_ICON),
-    Cursor     => Load_Cursor(NULL_ADDRESS, GENERIC_CURSOR),
-    Background => BRUSH_GRAY,
-    Menu_Name  => null,
-    Class_Name => To_Access_Constant_Character_2_C(To_String_2(Neo.System.SPECIFICS.Name)));
-  begin
-    Assert(Register_Class(Class'unchecked_access) /= Integer_2_Unsigned_C(FAILED));
-    Window :=
-      Create_Window(
+    Current_Virtual_Key : Integer_2_Unsigned_C := 0;
+    Class : aliased Record_Window_Class :=(
+      Size       => Record_Window_Class'object_size / Byte'object_size,
+      Style      => 0,
+      Callback   => Window_Callback'address,
+      Extra_A    => 0,
+      Extra_B    => 0,
+      Instance   => Get_Current_Instance,
+      Icon_Small => Load_Icon(Get_Current_Instance, GENERIC_ICON),
+      Icon_Large => Load_Icon(Get_Current_Instance, GENERIC_ICON),
+      Cursor     => Load_Cursor(NULL_ADDRESS, GENERIC_CURSOR),
+      Background => BRUSH_GRAY,
+      Menu_Name  => null,
+      Class_Name => To_Access_Constant_Character_2_C(To_String_2(Name_Class)));
+    begin
+      Assert(Register_Class(Class'unchecked_access) /= Integer_2_Unsigned_C(FAILED));
+      Window := Create_Window(
         Style_Extra => 0,
-        Class_Name  => To_String_2_C(Neo.System.SPECIFICS.Name),
-        Window_Name => To_String_2_C(Neo.System.SPECIFICS.Name),
+        Class_Name  => Name_Class,
+        Window_Name => Name_Class,
         Style       => STYLE_NO_ACTIVATE,
         X           => 0,
         Y           => 0,
@@ -580,52 +192,116 @@ separate (Neo.System.Input) package body Import is
         Menu        => 0,
         Instance    => Get_Current_Instance,
         Parameter   => NULL_ADDRESS);
-    Assert(Window);
-    declare
-    Device_Setups : aliased Array_Record_Device_Setup :=(
-      1 =>(
-        Page   => GENERIC_DESKTOP_CONTROL,
-        Usage  => USE_RAW_KEYBOARD,
-        Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        Target => Window),
-      2 =>(
-        Page   => GENERIC_DESKTOP_CONTROL,
-        Usage  => USE_RAW_MOUSE,
-        Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        Target => Window),
-      3 =>(
-        Page   => GENERIC_DESKTOP_CONTROL,
-        Usage  => USE_RAW_JOYSTICK,
-        Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-        Target => Window)
-      --4 =>(
-      --  Page   => GENERIC_DESKTOP_CONTROL,
-      --  Usage  => USE_RAW_GAMEPAD,
-      --  Flags  => TAKE_INPUT_ON_NON_ACTIVE,
-      --  Target => Window)
-      );
+      Assert(Window);
+      declare
+      Device_Setups : aliased Array_Record_Device_Setup :=(
+        (GENERIC_DESKTOP_CONTROL, USE_RAW_KEYBOARD, TAKE_INPUT_ON_NON_ACTIVE, Window),
+        (GENERIC_DESKTOP_CONTROL, USE_RAW_MOUSE,    TAKE_INPUT_ON_NON_ACTIVE, Window),
+        (GENERIC_DESKTOP_CONTROL, USE_RAW_JOYSTICK, TAKE_INPUT_ON_NON_ACTIVE, Window));
+      begin
+        Assert(Register_Devices(
+          Devices => Device_Setups'address,
+          Number  => Device_Setups'Length,
+          Size    => Record_Device_Setup'object_size / Byte'object_size));
+      end;
+    end Initialize;
+  function Update return Boolean is
+    Number_Of_Devices : aliased Integer_4_Unsigned_C := 0;
+    State             : aliased Record_Gamepad_State := (others => <>);
+    Message           : aliased Record_Message       := (others => <>);
+    Has_Gamepad       :         Array_Boolean(1..4)  := (others => False);
+    File              :         Address              := NULL_ADDRESS;
+    Current_Device    :         Ordered_Map_Record_Device.Cursor;
+    procedure Unpack_Button(Player : in Integer_4_Signed; Raw : in Integer_2_Unsigned_C; Key : in Enumerated_Xbox_Key) is
+      begin
+        if (State.Gamepad.Buttons and Raw) /= (Gamepad_States(Player).Buttons and Raw) then
+          if (State.Gamepad.Buttons and Raw) > 0 then Inject_Key(Integer_Address(Player), Key, True);
+          else Inject_Key(Integer_Address(Player), Key, False); end if;
+        end if;
+      end Unpack_Button;
+    procedure Unpack_Stick(Player : in Integer_4_Signed; Stick : in Enumerated_Stick; X, Y : in Integer_2_Signed_C) is
+      begin
+        Inject_Stick(Integer_Address(Player), Stick,((
+          if X > 0 then Float_4_Range(Float_4_Real(X) / Float_4_Real(Integer_2_Signed_C'last))
+          else          Float_4_Range(Float_4_Real(X) / Float_4_Real(Integer_2_Signed_C'first))),(
+          if Y > 0 then Float_4_Range(Float_4_Real(Y) / Float_4_Real(Integer_2_Signed_C'last))
+          else          Float_4_Range(Float_4_Real(Y) / Float_4_Real(Integer_2_Signed_C'first)))));
+      end Unpack_Stick;
     begin
-      Assert(Register_Devices(
-        Devices => Device_Setups'address,
-        Number  => Device_Setups'Length,
-        Size    => Record_Device_Setup'object_size / Byte'object_size));
-    end;
-    for I in MAP_VIRTUAL_KEY'range loop
-      Current_Virtual_Key := 0;
-      for J in MAP_KEY'range loop
-        if I = MAP_KEY(J) then
-          Current_Virtual_Key := J;
-          exit;
+      Assert(Get_Device_List(NULL_ADDRESS, Number_Of_Devices'address, Record_Device_List_Element'Object_Size / Byte'object_size) /= -1);
+      Assert(Number_Of_Devices /= 0);
+      declare
+      List : aliased Array_Record_Device_List_Element(1..Integer(Number_Of_Devices)) := (others => <>);
+      begin
+        Assert(Get_Device_List(List(List'first)'address, Number_Of_Devices'address, Record_Device_List_Element'Object_Size / Byte'object_size) /= -1);
+        for I in List'range loop
+          if not Has_Device(To_Unchecked_Integer_Address(List(I).Handle)) then
+            case List(I).Kind is
+              when KIND_IS_KEYBOARD => Add_Device(To_Unchecked_Integer_Address(List(I).Handle), (Keyboard_Device, others => <>));
+              when KIND_IS_MOUSE    => Add_Device(To_Unchecked_Integer_Address(List(I).Handle), (Mouse_Device,    others => <>));
+            when others => null; end case;
+          end if;
+        end loop;
+        Current_Device := Devices.First;
+        while Devices.Has_Element(Current_Device) loop
+          if Devices.Key(Current_Device) in 0..3 then
+            Has_Gamepad(Integer_4_Signed(Devices.Key(Current_Device)) + 1) := True;
+            if Get_XInput_State(Integer_4_Unsigned_C(Devices.Key(Current_Device)), State'unchecked_access) /= 0 then Remove_Device(Devices.Key(Current_Device)); end if;
+          else
+            for J in List'range loop
+              if Devices.Key(Current_Device) = To_Unchecked_Integer_Address(List(J).Handle) then exit; end if;
+              if J = List'last then Remove_Device(Devices.Key(Current_Device)); end if;
+            end loop;
+          end if;
+          Devices.Next(Current_Device);
+        end loop;
+        for I in Gamepad_States'range loop
+          if not Has_Gamepad(I + 1) then
+            if Get_XInput_State(Integer_4_Unsigned_C(I), State'unchecked_access) = 0 then Add_Device(Integer_Address(I), (XBox_Device, others => <>)); end if;
+          end if;
+        end loop;
+      end;
+      while Peek_Message(
+        Window         => Window,
+        Message        => Message'unchecked_access,
+        Filter_Minimum => IGNORE_MESSAGE_FILTER_MINIMUM,
+        Filter_Maximum => IGNORE_MESSAGE_FILTER_MAXIMUM,
+        Command        => REMOVE_MESSAGES_AFTER_PROCESSING) /= FAILED
+      loop
+        if Message.Data = MESSAGE_QUIT then return False; end if;
+        Assert_Dummy(Translate_Message(Message'unchecked_access));
+        Assert_Dummy(Dispatch_Message(Message'unchecked_access));
+      end loop;
+      for I in Gamepad_States'range loop
+        if Get_XInput_State(Integer_4_Unsigned_C(I), State'unchecked_access) = 0 and then Gamepad_States(I) /= State.Gamepad then
+          Unpack_Button(I, GAMEPAD_A,                     Green_A_Key);
+          Unpack_Button(I, GAMEPAD_B,                     Red_B_Button_Key);
+          Unpack_Button(I, GAMEPAD_X,                     Blue_X_Key);
+          Unpack_Button(I, GAMEPAD_Y,                     Yellow_Y_Key);
+          Unpack_Button(I, GAMEPAD_BACK,                  Back_Key);
+          Unpack_Button(I, GAMEPAD_START,                 Start_Key);
+          Unpack_Button(I, GAMEPAD_THUMB_LEFT,            Left_Stick_Key);
+          Unpack_Button(I, GAMEPAD_THUMB_RIGHT,           Right_Stick_Key);
+          Unpack_Button(I, GAMEPAD_BUMPER_LEFT,           Left_Bumper_Key);
+          Unpack_Button(I, GAMEPAD_BUMPER_RIGHT,          Right_Bumper_Key);
+          Unpack_Button(I, GAMEPAD_DIRECTIONAL_PAD_UP,    Directional_Pad_Up_Key);
+          Unpack_Button(I, GAMEPAD_DIRECTIONAL_PAD_DOWN,  Directional_Pad_Down_Key);
+          Unpack_Button(I, GAMEPAD_DIRECTIONAL_PAD_LEFT,  Directional_Pad_Left_Key);
+          Unpack_Button(I, GAMEPAD_DIRECTIONAL_PAD_RIGHT, Directional_Pad_Right_Key);
+          if State.Gamepad.Thumb_Left_X  /= Gamepad_States(I).Thumb_Left_X  or State.Gamepad.Thumb_Left_Y  /= Gamepad_States(I).Thumb_Left_Y  then Unpack_Stick(I, Left_Stick,  State.Gamepad.Thumb_Left_X,  State.Gamepad.Thumb_Left_Y);  end if;
+          if State.Gamepad.Thumb_Right_X /= Gamepad_States(I).Thumb_Right_X or State.Gamepad.Thumb_Right_Y /= Gamepad_States(I).Thumb_Right_Y then Unpack_Stick(I, Right_Stick, State.Gamepad.Thumb_Right_X, State.Gamepad.Thumb_Right_Y); end if;
+          if State.Gamepad.Left_Trigger  /= Gamepad_States(I).Left_Trigger  then Inject_Trigger(Integer_Address(I), Left_Trigger,  Float_4_Real(State.Gamepad.Left_Trigger)  / Float_4_Real(Integer_1_Unsigned_C'last) * 100.0); end if;
+          if State.Gamepad.Right_Trigger /= Gamepad_States(I).Right_Trigger then Inject_Trigger(Integer_Address(I), Right_Trigger, Float_4_Real(State.Gamepad.Right_Trigger) / Float_4_Real(Integer_1_Unsigned_C'last) * 100.0); end if;
+          Gamepad_States(I) := State.Gamepad;
         end if;
       end loop;
-      MAP_VIRTUAL_KEY(I) := Current_Virtual_Key;
-    end loop;
-    end Initialize;
-  end Import;
-
-
-
-
-
-
-
+      return True;
+    end Update;
+  procedure Finalize is
+    Empty_Device_Setup : aliased Record_Device_Setup := (GENERIC_DESKTOP_CONTROL, USE_RAW_MOUSE, STOP_READING_TOP_LEVEL_DEVICES, NULL_ADDRESS);
+    begin
+      Assert(Register_Devices(Empty_Device_Setup'address, Empty_Device_Setup'size / Record_Device'object_size, Record_Device'object_size / Byte'object_size));
+      if Window /= NULL_ADDRESS then Assert(Destroy_Window(Window)); end if;
+      Window := NULL_ADDRESS;
+    end Finalize;
+end Import;

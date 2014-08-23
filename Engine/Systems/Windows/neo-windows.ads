@@ -11,10 +11,16 @@ WTF2 : Integer_4_Signed_C := -2;
     GENERIC_ICON                               : constant Integer_Address      := 16#7F00#;
     BRUSH_GRAY                                 : constant Integer_Address      := 16#0011#;
     BRUSH_WINDOW                               : constant Integer_Address      := 16#0005#; -- COLOR_WINDOW
-    FONT_WEIGHT_LIGHT                          : constant Integer_4_Signed_C   := 300;
+   FONT_WEIGHT_LIGHT                          : constant Integer_4_Signed_C   := 300;
     CAPITAL_LOCK                               : constant Integer_1_Unsigned_C := 1;
-    KEYBOARD_DEAD_CHARACTER                    : constant Character_2_C        := CHaracter_2_C'val(61440); -- 16#F000#
-    KEYBOARD_NO_CHARACTER                      : constant Character_2_C        := CHaracter_2_C'val(61441);-- 16#F001#
+    KEYBOARD_DEAD_CHARACTER                    : constant Integer_2_Unsigned   := 16#F001#;
+    KEYBOARD_NO_CHARACTER                      : constant Integer_2_Unsigned   := 16#F000#;
+    EVENT_TEXT_GET_LINE                        : constant Integer_4_Unsigned_C := 16#0000_00CE#;
+    EVENT_TEXT_GET_SELECTION               : constant Integer_4_Unsigned_C := 16#0000_00B0#;
+    EVENT_TEXT_SET_SELECTION               : constant Integer_4_Unsigned_C := 16#0000_00B1#;
+    EVENT_TEXT_GET_BUFFER                    : constant Integer_4_Unsigned_C := 16#0000_000D#;
+    SUBEVENT_SCROLL_BOTTOM                    : constant Integer_Address := 16#0000_0007#;
+    SUBEVENT_SCROLL_DOWN_LINE              : constant Integer_Address := 16#0000_0001#;
     FONT_FAMILY_SWISS                          : constant Integer_4_Unsigned_C := 16#0000_0020#;
     FONT_FAMILY_MODERN                         : constant Integer_4_Unsigned_C := 16#0000_0030#;
     FONT_FIXED_PITCH                           : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -168,23 +174,22 @@ WTF2 : Integer_4_Signed_C := -2;
     SUBEVENT_MOUSE_BUTTON_EXTRA_1_UP           : constant Integer_4_Unsigned_C := 16#0000_0080#;
     SUBEVENT_MOUSE_BUTTON_EXTRA_2_DOWN         : constant Integer_4_Unsigned_C := 16#0000_0100#;
     SUBEVENT_MOUSE_BUTTON_EXTRA_2_UP           : constant Integer_4_Unsigned_C := 16#0000_0200#;
-    SUBEVENT_ACTIVATED_BY_CLICK                : constant Integer_4_Unsigned_C := 16#0000_0002#;
     SUBEVENT_KEY_COMBINATION_ALT_ENTER         : constant Integer_4_Unsigned_C := 16#0000_000D#;
-    SUBEVENT_RESIZE_BOTTOM_RIGHT               : constant Integer_4_Unsigned_C := 16#0000_0008#;
-    SUBEVENT_RESIZE_BOTTOM_LEFT                : constant Integer_4_Unsigned_C := 16#0000_0007#;
-    SUBEVENT_RESIZE_TOP_RIGHT                  : constant Integer_4_Unsigned_C := 16#0000_0005#;
-    SUBEVENT_RESIZE_TOP_LEFT                   : constant Integer_4_Unsigned_C := 16#0000_0004#;
-    SUBEVENT_RESIZE_BOTTOM                     : constant Integer_4_Unsigned_C := 16#0000_0006#;
-    SUBEVENT_RESIZE_RIGHT                      : constant Integer_4_Unsigned_C := 16#0000_0002#;
-    SUBEVENT_RESIZE_LEFT                       : constant Integer_4_Unsigned_C := 16#0000_0001#;
-    SUBEVENT_RESIZE_TOP                        : constant Integer_4_Unsigned_C := 16#0000_0003#;
-    SUBEVENT_RESIZE_SNAPBACK                   : constant Integer_4_Unsigned_C := 16#0000_0009#;
-    SUBEVENT_CLICK_ACTIVATION                  : constant Integer_4_Unsigned_C := 16#0000_0002#;
-    SUBEVENT_FULLSCREENED                      : constant Integer_4_Unsigned_C := 16#0000_0002#;
+    SUBEVENT_RESIZE_BOTTOM_RIGHT               : constant Integer_Address := 16#0000_0008#;
+    SUBEVENT_RESIZE_BOTTOM_LEFT                : constant Integer_Address := 16#0000_0007#;
+    SUBEVENT_RESIZE_TOP_RIGHT                  : constant Integer_Address := 16#0000_0005#;
+    SUBEVENT_RESIZE_TOP_LEFT                   : constant Integer_Address := 16#0000_0004#;
+    SUBEVENT_RESIZE_BOTTOM                     : constant Integer_Address := 16#0000_0006#;
+    SUBEVENT_RESIZE_RIGHT                      : constant Integer_Address := 16#0000_0002#;
+    SUBEVENT_RESIZE_LEFT                       : constant Integer_Address := 16#0000_0001#;
+    SUBEVENT_RESIZE_TOP                        : constant Integer_Address := 16#0000_0003#;
+    SUBEVENT_RESIZE_SNAPBACK                   : constant Integer_Address := 16#0000_0009#;
+    SUBEVENT_CLICK_ACTIVATION                  : constant Integer_Address := 16#0000_0002#;
+    SUBEVENT_FULLSCREENED                      : constant Integer_Address := 16#0000_0002#;
     SUBEVENT_RESTORED                          : constant Integer_4_Unsigned_C := 16#0000_0000#;
-    SUBEVENT_ICONIZED                          : constant Integer_4_Unsigned_C := 16#0000_0001#;
-    SUBEVENT_MENU_POPOUT                       : constant Integer_4_Unsigned_C := 16#0000_F100#;
-    SUBEVENT_SCREEN_SAVER_START                : constant Integer_4_Unsigned_C := 16#0000_F140#;
+    SUBEVENT_ICONIZED                          : constant Integer_Address := 16#0000_0001#;
+    SUBEVENT_MENU_POPOUT                       : constant Integer_Address := 16#0000_F100#;
+    SUBEVENT_SCREEN_SAVER_START                : constant Integer_Address := 16#0000_F140#;
     SUBEVENT_WORD_LOW                          : constant Integer_4_Unsigned_C := 16#0000_FFFF#;
     SUBEVENT_WORD_HIGH                         : constant Integer_4_Unsigned_C := 16#FFFF_0000#;
     SUBEVENT_SHORT_LOW                         : constant Integer_2_Unsigned_C := 16#00FF#;
@@ -206,35 +211,20 @@ WTF2 : Integer_4_Signed_C := -2;
     USE_RAW_GAME_PAD                           : constant Integer_2_Unsigned_C := 16#0005#;
     USE_RAW_KEYPAD                             : constant Integer_2_Unsigned_C := 16#0004#;
     GENERIC_DESKTOP_CONTROL                    : constant Integer_2_Unsigned_C := 16#0001#;
-    LANGUAGE_ARABIC                            : constant Integer_2_Unsigned_C := 16#0401#;
-    LANGUAGE_BASQUE                            : constant Integer_2_Unsigned_C := 16#042D#;
-    LANGUAGE_CATALAN                           : constant Integer_2_Unsigned_C := 16#0403#;
-    LANGUAGE_CHINESE_SIMPLIFIED                : constant Integer_2_Unsigned_C := 16#0804#;
-    LANGUAGE_CHINESE_TRADITIONAL               : constant Integer_2_Unsigned_C := 16#0404#;
-    LANGUAGE_CZECH                             : constant Integer_2_Unsigned_C := 16#0405#;
-    LANGUAGE_DANISH                            : constant Integer_2_Unsigned_C := 16#0406#;
-    LANGUAGE_DUTCH                             : constant Integer_2_Unsigned_C := 16#0413#;
-    LANGUAGE_ENGLISH                           : constant Integer_2_Unsigned_C := 16#0409#;
-    LANGUAGE_FINNISH                           : constant Integer_2_Unsigned_C := 16#040B#;
-    LANGUAGE_FRENCH                            : constant Integer_2_Unsigned_C := 16#040C#;
-    LANGUAGE_GERMAN                            : constant Integer_2_Unsigned_C := 16#0407#;
-    LANGUAGE_GREEK                             : constant Integer_2_Unsigned_C := 16#0408#;
-    LANGUAGE_HEBREW                            : constant Integer_2_Unsigned_C := 16#040D#;
-    LANGUAGE_HUNGARIAN                         : constant Integer_2_Unsigned_C := 16#040E#;
-    LANGUAGE_ITALIAN                           : constant Integer_2_Unsigned_C := 16#0410#;
-    LANGUAGE_JAPANESE                          : constant Integer_2_Unsigned_C := 16#0411#;
-    LANGUAGE_KOREAN                            : constant Integer_2_Unsigned_C := 16#0412#;
-    LANGUAGE_NORWEGIAN                         : constant Integer_2_Unsigned_C := 16#0414#;
-    LANGUAGE_POLISH                            : constant Integer_2_Unsigned_C := 16#0415#;
-    LANGUAGE_PORTUGUESE                        : constant Integer_2_Unsigned_C := 16#0816#;
-    LANGUAGE_PORTUGUESE_BRAZIL                 : constant Integer_2_Unsigned_C := 16#0416#;
-    LANGUAGE_RUSSIAN                           : constant Integer_2_Unsigned_C := 16#0419#;
-    LANGUAGE_SLOVAKIAN                         : constant Integer_2_Unsigned_C := 16#041B#;
-    LANGUAGE_SLOVENIAN                         : constant Integer_2_Unsigned_C := 16#0424#;
-    LANGUAGE_SPANISH                           : constant Integer_2_Unsigned_C := 16#0C0A#;
-    LANGUAGE_SWEDISH                           : constant Integer_2_Unsigned_C := 16#041D#;
-    LANGUAGE_TURKISH                           : constant Integer_2_Unsigned_C := 16#041F#;
-    LANGUAGE_NEUTRAL                           : constant Integer_1_Unsigned_C := 16#00#;
+    GAMEPAD_DIRECTIONAL_PAD_UP                 : constant Integer_2_Unsigned_C := 16#0001#; -- XINPUT_GAMEPAD_DPAD_UP
+    GAMEPAD_DIRECTIONAL_PAD_DOWN               : constant Integer_2_Unsigned_C := 16#0002#; -- XINPUT_GAMEPAD_DPAD_DOWN
+    GAMEPAD_DIRECTIONAL_PAD_LEFT               : constant Integer_2_Unsigned_C := 16#0004#; -- XINPUT_GAMEPAD_DPAD_LEFT
+    GAMEPAD_DIRECTIONAL_PAD_RIGHT              : constant Integer_2_Unsigned_C := 16#0008#; -- XINPUT_GAMEPAD_DPAD_RIGHT
+    GAMEPAD_START                              : constant Integer_2_Unsigned_C := 16#0010#; -- XINPUT_GAMEPAD_START
+    GAMEPAD_BACK                               : constant Integer_2_Unsigned_C := 16#0020#; -- XINPUT_GAMEPAD_BACK
+    GAMEPAD_THUMB_LEFT                         : constant Integer_2_Unsigned_C := 16#0040#; -- XINPUT_GAMEPAD_LEFT_THUMB
+    GAMEPAD_THUMB_RIGHT                        : constant Integer_2_Unsigned_C := 16#0080#; -- XINPUT_GAMEPAD_RIGHT_THUMB
+    GAMEPAD_BUMPER_LEFT                               : constant Integer_2_Unsigned_C := 16#0100#; -- XINPUT_GAMEPAD_LEFT_SHOULDER
+    GAMEPAD_BUMPER_RIGHT                              : constant Integer_2_Unsigned_C := 16#0200#; -- XINPUT_GAMEPAD_RIGHT_SHOULDER
+    GAMEPAD_A                                  : constant Integer_2_Unsigned_C := 16#1000#; -- XINPUT_GAMEPAD_A
+    GAMEPAD_B                                  : constant Integer_2_Unsigned_C := 16#2000#; -- XINPUT_GAMEPAD_B
+    GAMEPAD_X                                  : constant Integer_2_Unsigned_C := 16#4000#; -- XINPUT_GAMEPAD_X
+    GAMEPAD_Y                                  : constant Integer_2_Unsigned_C := 16#8000#; -- XINPUT_GAMEPAD_Y
     SUBLANGUAGE_DEFAULT                        : constant Integer_1_Unsigned_C := 16#01#;
     PATH_SYSTEM_X86                            : constant Integer_4_Signed_C   := To_Unchecked_Integer_4_SIgned_C(16#0000_0029#); -- CSIDL_SYSTEMX86
     GET_CLASS_CURSOR                           : constant Integer_4_Signed_C   := -12;
@@ -368,48 +358,41 @@ WTF2 : Integer_4_Signed_C := -2;
     --     Product : Integer_2_Unsigned_C := 0;
     --     Version : Integer_2_Unsigned_C := 0;
     --   end record;
--- typedef struct _XINPUT_GAMEPAD
--- {
---     WORD                                wButtons;
---     BYTE                                bLeftTrigger;
---     BYTE                                bRightTrigger;
---     SHORT                               sThumbLX;
---     SHORT                               sThumbLY;
---     SHORT                               sThumbRX;
---     SHORT                               sThumbRY;
--- } XINPUT_GAMEPAD, *PXINPUT_GAMEPAD;
--- typedef struct _XINPUT_STATE
--- {
---     DWORD                               dwPacketNumber;
---     XINPUT_GAMEPAD                      Gamepad;
--- } XINPUT_STATE, *PXINPUT_STATE;
--- typedef struct _XINPUT_VIBRATION
--- {
---     WORD                                wLeftMotorSpeed;
---     WORD                                wRightMotorSpeed;
--- } XINPUT_VIBRATION, *PXINPUT_VIBRATION;
--- typedef struct _XINPUT_CAPABILITIES
--- {
---     BYTE                                type;
---     BYTE                                SubType;
---     WORD                                Flags;
---     XINPUT_GAMEPAD                      Gamepad;
---     XINPUT_VIBRATION                    Vibration;
--- } XINPUT_CAPABILITIES, *PXINPUT_CAPABILITIES;
--- #ifndef XINPUT_USE_9_1_0
--- typedef struct _XINPUT_BATTERY_INFORMATION
--- {
---     BYTE BatteryType;
---     BYTE BatteryLevel;
--- } XINPUT_BATTERY_INFORMATION, *PXINPUT_BATTERY_INFORMATION;
--- typedef struct _XINPUT_KEYSTROKE
--- {
---     WORD    VirtualKey;
---     WCHAR   Unicode;
---     WORD    Flags;
---     BYTE    UserIndex;
---     BYTE    HidCode;
--- } XINPUT_KEYSTROKE, *PXINPUT_KEYSTROKE;
+    type Record_Gamepad is record -- XINPUT_GAMEPAD
+        Buttons       : Integer_2_Unsigned_C := 0; -- wButtons
+        Left_Trigger  : Integer_1_Unsigned_C := 0; -- bLeftTrigger
+        Right_Trigger : Integer_1_Unsigned_C := 0; -- bRightTrigger
+        Thumb_Left_X  : Integer_2_Signed_C := 0; -- sThumbLX
+        Thumb_Left_Y  : Integer_2_Signed_C := 0; -- sThumbLY
+        Thumb_Right_X : Integer_2_Signed_C := 0; -- sThumbRX
+        Thumb_Right_Y : Integer_2_Signed_C := 0; -- sThumbRY
+      end record;
+    type Record_Gamepad_State is record -- XINPUT_STATE
+        Packet_Number : Integer_4_Unsigned_C := 0; -- dwPacketNumber
+        Gamepad       : Record_Gamepad       := (others => <>); -- Gamepad
+      end record;
+    type Record_Vibration is record -- XINPUT_VIBRATION
+        Left_Motor_Speed  : Integer_2_Unsigned_C := 0; -- wLeftMotorSpeed
+        Right_Motor_Speed : Integer_2_Unsigned_C := 0; -- wRightMotorSpeed
+      end record;
+    type Record_Capabilities is record -- XINPUT_CAPABILITIES
+        Kind      : Integer_1_Unsigned_C := 0; -- type
+        Sub_Kind  : Integer_1_Unsigned_C := 0; -- SubType
+        Flags     : Integer_2_Unsigned_C := 0; -- Flags;
+        Gamepad   : Record_Gamepad       := (others => <>); -- Gamepad
+        Vibration : Record_Vibration     := (others => <>); -- Vibration
+      end record;
+    type Record_Battery_Information is record -- XINPUT_BATTERY_INFORMATION
+        Battery_Type  : Integer_1_Unsigned_C := 0; -- BatteryType
+        Battery_Level : Integer_1_Unsigned_C := 0; -- BatteryLevel
+      end record;
+    type Record_Keystroke is record -- XINPUT_KEYSTROKE
+        Virtual_Key : Integer_2_Unsigned_C := 0; -- VirtualKey
+        Unicode     : Character_2_C        := NULL_CHARACTER_2_C; -- Unicode
+        Flags       : Integer_2_Unsigned_C := 0; -- Flags
+        User_Index  : Integer_1_Unsigned_C := 0; -- UserIndex
+        HID_Code    : Integer_1_Unsigned_C := 0; -- HidCode
+      end record;
     -- type Record_Device_Capabilities
     --   is record
     --     Usage                                 : Integer_2_Unsigned_C  := 0;
@@ -492,9 +475,13 @@ WTF2 : Integer_4_Signed_C := -2;
     --     Information : Address; -- Changes on 64/32 bit systems
     --   end record;
     --   pragma Convention(C, Record_Mouse);
+    type Record_Common_Controls is record -- INITCOMMONCONTROLSEX
+        Size : Integer_4_Unsigned_C := Record_Common_Controls'size / Byte'size; -- dwSize
+        Flags : Integer_4_Unsigned_C := 16#0000_4000#; -- dwICC
+      end record; pragma Convention(C, Record_Common_Controls);
     type Record_Scroll_Information is record -- SCROLLINFO
         Size : Integer_4_Unsigned_C := Record_Scroll_Information'size / Byte'size; -- cbSize
-        Mask : Integer_4_Unsigned_C := 0; -- fMask
+        Mask : Integer_4_Unsigned_C := 16#001F#; -- fMask
         Minimum : Integer_4_Signed_C := 0; -- nMin
         Maximum : Integer_4_Signed_C := 0; -- nMax
         Page : Integer_4_Unsigned_C := 0; -- nPage
@@ -775,7 +762,6 @@ WTF2 : Integer_4_Signed_C := -2;
         Descriptor     : Address              := NULL_ADDRESS;
         Inherit_Handle : Integer_4_Signed_C   := 0;
       end record; pragma Convention(C, Record_Security_Attributes);
-
     type Record_Virtual_Key_To_Bit is record       -- VK_TO_BIT
         Virtual_Key   : Integer_1_Unsigned_C := 0; -- Vk
         Modifier_Bits : Integer_1_Unsigned_C := 0; -- ModBits
@@ -833,9 +819,11 @@ WTF2 : Integer_4_Signed_C := -2;
         Virtual_Scancode_To_Virtual_Key_E1      : Access_Record_Virtual_Scancode_To_Virtual_Key        := null; -- pVSCtoVK_E1
         Local_Flags                             : Integer_4_Unsigned_C                                 := 0;    -- fLocaleFlags
         Ligature_Maximum                        : Integer_1_Unsigned_C                                 := 0;    -- nLgMax
+        Ligature_Entry                          : Integer_1_Unsigned_C                                 := 0;    -- cbLgEntry
+        Ligature                                : Integer_Address                                      := 0;    -- pLigature
         Kind                                    : Integer_4_Unsigned_C                                 := 0;    -- dwType
         Subkind                                 : Integer_4_Unsigned_C                                 := 0;    -- dwSubType
-      end record; pragma Convention(C, Record_Keyboard_Tables);
+     end record; pragma Convention(C, Record_Keyboard_Tables);
       type Access_Record_Keyboard_Tables is access all Record_Keyboard_Tables;
     type Array_Record_Device_List_Element
       is array(Positive range <>)
@@ -850,7 +838,10 @@ WTF2 : Integer_4_Signed_C := -2;
     --   is access all Record_Device_List;
     -- type Access_Array_Record_Device_List
     --   is access all Array_Record_Device_List;
-    type Access_Function_Get_Keyboard_Layer_Descriptor is access function return Access_Record_Keyboard_Tables;
+    type Access_Record_Gamepad_State is access all Record_Gamepad_State;
+    type Access_Record_Vibration is access all Record_Vibration;
+    type Access_Record_Capabilities is access all Record_Capabilities;
+    type Access_Function_Get_Keyboard_Layer_Descriptor is access function return Address;
     type Access_Record_Version_Information is access all Record_Version_Information;
     type Access_Record_Memory_Status is access all Record_Memory_Status;
     type Access_Record_Key is access all Record_Key;
@@ -868,6 +859,7 @@ WTF2 : Integer_4_Signed_C := -2;
     type Access_Record_Log_Font is access all Record_Log_Font;
     type Access_Record_Minimum_Maximum_Information is access all Record_Minimum_Maximum_Information;
     type Access_Record_Scroll_Information is access all Record_Scroll_Information;
+    function To_Unchecked_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_Address, Access_Record_Rectangle);
     function To_Unchecked_Access_Record_Virtual_Key_To_Character_2_C is new Ada.Unchecked_Conversion(Integer_Address, Access_Record_Virtual_Key_To_Character_2_C);
     function To_Unchecked_Access_Function_Get_Keyboard_Layer_Descriptor is new Ada.Unchecked_Conversion(Address, Access_Function_Get_Keyboard_Layer_Descriptor);
     --function To_Integer_4_Signed_C is new Ada.Unchecked_Conversion(Access_Record_Mouse, Integer_4_Signed_C);
@@ -876,22 +868,6 @@ WTF2 : Integer_4_Signed_C := -2;
     function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Address, Access_Record_Rectangle);
     --function To_Access_Record_Key is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Key);
     --function To_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_4_Signed_C, Access_Record_Rectangle);
-    -- DWORD WINAPI XInputGetState
-    -- (
-    --     DWORD         dwUserIndex,  // Index of the gamer associated WITH the device
-    --     XINPUT_STATE* pState        // Receives the current state
-    -- );
-    -- DWORD WINAPI XInputSetState
-    -- (
-    --     DWORD             dwUserIndex,  // Index of the gamer associated WITH the device
-    --     XINPUT_VIBRATION* pVibration    // The vibration information to send to the controller
-    -- );
-    -- DWORD WINAPI XInputGetDSoundAudioDeviceGuids
-    -- (
-    --     DWORD dwUserIndex,          // Index of the gamer associated WITH the device
-    --     GUID* pDSoundRenderGuid,    // DSound device ID for render
-    --     GUID* pDSoundCaptureGuid    // DSound device ID for capture
-    -- );
     -- procedure Get_Device_Identifier(
     --   Identifier : in Access_Device_Identifier);
     -- function Write_File(
@@ -946,6 +922,36 @@ WTF2 : Integer_4_Signed_C := -2;
     --   Enumerator    : in Address;
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
+    function Get_XInput_State( -- XInputGetState
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      State      : in Access_Record_Gamepad_State) -- pState
+      return Integer_4_Unsigned_C; -- DWORD
+    function Set_XInput_State( -- XInputSetState
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      Vibration  : in Access_Record_Vibration) -- pVibration
+      return Integer_4_Unsigned_C; -- DWORD
+    function Get_XInput_Capabilities( -- XInputGetCapabilities
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      Flags      : in Integer_4_Unsigned_C; -- dwFlags
+      Capabilities : in Access_Record_Capabilities) -- pCapabilities
+      return Integer_4_Unsigned_C; -- DWORD
+    procedure Enable_XInput( -- XInputEnable
+      Enable : in Integer_4_Signed_C); -- enable
+    function Get_XInput_Direct_Sound_Device_GUIDS( -- XInputGetDSoundAudioDeviceGuids
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      Render_GUID : in Address; -- pDSoundRenderGuid
+      Capture_GUID : in Address) -- pDSoundCaptureGuid
+      return Integer_4_Unsigned_C; -- DWORD
+    function Get_XInput_Battery_Information(-- XInputGetBatteryInformation
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      Developer_Kind : in Integer_1_Unsigned_C; -- devType
+      Battery_Information : in Record_Battery_Information) -- pBatteryInformation
+      return Integer_4_Unsigned_C; -- DWORD
+    function Get_XInput_Keystroke( -- XInputGetKeystroke
+      User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
+      Reserved   : in Integer_4_Unsigned_C; -- dwReserved
+      Keystroke  : in Record_Keystroke) -- pKeystroke
+      return Integer_4_Unsigned_C; -- DWORD
     function Get_Window_Text( -- GetWindowText
       Window : in Address; -- hWnd
       Text   : in Access_String_2_C; -- lpString
@@ -1186,7 +1192,12 @@ WTF2 : Integer_4_Signed_C := -2;
       Bits_AND   : in Address;
       Bits_XOR   : in Address)
       return Address;
-    function Change_Class_Setting(
+    function Change_Class_Setting_64(
+      Window  : in Address;
+      Command : in Integer_4_Signed_C;
+      Setting : in Integer_Address)
+      return Integer_Address;
+    function Change_Class_Setting_32(
       Window  : in Address;
       Command : in Integer_4_Signed_C;
       Setting : in Integer_4_Unsigned_C)
@@ -1410,9 +1421,9 @@ WTF2 : Integer_4_Signed_C := -2;
     function Call_Next_Hook(
       Hook          : in Address;
       Code          : in Integer_4_Signed_C;
-      Data_Unsigned   : in Integer_4_Unsigned_C;
-      Data_Signed : in Integer_4_Signed_C)
-      return Integer_4_Signed_C;
+      Data_Unsigned   : in Integer_Address;
+      Data_Signed : in Integer_Address)
+      return Integer_Address;
     function Set_Windows_Hook(
       Hook      : in Integer_4_Signed_C;
       Callback  : in Address;
@@ -1590,7 +1601,30 @@ WTF2 : Integer_4_Signed_C := -2;
       Window : in Address; -- hWnd,
       Invert : in Integer_4_Signed_C) -- bInvert
       return Integer_4_Signed_C; -- BOOL
+  --HKL WINAPI GetKeyboardLayout(
+  --_In_  DWORD idThread
+--);
+    function Get_Keyboard_Layout(
+      Thread_Id : in Integer_4_Unsigned_C)
+      return Integer_Address;
+    function Initialize_Common_Controls( -- InitCommonControlsEx
+      Initialize_Controls : in Address) -- lpInitCtrls
+      return Integer_4_Signed_C; -- BOOL
+    function Get_Window_Thread_Process_ID( -- GetWindowThreadProcessId
+      Window : in Address; -- hWnd
+      Process_Id : in Address) -- lpdwProcessId
+      return Integer_4_Unsigned_C;
 private
+    pragma Import(Stdcall, Get_XInput_State, "XInputGetState");
+    pragma Import(Stdcall, Set_XInput_State, "XInputSetState");
+    pragma Import(Stdcall, Get_XInput_Capabilities, "XInputGetCapabilities");
+    pragma Import(Stdcall, Enable_XInput, "XInputEnable");
+    pragma Import(Stdcall, Get_XInput_Direct_Sound_Device_GUIDS, "XInputGetDSoundAudioDeviceGuids");
+    pragma Import(Stdcall, Get_XInput_Battery_Information, "XInputGetBatteryInformation");
+    pragma Import(Stdcall, Get_XInput_Keystroke, "XInputGetKeystroke");
+    pragma Import(Stdcall, Get_Window_Thread_Process_ID, "GetWindowThreadProcessId");
+    pragma Import(Stdcall, Initialize_Common_Controls, "InitCommonControlsEx");
+    pragma Import(Stdcall, Get_Keyboard_Layout, "GetKeyboardLayout");
     pragma Import(Stdcall, Flash_Window_B, "FlashWindow");
     pragma Import(Stdcall, Get_Folder_Path, "SHGetFolderPathW");
     pragma Import(Stdcall, Get_System_Directory, "GetSystemDirectoryW");
@@ -1662,7 +1696,8 @@ private
     pragma Import(Stdcall, Get_Version,                    "GetVersionExW");
     pragma Import(Stdcall, Get_Username,                   "GetUserNameW");
     pragma Import(Stdcall, Create_Cursor,                  "CreateCursor");
-    pragma Import(Stdcall, Change_Class_Setting,           "SetClassLongW");
+    pragma Import(Stdcall, Change_Class_Setting_64,        "SetClassLongPtrW");
+    pragma Import(Stdcall, Change_Class_Setting_32,        "SetClassLongW");
     pragma Import(Stdcall, Flash_Window,                   "FlashWindowEx");
     pragma Import(Stdcall, Get_Clip_Cursor_Area,           "GetClipCursor");
     pragma Import(Stdcall, Clip_Cursor,                    "ClipCursor");

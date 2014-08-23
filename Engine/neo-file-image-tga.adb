@@ -111,10 +111,7 @@ package body TGA
 --          then
 --            Header.Alpha_Bits := 8; -- http://web.archive.org/liveweb/https://bugzilla.gnome.org/show_bug.cgi?id=540969
 --          end if;
---          --
---          -- Check for irreconcilable curruption
---          --
---          if
+--          if -- Check for irreconcilable curruption
 --          Header.bytes * 8 /= Header.bpp and Header.Bits_Per_Pixel /= 15 or
 --          (Header.Color = Multi_Color     and Colors < Thirty_Two_Per_Colors) or
 --          (Header.Color = Mapped_Color    and Colors /= Sixteen_Colors) or

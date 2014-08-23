@@ -3,18 +3,18 @@ with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
 with Ada.Containers.Vectors;
 with Ada.Finalization;
 package Neo.System.Input is
-  No_Printable_Character    : Exception;
   Invalid_Device_Identifier : Exception;
   Invalid_Trigger_Index     : Exception;
   Invalid_Button_Index      : Exception;
   Invalid_Stick_Index       : Exception;
-  type Enumerated_Device  is  (Keyboard_Device, Mouse_Device, Xbox_Device, Playstation_Device, Generic_Device);
+  Impulse_Out_Of_Scope      : Exception;
+  NO_COMBO : constant Integer_4_Natural := 0;
+  type Enumerated_Device  is  (Keyboard_Device, Mouse_Device, Xbox_Device, Playstation_Device);
   type Enumerated_Trigger is  (Left_Trigger,               Right_Trigger);
   type Enumerated_Stick   is  (Left_Stick,                 Right_Stick);
   type Enumerated_Kind    is  (Keyboard_Key_Kind,          Mouse_Key_Kind,             Mouse_Cursor_Kind,
-    Xbox_Key_Kind,             Xbox_Stick_Kind,            Xbox_Trigger_Kind,          Generic_Key_Kind,
-    Generic_Trigger_Kind,      Generic_Stick_Kind,         Playstation_Key_Kind,       Playstation_Stick_Kind,
-    Playstation_Trigger_Kind,  Character_Kind);
+    Xbox_Key_Kind,             Xbox_Stick_Kind,            Xbox_Trigger_Kind,          Playstation_Key_Kind,
+    Playstation_Stick_Kind,    Playstation_Trigger_Kind,   Text_Kind);
   type Enumerated_Key     is  (Null_Key,                   Alternative_Key,            Shift_Key,
     Escape_Key,                One_Key,                    Two_Key,                    Three_Key,
     Four_Key,                  Five_Key,                   Six_Key,                    Seven_Key,
@@ -75,8 +75,7 @@ package Neo.System.Input is
     Directional_Pad_Up_Key,    Directional_Pad_Down_Key,   Directional_Pad_Left_Key,   Directional_Pad_Right_Key,
     Left_Stick_Key,            Right_Stick_Key,            Circle_Key,                 Square_Key,
     Triangle_Key);
-  NO_COMBO : constant Integer_4_Natural := 0;
-  subtype Enumerated_Playstation_Key is Enumerated_Key range Select_Key..Triangle_Key;
+  subtype Enumerated_Playstation_Key is Enumerated_Key range Back_Key..Triangle_Key;
   subtype Enumerated_Keyboard_Key    is Enumerated_Key range Null_Key..PA1_Key;
   subtype Enumerated_Xbox_Key        is Enumerated_Key range Y_Key..Right_Stick_Key;
   subtype Enumerated_Mouse_Key       is Enumerated_Key range Horizontal_Wheel_Left_Key..Auxiliary_2_Mouse_Key;
@@ -84,174 +83,158 @@ package Neo.System.Input is
       X : Integer_8_Signed := 0;
       Y : Integer_8_Signed := 0;
     end record;
+  type Record_Axis is record
+      X : Float_4_Range := 0.0;
+      Y : Float_4_Range := 0.0;
+    end record;
   type Record_State is record
       Is_Pressed : Boolean := False;
       Last       : Time    := INITIAL_TIME;
     end record;
+  type Array_Playstation_Keys is array(Enumerated_Playstation_Key) of Record_State;
   type Array_Keyboard_Keys    is array(Enumerated_Keyboard_Key)    of Record_State;
   type Array_Xbox_Keys        is array(Enumerated_Xbox_Key)        of Record_State;
-  type Array_Playstation_Keys is array(Enumerated_Playstation_Key) of Record_State;
   type Array_Mouse_Keys       is array(Enumerated_Mouse_Key)       of Record_State;
+  type Array_Sticks           is array(Enumerated_Stick)           of Record_Axis;
   type Array_Triggers         is array(Enumerated_Trigger)         of Float_4_Percent;
-  type Array_Sticks           is array(Enumerated_Stick)           of Record_Location;
-  package Vector_Boolean  is new Ada.Containers.Vectors(Integer_4_Positive, Record_State);
-  package Vector_Percent  is new Ada.Containers.Vectors(Integer_4_Positive, Float_4_Percent);
-  package Vector_Location is new Ada.Containers.Vectors(Integer_4_Positive, Record_Location);
-  type Record_Generic_Device is record
-      Description      : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
-      Generic_Triggers : Vector_Percent.Vector;
-      Generic_Sticks   : Vector_Location.Vector;
-      Generic_Keys     : Vector_Boolean.Vector;
-    end record;
-  package Map_Generic_Device is new Hashed_Maps(Record_Generic_Device);
   type Record_Player is record
-      Xbox_Triggers        : Array_Triggers                := (others => 0.0);
-      Xbox_Sticks          : Array_Sticks                  := (others => (others => <>));
-      Xbox_Keys            : Array_Xbox_Keys               := (others => (others => <>));
-      Playstation_Triggers : Array_Triggers                := (others => 0.0);
-      Playstation_Sticks   : Array_Sticks                  := (others => (others => <>));
-      Playstation_Keys     : Array_Playstation_Keys        := (others => (others => <>));
-      Keyboard_Keys        : Array_Keyboard_Keys           := (others => (others => <>));
-      Mouse_Keys           : Array_Mouse_Keys              := (others => (others => <>));
-      Mouse_Location       : Record_Location               := (others => <>);
-      Generic_Devices      : Map_Generic_Device.Unsafe.Map;
+      Playstation_Triggers : Array_Triggers         := (others => 0.0);
+      Playstation_Sticks   : Array_Sticks           := (others => (others => <>));
+      Playstation_Keys     : Array_Playstation_Keys := (others => (others => <>));
+      Xbox_Triggers        : Array_Triggers         := (others => 0.0);
+      Xbox_Sticks          : Array_Sticks           := (others => (others => <>));
+      Xbox_Keys            : Array_Xbox_Keys        := (others => (others => <>));
+      Mouse_Keys           : Array_Mouse_Keys       := (others => (others => <>));
+      Mouse_Cursor         : Record_Location        := (others => <>);
+      Keyboard_Keys        : Array_Keyboard_Keys    := (others => <>);
+      Text                 : String_2_Unbounded     := NULL_STRING_2_UNBOUNDED;
     end record;
-  package Map_Players is new Ordered_Maps(Integer_4_Positive, Record_Player);
-  type Record_Device(Kind : Enumerated_Device := Keyboard_Device) is record
+  package Ordered_Map_Record_Player is new Ordered_Maps(Integer_4_Positive, Record_Player);
+  type Record_Device(Kind : Enumerated_Device := Mouse_Device) is record
       Player : Integer_4_Positive := 1;
+      Text   : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
       case Kind is
         when Xbox_Device | Playstation_Device =>
           Triggers : Array_Triggers := (others => 0.0);
           Sticks   : Array_Sticks   := (others => (others => <>));
           case Kind is
-            when Xbox_Device =>
-              Xbox_Keys : Array_Xbox_Keys := (others => (others => <>));
-            when Playstation_Device =>
-              Playstation_Keys : Array_Playstation_Keys := (others => (others => <>));
+            when Xbox_Device        => Xbox_Keys        : Array_Xbox_Keys        := (others => (others => <>));
+            when Playstation_Device => Playstation_Keys : Array_Playstation_Keys := (others => (others => <>));
             when others => null;
           end case;
-        when Keyboard_Device =>
-          Keyboard_Keys : Array_Keyboard_Keys := (others => (others => <>));
-          Last_Press    : Duration            := 0.0;
+        when Keyboard_Device => Keyboard_Keys : Array_Keyboard_Keys := (others => <>);
         when Mouse_Device =>
-          Mouse_Keys     : Array_Mouse_Keys := (others => (others => <>));
-          Mouse_Location : Record_Location  := (others => <>);
-        when Generic_Device =>
-          Generic_Triggers : Vector_Percent.Vector;
-          Generic_Sticks   : Vector_Location.Vector;
-          Generic_Keys     : Vector_Boolean.Vector;
+          Mouse_Keys   : Array_Mouse_Keys := (others => (others => <>));
+          Mouse_Cursor : Record_Location  := (others => <>);
       end case;
     end record;
-  package Map_Devices is new Ordered_Maps(Integer_Address, Record_Device);
+  package Ordered_Map_Record_Device is new Ordered_Maps(Integer_Address, Record_Device);
+  package Vector_Record_Device is new Vectors(Record_Device);
   type Record_Binding(Kind : Enumerated_Kind := Keyboard_Key_Kind) is record
       Player : Integer_4_Positive := 1;
       Combo  : Integer_4_Natural  := NO_COMBO;
       case Kind is
-        when Keyboard_Key_Kind | Mouse_Key_Kind | Xbox_Key_Kind | Playstation_Key_Kind | Generic_Key_Kind =>
+        when Keyboard_Key_Kind | Mouse_Key_Kind | Xbox_Key_Kind | Playstation_Key_Kind =>
           State : Record_State := (others => <>);
           case Kind is
+            when Playstation_Key_Kind => Playstation_Key : Enumerated_Playstation_Key := Enumerated_Playstation_Key'first;
             when Keyboard_Key_Kind    => Keyboard_Key    : Enumerated_Keyboard_Key    := Enumerated_Keyboard_Key'first;
             when Mouse_Key_Kind       => Mouse_Key       : Enumerated_Mouse_Key       := Enumerated_Mouse_Key'first;
             when Xbox_Key_Kind        => Xbox_Key        : Enumerated_Xbox_Key        := Enumerated_Xbox_Key'first;
-            when Playstation_Key_Kind => Playstation_Key : Enumerated_Playstation_Key := Enumerated_Playstation_Key'first;
-            when Generic_Key_Kind     => Key_Number      : Integer_4_Positive         := 1;
-                                         Key_Device      : String_2_Unbounded         := NULL_STRING_2_UNBOUNDED;
             when others => null;
           end case;
-        when Playstation_Stick_Kind | Xbox_Stick_Kind | Mouse_Cursor_Kind | Generic_Stick_Kind =>
+        when Playstation_Stick_Kind | Xbox_Stick_Kind =>
+          Axis : Record_Axis := (others => <>);
+          case Kind is
+            when Playstation_Stick_Kind | Xbox_Stick_Kind => Stick : Enumerated_Stick := Enumerated_Stick'first;
+            when others => null;
+          end case;
+        when Mouse_Cursor_Kind =>
           Location : Record_Location := (others => <>);
-          case Kind is
-            when Playstation_Stick_Kind | Xbox_Stick_Kind => Stick        : Enumerated_Stick   := Enumerated_Stick'first;
-            when Generic_Stick_kind                       => Stick_Number : Integer_4_Positive := 1;
-                                                             Stick_Device : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
-            when others => null;
-          end case;
-        when Playstation_Trigger_Kind | Xbox_Trigger_Kind | Generic_Trigger_Kind =>
+        when Playstation_Trigger_Kind | Xbox_Trigger_Kind =>
           Position : Float_4_Percent    := 0.0;
-          case Kind is
-            when Playstation_Trigger_Kind | Xbox_Trigger_Kind => Trigger        : Enumerated_Trigger := Enumerated_Trigger'first;
-            when Generic_Trigger_kind                         => Trigger_Number : Integer_4_Positive := 1;
-                                                                 Trigger_Device : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
-            when others => null;
-          end case;
-        when Character_Kind =>
-          Keyboard_Keys : Array_Keyboard_Keys := (others => (others => <>));
-          Input         : Character_2         := NULL_CHARACTER_2;
+          Trigger  : Enumerated_Trigger := Enumerated_Trigger'first;
+        when Text_Kind => Text : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
       end case;
     end record;
-  package Vector_Bindings is new Vectors(Record_Binding);
-  generic
+  package Vector_Record_Binding is new Vectors(Record_Binding);
+  generic -- Do not let Impulses go out of scope while Neo.System.Is_Running!
     Name : String_2;
     with procedure Trip(Binding : in Record_Binding);
+    Is_User_Settable : Boolean := False;
   package Impulse is
-      Bindings : aliased Vector_Bindings.Protected_Vector;
+      Bindings : aliased Vector_Record_Binding.Protected_Vector;
       procedure Enable;
       procedure Disable;
     private
       LOWER_NAME : constant String_2 := To_Lower(Name);
       type Record_Controller is new Ada.Finalization.Controlled with null record;
       procedure Not_A_Formal_Subprogram (Binding : in Record_Binding) renames Trip;
-      overriding procedure Initialize   (Controller : in out Record_Controller);
-      overriding procedure Finalize     (Controller : in out Record_Controller);
+      overriding procedure Initialize (Controller : in out Record_Controller);
+      overriding procedure Finalize   (Controller : in out Record_Controller);
       Controller : Record_Controller;
     end Impulse;
-  procedure Test;
-  procedure Handle        (Input  : in String_2);
-  procedure Set_Device    (Player : in Integer_4_Positive := 1; Identifier : in Integer_Address);
+  procedure Handle        (Text : in String_2);
+  procedure Inject        (Binding : in Record_Binding); -- Injections affect all players, not task safe
   procedure Set_Vibration (Player : in Integer_4_Positive := 1; Frequency_High, Frequency_Low : in Float_4_Percent);
+  procedure Set_Device    (Identifier : in Integer_Address; Player : in Integer_4_Positive := 1);
   function Get_Device     (Identifier : in Integer_Address) return Record_Device;
-  function Get_Devices    return Map_Devices.Unsafe.Map;
-  function Get_Players    return Map_Players.Unsafe.Map;
+  function Get_Devices                                      return Ordered_Map_Record_Device.Unsafe.Map;
+  function Get_Cursor                                       return Record_Location;
+  function Playstation    (Trigger : in Enumerated_Trigger;         Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Playstation    (Stick   : in Enumerated_Stick;           Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Playstation    (Key     : in Enumerated_Playstation_Key; Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Keyboard       (Key     : in Enumerated_Keyboard_Key;    Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Xbox           (Trigger : in Enumerated_Trigger;         Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Xbox           (Stick   : in Enumerated_Stick;           Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Xbox           (Key     : in Enumerated_Xbox_Key;        Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Mouse          (Key     : in Enumerated_Mouse_Key;       Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Mouse                                                   (Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
 private
+  No_Printable_Character             : Exception;
   NULL_RECORD_LOCATION               : constant Record_Location := (others => 0);
+  NAME_POSTFIX                       : constant String_2        := "Input";
   COMMAND_BIND                       : constant String_2        := "bind";
   COMMAND_UNBIND                     : constant String_2        := "unbind";
+  COMMAND_HELP                       : constant String_2        := "Below is an example call, player# and device are optional";
+  COMMAND_EXAMPLE                    : constant String_2        := "player# impulse device value";
+  NO_SUCH_IMPULSE                    : constant String_2        := "No such impulse!";
+  NO_SUCH_DEVICE                     : constant String_2        := "No such device!";
+  NO_SUCH_VALUE                      : constant String_2        := "No such value!";
   DURATION_TO_WAIT_BEFORE_KEY_REPEAT : constant Duration        := 0.1;
   DURATION_BETWEEN_KEY_REPEAT        : constant Duration        := 0.05;
   DURATION_TO_WAIT_BEFORE_POLLING    : constant Duration        := 0.002;
-  type Not_Null_Access_Vector_Bindings is not null access all Vector_Bindings.Protected_Vector;
+  type Not_Null_Access_Vector_Record_Binding is not null access all Vector_Record_Binding.Protected_Vector;
   type Not_Null_Access_Procedure_Trip is not null access procedure(Binding : in Record_Binding);
   type Record_Impulse is record
       Trip       : Not_Null_Access_Procedure_Trip;
-      Bindings   : Not_Null_Access_Vector_Bindings;
-      Is_Garbage : Boolean := False;
+      Bindings   : Not_Null_Access_Vector_Record_Binding;
       Is_Enabled : Boolean := True;
     end record;
   procedure Run;
-  procedure Handle_Stick           (Identifier : in Integer_Address; Stick    : in Enumerated_Stick;   Location   : in Record_Location);
-  procedure Handle_Generic_Stick   (Identifier : in Integer_Address; Stick    : in Integer_4_Positive; Location   : in Record_Location);
-  procedure Handle_Trigger         (Identifier : in Integer_Address; Trigger  : in Enumerated_Trigger; Position   : in Float_4_Percent);
-  procedure Handle_Generic_Trigger (Identifier : in Integer_Address; Trigger  : in Integer_4_Positive; Position   : in Float_4_Percent);
-  procedure Handle_Key             (Identifier : in Integer_Address; Key      : in Enumerated_Key;     Is_Pressed : in Boolean);
-  procedure Handle_Generic_Key     (Identifier : in Integer_Address; Key      : in Integer_4_Positive; Is_Pressed : in Boolean);
-  procedure Handle_Mouse           (Identifier : in Integer_Address; Location : in Record_Location);
-  procedure Add_Device             (Identifier : in Integer_Address; Device   : in Record_Device);
-  procedure Remove_Device          (Identifier : in Integer_Address);
-  function Has_ELement             (Identifier : in Integer_Address) return Boolean;
-  generic
-    with procedure Handle_Stick           (Identifier : in Integer_Address; Stick    : in Enumerated_Stick;   Location   : in Record_Location);
-    with procedure Handle_Generic_Stick   (Identifier : in Integer_Address; Stick    : in Integer_4_Positive; Location   : in Record_Location);
-    with procedure Handle_Trigger         (Identifier : in Integer_Address; Trigger  : in Enumerated_Trigger; Position   : in Float_4_Percent);
-    with procedure Handle_Generic_Trigger (Identifier : in Integer_Address; Trigger  : in Integer_4_Positive; Position   : in Float_4_Percent);
-    with procedure Handle_Key             (Identifier : in Integer_Address; Key      : in Enumerated_Key;     Is_Pressed : in Boolean);
-    with procedure Handle_Generic_Key     (Identifier : in Integer_Address; Key      : in Integer_4_Positive; Is_Pressed : in Boolean);
-    with procedure Handle_Mouse           (Identifier : in Integer_Address; Location : in Record_Location);
-    with procedure Add_Device             (Identifier : in Integer_Address; Device   : in Record_Device);
-    with procedure Remove_Device          (Identifier : in Integer_Address);
-    with function Get_Device              (Identifier : in Integer_Address) return Record_Device;
-    with function Has_ELement             (Identifier : in Integer_Address) return Boolean;
-    --with Function  Get_Devices    (
+  procedure Inject_Trigger (Identifier : in Integer_Address; Trigger  : in Enumerated_Trigger; Position   : in Float_4_Percent);
+  procedure Inject_Stick   (Identifier : in Integer_Address; Stick    : in Enumerated_Stick;   Axis       : in Record_Axis);
+  procedure Inject_Key     (Identifier : in Integer_Address; Key      : in Enumerated_Key;     Is_Pressed : in Boolean);
+  procedure Inject_Text    (Identifier : in Integer_Address; Text     : in String_2_Unbounded);
+  procedure Add_Device     (Identifier : in Integer_Address; Device   : in Record_Device);
+  procedure Inject_Mouse   (Identifier : in Integer_Address; Location : in Record_Location);
+  procedure Remove_Device  (Identifier : in Integer_Address);
+  function Has_Device      (Identifier : in Integer_Address) return Boolean;
   package Import is
+      function Get_Cursor                       return Record_Location;
+      function Does_Support_Playstation_Devices return Boolean;
+      function Does_SUpport_Xbox_Devices        return Boolean;
+      function Update                           return Boolean;
       procedure Initialize;
-      procedure Handle_Events;
-      procedure Update_Devices;
+      procedure Finalize;
       procedure Set_Vibration(Identifier : in Integer_Address; Frequency_High, Frequency_Low : in Float_4_Percent);
-      function Lookup_Character(Keyboard : in Array_Keyboard_Keys) return Character_2;
     end Import;
-  package Map_Impulses is new Hashed_Maps(Record_Impulse);
+  package Hashed_Map_Record_Impulse is new Hashed_Maps(Record_Impulse);
   package Task_Main is new Tasks(Run);
+  Status    : Protected_Status;
+  Injection : Record_Player;
   Main_Task : Task_Main.Protected_Task;
-  Impulses  : Map_Impulses.Protected_Map;
-  Devices   : Map_Devices.Protected_Map;
-  Players   : Map_Players.Protected_Map;
+  Impulses  : Hashed_Map_Record_Impulse.Protected_Map;
+  Devices   : Ordered_Map_Record_Device.Protected_Map;
+  Players   : Ordered_Map_Record_Player.Protected_Map;
 end Neo.System.Input;

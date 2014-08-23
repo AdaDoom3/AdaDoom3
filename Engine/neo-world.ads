@@ -1,4 +1,6 @@
-package Neo.System.Graphics.World is
+package Neo.World is
+  type Record_Entity is record
+    end record;
 
 
 
