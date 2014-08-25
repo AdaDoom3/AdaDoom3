@@ -193,8 +193,8 @@ WTF2 : Integer_4_Signed_C := -2;
     SUBEVENT_WORD_LOW                          : constant Integer_4_Unsigned_C := 16#0000_FFFF#;
     SUBEVENT_WORD_HIGH                         : constant Integer_4_Unsigned_C := 16#FFFF_0000#;
     SUBEVENT_SHORT_LOW                         : constant Integer_2_Unsigned_C := 16#00FF#;
-    SUBEVENT_KEY_IS_LEFT_SIDED                 : constant Integer_2_Unsigned_C := 16#0002#;
-    SUBEVENT_KEY_IS_RIGHT_SIDED                : constant Integer_2_Unsigned_C := 16#0004#;
+    SUBEVENT_KEY_IS_RIGHT_SIDED                 : constant Integer_2_Unsigned_C := 16#0002#;
+    SUBEVENT_KEY_IS_LEFT_SIDED                : constant Integer_2_Unsigned_C := 16#0004#;
     VIRTUAL_KEY_V                              : constant Integer_2_Unsigned_C := 16#0056#;
     VIRTUAL_KEY_CONTROL                        : constant Integer_2_Unsigned_C := 16#0011#;
     VIRTUAL_KEY_LEFT_MOUSE                     : constant Integer_2_Unsigned_C := 16#0001#;
@@ -269,95 +269,6 @@ WTF2 : Integer_4_Signed_C := -2;
       Data_Unsigned : in Integer_4_Signed_C; -- wParam
       Data_Signed : in Integer_4_Unsigned_C) -- lParam
       return Integer_4_Signed_C; -- LRESULT
--- #ifndef _MSC_VER
--- typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
--- #endif
--- typedef void* (CALLBACK *KbdLayerDescriptor) (VOID);
--- #define CAPLOK          0x01
--- #define WCH_NONE        0xF000
--- #define WCH_DEAD        0xF001
--- typedef struct _VK_TO_WCHARS {
---         BYTE VirtualKey;
---         BYTE Attributes;
---         WCHAR wch[];
--- } VK_TO_WCHARS, *PVK_TO_WCHARS;
--- typedef struct _LIGATURE {
---         BYTE VirtualKey;
---         WORD ModificationNumber;
---         WCHAR wch[];
--- } LIGATURE, *PLIGATURE;
--- typedef struct _VK_TO_BIT {
---         BYTE Vk;
---         BYTE ModBits;
--- } VK_TO_BIT, *PVK_TO_BIT;
--- typedef struct _MODIFIERS {
---         PVK_TO_BIT pVkToBit; // __ptr64
---         WORD wMaxModBits;
---         BYTE ModNumber[];
--- } MODIFIERS, *PMODIFIERS;
--- typedef struct _VSC_VK {
---         BYTE Vsc;
---         USHORT Vk;
--- } VSC_VK, *PVSC_VK;
--- typedef struct _VK_TO_WCHAR_TABLE {
---         //PVK_TO_WCHARS1 pVkToWchars; // __ptr64
---         PVK_TO_WCHARS pVkToWchars; // __ptr64
---         BYTE nModifications;
---         BYTE cbSize;
--- } VK_TO_WCHAR_TABLE, *PVK_TO_WCHAR_TABLE;
--- typedef struct _DEADKEY {
---         DWORD dwBoth;
---         WCHAR wchComposed;
---         USHORT uFlags;
--- } DEADKEY, *PDEADKEY;
--- typedef struct _VSC_LPWSTR {
---         BYTE vsc;
---         WCHAR *pwsz; // __ptr64
--- } VSC_LPWSTR, *PVSC_LPWSTR;
--- typedef struct tagKbdLayer {
---         PMODIFIERS pCharModifiers; // __ptr64
---         PVK_TO_WCHAR_TABLE pVkToWcharTable; // __ptr64
---         PDEADKEY pDeadKey; // __ptr64
---         PVSC_LPWSTR pKeyNames; // __ptr64
---         PVSC_LPWSTR pKeyNamesExt; // __ptr64
---         WCHAR **pKeyNamesDead; // __ptr64
---         USHORT *pusVSCtoVK; // __ptr64
---         BYTE bMaxVSCtoVK;
---         PVSC_VK pVSCtoVK_E0; // __ptr64
---         PVSC_VK pVSCtoVK_E1; // __ptr64
---         DWORD fLocaleFlags;
---         BYTE nLgMax;
---         BYTE cbLgEntry;
---         //PLIGATURE1 pLigature; // __ptr64
---         PLIGATURE pLigature; // __ptr64
---         DWORD dwType;
---         DWORD dwSubType;
--- } KBDTABLES, *PKBDTABLES; // __ptr64
-    -- typedef struct _OVERLAPPED {
-    --   ULONG_PTR Internal;
-    --   ULONG_PTR InternalHigh;
-    --   union {
-    --     struct {
-    --       DWORD Offset;
-    --       DWORD OffsetHigh;
-    --     };
-    --     PVOID  Pointer;
-    --   };
-    --   HANDLE    hEvent;
-    -- } OVERLAPPED, *LPOVERLAPPED;
-    -- type Record_Overlapped_
-    --   is record
-    --     Internal : ;
-    --     Internal_High : ;
-    --     Event  : Address;
-    --   end record;
-    -- type Record_Device_Attributes
-    --   is record
-    --     Size    : Integer_4_Unsigned_C := Record_Device_Attributes'size / Byte'size;
-    --     Vendor  : Integer_2_Unsigned_C := 0;
-    --     Product : Integer_2_Unsigned_C := 0;
-    --     Version : Integer_2_Unsigned_C := 0;
-    --   end record;
     type Record_Gamepad is record -- XINPUT_GAMEPAD
         Buttons       : Integer_2_Unsigned_C := 0; -- wButtons
         Left_Trigger  : Integer_1_Unsigned_C := 0; -- bLeftTrigger

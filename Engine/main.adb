@@ -12,11 +12,9 @@ with Neo.System.Graphics.Window; use Neo.System.Graphics.Window;
 --with Neo.System.Network;         use Neo.System.Network;
 procedure Main is
   begin
-    begin
-      Set_Do_Put_Debug(True);
-      if Do_Put_Debug then Neo.System.Text.Console.Initialize; end if;
-      Neo.System.Graphics.Window.Run;
-    exception when Occurrence: others => Handle_Exception(Occurrence); end;
+    Set_Do_Put_Debug(True);
+    if Do_Put_Debug then Neo.System.Text.Console.Initialize; end if;
+    begin Run; exception when Occurrence: others => Handle_Exception(Occurrence); end;
     if not Neo.System.Text.Console.Is_Running and then Get_Errors /= NULL_STRING_2 and then Is_Okay(
       Icon    => Error_Icon,
       Name    => To_String_2(Neo.System.SPECIFICS.Name),

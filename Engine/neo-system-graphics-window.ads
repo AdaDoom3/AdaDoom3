@@ -4,6 +4,7 @@ with Interfaces;       use Interfaces;
 with System;           use System;
 package Neo.System.Graphics.Window is
   pragma Suppress(Elaboration_Check);
+  Cursor_Off_Window : Exception;
   type Enumerated_State is (Fullscreen_State, Multi_Monitor_State, Windowed_State);
   type Record_Specifics is record
       Color_Bits              : Integer_4_Positive := 1;
@@ -22,9 +23,10 @@ package Neo.System.Graphics.Window is
     end record;
   package Vector_Record_Border is new Vectors(Record_Border);
   procedure Run;
-  function Get_Borders    return Vector_Record_Border.Unsafe.Vector;
-  function Get_Specifics  return Record_Specifics;
-  function Get_Decoration return Record_Border;
+  function Get_Borders           return Vector_Record_Border.Unsafe.Vector;
+  function Get_Specifics         return Record_Specifics;
+  function Get_Decoration        return Record_Border;
+  function Get_Normalized_Cursor return Record_Location;
   SPECIFICS       : constant Record_Specifics := Get_Specifics;
   VARIABLE_PREFIX : constant String_2         := "w_";
   package Is_Iconized              is new Variable(VARIABLE_PREFIX & "minimized",  "Query if minimized",                      Boolean, False, False, False);
@@ -41,18 +43,18 @@ package Neo.System.Graphics.Window is
   package Aspect_Narrow_Vertical   is new Variable(VARIABLE_PREFIX & "narrowvert", "Minimum narrow vertical aspect ratio ",   Integer_4_Positive, 9);
   package Aspect_Narrow_Horizontal is new Variable(VARIABLE_PREFIX & "narrowhorz", "Minimum narrow horizontal aspect ratio ", Integer_4_Positive, 16);
 private
-  type Enumerated_Change is (Fullscreen_Change, Windowed_Change, Iconic_Change);
   type Enumerated_Cursor is (System_Cursor, Active_Cursor, Inactive_Cursor);
+  type Enumerated_Change is (Fullscreen_Change, Windowed_Change, Iconic_Change);
   type Enumerated_Resize is (Other_Resize, Left_Resize, Right_Resize, Top_Resize, Bottom_Resize, Top_Left_Resize, Top_Right_Resize, Bottom_Right_Resize, Bottom_Left_Resize);
   MULTI_MONITOR_NAME : constant String_2         := " Multi Monitor";
   MINIMUM_FACTOR     : constant Integer_8_Signed := 256;
   Do_Hide_Mouse      :          Boolean          := True;
-  procedure Detect_Menu_Mode_Entry (Binding : in Record_Binding);
-  procedure Toggle_Fullscreen      (Binding : in Record_Binding);
-  procedure Exit_To_Menu           (Binding : in Record_Binding);
-  procedure Change_State           (Kind : in Enumerated_Change);
-  procedure Activate               (Do_Activate, Do_Detect_Click : in Boolean; X, Y : in Integer_8_Signed);
-  function Resize                  (Kind : in Enumerated_Resize; Border : in Record_Border) return Record_Border;
+  procedure Preform_Detect_Menu_Mode_Entry (Binding : in Record_Binding);
+  procedure Preform_Toggle_Fullscreen      (Binding : in Record_Binding);
+  procedure Preform_Exit_To_Menu           (Binding : in Record_Binding);
+  procedure Change_State                   (Kind : in Enumerated_Change);
+  procedure Activate                       (Do_Activate, Do_Detect_Click : in Boolean; X, Y : in Integer_8_Signed);
+  function Resize                          (Kind : in Enumerated_Resize; Border : in Record_Border) return Record_Border;
   package Import is
       procedure Initialize_Multi_Monitor;
       procedure Finalize_Multi_Monitor;
@@ -71,7 +73,7 @@ private
       function Get_Borders        return Vector_Record_Border.Unsafe.Vector;
       function Get_Decoration     return Record_Border;
     end Import;
-  --package Impulse_Detect_Menu_Mode_Entry is new Impulse("menuentry",  Detect_Menu_Mode_Entry);
-  package Impulse_Toggle_Fullscreen      is new Impulse("togglemode", Toggle_Fullscreen);
-  package Impulse_Exit_To_Menu           is new Impulse("exittomenu", Exit_To_Menu);
+  package Detect_Menu_Mode_Entry is new Impulse("menuentry",  Preform_Detect_Menu_Mode_Entry);
+  package Toggle_Fullscreen      is new Impulse("togglemode", Preform_Toggle_Fullscreen);
+  package Exit_To_Menu           is new Impulse("exittomenu", Preform_Exit_To_Menu);
 end Neo.System.Graphics.Window;

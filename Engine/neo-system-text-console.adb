@@ -1,7 +1,10 @@
 package body Neo.System.Text.Console is
   package body Import is separate;
-  function Is_Running return Boolean is begin return Main_Task.Is_Running;                                                                           end Is_Running;
-  procedure Send_Log                 is begin Open_Webpage(ERROR_REPORTING_URL); exception when others => Put_Debug_Line(Localize(FAILED_SEND_LOG)); end Send_Log;
+  function Is_Running return Boolean is begin return Main_Task.Is_Running;                                                                                   end Is_Running;
+  procedure Initialize               is begin Main_Task.Initialize;                                                                                          end Initialize;
+  procedure Finalize                 is begin Main_Task.Finalize;                                                                                            end Finalize;
+  procedure Run                      is begin Import.Run;                        exception when Call_Failure => Put_Debug_Line(Localize(FAILED_INITIALIZE)); end Run;
+  procedure Send_Log                 is begin Open_Webpage(ERROR_REPORTING_URL); exception when others => Put_Debug_Line(Localize(FAILED_SEND_LOG));         end Send_Log;
   procedure Save_Log is
     File        : File_Type;
     File_Stream : Stream_Access;
@@ -19,11 +22,4 @@ package body Neo.System.Text.Console is
       Open_Text(To_String_2(Neo.System.SPECIFICS.Path) & SPECIFICS.Separator & PATH_LOGS & SPECIFICS.Separator & To_String_2(Path));
     exception when Call_Failure => Put_Debug_Line(Localize(FAILED_SAVE_LOG));
     end Save_Log;
-  procedure Initialize is begin Main_Task.Initialize; end Initialize;
-  procedure Finalize is begin Main_Task.Finalize; end Finalize;
-  procedure Run is
-    begin
-      Import.Run;
-    exception when Call_Failure => Put_Debug_Line(Localize(FAILED_INITIALIZE));
-    end Run;
 end Neo.System.Text.Console;

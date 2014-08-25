@@ -100,6 +100,7 @@ separate (Neo.System.Input) package body Import is
             Size        => Number_Of_Bytes'address,
             Header_Size => Record_Device_Header'object_size / Byte'object_size) = Record_Device_Header'object_size / Byte'object_size);
           Identifier := To_Unchecked_Integer_Address(Header.Device);
+          if not Devices.Has_Element(Identifier) then return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed); end if;
           case Header.Kind is
             when KIND_IS_KEYBOARD =>
               declare
@@ -116,9 +117,9 @@ separate (Neo.System.Input) package body Import is
                 if Keyboard.Data.Key <= MAP_KEY'last and Keyboard.Data.Key >= MAP_KEY'first then
                   if Keyboard.Data.Message = EVENT_KEY_DOWN or Keyboard.Data.Message = EVENT_SYSTEM_KEY_DOWN then Is_Pressed := True; end if;
                   Inject_Key(Identifier, Is_Pressed => Is_Pressed, Key => (case MAP_KEY(Keyboard.Data.Key) is
-                    when Shift_Key       => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Shift_Key       else Right_Shift_Key),
-                    when Control_Key     => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Control_Key     else Right_Control_Key),
-                    when Alternative_Key => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT then Left_Alternative_Key else Right_Alternative_Key),
+                    when Shift_Key       => (if Keyboard.Data.Make_Code = KEY_MAKE_CODE_FOR_LEFT          then Left_Shift_Key       else Right_Shift_Key),
+                    when Control_Key     => (if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_RIGHT_SIDED) = 0 then Left_Control_Key     else Right_Control_Key),
+                    when Alternative_Key => (if (Keyboard.Data.Flags and SUBEVENT_KEY_IS_RIGHT_SIDED) = 0 then Left_Alternative_Key else Right_Alternative_Key),
                     when others          => MAP_KEY(Keyboard.Data.Key)));
                 end if;
               end;
@@ -146,8 +147,7 @@ separate (Neo.System.Input) package body Import is
                 elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_EXTRA_2_UP)      > 0 then Inject_Key(Identifier, Auxiliary_2_Mouse_Key, False);
                 elsif (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_VERTICAL) > 0 or (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then
                   Inject_Key(Identifier, Is_Pressed => True, Key =>(
-                    if To_Unchecked_Integer_2_Signed(Integer_2_Unsigned(
-                      Shift_Right(Amount => 16, Value => Integer_8_Unsigned(Data_Unsigned) and 16#0000_0000_FFFF_0000#))) / MOUSE_WHEEL_DELTA < 0
+                    if To_Unchecked_Integer_2_Signed(Integer_2_Unsigned(Shift_Right(Amount => 16, Value => Integer_8_Unsigned(Mouse.Data.Button_Flags) and 16#0000_0000_FFFF_0000#))) / MOUSE_WHEEL_DELTA < 0
                     then (if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then Horizontal_Wheel_Left_Key else Vertical_Wheel_Down_Key)
                     else (if (Mouse.Data.Button_Flags and SUBEVENT_MOUSE_BUTTON_MIDDLE_HORIZONTAL) > 0 then Horizontal_Wheel_Right_Key else Vertical_Wheel_Up_Key)));
                 end if;
@@ -246,11 +246,11 @@ separate (Neo.System.Input) package body Import is
         while Devices.Has_Element(Current_Device) loop
           if Devices.Key(Current_Device) in 0..3 then
             Has_Gamepad(Integer_4_Signed(Devices.Key(Current_Device)) + 1) := True;
-            if Get_XInput_State(Integer_4_Unsigned_C(Devices.Key(Current_Device)), State'unchecked_access) /= 0 then Remove_Device(Devices.Key(Current_Device)); end if;
+            if Get_XInput_State(Integer_4_Unsigned_C(Devices.Key(Current_Device)), State'unchecked_access) /= 0 then Devices.Delete(Current_Device); end if;
           else
             for J in List'range loop
               if Devices.Key(Current_Device) = To_Unchecked_Integer_Address(List(J).Handle) then exit; end if;
-              if J = List'last then Remove_Device(Devices.Key(Current_Device)); end if;
+              if J = List'last then Devices.Delete(Current_Device); end if;
             end loop;
           end if;
           Devices.Next(Current_Device);
@@ -272,7 +272,7 @@ separate (Neo.System.Input) package body Import is
         Assert_Dummy(Translate_Message(Message'unchecked_access));
         Assert_Dummy(Dispatch_Message(Message'unchecked_access));
       end loop;
-      for I in Gamepad_States'range loop
+      begin for I in Gamepad_States'range loop
         if Get_XInput_State(Integer_4_Unsigned_C(I), State'unchecked_access) = 0 and then Gamepad_States(I) /= State.Gamepad then
           Unpack_Button(I, GAMEPAD_A,                     Green_A_Key);
           Unpack_Button(I, GAMEPAD_B,                     Red_B_Button_Key);
@@ -294,14 +294,14 @@ separate (Neo.System.Input) package body Import is
           if State.Gamepad.Right_Trigger /= Gamepad_States(I).Right_Trigger then Inject_Trigger(Integer_Address(I), Right_Trigger, Float_4_Real(State.Gamepad.Right_Trigger) / Float_4_Real(Integer_1_Unsigned_C'last) * 100.0); end if;
           Gamepad_States(I) := State.Gamepad;
         end if;
-      end loop;
+      end loop; exception when others => null; end; -- "TERRIBLE HORRIBLE NO GOOD VERY BAD HACK"
       return True;
     end Update;
   procedure Finalize is
     Empty_Device_Setup : aliased Record_Device_Setup := (GENERIC_DESKTOP_CONTROL, USE_RAW_MOUSE, STOP_READING_TOP_LEVEL_DEVICES, NULL_ADDRESS);
     begin
-      Assert(Register_Devices(Empty_Device_Setup'address, Empty_Device_Setup'size / Record_Device'object_size, Record_Device'object_size / Byte'object_size));
-      if Window /= NULL_ADDRESS then Assert(Destroy_Window(Window)); end if;
+      Assert_Dummy(Register_Devices(Empty_Device_Setup'address, Empty_Device_Setup'size / Record_Device'object_size, Record_Device'object_size / Byte'object_size));
+      if Window /= NULL_ADDRESS then Assert_Dummy(Destroy_Window(Window)); end if;
       Window := NULL_ADDRESS;
     end Finalize;
 end Import;

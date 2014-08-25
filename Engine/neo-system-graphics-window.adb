@@ -3,25 +3,27 @@ package body Neo.System.Graphics.Window is
   function Get_Borders    return Vector_Record_Border.Unsafe.Vector renames Import.Get_Borders;
   function Get_Specifics  return Record_Specifics                   renames Import.Get_Specifics;
   function Get_Decoration return Record_Border                      renames Import.Get_Decoration;
-  procedure Exit_To_Menu(Binding : in Record_Binding) is
+  procedure Preform_Exit_To_Menu(Binding : in Record_Binding) is
     begin
-      Put_Line("Triggered!");
-      if Binding.State.Is_Pressed then
-        Is_In_Menu.Set(not Is_In_Menu.Get);--False); Toggle for now
+      if Binding.Kind = Mouse_Key_Kind and then Binding.State.Is_Pressed then
+        null;--Is_In_Menu.Set(not Is_In_Menu.Get);--False); Toggle for now
       end if;
-    end Exit_To_Menu;
-  procedure Toggle_Fullscreen(Binding : in Record_Binding) is
+    end Preform_Exit_To_Menu;
+  procedure Preform_Toggle_Fullscreen(Binding : in Record_Binding) is
     begin
       if Binding.State.Is_Pressed then
         State.Set((case State.Get is when Multi_Monitor_State | Fullscreen_State => Windowed_State, when Windowed_State => Fullscreen_State));
       end if;
-    end Toggle_Fullscreen;
-  procedure Detect_Menu_Mode_Entry(Binding : in Record_Binding) is
+    end Preform_Toggle_Fullscreen;
+  procedure Preform_Detect_Menu_Mode_Entry(Binding : in Record_Binding) is
+    Location : Record_Location := Get_Cursor;
+    Border   : Record_Border   := Get_Borders.Element(1);
     begin
+      --Put_Line(Integer_8_Signed'wide_image(Border.Right) & "   " & Integer_8_Signed'wide_image(Border.Bottom));
       null;--  Take_Control;
       --  Impulse_Detect_Menu_Mode_Entry.Disable;
       --end if;
-    end Detect_Menu_Mode_Entry;
+    end Preform_Detect_Menu_Mode_Entry;
   procedure Change_State(Kind : in Enumerated_Change) is
     begin
       case Kind is
@@ -30,6 +32,10 @@ package body Neo.System.Graphics.Window is
         when Windowed_Change   => Is_Iconized.Set(False); State.Set(Windowed_State);
       end case;
     end Change_State;
+  function Get_Normalized_Cursor return Record_Location is
+    begin
+      return (others => <>);
+    end Get_Normalized_Cursor;
   procedure Activate(Do_Activate, Do_Detect_Click : in Boolean; X, Y : in Integer_8_Signed) is
     begin
       if Do_Activate then
@@ -109,9 +115,9 @@ package body Neo.System.Graphics.Window is
     begin
       Import.Assert_Only_Instance;
       Import.Initialize;
-      --Impulse_Detect_Menu_Mode_Entry.Bindings.Append(Mouse(Left_Mouse_Key));
-      Impulse_Toggle_Fullscreen.Bindings.Append(Keyboard(F11_Key));
-      Impulse_Exit_To_Menu.Bindings.Append(Keyboard(Escape_Key));
+      Detect_Menu_Mode_Entry.Bindings.Append(Mouse(Left_Mouse_Key));
+      Toggle_Fullscreen.Bindings.Append(Keyboard(F11_Key));
+      Exit_To_Menu.Bindings.Append(Keyboard(Escape_Key));
       while Is_Running.Get loop
         case Current_State is
           when Fullscreen_State | Multi_Monitor_State =>

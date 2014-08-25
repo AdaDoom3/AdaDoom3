@@ -1,4 +1,8 @@
 package body Neo is
+  protected body Protected_Status is
+      function Is_Doing_Something      return Boolean       is begin return Status;   end Is_Doing_Something;
+      procedure Set_Is_Doing_Something (Value : in Boolean) is begin Status := Value; end Set_Is_Doing_Something;
+    end Protected_Status;
   package body Ordered_Maps is
       protected body Protected_Map is
           procedure Clear                                                        is begin Unsafe.Clear(Current_Data);                                end Clear;
@@ -55,10 +59,6 @@ package body Neo is
           function First                                        return Cursor                                                     is begin return Unsafe.First(Current_Data);                                end First;
         end Protected_Vector;
     end Vectors;
-  protected body Protected_Status is
-      function Is_Doing_Something      return Boolean       is begin return Status;   end Is_Doing_Something;
-      procedure Set_Is_Doing_Something (Value : in Boolean) is begin Status := Value; end Set_Is_Doing_Something;
-    end Protected_Status;
   protected body Protected_Data is
       procedure Set_Do_Put_Debug    (Value : in Boolean)                            is begin Current_Do_Put_Debug := Value;                                                 end Set_Do_Put_Debug;
       procedure Set_Line_Size       (Value : in Integer_4_Positive)                 is begin Current_Line_Size := Value;                                                    end Set_Line_Size;
@@ -86,17 +86,6 @@ package body Neo is
           if Current_Put /= null then Current_Put.all(Item); end if;
         end Put;
     end Protected_Data;
-  function Get_Duration(Timer : in Record_Timer) return Duration is begin return (if Timer.Is_Stopped then Timer.Last else Clock - Timer.Start); end Get_Duration;
-  procedure Start(Timer : in out Record_Timer) is
-    begin
-      if not Timer.Is_Stopped then raise Timer_Started_Without_Being_Stopped; end if;
-      Timer := (Is_Stopped => False, Start => Clock, others => <>);
-    end Start;
-  procedure Stop(Timer : in out Record_Timer) is
-    begin
-      if Timer.Is_Stopped then raise Timer_Stopped_Without_Being_Started; end if;
-      Timer := (Is_Stopped => True, Last => Timer.Start - Clock, others => <>);
-    end Stop;
   procedure New_Line            (Count : in Integer_4_Positive := 1)            is begin for I in 1..Count loop Put(END_LINE_2); end loop; end New_Line;
   procedure Put_Debug           (Item  : in Character_2)                        is begin Put_Debug(Item & "");                             end Put_Debug;
   procedure Set_Input_Entry     (Value : in String_2)                           is begin Data.Set_Input_Entry(Value);                      end Set_Input_Entry;
@@ -108,6 +97,7 @@ package body Neo is
   procedure Put                 (Item  : in Character_2)                        is begin Put(Item & "");                                   end Put;                  
   procedure Put                 (Item  : in String_2)                           is begin Data.Put(Item);                                   end Put;
   procedure Put_Line            (Item  : in Character_2)                        is begin Put_Line(Item & "");                              end Put_Line;    
+  procedure Put_Line            (Item  : in String_2_Unbounded)                 is begin Put_Line(To_String_2(Item));                      end Put_Line;
   procedure Put_Line            (Item  : in String_2)                           is begin Put(Item); New_Line;                              end Put_Line;
   procedure Put_Debug           (Item  : in String_2)                           is begin if Data.Do_Put_Debug then Data.Put(Item); end if; end Put_Debug;
   procedure Put_Debug_Line      (Item  : in String_2)                           is begin Put_Debug(Item); New_Line;                        end Put_Debug_Line;   
@@ -120,35 +110,6 @@ package body Neo is
   function Get_Line_Size                              return Integer_4_Positive is begin return Data.Get_Line_Size;                        end Get_Line_Size;
   function Get_Number_Of_Tasks                        return Integer_4_Positive is begin return Data.Get_Number_Of_Tasks;                  end Get_Number_Of_Tasks;
   function Do_Put_Debug                               return Boolean            is begin return Data.Do_Put_Debug;                         end Do_Put_Debug;
-  procedure Put_Title(Item : in String_2) is
-    Space_Count : Integer_4_Signed := 0;
-    Count       : Integer_4_Signed := Item'length * 3 - Item'length / 3;
-    begin
-      if Item'length > Get_Line_Size then raise Title_Is_Too_Long; end if;
-      Put(Character_2'val(16#250C#));
-      for I in 1..Get_Line_Size - 2 loop Put(Character_2'val(16#2500#)); end loop;
-      Put_Line(Character_2'val(16#2510#));
-      Put(Character_2'val(16#2502#));
-      for I in 1..Item'length loop
-        if Item(I) = ' ' then Space_Count := Space_Count + 1; end if;
-      end loop;
-      if Count + Space_Count >= Get_Line_Size then
-        for I in 1..Get_Line_Size / 2 - Item'length / 2 - 1 loop Put(" "); end loop;
-        Put(Item);
-        for I in 1..Get_Line_Size - Item'length - (Get_Line_Size / 2 - Item'length / 2) - 1 loop Put(" "); end loop;
-      else
-        for I in 1..Get_Line_Size / 2 - (Count + Space_Count) / 2 - 1 loop Put(" "); end loop;
-        for I in 1..Item'length loop
-          Put(Item(I) & "  ");
-          if Item(I) = ' ' then Put(" "); end if;
-        end loop;
-        for I in 1..Get_Line_Size - (Get_Line_Size / 2 - (Count + Space_Count) / 2 - 1) - Item'length * 3 - Space_Count - 2 loop Put(" "); end loop;
-      end if;
-      Put_Line(Character_2'val(16#2502#));
-      Put(Character_2'val(16#2514#));
-      for I in 1..Get_Line_Size - 2 loop Put(Character_2'val(16#2500#)); end loop;
-      Put_Line(Character_2'val(16#2518#));
-    end Put_Title;
   --function To_String_1_C                    (Item : in String_2)           return String_1_C                    is begin return To_String_1_C(To_String_1(Item));                                     end To_String_1_C;
   function To_String_1_C                    (Item : in String_1)           return String_1_C                    is begin return To_C(Item, True);                                                     end To_String_1_C;
   function To_String_1                      (Item : in String_1_C)         return String_1                      is begin return To_Ada(Item, True);                                                   end To_String_1;
@@ -238,6 +199,46 @@ package body Neo is
       return To_String_2(Buffer);
     exception when others => raise Storage_Error;
     end To_String_2;
+  function Get_Duration(Timer : in Record_Timer) return Duration is begin return (if Timer.Is_Stopped then Timer.Last else Clock - Timer.Start); end Get_Duration;
+  procedure Start(Timer : in out Record_Timer) is
+    begin
+      if not Timer.Is_Stopped then raise Timer_Started_Without_Being_Stopped; end if;
+      Timer := (Is_Stopped => False, Start => Clock, others => <>);
+    end Start;
+  procedure Stop(Timer : in out Record_Timer) is
+    begin
+      if Timer.Is_Stopped then raise Timer_Stopped_Without_Being_Started; end if;
+      Timer := (Is_Stopped => True, Last => Timer.Start - Clock, others => <>);
+    end Stop;
+  procedure Put_Title(Item : in String_2) is
+    Space_Count : Integer_4_Signed := 0;
+    Count       : Integer_4_Signed := Item'length * 3 - Item'length / 3;
+    begin
+      if Item'length > Get_Line_Size then raise Title_Is_Too_Long; end if;
+      Put(Character_2'val(16#250C#));
+      for I in 1..Get_Line_Size - 2 loop Put(Character_2'val(16#2500#)); end loop;
+      Put_Line(Character_2'val(16#2510#));
+      Put(Character_2'val(16#2502#));
+      for I in 1..Item'length loop
+        if Item(I) = ' ' then Space_Count := Space_Count + 1; end if;
+      end loop;
+      if Count + Space_Count >= Get_Line_Size then
+        for I in 1..Get_Line_Size / 2 - Item'length / 2 - 1 loop Put(" "); end loop;
+        Put(Item);
+        for I in 1..Get_Line_Size - Item'length - (Get_Line_Size / 2 - Item'length / 2) - 1 loop Put(" "); end loop;
+      else
+        for I in 1..Get_Line_Size / 2 - (Count + Space_Count) / 2 - 1 loop Put(" "); end loop;
+        for I in 1..Item'length loop
+          Put(Item(I) & "  ");
+          if Item(I) = ' ' then Put(" "); end if;
+        end loop;
+        for I in 1..Get_Line_Size - (Get_Line_Size / 2 - (Count + Space_Count) / 2 - 1) - Item'length * 3 - Space_Count - 2 loop Put(" "); end loop;
+      end if;
+      Put_Line(Character_2'val(16#2502#));
+      Put(Character_2'val(16#2514#));
+      for I in 1..Get_Line_Size - 2 loop Put(Character_2'val(16#2500#)); end loop;
+      Put_Line(Character_2'val(16#2518#));
+    end Put_Title;
   function Split(Item : in String_2; On : in String_2 := " ") return Vector_String_2_Unbounded.Vector is
     Result    : Vector_String_2_Unbounded.Vector;
     TRIMMED   : constant String_2 := Trim(Item, Both);
@@ -246,9 +247,7 @@ package body Neo is
       if REMAINDER = 0 then
         Result.Append(To_String_2_Unbounded(TRIMMED));
         return Result;
-      else
-        Result.Append(To_String_2_Unbounded(Trim(TRIMMED(TRIMMED'first..REMAINDER - 1), Both)));
-      end if;
+      else Result.Append(To_String_2_Unbounded(Trim(TRIMMED(TRIMMED'first..REMAINDER - 1), Both))); end if;
       Result.Append(Split(TRIMMED(REMAINDER..TRIMMED'last), On));
       return Result;
     end Split;

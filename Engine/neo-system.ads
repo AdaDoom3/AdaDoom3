@@ -9,8 +9,8 @@ package Neo.System is
   pragma Elaborate_Body;
   Task_Initialized_Without_Being_Finalized : Exception;
   Task_Finalized_Without_Begin_Initialized : Exception;
-  Call_Failure : Exception;
-  Unsupported  : Exception;
+  Call_Failure                             : Exception;
+  Unsupported                              : Exception;
   type Enumerated_Icon    is (No_Icon, Warning_Icon, Information_Icon, Error_Icon);
   type Enumerated_Buttons is (Yes_No_Buttons, Okay_Button, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
   type Enumerated_System  is (Unknown_System,

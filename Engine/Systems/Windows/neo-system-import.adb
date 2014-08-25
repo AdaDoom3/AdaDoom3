@@ -48,7 +48,7 @@ separate(Neo.System) package body Import is
         if Code = COMPUTER_BASED_TRAINING_ACTIVATE and To_String_2(Class_Name) = CLASS_NAME_DIALOG and To_String_2(Window_Text) = Name then
           Icon := Load_Image(
             Instance  => NULL_ADDRESS,
-            Name      => To_Access_Constant_Character_2_C(NAME_ICON & ".ico"),
+            Name      => To_Access_Constant_Character_2_C(PATH_ASSETS & "\ico\" & NAME_ICON & ".ico"),
             Kind      => LOAD_ICO,
             Desired_X => 0,
             Desired_Y => 0,
@@ -65,26 +65,23 @@ separate(Neo.System) package body Import is
       end Hook;
     begin
       Temporary_Hook := Set_Windows_Hook(COMPUTER_BASED_TRAINING_HOOK, Hook'address, NULL_ADDRESS, Get_Current_Thread_Id);
-      return(
-        case
-          Message_Box(
-            Window  => Window,
-            Caption => To_String_2_C(Name),
-            Text    => To_String_2_C(Message),
-            Kind    =>(
-              if Window = NULL_ADDRESS then MESSAGE_BOX_SYSTEM_MODAL else 0)
-              or(case Icon is
-                when Warning_Icon     => ICON_WARNING,
-                when Information_Icon => ICON_INFORMATION,
-                when Error_Icon       => ICON_ERROR,
-                when No_Icon          => 0)
-              or(case Buttons is
-                when Okay_Button          => BUTTON_OKAY,
-                when Yes_No_Buttons       => BUTTONS_YES_NO,
-                when Okay_Cancel_Buttons  => BUTTONS_CANCEL_OKAY,
-                when Retry_Cancel_Buttons => BUTTONS_CANCEL_RETRY)) is
-            when PRESSED_OKAY | PRESSED_RETRY | PRESSED_YES => True,
-            when others => False);
+      return(case Message_Box(
+        Window  => Window,
+        Caption => To_String_2_C(Name),
+        Text    => To_String_2_C(Message),
+        Kind    =>(
+          if Window = NULL_ADDRESS then MESSAGE_BOX_SYSTEM_MODAL else 0) or(case Icon is
+            when Warning_Icon     => ICON_WARNING,
+            when Information_Icon => ICON_INFORMATION,
+            when Error_Icon       => ICON_ERROR,
+            when No_Icon          => 0)
+          or(case Buttons is
+            when Okay_Button          => BUTTON_OKAY,
+            when Yes_No_Buttons       => BUTTONS_YES_NO,
+            when Okay_Cancel_Buttons  => BUTTONS_CANCEL_OKAY,
+            when Retry_Cancel_Buttons => BUTTONS_CANCEL_RETRY)) is
+        when PRESSED_OKAY | PRESSED_RETRY | PRESSED_YES => True,
+        when others => False);
     end Is_Okay;
   function Get_Specifics return Record_Specifics is
     Buffer           : aliased Integer_4_Signed_C         := 0;

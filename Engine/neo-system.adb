@@ -4,10 +4,7 @@ package body Neo.System is
       task body Task_Unsafe is
         begin
           accept Initialize(Id : in out Task_Id) do Id := Current_Task; end Initialize;
-          Run;
-          Set_Number_Of_Tasks(Get_Number_Of_Tasks - 1);
-        exception when Occurrence: others =>
-          Handle_Exception(Occurrence);
+          begin Run; exception when Occurrence: others => Handle_Exception(Occurrence); end;
           Set_Number_Of_Tasks(Get_Number_Of_Tasks - 1);
         end Task_Unsafe;
       protected body Protected_Task is
@@ -57,7 +54,7 @@ package body Neo.System is
     end Is_Okay;
   function Is_Supported(Requirements : in Record_Requirements) return Boolean is
     begin
-      if SPECIFICS.Version    in Enumerated_Linux_System'range     then return SPECIFICS.Version >= Requirements.Minimum_Linux;
+      if    SPECIFICS.Version in Enumerated_Linux_System'range     then return SPECIFICS.Version >= Requirements.Minimum_Linux;
       elsif SPECIFICS.Version in Enumerated_Windows_System'range   then return SPECIFICS.Version >= Requirements.Minimum_Windows;
       elsif SPECIFICS.Version in Enumerated_Macintosh_System'range then return SPECIFICS.Version >= Requirements.Minimum_Macintosh; end if;
       return False;
@@ -68,6 +65,7 @@ package body Neo.System is
         To_String_2(Exception_Name(Occurrence))    & END_LINE_2 &
         To_String_2(Exception_Message(Occurrence)) & END_LINE_2 &(
         if Exception_Name(Occurrence) = "NEO.SYSTEM.CALL_FAILURE" then Get_Last_Error & END_LINE_2 else NULL_STRING_2));
+      New_Line;
       Put_Line(Get_Errors);
       Is_Running.Set(False);
     end Handle_Exception;

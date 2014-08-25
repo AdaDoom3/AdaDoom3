@@ -22,7 +22,7 @@ project Neo is
       "Xbox",
       "PlayStation");
     type Option_Game is(
-      "Doom3");
+      "DOOM");
   ---------------
   -- Scenarios -- In the GPS IDE scenarios are displayed with the latest External call on top within the widget
   ---------------
@@ -33,7 +33,7 @@ project Neo is
     ARCHITECTURE : Option_Architecture := External("Architecture", "x86-64");
     SYSTEM       : Option_System       := External("System",       "Windows");
     STEAM        : Option_Boolean      := External("Steam",        "Yes");
-    GAME         : Option_Game         := External("Game",         "Doom3");
+    GAME         : Option_Game         := External("Game",         "DOOM");
   ------------
   -- Naming --
   ------------

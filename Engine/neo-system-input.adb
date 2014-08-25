@@ -1,4 +1,3 @@
-with Ada.Exceptions;          use Ada.Exceptions;
 package body Neo.System.Input is
   package body Import is separate;
   package body Impulse is
@@ -41,7 +40,7 @@ package body Neo.System.Input is
     end Inject_Key;
   procedure Inject(Binding : in Record_Binding) is
     begin
-      while Status.Is_Doing_Something loop delay 0.0001; end loop; Status.Set_Is_Doing_Something(True);
+      while Status.Is_Doing_Something loop delay DURATION_FOR_MUTEX_WAIT; end loop; Status.Set_Is_Doing_Something(True);
       case Binding.Kind is
         when Playstation_Trigger_Kind => Injection.Playstation_Triggers(Binding.Trigger)     := Binding.Position;
         when Playstation_Stick_Kind   => Injection.Playstation_Sticks(Binding.Stick)         := Binding.Axis;
@@ -64,10 +63,14 @@ package body Neo.System.Input is
         Devices.Next(Current_Device);
       end loop;
     end Set_Vibration;
-  procedure Handle(Text : in String_2) is
-    Line    : Vector_String_2_Unbounded.Vector := Split(Text);
+  procedure Perform_Unbind(Parameters : in Vector_String_2_Unbounded.Vector) is
+    begin
+      null;
+    end Perform_Unbind;
+  procedure Perform_Bind(Parameters : in Vector_String_2_Unbounded.Vector) is
+    begin
     --Impulse : Record_Impulse                   := (others => <>);
-    Success : Boolean                          := False;
+    --Success : Boolean                          := False;
     --procedure Dispatch(Command : in String_2; Binding : in Record_Binding) is
     --  begin
     --    if Command = COMMAND_BIND then
@@ -78,7 +81,6 @@ package body Neo.System.Input is
     --
     --    end if;
     --  end Dispatch;
-    begin
       --if To_String_2(Line.First_Element) /= COMMAND_BIND and To_String_2(Line.First_Element) /= COMMAND_UNBIND then raise Parse; end if;
       --case Length(Line) is
       --  when 1 =>
@@ -101,9 +103,8 @@ package body Neo.System.Input is
       --    return;
       --  end if;
       --end loop;
-      raise Parse;
-    exception when others => Neo.Command.Handle(Text);
-    end Handle;
+      null;
+    end Perform_Bind;
   procedure Run is
     Last_Time        : Time          := Clock;
     Player           : Record_Player := (others => <>);
@@ -117,7 +118,7 @@ package body Neo.System.Input is
       Import.Initialize;
       while Is_Running.Get and Import.Update loop
         if Is_Active.Get then
-          while Status.Is_Doing_Something loop delay 0.0001; end loop; Status.Set_Is_Doing_Something(True);
+          while Status.Is_Doing_Something loop delay DURATION_FOR_MUTEX_WAIT; end loop; Status.Set_Is_Doing_Something(True);
           Current_Player := Players.First;
           while Players.Has_Element(Current_Player) loop
             Players.Replace(Current_Player, Injection);
@@ -199,6 +200,7 @@ package body Neo.System.Input is
                       end loop;
                     end if;
                     Impulse.Trip(Binding);
+                    if Binding.Kind = Text_Kind then Binding.Text := NULL_STRING_2_UNBOUNDED; Impulse.Bindings.all.Replace(Current_Binding, Binding); end if;
                   end Handle_Common;
                 begin
                   Player := Players.Element(Binding.Player);

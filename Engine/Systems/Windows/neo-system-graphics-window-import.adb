@@ -16,17 +16,18 @@ separate(Neo.System.Graphics.Window) package body Import is
     begin null;
     end Set_Cursor;
   function Get_Borders return Vector_Record_Border.Unsafe.Vector is
-    Borders : Vector_Record_Border.Unsafe.Vector;
+    Borders   : Vector_Record_Border.Unsafe.Vector;
+    Rectangle : Record_Rectangle := (others => <>);
     function Callback_Monitor(Monitor, Device_Context : in Address; Screen : in Access_Record_Rectangle; Data : in Integer_Address) return Integer_4_Signed_C; pragma Convention(Stdcall, Callback_Monitor);
     function Callback_Monitor(Monitor, Device_Context : in Address; Screen : in Access_Record_Rectangle; Data : in Integer_Address) return Integer_4_Signed_C is
       Monitor_Information : aliased Record_Monitor_Information := (others => <>);
       begin
         Assert(Get_Monitor_Information(Monitor, Monitor_Information'address));
         Borders.Append((
-          Left   => Integer_8_Signed(Monitor_Information.Work_Area.Left),
-          Right  => Integer_8_Signed(Monitor_Information.Work_Area.Right),
-          Top    => Integer_8_Signed(Monitor_Information.Work_Area.Top),
-          Bottom => Integer_8_Signed(Monitor_Information.Work_Area.Bottom)));
+          Left   => Integer_8_Signed(Monitor_Information.Monitor.Left),
+          Right  => Integer_8_Signed(Monitor_Information.Monitor.Right),
+          Top    => Integer_8_Signed(Monitor_Information.Monitor.Top),
+          Bottom => Integer_8_Signed(Monitor_Information.Monitor.Bottom)));
         return C_TRUE;
       end Callback_Monitor;
     begin
@@ -35,18 +36,15 @@ separate(Neo.System.Graphics.Window) package body Import is
         Clip           => NULL_ADDRESS,
         Callback       => Callback_Monitor'address,
         Data           => 0));
-      return Borders;
-    end Get_Borders;
-  function Get_Window_Border return Record_Border is
-    Rectangle : Record_Rectangle := (others => <>);
-    begin
+      Assert(Borders.Length > 0);
       Assert(Get_Window_Rectangle(Primary_Window, Rectangle'address));
-      return(
+      Borders.Replace_Element(1,(
         Bottom => Integer_8_Signed(Rectangle.Bottom),
         Top    => Integer_8_Signed(Rectangle.Top),
         Left   => Integer_8_Signed(Rectangle.Left),
-        Right  => Integer_8_Signed(Rectangle.Right));
-    end Get_Window_Border;
+        Right  => Integer_8_Signed(Rectangle.Right)));
+      return Borders;
+    end Get_Borders;
   function Get_Decoration return Record_Border is
     begin
       return(
@@ -87,7 +85,72 @@ separate(Neo.System.Graphics.Window) package body Import is
       end if;
     end Assert_Only_Instance;
   function Get_Specifics return Record_Specifics is
+    function Callback_Window(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned, Data_Signed : in Integer_Address) return Integer_Address; pragma Convention(Stdcall, Callback_Window);
+    function Callback_Window(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned, Data_Signed : in Integer_Address) return Integer_Address is
+      --Device_Context    : Record_Device_Context    := 0;
+      --Rendering_Context : Record_Rendering_Context := hGLRC;
+      begin null;
+      --  if Message = EVENT_DESTROY then Post_Quit_Message(0); end if;
+      --  if Message /= EVENT_CREATE then return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed); end if;
+      --  Device_Context := Get_Device_Context(Window);
+      --  Set_Pixel_Format(
+      --    Device_Context => Device_Context,
+      --    Format         => Choose_Pixel_Format(Device_Context, Pixel_Format'address),
+      --    Descriptor     => Pixel_Format'address);
+      --  Rendering_Context := OpenGL_Create_Context(Device_Context);
+      --  Make_Current(Device_Context, Rendering_Context);
+      --  Make_Current(NULL_ADDRESS, NULL_ADDRESS);
+      --  Delete_Context(Rendering_Context);
+      --  Release_Device_Context(Window, Device_Context);
+        return 1;
+      end Callback_Window;
+    --Message           : Record_Message := NULL_RECORD_MESSAGE;
+    --Window            : Address        := NULL_ADDRESS;
+    --Device_Context    : Address        := NULL_ADDRESS;
+    --Rendering_Context : Address        := NULL_ADDRESS;
     begin
+      --Assert(Create_Class(Callback'address, " "));
+      --Window := Create_Window(
+      --  Class_Name  => WIN32_FAKE_WINDOW_CLASS_NAME,
+      --  Window_Name => GAME_NAME,
+      --  Style       => WS_OVERLAPPEDWINDOW);
+      --Assert(Window);
+      --Device_Context    := Get_Device_Context(Window);
+      --Rendering_Context := Create_Rendering_Context(Device_Context);
+      --Make_Current(Device_Context, Rendering_Context);
+      --Operating_System_Supports_Swap_Control_Tear := Index(, "WGL_EXT_swap_control_tear") /= 0;
+      --Release_Device_Context(Window, Device_Context);
+      --while Get_Message(Message'address, NULL_ADDRESS, 0, 0) loop
+      --  Result := Translate_Message(Message'address);
+      --  Result := Dispatch_Message(Message'address);
+      --end loop;
+      --Device_Context := Get_Device_Context(Window);
+      --Assert(Device_Context);
+      --if Choose_Pixel_Format /= null and Multi_Samples > 1 then
+      --  Choose_Pixel_Format(
+      --    Device_Context     => Device_Context,
+      --    Attributes_Integer =>(
+      --    WGL_SAMPLE_BUFFERS_ARB, 1,
+      --    WGL_SAMPLES_ARB,        Multi_Samples,
+      --    WGL_DOUBLE_BUFFER_ARB,  1,
+      --    WGL_STENCIL_BITS_ARB,   8,
+      --    WGL_DEPTH_BITS_ARB,     24,
+      --    WGL_RED_BITS_ARB,       8,
+      --    WGL_BLUE_BITS_ARB,      8,
+      --    WGL_GREEN_BITS_ARB,     8,
+      --    WGL_ALPHA_BITS_ARB,     8, 0, 0),
+      --    Attributes_Float  => (0.0, 0.0),
+      --    Pixel_Format      => Pixel_Format'address,
+      --    Number_Of_Formats => null);
+      --else Assert(Choose_Pixel_Format(Device_Context, FORMAT'address)); end if;
+      --Describe_Pixel_Format(Device_Context, Pixel_Format, Pixel_Descriptor'size / Byte'size, Pixel_Descriptor'address);
+      --Color_Bits   := Pixel_Descriptor.Color_Bits;
+      --Depth_Bits   := Pixel_Descriptor.Depth_Bits;
+      --Stencil_Bits :=(
+      --  if Pixel_Descriptor.Stencil_Bits /= 0 then Pixel_Descriptor.Stencil_Bits -- Windows XP seems to set this incorrectly
+      --  else Byte'size);
+      --Assert(Set_Pixel_Format(Device_Context, Pixel_Format, &win32.pfd));
+      --Assert(Create_Context(Device_Context));
       return (others => <>);
     end Get_Specifics;
   procedure Clip_Mouse(Undo : in Boolean := False; Do_Hide : in Boolean := False) is
@@ -228,8 +291,12 @@ separate(Neo.System.Graphics.Window) package body Import is
       Point : Record_Point;
       begin
         case Message is
+          when EVENT_CLOSE   => Post_Quit_Message(0); return Integer_Address(C_FALSE);
           when EVENT_COMMAND => if Data_Unsigned = SUBEVENT_MENU_POPOUT or Data_Unsigned = SUBEVENT_SCREEN_SAVER_START then return 0; end if;
-          when EVENT_CLOSE => Post_Quit_Message(0); return Integer_Address(C_FALSE);
+          when EVENT_CHARACTER =>
+            if (Get_Key_State(Integer_4_Signed_C(VIRTUAL_KEY_CONTROL)) and 16#8000#) = 0 then
+              Inject((Text_Kind, Text => To_String_2_Unbounded(Character_2'val(Integer_4_Signed(Data_Unsigned))), others => <>));
+            end if;
           when EVENT_ACTIVATION_CHANGE =>
             if    (Data_Unsigned and 16#0000_FFFF#) = 0 or (Data_Unsigned and 16#FFFF_0000#) /= 0 then Activate(False, False, Integer_8_Signed(Point.X), Integer_8_Signed(Point.Y));
             elsif (Data_Unsigned and 16#0000_FFFF#) = SUBEVENT_CLICK_ACTIVATION then                   Activate(True,  True,  Integer_8_Signed(Point.X), Integer_8_Signed(Point.Y));

@@ -207,6 +207,7 @@ package Neo is
   procedure Put                 (Item  : in String_2);
   procedure Put_Title           (Item  : in String_2);
   procedure Put_Line            (Item  : in String_2);
+  procedure Put_Line            (Item  : in String_2_Unbounded);
   procedure Put_Line            (Item  : in Character_2);
   procedure Put_Debug           (Item  : in String_2);
   procedure Put_Debug_Line      (Item  : in String_2);
@@ -277,6 +278,7 @@ package Neo is
   function To_Unchecked_Integer_4_Signed_C            is new Ada.Unchecked_Conversion(Integer_4_Unsigned_C,          Integer_4_Signed_C);
   function To_Unchecked_Integer_4_Signed              is new Ada.Unchecked_Conversion(Integer_4_Unsigned,            Integer_4_Signed);
   function To_Unchecked_Integer_2_Signed              is new Ada.Unchecked_Conversion(Integer_2_Unsigned,            Integer_2_Signed);
+  function To_Unchecked_Integer_2_Signed_C            is new Ada.Unchecked_Conversion(Integer_2_Unsigned,            Integer_2_Signed_C);
   function To_Unchecked_Integer_2_Unsigned            is new Ada.Unchecked_Conversion(Character_2_C,                 Integer_2_Unsigned);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C,   Integer_Address);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
