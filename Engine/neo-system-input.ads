@@ -78,7 +78,7 @@ package Neo.System.Input is
   subtype Enumerated_Playstation_Key is Enumerated_Key range Back_Key..Triangle_Key;
   subtype Enumerated_Keyboard_Key    is Enumerated_Key range Null_Key..PA1_Key;
   subtype Enumerated_Xbox_Key        is Enumerated_Key range Y_Key..Right_Stick_Key;
-  subtype Enumerated_Mouse_Key       is Enumerated_Key range Horizontal_Wheel_Left_Key..Auxiliary_2_Mouse_Key;
+  subtype Enumerated_Mouse_Key       is Enumerated_Key range Horizontal_Wheel_Left_Key..Middle_Mouse_Key;
   type Record_Location is record
       X : Integer_8_Signed := 0;
       Y : Integer_8_Signed := 0;
