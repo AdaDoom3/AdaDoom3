@@ -29,7 +29,7 @@ package body Neo.System.Input is
   procedure Inject_Key(Identifier : in Integer_Address; Key : in Enumerated_Key; Is_Pressed : in Boolean) is
     Device : Record_Device := Devices.Element(Identifier);
     begin
-      Put_Line((if Is_Pressed then "Pressed " else "Released ") & Enumerated_Key'wide_image(Key) & " from" & Integer_Address'wide_image(Identifier));
+      --Put_Line((if Is_Pressed then "Pressed " else "Released ") & Enumerated_Key'wide_image(Key) & " from" & Integer_Address'wide_image(Identifier));
       case Device.Kind is
         when Playstation_Device => if Device.Playstation_Keys(Key).Is_Pressed /= Is_Pressed then Device.Playstation_Keys(Key) := (Is_Pressed, Clock); Devices.Replace(Identifier, Device); end if;
         when Keyboard_Device    => if Device.Keyboard_Keys(Key).Is_Pressed    /= Is_Pressed then Device.Keyboard_Keys(Key)    := (Is_Pressed, Clock); Devices.Replace(Identifier, Device); end if;

@@ -3,7 +3,6 @@ with Neo.Command;                use Neo.Command;
 with Neo.System;                 use Neo.System;
 with Neo.System.Input;           use Neo.System.Input;
 with Neo.System.Memory;          use Neo.System.Memory;
-with Neo.System.Community;       use Neo.System.Community;
 with Neo.System.Processor;       use Neo.System.Processor;
 with Neo.System.Text;            use Neo.System.Text;
 with Neo.System.Text.Console;    use Neo.System.Text.Console;

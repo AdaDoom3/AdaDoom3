@@ -10,7 +10,7 @@ package body ada_main is
 
    E076 : Short_Integer; pragma Import (Ada, E076, "system__os_lib_E");
    E011 : Short_Integer; pragma Import (Ada, E011, "system__soft_links_E");
-   E270 : Short_Integer; pragma Import (Ada, E270, "system__fat_llf_E");
+   E268 : Short_Integer; pragma Import (Ada, E268, "system__fat_llf_E");
    E021 : Short_Integer; pragma Import (Ada, E021, "system__exception_table_E");
    E166 : Short_Integer; pragma Import (Ada, E166, "ada__containers_E");
    E061 : Short_Integer; pragma Import (Ada, E061, "ada__io_exceptions_E");
@@ -29,8 +29,8 @@ package body ada_main is
    E095 : Short_Integer; pragma Import (Ada, E095, "system__storage_pools__subpools_E");
    E141 : Short_Integer; pragma Import (Ada, E141, "system__task_info_E");
    E163 : Short_Integer; pragma Import (Ada, E163, "ada__calendar_E");
-   E249 : Short_Integer; pragma Import (Ada, E249, "ada__calendar__delays_E");
-   E281 : Short_Integer; pragma Import (Ada, E281, "ada__calendar__time_zones_E");
+   E247 : Short_Integer; pragma Import (Ada, E247, "ada__calendar__delays_E");
+   E279 : Short_Integer; pragma Import (Ada, E279, "ada__calendar__time_zones_E");
    E202 : Short_Integer; pragma Import (Ada, E202, "system__assertions_E");
    E091 : Short_Integer; pragma Import (Ada, E091, "system__pool_global_E");
    E079 : Short_Integer; pragma Import (Ada, E079, "system__file_control_block_E");
@@ -42,23 +42,22 @@ package body ada_main is
    E189 : Short_Integer; pragma Import (Ada, E189, "ada__strings__wide_unbounded_E");
    E204 : Short_Integer; pragma Import (Ada, E204, "system__strings__stream_ops_E");
    E229 : Short_Integer; pragma Import (Ada, E229, "system__tasking__initialization_E");
-   E251 : Short_Integer; pragma Import (Ada, E251, "ada__real_time_E");
+   E249 : Short_Integer; pragma Import (Ada, E249, "ada__real_time_E");
    E200 : Short_Integer; pragma Import (Ada, E200, "ada__text_io_E");
    E117 : Short_Integer; pragma Import (Ada, E117, "system__tasking__protected_objects_E");
    E233 : Short_Integer; pragma Import (Ada, E233, "system__tasking__protected_objects__entries_E");
    E231 : Short_Integer; pragma Import (Ada, E231, "system__tasking__queuing_E");
-   E261 : Short_Integer; pragma Import (Ada, E261, "system__tasking__stages_E");
+   E259 : Short_Integer; pragma Import (Ada, E259, "system__tasking__stages_E");
    E043 : Short_Integer; pragma Import (Ada, E043, "neo_E");
    E210 : Short_Integer; pragma Import (Ada, E210, "neo__command_E");
    E222 : Short_Integer; pragma Import (Ada, E222, "neo__system_E");
-   E241 : Short_Integer; pragma Import (Ada, E241, "neo__system__community_E");
-   E243 : Short_Integer; pragma Import (Ada, E243, "neo__system__graphics_E");
-   E247 : Short_Integer; pragma Import (Ada, E247, "neo__system__input_E");
-   E245 : Short_Integer; pragma Import (Ada, E245, "neo__system__graphics__window_E");
-   E267 : Short_Integer; pragma Import (Ada, E267, "neo__system__memory_E");
-   E273 : Short_Integer; pragma Import (Ada, E273, "neo__system__processor_E");
-   E275 : Short_Integer; pragma Import (Ada, E275, "neo__system__text_E");
-   E277 : Short_Integer; pragma Import (Ada, E277, "neo__system__text__console_E");
+   E241 : Short_Integer; pragma Import (Ada, E241, "neo__system__graphics_E");
+   E245 : Short_Integer; pragma Import (Ada, E245, "neo__system__input_E");
+   E243 : Short_Integer; pragma Import (Ada, E243, "neo__system__graphics__window_E");
+   E265 : Short_Integer; pragma Import (Ada, E265, "neo__system__memory_E");
+   E271 : Short_Integer; pragma Import (Ada, E271, "neo__system__processor_E");
+   E273 : Short_Integer; pragma Import (Ada, E273, "neo__system__text_E");
+   E275 : Short_Integer; pragma Import (Ada, E275, "neo__system__text__console_E");
 
    Local_Priority_Specific_Dispatching : constant String := "";
    Local_Interrupt_States : constant String := "";
@@ -67,21 +66,21 @@ package body ada_main is
 
    procedure finalize_library is
    begin
-      E277 := E277 - 1;
+      E275 := E275 - 1;
       declare
          procedure F1;
          pragma Import (Ada, F1, "neo__system__text__console__finalize_spec");
       begin
          F1;
       end;
-      E245 := E245 - 1;
+      E243 := E243 - 1;
       declare
          procedure F2;
          pragma Import (Ada, F2, "neo__system__graphics__window__finalize_spec");
       begin
          F2;
       end;
-      E247 := E247 - 1;
+      E245 := E245 - 1;
       declare
          procedure F3;
          pragma Import (Ada, F3, "neo__system__input__finalize_spec");
@@ -308,7 +307,7 @@ package body ada_main is
 
       System.Soft_Links'Elab_Spec;
       System.Fat_Llf'Elab_Spec;
-      E270 := E270 + 1;
+      E268 := E268 + 1;
       System.Exception_Table'Elab_Body;
       E021 := E021 + 1;
       Ada.Containers'Elab_Spec;
@@ -341,9 +340,9 @@ package body ada_main is
       Ada.Calendar'Elab_Body;
       E163 := E163 + 1;
       Ada.Calendar.Delays'Elab_Body;
-      E249 := E249 + 1;
+      E247 := E247 + 1;
       Ada.Calendar.Time_Zones'Elab_Spec;
-      E281 := E281 + 1;
+      E279 := E279 + 1;
       System.Assertions'Elab_Spec;
       E202 := E202 + 1;
       System.Pool_Global'Elab_Spec;
@@ -381,7 +380,7 @@ package body ada_main is
       E058 := E058 + 1;
       Ada.Real_Time'Elab_Spec;
       Ada.Real_Time'Elab_Body;
-      E251 := E251 + 1;
+      E249 := E249 + 1;
       Ada.Text_Io'Elab_Spec;
       Ada.Text_Io'Elab_Body;
       E200 := E200 + 1;
@@ -392,7 +391,7 @@ package body ada_main is
       System.Tasking.Queuing'Elab_Body;
       E231 := E231 + 1;
       System.Tasking.Stages'Elab_Body;
-      E261 := E261 + 1;
+      E259 := E259 + 1;
       Neo'Elab_Spec;
       E043 := E043 + 1;
       Neo.Command'Elab_Spec;
@@ -401,22 +400,21 @@ package body ada_main is
       Neo.System'Elab_Body;
       E222 := E222 + 1;
       E241 := E241 + 1;
-      E243 := E243 + 1;
       Neo.System.Input'Elab_Spec;
       Neo.System.Input'Elab_Body;
-      E247 := E247 + 1;
+      E245 := E245 + 1;
       Neo.System.Graphics.Window'Elab_Spec;
       Neo.System.Graphics.Window'Elab_Body;
-      E245 := E245 + 1;
+      E243 := E243 + 1;
       Neo.System.Memory'Elab_Spec;
       Neo.System.Memory'Elab_Body;
-      E267 := E267 + 1;
+      E265 := E265 + 1;
       Neo.System.Processor'Elab_Spec;
       Neo.System.Processor'Elab_Body;
+      E271 := E271 + 1;
       E273 := E273 + 1;
-      E275 := E275 + 1;
       Neo.System.Text.Console'Elab_Spec;
-      E277 := E277 + 1;
+      E275 := E275 + 1;
    end adainit;
 
    procedure Ada_Main_Program;
@@ -452,21 +450,20 @@ package body ada_main is
    end;
 
 --  BEGIN Object file/option list
-   --   C:\Neo\Objects\neo.o
-   --   C:\Neo\Objects\neo-command.o
-   --   C:\Neo\Objects\neo-windows.o
-   --   C:\Neo\Objects\neo-system.o
-   --   C:\Neo\Objects\neo-system-community.o
-   --   C:\Neo\Objects\neo-system-graphics.o
-   --   C:\Neo\Objects\neo-system-input.o
-   --   C:\Neo\Objects\neo-system-graphics-window.o
-   --   C:\Neo\Objects\neo-system-memory.o
-   --   C:\Neo\Objects\neo-system-processor.o
-   --   C:\Neo\Objects\neo-system-text.o
-   --   C:\Neo\Objects\neo-system-text-console.o
-   --   C:\Neo\Objects\main.o
-   --   -LC:\Neo\Objects\
-   --   -LC:\Neo\Objects\
+   --   C:\git\Objects\neo.o
+   --   C:\git\Objects\neo-command.o
+   --   C:\git\Objects\neo-windows.o
+   --   C:\git\Objects\neo-system.o
+   --   C:\git\Objects\neo-system-graphics.o
+   --   C:\git\Objects\neo-system-input.o
+   --   C:\git\Objects\neo-system-graphics-window.o
+   --   C:\git\Objects\neo-system-memory.o
+   --   C:\git\Objects\neo-system-processor.o
+   --   C:\git\Objects\neo-system-text.o
+   --   C:\git\Objects\neo-system-text-console.o
+   --   C:\git\Objects\main.o
+   --   -LC:\git\Objects\
+   --   -LC:\git\Objects\
    --   -LC:/gnat/2014/lib/gcc/i686-pc-mingw32/4.7.4/adalib/
    --   -static
    --   -lgnarl
