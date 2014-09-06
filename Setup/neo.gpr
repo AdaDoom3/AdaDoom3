@@ -81,7 +81,7 @@ project Neo is
     Directory_Systems       := Directory_Engine   & S & "Systems";
     Directory_SDL           := Directory_Systems  & S & "SDL";
     Directory_Documentation := Directory_Game     & S & "Documentation";
-    Directory_Base          := Directory_Game     & S & "Base";
+    Directory_Base          := Directory_Game;--     & S & "Base";
     Directory_Direct3D      := Directory_APIs     & S & "Direct3D";
     Directory_XAudio        := Directory_APIs     & S & "XAudio";
     Directory_OpenGL        := Directory_APIs     & S & "OpenGL";
