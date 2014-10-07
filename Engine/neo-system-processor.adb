@@ -1,20 +1,20 @@
 package body Neo.System.Processor is
-    package body Import is separate;
-    procedure Put_Stack                                            renames Import.Put_Stack;
-    procedure Clear_Stack                                          renames Import.Clear_Stack;
-    procedure Check_Exceptions                                     renames Import.Check_Exceptions;
-    procedure Set_Rounding   (Rounding  : in Enumerated_Rounding)  renames Import.Set_Rounding;
-    procedure Set_Precision  (Precision : in Enumerated_Precision) renames Import.Set_Precision;
-    function Get_Clock_Ticks return Integer_8_Unsigned             renames Import.Get_Clock_Ticks;
-    function Is_Stack_Empty  return Boolean                        renames Import.Is_Stack_Empty;
-    function Get_Specifics return Record_Specifics is
-      Specifics : Record_Specifics := Import.Get_Specifics;
-      begin
-        Specifics.Speed_In_Megahertz := Get_Clock_Ticks;
-        delay SECONDS_FOR_PROCESSOR_SPEED_TIMING;
-        Specifics.Speed_In_Megahertz := (Get_Clock_Ticks - Specifics.Speed_In_Megahertz) * Integer_8_Unsigned(1.0 / SECONDS_FOR_PROCESSOR_SPEED_TIMING);
-        return Specifics;
-      end Get_Specifics;
+  package body Import is separate;
+  procedure Put_Stack                                            renames Import.Put_Stack;
+  procedure Clear_Stack                                          renames Import.Clear_Stack;
+  procedure Check_Exceptions                                     renames Import.Check_Exceptions;
+  procedure Set_Rounding   (Rounding  : in Enumerated_Rounding)  renames Import.Set_Rounding;
+  procedure Set_Precision  (Precision : in Enumerated_Precision) renames Import.Set_Precision;
+  function Get_Clock_Ticks return Integer_8_Unsigned             renames Import.Get_Clock_Ticks;
+  function Is_Stack_Empty  return Boolean                        renames Import.Is_Stack_Empty;
+  function Get_Specifics return Record_Specifics is
+    Specifics : Record_Specifics := Import.Get_Specifics;
+    begin
+      Specifics.Speed_In_Megahertz := Get_Clock_Ticks;
+      delay SECONDS_FOR_PROCESSOR_SPEED_TIMING;
+      Specifics.Speed_In_Megahertz := (Get_Clock_Ticks - Specifics.Speed_In_Megahertz) * Integer_8_Unsigned(1.0 / SECONDS_FOR_PROCESSOR_SPEED_TIMING);
+      return Specifics;
+    end Get_Specifics;
 begin
   Put_Title(Localize("PROCESSOR"));
   New_Line;

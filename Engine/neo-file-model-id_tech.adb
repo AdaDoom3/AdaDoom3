@@ -72,12 +72,12 @@ package Id_Tech is
         while Parser.Peek /= "}" loop Frame_Data.Append(Parser.Next); end loop; Parser.Skip;
         for Frame of Frames loop
           Joint := Joints.Element
-          if Frame.Has_Position_X then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Position_Y then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Position_Z then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_X then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_Z then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_Y then Joint.Position(1) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Position_X then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Position_Y then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Position_Z then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Rotation_X then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Rotation_Z then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Has_Rotation_Y then Joint.Position(I) := Frame_Data.Element(Frame.Index); Frame.Index := Frame.Index + 1; end if;
           Joints.Replace_Element(Frame.Joint, Joint);
         end loop;
         Animation.Frames.Append(Build_Skeleton(Joints));

@@ -1,480 +1,509 @@
+with Neo.OpenGL;              use Neo.OpenGL;
 with System;                  use System;
 with Ada.Wide_Text_IO;        use Ada.Wide_Text_IO;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
 separate(Neo.System.Graphics) package body OpenGL is
-    package Import is separate;
-    function Get_Specifics  return Record_Specifics is
-      Extensions : constant String_2 := To_String_2(Get_String(EXTENSIONS));
-      begin
-        return new Record_Specifics(Get_Inteface) :=(
-          Shading_Language                 => OpenGLShading_Language,
-          Version                          => Float_4_Real'value(Trim(To_String_2(Get_String(VERSION)))(1..3)),
-          Maximum_Texture_Size             => Integer_4_Positive(Get_Integer(MAXIMUM_TEXTURE_SIZE)),
-          Maximum_Texture_Coordinates      => Integer_4_Positive(Get_Integer(MAXIMUM_TEXTURE_COORDINATES)),
-          Maximum_Texture_Image_Units      => Integer_4_Positive(Get_Integer(MAXIMUM_COMBINED_TEXTURE_IMAGE_UNITS)),
-          Has_Direct_State_Access          => Index(Extensions, "EXT_direct_state_access")        /= 0,    -- http://web.archive.org/web/20130807092103/http://www.open.org/registry/specs/EXT/direct_state_access.txt
-          Has_Depth_Bounds_Test            => Index(Extensions, "EXT_depth_bounds_test")          /= 0,    -- http://web.archive.org/web/20130807163528/http://www.open.org/registry/specs/EXT/depth_bounds_test.txt
-          Has_Anisotropic_Filter           => Index(Extensions, "EXT_texture_filter_anisotropic") /= 0,    -- http://web.archive.org/web/20130806203011/http://www.open.org/registry/specs/EXT/texture_filter_anisotropic.txt
-          Has_Texture_Compression          => Index(Extensions, "EXT_texture_compression_s3tc")   /= 0 and --
-                                              Index(Extensions, "ARB_texture_compression")        /= 0,    --
-          Has_Multitexture                 => Index(Extensions, "ARB_multitexture")               /= 0,    --
-          Has_Sync                         => Index(Extensions, "ARB_sync")                       /= 0--,  --
--- As of 5/24/2012, Intel HD 4000 driver's version 15.26.12.64.2761 sync objects do not work properly
-and SPECIFICS.Vendor /= Intel_Vendor,
-          Has_Draw_Elements_Base_Vertex    => Index(Extensions, "ARB_draw_elements_base_vertex")  /= 0,    --
-          Has_Vertex_Array_Object          => Index(Extensions, "ARB_vertex_array_object")        /= 0,    --
-          Has_Vertex_Buffer_Object         => Index(Extensions, "ARB_vertex_buffer_object")       /= 0,    --
-          Has_Uniform_Buffer               => Index(Extensions, "ARB_uniform_buffer_object")      /= 0,    --
-          Has_RGB_Color_Framebuffer        => Index(Extensions, "ARB_framebuffer_sRGB")           /= 0,    --
-          Has_Map_Buffer_Range             => Index(Extensions, "ARB_map_buffer_range")           /= 0,    --
-          Has_Seamless_Cube_Map            => Index(Extensions, "ARB_seamless_cube_map")          /= 0,    --
-          Has_Timer_Query                  => Index(Extensions, "ARB_timer_query")                /= 0,    --
-          Has_Occlusion_Query              => Index(Extensions, "ARB_occlusion_query")            /= 0);   --
-      end Get_Specifics;
-    procedure Reset is
-      begin
-        Clear_Depth(1.0);
-        Cull_Face(FRONT_AND_BACK);
-        Enable(CULL_FACE);
-        Color_Mask(Red => C_TRUE, Green => C_TRUE, Blue => C_TRUE, Alpha => C_TRUE);
-        Blend_Function(ONE, ZERO);
-        Depth_Mask(C_TRUE);
-        Depth_Function(LESS);
-        Disable(STENCIL_TEST);
-        Disable(POLYGON_OFFSET_FILL);
-        Disable(POLYGON_OFFSET_LINE);
-        Polygon_Mode(FRONT_AND_BACK, FILL);
-        Shade_Model(SMOOTH);
-        Enable(DEPTH_TEST);
-        Enable(BLEND);
-        Enable(SCISSOR_TEST);
-        Draw_Buffer(BACK);
-        Read_Buffer(BACK);
-        if Do_Use_Scissor.Get then Scissor(0, 0, Widht, Height); end if;
-      end Reset;
-    procedure Check_Exceptions is
-      begin
-        case Get_Error is
-          when INVALID_ENUMERATION => raise Invalid_Enumeration;
-          when INVALID_OPERATION   => raise Invalid_Operation;
-          when STACK_UNDERFLOW     => raise Stack_Underflow;
-          when STACK_OVERFLOW      => raise Stack_Overflow;
-          when INVALID_VALUE       => raise Invalid_Value;
-          when OUT_OF_MEMORY       => raise Out_Of_Memory;
-          when others              => null;
-        end case;
-      end Check_Exceptions;
-    procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
-      begin
-        case Kind is
-          when Face_Culling    => null;
-          when Two_Sided_Cull  => Disable(CULL_FACE);
-          when Back_Sided_Cull => Cull_Face((if Is_Mirror then FRONT else BACK));
-        end case;
-      end Cull;
-    procedure Scissor(X, Y, Width, Height : in Integer_4_Signed) is
-      begin
-        Scissor(
-          X      => Integer_4_Signed_C(X),
-          Y      => Integer_4_Signed_C(Y),
-          Width  => Integer_4_Signed_C(Width),
-          Height => Integer_4_Signed_C(Height));
-      end Scissor;
-    procedure View_Port(X, Y, Width, Height : in Integer_4_Signed) is
-      begin
-        Viewport(
-          X      => Integer_4_Signed_C(X),
-          Y      => Integer_4_Signed_C(Y),
-          Width  => Integer_4_Signed_C(Width),
-          Height => Integer_4_Signed_C(Height));
-      end View_Port;
-    procedure Polygon_Offset(Scale, Bias : in Float_4_Real) is
-      begin
-        PolygonOffset(
-          Scale => Integer_4_Signed_C(Scale),
-          Bias  => Integer_4_Signed_C(Bias));
-      end Polygon_Offset;
-    procedure Depth_Bounds_Test(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) is
-      begin
-        if Z_Minimum = 0.0 and Z_Maximum = 0.0 then
-          Disable(DEPTH_BOUNDS_TEST);
-        else
-          Enable(DEPTH_BOUNDS_TEST);
-          Depth_Bounds(Float_4_Real_C(Z_Minimum), Float_4_Real_C(Z_Maximum));
-        end if;
-      end Depth_Bounds_Test;
-    procedure Start_Depth_Pass(Rectane : in Record_Rectane) is
-      begin
-        null;
-      end Start_Depth_Pass;
-    procedure Finish_Depth_Pass(Rectane : in Record_Rectane)  is
-      begin
-        null;
-      end Finish_Depth_Pass;
-    procedure Get_Depth_Pass(Rectane : in out Record_Rectane) is
-      begin
-        Rectane := (others => <>);
-      end Get_Depth_Pass;
-    procedure Color(Pixel : in Record_Pixel)  is
-      begin
-        Color(
-          Red   => Float_4_Real_C(Pixel.Color.Red)   / Pixel.Color.Red'size,
-          Green => Float_4_Real_C(Pixel.Color.Green) / Pixel.Color.Green'size,
-          Blue  => Float_4_Real_C(Pixel.Color.Blue)  / Pixel.Color.Blue'size,
-          Alpha => Float_4_Real_C(Pixel.Alpha)       / Pixel.Color.Alpha'size);
-      end Color;
-    procedure Color(Color : in Record_Color) is
-      begin
-        Color(
-          Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
-          Green => Float_4_Real_C(Color.Green) / Color.Green'size,
-          Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
-          Alpha => 1.0);
-      end Color;
-    procedure Clear is
-      begin
-        Clear(DEPTH_BUFFER_BIT);
-      end Clear;
-    procedure Clear(Color : in Record_Pixel; Do_Clear_Depth : in Boolean := False) is
-      begin
-        Clear_Color(Red, Green, Blue, Alpha);
-        Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or COLOR_BUFFER_BIT);
-      end Clear;
-    procedure Clear(Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
-      begin
-        Clear_Stencil(Stencil_Value);
-        Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT);
-      end Clear;
-    procedure Clear(Color : in Record_Pixel; Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
-      begin
-        Clear_Stencil(Stencil_Value);
-        Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT or COLOR_BUFFER_BIT);
-      end Clear;
-    procedure Set_Stereo_Depth(Stereo_Depth : in Item_Stereo_Depth.Variable) is
-      begin
-        Depth((
-          case Depth_Function is
-            when Less_Depth_Function   => LESS--LESS_THAN_OR_EQUAL
-            when Equal_Depth_Function  => EQUAL
-            when Always_Depth_Function => ALWAYS
-            when Greater_Than_Or_Equal => GREATER_THAN_OR_EQUAL));
-      end Set_Stereo_Depth;
-    procedure Set_Stereo_3D(Stereo_3D : in Enumerated_Stereo_3D) is
-      begin
-      end Set_Stereo_3D;
-    procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
-      BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
-        One_Blend                         => ZERO,
-        Zero_Blend                        => ONE,
-        Source_Alpha_Blend                => SOURCE_ALPHA,
-        Destination_Color_Blend           => DESTINATION_COLOR,
-        Destination_Alpha_Blend           => DESTINATION_ALPHA,
-        One_Minus_Source_Alpha_Blend      => ONE_MINUS_SOURCE_ALPHA,
-        One_Minus_Destination_Color_Blend => ONE_MINUS_DESTINATION_COLOR,
-        One_Minus_Destination_Alpha_Blend => ONE_MINUS_DESTINATION_ALPHA);
-      begin
-        if Source = One_Blend and Destination = Zero_Blend then
-          Disable(BLEND);
-        else
-          Enable(BLEND);
-          Blend_Function(BLENDS(Source), BLENDS(Destination));
-        end if;
-      end Set_Blend;
-    procedure Set_Blend_Operation(Blend_Operation : in Enumerated_Blend_Operation) is
-      begin
-      end Set_Blend_Operation;
-    procedure Set_Stencil(Stencil : in Enumerated_Stencil) is
-      begin
-      end Set_Stencil;
-    procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
-      OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
-        Keep_Stencil_Operation           => KEEP,
-        Zero_Stencil_Operation           => ZERO,
-        Invert_Stencil_Operation         => INVERT,
-        Replace_Stencil_Operation        => REPLACE,
-        Increment_Stencil_Operation      => INCREMENT,
-        Decrement_Stencil_Operation      => DECREMENT,
-        Increment_Wrap_Stencil_Operation => INCREMENT_WRAP,
-        Decrement_Wrap_Stencil_Operation => DECREMENT_WRAP);
-      begin
-        Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
-      end Set_Stencil_Operation;
-    procedure Set_Stencil_Function(Stencil : in Enumerated_Stencil_Function) is
-      begin
-        if (diff & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) then
-          if (stateBits & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) != 0 then
-            Enable(STENCIL_TEST);
-          else
-            Disable(STENCIL_TEST);
-          end if;
-        end if;
-        Stencil_Function(
-          Referece      => GLuint((stateBits & GLS_STENCIL_FUNC_REF_BITS ) >> GLS_STENCIL_FUNC_REF_SHIFT),
-          Mask          => GLuint((stateBits & GLS_STENCIL_FUNC_MASK_BITS ) >> GLS_STENCIL_FUNC_MASK_SHIFT)
-          Function_Kind =>(
-            case Stencil is
-              when Less_Stencil                            => LESS
-              when Equal_Stencil                           => EQUAL
-              when Never_Stencil                           => NEVER
-              when Always_Stencil                          => ALWAYS
-              when Greater_Stencil                         => GREATER
-              when Not_Equal_Stencil                       => NOT_EQUAL
-              when Less_Than_Or_Equal_To_Stencil           => LESS_THAN_OR_EQUAL
-              when Greater_Than_Or_Equal_Stencil_Operation => GREATER_THAN_OR_EQUAL));
-      end Set_Stencil_Function;
-    procedure Set_Depth_Function(Value : in Enumerated_Depth_Function) is
-      begin
-      end Set_Depth_Function;
-    procedure Set_Mask(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean) is
-      begin
-        ColorMask(
-          Red   => (if Do_Mask_Red   then C_FALSE else C_TRUE),
-          Green => (if Do_Mask_Green then C_FALSE else C_TRUE),
-          Blue  => (if Do_Mask_Blue  then C_FALSE else C_TRUE),
-          Alpha => (if Do_Mask_Alpha then C_FALSE else C_TRUE));
-      end Set_Mask;
-    procedure Set_Depth_Mask( is
-      begin
-        if (diff & GLS_DEPTHMASK ) then
-          if (stateBits & GLS_DEPTHMASK ) then
-            DepthMask(FALSE);
-          else
-            DepthMask(TRUE);
-          end if;
-        end if;
-      end Set_Depth_Mask;
-    procedure Set_Polymode_Line( is
-      begin
-        if (diff & GLS_POLYMODE_LINE ) then
-          if (stateBits & GLS_POLYMODE_LINE ) then
-            PolygonMode(FRONT_AND_BACK, LINE);
-          else
-            PolygonMode(FRONT_AND_BACK, FILL);
-          end if;
-        end if;
-      end Set_Polymode_Line;
-    procedure Set_Polygon_Offset(Do_Enable : in Boolean) is
-      begin
-        if Do_Enable then
-          PolygonOffset(backEnd.State.polyOfsScale, backEnd.State.polyOfsBias);
-          Enable(POLYGON_OFFSET_FILL);
-          Enable(POLYGON_OFFSET_LINE);
-        else
-          Disable(POLYGON_OFFSET_FILL);
-          Disable(POLYGON_OFFSET_LINE);
-        end if;
-      end Set_Polygon_Offset;
-    procedure Set_Buffer(const void *data ) is
-      -- see which draw buffer we want to render the frame to
-      const setBufferCommand_t * cmd = (const setBufferCommand_t *)data;
-      begin
-        Scissor(0, 0, tr.GetWidth, tr.GetHeight);
-        -- clear screen for debugging automatically enable this with several other debug tools
-        -- that might leave unrendered portions of the screen
-        if r_clear.GetFloat or idStr::Length(r_clear.GetString ) != 1 || r_sineArea.GetBool || r_showOverDraw.GetBool ) {
-          float c[3];
-          if sscanf(r_clear.GetString, "%f %f %f", &c[0], &c[1], &c[2] ) = 3 then
-            Clear(true, false, false, 0, c[0], c[1], c[2], 1.0f);
-          elsif r_clear.GetInteger = 2 then
-            Clear(true, false, false, 0, 0.0, 0.0, 0.0, 1.0);
-          elsif r_showOverDraw.GetBool then
-            Clear(true, false, false, 0, 1.0, 1.0, 1.0, 1.0);
-          else
-            Clear(true, false, false, 0, 0.4, 0.0, 0.25, 1.0);
-          end if;
-        end if;
-      end Set_Buffer;
-    procedure Make_Stereo_Render_Image(Graphic : in Record_Graphic) is
-      idImageOpts opts;
-      begin
-        opts.width := renderSystem->GetWidth;
-        opts.height := renderSystem->GetHeight;
-        opts.numLevels := 1;
-        opts.format := FMT_RGBA8;
-        image->AllocImage(opts, TF_LINEAR, TR_CLAMP);
-      end Make_Stereo_Render_Image;
-    procedure Render_Headset( is
-      begin
-      end Render;
-    procedure Initialize_Texture(Texture : in out Record_Texture) is
-      int numSides;
-      int target;
-      int uploadTarget;
-      begin
-        CheckErrors;
-        PurgeImage;
-        case opts.format is
-          when FMT_RGBA8 =>
-            internalFormat := RGBA8;
-            dataFormat := RGBA;
-            dataType := UNSIGNED_BYTE;
-          when FMT_XRGB8 =>
-            internalFormat := RGB;
-            dataFormat := RGBA;
-            dataType := UNSIGNED_BYTE;
-          when FMT_RGB565 =>
-            internalFormat := RGB;
-            dataFormat := RGB;
-            dataType := UNSIGNED_SHORT_5_6_5;
-          when FMT_ALPHA =>
-            internalFormat := R8;
-            dataFormat := RED;
-            dataType := UNSIGNED_BYTE;
-          when FMT_L8A8 =>
-            internalFormat := RG8;
-            dataFormat := RG;
-            dataType := UNSIGNED_BYTE;
-          when FMT_LUM8 =>
-            internalFormat := R8;
-            dataFormat := RED;
-            dataType := UNSIGNED_BYTE;
-          when FMT_INT8 =>
-            internalFormat := R8;
-            dataFormat := RED;
-            dataType := UNSIGNED_BYTE;
-          when FMT_DXT1 =>
-            internalFormat := COMPRESSED_RGBA_S3TC_DXT1_EXT;
-            dataFormat := RGBA;
-            dataType := UNSIGNED_BYTE;
-          when FMT_DXT5 =>
-            internalFormat := COMPRESSED_RGBA_S3TC_DXT5_EXT;
-            dataFormat := RGBA;
-            dataType := UNSIGNED_BYTE;
-          when FMT_DEPTH =>
-            internalFormat := DEPTH_COMPONENT;
-            dataFormat := DEPTH_COMPONENT;
-            dataType := UNSIGNED_BYTE;
-          when FMT_X16 =>
-            internalFormat := INTENSITY16;
-            dataFormat := LUMINANCE;
-            dataType := UNSIGNED_SHORT;
-          when FMT_Y16_X16 =>
-            internalFormat := LUMINANCE16_ALPHA16;
-            dataFormat := LUMINANCE_ALPHA;
-            dataType := UNSIGNED_SHORT;
-        end case;
-        -- generate the texture number
-        GenTextures(1, (GLuint *)&texnum);
-        if texnum != TEXTURE_NOT_LOADED then raise Texture_Load_Failure; end if;
-        -- allocate all the mip levels with NULL data
-        if (opts.textureType == TT_2D ) {
-          target = uploadTarget = TEXTURE_2D;
-          numSides = 1;
-        elsif (opts.textureType == TT_CUBIC ) {
-          target = TEXTURE_CUBE_MAP_EXT;
-          uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
-          numSides = 6;
-        else
-          assert(!"opts.textureType");
-          target = uploadTarget = TEXTURE_2D;
-          numSides = 1;
-        end if;
-        BindTexture(target, texnum);
-        for (int side = 0; side < numSides; side++ ) loop
-          int w = opts.width;
-          int h = opts.height;
-          if (opts.textureType == TT_CUBIC ) then
-            h = w;
-          end if;
-          for (int level = 0; level < opts.numLevels; level++ ) loop
-            -- clear out any previous error
-            CheckErrors;
-            if (IsCompressed ) then
-              int compressedSize = (((w+3)/4) * ((h+3)/4) * int64(16 ) * BitsForFormat(opts.format ) ) / 8;
-              -- Even though the OpenGL specification allows the 'data' pointer to be NULL, for some
-              -- drivers we actually need to upload data to get it to allocate the texture.
-              -- However, on 32-bit systems we may fail to allocate a large block of memory for large
-              -- textures. We handle this when by using HeapAlloc directly and allowing the allocation
-              -- to fail in which when we simply pass down NULL to CompressedTexImage2D and hope for the best.
-              -- As of 2011-10-6 using NVIDIA hardware and drivers we have to allocate the memory with HeapAlloc
-              -- with the exact size otherwise large image allocation (for instance for physical page textures)
-              -- may fail on Vista 32-bit.
-              void * data = HeapAlloc(GetProcessHeap, 0, compressedSize);
-              CompressedTexImage2DARB(uploadTarget+side, level, internalFormat, w, h, 0, compressedSize, data);
-              if (data != NULL ) then
-                HeapFree(GetProcessHeap, 0, data);
-              end if;
-            else
-              TexImage2D(uploadTarget + side, level, internalFormat, w, h, 0, dataFormat, dataType, NULL);
-            end if;
-            CheckErrors;
-            w = Max(1, w >> 1);
-            h = Max(1, h >> 1);
-          end loop;
-        end loop;
-        TexParameteri(target, TEXTURE_MAX_LEVEL, opts.numLevels - 1);
-        -- see if we messed anything up
-        CheckErrors;
-        SetTexParameters;
-        CheckErrors;
-      end Initialize_Texture;
-    procedure Finalize_Texture(Texture : in out Record_Texture) is
-      begin
-        if (texnum != TEXTURE_NOT_LOADED ) then
-          DeleteTextures(1, (GLuint *)&texnum); -- this should be the ONLY place it is ever called!
-          texnum = TEXTURE_NOT_LOADED;
-        end if;
-        -- clear all the current binding caches, so the next bind will do a real one
-        for (int i = 0 ; i < MAX_MULTITEXTURE_UNITS ; i++ ) {
-          backEnd.State.tmu[i].current2DMap = TEXTURE_NOT_LOADED;
-          backEnd.State.tmu[i].currentCubeMap = TEXTURE_NOT_LOADED;
-        end loop;
-      end Finalize;
-    procedure Upload_Subimage (mipLevel, x, y, z, width, height, const void * pic, int pixelPitch) is
-      int compressedSize = 0;
-      begin
-        if Is_Compressed then
-          assert( !(x&3) && !(y&3) );
-          -- The compressed size may be larger than the dimensions due to padding to quads
-          compressedSize = ( width + 3 ) & ~3 * ( height + 3 ) & ~3 * BitsForFormat( opts.format ) / 8;
-          assert( x + width <= ( opts.width + 3 ) & ~3 && y + height <= ( opts.height + 3 ) & ~3);
-          -- OpenGL understands that there will be padding
-          if x + width > opts.width then width = opts.width - x; end if;
-          if y + height > opts.height then height = opts.height - x; end if;
-        else
-          assert( x + width <= opts.width && y + height <= opts.height );
-        end if;
-        int target;
-        int uploadTarget;
-        if ( opts.textureType == TT_2D ) {
-          target = TEXTURE_2D;
-          uploadTarget = TEXTURE_2D;
-        } else if ( opts.textureType == TT_CUBIC ) {
-          target = TEXTURE_CUBE_MAP_EXT;
-          uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
-        } else {
-          assert( !"invalid opts.textureType" );
-          target = TEXTURE_2D;
-          uploadTarget = TEXTURE_2D;
-        }
-        glBindTexture( target, texnum );
-        if ( pixelPitch != 0 ) {
-          glPixelStorei( UNPACK_ROW_LENGTH, pixelPitch );
-        }
-        if ( opts.format == FMT_RGB565 ) {
-          glPixelStorei( UNPACK_SWAP_BYTES, TRUE );
-        }
-        if ( IsCompressed ) {
-          glCompressedTexSubImage2DARB( uploadTarget, mipLevel, x, y, width, height, internalFormat, compressedSize, pic );
-        } else {
-          // make sure the pixel store alignment is correct so that lower mips get created
-          // properly for odd shaped textures - this fixes the mip mapping issues with
-          // fonts
-          int unpackAlignment = width * BitsForFormat( (textureFormat_t)opts.format ) / 8;
-          if ( ( unpackAlignment & 3 ) == 0 ) {
-            glPixelStorei( UNPACK_ALIGNMENT, 4 );
-          } else {
-            glPixelStorei( UNPACK_ALIGNMENT, 1 );
-          }
-          glTexSubImage2D( uploadTarget, mipLevel, x, y, width, height, dataFormat, dataType, pic );
-        }
-        if ( opts.format == FMT_RGB565 ) {
-          glPixelStorei( UNPACK_SWAP_BYTES, FALSE );
-        }
-        if ( pixelPitch != 0 ) {
-          glPixelStorei( UNPACK_ROW_LENGTH, 0 );
-        }
-      end Upload_Subimage;
+  package Import is
+      procedure Initialize (Monitor : in Integer_4_Positive);
+      procedure Finalize   (Monitor : in Integer_4_Positive);
+      procedure Swap_Buffers;
+    end Import; package body Import is separate;
+   procedure Reset is
+     begin null;
+       --Clear_Depth(1.0);
+       --Cull_Face(FRONT_AND_BACK);
+       --Enable(CULL_FACE);
+       --Color_Mask(Red => C_TRUE, Green => C_TRUE, Blue => C_TRUE, Alpha => C_TRUE);
+       --Blend_Function(ONE, ZERO);
+       --Depth_Mask(C_TRUE);
+       --Depth_Function(LESS);
+       --Disable(STENCIL_TEST);
+       --Disable(POLYGON_OFFSET_FILL);
+       --Disable(POLYGON_OFFSET_LINE);
+       --Polygon_Mode(FRONT_AND_BACK, FILL);
+       --Shade_Model(SMOOTH);
+       --Enable(DEPTH_TEST);
+       --Enable(BLEND);
+       --Enable(SCISSOR_TEST);
+       --Draw_Buffer(BACK);
+       --Read_Buffer(BACK);
+       --if Do_Use_Scissor.Get then Scissor(0, 0, Widht, Height); end if;
+     end Reset;
+  procedure Initialize(Monitor : in Integer_4_Positive) is
+    begin
+      Import.Initialize(Monitor);
+      if Monitor = 1 then
+        declare
+        Extensions            :         String_1_Unbounded := NULL_STRING_1_UNBOUNDED;
+        Maximum_Texture_Size  : aliased Integer_4_Signed_C := 1;
+        Maximum_Texture_Units : aliased Integer_4_Signed_C := 1;
+        Number_Of_Extensions  : aliased Integer_4_Signed_C := 0;
+        begin
+          Get_Integer_Vector(GL_MAX_TEXTURE_SIZE, Maximum_Texture_Size'unchecked_access);
+          Get_Integer_Vector(GL_MAX_TEXTURE_UNITS, Maximum_Texture_Units'unchecked_access);
+          --for I in 1..Number_Of_Extensions loop
+          --  Extensions := Extensions & To_String_1_Unbounded(To_String_1(Get_String(Integer_4_Unsigned_C(I))));
+          --end loop;
+          Current_Specifics.Is_Supported                  := True;
+          Current_Specifics.Shading_Language              := OpenGL_Shading_Language;
+          Current_Specifics.Maximum_Texture_Size          := Integer_4_Positive(Maximum_Texture_Size);
+          Current_Specifics.Maximum_Texture_Units         := Integer_4_Positive(Maximum_Texture_Units);
+          --Current_Specifics.Version                       := Float_4_Real'value(Trim(To_String_1(Get_String(GL_VERSION)), Both)(1..3));
+          Current_Specifics.Has_Depth_Bounds_Test         := Index(Extensions, "EXT_depth_bounds_test")          /= 0;
+          Current_Specifics.Has_Anisotropic_Filter        := Index(Extensions, "EXT_texture_filter_anisotropic") /= 0;
+          Current_Specifics.Has_Direct_State_Access       := Index(Extensions, "EXT_direct_state_access")        /= 0;
+          Current_Specifics.Has_Texture_Compression       := Index(Extensions, "EXT_texture_compression_s3tc")   /= 0 and Index(Extensions, "ARB_texture_compression") /= 0;
+          Current_Specifics.Has_Sync                      := Index(Extensions, "ARB_sync")                       /= 0;
+          Current_Specifics.Has_Timer_Query               := Index(Extensions, "ARB_timer_query")                /= 0;
+          Current_Specifics.Has_Multitexture              := Index(Extensions, "ARB_multitexture")               /= 0;
+          Current_Specifics.Has_Uniform_Buffer            := Index(Extensions, "ARB_uniform_buffer_object")      /= 0;
+          Current_Specifics.Has_Occlusion_Query           := Index(Extensions, "ARB_occlusion_query")            /= 0;
+          Current_Specifics.Has_Map_Buffer_Range          := Index(Extensions, "ARB_map_buffer_range")           /= 0;
+          Current_Specifics.Has_Seamless_Cube_Map         := Index(Extensions, "ARB_seamless_cube_map")          /= 0;
+          Current_Specifics.Has_Vertex_Array_Object       := Index(Extensions, "ARB_vertex_array_object")        /= 0;
+          Current_Specifics.Has_Vertex_Buffer_Object      := Index(Extensions, "ARB_vertex_buffer_object")       /= 0;
+          Current_Specifics.Has_RGB_Color_Framebuffer     := Index(Extensions, "ARB_framebuffer_sRGB")           /= 0;
+          Current_Specifics.Has_Draw_Elements_Base_Vertex := Index(Extensions, "ARB_draw_elements_base_vertex")  /= 0;
+        end;
+      end if;
+      Reset;
+    end Initialize;
+  procedure Finalize(Monitor : in Integer_4_Positive) is
+    begin
+      Import.Finalize(Monitor);
+    end Finalize;
+  function Get_Driver return Record_Driver is
+    begin
+      return(
+        Initialize => Initialize'access,
+        Finalize   => Finalize'access);
+    end Get_Driver;
+begin
+  null;--if SPECIFICS(OpenGL_API).Version < 2.0 then raise Unsupported; end if;
+end OpenGL;
+--     procedure Check_Exceptions is
+--       begin
+--         case Get_Error is
+--           when INVALID_ENUMERATION => raise Invalid_Enumeration;
+--           when INVALID_OPERATION   => raise Invalid_Operation;
+--           when STACK_UNDERFLOW     => raise Stack_Underflow;
+--           when STACK_OVERFLOW      => raise Stack_Overflow;
+--           when INVALID_VALUE       => raise Invalid_Value;
+--           when OUT_OF_MEMORY       => raise Out_Of_Memory;
+--           when others              => null;
+--         end case;
+--       end Check_Exceptions;
+--     procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
+--       begin
+--         case Kind is
+--           when Face_Culling    => null;
+--           when Two_Sided_Cull  => Disable(CULL_FACE);
+--           when Back_Sided_Cull => Cull_Face((if Is_Mirror then FRONT else BACK));
+--         end case;
+--       end Cull;
+--     procedure Scissor(X, Y, Width, Height : in Integer_4_Signed) is
+--       begin
+--         Scissor(
+--           X      => Integer_4_Signed_C(X),
+--           Y      => Integer_4_Signed_C(Y),
+--           Width  => Integer_4_Signed_C(Width),
+--           Height => Integer_4_Signed_C(Height));
+--       end Scissor;
+--     procedure View_Port(X, Y, Width, Height : in Integer_4_Signed) is
+--       begin
+--         Viewport(
+--           X      => Integer_4_Signed_C(X),
+--           Y      => Integer_4_Signed_C(Y),
+--           Width  => Integer_4_Signed_C(Width),
+--           Height => Integer_4_Signed_C(Height));
+--       end View_Port;
+--     procedure Polygon_Offset(Scale, Bias : in Float_4_Real) is
+--       begin
+--         PolygonOffset(
+--           Scale => Integer_4_Signed_C(Scale),
+--           Bias  => Integer_4_Signed_C(Bias));
+--       end Polygon_Offset;
+--     procedure Depth_Bounds_Test(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) is
+--       begin
+--         if Z_Minimum = 0.0 and Z_Maximum = 0.0 then
+--           Disable(DEPTH_BOUNDS_TEST);
+--         else
+--           Enable(DEPTH_BOUNDS_TEST);
+--           Depth_Bounds(Float_4_Real_C(Z_Minimum), Float_4_Real_C(Z_Maximum));
+--         end if;
+--       end Depth_Bounds_Test;
+--     procedure Start_Depth_Pass(Rectane : in Record_Rectane) is
+--       begin
+--         null;
+--       end Start_Depth_Pass;
+--     procedure Finish_Depth_Pass(Rectane : in Record_Rectane)  is
+--       begin
+--         null;
+--       end Finish_Depth_Pass;
+--     procedure Get_Depth_Pass(Rectane : in out Record_Rectane) is
+--       begin
+--         Rectane := (others => <>);
+--       end Get_Depth_Pass;
+--     procedure Color(Pixel : in Record_Pixel)  is
+--       begin
+--         Color(
+--           Red   => Float_4_Real_C(Pixel.Color.Red)   / Pixel.Color.Red'size,
+--           Green => Float_4_Real_C(Pixel.Color.Green) / Pixel.Color.Green'size,
+--           Blue  => Float_4_Real_C(Pixel.Color.Blue)  / Pixel.Color.Blue'size,
+--           Alpha => Float_4_Real_C(Pixel.Alpha)       / Pixel.Color.Alpha'size);
+--       end Color;
+--     procedure Color(Color : in Record_Color) is
+--       begin
+--         Color(
+--           Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
+--           Green => Float_4_Real_C(Color.Green) / Color.Green'size,
+--           Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
+--           Alpha => 1.0);
+--       end Color;
+--     procedure Clear is
+--       begin
+--         Clear(DEPTH_BUFFER_BIT);
+--       end Clear;
+--     procedure Clear(Color : in Record_Pixel; Do_Clear_Depth : in Boolean := False) is
+--       begin
+--         Clear_Color(Red, Green, Blue, Alpha);
+--         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or COLOR_BUFFER_BIT);
+--       end Clear;
+--     procedure Clear(Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
+--       begin
+--         Clear_Stencil(Stencil_Value);
+--         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT);
+--       end Clear;
+--     procedure Clear(Color : in Record_Pixel; Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
+--       begin
+--         Clear_Stencil(Stencil_Value);
+--         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT or COLOR_BUFFER_BIT);
+--       end Clear;
+--     procedure Set_Stereo_Depth(Stereo_Depth : in Item_Stereo_Depth.Variable) is
+--       begin
+--         Depth((
+--           case Depth_Function is
+--             when Less_Depth_Function   => LESS--LESS_THAN_OR_EQUAL
+--             when Equal_Depth_Function  => EQUAL
+--             when Always_Depth_Function => ALWAYS
+--             when Greater_Than_Or_Equal => GREATER_THAN_OR_EQUAL));
+--       end Set_Stereo_Depth;
+--     procedure Set_Stereo_3D(Stereo_3D : in Enumerated_Stereo_3D) is
+--       begin
+--       end Set_Stereo_3D;
+--     procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
+--       BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
+--         One_Blend                         => ZERO,
+--         Zero_Blend                        => ONE,
+--         Source_Alpha_Blend                => SOURCE_ALPHA,
+--         Destination_Color_Blend           => DESTINATION_COLOR,
+--         Destination_Alpha_Blend           => DESTINATION_ALPHA,
+--         One_Minus_Source_Alpha_Blend      => ONE_MINUS_SOURCE_ALPHA,
+--         One_Minus_Destination_Color_Blend => ONE_MINUS_DESTINATION_COLOR,
+--         One_Minus_Destination_Alpha_Blend => ONE_MINUS_DESTINATION_ALPHA);
+--       begin
+--         if Source = One_Blend and Destination = Zero_Blend then
+--           Disable(BLEND);
+--         else
+--           Enable(BLEND);
+--           Blend_Function(BLENDS(Source), BLENDS(Destination));
+--         end if;
+--       end Set_Blend;
+--     procedure Set_Blend_Operation(Blend_Operation : in Enumerated_Blend_Operation) is
+--       begin
+--       end Set_Blend_Operation;
+--     procedure Set_Stencil(Stencil : in Enumerated_Stencil) is
+--       begin
+--       end Set_Stencil;
+--     procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
+--       OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
+--         Keep_Stencil_Operation           => KEEP,
+--         Zero_Stencil_Operation           => ZERO,
+--         Invert_Stencil_Operation         => INVERT,
+--         Replace_Stencil_Operation        => REPLACE,
+--         Increment_Stencil_Operation      => INCREMENT,
+--         Decrement_Stencil_Operation      => DECREMENT,
+--         Increment_Wrap_Stencil_Operation => INCREMENT_WRAP,
+--         Decrement_Wrap_Stencil_Operation => DECREMENT_WRAP);
+--       begin
+--         Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
+--       end Set_Stencil_Operation;
+--     procedure Set_Stencil_Function(Stencil : in Enumerated_Stencil_Function) is
+--       begin
+--         if (diff & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) then
+--           if (stateBits & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) != 0 then
+--             Enable(STENCIL_TEST);
+--           else
+--             Disable(STENCIL_TEST);
+--           end if;
+--         end if;
+--         Stencil_Function(
+--           Referece      => GLuint((stateBits & GLS_STENCIL_FUNC_REF_BITS ) >> GLS_STENCIL_FUNC_REF_SHIFT),
+--           Mask          => GLuint((stateBits & GLS_STENCIL_FUNC_MASK_BITS ) >> GLS_STENCIL_FUNC_MASK_SHIFT)
+--           Function_Kind =>(
+--             case Stencil is
+--               when Less_Stencil                            => LESS
+--               when Equal_Stencil                           => EQUAL
+--               when Never_Stencil                           => NEVER
+--               when Always_Stencil                          => ALWAYS
+--               when Greater_Stencil                         => GREATER
+--               when Not_Equal_Stencil                       => NOT_EQUAL
+--               when Less_Than_Or_Equal_To_Stencil           => LESS_THAN_OR_EQUAL
+--               when Greater_Than_Or_Equal_Stencil_Operation => GREATER_THAN_OR_EQUAL));
+--       end Set_Stencil_Function;
+--     procedure Set_Depth_Function(Value : in Enumerated_Depth_Function) is
+--       begin
+--       end Set_Depth_Function;
+--     procedure Set_Mask(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean) is
+--       begin
+--         ColorMask(
+--           Red   => (if Do_Mask_Red   then C_FALSE else C_TRUE),
+--           Green => (if Do_Mask_Green then C_FALSE else C_TRUE),
+--           Blue  => (if Do_Mask_Blue  then C_FALSE else C_TRUE),
+--           Alpha => (if Do_Mask_Alpha then C_FALSE else C_TRUE));
+--       end Set_Mask;
+--     procedure Set_Depth_Mask( is
+--       begin
+--         if (diff & GLS_DEPTHMASK ) then
+--           if (stateBits & GLS_DEPTHMASK ) then
+--             DepthMask(FALSE);
+--           else
+--             DepthMask(TRUE);
+--           end if;
+--         end if;
+--       end Set_Depth_Mask;
+--     procedure Set_Polymode_Line( is
+--       begin
+--         if (diff & GLS_POLYMODE_LINE ) then
+--           if (stateBits & GLS_POLYMODE_LINE ) then
+--             PolygonMode(FRONT_AND_BACK, LINE);
+--           else
+--             PolygonMode(FRONT_AND_BACK, FILL);
+--           end if;
+--         end if;
+--       end Set_Polymode_Line;
+--     procedure Set_Polygon_Offset(Do_Enable : in Boolean) is
+--       begin
+--         if Do_Enable then
+--           PolygonOffset(backEnd.State.polyOfsScale, backEnd.State.polyOfsBias);
+--           Enable(POLYGON_OFFSET_FILL);
+--           Enable(POLYGON_OFFSET_LINE);
+--         else
+--           Disable(POLYGON_OFFSET_FILL);
+--           Disable(POLYGON_OFFSET_LINE);
+--         end if;
+--       end Set_Polygon_Offset;
+--     procedure Set_Buffer(const void *data ) is
+--       -- see which draw buffer we want to render the frame to
+--       const setBufferCommand_t * cmd = (const setBufferCommand_t *)data;
+--       begin
+--         Scissor(0, 0, tr.GetWidth, tr.GetHeight);
+--         -- clear screen for debugging automatically enable this with several other debug tools
+--         -- that might leave unrendered portions of the screen
+--         if r_clear.GetFloat or idStr::Length(r_clear.GetString ) != 1 || r_sineArea.GetBool || r_showOverDraw.GetBool ) {
+--           float c[3];
+--           if sscanf(r_clear.GetString, "%f %f %f", &c[0], &c[1], &c[2] ) = 3 then
+--             Clear(true, false, false, 0, c[0], c[1], c[2], 1.0f);
+--           elsif r_clear.GetInteger = 2 then
+--             Clear(true, false, false, 0, 0.0, 0.0, 0.0, 1.0);
+--           elsif r_showOverDraw.GetBool then
+--             Clear(true, false, false, 0, 1.0, 1.0, 1.0, 1.0);
+--           else
+--             Clear(true, false, false, 0, 0.4, 0.0, 0.25, 1.0);
+--           end if;
+--         end if;
+--       end Set_Buffer;
+--     procedure Make_Stereo_Render_Image(Graphic : in Record_Graphic) is
+--       idImageOpts opts;
+--       begin
+--         opts.width := renderSystem->GetWidth;
+--         opts.height := renderSystem->GetHeight;
+--         opts.numLevels := 1;
+--         opts.format := FMT_RGBA8;
+--         image->AllocImage(opts, TF_LINEAR, TR_CLAMP);
+--       end Make_Stereo_Render_Image;
+--     procedure Render_Headset( is
+--       begin
+--       end Render;
+--     procedure Initialize_Texture(Texture : in out Record_Texture) is
+--       int numSides;
+--       int target;
+--       int uploadTarget;
+--       begin
+--         CheckErrors;
+--         PurgeImage;
+--         case opts.format is
+--           when FMT_RGBA8 =>
+--             internalFormat := RGBA8;
+--             dataFormat := RGBA;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_XRGB8 =>
+--             internalFormat := RGB;
+--             dataFormat := RGBA;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_RGB565 =>
+--             internalFormat := RGB;
+--             dataFormat := RGB;
+--             dataType := UNSIGNED_SHORT_5_6_5;
+--           when FMT_ALPHA =>
+--             internalFormat := R8;
+--             dataFormat := RED;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_L8A8 =>
+--             internalFormat := RG8;
+--             dataFormat := RG;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_LUM8 =>
+--             internalFormat := R8;
+--             dataFormat := RED;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_INT8 =>
+--             internalFormat := R8;
+--             dataFormat := RED;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_DXT1 =>
+--             internalFormat := COMPRESSED_RGBA_S3TC_DXT1_EXT;
+--             dataFormat := RGBA;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_DXT5 =>
+--             internalFormat := COMPRESSED_RGBA_S3TC_DXT5_EXT;
+--             dataFormat := RGBA;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_DEPTH =>
+--             internalFormat := DEPTH_COMPONENT;
+--             dataFormat := DEPTH_COMPONENT;
+--             dataType := UNSIGNED_BYTE;
+--           when FMT_X16 =>
+--             internalFormat := INTENSITY16;
+--             dataFormat := LUMINANCE;
+--             dataType := UNSIGNED_SHORT;
+--           when FMT_Y16_X16 =>
+--             internalFormat := LUMINANCE16_ALPHA16;
+--             dataFormat := LUMINANCE_ALPHA;
+--             dataType := UNSIGNED_SHORT;
+--         end case;
+--         -- generate the texture number
+--         GenTextures(1, (GLuint *)&texnum);
+--         if texnum != TEXTURE_NOT_LOADED then raise Texture_Load_Failure; end if;
+--         -- allocate all the mip levels with NULL data
+--         if (opts.textureType == TT_2D ) {
+--           target = uploadTarget = TEXTURE_2D;
+--           numSides = 1;
+--         elsif (opts.textureType == TT_CUBIC ) {
+--           target = TEXTURE_CUBE_MAP_EXT;
+--           uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
+--           numSides = 6;
+--         else
+--           assert(!"opts.textureType");
+--           target = uploadTarget = TEXTURE_2D;
+--           numSides = 1;
+--         end if;
+--         BindTexture(target, texnum);
+--         for (int side = 0; side < numSides; side++ ) loop
+--           int w = opts.width;
+--           int h = opts.height;
+--           if (opts.textureType == TT_CUBIC ) then
+--             h = w;
+--           end if;
+--           for (int level = 0; level < opts.numLevels; level++ ) loop
+--             -- clear out any previous error
+--             CheckErrors;
+--             if (IsCompressed ) then
+--               int compressedSize = (((w+3)/4) * ((h+3)/4) * int64(16 ) * BitsForFormat(opts.format ) ) / 8;
+--               -- Even though the OpenGL specification allows the 'data' pointer to be NULL, for some
+--               -- drivers we actually need to upload data to get it to allocate the texture.
+--               -- However, on 32-bit systems we may fail to allocate a large block of memory for large
+--               -- textures. We handle this when by using HeapAlloc directly and allowing the allocation
+--               -- to fail in which when we simply pass down NULL to CompressedTexImage2D and hope for the best.
+--               -- As of 2011-10-6 using NVIDIA hardware and drivers we have to allocate the memory with HeapAlloc
+--               -- with the exact size otherwise large image allocation (for instance for physical page textures)
+--               -- may fail on Vista 32-bit.
+--               void * data = HeapAlloc(GetProcessHeap, 0, compressedSize);
+--               CompressedTexImage2DARB(uploadTarget+side, level, internalFormat, w, h, 0, compressedSize, data);
+--               if (data != NULL ) then
+--                 HeapFree(GetProcessHeap, 0, data);
+--               end if;
+--             else
+--               TexImage2D(uploadTarget + side, level, internalFormat, w, h, 0, dataFormat, dataType, NULL);
+--             end if;
+--             CheckErrors;
+--             w = Max(1, w >> 1);
+--             h = Max(1, h >> 1);
+--           end loop;
+--         end loop;
+--         TexParameteri(target, TEXTURE_MAX_LEVEL, opts.numLevels - 1);
+--         -- see if we messed anything up
+--         CheckErrors;
+--         SetTexParameters;
+--         CheckErrors;
+--       end Initialize_Texture;
+--     procedure Finalize_Texture(Texture : in out Record_Texture) is
+--       begin
+--         if (texnum != TEXTURE_NOT_LOADED ) then
+--           DeleteTextures(1, (GLuint *)&texnum); -- this should be the ONLY place it is ever called!
+--           texnum = TEXTURE_NOT_LOADED;
+--         end if;
+--         -- clear all the current binding caches, so the next bind will do a real one
+--         for (int i = 0 ; i < MAX_MULTITEXTURE_UNITS ; i++ ) {
+--           backEnd.State.tmu[i].current2DMap = TEXTURE_NOT_LOADED;
+--           backEnd.State.tmu[i].currentCubeMap = TEXTURE_NOT_LOADED;
+--         end loop;
+--       end Finalize;
+--     procedure Upload_Subimage (mipLevel, x, y, z, width, height, const void * pic, int pixelPitch) is
+--       int compressedSize = 0;
+--       begin
+--         if Is_Compressed then
+--           assert( !(x&3) && !(y&3) );
+--           -- The compressed size may be larger than the dimensions due to padding to quads
+--           compressedSize = ( width + 3 ) & ~3 * ( height + 3 ) & ~3 * BitsForFormat( opts.format ) / 8;
+--           assert( x + width <= ( opts.width + 3 ) & ~3 && y + height <= ( opts.height + 3 ) & ~3);
+--           -- OpenGL understands that there will be padding
+--           if x + width > opts.width then width = opts.width - x; end if;
+--           if y + height > opts.height then height = opts.height - x; end if;
+--         else
+--           assert( x + width <= opts.width && y + height <= opts.height );
+--         end if;
+--         int target;
+--         int uploadTarget;
+--         if ( opts.textureType == TT_2D ) {
+--           target = TEXTURE_2D;
+--           uploadTarget = TEXTURE_2D;
+--         } else if ( opts.textureType == TT_CUBIC ) {
+--           target = TEXTURE_CUBE_MAP_EXT;
+--           uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
+--         } else {
+--           assert( !"invalid opts.textureType" );
+--           target = TEXTURE_2D;
+--           uploadTarget = TEXTURE_2D;
+--         }
+--         glBindTexture( target, texnum );
+--         if ( pixelPitch != 0 ) {
+--           glPixelStorei( UNPACK_ROW_LENGTH, pixelPitch );
+--         }
+--         if ( opts.format == FMT_RGB565 ) {
+--           glPixelStorei( UNPACK_SWAP_BYTES, TRUE );
+--         }
+--         if ( IsCompressed ) {
+--           glCompressedTexSubImage2DARB( uploadTarget, mipLevel, x, y, width, height, internalFormat, compressedSize, pic );
+--         } else {
+--           // make sure the pixel store alignment is correct so that lower mips get created
+--           // properly for odd shaped textures - this fixes the mip mapping issues with
+--           // fonts
+--           int unpackAlignment = width * BitsForFormat( (textureFormat_t)opts.format ) / 8;
+--           if ( ( unpackAlignment & 3 ) == 0 ) {
+--             glPixelStorei( UNPACK_ALIGNMENT, 4 );
+--           } else {
+--             glPixelStorei( UNPACK_ALIGNMENT, 1 );
+--           }
+--           glTexSubImage2D( uploadTarget, mipLevel, x, y, width, height, dataFormat, dataType, pic );
+--         }
+--         if ( opts.format == FMT_RGB565 ) {
+--           glPixelStorei( UNPACK_SWAP_BYTES, FALSE );
+--         }
+--         if ( pixelPitch != 0 ) {
+--           glPixelStorei( UNPACK_ROW_LENGTH, 0 );
+--         }
+--       end Upload_Subimage;
 --
 --  /*
 --  ========================
@@ -812,6 +841,3 @@ and SPECIFICS.Vendor /= Intel_Vendor,
 --    // two-sided stencil test
 --    glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_REPLACE, GL_ZERO );
 --    glStencilOpSeparate( GL_BACK, GL_KEEP, GL_ZERO, GL_REPLACE );
-  begin
-    if SPECIFICS.Version < 2.0 then raise Unsupported; end if;
-  end OpenGL

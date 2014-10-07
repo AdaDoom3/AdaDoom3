@@ -22,32 +22,32 @@ package Neo.Command is
       procedure Set(Value : in Type_To_Vary);
       function Get return Type_To_Vary;
     private
-      LOWER_NAME : constant String_2 := To_Lower(Name);
       type Record_Controller is new Ada.Finalization.Controlled with null record;
-      overriding procedure Initialize (Controller : in out Record_Controller);
-      overriding procedure Finalize   (Controller : in out Record_Controller);
-      Controller : Record_Controller;
-      procedure Handle_Set (Value : in String_2);
-      function Handle_Get  return String_2;
       protected type Protected_Type_To_Vary is
           procedure Set (Item : in Type_To_Vary);
           function Get  return Type_To_Vary;
         private
           Current : Type_To_Vary := Initial;
         end Protected_Type_To_Vary;
-      Data : Protected_Type_To_Vary;
+      procedure Initialize (Controller : in out Record_Controller);
+      procedure Finalize   (Controller : in out Record_Controller);
+      procedure Handle_Set (Value : in String_2);
+      function Handle_Get  return String_2;
+      LOWER_NAME : constant String_2 := To_Lower(Name);
+      Controller : Record_Controller;
+      Data       : Protected_Type_To_Vary;
     end Variable;
   generic
     Name : String_2;
     with procedure Perform(Parameters : in Vector_String_2_Unbounded.Vector);
   package Action is
     private
-      LOWER_NAME : constant String_2 := To_Lower(Name);
       type Record_Controller is new Ada.Finalization.Controlled with null record;
-      overriding procedure Initialize (Controller : in out Record_Controller);
-      overriding procedure Finalize   (Controller : in out Record_Controller);
+      procedure Initialize              (Controller : in out Record_Controller);
+      procedure Finalize                (Controller : in out Record_Controller);
+      procedure Not_A_Formal_Subprogram (Parameters : in Vector_String_2_Unbounded.Vector) renames Perform;
+      LOWER_NAME : constant String_2 := To_Lower(Name);
       Controller : Record_Controller;
-      procedure Not_A_Formal_Subprogram(Parameters : in Vector_String_2_Unbounded.Vector) renames Perform;
     end Action;
 private
   CURRENT_VALUE                     : constant String_2           := "Current value: ";

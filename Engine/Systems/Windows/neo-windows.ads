@@ -21,6 +21,21 @@ WTF2 : Integer_4_Signed_C := -2;
     EVENT_TEXT_GET_BUFFER                    : constant Integer_4_Unsigned_C := 16#0000_000D#;
     SUBEVENT_SCROLL_BOTTOM                    : constant Integer_Address := 16#0000_0007#;
     SUBEVENT_SCROLL_DOWN_LINE              : constant Integer_Address := 16#0000_0001#;
+    FORMAT_SAMPLE_BUFFERS                  : constant Integer_4_Signed_C := 16#2041#; -- WGL_SAMPLE_BUFFERS_ARB
+    FORMAT_SAMPLES                  : constant Integer_4_Signed_C := 16#2042#; -- WGL_SAMPLES_ARB
+    FORMAT_DOUBLE_BUFFER                  : constant Integer_4_Signed_C := 16#2011#; -- WGL_DOUBLE_BUFFER_ARB
+    FORMAT_BITS_STENCIL                  : constant Integer_4_Signed_C := 16#2023#; -- WGL_STENCIL_BITS_ARB
+    FORMAT_BITS_DEPTH                  : constant Integer_4_Signed_C := 16#2022#; -- WGL_DEPTH_BITS_ARB
+    FORMAT_BITS_RED                  : constant Integer_4_Signed_C := 16#2015#; -- WGL_RED_BITS_ARB
+    FORMAT_BITS_BLUE                  : constant Integer_4_Signed_C := 16#2019#; -- WGL_BLUE_BITS_ARB
+    FORMAT_BITS_GREEN                  : constant Integer_4_Signed_C := 16#2017#; -- WGL_GREEN_BITS_ARB
+    FORMAT_BITS_ALPHA                  : constant Integer_4_Signed_C := 16#201B#; -- WGL_ALPHA_BITS_ARB
+    FORMAT_STEREO                            : constant Integer_4_Signed_C := 16#2012#; -- WGL_STEREO_ARB
+    CONTEXT_VERSION_MAJOR                    : constant Integer_4_Signed_C := 16#2091#; -- WGL_CONTEXT_MAJOR_VERSION_ARB
+    CONTEXT_VERSION_MINOR                    : constant Integer_4_Signed_C := 16#2092#; -- WGL_CONTEXT_MINOR_VERSION_ARB
+    CONTEXT_FLAGS                           : constant Integer_4_Signed_C := 16#2094#; -- WGL_CONTEXT_FLAGS_ARB
+    CONTEXT_PROFILE                         : constant Integer_4_Signed_C := 16#9126#; -- WGL_CONTEXT_PROFILE_MASK_ARB
+    CONTEXT_CORE_PROFILE_BIT                : constant Integer_4_Signed_C := 16#00000002#;-- WGL_CONTEXT_CORE_PROFILE_BIT_ARB
     FONT_FAMILY_SWISS                          : constant Integer_4_Unsigned_C := 16#0000_0020#;
     FONT_FAMILY_MODERN                         : constant Integer_4_Unsigned_C := 16#0000_0030#;
     FONT_FIXED_PITCH                           : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -264,6 +279,34 @@ WTF2 : Integer_4_Signed_C := -2;
     type Reserved_Capabilities        is array(1..17) of Integer_2_Unsigned_C;
     type Reserved_Button_Capabilities is array(1..10) of Integer_4_Unsigned_C;
     type Reserved_Shit                is array(1..5)  of Integer_2_Unsigned_C;
+    type Record_Pixel_Descriptor is record                                                          -- PIXELFORMATDESCRIPTOR
+        Size                    : Integer_2_Signed_C   := Record_Pixel_Descriptor'size / Byte'size; -- nSize
+        Version                 : Integer_2_Signed_C   := 0;                                    -- nVersion
+        Flags                   : Integer_4_Unsigned_C := 0;                                    -- dwFlags
+        Pixel_Type              : Integer_1_Unsigned_C := 0;                                    -- iPixelType
+        Color_Bits              : Integer_1_Unsigned_C := 0;                                    -- cColorBits
+        Red_Bits                : Integer_1_Unsigned_C := 0;                                    -- cRedBits
+        Red_Shift               : Integer_1_Unsigned_C := 0;                                    -- cRedShift
+        Green_Bits              : Integer_1_Unsigned_C := 0;                                    -- cGreenBits
+        Green_Shift             : Integer_1_Unsigned_C := 0;                                    -- cGreenShift
+        Blud_Bits               : Integer_1_Unsigned_C := 0;                                    -- cBlueBits
+        Blue_Shift              : Integer_1_Unsigned_C := 0;                                    -- cBlueShift
+        Alpha_Bits              : Integer_1_Unsigned_C := 0;                                    -- cAlphaBits
+        Alpha_Shift             : Integer_1_Unsigned_C := 0;                                    -- cAlphaShift
+        Accumulation_Bits       : Integer_1_Unsigned_C := 0;                                    -- cAccumBits
+        Accumulation_Red_Bits   : Integer_1_Unsigned_C := 0;                                    -- cAccumRedBits
+        Accumulation_Green_Bits : Integer_1_Unsigned_C := 0;                                    -- cAccumGreenBits
+        Accumulation_Blue_Bits  : Integer_1_Unsigned_C := 0;                                    -- cAccumBlueBits
+        Accumulation_Alpha_Bits : Integer_1_Unsigned_C := 0;                                    -- cAccumAlphaBits
+        Depth_Bits              : Integer_1_Unsigned_C := 0;                                    -- cDepthBits
+        Stencil_Bits            : Integer_1_Unsigned_C := 0;                                    -- cStencilBits
+        Auxiliary_Buffers       : Integer_1_Unsigned_C := 0;                                    -- cAuxBuffers
+        Layer_Type              : Integer_1_Unsigned_C := 0;                                    -- iLayerType
+        Reserved                : Integer_1_Unsigned_C := 0;                                    -- bReserved
+        Layer_Mask              : Integer_4_Unsigned_C := 0;                                    -- dwLayerMask
+        Visible_Mask            : Integer_4_Unsigned_C := 0;                                    -- dwVisibleMask
+        Damage_Mask             : Integer_4_Unsigned_C := 0;                                    -- dwDamageMask
+      end record;
     type Access_Function_Hook is access function(
       Code : in Integer_4_Signed_C; -- nCode
       Data_Unsigned : in Integer_4_Signed_C; -- wParam
@@ -770,6 +813,21 @@ WTF2 : Integer_4_Signed_C := -2;
     type Access_Record_Log_Font is access all Record_Log_Font;
     type Access_Record_Minimum_Maximum_Information is access all Record_Minimum_Maximum_Information;
     type Access_Record_Scroll_Information is access all Record_Scroll_Information;
+    type Access_Function_Choose_Pixel_Format is access function( -- wglChoosePixelFormatARB
+      Device_Context     : in Address; -- hdc
+      Attributes_Integer   : in Address; -- piAttribIList
+      Attributes_Float       : in Address; -- pfAttribFList
+      Maximum_Formats   : in Integer_4_Unsigned_C; -- nMaxFormats
+      Pixel_Formats     : in Address; -- piFormats
+      Number_Of_Formats  : in Access_Integer_4_Unsigned_C) -- nNumFormats
+      return Integer_4_Signed_C; -- BOOL
+     -- pragma Import(Stdcall, Choose_Pixel_Format, "wglChoosePixelFormatARB");
+    type Access_Function_Create_OpenGL_Context is access function( -- wglCreateContextAttribsARB
+      Device_Context : in Address; -- hDC
+      Share_Context  : in Address; -- hShareContext
+      Attribute_List : in Address) -- attribList
+      return Address;
+   --   pragma Import(Stdcall, Create_OpenGL_Context, "wglCreateContextAttribsARB");
     function To_Unchecked_Access_Record_Rectangle is new Ada.Unchecked_Conversion(Integer_Address, Access_Record_Rectangle);
     function To_Unchecked_Access_Record_Virtual_Key_To_Character_2_C is new Ada.Unchecked_Conversion(Integer_Address, Access_Record_Virtual_Key_To_Character_2_C);
     function To_Unchecked_Access_Function_Get_Keyboard_Layer_Descriptor is new Ada.Unchecked_Conversion(Address, Access_Function_Get_Keyboard_Layer_Descriptor);
@@ -833,6 +891,31 @@ WTF2 : Integer_4_Signed_C := -2;
     --   Enumerator    : in Address;
     --   Window_Parent : in Address;
     --   Flags         : in Integer_4_Unsigned_C)
+--wglGetExtensionsStringARB
+--Choose_Pixel_Format
+--Make_Current
+--BOOL WINAPI wglMakeCurrent(
+--  HDC hdc,
+--  HGLRC hglrc
+--);
+    function Describe_Pixel_Format( -- DescribePixelFormat
+      Device_Context : in Address; -- hdc,
+      Pixel_Format   : in Integer_4_Signed_C; -- iPixelFormat,
+      Number_Of_Bytes : in Integer_4_Unsigned_C; -- nBytes,
+      Pixel_Descriptor : in Address) -- ppfd
+      return Integer_4_Signed_C; -- int
+      pragma Import(Stdcall, Describe_Pixel_Format, "DescribePixelFormat");
+    function Set_Pixel_Format( -- SetPixelFormat
+      Device_Context : in Address; -- hdc
+      Pixel_Format   : in Integer_4_Signed_C; -- iPixelFormat
+      Pixel_Descriptor : in Address) -- ppfd
+      return Integer_4_Signed_C; -- BOOL
+      pragma Import(Stdcall, Set_Pixel_Format, "SetPixelFormat");
+    function Make_OpenGL_Current( -- wglMakeCurrent
+      Device_Context : in Address; -- hdc
+      OpenGL_Context : in Address) -- hglrc
+      return Integer_4_Signed_C; -- BOOL
+      pragma Import(Stdcall, Make_OpenGL_Current, "wglMakeCurrent");
     function Get_XInput_State( -- XInputGetState
       User_Index : in Integer_4_Unsigned_C; -- dwUserIndex
       State      : in Access_Record_Gamepad_State) -- pState

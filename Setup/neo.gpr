@@ -81,7 +81,7 @@ project Neo is
     Directory_Systems       := Directory_Engine   & S & "Systems";
     Directory_SDL           := Directory_Systems  & S & "SDL";
     Directory_Documentation := Directory_Game     & S & "Documentation";
-    Directory_Base          := Directory_Game;--     & S & "Base";
+    Directory_Base          := Directory_Game     & S & "Base";
     Directory_Direct3D      := Directory_APIs     & S & "Direct3D";
     Directory_XAudio        := Directory_APIs     & S & "XAudio";
     Directory_OpenGL        := Directory_APIs     & S & "OpenGL";
@@ -89,7 +89,7 @@ project Neo is
     Directory_Steam         := Directory_APIs     & S & "Steam";
     Directory_Null_Direct3D := Directory_Direct3D & S & Directory_Null_API;
     Directory_Null_XAudio   := Directory_XAudio   & S & Directory_Null_API;
-    Directory_Null_OpenGL   := Directory_APIs     & S & Directory_Null_API;
+    Directory_Null_OpenGL   := Directory_OpenGL   & S & Directory_Null_API;
     Directory_Null_GCM      := Directory_GCM      & S & Directory_Null_API;
     Directory_Null_Steam    := Directory_Steam    & S & Directory_Null_API;
     File_Main               := (Directory_Engine  & S & "main" & Extension_Ada_Body); -- Has to match Executable name in Builder package!
@@ -170,7 +170,9 @@ project Neo is
           External("WinDir") & S & "System32" & S & "hid"         & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "setupapi"    & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "XInput9_1_0" & Extension_Library,  --
-          External("WinDir") & S & "System32" & S & "opengl32"    & Extension_Library); --
+          External("WinDir") & S & "System32" & S & "ogldrv"    & Extension_Library,
+          External("WinDir") & S & "System32" & S & "opengl32"    & Extension_Library
+          ); --
         case WORD_SIZE is
           when "64" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles(x86)") & S & "Steam" & Extension_Library); 
           when "32" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles")      & S & "Steam" & Extension_Library);

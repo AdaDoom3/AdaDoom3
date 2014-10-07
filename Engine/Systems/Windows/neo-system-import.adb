@@ -4,10 +4,10 @@ with Ada.Strings;            use Ada.Strings;
 with Ada.Strings.Wide_Fixed; use Ada.Strings.Wide_Fixed;
 with Neo.Windows;            use Neo.Windows;
 separate(Neo.System) package body Import is
-  function Get_Last_Error return Integer_4_Unsigned       is begin return Integer_4_Unsigned(Neo.Windows.Get_Last_Error); end Get_Last_Error;
-  procedure Open_Text     (Path : in String_2)            is begin Execute("explorer """ & Path & """", False);           end Open_Text;
-  procedure Open_Webpage  (Path : in String_2)            is begin Execute("explorer " & Path, True);                     end Open_Webpage;
-  procedure Assert        (Value : in Integer_4_Signed_C) is begin if Value = FAILED then raise Call_Failure; end if;     end Assert;
+  function Get_Last_Error return Integer_4_Unsigned       is begin return Integer_4_Unsigned(Neo.Windows.Get_Last_Error);    end Get_Last_Error;
+  procedure Open_Text     (Path : in String_2)            is begin Execute("explorer """ & Path & """", False);              end Open_Text;
+  procedure Open_Webpage  (Path : in String_2)            is begin Execute("explorer " & Path, True);                        end Open_Webpage;
+  procedure Assert        (Value : in Integer_4_Signed_C) is begin if Value = FAILED then Trace; raise Call_Failure; end if; end Assert;
   procedure Set_Alert(Value : in Boolean) is
     Flash_Information : aliased Record_Flash_Information := (if Value then (Flags => FLASH_CONTINUOUSLY, others => <>) else (Flags => FLASH_END, others => <>));
     Window            :         Address                  := Find_Window(To_String_2_C(SPECIFICS.Name), NULL_ADDRESS);

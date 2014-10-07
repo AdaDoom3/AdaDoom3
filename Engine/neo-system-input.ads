@@ -190,7 +190,7 @@ package Neo.System.Input is
   function Xbox            (Stick   : in Enumerated_Stick;           Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   function Xbox            (Key     : in Enumerated_Xbox_Key;        Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   function Mouse           (Key     : in Enumerated_Mouse_Key;       Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
-  function Mouse                                                   (Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
+  function Mouse                                                    (Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   package Bind   is new Action("bind",   Perform_Bind);
   package Unbind is new Action("unbind", Perform_Unbind);
 private

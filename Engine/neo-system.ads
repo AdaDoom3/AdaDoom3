@@ -1,3 +1,5 @@
+with GNAT.Traceback;          use GNAT.Traceback; 
+with GNAT.Traceback.Symbolic; use GNAT.Traceback.Symbolic; -- Neo.System requires the GNAT Ada compiler. There aren't any other Ada compilers anyway...
 with System;                  use System;
 with Ada.Strings;             use Ada.Strings;
 with Ada.Strings.Wide_Fixed;  use Ada.Strings.Wide_Fixed;
@@ -65,9 +67,9 @@ package Neo.System is
   PATH_VARIABLES  : constant String_2         := PATH_SETTINGS & SPECIFICS.Separator & "variables.csv";
   PATH_LOCALS     : constant String_2         := PATH_SETTINGS & SPECIFICS.Separator & "locals.csv";
   VARIABLE_PREFIX : constant String_2         := "s_";
-  package Is_In_Menu is new Variable(VARIABLE_PREFIX & "menu",    "Query cursor captured state",            Boolean, True, False, False);
-  package Is_Active  is new Variable(VARIABLE_PREFIX & "active",  "Query activity of main application",     Boolean, False);
-  package Is_Running is new Variable(VARIABLE_PREFIX & "running", "Controls state - set to False to quit.", Boolean, True);
+  package Is_In_Menu is new Variable(VARIABLE_PREFIX & "menu",    "Query cursor captured state",           Boolean, True, False, False);
+  package Is_Active  is new Variable(VARIABLE_PREFIX & "active",  "Query activity of main application",    Boolean, False);
+  package Is_Running is new Variable(VARIABLE_PREFIX & "running", "Controls state - set to False to quit", Boolean, True);
   generic
     with procedure Run;
   package Tasks is
@@ -85,6 +87,7 @@ package Neo.System is
         end Protected_Task;
     end Tasks;
 private
+  procedure Trace;
   package Import is
       procedure Set_Alert     (Value : in Boolean);
       procedure Assert        (Value : in Integer_4_Signed_C);

@@ -20,7 +20,7 @@ package body Neo.Command is
               Values := Values & ", " & To_String_2_Unbounded(Trim(Type_To_Vary'wide_image(I), Both));
             end loop;
           end if;
-          return LOWER_NAME & ": " & Localize(Description)                                 & END_LINE_2 &
+          return Localize(Description)                                                     & END_LINE_2 &
                  Localize(CURRENT_VALUE)   & Trim(Type_To_Vary'wide_image(Data.Get), Both) & END_LINE_2 &
                  Localize(POSSIBLE_VALUES) & To_String_2(Values);
         end Handle_Get;

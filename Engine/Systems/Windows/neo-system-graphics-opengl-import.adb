@@ -1,112 +1,60 @@
-
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-with
-  Neo.Link.Windows;
-use
-  Neo.Link.Windows;
-separate(Neo.System.Graphics.OpenGL)
-package Import
-  is
-  ---------------
-  -- Constants --
-  ---------------
-    Pixel_Format : constant aliased Record_Pixel_Format :=(
-      Version      => 1,
-      Flags        => PIXEL_FLAGS, --
-      Color_Bits   => 32,
-      Alpha_Bits   => 8,
-      Depth_Bits   => 24,
-      Stencil_Bits => 8,
-      Layer_Type   => PIXEL_LAYER, -- PFD_MAIN_PLANE
-      Pixel_Type   => PIXEL_TYPE or(if Do_Use_Stereo then PFD_STEREO else 0);
-      others       => <>);
-  ----------------
-  -- Initialize --
-  ----------------
-    procedure Initialize(
-      Monitor_Index : in Integer_4_Positive)
-      is
-      Message           : Record_Message := NULL_RECORD_MESSAGE;
-      Device_Context    : Address        := NULL_ADDRESS;
-      Rendering_Context : Address        := NULL_ADDRESS;
-      begin
-        Device_Context := Get_Device_Context(Window);
-        if Device_Context = NULL_ADDRESS then
-          raise Initialization_Error;
-        end if;
-        if Choose_Pixel_Format /= null and Multi_Samples > 1 then
-          Choose_Pixel_Format(
-            Device_Context     => Device_Context,
-            Attributes_Float   => (0.0, 0.0),
-            Pixel_Format       => Pixel_Format'address,
-            Number_Of_Formats  => null,
-            Attributes_Integer =>(
-              SAMPLE_BUFFERS, 1,
-              SAMPLES,        Multi_Samples,
-              DOUBLE_BUFFER,  1,
-              STENCIL_BITS,   8,
-              DEPTH_BITS,     24,
-              RED_BITS,       8,
-              BLUE_BITS,      8,
-              GREEN_BITS,     8,
-              ALPHA_BITS,     8, 0, 0));
-        elsif Choose_Pixel_Format(Device_Context, FORMAT'address) = FAILED then
-          raise Call_Failure;
-        end if;
-        Describe_Pixel_Format(Device_Context, Pixel_Format, Pixel_Descriptor'size / Byte'size, Pixel_Descriptor'address);
-        if Stencil_Bits = 0 then -- Windows XP seems to set this incorrectly
-          Stencil_Bits = 8;
-        end if;
-        if Set_Pixel_Format(Device_Context, Pixel_Format, &win32.pfd) = 0 then
-          raise Initialization_Error;
-        end if;
-        Rendering_Context := Create_Context(Device_Context);
-        if Rendering_Context = NULL_ADDRESS then
-          raise Call_Failure;
-        end if;
-        if not Make_Current(Device_Context, Rendering_Context) then
-          Delete_Context(Rendering_Context);
-          Rendering_Context := NULL_ADDRESS;
-          raise Call_Failure;
-        end if;
-        if
-        Set_Foreground_Window(Window) = 0 or else
-        Set_Focus(Window) = NULL_ADDRESS
-        then
-          raise Call_Failure;
-        end if;
-        return true;
-      end Initialize;
-  --------------
-  -- Finalize --
-  --------------
-    procedure Finalize(
-      Monitor_Index : in Integer_4_Positive)
-      is
-      begin
-        if Make_Current /= FAILED and then Make_Current(NULL_ADDRESS, NULL_ADDRESS) = FAILED then
-          null;
-        end if;
-        if Rendering_Context /= null and then Delete_Rendering_Context = FAILED then
-          null;
-        end if;
-        if Device_Context /= null and then Release_Device_Context = FAILED then
-          null;
-        end if;
-        GLimp_RestoreGamma();
-      end Finalize;
-  end Import;
+with Neo.Windows; use Neo.Windows;
+separate(Neo.System.Graphics.OpenGL) package body Import is
+  procedure Swap_Buffers is begin null; end Swap_Buffers;
+  procedure Initialize(Monitor : in Integer_4_Positive) is
+    Rendering_Context :         Address                  := NULL_ADDRESS;
+    Device_Context    :         Address                  := NULL_ADDRESS;
+    Window            :         Address                  := NULL_ADDRESS;
+    Specifics         :         Record_Specifics         := (others => <>);
+    Pixel_Descriptor  : aliased Record_Pixel_Descriptor  := (others => <>);
+    Message           : aliased Record_Message           := (others => <>);
+    Pixel_Format      : aliased Integer_4_Signed_C       := 0;
+    Beef              : aliased Integer_4_Unsigned_C     := 16#Dead_beef#;
+    Attributes_Junk   : aliased Array_Float_4_Real_C     := (0.0, 0.0);
+    Attributes_Format : aliased Array_Integer_4_Signed_C :=(
+      FORMAT_SAMPLE_BUFFERS, C_TRUE,
+      FORMAT_SAMPLES,        Integer_4_Signed_C(Antialiasing_Samples.Get),
+      FORMAT_DOUBLE_BUFFER,  C_TRUE,
+      FORMAT_BITS_STENCIL,   8,
+      FORMAT_BITS_DEPTH,     24,
+      FORMAT_BITS_RED,       8,
+      FORMAT_BITS_BLUE,      8,
+      FORMAT_BITS_GREEN,     8,
+      FORMAT_BITS_ALPHA,     8,
+      FORMAT_STEREO,         0, 0);
+    Attributes_Context : aliased Array_Integer_4_Signed_C :=(
+      CONTEXT_VERSION_MAJOR, 3,
+      CONTEXT_VERSION_MINOR, 2,
+      CONTEXT_FLAGS,         (if Do_Put_Debug then C_TRUE else C_FALSE),
+      CONTEXT_PROFILE,       CONTEXT_CORE_PROFILE_BIT, 0);
+    begin
+      Device_Context := Get_Device_Context(Window);
+      Assert(Device_Context);
+    --  Assert(Choose_Pixel_Format(Device_Context, Attributes_Format'address, Attributes_Junk'address, 1, Pixel_Format'address, Beef'unchecked_access));
+    --  Assert(Describe_Pixel_Format(Device_Context, Pixel_Format, Pixel_Descriptor'size / Byte'size, Pixel_Descriptor'address));
+   --   Assert(Set_Pixel_Format(Device_Context, Pixel_Format, Pixel_Descriptor'address));
+      --Rendering_Context := Create_OpenGL_Context(Device_Context, NULL_ADDRESS, Attributes_Context'address);
+  --    Assert(Rendering_Context);
+  --    if Monitor = 1 then
+   --     Current_Specifics.Has_Swap_Control_Tear := Index(Get_Extension(Device_Context), "WGL_EXT_swap_control_tear") /= 0;
+  --      Current_Specifics.Stencil_Bits          := Integer_4_Positive((if Pixel_Descriptor.Stencil_Bits /= 0 then Pixel_Descriptor.Stencil_Bits else Byte'size)); -- Windows XP seems to set this incorrectly
+  --      Current_Specifics.Color_Bits            := Integer_4_Positive(Pixel_Descriptor.Color_Bits);
+  --      Current_Specifics.Depth_Bits            := Integer_4_Positive(Pixel_Descriptor.Depth_Bits);
+  --      Assert(Make_OpenGL_Current(Device_Context, Rendering_Context));
+  --    end if;
+      Assert(Release_Device_Context(Window, Device_Context));
+    end Initialize;
+  procedure Finalize(Monitor : in Integer_4_Positive) is
+    begin
+      null;
+      --Assert_Dummy(Make_Current);
+      --Assert_Dummy(Make_Current(NULL_ADDRESS, NULL_ADDRESS);
+      --Assert_Dummy(Delete_Rendering_Context);
+      --if Device_Context /= null and then Release_Device_Context = FAILED then
+      --  null;
+      --end if;
+      --GLimp_RestoreGamma();
+    end Finalize;
+begin
+  null;
+end Import;

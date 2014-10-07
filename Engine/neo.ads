@@ -10,6 +10,7 @@ with Ada.Characters.Latin_1;
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
 with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
 with Ada.Strings.Wide_Fixed;     use Ada.Strings.Wide_Fixed;
+with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;          use Ada.Strings.Fixed;
 with Ada.Strings;                use Ada.Strings;
 with Ada.Streams;                use Ada.Streams;
@@ -31,10 +32,12 @@ package Neo is
   subtype Character_2   is Wide_Character;
   subtype String_1_C         is Interfaces.C.Char_Array;
   subtype String_1           is String;
+  subtype String_1_Unbounded is Ada.Strings.Unbounded.Unbounded_String;
   subtype String_2_C         is Interfaces.C.WChar_Array;
   subtype String_2           is Wide_String;
   subtype String_2_Unbounded is Ada.Strings.Wide_Unbounded.Unbounded_Wide_String;
   type    Integer_Address      is mod MEMORY_SIZE;
+  type    Integer_1_Percent    is range 1..100; for Integer_1_Percent'size use 8;
   subtype Integer_1_Unsigned   is Unsigned_8;
   subtype Integer_1_Unsigned_C is Interfaces.C.Unsigned_Char;
   subtype Integer_1_Signed     is Short_Short_Integer;
@@ -198,6 +201,7 @@ package Neo is
     end Protected_Status;
   package Vector_String_2_Unbounded is new Ada.Containers.Vectors(Integer_4_Positive, String_2_Unbounded);
   package Vector_Address            is new Ada.Containers.Vectors(Integer_4_Positive, Address);
+  procedure Set_Failure;
   function Get_Duration         (Timer : in     Record_Timer) return Duration;
   procedure Start               (Timer : in out Record_Timer);
   procedure Stop                (Timer : in out Record_Timer);
@@ -212,7 +216,6 @@ package Neo is
   procedure Put_Debug           (Item  : in String_2);
   procedure Put_Debug_Line      (Item  : in String_2);
   procedure Set_Input_Entry     (Value : in String_2);
-  procedure Set_Errors          (Value : in String_2);
   procedure Set_Do_Put_Debug    (Value : in Boolean);
   procedure Set_Line_Size       (Value : in Integer_4_Positive);
   procedure Set_Put             (Value : in Access_Procedure_Put);
@@ -225,7 +228,7 @@ package Neo is
   function Get_Number_Of_Lines                     return Integer_8_Natural;
   function Get_Log                                 return String_2;
   function Get_Input_Entry                         return String_2;
-  function Get_Errors                              return String_2;
+  function Did_Fail                                return Boolean;
   function Do_Put_Debug                            return Boolean;
   function To_Access_Constant_Character_1_C (Item : in String_1)                      return Access_Constant_Character_1_C;
   function To_Access_Constant_Character_2_C (Item : in String_2)                      return Access_Constant_Character_2_C;
@@ -249,6 +252,9 @@ package Neo is
   function To_String_1                      (Item : in String_2)                      return String_1;
   function To_String_1_C                    (Item : in String_1)                      return String_1_C;
   function To_String_1                      (Item : in String_1_C)                    return String_1;
+  function To_String_1                      (Item : in Access_Constant_Character_1_C) return String_1;
+  function To_String_1                      (Item : in String_1_Unbounded)            return String_1           renames Ada.Strings.Unbounded.To_String;
+  function To_String_1_Unbounded            (Item : in String_1)                      return String_1_Unbounded renames Ada.Strings.Unbounded.To_Unbounded_String;
   function To_String_2                      (Item : in String_2_Unbounded)            return String_2           renames Ada.Strings.Wide_Unbounded.To_Wide_String;
   function To_String_2_Unbounded            (Item : in String_2)                      return String_2_Unbounded renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
   function To_String_2_Unbounded            (Item : in Character_2)                   return String_2_Unbounded;
@@ -257,6 +263,7 @@ package Neo is
   function To_String_2                      (Item : in String_1_C)                    return String_2;
   function To_String_2                      (Item : in String_1)                      return String_2;
   function To_String_2                      (Item : in String_2_C)                    return String_2;
+  function To_String_2                      (Item : in Character_1)                   return String_2;
   function To_String_2                      (Item : in Character_2)                   return String_2;
   function To_String_2                      (Item : in Access_Constant_Character_2_C) return String_2;
   generic
@@ -282,6 +289,7 @@ package Neo is
   function To_Unchecked_Integer_2_Unsigned            is new Ada.Unchecked_Conversion(Character_2_C,                 Integer_2_Unsigned);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Integer_2_Unsigned_C,   Integer_Address);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Constant_Character_2_C, Integer_Address);
+  function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Constant_Character_1_C, Integer_Address);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Address,                       Integer_Address);
   function To_Unchecked_Float_4_Real                  is new Ada.Unchecked_Conversion(Float_4_Real,                  Integer_4_Unsigned);
   generic
@@ -374,7 +382,10 @@ package Neo is
   WORD_SIZE_IMAGE         : constant String_1           := Integer_4_Signed'image(WORD_SIZE)(Integer_4_Signed'image(WORD_SIZE)'first + 1..Integer_4_Signed'image(WORD_SIZE)'last);
   END_LINE_1              : constant String_1           := Ada.Characters.Latin_1.CR & Ada.Characters.Latin_1.LF;
   END_LINE_2              : constant String_2           := To_String_2(END_LINE_1);
+  TAB_1                   : constant String_1           := "" & Ada.Characters.Latin_1.HT;
+  TAB_2                   : constant String_2           := To_String_2(TAB_1);
   NULL_STRING_1           : constant String_1           := "";
+  NULL_STRING_1_UNBOUNDED : constant String_1_Unbounded := NULL_UNBOUNDED_STRING;
   NULL_STRING_2           : constant String_2           := "";
   NULL_STRING_2_C         : constant String_2_C         := To_String_2_C(NULL_STRING_2);
   NULL_STRING_2_UNBOUNDED : constant String_2_Unbounded := NULL_UNBOUNDED_WIDE_STRING;
@@ -438,10 +449,11 @@ private
   RADIAN_IMAGE_STRING_SIZE          : constant Integer_4_Positive := 256;
   FAILED_LOCALIZE_PREVIEW_LENGTH    : constant Integer_4_Positive := 10;
   DEFAULT_LINE_SIZE                 : constant Integer_4_Positive := 80;
+  CALLBACK_TRACE_LIMIT              : constant Integer_4_Positive := 256;
   TESTING_SEPARATOR                 : constant Character_2        := Character_2'val(16#250F#);
   protected type Protected_Data is
+      procedure Set_Failure;
       procedure Set_Input_Entry     (Value : in String_2);
-      procedure Set_Errors          (Value : in String_2);
       procedure Set_Do_Put_Debug    (Value : in Boolean);
       procedure Set_Line_Size       (Value : in Integer_4_Positive);
       procedure Set_Number_Of_Tasks (Value : in Integer_4_Positive);
@@ -450,21 +462,21 @@ private
       procedure Put                 (Item  : in String_2);
       function Localize             (Item  : in String_2) return String_2;
       function Get_Log                                    return String_2;
-      function Get_Errors                                 return String_2;
       function Get_Input_Entry                            return String_2;
       function Get_Line_Size                              return Integer_4_Positive;
       function Get_Number_Of_Tasks                        return Integer_4_Positive;
       function Get_Number_Of_Lines                        return Integer_8_Natural;
+      function Did_Fail                                   return Boolean;
       function Do_Put_Debug                               return Boolean;
     private
       Current_Put             : Access_Procedure_Put     := null;--Ada.Wide_Text_IO.Put'access;
       Current_Localize        : Access_Function_Localize := null;
       Current_Log             : String_2_Unbounded       := NULL_STRING_2_UNBOUNDED;
-      Current_Errors          : String_2_Unbounded       := NULL_STRING_2_UNBOUNDED;
       Current_Input_Entry     : String_2_Unbounded       := NULL_STRING_2_UNBOUNDED;
       Current_Line_Size       : Integer_4_Positive       := DEFAULT_LINE_SIZE;
       Current_Number_of_Tasks : Integer_4_Positive       := 1;
       Current_Number_Of_Lines : Integer_8_Natural        := 0;
+      Current_Failure         : Boolean                  := False;
       Current_Do_Put_Debug    : Boolean                  := False;
     end Protected_Data;
   Data : Protected_Data;

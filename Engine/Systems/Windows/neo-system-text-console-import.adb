@@ -22,12 +22,13 @@ separate(Neo.System.Text.Console) package body Import is
     Name_Class              : aliased String_2_C                := To_String_2_C(SPECIFICS.Name & " " & Localize(NAME_POSTFIX));
     Hack                    : aliased String_2_C                := To_String_2_C("SINISTER HACK TO GET DIALOG BASE UNITS");
     Buffer                  : aliased String_2_C(1..10000)      := (others => NULL_CHARACTER_2_C);
-    Size                    : aliased Record_Size               := (others => <>);
-    Message                 : aliased Record_Message            := (others => <>);
-    Rectangle               : aliased Record_Rectangle          := (others => <>);
-    Text_Metric             : aliased Record_Text_Metric        := (others => <>);
-    Class                   : aliased Record_Window_Class       := (others => <>);
     Non_Client_Metrics      : aliased Record_Non_Client_Metrics := (others => <>);
+    Text_Metric             : aliased Record_Text_Metric        := (others => <>);
+    Rectangle               : aliased Record_Rectangle          := (others => <>);
+    Message                 : aliased Record_Message            := (others => <>);
+    Class                   : aliased Record_Window_Class       := (others => <>);
+    Size                    : aliased Record_Size               := (others => <>);
+    Y                       :         Integer_4_Signed_C        := 0;
     Message_Box_Font_Height :         Integer_4_Signed_C        := 0;
     Dialog_Base_Unit_Height :         Integer_4_Signed_C        := 0;
     Dialog_Base_Unit_Width  :         Integer_4_Signed_C        := 0;
@@ -50,7 +51,6 @@ separate(Neo.System.Text.Console) package body Import is
     Button_Width            :         Integer_4_Signed_C        := 0;
     Right_Count             :         Integer_4_Signed_C        := 0;
     Left_Count              :         Integer_4_Signed_C        := 0;
-    Y                       :         Integer_4_Signed_C        := 0;
     Number_Of_Lines         :         Integer_4_Signed_C        := 0;
     Current_Line            :         Integer_4_Signed_C        := 0;
     Current_Lines           :         Integer_8_Natural         := 0;
@@ -106,12 +106,11 @@ separate(Neo.System.Text.Console) package body Import is
         Margin_Group      := Integer_4_Signed_C(Float(Text_Metric.Height) / GROUP_BOX_SIDE_MARGIN);
         Margin_Group_Top  := Integer_4_Signed_C(Float(Text_Metric.Height) * FONT_GROUP_BOX_SIZE);
         Box_Padding       := Integer_4_Signed_C(Float(Text_Box_Font_Width) / 1.5);
-        Output_Box_Width  := 2 * Box_Padding + (Text_Box_Font_Width * Integer_4_Signed_C(Get_Line_Size)) + Get_System_Metrics(DATA_SCROLL_BAR_WIDTH);
+        Output_Box_Width  := 2 * Box_Padding + (Text_Box_Font_Width  * Integer_4_Signed_C(Get_Line_Size)) + Get_System_Metrics(DATA_SCROLL_BAR_WIDTH);
         Output_Box_Height := 2 * Box_Padding + (Text_Box_Font_Height * Integer_4_Signed_C(NUMBER_OF_OUTPUT_ROWS));
         Input_Box_Height  := 2 * Box_Padding + Text_Box_Font_Height;
         Console_Width     := (MARGIN * Dialog_Base_Unit_Width + Margin_Group + Border_Width) * 2 + Output_Box_Width;
-        Console_Height    := (MARGIN * Dialog_Base_Unit_Height) * 4 + (Border_Height + Margin_Group + Margin_Group_Top) * 2 +
-                             Output_Box_Height + Input_Box_Height + BUTTON_HEIGHT + Get_System_Metrics(DATA_TITLE_BAR_HEIGHT);
+        Console_Height    := (MARGIN * Dialog_Base_Unit_Height) * 4 + (Border_Height + Margin_Group + Margin_Group_Top) * 2 + Output_Box_Height + Input_Box_Height + BUTTON_HEIGHT + Get_System_Metrics(DATA_TITLE_BAR_HEIGHT);
         if Buttons'length > 0 then
           Minimum_Width := (Buttons'length - 1) * MARGIN_BUTTON * Dialog_Base_Unit_Width + MARGIN * 2 * Dialog_Base_Unit_Width + BUTTON_WIDTH * Buttons'length + Border_Width * 2;
           if Console_Width < Minimum_Width then
@@ -120,11 +119,11 @@ separate(Neo.System.Text.Console) package body Import is
           end if;
         end if;
         if Current_Height < Console_Height or (Was_At_Minimum_Height and Current_Height > Console_Height) then Current_Height := Console_Height; end if;
-        if Current_Width < Console_Width or (Was_At_Minimum_Width and Current_Width > Console_Width) then Current_Width := Console_Width; end if;
-        Output_Box_Width      := Current_Width - (Console_Width - Output_Box_Width);
+        if Current_Width  < Console_Width  or (Was_At_Minimum_Width  and Current_Width  > Console_Width)  then Current_Width  := Console_Width; end if;
+        Output_Box_Width      := Current_Width  - (Console_Width  - Output_Box_Width);
         Output_Box_Height     := Current_Height - (Console_Height - Output_Box_Height);
         Was_At_Minimum_Height := Current_Height < Console_Height + Border_Height;
-        Was_At_Minimum_Width  := Current_Width < Console_Width + Border_Width;
+        Was_At_Minimum_Width  := Current_Width  < Console_Width  + Border_Width;
         Number_Of_Lines       := (Output_Box_Height - 2 * Box_Padding) / Text_Box_Font_Height;
       end Set_Sizes;
     procedure Create_Fonts is 
@@ -245,12 +244,8 @@ separate(Neo.System.Text.Console) package body Import is
             Assert(Edit_Background);
           when EVENT_CONTROL_STATIC_COLOR | EVENT_CONTROL_DYNAMIC_COLOR =>
             if To_Unchecked_Address(Data_Signed) = Output_Box or To_Unchecked_Address(Data_Signed) = Input_Box then
-              Assert(Set_Background_Color(
-                Device_Context => To_Unchecked_Address(Integer_Address(Data_Unsigned)),
-                Color          => To_Windows_Color(COLOR_BACKGROUND)) /= INVALID_COLOR);
-              Assert(Set_Text_Color(
-                Device_Context => To_Unchecked_Address(Integer_Address(Data_Unsigned)),
-                Color          => To_Windows_Color(COLOR_TEXT)) /= INVALID_COLOR);
+              Assert(Set_Background_Color (To_Unchecked_Address(Integer_Address(Data_Unsigned)), To_Windows_Color(COLOR_BACKGROUND)) /= INVALID_COLOR);
+              Assert(Set_Text_Color       (To_Unchecked_Address(Integer_Address(Data_Unsigned)), To_Windows_Color(COLOR_TEXT))       /= INVALID_COLOR);
               return To_Unchecked_Integer_Address(Edit_Background);
             end if;
           when EVENT_BUTTON_COMMAND =>
@@ -341,8 +336,7 @@ separate(Neo.System.Text.Console) package body Import is
                     if CONSOLE_BUTTONS(I).Action /= null then -- Left justify
                       Dialog_Base_Unit_Width * (MARGIN + Left_Count * MARGIN_BUTTON) + Left_Count * BUTTON_WIDTH
                     else -- Right justify
-                      Output_Box_Width + Margin_Group * 2 + Dialog_Base_Unit_Width * MARGIN - (Right_Count + 1) * BUTTON_WIDTH -
-                      Dialog_Base_Unit_Width * Right_Count * MARGIN_BUTTON)));
+                      Output_Box_Width + Margin_Group * 2 + Dialog_Base_Unit_Width * MARGIN - (Right_Count + 1) * BUTTON_WIDTH - Dialog_Base_Unit_Width * Right_Count * MARGIN_BUTTON)));
                 if CONSOLE_BUTTONS(I).Action = null then Right_Count := Right_Count + 1;
                 else Left_Count := Left_Count + 1; end if;
               end loop;
@@ -573,16 +567,9 @@ separate(Neo.System.Text.Console) package body Import is
           case Message.Data is
             when EVENT_MOUSE_WHEEL_VERTICAL =>
               if Get_Focus /= Output_Box then
-                declare
-                Wheel_Delta : Integer_2_Signed := To_Unchecked_Integer_2_Signed(Integer_2_Unsigned( 
-                  Shift_Right(Amount => 16, Value => Integer_8_Unsigned(Message.Data_Unsigned) and 16#0000_0000_FFFF_0000#))) / MOUSE_WHEEL_DELTA; 
-                begin
-                  if Wheel_Delta < 0 then
-                    for I in 1..Current_Lines / SCROLL_FACTOR loop Assert_Dummy(Send_Message(Output_Box, EVENT_SCROLL_VERTICALLY, 1, 0)); end loop;
-                  elsif Wheel_Delta > 0 then
-                    for I in 1..Current_Lines / SCROLL_FACTOR loop Assert_Dummy(Send_Message(Output_Box, EVENT_SCROLL_VERTICALLY, 0, 0)); end loop;
-                  end if;
-                end;
+                if To_Unchecked_Integer_2_Signed(Integer_2_Unsigned(Shift_Right(Integer_8_Unsigned(Message.Data_Unsigned) and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0
+                then for I in 1..Current_Lines / SCROLL_FACTOR loop Assert_Dummy(Send_Message(Output_Box, EVENT_SCROLL_VERTICALLY, 1, 0)); end loop;
+                else for I in 1..Current_Lines / SCROLL_FACTOR loop Assert_Dummy(Send_Message(Output_Box, EVENT_SCROLL_VERTICALLY, 0, 0)); end loop; end if;
               end if;
             when EVENT_KEY_DOWN =>
               Do_Process_Character := True;
@@ -598,21 +585,19 @@ separate(Neo.System.Text.Console) package body Import is
                 Do_Process_Character := False;
                 Current_Input := Character_2'val(Integer_4_Signed(Message.Data_Unsigned));
                 if not Is_Control(Current_Input) then
-                  Assert_Dummy(
-                    Send_Message(
-                      Window        => Input_Box,
-                      Message       => EVENT_TEXT_GET_BUFFER,
-                      Data_Unsigned => Integer_Address(Buffer'length),
-                      Data_Signed   => To_Unchecked_Integer_Address(Buffer'address)));
+                  Assert_Dummy(Send_Message(
+                    Window        => Input_Box,
+                    Message       => EVENT_TEXT_GET_BUFFER,
+                    Data_Unsigned => Integer_Address(Buffer'length),
+                    Data_Signed   => To_Unchecked_Integer_Address(Buffer'address)));
                   Set_Input_Entry(To_String_2(Buffer) & Current_Input);
                   if Get_Focus /= Input_Box then Set_Text(Input_Box, Get_Input_Entry); end if;
                 elsif Current_Input = Character_2'val(Character_1'pos(ASCII.CR)) then
-                  Assert_Dummy(
-                    Send_Message(
-                      Window        => Input_Box,
-                      Message       => EVENT_TEXT_GET_BUFFER,
-                      Data_Unsigned => Integer_Address(Buffer'length),
-                      Data_Signed   => To_Unchecked_Integer_Address(Buffer'address)));
+                  Assert_Dummy(Send_Message(
+                    Window        => Input_Box,
+                    Message       => EVENT_TEXT_GET_BUFFER,
+                    Data_Unsigned => Integer_Address(Buffer'length),
+                    Data_Signed   => To_Unchecked_Integer_Address(Buffer'address)));
                   Set_Input_Entry(To_String_2(Buffer));
                   if Get_Input_Entry /= NULL_STRING_2 then
                     Put_Line(Get_Input_Entry);

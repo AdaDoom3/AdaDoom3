@@ -60,17 +60,17 @@ package body Neo is
         end Protected_Vector;
     end Vectors;
   protected body Protected_Data is
+      procedure Set_Failure                                                         is begin Current_Failure := True;                                                       end Set_Failure;
       procedure Set_Do_Put_Debug    (Value : in Boolean)                            is begin Current_Do_Put_Debug := Value;                                                 end Set_Do_Put_Debug;
       procedure Set_Line_Size       (Value : in Integer_4_Positive)                 is begin Current_Line_Size := Value;                                                    end Set_Line_Size;
       procedure Set_Number_of_Tasks (Value : in Integer_4_Positive)                 is begin Current_Number_Of_Tasks := Value;                                              end Set_Number_Of_Tasks;
       procedure Set_Put             (Value : in Access_Procedure_Put)               is begin Current_Put := Value;                                                          end Set_Put;
       procedure Set_Localize        (Value : in Access_Function_Localize)           is begin Current_Localize := Value;                                                     end Set_Localize;
       procedure Set_Input_Entry     (Value : in String_2)                           is begin Current_Input_Entry := To_String_2_Unbounded(Value);                           end Set_Input_Entry;
-      procedure Set_Errors          (Value : in String_2)                           is begin Current_Errors := To_String_2_Unbounded(Value);                                end Set_Errors;
       function Localize             (Item  : in String_2) return String_2           is begin return (if Current_Localize = null then Item else Current_Localize.all(Item)); end Localize;
       function Get_Log                                    return String_2           is begin return To_String_2(Current_Log);                                               end Get_Log;
-      function Get_Errors                                 return String_2           is begin return To_String_2(Current_Errors);                                            end Get_Errors;
       function Get_Input_Entry                            return String_2           is begin return To_String_2(Current_Input_Entry);                                       end Get_Input_Entry;
+      function Did_Fail                                   return Boolean            is begin return Current_Failure;                                                        end Did_Fail;
       function Do_Put_Debug                               return Boolean            is begin return Current_Do_Put_Debug;                                                   end Do_Put_Debug;
       function Get_Line_Size                              return Integer_4_Positive is begin return Current_Line_Size;                                                      end Get_Line_Size;
       function Get_Number_Of_Lines                        return Integer_8_Natural  is begin return Current_Number_Of_Lines;                                                end Get_Number_Of_Lines;
@@ -86,10 +86,10 @@ package body Neo is
           if Current_Put /= null then Current_Put.all(Item); end if;
         end Put;
     end Protected_Data;
+  procedure Set_Failure                                                         is begin Data.Set_Failure;                                 end Set_Failure;
   procedure New_Line            (Count : in Integer_4_Positive := 1)            is begin for I in 1..Count loop Put(END_LINE_2); end loop; end New_Line;
   procedure Put_Debug           (Item  : in Character_2)                        is begin Put_Debug(Item & "");                             end Put_Debug;
   procedure Set_Input_Entry     (Value : in String_2)                           is begin Data.Set_Input_Entry(Value);                      end Set_Input_Entry;
-  procedure Set_Errors          (Value : in String_2)                           is begin Data.Set_Errors(Value);                           end Set_Errors;
   procedure Set_Do_Put_Debug    (Value : in Boolean)                            is begin Data.Set_Do_Put_Debug(Value);                     end Set_Do_Put_Debug; 
   procedure Set_Line_Size       (Value : in Integer_4_Positive)                 is begin Data.Set_Line_Size(Value);                        end Set_Line_Size;
   procedure Set_Put             (Value : in Access_Procedure_Put)               is begin Data.Set_Put(Value);                              end Set_Put;
@@ -105,18 +105,19 @@ package body Neo is
   function Get_Extension        (Path  : in String_2) return String_2           is begin return Path(Index(Path, ".") + 1..Path'last);     end Get_Extension;
   function Get_Log                                    return String_2           is begin return Data.Get_Log;                              end Get_Log;
   function Get_Input_Entry                            return String_2           is begin return Data.Get_Input_Entry;                      end Get_Input_Entry; 
-  function Get_Errors                                 return String_2           is begin return Data.Get_Errors;                           end Get_Errors;
   function Get_Number_Of_Lines                        return Integer_8_Natural  is begin return Data.Get_Number_Of_Lines;                  end Get_Number_Of_Lines;
   function Get_Line_Size                              return Integer_4_Positive is begin return Data.Get_Line_Size;                        end Get_Line_Size;
   function Get_Number_Of_Tasks                        return Integer_4_Positive is begin return Data.Get_Number_Of_Tasks;                  end Get_Number_Of_Tasks;
   function Do_Put_Debug                               return Boolean            is begin return Data.Do_Put_Debug;                         end Do_Put_Debug;
+  function Did_Fail                                   return Boolean            is begin return Data.Did_Fail;                             end Did_Fail;
   --function To_String_1_C                    (Item : in String_2)           return String_1_C                    is begin return To_String_1_C(To_String_1(Item));                                     end To_String_1_C;
   function To_String_1_C                    (Item : in String_1)           return String_1_C                    is begin return To_C(Item, True);                                                     end To_String_1_C;
-  function To_String_1                      (Item : in String_1_C)         return String_1                      is begin return To_Ada(Item, True);                                                   end To_String_1;
+  function To_String_1                      (Item : in String_1_C)         return String_1                      is begin return To_Ada(Item, True);                                                   end To_String_1;    
   function To_String_2_C                    (Item : in String_2_Unbounded) return String_2_C                    is begin return To_String_2_C(To_String_2(Item));                                     end To_String_2_C;
   function To_String_2_C                    (Item : in String_2)           return String_2_C                    is begin return To_C(Item & NULL_CHARACTER_2);                                        end To_String_2_C;
   function To_String_2                      (Item : in Character_2)        return String_2                      is begin return "" & Item;                                                            end To_String_2;
   function To_String_2                      (Item : in String_1_C)         return String_2                      is begin return To_String_2(To_String_1(Item));                                       end To_String_2;
+  function To_String_2                      (Item : in Character_1)        return String_2                      is begin return To_String_2("" & Item);                                               end To_String_2;
   function To_String_2_Unbounded            (Item : in Character_2)        return String_2_Unbounded            is begin return To_String_2_Unbounded("" & Item);                                     end To_String_2_Unbounded;
   function To_Access_Character_1_C          (Item : in String_1_C)         return Access_Character_1_C          is begin return To_Unchecked_Access_Character_1_C(Item(Item'first)'address);          end To_Access_Character_1_C;
   function To_Access_Character_2_C          (Item : in String_2)           return Access_Character_2_C          is begin return To_Unchecked_Access_Character_2_C(To_String_2_C(Item)'address);       end To_Access_Character_2_C;
@@ -198,7 +199,23 @@ package body Neo is
       end loop;
       return To_String_2(Buffer);
     exception when others => raise Storage_Error;
-    end To_String_2;
+    end To_String_2;          
+  function To_String_1(Item : in Access_Constant_Character_1_C) return String_1 is 
+    Length  : Integer_4_Signed              := 0;
+    Buffer  : String_1_Unbounded            := NULL_STRING_1_UNBOUNDED;
+    Pointer : Access_Constant_Character_1_C := Item;
+    begin
+      while Pointer.all /= NULL_CHARACTER_1_C loop
+        Length  := Length + 1;
+        Buffer  := Buffer & Character_1(Pointer.all);
+        Pointer :=
+          To_Unchecked_Access_Constant_Character_1_C(
+            To_Unchecked_Address(
+              To_Unchecked_Integer_Address(Pointer) + Character_1_C'size / Byte'size));
+      end loop;
+      return To_String_1(Buffer);
+    exception when others => raise Storage_Error;
+    end To_String_1;
   function Get_Duration(Timer : in Record_Timer) return Duration is begin return (if Timer.Is_Stopped then Timer.Last else Clock - Timer.Start); end Get_Duration;
   procedure Start(Timer : in out Record_Timer) is
     begin

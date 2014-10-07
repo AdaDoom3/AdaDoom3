@@ -1,7 +1,6 @@
 package body Neo.System.Graphics.Window is
   package body Import is separate;
   function Get_Borders    return Vector_Record_Border.Unsafe.Vector renames Import.Get_Borders;
-  function Get_Specifics  return Record_Specifics                   renames Import.Get_Specifics;
   function Get_Decoration return Record_Border                      renames Import.Get_Decoration;
   procedure Preform_Exit_To_Menu(Binding : in Record_Binding) is
     begin
@@ -101,10 +100,9 @@ package body Neo.System.Graphics.Window is
       return Result;
     end Resize;
   procedure Run_Multi_Monitor_Window is
-    Index : Integer_4_Positive := 1;--Current_Number_Of_Monitors.Get;
     begin
       --Current_Number_Of_Monitors.Set(Index + 1);
-      while Import.Update(Index) and Is_Running.Get loop null;
+      while Import.Update and Is_Running.Get loop null;
         --Render_Backend;
       end loop;
     end Run_Multi_Monitor_Window;
@@ -115,6 +113,7 @@ package body Neo.System.Graphics.Window is
     begin
       Import.Assert_Only_Instance;
       Import.Initialize;
+      Initialize(1);
       Detect_Menu_Mode_Entry.Bindings.Append(Mouse(Left_Mouse_Key));
       Toggle_Fullscreen.Bindings.Append(Keyboard(F11_Key));
       Exit_To_Menu.Bindings.Append(Keyboard(Escape_Key));
@@ -156,15 +155,4 @@ package body Neo.System.Graphics.Window is
       end loop;
       Import.Finalize;
     end Run;
-begin
-  Put_Title(Localize("WINDOW"));
-  New_Line;
-  Put_Line(Localize("Color:")          & Integer_4_Positive'wide_image(SPECIFICS.Color_Bits));
-  Put_Line(Localize("Depth:")          & Integer_4_Positive'wide_image(SPECIFICS.Depth_Bits));
-  Put_Line(Localize("Stencil:")        & Integer_4_Positive'wide_image(SPECIFICS.Stencil_Bits));
-  Put_Line(Localize("Bits per pixel:") & Integer_4_Positive'wide_image(SPECIFICS.Bits_Per_Pixel));
-  Put_Line(Localize("Multisamples:")   & Integer_4_Natural'wide_image(SPECIFICS.Mutlisamples));
-  if SPECIFICS.Has_Swap_Control_Tear   then Put_Line(Localize("Has swap control tear"));   end if;
-  if SPECIFICS.Has_Stereo_Pixel_Format then Put_Line(Localize("Has stereo pixel format")); end if;
-  New_Line;
 end Neo.System.Graphics.Window;

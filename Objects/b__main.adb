@@ -16,7 +16,7 @@ package body ada_main is
    E061 : Short_Integer; pragma Import (Ada, E061, "ada__io_exceptions_E");
    E171 : Short_Integer; pragma Import (Ada, E171, "ada__strings_E");
    E175 : Short_Integer; pragma Import (Ada, E175, "ada__strings__maps_E");
-   E213 : Short_Integer; pragma Import (Ada, E213, "ada__strings__maps__constants_E");
+   E217 : Short_Integer; pragma Import (Ada, E217, "ada__strings__maps__constants_E");
    E045 : Short_Integer; pragma Import (Ada, E045, "ada__tags_E");
    E060 : Short_Integer; pragma Import (Ada, E060, "ada__streams_E");
    E072 : Short_Integer; pragma Import (Ada, E072, "interfaces__c_E");
@@ -29,35 +29,38 @@ package body ada_main is
    E095 : Short_Integer; pragma Import (Ada, E095, "system__storage_pools__subpools_E");
    E141 : Short_Integer; pragma Import (Ada, E141, "system__task_info_E");
    E163 : Short_Integer; pragma Import (Ada, E163, "ada__calendar_E");
-   E247 : Short_Integer; pragma Import (Ada, E247, "ada__calendar__delays_E");
-   E279 : Short_Integer; pragma Import (Ada, E279, "ada__calendar__time_zones_E");
-   E202 : Short_Integer; pragma Import (Ada, E202, "system__assertions_E");
+   E228 : Short_Integer; pragma Import (Ada, E228, "ada__calendar__delays_E");
+   E301 : Short_Integer; pragma Import (Ada, E301, "ada__calendar__time_zones_E");
+   E206 : Short_Integer; pragma Import (Ada, E206, "system__assertions_E");
    E091 : Short_Integer; pragma Import (Ada, E091, "system__pool_global_E");
    E079 : Short_Integer; pragma Import (Ada, E079, "system__file_control_block_E");
-   E206 : Short_Integer; pragma Import (Ada, E206, "ada__streams__stream_io_E");
+   E210 : Short_Integer; pragma Import (Ada, E210, "ada__streams__stream_io_E");
    E066 : Short_Integer; pragma Import (Ada, E066, "system__file_io_E");
    E058 : Short_Integer; pragma Import (Ada, E058, "ada__wide_text_io_E");
+   E258 : Short_Integer; pragma Import (Ada, E258, "system__object_reader_E");
+   E252 : Short_Integer; pragma Import (Ada, E252, "system__dwarf_lines_E");
    E015 : Short_Integer; pragma Import (Ada, E015, "system__secondary_stack_E");
-   E183 : Short_Integer; pragma Import (Ada, E183, "ada__strings__wide_maps_E");
-   E189 : Short_Integer; pragma Import (Ada, E189, "ada__strings__wide_unbounded_E");
-   E204 : Short_Integer; pragma Import (Ada, E204, "system__strings__stream_ops_E");
-   E229 : Short_Integer; pragma Import (Ada, E229, "system__tasking__initialization_E");
-   E249 : Short_Integer; pragma Import (Ada, E249, "ada__real_time_E");
-   E200 : Short_Integer; pragma Import (Ada, E200, "ada__text_io_E");
+   E181 : Short_Integer; pragma Import (Ada, E181, "ada__strings__unbounded_E");
+   E194 : Short_Integer; pragma Import (Ada, E194, "ada__strings__wide_maps_E");
+   E198 : Short_Integer; pragma Import (Ada, E198, "ada__strings__wide_unbounded_E");
+   E208 : Short_Integer; pragma Import (Ada, E208, "system__strings__stream_ops_E");
+   E235 : Short_Integer; pragma Import (Ada, E235, "system__tasking__initialization_E");
+   E279 : Short_Integer; pragma Import (Ada, E279, "ada__real_time_E");
+   E204 : Short_Integer; pragma Import (Ada, E204, "ada__text_io_E");
    E117 : Short_Integer; pragma Import (Ada, E117, "system__tasking__protected_objects_E");
-   E233 : Short_Integer; pragma Import (Ada, E233, "system__tasking__protected_objects__entries_E");
-   E231 : Short_Integer; pragma Import (Ada, E231, "system__tasking__queuing_E");
-   E259 : Short_Integer; pragma Import (Ada, E259, "system__tasking__stages_E");
+   E239 : Short_Integer; pragma Import (Ada, E239, "system__tasking__protected_objects__entries_E");
+   E237 : Short_Integer; pragma Import (Ada, E237, "system__tasking__queuing_E");
+   E289 : Short_Integer; pragma Import (Ada, E289, "system__tasking__stages_E");
    E043 : Short_Integer; pragma Import (Ada, E043, "neo_E");
-   E210 : Short_Integer; pragma Import (Ada, E210, "neo__command_E");
-   E222 : Short_Integer; pragma Import (Ada, E222, "neo__system_E");
-   E241 : Short_Integer; pragma Import (Ada, E241, "neo__system__graphics_E");
-   E245 : Short_Integer; pragma Import (Ada, E245, "neo__system__input_E");
-   E243 : Short_Integer; pragma Import (Ada, E243, "neo__system__graphics__window_E");
-   E265 : Short_Integer; pragma Import (Ada, E265, "neo__system__memory_E");
-   E271 : Short_Integer; pragma Import (Ada, E271, "neo__system__processor_E");
-   E273 : Short_Integer; pragma Import (Ada, E273, "neo__system__text_E");
-   E275 : Short_Integer; pragma Import (Ada, E275, "neo__system__text__console_E");
+   E214 : Short_Integer; pragma Import (Ada, E214, "neo__command_E");
+   E226 : Short_Integer; pragma Import (Ada, E226, "neo__system_E");
+   E264 : Short_Integer; pragma Import (Ada, E264, "neo__system__graphics_E");
+   E277 : Short_Integer; pragma Import (Ada, E277, "neo__system__input_E");
+   E275 : Short_Integer; pragma Import (Ada, E275, "neo__system__graphics__window_E");
+   E291 : Short_Integer; pragma Import (Ada, E291, "neo__system__memory_E");
+   E293 : Short_Integer; pragma Import (Ada, E293, "neo__system__processor_E");
+   E295 : Short_Integer; pragma Import (Ada, E295, "neo__system__text_E");
+   E297 : Short_Integer; pragma Import (Ada, E297, "neo__system__text__console_E");
 
    Local_Priority_Specific_Dispatching : constant String := "";
    Local_Interrupt_States : constant String := "";
@@ -66,124 +69,151 @@ package body ada_main is
 
    procedure finalize_library is
    begin
-      E275 := E275 - 1;
+      E297 := E297 - 1;
       declare
          procedure F1;
          pragma Import (Ada, F1, "neo__system__text__console__finalize_spec");
       begin
          F1;
       end;
-      E243 := E243 - 1;
+      E275 := E275 - 1;
       declare
          procedure F2;
          pragma Import (Ada, F2, "neo__system__graphics__window__finalize_spec");
       begin
          F2;
       end;
-      E245 := E245 - 1;
+      E277 := E277 - 1;
       declare
          procedure F3;
          pragma Import (Ada, F3, "neo__system__input__finalize_spec");
       begin
          F3;
       end;
-      E222 := E222 - 1;
+      E264 := E264 - 1;
       declare
          procedure F4;
-         pragma Import (Ada, F4, "neo__system__finalize_spec");
+         pragma Import (Ada, F4, "neo__system__graphics__finalize_spec");
       begin
          F4;
       end;
-      E210 := E210 - 1;
+      E226 := E226 - 1;
       declare
          procedure F5;
-         pragma Import (Ada, F5, "neo__command__finalize_spec");
+         pragma Import (Ada, F5, "neo__system__finalize_spec");
       begin
          F5;
       end;
-      E043 := E043 - 1;
+      E214 := E214 - 1;
       declare
          procedure F6;
-         pragma Import (Ada, F6, "neo__finalize_spec");
+         pragma Import (Ada, F6, "neo__command__finalize_spec");
       begin
          F6;
       end;
-      E233 := E233 - 1;
+      E043 := E043 - 1;
       declare
          procedure F7;
-         pragma Import (Ada, F7, "system__tasking__protected_objects__entries__finalize_spec");
+         pragma Import (Ada, F7, "neo__finalize_spec");
       begin
          F7;
       end;
-      E200 := E200 - 1;
+      E239 := E239 - 1;
       declare
          procedure F8;
-         pragma Import (Ada, F8, "ada__text_io__finalize_spec");
+         pragma Import (Ada, F8, "system__tasking__protected_objects__entries__finalize_spec");
       begin
          F8;
       end;
-      E058 := E058 - 1;
-      E189 := E189 - 1;
+      E204 := E204 - 1;
       declare
          procedure F9;
-         pragma Import (Ada, F9, "ada__strings__wide_unbounded__finalize_spec");
+         pragma Import (Ada, F9, "ada__text_io__finalize_spec");
       begin
          F9;
       end;
-      E183 := E183 - 1;
+      E058 := E058 - 1;
+      E198 := E198 - 1;
       declare
          procedure F10;
-         pragma Import (Ada, F10, "ada__strings__wide_maps__finalize_spec");
+         pragma Import (Ada, F10, "ada__strings__wide_unbounded__finalize_spec");
       begin
          F10;
+      end;
+      E194 := E194 - 1;
+      declare
+         procedure F11;
+         pragma Import (Ada, F11, "ada__strings__wide_maps__finalize_spec");
+      begin
+         F11;
+      end;
+      E181 := E181 - 1;
+      declare
+         procedure F12;
+         pragma Import (Ada, F12, "ada__strings__unbounded__finalize_spec");
+      begin
+         F12;
+      end;
+      declare
+         procedure F13;
+         pragma Import (Ada, F13, "system__object_reader__finalize_body");
+      begin
+         E258 := E258 - 1;
+         F13;
       end;
       E081 := E081 - 1;
       E095 := E095 - 1;
       declare
-         procedure F11;
-         pragma Import (Ada, F11, "system__file_io__finalize_body");
+         procedure F14;
+         pragma Import (Ada, F14, "system__file_io__finalize_body");
       begin
          E066 := E066 - 1;
-         F11;
-      end;
-      declare
-         procedure F12;
-         pragma Import (Ada, F12, "ada__wide_text_io__finalize_spec");
-      begin
-         F12;
-      end;
-      E206 := E206 - 1;
-      declare
-         procedure F13;
-         pragma Import (Ada, F13, "ada__streams__stream_io__finalize_spec");
-      begin
-         F13;
-      end;
-      declare
-         procedure F14;
-         pragma Import (Ada, F14, "system__file_control_block__finalize_spec");
-      begin
-         E079 := E079 - 1;
          F14;
       end;
-      E091 := E091 - 1;
       declare
          procedure F15;
-         pragma Import (Ada, F15, "system__pool_global__finalize_spec");
+         pragma Import (Ada, F15, "system__object_reader__finalize_spec");
       begin
          F15;
       end;
       declare
          procedure F16;
-         pragma Import (Ada, F16, "system__storage_pools__subpools__finalize_spec");
+         pragma Import (Ada, F16, "ada__wide_text_io__finalize_spec");
       begin
          F16;
       end;
+      E210 := E210 - 1;
       declare
          procedure F17;
-         pragma Import (Ada, F17, "system__finalization_masters__finalize_spec");
+         pragma Import (Ada, F17, "ada__streams__stream_io__finalize_spec");
       begin
          F17;
+      end;
+      declare
+         procedure F18;
+         pragma Import (Ada, F18, "system__file_control_block__finalize_spec");
+      begin
+         E079 := E079 - 1;
+         F18;
+      end;
+      E091 := E091 - 1;
+      declare
+         procedure F19;
+         pragma Import (Ada, F19, "system__pool_global__finalize_spec");
+      begin
+         F19;
+      end;
+      declare
+         procedure F20;
+         pragma Import (Ada, F20, "system__storage_pools__subpools__finalize_spec");
+      begin
+         F20;
+      end;
+      declare
+         procedure F21;
+         pragma Import (Ada, F21, "system__finalization_masters__finalize_spec");
+      begin
+         F21;
       end;
       declare
          procedure Reraise_Library_Exception_If_Any;
@@ -318,7 +348,7 @@ package body ada_main is
       E171 := E171 + 1;
       Ada.Strings.Maps'Elab_Spec;
       Ada.Strings.Maps.Constants'Elab_Spec;
-      E213 := E213 + 1;
+      E217 := E217 + 1;
       Ada.Tags'Elab_Spec;
       Ada.Streams'Elab_Spec;
       E060 := E060 + 1;
@@ -340,18 +370,20 @@ package body ada_main is
       Ada.Calendar'Elab_Body;
       E163 := E163 + 1;
       Ada.Calendar.Delays'Elab_Body;
-      E247 := E247 + 1;
+      E228 := E228 + 1;
       Ada.Calendar.Time_Zones'Elab_Spec;
-      E279 := E279 + 1;
+      E301 := E301 + 1;
       System.Assertions'Elab_Spec;
-      E202 := E202 + 1;
+      E206 := E206 + 1;
       System.Pool_Global'Elab_Spec;
       E091 := E091 + 1;
       System.File_Control_Block'Elab_Spec;
       E079 := E079 + 1;
       Ada.Streams.Stream_Io'Elab_Spec;
-      E206 := E206 + 1;
+      E210 := E210 + 1;
       Ada.Wide_Text_Io'Elab_Spec;
+      System.Object_Reader'Elab_Spec;
+      System.Dwarf_Lines'Elab_Spec;
       System.File_Io'Elab_Body;
       E066 := E066 + 1;
       E095 := E095 + 1;
@@ -368,53 +400,60 @@ package body ada_main is
       E076 := E076 + 1;
       System.Secondary_Stack'Elab_Body;
       E015 := E015 + 1;
+      System.Dwarf_Lines'Elab_Body;
+      E252 := E252 + 1;
+      System.Object_Reader'Elab_Body;
+      E258 := E258 + 1;
+      Ada.Strings.Unbounded'Elab_Spec;
+      E181 := E181 + 1;
       Ada.Strings.Wide_Maps'Elab_Spec;
-      E183 := E183 + 1;
+      E194 := E194 + 1;
       Ada.Strings.Wide_Unbounded'Elab_Spec;
-      E189 := E189 + 1;
+      E198 := E198 + 1;
       System.Strings.Stream_Ops'Elab_Body;
-      E204 := E204 + 1;
+      E208 := E208 + 1;
       System.Tasking.Initialization'Elab_Body;
-      E229 := E229 + 1;
+      E235 := E235 + 1;
       Ada.Wide_Text_Io'Elab_Body;
       E058 := E058 + 1;
       Ada.Real_Time'Elab_Spec;
       Ada.Real_Time'Elab_Body;
-      E249 := E249 + 1;
+      E279 := E279 + 1;
       Ada.Text_Io'Elab_Spec;
       Ada.Text_Io'Elab_Body;
-      E200 := E200 + 1;
+      E204 := E204 + 1;
       System.Tasking.Protected_Objects'Elab_Body;
       E117 := E117 + 1;
       System.Tasking.Protected_Objects.Entries'Elab_Spec;
-      E233 := E233 + 1;
+      E239 := E239 + 1;
       System.Tasking.Queuing'Elab_Body;
-      E231 := E231 + 1;
+      E237 := E237 + 1;
       System.Tasking.Stages'Elab_Body;
-      E259 := E259 + 1;
+      E289 := E289 + 1;
       Neo'Elab_Spec;
       E043 := E043 + 1;
       Neo.Command'Elab_Spec;
-      E210 := E210 + 1;
+      E214 := E214 + 1;
       Neo.System'Elab_Spec;
       Neo.System'Elab_Body;
-      E222 := E222 + 1;
-      E241 := E241 + 1;
+      E226 := E226 + 1;
+      Neo.System.Graphics'Elab_Spec;
+      E264 := E264 + 1;
       Neo.System.Input'Elab_Spec;
       Neo.System.Input'Elab_Body;
-      E245 := E245 + 1;
+      E277 := E277 + 1;
       Neo.System.Graphics.Window'Elab_Spec;
       Neo.System.Graphics.Window'Elab_Body;
-      E243 := E243 + 1;
+      E275 := E275 + 1;
       Neo.System.Memory'Elab_Spec;
       Neo.System.Memory'Elab_Body;
-      E265 := E265 + 1;
+      E291 := E291 + 1;
       Neo.System.Processor'Elab_Spec;
       Neo.System.Processor'Elab_Body;
-      E271 := E271 + 1;
-      E273 := E273 + 1;
+      E293 := E293 + 1;
+      E295 := E295 + 1;
       Neo.System.Text.Console'Elab_Spec;
-      E275 := E275 + 1;
+      E297 := E297 + 1;
    end adainit;
 
    procedure Ada_Main_Program;
@@ -450,20 +489,21 @@ package body ada_main is
    end;
 
 --  BEGIN Object file/option list
-   --   C:\git\Objects\neo.o
-   --   C:\git\Objects\neo-command.o
-   --   C:\git\Objects\neo-windows.o
-   --   C:\git\Objects\neo-system.o
-   --   C:\git\Objects\neo-system-graphics.o
-   --   C:\git\Objects\neo-system-input.o
-   --   C:\git\Objects\neo-system-graphics-window.o
-   --   C:\git\Objects\neo-system-memory.o
-   --   C:\git\Objects\neo-system-processor.o
-   --   C:\git\Objects\neo-system-text.o
-   --   C:\git\Objects\neo-system-text-console.o
-   --   C:\git\Objects\main.o
-   --   -LC:\git\Objects\
-   --   -LC:\git\Objects\
+   --   C:\Neo\Objects\neo.o
+   --   C:\Neo\Objects\neo-command.o
+   --   C:\Neo\Objects\neo-opengl.o
+   --   C:\Neo\Objects\neo-windows.o
+   --   C:\Neo\Objects\neo-system.o
+   --   C:\Neo\Objects\neo-system-graphics.o
+   --   C:\Neo\Objects\neo-system-input.o
+   --   C:\Neo\Objects\neo-system-graphics-window.o
+   --   C:\Neo\Objects\neo-system-memory.o
+   --   C:\Neo\Objects\neo-system-processor.o
+   --   C:\Neo\Objects\neo-system-text.o
+   --   C:\Neo\Objects\neo-system-text-console.o
+   --   C:\Neo\Objects\main.o
+   --   -LC:\Neo\Objects\
+   --   -LC:\Neo\Objects\
    --   -LC:/gnat/2014/lib/gcc/i686-pc-mingw32/4.7.4/adalib/
    --   -static
    --   -lgnarl

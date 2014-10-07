@@ -41,9 +41,9 @@ package body Neo.System is
   procedure Assert_Dummy  (Value : in Address)              is begin null;                                                                                                                                                                      end Assert_Dummy;
   procedure Assert_Dummy  (Value : in Boolean)              is begin null;                                                                                                                                                                      end Assert_Dummy;
   procedure Set_Alert     (Value : in Boolean)              is begin Alert_Status.Set_Is_Doing_Something(Value); Import.Set_Alert(Value); exception when Call_Failure => Put_Debug_Line(Localize(FAILED_SET_ALERT));                            end Set_Alert;
-  procedure Execute       (Path : in String_2; Do_Fullscreen : in Boolean := False) is begin Import.Execute(Path, Do_Fullscreen);         exception when Call_Failure => Put_Debug_Line(Localize(FAILED_EXECUTE) & Path);                       end Execute;
   procedure Open_Text     (Path : in String_2)              is begin Import.Open_Text(Path);                                              exception when Call_Failure => Put_Debug_Line(Localize(FAILED_OPEN) & Path);                          end Open_Text;
   procedure Open_Webpage  (Path : in String_2)              is begin Import.Open_Webpage(Path);                                           exception when Call_Failure => Put_Debug_Line(Localize(FAILED_OPEN) & Path);                          end Open_Webpage;
+  procedure Execute       (Path : in String_2; Do_Fullscreen : in Boolean := False) is begin Import.Execute(Path, Do_Fullscreen);         exception when Call_Failure => Put_Debug_Line(Localize(FAILED_EXECUTE) & Path);                       end Execute;
   function Get_Specifics  return Record_Specifics           is begin return Import.Get_Specifics;                                         exception when Call_Failure => Put_Debug_Line(Localize(FAILED_GET_SPECIFICS)); return (others => <>); end Get_Specifics;
   function Is_Alerting    return Boolean                    is begin return Alert_Status.Is_Doing_Something;                                                                                                                                    end Is_Alerting;
   function Get_Last_Error return String_2                   is begin return Localize(PREFIX_ERROR_NUMBER) & Trim(Integer_4_Unsigned'wide_image(Import.Get_Last_Error), Both);                                                                   end Get_Last_Error;
@@ -59,14 +59,60 @@ package body Neo.System is
       elsif SPECIFICS.Version in Enumerated_Macintosh_System'range then return SPECIFICS.Version >= Requirements.Minimum_Macintosh; end if;
       return False;
     end Is_Supported;
+  procedure Trace is
+    Trace   : Tracebacks_Array(1..CALLBACK_TRACE_LIMIT) := (others => NULL_ADDRESS);
+    Length  : Integer_4_Natural                         := 0;
+    begin
+      Call_Chain(Trace, Length);
+      Put(Localize("Call stack:"));
+      declare
+      Traceback : String_2         := To_String_2(Symbolic_Traceback(Trace(1..Length)));
+      Skip_Next : Boolean          := False;
+      To_Skip   : Integer_4_Signed := 3;
+      Current   : Integer_4_Signed := 1;
+      Skips     : Integer_4_Signed := 1;
+      Index     : Integer_4_Signed := 0;
+      begin
+        while Traceback(Current) /= Character_2'Val(Character_1'Pos(ASCII.LF)) loop
+          exit when Current = Traceback'Last;
+          if Index /= Length then New_Line; end if;
+          declare
+          Index_Image : String_2 := Trim(Integer_4_Signed'Wide_Image(Index), Both);
+          begin
+            for I in 2..Integer_4_Natural'Image(Length)'Length - Index_Image'Length loop Put(" "); end loop;
+            Put(Index_Image & ": " & TAB_2 & Traceback(Current..Current + 10));
+          end;
+          for I in Current + 11..Traceback'Last loop
+            if I = Traceback'Last then Current := I; elsif Traceback(I) = Character_2'Val(Character_1'Pos(ASCII.LF)) then
+              Current := I + 1;
+              exit;
+            end if;
+            if Traceback(Current + 11) /= ' ' then
+              if I + 2 <= Traceback'Last and then Traceback(I..I + 2) = "at " then
+                Skip_Next := True;
+                Put(END_LINE_2 & TAB_2);
+              end if;
+              if not Skip_Next then Put("" & Traceback(I));
+              else
+                if Skips = To_Skip then
+                  Skip_Next := False;
+                  Skips     := 1;
+                else Skips := Skips + 1; end if;
+              end if;
+            end if;
+          end loop;
+          Index := Index + 1;
+        end loop;
+        New_Line;
+      end;
+      delay 0.5; -- Assure put is done
+    end Trace;
   procedure Handle_Exception(Occurrence : in Exception_Occurrence) is
     begin
-      Set_Errors(
-        To_String_2(Exception_Name(Occurrence))    & END_LINE_2 &
-        To_String_2(Exception_Message(Occurrence)) & END_LINE_2 &(
-        if Exception_Name(Occurrence) = "NEO.SYSTEM.CALL_FAILURE" then Get_Last_Error & END_LINE_2 else NULL_STRING_2));
-      New_Line;
-      Put_Line(Get_Errors);
+      Put_Line(To_String_2(Exception_Name(Occurrence)));
+      Put_Line(To_String_2(Exception_Message(Occurrence)));
+      Trace;
+      Set_Failure;
       Is_Running.Set(False);
     end Handle_Exception;
   --function Localize(Item : in String_2) return String_2 is
