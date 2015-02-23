@@ -829,69 +829,69 @@ package Neo.OpenGL is
   GL_QUERY_RESULT_AVAILABLE_ARB          : constant Integer_4_Unsigned_C := 16#0000_8867#;
   type Access_Active_Texture is access procedure( -- glActiveTextureARB
     Texture : in Integer_4_Unsigned_C);           -- GLenum texture
-    pragma Convention(C, Access_Active_Texture);
+    pragma Convention(Stdcall, Access_Active_Texture);
   type Access_Client_Active_Texture is access procedure( -- glClientActiveTextureARB
     Texture : in Integer_4_Unsigned_C);                  -- GLenum texture
-    pragma Convention(C, Access_Client_Active_Texture);
+    pragma Convention(Stdcall, Access_Client_Active_Texture);
   type Access_Bind_Buffer is access procedure( -- glBindBufferARB
     Target : in Integer_4_Unsigned_C;          -- GLenum target
     Buffer : in Integer_4_Unsigned_C);         -- GLuint buffer
-    pragma Convention(C, Access_Bind_Buffer);
+    pragma Convention(Stdcall, Access_Bind_Buffer);
   type Access_Bind_Buffer_Range is access procedure( -- glBindBufferRange
     Index  : in Integer_4_Unsigned;                  -- GLenum target
     Buffer : in Integer_4_Unsigned;                  -- GLuint buffer
     Offset : in Integer_Address;                     -- GLintptr offset
     Size   : in Integer_Address);                    -- GLsizeiptr size
-    pragma Convention(C, Access_Bind_Buffer_Range);
+    pragma Convention(Stdcall, Access_Bind_Buffer_Range);
   type Access_Delete_Buffers is access procedure( -- glDeleteBuffersARB
     Number  : in Integer_4_Signed_C;              -- GLsizei n
     Buffers : in Access_Integer_4_Unsigned_C);    -- const GLuint *buffers
-    pragma Convention(C, Access_Delete_Buffers);
+    pragma Convention(Stdcall, Access_Delete_Buffers);
   type Access_Generate_Buffers is access procedure( -- glGenBuffersARB
     Number  : in Integer_4_Signed_C;                -- GLsizei n
     Buffers : in Access_Integer_4_Unsigned_C);      -- GLuint *buffers
-    pragma Convention(C, Access_Generate_Buffers);
+    pragma Convention(Stdcall, Access_Generate_Buffers);
   type Access_Is_Buffer is access function( -- glIsBufferARB
     Buffer : in Integer_4_Unsigned_C)       -- GLuint buffer
     return Integer_1_Unsigned_C;            -- GLboolean
-    pragma Convention(C, Access_Is_Buffer);
+    pragma Convention(Stdcall, Access_Is_Buffer);
   type Access_Buffer_Data is access procedure( -- glBufferDataARB
     Target : in Integer_4_Unsigned_C;          -- GLenum target
     Size   : in Integer_4_Signed_C;            -- GLsizeiptrARB size
     Data   : in Address;                       -- const GLvoid *data
     Usage  : in Integer_4_Unsigned_C);         -- GLenum usage
-    pragma Convention(C, Access_Buffer_Data);
+    pragma Convention(Stdcall, Access_Buffer_Data);
   type Access_Buffer_Subdata is access procedure( -- glBufferSubDataARB
     Target : in Integer_4_Unsigned_C;             -- GLenum target
     Offset : in Integer_4_Signed_C;               -- GLintptrARB offset
     Size   : in Integer_4_Signed_C;               -- GLsizeiptrARB size
     Data   : in Address);                         -- const GLvoid *data
-    pragma Convention(C, Access_Buffer_Subdata);
+    pragma Convention(Stdcall, Access_Buffer_Subdata);
   type Access_Get_Buffer_Subdata is access procedure( -- glGetBufferSubDataARB
     Target : in Integer_4_Unsigned_C;                 -- GLenum target
     Offset : in Integer_4_Signed_C;                   -- GLintptrARB offset
     Size   : in Integer_4_Signed_C;                   -- GLsizeiptrARB size
     Data   : in Address);                             -- GLvoid *data
-    pragma Convention(C, Access_Get_Buffer_Subdata);
+    pragma Convention(Stdcall, Access_Get_Buffer_Subdata);
   type Access_Map_Buffer is access function( -- glMapBufferARB
     Target : in Integer_4_Unsigned_C;        -- GLenum target
     Item   : in Integer_4_Unsigned_C)        -- GLenum access
     return Address;                          -- GLvoid*
-    pragma Convention(C, Access_Map_Buffer);
+    pragma Convention(Stdcall, Access_Map_Buffer);
   type Access_Unmap_Buffer is access function( -- glUnmapBufferARB
     Target : in Integer_4_Unsigned_C)          -- GLenum target
     return Integer_4_Signed_C;                 -- GLboolean
-    pragma Convention(C, Access_Unmap_Buffer);
+    pragma Convention(Stdcall, Access_Unmap_Buffer);
   type Access_Get_Buffer_Parameter is access procedure( -- glGetBufferParameterivARB
     Target     : in Integer_4_Unsigned_C;               -- GLenum target
     Name       : in Integer_4_Unsigned_C;               -- GLenum pname
     Parameters : in Access_Integer_4_Signed_C);         -- GLint *params
-    pragma Convention(C, Access_Get_Buffer_Parameter);
+    pragma Convention(Stdcall, Access_Get_Buffer_Parameter);
   type Access_Get_Buffer_Pointer is access procedure( -- glGetBufferPointervARB
     Target     : in Integer_4_Unsigned_C; -- GLenum target
     Name       : in Integer_4_Unsigned_C; -- GLenum pname
     Parameters : in Address);             -- GLvoid* *params
-    pragma Convention(C, Access_Get_Buffer_Pointer);
+    pragma Convention(Stdcall, Access_Get_Buffer_Pointer);
   type Access_Debug_Message_Control is access procedure( -- glDebugMessageControlARB
     Source   : in Integer_4_Unsigned_C;                  -- GLenum source
     Kind     : in Integer_4_Unsigned_C;                  -- GLenum type
@@ -899,7 +899,7 @@ package Neo.OpenGL is
     Count    : in Integer_4_Signed_C;                    -- GLsizei count
     IDs      : in Access_Integer_4_Unsigned_C;           -- const GLuint * ids
     Enabled  : in Integer_4_Signed_C);                   -- GLboolean enabled
-    pragma Convention(C, Access_Debug_Message_Control);
+    pragma Convention(Stdcall, Access_Debug_Message_Control);
   type Access_Debug_Message_Insert is access procedure( -- glDebugMessageInsertARB
     Source   : in Integer_4_Unsigned_C;                 -- GLenum source
     Kind     : in Integer_4_Unsigned_C;                 -- GLenum type
@@ -907,7 +907,7 @@ package Neo.OpenGL is
     Severity : in Integer_4_Unsigned_C;                 -- GLenum severity
     Length   : in Integer_4_Signed_C;                   -- GLsizei length
     Buffer   : in Access_Integer_1_Unsigned_C);         -- const GLchar * buf
-    pragma Convention(C, Access_Debug_Message_Insert);
+    pragma Convention(Stdcall, Access_Debug_Message_Insert);
   type Access_Debug_Procedure is access procedure(   -- glDebugProcARB
     Source         : in Integer_4_Unsigned_C;        -- GLenum source
     Kind           : in Integer_4_Unsigned_C;        -- GLenum type
@@ -916,11 +916,11 @@ package Neo.OpenGL is
     Length         : in Integer_4_Signed_C;          -- GLsizei length
     Message        : in Access_Integer_1_Unsigned_C; -- const GLchar* message
     User_Parameter : in Address);                    -- GLvoid* userParam
-    pragma Convention(C, Access_Debug_Procedure);
+    pragma Convention(Stdcall, Access_Debug_Procedure);
   type Access_Debug_Message_Callback is access procedure( -- glDebugMessageCallbackARB
     Callback       : in Access_Debug_Procedure;           -- CARB callback
     User_Parameter : in Address);                         -- GLvoid * userParam
-    pragma Convention(C, Access_Debug_Message_Callback);
+    pragma Convention(Stdcall, Access_Debug_Message_Callback);
   type Access_Get_Debug_Message_Log is access procedure( -- glGetDebugMessageLogARB
     Count       : in Integer_4_Unsigned_C;               -- GLuint count
     Log_Size    : in Integer_4_Signed_C;                 -- GLsizei logSize
@@ -930,162 +930,162 @@ package Neo.OpenGL is
     Severities  : in Access_Integer_4_Unsigned_C;        -- GLenum * severities
     Lengths     : in Access_Integer_4_Signed_C;          -- GLsizei * lengths
     Message_Log : in Access_Integer_1_Unsigned_C);       -- GLchar * messageLog
-    pragma Convention(C, Access_Get_Debug_Message_Log);
+    pragma Convention(Stdcall, Access_Get_Debug_Message_Log);
   type Access_Generate_Queries is access procedure( -- glGenQueriesARB
     Number : in Integer_4_Signed_C;                 -- GLsizei n
     IDs    : in Access_Integer_4_Unsigned_C);       -- GLuint *ids
-    pragma Convention(C, Access_Generate_Queries);
+    pragma Convention(Stdcall, Access_Generate_Queries);
   type Access_Delete_Quries is access procedure( -- glDeleteQueriesARB
     Number : in Integer_4_Signed_C;              -- GLsizei n
     IDs    : in Access_Integer_4_Unsigned_C);    -- const GLuint *ids
-    pragma Convention(C, Access_Delete_Quries);
+    pragma Convention(Stdcall, Access_Delete_Quries);
   type Access_Is_Query is access function( -- glIsQueryARB
     ID : in Integer_4_Unsigned_C)          -- GLuint id
     return Integer_4_Signed_C;             -- GLboolean
-    pragma Convention(C, Access_Is_Query);
+    pragma Convention(Stdcall, Access_Is_Query);
   type Access_Begin_Query is access procedure( -- glBeginQueryARB
     Target : in Integer_4_Unsigned_C;          -- GLenum target
     ID     : in Integer_4_Unsigned_C);         -- GLuint id
-    pragma Convention(C, Access_Begin_Query);
+    pragma Convention(Stdcall, Access_Begin_Query);
   type Access_End_Query is access procedure( -- glEndQueryARB
     Target : in Integer_4_Unsigned_C);       -- GLenum target
-    pragma Convention(C, Access_End_Query);
+    pragma Convention(Stdcall, Access_End_Query);
   type Access_Get_Query is access procedure(    -- glGetQueryivARB
     Target     : in Integer_4_Unsigned_C;       -- GLenum target
     Name       : in Integer_4_Unsigned_C;       -- GLenum pname
     Parameters : in Access_Integer_4_Signed_C); -- GLint *params
-    pragma Convention(C, Access_Get_Query);
+    pragma Convention(Stdcall, Access_Get_Query);
   type Access_Get_Query_Object is access procedure( -- glGetQueryObjectivARB
     ID         : in Integer_4_Unsigned_C;           -- GLuint id
     Name       : in Integer_4_Unsigned_C;           -- GLenum pname
     Parameters : in Access_Integer_4_Signed_C);     -- GLint *params
-    pragma Convention(C, Access_Get_Query_Object);
+    pragma Convention(Stdcall, Access_Get_Query_Object);
   type Access_Get_Query_Object_Unsigned is access procedure( -- glGetQueryObjectuivARB
     ID         : in Integer_4_Unsigned_C;                    -- GLuint id
     Name       : in Integer_4_Unsigned_C;                    -- GLenum pname
     Parameters : in Access_Integer_4_Unsigned_C);            -- GLuint *params
-    pragma Convention(C, Access_Get_Query_Object_Unsigned);
+    pragma Convention(Stdcall, Access_Get_Query_Object_Unsigned);
   type Access_Stencil_Operation is access procedure( -- glStencilOpSeparate
     Face         : in Integer_4_Unsigned_C;          -- GLenum face
     Stencil_Fail : in Integer_4_Unsigned_C;          -- GLenum sfail
     Depth_Fail   : in Integer_4_Unsigned_C;          -- GLenum dpfail
     Depth_Pass   : in Integer_4_Unsigned_C);         -- GLenum dppass
-    pragma Convention(C, Access_Stencil_Operation);
+    pragma Convention(Stdcall, Access_Stencil_Operation);
   type Access_Stencil_Function is access procedure( -- glStencilFuncSeparate
     Front_Function : in Integer_4_Unsigned_C;       -- GLenum frontfunc
     Back_Function  : in Integer_4_Unsigned_C;       -- GLenum backfunc
     Reference      : in Integer_4_Signed_C;         -- GLint ref
     Mask           : in Integer_4_Unsigned_C);      -- GLuint mask
-    pragma Convention(C, Access_Stencil_Function);
+    pragma Convention(Stdcall, Access_Stencil_Function);
   type Access_Get_Uniform_From_Index is access function( -- glGetUniformBlockIndex
     Program            : in Integer_4_Unsigned_C;        -- GLuint program
     Uniform_Block_Name : in Access_Integer_1_Unsigned_C) -- const GLchar * uniformBlockName
     return Integer_4_Unsigned_C;                         -- GLuint
-    pragma Convention(C, Access_Get_Uniform_From_Index);
+    pragma Convention(Stdcall, Access_Get_Uniform_From_Index);
   type Access_Uniform_Block_Binding is access procedure( -- glUniformBlockBinding
     Program               : in Integer_4_Unsigned_C;     -- GLuint program
     Uniform_Block_Index   : in Integer_4_Unsigned_C;     -- GLuint uniformBlockIndex
     Uniform_Block_Binding : in Integer_4_Unsigned_C);    -- GLuint uniformBlockBinding
-    pragma Convention(C, Access_Uniform_Block_Binding);
+    pragma Convention(Stdcall, Access_Uniform_Block_Binding);
   type Access_Fence_Sync is access function( -- glFenceSync
     Condition : in Integer_4_Unsigned_C;     -- GLenum condition
     Flags     : in Integer_4_Unsigned_C)     -- GLbitfield flags
     return Address;                          -- GLsync
-    pragma Convention(C, Access_Fence_Sync);
+    pragma Convention(Stdcall, Access_Fence_Sync);
   type Access_Is_Sync is access function( -- glIsSync
     Sync : in Address)                    -- GLsync sync
     return Address;                       -- GLsync
-    pragma Convention(C, Access_Is_Sync);
+    pragma Convention(Stdcall, Access_Is_Sync);
   type Access_Client_Wait_Sync is access function( -- glClientWaitSync
     Sync    : in Address;                          -- GLsync sync
     Flags   : in Integer_4_Unsigned_C;             -- GLbitfield flags
     Timeout : in Integer_8_Unsigned_C)             -- GLuint64 timeout
     return Integer_4_Unsigned_C;                   -- GLenum
-    pragma Convention(C, Access_Client_Wait_Sync);
+    pragma Convention(Stdcall, Access_Client_Wait_Sync);
   type Access_Delete_Sync is access procedure( -- glDeleteSync
     Sync : in Address);                        -- GLsync sync
-    pragma Convention(C, Access_Delete_Sync);
+    pragma Convention(Stdcall, Access_Delete_Sync);
   type Access_Depth_Bounds is access procedure( -- glDepthBoundsEXT
     Z_Minimum : in Float_8_Real_C;              -- GLclampd zmin
     Z_Maximum : in Float_8_Real_C);             -- GLclampd zmax
-    pragma Convention(C, Access_Depth_Bounds);
+    pragma Convention(Stdcall, Access_Depth_Bounds);
   type Access_Create_Shader is access function( -- glCreateShader
     Kind : in Integer_4_Unsigned_C)             -- GLenum type
     return Integer_4_Unsigned_C;                -- GLuint
-    pragma Convention(C, Access_Create_Shader);
+    pragma Convention(Stdcall, Access_Create_Shader);
   type Access_Delete_Shader is access procedure( -- glDeleteShader
     Shader : in Integer_4_Unsigned_C);           -- GLuint shader
-    pragma Convention(C, Access_Delete_Shader);
+    pragma Convention(Stdcall, Access_Delete_Shader);
   type Access_Shader_Source is access procedure( -- glShaderSource
     Shader : in Integer_4_Unsigned_C;            -- GLuint shader
     Count  : in Integer_4_Signed_C;              -- GLsizei count
     Text   : in Access_Character_1_C;            -- const GLchar* *string
     Length : in Integer_4_Signed_C);             -- const GLint *length
-    pragma Convention(C, Access_Shader_Source);
+    pragma Convention(Stdcall, Access_Shader_Source);
   type Access_Compile_Shader is access procedure( -- glCompileShader
     Shader_Object : in Integer_Address);          -- GLhandleARB shaderObj
-    pragma Convention(C, Access_Compile_Shader);
+    pragma Convention(Stdcall, Access_Compile_Shader);
   type Access_Get_Shader is access procedure(   -- glGetShaderiv
     Shader     : in Integer_4_Unsigned_C;       -- GLuint shader
     Name       : in Integer_4_Unsigned_C;       -- GLenum pname
     Parameters : in Access_Integer_4_Signed_C); -- GLint *params
-    pragma Convention(C, Access_Get_Shader);
+    pragma Convention(Stdcall, Access_Get_Shader);
   type Access_Get_Shader_Info_Log is access procedure( -- glGetShaderInfoLog
     Shader          : in Integer_4_Unsigned_C;         -- GLuint shader
     Buffer_Size     : in Integer_4_Signed_C;           -- GLsizei bufSize
     Length          : in Access_Integer_4_Signed_C;    -- GLsizei *length
     Information_Log : in Access_Character_1_C);        -- GLchar *infoLog
-    pragma Convention(C, Access_Get_Shader_Info_Log);
+    pragma Convention(Stdcall, Access_Get_Shader_Info_Log);
   type Access_Create_Program is access function -- glCreateProgram
     return Integer_4_Unsigned_C;                -- GLuint
-    pragma Convention(C, Access_Create_Program);
+    pragma Convention(Stdcall, Access_Create_Program);
   type Access_Delete_Program is access procedure( -- glDeleteProgram
     Program : in Integer_4_Unsigned_C);           -- GLuint program
-    pragma Convention(C, Access_Delete_Program);
+    pragma Convention(Stdcall, Access_Delete_Program);
   type Access_Attach_Shader is access procedure( -- glAttachShader
     Program : in Integer_4_Unsigned_C;           -- GLuint program
     Shader  : in Integer_4_Unsigned_C);          -- GLuint shader
-    pragma Convention(C, Access_Attach_Shader);
+    pragma Convention(Stdcall, Access_Attach_Shader);
   type Access_Detach_Shader is access procedure( -- glDetachShader
     Program : in Integer_4_Unsigned_C;           -- GLuint program,
     Shader  : in Integer_4_Unsigned_C);          -- GLuint shader
-    pragma Convention(C, Access_Detach_Shader);
+    pragma Convention(Stdcall, Access_Detach_Shader);
   type Access_Link_Program is access procedure( -- glLinkProgram
     Program : in Integer_4_Unsigned_C);         -- GLuint program
-    pragma Convention(C, Access_Link_Program);
+    pragma Convention(Stdcall, Access_Link_Program);
   type Access_Use_Program is access procedure( -- glUseProgram
     Program : in Integer_Address);             -- GLhandleARB programObj
-    pragma Convention(C, Access_Use_Program);
+    pragma Convention(Stdcall, Access_Use_Program);
   type Access_Get_Program is access procedure(    -- glGetProgramiv
     Target       : in Integer_4_Unsigned_C;       -- GLenum target
     Program_Name : in Integer_4_Unsigned_C;       -- GLenum pname
     Parameters   : in Access_Integer_4_Signed_C); -- GLint *params
-    pragma Convention(C, Access_Get_Program);
+    pragma Convention(Stdcall, Access_Get_Program);
   type Access_Get_Program_Info_Log is access procedure( -- glGetProgramInfoLog
     Program     : in Integer_4_Unsigned_C;              -- GLuint program
     Buffer_Size : in Integer_4_Signed_C;                -- GLsizei bufSize
     Length      : in Integer_4_Signed_C;                -- GLsizei *length
     Info_Log    : in Access_Integer_1_Unsigned_C);      -- GLchar *infoLog
-    pragma Convention(C, Access_Get_Program_Info_Log);
+    pragma Convention(Stdcall, Access_Get_Program_Info_Log);
   type Access_Bind_Attribute_Location is access function( -- glBindAttribLocation
     Program : in Integer_Address;                         -- GLhandleARB programObj,
     Name    : in Access_Integer_1_Unsigned_C)             -- const GLcharARB *name
     return Integer_4_Signed_C;                            -- GLint
-    pragma Convention(C, Access_Bind_Attribute_Location);
+    pragma Convention(Stdcall, Access_Bind_Attribute_Location);
   type Access_Get_Uniform_Location is access function( -- glGetUniformLocation
     Program : in Integer_Address;                      -- GLhandleARB programObj
     Name : in Access_Integer_1_Unsigned_C)             -- const GLcharARB *name
     return Integer_4_Signed_C;                         -- GLint
-    pragma Convention(C, Access_Get_Uniform_Location);
+    pragma Convention(Stdcall, Access_Get_Uniform_Location);
   type Access_Uniform is access procedure( -- glUniform1i
     Location : in Integer_4_Signed_C;      -- GLint location
     Vertex   : in Integer_4_Signed_C);     -- GLint v0
-    pragma Convention(C, Access_Uniform);
+    pragma Convention(Stdcall, Access_Uniform);
   type Access_Uniform_Vector is access procedure( -- glUniform4fv
     Location : in Integer_4_Signed_C;             -- GLint location
     Count    : in Integer_4_Signed_C;             -- GLsizei count
     Value    : in Access_Float_4_Real_C);         -- const GLfloat *value
-    pragma Convention(C, Access_Uniform_Vector);
+    pragma Convention(Stdcall, Access_Uniform_Vector);
   type Access_Vertex_Attribute_Pointer is access procedure( -- glVertexAttribPointerARB
     Index      : in Integer_4_Unsigned_C;                   -- GLuint index
     Size       : in Integer_4_Signed_C;                     -- GLint size
@@ -1093,71 +1093,71 @@ package Neo.OpenGL is
     Normalized : in Integer_1_Unsigned_C;                   -- GLboolean normalized
     Stride     : in Integer_4_Signed_C;                     -- GLsizei stride
     Pointer    : in Address);                               -- const GLvoid *pointer
-    pragma Convention(C, Access_Vertex_Attribute_Pointer);
+    pragma Convention(Stdcall, Access_Vertex_Attribute_Pointer);
   type Access_Enable_Vertex_Attribute_Array  is access procedure( -- glEnableVertexAttribArrayARB
     Index : in Integer_4_Unsigned_C);                             -- GLuint index
-    pragma Convention(C, Access_Enable_Vertex_Attribute_Array);
+    pragma Convention(Stdcall, Access_Enable_Vertex_Attribute_Array);
   type Access_Disable_Vertex_Attirbute_Array is access procedure( -- glDisableVertexAttribArrayARB
     Index : in Integer_4_Unsigned_C);                             -- GLuint index
-    pragma Convention(C, Access_Disable_Vertex_Attirbute_Array);
+    pragma Convention(Stdcall, Access_Disable_Vertex_Attirbute_Array);
   type Access_Program_String is access procedure( -- glProgramStringARB
     Target : in Integer_4_Unsigned_C;             -- GLenum target
     Format : in Integer_4_Unsigned_C;             -- GLenum format
     Length : in Integer_4_Signed_C;               -- GLsizei len
     Text   : in Address);                         -- const GLvoid *string
-    pragma Convention(C, Access_Program_String);
+    pragma Convention(Stdcall, Access_Program_String);
   type Access_Bind_Program is access procedure( -- glBindProgramARB
     Target  : in Integer_4_Unsigned_C;          -- GLenum target;
     Program : in Integer_4_Unsigned_C);         -- GLuint program
-    pragma Convention(C, Access_Bind_Program);
+    pragma Convention(Stdcall, Access_Bind_Program);
   type Access_Generate_Programs is access procedure( -- glGenProgramsARB
     Index    : in Integer_4_Signed_C;                -- GLsizei n
     Programs : in Access_Integer_4_Unsigned_C);      -- GLuint *programs
-    pragma Convention(C, Access_Generate_Programs);
+    pragma Convention(Stdcall, Access_Generate_Programs);
   type Access_Delete_Programs is access procedure( -- glDeleteProgramsARB
     Index    : in Integer_4_Signed_C;              -- GLsizei n
     Programs : in Access_Integer_4_Unsigned_C);    -- const GLuint *programs
-    pragma Convention(C, Access_Delete_Programs);
+    pragma Convention(Stdcall, Access_Delete_Programs);
   type Access_Program_Environment_Parameter  is access procedure( -- glProgramEnvParameter4fvARB
     Target     : in Integer_4_Unsigned_C;                         -- GLenum target
     Index      : in Integer_4_Unsigned_C;                         -- GLuint index
     Parameters : in Float_4_Real_C);                              -- const GLfloat *params
-    pragma Convention(C, Access_Program_Environment_Parameter);
+    pragma Convention(Stdcall, Access_Program_Environment_Parameter);
   type Access_Program_Local_Parameter is access procedure( -- glProgramLocalParameter4fvARB
     Target : in Integer_4_Unsigned_C;                      -- GLenum target
     Index  : in Integer_4_Unsigned_C;                      -- GLuint index
     Params : in Access_Float_4_Real_C);                    -- const GLfloat *params
-    pragma Convention(C, Access_Program_Local_Parameter);
+    pragma Convention(Stdcall, Access_Program_Local_Parameter);
   type Access_Draw_Elements_Base_Vertex is access procedure( -- glDrawElementsBaseVertex
     Mode        : in Integer_4_Unsigned_C;                   -- GLenum mode
     Count       : in Integer_4_Signed_C;                     -- GLsizei count
     Kind        : in Integer_4_Unsigned_C;                   -- GLenum type
     Indices     : in Address;                                -- GLvoid *indices
     Base_Vertex : in Integer_4_Signed_C);                    -- GLint basevertex
-    pragma Convention(C, Access_Draw_Elements_Base_Vertex);
+    pragma Convention(Stdcall, Access_Draw_Elements_Base_Vertex);
   type Access_Generate_Vertex_Arrays is access procedure( -- glGenVertexArrays
     Index : in Integer_4_Signed_C;                        -- GLsizei n
     Item  : in Access_Integer_4_Unsigned_C);              -- GLuint *arrays
-    pragma Convention(C, Access_Generate_Vertex_Arrays);
+    pragma Convention(Stdcall, Access_Generate_Vertex_Arrays);
   type Access_Bind_Vertex_Array is access procedure( -- glBindVertexArray
     Item : in Integer_4_Unsigned_C);                 -- GLuint array
-    pragma Convention(C, Access_Bind_Vertex_Array);
+    pragma Convention(Stdcall, Access_Bind_Vertex_Array);
   type Access_Delete_Vertex_Arrays is access procedure( -- glDeleteVertexArrays
     Index  : in Integer_4_Signed_C;                     -- GLsizei n,
     Arrays : in Access_Integer_4_Unsigned_C);           -- const GLuint *arrays
-    pragma Convention(C, Access_Delete_Vertex_Arrays);
+    pragma Convention(Stdcall, Access_Delete_Vertex_Arrays);
   type Access_Map_Buffer_Range is access function( -- glMapBufferRange
     Target : in Integer_4_Unsigned_C;              -- GLenum target
     Offset : in Integer_Address;                   -- GLintptr offset
     Length : in Integer_Address;                   -- GLsizeiptr length
     Item   : in Integer_4_Unsigned_C)              -- GLbitfield access
     return Address;
-    pragma Convention(C, Access_Map_Buffer_Range);
+    pragma Convention(Stdcall, Access_Map_Buffer_Range);
   type Access_Get_String_Index is access function( -- glGetStringi
     Name  : in Integer_4_Unsigned_C;      -- GLenum name
     Index : in Integer_4_Unsigned_C)      -- index
     return Access_Constant_Character_1_C; -- const GLubyte*
-    pragma Convention(CPP, Access_Get_String_Index);
+    pragma Convention(Stdcall, Access_Get_String_Index);
   type Access_Function_Load is access function(
     Item : in String_1)
     return Address;

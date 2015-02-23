@@ -35,8 +35,8 @@ package body Neo.System.Graphics is
         if Current_Specifics.Has_Direct_State_Access       then Put_Line(Localize("Has direct state access"));       end if;
         if Current_Specifics.Has_Multitexture              then Put_Line(Localize("Has multitexture"));              end if;
         if Current_Specifics.Has_Stereo_Pixel_Format       then Put_Line(Localize("Has stereo pixel format"));       end if;
+        New_Line;
       end if;
-      --Neo.OpenGL.Initialize; -- Context MUST be setup
     end Initialize;
   procedure Draw is
     begin

@@ -825,15 +825,15 @@ package Neo.Windows is
       Share_Context  : in Address; -- hShareContext
       Attribute_List : in Address) -- attribList
       return Address;
-      pragma Convention(C, Access_Function_OpenGL_Create_Context);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Create_Context);
     type Access_Function_OpenGL_Get_Extensions is access function( -- wglGetExtensionsStringARB
       Device_Context : in Address) -- hdc
       return Access_Constant_Character_1_C; -- const char*
-      pragma Convention(C, Access_Function_OpenGL_Get_Extensions);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Get_Extensions);
     type Access_Function_OpenGL_Swap_Interval is access function( -- wglSwapIntervalEXT
       Interval : in Integer_4_Signed_C) -- interval
       return Integer_4_Signed_C; -- BOOL
-      pragma Convention(C, Access_Function_OpenGL_Swap_Interval);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Swap_Interval);
     type Access_Function_OpenGL_Get_Pixel_Format_Integer is access function( -- wglGetPixelFormatAttribivARB
       Device_Context : in Address; -- hdc,
       Pixel_Format   : in Integer_4_Signed_C; -- iPixelFormat
@@ -842,7 +842,7 @@ package Neo.Windows is
       Attributes     : in Access_Array_Integer_4_Signed_C; -- piAttributes
       Values         : in Access_Array_Integer_4_Signed_C) -- piValues
       return Integer_4_Signed_C; -- BOOL
-      pragma Convention(C, Access_Function_OpenGL_Get_Pixel_Format_Integer);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Get_Pixel_Format_Integer);
     type Access_Function_OpenGL_Get_Pixel_Format_Float is access function( -- wglGetPixelFormatAttribfvARB
       Device_Context : in Address; -- hdc,
       Pixel_Format   : in Integer_4_Signed_C; -- iPixelFormat
@@ -851,7 +851,7 @@ package Neo.Windows is
       Attributes     : in Access_Array_Integer_4_Signed_C; -- piAttributes
       Values         : in Access_Array_Float_4_Real_C) -- piValues
       return Integer_4_Signed_C; -- BOOL
-      pragma Convention(C, Access_Function_OpenGL_Get_Pixel_Format_Float);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Get_Pixel_Format_Float);
     type Access_Function_OpenGL_Choose_Pixel_Format is access function( -- wglChoosePixelFormatARB
       Device_Context : in Address; -- hdc,
       List_Integers  : in Access_Array_Integer_4_Signed_C; -- piAttribIList
@@ -860,13 +860,13 @@ package Neo.Windows is
       Formats         : in Address;--Access_Integer_4_Signed_C;--Access_Array_Integer_4_Signed_C; -- piFormats
       Number_Of_Formats : in Access_Integer_4_Unsigned_C) -- nNumFormats
       return Integer_4_Signed_C; -- BOOL
-      pragma Convention(C, Access_Function_OpenGL_Choose_Pixel_Format);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Choose_Pixel_Format);
     type Access_Function_OpenGL_Create_Context_Attributes is access function( -- wglCreateContextAttribsARB
       Device_Context : in Address; -- hDC
       Share_Context  : in Address; -- hShareContext
       List           : in Access_Array_Integer_4_Signed_C) -- attribList
       return Address; -- HGLRC
-      pragma Convention(C, Access_Function_OpenGL_Create_Context_Attributes);
+      pragma Convention(Stdcall, Access_Function_OpenGL_Create_Context_Attributes);
     function To_Unchecked_Access_OpenGL_Get_Extensions is new Ada.Unchecked_Conversion(Address, Access_Function_OpenGL_Get_Extensions);
     function To_Unchecked_Access_OpenGL_Swap_Interval is new Ada.Unchecked_Conversion(Address, Access_Function_OpenGL_Swap_Interval);
     function To_Unchecked_Access_OpenGL_Get_Pixel_Format_Integer is new Ada.Unchecked_Conversion(Address, Access_Function_OpenGL_Get_Pixel_Format_Integer);

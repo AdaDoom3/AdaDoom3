@@ -62,11 +62,7 @@ separate(Neo.System.Graphics) package body OpenGL is
       if Monitor = 1 then
         Get_Integer_Value(GL_NUM_EXTENSIONS, Number_Of_Extensions'unchecked_access);
         Get_Float_Value(GL_MAX_TEXTURE_SIZE, Maximum_Texture_Size'unchecked_access);
-        declare
-        function Pure_Evil return String_2 is begin return "666"; end Pure_Evil; -- This needs to be here. Why? Your guess is as good as mine.
-        begin
-          for I in 0..Number_Of_Extensions - 1 loop Extensions := Extensions & To_String_2_Unbounded(Pure_Evil & To_String_2(Get_String_Index(GL_EXTENSIONS, Integer_4_Unsigned_C(I)))); end loop;
-        end;
+        for I in 0..Number_Of_Extensions - 1 loop Extensions := Extensions & To_String_2_Unbounded(To_String_2(Get_String_Index(GL_EXTENSIONS, Integer_4_Unsigned_C(I)))); end loop;
         Current_Specifics.Is_Supported                  := True;
         Current_Specifics.Shading_Language              := OpenGL_Shading_Language;
         Current_Specifics.Maximum_Texture_Size          := Integer_4_Positive(Maximum_Texture_Size);

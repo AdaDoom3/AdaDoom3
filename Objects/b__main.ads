@@ -491,7 +491,7 @@ package ada_main is
    pragma Export (C, u00227, "ada__calendar__delaysB");
    u00228 : constant Version_32 := 16#474dd4b1#;
    pragma Export (C, u00228, "ada__calendar__delaysS");
-   u00229 : constant Version_32 := 16#de3f955c#;
+   u00229 : constant Version_32 := 16#be8a2e65#;
    pragma Export (C, u00229, "neo__windowsS");
    u00230 : constant Version_32 := 16#cc40077e#;
    pragma Export (C, u00230, "ada__task_identificationB");
@@ -559,13 +559,13 @@ package ada_main is
    pragma Export (C, u00261, "system__val_boolB");
    u00262 : constant Version_32 := 16#a55ac248#;
    pragma Export (C, u00262, "system__val_boolS");
-   u00263 : constant Version_32 := 16#0619602c#;
+   u00263 : constant Version_32 := 16#cf28bbef#;
    pragma Export (C, u00263, "neo__system__graphicsB");
    u00264 : constant Version_32 := 16#004e9600#;
    pragma Export (C, u00264, "neo__system__graphicsS");
-   u00265 : constant Version_32 := 16#c1cce485#;
+   u00265 : constant Version_32 := 16#99c6c8d1#;
    pragma Export (C, u00265, "neo__openglB");
-   u00266 : constant Version_32 := 16#bc947a8f#;
+   u00266 : constant Version_32 := 16#e49e56db#;
    pragma Export (C, u00266, "neo__openglS");
    u00267 : constant Version_32 := 16#56e74f1a#;
    pragma Export (C, u00267, "system__img_realB");
