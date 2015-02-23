@@ -1,0 +1,1421 @@
+-- 1: pragma Warnings (Off, "* is an internal GNAT unit");
+
+-- 2: with Neo.OpenGL;              use Neo.OpenGL;
+
+-- 3: with Ada.Wide_Text_IO;        use Ada.Wide_Text_IO;
+
+-- 4: with Ada.Characters.Handling; use Ada.Characters.Handling;
+
+-- 5: with System.Storage_Elements; use System.Storage_Elements;
+
+-- 6: with System.Stack_Checking;   use System.Stack_Checking;
+with system;
+with system;
+with ada;
+with ada.ada__characters;
+with ada;
+with neo;
+pragma warnings (off, "* is an internal GNAT unit");
+with neo.neo__opengl;
+use neo.neo__opengl;
+with ada.ada__wide_text_io;
+use ada.ada__wide_text_io;
+with ada.ada__characters.ada__characters__handling;
+use ada.ada__characters.ada__characters__handling;
+with system.system__storage_elements;
+use system.system__storage_elements;
+with system.system__stack_checking;
+use system.system__stack_checking;
+
+-- 7: separate(Neo.System.Graphics) package body OpenGL is
+separate (neo.neo__system.neo__system__graphics)
+package body opengl is
+
+-- 8:   package Import is
+   package neo__system__graphics__opengl__importXnnn is
+
+-- 9:       function Get_Extensions return String_1;
+      function
+        neo__system__graphics__opengl__import__get_extensionsXnnn
+        return neo__string_1;
+
+-- 10:       function Load_Function  (Name : in String_1) return Address;
+      function neo__system__graphics__opengl__import__load_functionXnnn
+        (name : in neo__string_1) return system__address;
+
+-- 11:       procedure Initialize    (Monitor : in Integer_4_Positive);
+      procedure neo__system__graphics__opengl__import__initializeXnnn (
+        monitor : in neo__integer_4_positive);
+
+-- 12:       procedure Finalize      (Monitor : in Integer_4_Positive);
+      procedure neo__system__graphics__opengl__import__finalizeXnnn (
+        monitor : in neo__integer_4_positive);
+
+-- 13:       procedure Swap_Buffers;
+      procedure neo__system__graphics__opengl__import__swap_buffersXnnn;
+
+-- 14:     end Import; package body Import is separate;
+   end neo__system__graphics__opengl__importXnnn;
+   package body import is separate;
+
+-- 15:   procedure Reset is
+   procedure neo__system__graphics__opengl__reset is
+
+-- 16:     begin null;
+   begin
+      null;
+-- 17:       --Clear_Depth(1.0);
+-- 18:       --Cull_Face(FRONT_AND_BACK);
+-- 19:       --Enable(CULL_FACE);
+-- 20:       --Color_Mask(Red => C_TRUE, Green => C_TRUE, Blue => C_TRUE, Alpha => C_TRUE);
+-- 21:       --Blend_Function(ONE, ZERO);
+-- 22:       --Depth_Mask(C_TRUE);
+-- 23:       --Depth_Function(LESS);
+-- 24:       --Disable(STENCIL_TEST);
+-- 25:       --Disable(POLYGON_OFFSET_FILL);
+-- 26:       --Disable(POLYGON_OFFSET_LINE);
+-- 27:       --Polygon_Mode(FRONT_AND_BACK, FILL);
+-- 28:       --Shade_Model(SMOOTH);
+-- 29:       --Enable(DEPTH_TEST);
+-- 30:       --Enable(BLEND);
+-- 31:       --Enable(SCISSOR_TEST);
+-- 32:       --Draw_Buffer(BACK);
+-- 33:       --Read_Buffer(BACK);
+-- 34:       --if Do_Use_Scissor.Get then Scissor(0, 0, Widht, Height); end if;
+
+-- 35:     end Reset;
+      return;
+   end neo__system__graphics__opengl__reset;
+
+-- 36:   procedure Initialize(Monitor : in Integer_4_Positive) is
+   procedure initialize (monitor : in neo__integer_4_positive) is
+
+-- 37:     Extensions : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+      extensions : neo__string_2_unbounded :=
+        neo__null_string_2_unbounded;
+      $ada__strings__wide_unbounded__adjust__2 (extensions);
+
+-- 38:     Number_Of_Extensions : aliased Integer_4_Signed_C := 0;
+      number_of_extensions : aliased neo__integer_4_signed_c := 0;
+      L_1 : label
+
+-- 39:     begin
+   begin
+
+-- 40:       Set_Stack_Size(Storage_Element(20_000_000));
+      any id (storage_element (20000000));
+
+-- 41:       Import.Initialize(Monitor);
+      neo__system__graphics__opengl__importXnnn.
+        neo__system__graphics__opengl__import__initializeXnnn (monitor);
+
+-- 42:       Neo.OpenGL.Initialize(Import.Load_Function'access);
+      [program_error when
+        not (neo__opengl_E /= 0)
+        "access before elaboration"]
+      neo.neo__opengl.neo__opengl__initialize (
+        neo__system__graphics__opengl__importXnnn.
+        neo__system__graphics__opengl__import__load_functionXnnn'access);
+-- 43:       --Begin_Drawing(GL_TRIANGLES);
+-- 44:       --Color(0.1, 0.2, 0.3);
+-- 45:       --Vertex(0.0, 0.0, 0.0);
+-- 46:       --Vertex(1.0, 0.0, 0.0);
+-- 47:       --Vertex(0.0, 1.0, 0.0);
+-- 48:       --End_Drawing;
+
+-- 49:       if Monitor = 1 then
+      if monitor = 1 then
+-- 50:         --Get_Integer_Vector(GL_MAX_TEXTURE_SIZE, Maximum_Texture_Size'unchecked_access);
+-- 51:         --Get_Integer_Vector(GL_MAX_TEXTURE_UNITS, Maximum_Texture_Units'unchecked_access);
+
+-- 52:         Get_Integer_Vector(GL_NUM_EXTENSIONS, Number_Of_Extensions'unchecked_access);
+         glGetIntegerv (neo__opengl__gl_num_extensions,
+           number_of_extensions'unchecked_access);
+
+-- 53:         for I in 0..Number_Of_Extensions - 1 loop
+         L_1 : for i in 0 .. number_of_extensions - 1 loop
+-- 54:           --Put_Line(Integer_4_Signed_C'wide_image(I));-- & ": " & To_String_2(Get_String_Index(GL_EXTENSIONS, Integer_4_Unsigned_C(I))));
+
+-- 55:           Extensions := Extensions & To_String_2(Get_String_Index(GL_EXTENSIONS, Integer_4_Unsigned_C(I)));
+            extensions := ada__strings__wide_unbounded__Oconcat__2 (
+              extensions, neo__to_string_2__8 (
+              neo__opengl__get_string_index.all (
+              neo__opengl__gl_extensions, neo__integer_4_unsigned_c(i))));
+
+-- 56:         end loop;
+         end loop L_1;
+
+-- 57:         Put_Line(Extensions);
+         neo__put_line__2 (extensions);
+
+-- 58:         Current_Specifics.Is_Supported                  := True;
+         neo__system__graphics__current_specifics.is_supported := true;
+
+-- 59:         Current_Specifics.Shading_Language              := OpenGL_Shading_Language;
+         neo__system__graphics__current_specifics.shading_language :=
+           neo__system__graphics__opengl_shading_language;
+-- 60:         --Current_Specifics.Maximum_Texture_Size          := Integer_4_Positive(Maximum_Texture_Size);
+-- 61:         --Current_Specifics.Maximum_Texture_Units         := Integer_4_Positive(Maximum_Texture_Units);
+-- 62:         --Current_Specifics.Version                       := Float_4_Real'value(Trim(To_String_1(Get_String(GL_VERSION)), Both)(1..3));
+
+-- 63:         Current_Specifics.Has_Depth_Bounds_Test         := Index(Import.Get_Extensions, "WGL_EXT_depth_bounds_test")          /= 0;
+         neo__system__graphics__current_specifics.has_depth_bounds_test :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "WGL_EXT_depth_bounds_test", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 64:         Current_Specifics.Has_Anisotropic_Filter        := Index(Import.Get_Extensions, "EXT_texture_filter_anisotropic") /= 0;
+         neo__system__graphics__current_specifics.
+           has_anisotropic_filter := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "EXT_texture_filter_anisotropic", going =>
+           ada__strings__forward, mapping => ada__strings__maps.
+           ada__strings__maps__identity) /= 0;
+
+-- 65:         Current_Specifics.Has_Direct_State_Access       := Index(Import.Get_Extensions, "EXT_direct_state_access")        /= 0;
+         neo__system__graphics__current_specifics.
+           has_direct_state_access := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "EXT_direct_state_access", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 66:         Current_Specifics.Has_Texture_Compression       := Index(Import.Get_Extensions, "EXT_texture_compression_s3tc")   /= 0 and Index(Import.Get_Extensions, "ARB_texture_compression") /= 0;
+         neo__system__graphics__current_specifics.
+           has_texture_compression := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "EXT_texture_compression_s3tc", going =>
+           ada__strings__forward, mapping => ada__strings__maps.
+           ada__strings__maps__identity) /= 0 and
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_texture_compression", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 67:         Current_Specifics.Has_Sync                      := Index(Import.Get_Extensions, "ARB_sync")                       /= 0;
+         neo__system__graphics__current_specifics.has_sync :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_sync", going => ada__strings__forward, mapping =>
+           ada__strings__maps.ada__strings__maps__identity) /= 0;
+
+-- 68:         Current_Specifics.Has_Timer_Query               := Index(Import.Get_Extensions, "ARB_timer_query")                /= 0;
+         neo__system__graphics__current_specifics.has_timer_query :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_timer_query", going => ada__strings__forward, mapping =>
+           ada__strings__maps.ada__strings__maps__identity) /= 0;
+
+-- 69:         Current_Specifics.Has_Multitexture              := Index(Import.Get_Extensions, "ARB_multitexture")               /= 0;
+         neo__system__graphics__current_specifics.has_multitexture :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_multitexture", going => ada__strings__forward, mapping =>
+           ada__strings__maps.ada__strings__maps__identity) /= 0;
+
+-- 70:         Current_Specifics.Has_Uniform_Buffer            := Index(Import.Get_Extensions, "ARB_uniform_buffer_object")      /= 0;
+         neo__system__graphics__current_specifics.has_uniform_buffer :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_uniform_buffer_object", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 71:         Current_Specifics.Has_Occlusion_Query           := Index(Import.Get_Extensions, "ARB_occlusion_query")            /= 0;
+         neo__system__graphics__current_specifics.has_occlusion_query :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_occlusion_query", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 72:         Current_Specifics.Has_Map_Buffer_Range          := Index(Import.Get_Extensions, "ARB_map_buffer_range")           /= 0;
+         neo__system__graphics__current_specifics.has_map_buffer_range :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_map_buffer_range", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 73:         Current_Specifics.Has_Seamless_Cube_Map         := Index(Import.Get_Extensions, "ARB_seamless_cube_map")          /= 0;
+         neo__system__graphics__current_specifics.has_seamless_cube_map :=
+           ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_seamless_cube_map", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 74:         Current_Specifics.Has_Vertex_Array_Object       := Index(Import.Get_Extensions, "ARB_vertex_array_object")        /= 0;
+         neo__system__graphics__current_specifics.
+           has_vertex_array_object := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_vertex_array_object", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 75:         Current_Specifics.Has_Vertex_Buffer_Object      := Index(Import.Get_Extensions, "ARB_vertex_buffer_object")       /= 0;
+         neo__system__graphics__current_specifics.
+           has_vertex_buffer_object := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_vertex_buffer_object", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 76:         Current_Specifics.Has_RGB_Color_Framebuffer     := Index(Import.Get_Extensions, "ARB_framebuffer_sRGB")           /= 0;
+         neo__system__graphics__current_specifics.
+           has_rgb_color_framebuffer := ada__strings__fixed__index (
+           neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_framebuffer_sRGB", going => ada__strings__forward,
+           mapping => ada__strings__maps.ada__strings__maps__identity) /=
+           0;
+
+-- 77:         Current_Specifics.Has_Draw_Elements_Base_Vertex := Index(Import.Get_Extensions, "ARB_draw_elements_base_vertex")  /= 0;
+         neo__system__graphics__current_specifics.
+           has_draw_elements_base_vertex := ada__strings__fixed__index
+           (neo__system__graphics__opengl__importXnnn.get_extensions,
+           "ARB_draw_elements_base_vertex", going =>
+           ada__strings__forward, mapping => ada__strings__maps.
+           ada__strings__maps__identity) /= 0;
+
+-- 78:       end if;
+      end if;
+-- 79:       --Reset;
+
+-- 80:       Put_Line("Return?");
+      neo__put_line ("Return?");
+   end initialize;
+-- 81:     --exception when others => Put_Line("What2"); Put_Line(Integer_Address'wide_image(To_Unchecked_Integer_Address(Current)));
+
+-- 82:     end Initialize;
+
+-- 83:   procedure Finalize(Monitor : in Integer_4_Positive) is
+   procedure finalize (monitor : in neo__integer_4_positive) is
+
+-- 84:     begin
+   begin
+
+-- 85:       Import.Finalize(Monitor);
+      neo__system__graphics__opengl__importXnnn.
+        neo__system__graphics__opengl__import__finalizeXnnn (monitor);
+
+-- 86:     end Finalize;
+   end finalize;
+
+-- 87:   function Get_Driver return Record_Driver is
+   function neo__system__graphics__opengl__get_driver return
+     neo__system__graphics__record_driver is
+
+-- 88:     begin
+   begin
+
+-- 89:       return(
+      return (
+         initialize => initialize'access,
+         finalize => finalize'access);
+   end get_driver;
+begin
+
+-- 90:         Initialize => Initialize'access,
+
+-- 91:         Finalize   => Finalize'access);
+
+-- 92:     end Get_Driver;
+
+-- 93: begin
+
+-- 94:   null;--if SPECIFICS(OpenGL_API).Version < 2.0 then raise Unsupported; end if;
+   null;
+-- 95: --     procedure Check_Exceptions is
+-- 96: --       begin
+-- 97: --         case Get_Error is
+-- 98: --           when INVALID_ENUMERATION => raise Invalid_Enumeration;
+-- 99: --           when INVALID_OPERATION   => raise Invalid_Operation;
+-- 100: --           when STACK_UNDERFLOW     => raise Stack_Underflow;
+-- 101: --           when STACK_OVERFLOW      => raise Stack_Overflow;
+-- 102: --           when INVALID_VALUE       => raise Invalid_Value;
+-- 103: --           when OUT_OF_MEMORY       => raise Out_Of_Memory;
+-- 104: --           when others              => null;
+-- 105: --         end case;
+-- 106: --       end Check_Exceptions;
+-- 107: --     procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
+-- 108: --       begin
+-- 109: --         case Kind is
+-- 110: --           when Face_Culling    => null;
+-- 111: --           when Two_Sided_Cull  => Disable(CULL_FACE);
+-- 112: --           when Back_Sided_Cull => Cull_Face((if Is_Mirror then FRONT else BACK));
+-- 113: --         end case;
+-- 114: --       end Cull;
+-- 115: --     procedure Scissor(X, Y, Width, Height : in Integer_4_Signed) is
+-- 116: --       begin
+-- 117: --         Scissor(
+-- 118: --           X      => Integer_4_Signed_C(X),
+-- 119: --           Y      => Integer_4_Signed_C(Y),
+-- 120: --           Width  => Integer_4_Signed_C(Width),
+-- 121: --           Height => Integer_4_Signed_C(Height));
+-- 122: --       end Scissor;
+-- 123: --     procedure View_Port(X, Y, Width, Height : in Integer_4_Signed) is
+-- 124: --       begin
+-- 125: --         Viewport(
+-- 126: --           X      => Integer_4_Signed_C(X),
+-- 127: --           Y      => Integer_4_Signed_C(Y),
+-- 128: --           Width  => Integer_4_Signed_C(Width),
+-- 129: --           Height => Integer_4_Signed_C(Height));
+-- 130: --       end View_Port;
+-- 131: --     procedure Polygon_Offset(Scale, Bias : in Float_4_Real) is
+-- 132: --       begin
+-- 133: --         PolygonOffset(
+-- 134: --           Scale => Integer_4_Signed_C(Scale),
+-- 135: --           Bias  => Integer_4_Signed_C(Bias));
+-- 136: --       end Polygon_Offset;
+-- 137: --     procedure Depth_Bounds_Test(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) is
+-- 138: --       begin
+-- 139: --         if Z_Minimum = 0.0 and Z_Maximum = 0.0 then
+-- 140: --           Disable(DEPTH_BOUNDS_TEST);
+-- 141: --         else
+-- 142: --           Enable(DEPTH_BOUNDS_TEST);
+-- 143: --           Depth_Bounds(Float_4_Real_C(Z_Minimum), Float_4_Real_C(Z_Maximum));
+-- 144: --         end if;
+-- 145: --       end Depth_Bounds_Test;
+-- 146: --     procedure Start_Depth_Pass(Rectane : in Record_Rectane) is
+-- 147: --       begin
+-- 148: --         null;
+-- 149: --       end Start_Depth_Pass;
+-- 150: --     procedure Finish_Depth_Pass(Rectane : in Record_Rectane)  is
+-- 151: --       begin
+-- 152: --         null;
+-- 153: --       end Finish_Depth_Pass;
+-- 154: --     procedure Get_Depth_Pass(Rectane : in out Record_Rectane) is
+-- 155: --       begin
+-- 156: --         Rectane := (others => <>);
+-- 157: --       end Get_Depth_Pass;
+-- 158: --     procedure Color(Pixel : in Record_Pixel)  is
+-- 159: --       begin
+-- 160: --         Color(
+-- 161: --           Red   => Float_4_Real_C(Pixel.Color.Red)   / Pixel.Color.Red'size,
+-- 162: --           Green => Float_4_Real_C(Pixel.Color.Green) / Pixel.Color.Green'size,
+-- 163: --           Blue  => Float_4_Real_C(Pixel.Color.Blue)  / Pixel.Color.Blue'size,
+-- 164: --           Alpha => Float_4_Real_C(Pixel.Alpha)       / Pixel.Color.Alpha'size);
+-- 165: --       end Color;
+-- 166: --     procedure Color(Color : in Record_Color) is
+-- 167: --       begin
+-- 168: --         Color(
+-- 169: --           Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
+-- 170: --           Green => Float_4_Real_C(Color.Green) / Color.Green'size,
+-- 171: --           Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
+-- 172: --           Alpha => 1.0);
+-- 173: --       end Color;
+-- 174: --     procedure Clear is
+-- 175: --       begin
+-- 176: --         Clear(DEPTH_BUFFER_BIT);
+-- 177: --       end Clear;
+-- 178: --     procedure Clear(Color : in Record_Pixel; Do_Clear_Depth : in Boolean := False) is
+-- 179: --       begin
+-- 180: --         Clear_Color(Red, Green, Blue, Alpha);
+-- 181: --         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or COLOR_BUFFER_BIT);
+-- 182: --       end Clear;
+-- 183: --     procedure Clear(Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
+-- 184: --       begin
+-- 185: --         Clear_Stencil(Stencil_Value);
+-- 186: --         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT);
+-- 187: --       end Clear;
+-- 188: --     procedure Clear(Color : in Record_Pixel; Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
+-- 189: --       begin
+-- 190: --         Clear_Stencil(Stencil_Value);
+-- 191: --         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT or COLOR_BUFFER_BIT);
+-- 192: --       end Clear;
+-- 193: --     procedure Set_Stereo_Depth(Stereo_Depth : in Item_Stereo_Depth.Variable) is
+-- 194: --       begin
+-- 195: --         Depth((
+-- 196: --           case Depth_Function is
+-- 197: --             when Less_Depth_Function   => LESS--LESS_THAN_OR_EQUAL
+-- 198: --             when Equal_Depth_Function  => EQUAL
+-- 199: --             when Always_Depth_Function => ALWAYS
+-- 200: --             when Greater_Than_Or_Equal => GREATER_THAN_OR_EQUAL));
+-- 201: --       end Set_Stereo_Depth;
+-- 202: --     procedure Set_Stereo_3D(Stereo_3D : in Enumerated_Stereo_3D) is
+-- 203: --       begin
+-- 204: --       end Set_Stereo_3D;
+-- 205: --     procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
+-- 206: --       BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
+-- 207: --         One_Blend                         => ZERO,
+-- 208: --         Zero_Blend                        => ONE,
+-- 209: --         Source_Alpha_Blend                => SOURCE_ALPHA,
+-- 210: --         Destination_Color_Blend           => DESTINATION_COLOR,
+-- 211: --         Destination_Alpha_Blend           => DESTINATION_ALPHA,
+-- 212: --         One_Minus_Source_Alpha_Blend      => ONE_MINUS_SOURCE_ALPHA,
+-- 213: --         One_Minus_Destination_Color_Blend => ONE_MINUS_DESTINATION_COLOR,
+-- 214: --         One_Minus_Destination_Alpha_Blend => ONE_MINUS_DESTINATION_ALPHA);
+-- 215: --       begin
+-- 216: --         if Source = One_Blend and Destination = Zero_Blend then
+-- 217: --           Disable(BLEND);
+-- 218: --         else
+-- 219: --           Enable(BLEND);
+-- 220: --           Blend_Function(BLENDS(Source), BLENDS(Destination));
+-- 221: --         end if;
+-- 222: --       end Set_Blend;
+-- 223: --     procedure Set_Blend_Operation(Blend_Operation : in Enumerated_Blend_Operation) is
+-- 224: --       begin
+-- 225: --       end Set_Blend_Operation;
+-- 226: --     procedure Set_Stencil(Stencil : in Enumerated_Stencil) is
+-- 227: --       begin
+-- 228: --       end Set_Stencil;
+-- 229: --     procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
+-- 230: --       OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
+-- 231: --         Keep_Stencil_Operation           => KEEP,
+-- 232: --         Zero_Stencil_Operation           => ZERO,
+-- 233: --         Invert_Stencil_Operation         => INVERT,
+-- 234: --         Replace_Stencil_Operation        => REPLACE,
+-- 235: --         Increment_Stencil_Operation      => INCREMENT,
+-- 236: --         Decrement_Stencil_Operation      => DECREMENT,
+-- 237: --         Increment_Wrap_Stencil_Operation => INCREMENT_WRAP,
+-- 238: --         Decrement_Wrap_Stencil_Operation => DECREMENT_WRAP);
+-- 239: --       begin
+-- 240: --         Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
+-- 241: --       end Set_Stencil_Operation;
+-- 242: --     procedure Set_Stencil_Function(Stencil : in Enumerated_Stencil_Function) is
+-- 243: --       begin
+-- 244: --         if (diff & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) then
+-- 245: --           if (stateBits & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) != 0 then
+-- 246: --             Enable(STENCIL_TEST);
+-- 247: --           else
+-- 248: --             Disable(STENCIL_TEST);
+-- 249: --           end if;
+-- 250: --         end if;
+-- 251: --         Stencil_Function(
+-- 252: --           Referece      => GLuint((stateBits & GLS_STENCIL_FUNC_REF_BITS ) >> GLS_STENCIL_FUNC_REF_SHIFT),
+-- 253: --           Mask          => GLuint((stateBits & GLS_STENCIL_FUNC_MASK_BITS ) >> GLS_STENCIL_FUNC_MASK_SHIFT)
+-- 254: --           Function_Kind =>(
+-- 255: --             case Stencil is
+-- 256: --               when Less_Stencil                            => LESS
+-- 257: --               when Equal_Stencil                           => EQUAL
+-- 258: --               when Never_Stencil                           => NEVER
+-- 259: --               when Always_Stencil                          => ALWAYS
+-- 260: --               when Greater_Stencil                         => GREATER
+-- 261: --               when Not_Equal_Stencil                       => NOT_EQUAL
+-- 262: --               when Less_Than_Or_Equal_To_Stencil           => LESS_THAN_OR_EQUAL
+-- 263: --               when Greater_Than_Or_Equal_Stencil_Operation => GREATER_THAN_OR_EQUAL));
+-- 264: --       end Set_Stencil_Function;
+-- 265: --     procedure Set_Depth_Function(Value : in Enumerated_Depth_Function) is
+-- 266: --       begin
+-- 267: --       end Set_Depth_Function;
+-- 268: --     procedure Set_Mask(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean) is
+-- 269: --       begin
+-- 270: --         ColorMask(
+-- 271: --           Red   => (if Do_Mask_Red   then C_FALSE else C_TRUE),
+-- 272: --           Green => (if Do_Mask_Green then C_FALSE else C_TRUE),
+-- 273: --           Blue  => (if Do_Mask_Blue  then C_FALSE else C_TRUE),
+-- 274: --           Alpha => (if Do_Mask_Alpha then C_FALSE else C_TRUE));
+-- 275: --       end Set_Mask;
+-- 276: --     procedure Set_Depth_Mask( is
+-- 277: --       begin
+-- 278: --         if (diff & GLS_DEPTHMASK ) then
+-- 279: --           if (stateBits & GLS_DEPTHMASK ) then
+-- 280: --             DepthMask(FALSE);
+-- 281: --           else
+-- 282: --             DepthMask(TRUE);
+-- 283: --           end if;
+-- 284: --         end if;
+-- 285: --       end Set_Depth_Mask;
+-- 286: --     procedure Set_Polymode_Line( is
+-- 287: --       begin
+-- 288: --         if (diff & GLS_POLYMODE_LINE ) then
+-- 289: --           if (stateBits & GLS_POLYMODE_LINE ) then
+-- 290: --             PolygonMode(FRONT_AND_BACK, LINE);
+-- 291: --           else
+-- 292: --             PolygonMode(FRONT_AND_BACK, FILL);
+-- 293: --           end if;
+-- 294: --         end if;
+-- 295: --       end Set_Polymode_Line;
+-- 296: --     procedure Set_Polygon_Offset(Do_Enable : in Boolean) is
+-- 297: --       begin
+-- 298: --         if Do_Enable then
+-- 299: --           PolygonOffset(backEnd.State.polyOfsScale, backEnd.State.polyOfsBias);
+-- 300: --           Enable(POLYGON_OFFSET_FILL);
+-- 301: --           Enable(POLYGON_OFFSET_LINE);
+-- 302: --         else
+-- 303: --           Disable(POLYGON_OFFSET_FILL);
+-- 304: --           Disable(POLYGON_OFFSET_LINE);
+-- 305: --         end if;
+-- 306: --       end Set_Polygon_Offset;
+-- 307: --     procedure Set_Buffer(const void *data ) is
+-- 308: --       -- see which draw buffer we want to render the frame to
+-- 309: --       const setBufferCommand_t * cmd = (const setBufferCommand_t *)data;
+-- 310: --       begin
+-- 311: --         Scissor(0, 0, tr.GetWidth, tr.GetHeight);
+-- 312: --         -- clear screen for debugging automatically enable this with several other debug tools
+-- 313: --         -- that might leave unrendered portions of the screen
+-- 314: --         if r_clear.GetFloat or idStr::Length(r_clear.GetString ) != 1 || r_sineArea.GetBool || r_showOverDraw.GetBool ) {
+-- 315: --           float c[3];
+-- 316: --           if sscanf(r_clear.GetString, "%f %f %f", &c[0], &c[1], &c[2] ) = 3 then
+-- 317: --             Clear(true, false, false, 0, c[0], c[1], c[2], 1.0f);
+-- 318: --           elsif r_clear.GetInteger = 2 then
+-- 319: --             Clear(true, false, false, 0, 0.0, 0.0, 0.0, 1.0);
+-- 320: --           elsif r_showOverDraw.GetBool then
+-- 321: --             Clear(true, false, false, 0, 1.0, 1.0, 1.0, 1.0);
+-- 322: --           else
+-- 323: --             Clear(true, false, false, 0, 0.4, 0.0, 0.25, 1.0);
+-- 324: --           end if;
+-- 325: --         end if;
+-- 326: --       end Set_Buffer;
+-- 327: --     procedure Make_Stereo_Render_Image(Graphic : in Record_Graphic) is
+-- 328: --       idImageOpts opts;
+-- 329: --       begin
+-- 330: --         opts.width := renderSystem->GetWidth;
+-- 331: --         opts.height := renderSystem->GetHeight;
+-- 332: --         opts.numLevels := 1;
+-- 333: --         opts.format := FMT_RGBA8;
+-- 334: --         image->AllocImage(opts, TF_LINEAR, TR_CLAMP);
+-- 335: --       end Make_Stereo_Render_Image;
+-- 336: --     procedure Render_Headset( is
+-- 337: --       begin
+-- 338: --       end Render;
+-- 339: --     procedure Initialize_Texture(Texture : in out Record_Texture) is
+-- 340: --       int numSides;
+-- 341: --       int target;
+-- 342: --       int uploadTarget;
+-- 343: --       begin
+-- 344: --         CheckErrors;
+-- 345: --         PurgeImage;
+-- 346: --         case opts.format is
+-- 347: --           when FMT_RGBA8 =>
+-- 348: --             internalFormat := RGBA8;
+-- 349: --             dataFormat := RGBA;
+-- 350: --             dataType := UNSIGNED_BYTE;
+-- 351: --           when FMT_XRGB8 =>
+-- 352: --             internalFormat := RGB;
+-- 353: --             dataFormat := RGBA;
+-- 354: --             dataType := UNSIGNED_BYTE;
+-- 355: --           when FMT_RGB565 =>
+-- 356: --             internalFormat := RGB;
+-- 357: --             dataFormat := RGB;
+-- 358: --             dataType := UNSIGNED_SHORT_5_6_5;
+-- 359: --           when FMT_ALPHA =>
+-- 360: --             internalFormat := R8;
+-- 361: --             dataFormat := RED;
+-- 362: --             dataType := UNSIGNED_BYTE;
+-- 363: --           when FMT_L8A8 =>
+-- 364: --             internalFormat := RG8;
+-- 365: --             dataFormat := RG;
+-- 366: --             dataType := UNSIGNED_BYTE;
+-- 367: --           when FMT_LUM8 =>
+-- 368: --             internalFormat := R8;
+-- 369: --             dataFormat := RED;
+-- 370: --             dataType := UNSIGNED_BYTE;
+-- 371: --           when FMT_INT8 =>
+-- 372: --             internalFormat := R8;
+-- 373: --             dataFormat := RED;
+-- 374: --             dataType := UNSIGNED_BYTE;
+-- 375: --           when FMT_DXT1 =>
+-- 376: --             internalFormat := COMPRESSED_RGBA_S3TC_DXT1_EXT;
+-- 377: --             dataFormat := RGBA;
+-- 378: --             dataType := UNSIGNED_BYTE;
+-- 379: --           when FMT_DXT5 =>
+-- 380: --             internalFormat := COMPRESSED_RGBA_S3TC_DXT5_EXT;
+-- 381: --             dataFormat := RGBA;
+-- 382: --             dataType := UNSIGNED_BYTE;
+-- 383: --           when FMT_DEPTH =>
+-- 384: --             internalFormat := DEPTH_COMPONENT;
+-- 385: --             dataFormat := DEPTH_COMPONENT;
+-- 386: --             dataType := UNSIGNED_BYTE;
+-- 387: --           when FMT_X16 =>
+-- 388: --             internalFormat := INTENSITY16;
+-- 389: --             dataFormat := LUMINANCE;
+-- 390: --             dataType := UNSIGNED_SHORT;
+-- 391: --           when FMT_Y16_X16 =>
+-- 392: --             internalFormat := LUMINANCE16_ALPHA16;
+-- 393: --             dataFormat := LUMINANCE_ALPHA;
+-- 394: --             dataType := UNSIGNED_SHORT;
+-- 395: --         end case;
+-- 396: --         -- generate the texture number
+-- 397: --         GenTextures(1, (GLuint *)&texnum);
+-- 398: --         if texnum != TEXTURE_NOT_LOADED then raise Texture_Load_Failure; end if;
+-- 399: --         -- allocate all the mip levels with NULL data
+-- 400: --         if (opts.textureType == TT_2D ) {
+-- 401: --           target = uploadTarget = TEXTURE_2D;
+-- 402: --           numSides = 1;
+-- 403: --         elsif (opts.textureType == TT_CUBIC ) {
+-- 404: --           target = TEXTURE_CUBE_MAP_EXT;
+-- 405: --           uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
+-- 406: --           numSides = 6;
+-- 407: --         else
+-- 408: --           assert(!"opts.textureType");
+-- 409: --           target = uploadTarget = TEXTURE_2D;
+-- 410: --           numSides = 1;
+-- 411: --         end if;
+-- 412: --         BindTexture(target, texnum);
+-- 413: --         for (int side = 0; side < numSides; side++ ) loop
+-- 414: --           int w = opts.width;
+-- 415: --           int h = opts.height;
+-- 416: --           if (opts.textureType == TT_CUBIC ) then
+-- 417: --             h = w;
+-- 418: --           end if;
+-- 419: --           for (int level = 0; level < opts.numLevels; level++ ) loop
+-- 420: --             -- clear out any previous error
+-- 421: --             CheckErrors;
+-- 422: --             if (IsCompressed ) then
+-- 423: --               int compressedSize = (((w+3)/4) * ((h+3)/4) * int64(16 ) * BitsForFormat(opts.format ) ) / 8;
+-- 424: --               -- Even though the OpenGL specification allows the 'data' pointer to be NULL, for some
+-- 425: --               -- drivers we actually need to upload data to get it to allocate the texture.
+-- 426: --               -- However, on 32-bit systems we may fail to allocate a large block of memory for large
+-- 427: --               -- textures. We handle this when by using HeapAlloc directly and allowing the allocation
+-- 428: --               -- to fail in which when we simply pass down NULL to CompressedTexImage2D and hope for the best.
+-- 429: --               -- As of 2011-10-6 using NVIDIA hardware and drivers we have to allocate the memory with HeapAlloc
+-- 430: --               -- with the exact size otherwise large image allocation (for instance for physical page textures)
+-- 431: --               -- may fail on Vista 32-bit.
+-- 432: --               void * data = HeapAlloc(GetProcessHeap, 0, compressedSize);
+-- 433: --               CompressedTexImage2DARB(uploadTarget+side, level, internalFormat, w, h, 0, compressedSize, data);
+-- 434: --               if (data != NULL ) then
+-- 435: --                 HeapFree(GetProcessHeap, 0, data);
+-- 436: --               end if;
+-- 437: --             else
+-- 438: --               TexImage2D(uploadTarget + side, level, internalFormat, w, h, 0, dataFormat, dataType, NULL);
+-- 439: --             end if;
+-- 440: --             CheckErrors;
+-- 441: --             w = Max(1, w >> 1);
+-- 442: --             h = Max(1, h >> 1);
+-- 443: --           end loop;
+-- 444: --         end loop;
+-- 445: --         TexParameteri(target, TEXTURE_MAX_LEVEL, opts.numLevels - 1);
+-- 446: --         -- see if we messed anything up
+-- 447: --         CheckErrors;
+-- 448: --         SetTexParameters;
+-- 449: --         CheckErrors;
+-- 450: --       end Initialize_Texture;
+-- 451: --     procedure Finalize_Texture(Texture : in out Record_Texture) is
+-- 452: --       begin
+-- 453: --         if (texnum != TEXTURE_NOT_LOADED ) then
+-- 454: --           DeleteTextures(1, (GLuint *)&texnum); -- this should be the ONLY place it is ever called!
+-- 455: --           texnum = TEXTURE_NOT_LOADED;
+-- 456: --         end if;
+-- 457: --         -- clear all the current binding caches, so the next bind will do a real one
+-- 458: --         for (int i = 0 ; i < MAX_MULTITEXTURE_UNITS ; i++ ) {
+-- 459: --           backEnd.State.tmu[i].current2DMap = TEXTURE_NOT_LOADED;
+-- 460: --           backEnd.State.tmu[i].currentCubeMap = TEXTURE_NOT_LOADED;
+-- 461: --         end loop;
+-- 462: --       end Finalize;
+-- 463: --     procedure Upload_Subimage (mipLevel, x, y, z, width, height, const void * pic, int pixelPitch) is
+-- 464: --       int compressedSize = 0;
+-- 465: --       begin
+-- 466: --         if Is_Compressed then
+-- 467: --           assert( !(x&3) && !(y&3) );
+-- 468: --           -- The compressed size may be larger than the dimensions due to padding to quads
+-- 469: --           compressedSize = ( width + 3 ) & ~3 * ( height + 3 ) & ~3 * BitsForFormat( opts.format ) / 8;
+-- 470: --           assert( x + width <= ( opts.width + 3 ) & ~3 && y + height <= ( opts.height + 3 ) & ~3);
+-- 471: --           -- OpenGL understands that there will be padding
+-- 472: --           if x + width > opts.width then width = opts.width - x; end if;
+-- 473: --           if y + height > opts.height then height = opts.height - x; end if;
+-- 474: --         else
+-- 475: --           assert( x + width <= opts.width && y + height <= opts.height );
+-- 476: --         end if;
+-- 477: --         int target;
+-- 478: --         int uploadTarget;
+-- 479: --         if ( opts.textureType == TT_2D ) {
+-- 480: --           target = TEXTURE_2D;
+-- 481: --           uploadTarget = TEXTURE_2D;
+-- 482: --         } else if ( opts.textureType == TT_CUBIC ) {
+-- 483: --           target = TEXTURE_CUBE_MAP_EXT;
+-- 484: --           uploadTarget = TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
+-- 485: --         } else {
+-- 486: --           assert( !"invalid opts.textureType" );
+-- 487: --           target = TEXTURE_2D;
+-- 488: --           uploadTarget = TEXTURE_2D;
+-- 489: --         }
+-- 490: --         glBindTexture( target, texnum );
+-- 491: --         if ( pixelPitch != 0 ) {
+-- 492: --           glPixelStorei( UNPACK_ROW_LENGTH, pixelPitch );
+-- 493: --         }
+-- 494: --         if ( opts.format == FMT_RGB565 ) {
+-- 495: --           glPixelStorei( UNPACK_SWAP_BYTES, TRUE );
+-- 496: --         }
+-- 497: --         if ( IsCompressed ) {
+-- 498: --           glCompressedTexSubImage2DARB( uploadTarget, mipLevel, x, y, width, height, internalFormat, compressedSize, pic );
+-- 499: --         } else {
+-- 500: --           // make sure the pixel store alignment is correct so that lower mips get created
+-- 501: --           // properly for odd shaped textures - this fixes the mip mapping issues with
+-- 502: --           // fonts
+-- 503: --           int unpackAlignment = width * BitsForFormat( (textureFormat_t)opts.format ) / 8;
+-- 504: --           if ( ( unpackAlignment & 3 ) == 0 ) {
+-- 505: --             glPixelStorei( UNPACK_ALIGNMENT, 4 );
+-- 506: --           } else {
+-- 507: --             glPixelStorei( UNPACK_ALIGNMENT, 1 );
+-- 508: --           }
+-- 509: --           glTexSubImage2D( uploadTarget, mipLevel, x, y, width, height, dataFormat, dataType, pic );
+-- 510: --         }
+-- 511: --         if ( opts.format == FMT_RGB565 ) {
+-- 512: --           glPixelStorei( UNPACK_SWAP_BYTES, FALSE );
+-- 513: --         }
+-- 514: --         if ( pixelPitch != 0 ) {
+-- 515: --           glPixelStorei( UNPACK_ROW_LENGTH, 0 );
+-- 516: --         }
+-- 517: --       end Upload_Subimage;
+-- 518: --
+-- 519: --  /*
+-- 520: --  ========================
+-- 521: --  idImage::SetPixel
+-- 522: --  ========================
+-- 523: --  */
+-- 524: --  void idImage::SetPixel( int mipLevel, int x, int y, const void * data, int dataSize ) {
+-- 525: --    SubImageUpload( mipLevel, x, y, 0, 1, 1, data );
+-- 526: --  }
+-- 527: --
+-- 528: --  /*
+-- 529: --  ========================
+-- 530: --  idImage::SetTexParameters
+-- 531: --  ========================
+-- 532: --  */
+-- 533: --  void idImage::SetTexParameters {
+-- 534: --    int target = TEXTURE_2D;
+-- 535: --    switch ( opts.textureType ) {
+-- 536: --      case TT_2D:
+-- 537: --        target = TEXTURE_2D;
+-- 538: --        break;
+-- 539: --      case TT_CUBIC:
+-- 540: --        target = TEXTURE_CUBE_MAP_EXT;
+-- 541: --        break;
+-- 542: --      default:
+-- 543: --        idLib::FatalError( "%s: bad texture type %d", GetName, opts.textureType );
+-- 544: --        return;
+-- 545: --    }
+-- 546: --
+-- 547: --    -- ALPHA, LUMINANCE, LUMINANCE_ALPHA, and INTENSITY have been removed in OpenGL 3.2. In order to mimic those modes, we use the swizzle operators
+-- 548: --
+-- 549: --    if ( opts.colorFormat == CFM_GREEN_ALPHA ) {
+-- 550: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, ONE );
+-- 551: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, ONE );
+-- 552: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, ONE );
+-- 553: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, GREEN );
+-- 554: --    } else if ( opts.format == FMT_LUM8 ) {
+-- 555: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, RED );
+-- 556: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, RED );
+-- 557: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, RED );
+-- 558: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, ONE );
+-- 559: --    } else if ( opts.format == FMT_L8A8 ) {
+-- 560: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, RED );
+-- 561: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, RED );
+-- 562: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, RED );
+-- 563: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, GREEN );
+-- 564: --    } else if ( opts.format == FMT_ALPHA ) {
+-- 565: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, ONE );
+-- 566: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, ONE );
+-- 567: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, ONE );
+-- 568: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, RED );
+-- 569: --    } else if ( opts.format == FMT_INT8 ) {
+-- 570: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, RED );
+-- 571: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, RED );
+-- 572: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, RED );
+-- 573: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, RED );
+-- 574: --    } else {
+-- 575: --      glTexParameteri( target, TEXTURE_SWIZZLE_R, RED );
+-- 576: --      glTexParameteri( target, TEXTURE_SWIZZLE_G, GREEN );
+-- 577: --      glTexParameteri( target, TEXTURE_SWIZZLE_B, BLUE );
+-- 578: --      glTexParameteri( target, TEXTURE_SWIZZLE_A, ALPHA );
+-- 579: --    }
+-- 580: --
+-- 581: --    switch( filter ) {
+-- 582: --      case TF_DEFAULT:
+-- 583: --        if ( r_useTrilinearFiltering.GetBool ) {
+-- 584: --          glTexParameterf( target, TEXTURE_MIN_FILTER, LINEAR_MIPMAP_LINEAR );
+-- 585: --        } else {
+-- 586: --          glTexParameterf( target, TEXTURE_MIN_FILTER, LINEAR_MIPMAP_NEAREST );
+-- 587: --        }
+-- 588: --        glTexParameterf( target, TEXTURE_MAG_FILTER, LINEAR );
+-- 589: --        break;
+-- 590: --      case TF_LINEAR:
+-- 591: --        glTexParameterf( target, TEXTURE_MIN_FILTER, LINEAR );
+-- 592: --        glTexParameterf( target, TEXTURE_MAG_FILTER, LINEAR );
+-- 593: --        break;
+-- 594: --      case TF_NEAREST:
+-- 595: --        glTexParameterf( target, TEXTURE_MIN_FILTER, NEAREST );
+-- 596: --        glTexParameterf( target, TEXTURE_MAG_FILTER, NEAREST );
+-- 597: --        break;
+-- 598: --      default:
+-- 599: --        common->FatalError( "%s: bad texture filter %d", GetName, filter );
+-- 600: --    }
+-- 601: --    glDebugMessageControlARB
+-- 602: --    if ( glConfig.anisotropicFilterAvailable ) {
+-- 603: --      // only do aniso filtering on mip mapped images
+-- 604: --      if ( filter == TF_DEFAULT ) {
+-- 605: --        int aniso = r_maxAnisotropicFiltering.GetInteger;
+-- 606: --        if ( aniso > glConfig.maxTextureAnisotropy ) {
+-- 607: --          aniso = glConfig.maxTextureAnisotropy;
+-- 608: --        }
+-- 609: --        if ( aniso < 0 ) {
+-- 610: --          aniso = 0;
+-- 611: --        }
+-- 612: --        glTexParameterf(target, TEXTURE_MAX_ANISOTROPY_EXT, aniso );
+-- 613: --      } else {
+-- 614: --        glTexParameterf(target, TEXTURE_MAX_ANISOTROPY_EXT, 1 );
+-- 615: --      }
+-- 616: --    }
+-- 617: --    if ( glConfig.textureLODBiasAvailable && ( usage != TD_FONT ) ) {
+-- 618: --      // use a blurring LOD bias in combination with high anisotropy to fix our aliasing grate textures...
+-- 619: --      glTexParameterf(target, TEXTURE_LOD_BIAS_EXT, r_lodBias.GetFloat );
+-- 620: --    }
+-- 621: --
+-- 622: --    // set the wrap/clamp modes
+-- 623: --    switch( repeat ) {
+-- 624: --      case TR_REPEAT:
+-- 625: --        glTexParameterf( target, TEXTURE_WRAP_S, REPEAT );
+-- 626: --        glTexParameterf( target, TEXTURE_WRAP_T, REPEAT );
+-- 627: --        break;
+-- 628: --      case TR_CLAMP_TO_ZERO: {
+-- 629: --        float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+-- 630: --        glTexParameterfv(target, TEXTURE_BORDER_COLOR, color );
+-- 631: --        glTexParameterf( target, TEXTURE_WRAP_S, CLAMP_TO_BORDER );
+-- 632: --        glTexParameterf( target, TEXTURE_WRAP_T, CLAMP_TO_BORDER );
+-- 633: --        }
+-- 634: --        break;
+-- 635: --      case TR_CLAMP_TO_ZERO_ALPHA: {
+-- 636: --        float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+-- 637: --        glTexParameterfv(target, TEXTURE_BORDER_COLOR, color );
+-- 638: --        glTexParameterf( target, TEXTURE_WRAP_S, CLAMP_TO_BORDER );
+-- 639: --        glTexParameterf( target, TEXTURE_WRAP_T, CLAMP_TO_BORDER );
+-- 640: --        }
+-- 641: --        break;
+-- 642: --      case TR_CLAMP:
+-- 643: --        glTexParameterf( target, TEXTURE_WRAP_S, CLAMP_TO_EDGE );
+-- 644: --        glTexParameterf( target, TEXTURE_WRAP_T, CLAMP_TO_EDGE );
+-- 645: --        break;
+-- 646: --      default:
+-- 647: --        common->FatalError( "%s: bad texture repeat %d", GetName, repeat );
+-- 648: --    }
+-- 649: --  }
+-- 650: --      if renderZPass then
+-- 651: --        StencilOpSeparate(FRONT, KEEP, KEEP, INCREMENT);
+-- 652: --        StencilOpSeparate(BACK, KEEP, KEEP, DECREMENT);
+-- 653: --      elsif r_useStencilShadowPreload.GetBool then
+-- 654: --        // preload + Z-pass
+-- 655: --        StencilOpSeparate(FRONT, KEEP, DECREMENT, DECREMENT);
+-- 656: --        StencilOpSeparate(BACK, KEEP, INCREMENT, INCREMENT);
+-- 657: --      else
+-- 658: --        null; -- Z-fail
+-- 659: --      end if;
+-- 660: --
+-- 661: --  /*
+-- 662: --  ================
+-- 663: --  RB_DrawElementsWithCounters
+-- 664: --  ================
+-- 665: --  */
+-- 666: --  void RB_DrawElementsWithCounters( const drawSurf_t *surf ) {
+-- 667: --    // get vertex buffer
+-- 668: --    const vertCacheHandle_t vbHandle = surf->ambientCache;
+-- 669: --    idVertexBuffer * vertexBuffer;
+-- 670: --    if ( vertexCache.CacheIsStatic( vbHandle ) ) {
+-- 671: --      vertexBuffer = &vertexCache.staticData.vertexBuffer;
+-- 672: --    } else {
+-- 673: --      const uint64 frameNum = (int)( vbHandle >> VERTCACHE_FRAME_SHIFT ) & VERTCACHE_FRAME_MASK;
+-- 674: --      if ( frameNum != ( ( vertexCache.currentFrame - 1 ) & VERTCACHE_FRAME_MASK ) ) {
+-- 675: --        idLib::Warning( "RB_DrawElementsWithCounters, vertexBuffer == NULL" );
+-- 676: --        return;
+-- 677: --      }
+-- 678: --      vertexBuffer = &vertexCache.frameData[vertexCache.drawListNum].vertexBuffer;
+-- 679: --    }
+-- 680: --    const int vertOffset = (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
+-- 681: --
+-- 682: --    // get index buffer
+-- 683: --    const vertCacheHandle_t ibHandle = surf->indexCache;
+-- 684: --    idIndexBuffer * indexBuffer;
+-- 685: --    if ( vertexCache.CacheIsStatic( ibHandle ) ) {
+-- 686: --      indexBuffer = &vertexCache.staticData.indexBuffer;
+-- 687: --    } else {
+-- 688: --      const uint64 frameNum = (int)( ibHandle >> VERTCACHE_FRAME_SHIFT ) & VERTCACHE_FRAME_MASK;
+-- 689: --      if ( frameNum != ( ( vertexCache.currentFrame - 1 ) & VERTCACHE_FRAME_MASK ) ) {
+-- 690: --        idLib::Warning( "RB_DrawElementsWithCounters, indexBuffer == NULL" );
+-- 691: --        return;
+-- 692: --      }
+-- 693: --      indexBuffer = &vertexCache.frameData[vertexCache.drawListNum].indexBuffer;
+-- 694: --    }
+-- 695: --    const int indexOffset = (int)( ibHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
+-- 696: --
+-- 697: --    RENDERLOG_PRINTF( "Binding Buffers: %p:%i %p:%i\n", vertexBuffer, vertOffset, indexBuffer, indexOffset );
+-- 698: --
+-- 699: --    if ( surf->jointCache ) {
+-- 700: --      if ( !verify( renderProgManager.ShaderUsesJoints ) ) {
+-- 701: --        return;
+-- 702: --      }
+-- 703: --    } else {
+-- 704: --      if ( !verify( !renderProgManager.ShaderUsesJoints || renderProgManager.ShaderHasOptionalSkinning ) ) {
+-- 705: --        return;
+-- 706: --      }
+-- 707: --    }
+-- 708: --
+-- 709: --
+-- 710: --    if ( surf->jointCache ) {
+-- 711: --      idJointBuffer jointBuffer;
+-- 712: --      if ( !vertexCache.GetJointBuffer( surf->jointCache, &jointBuffer ) ) {
+-- 713: --        idLib::Warning( "RB_DrawElementsWithCounters, jointBuffer == NULL" );
+-- 714: --        return;
+-- 715: --      }
+-- 716: --      assert( ( jointBuffer.GetOffset & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) == 0 );
+-- 717: --
+-- 718: --      const GLuint ubo = reinterpret_cast< GLuint >( jointBuffer.GetAPIObject );
+-- 719: --      glBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset, jointBuffer.GetNumJoints * sizeof( idJointMat ) );
+-- 720: --    }
+-- 721: --
+-- 722: --    renderProgManager.CommitUniforms;
+-- 723: --
+-- 724: --    if ( backEnd.glState.currentIndexBuffer != (GLuint)indexBuffer->GetAPIObject || !r_useStateCaching.GetBool ) {
+-- 725: --      glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, (GLuint)indexBuffer->GetAPIObject );
+-- 726: --      backEnd.glState.currentIndexBuffer = (GLuint)indexBuffer->GetAPIObject;
+-- 727: --    }
+-- 728: --
+-- 729: --    if ( ( backEnd.glState.vertexLayout != LAYOUT_DRAW_VERT ) || ( backEnd.glState.currentVertexBuffer != (GLuint)vertexBuffer->GetAPIObject ) || !r_useStateCaching.GetBool ) {
+-- 730: --      glBindBufferARB( GL_ARRAY_BUFFER_ARB, (GLuint)vertexBuffer->GetAPIObject );
+-- 731: --      backEnd.glState.currentVertexBuffer = (GLuint)vertexBuffer->GetAPIObject;
+-- 732: --
+-- 733: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_VERTEX );
+-- 734: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_NORMAL );
+-- 735: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR );
+-- 736: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR2 );
+-- 737: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_ST );
+-- 738: --      glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_TANGENT );
+-- 739: --
+-- 740: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof( idDrawVert ), (void *)( DRAWVERT_XYZ_OFFSET ) );
+-- 741: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_NORMAL, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_NORMAL_OFFSET ) );
+-- 742: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR_OFFSET ) );
+-- 743: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR2_OFFSET ) );
+-- 744: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_ST, 2, GL_HALF_FLOAT, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_ST_OFFSET ) );
+-- 745: --      glVertexAttribPointerARB( PC_ATTRIB_INDEX_TANGENT, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_TANGENT_OFFSET ) );
+-- 746: --
+-- 747: --      backEnd.glState.vertexLayout = LAYOUT_DRAW_VERT;
+-- 748: --    }
+-- 749: --
+-- 750: --    glDrawElementsBaseVertex( GL_TRIANGLES,
+-- 751: --                  r_singleTriangle.GetBool ? 3 : surf->numIndexes,
+-- 752: --                  GL_INDEX_TYPE,
+-- 753: --                  (triIndex_t *)indexOffset,
+-- 754: --                  vertOffset / sizeof ( idDrawVert ) );
+-- 755: --
+-- 756: --
+-- 757: --  }
+-- 758: --
+-- 759: --
+-- 760: --      RENDERLOG_PRINTF( "Binding Buffers: %p %p\n", vertexBuffer, indexBuffer );
+-- 761: --
+-- 762: --
+-- 763: --      if ( backEnd.glState.currentIndexBuffer != (GLuint)indexBuffer->GetAPIObject || !r_useStateCaching.GetBool ) {
+-- 764: --        glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, (GLuint)indexBuffer->GetAPIObject );
+-- 765: --        backEnd.glState.currentIndexBuffer = (GLuint)indexBuffer->GetAPIObject;
+-- 766: --      }
+-- 767: --
+-- 768: --      if ( drawSurf->jointCache ) {
+-- 769: --        assert( renderProgManager.ShaderUsesJoints );
+-- 770: --
+-- 771: --        idJointBuffer jointBuffer;
+-- 772: --        if ( !vertexCache.GetJointBuffer( drawSurf->jointCache, &jointBuffer ) ) {
+-- 773: --          idLib::Warning( "RB_DrawElementsWithCounters, jointBuffer == NULL" );
+-- 774: --          continue;
+-- 775: --        }
+-- 776: --        assert( ( jointBuffer.GetOffset & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) == 0 );
+-- 777: --
+-- 778: --        const GLuint ubo = reinterpret_cast< GLuint >( jointBuffer.GetAPIObject );
+-- 779: --        glBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset, jointBuffer.GetNumJoints * sizeof( idJointMat ) );
+-- 780: --
+-- 781: --        if ( ( backEnd.glState.vertexLayout != LAYOUT_DRAW_SHADOW_VERT_SKINNED) || ( backEnd.glState.currentVertexBuffer != (GLuint)vertexBuffer->GetAPIObject ) || !r_useStateCaching.GetBool ) {
+-- 782: --          glBindBufferARB( GL_ARRAY_BUFFER_ARB, (GLuint)vertexBuffer->GetAPIObject );
+-- 783: --          backEnd.glState.currentVertexBuffer = (GLuint)vertexBuffer->GetAPIObject;
+-- 784: --
+-- 785: --          glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_VERTEX );
+-- 786: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_NORMAL );
+-- 787: --          glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR );
+-- 788: --          glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR2 );
+-- 789: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_ST );
+-- 790: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_TANGENT );
+-- 791: --
+-- 792: --          glVertexAttribPointerARB( PC_ATTRIB_INDEX_VERTEX, 4, GL_FLOAT, GL_FALSE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_XYZW_OFFSET ) );
+-- 793: --          glVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_COLOR_OFFSET ) );
+-- 794: --          glVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_COLOR2_OFFSET ) );
+-- 795: --
+-- 796: --          backEnd.glState.vertexLayout = LAYOUT_DRAW_SHADOW_VERT_SKINNED;
+-- 797: --        }
+-- 798: --
+-- 799: --      } else {
+-- 800: --
+-- 801: --        if ( ( backEnd.glState.vertexLayout != LAYOUT_DRAW_SHADOW_VERT ) || ( backEnd.glState.currentVertexBuffer != (GLuint)vertexBuffer->GetAPIObject ) || !r_useStateCaching.GetBool ) {
+-- 802: --          glBindBufferARB( GL_ARRAY_BUFFER_ARB, (GLuint)vertexBuffer->GetAPIObject );
+-- 803: --          backEnd.glState.currentVertexBuffer = (GLuint)vertexBuffer->GetAPIObject;
+-- 804: --
+-- 805: --          glEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_VERTEX );
+-- 806: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_NORMAL );
+-- 807: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR );
+-- 808: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR2 );
+-- 809: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_ST );
+-- 810: --          glDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_TANGENT );
+-- 811: --
+-- 812: --          glVertexAttribPointerARB( PC_ATTRIB_INDEX_VERTEX, 4, GL_FLOAT, GL_FALSE, sizeof( idShadowVert ), (void *)( SHADOWVERT_XYZW_OFFSET ) );
+-- 813: --
+-- 814: --          backEnd.glState.vertexLayout = LAYOUT_DRAW_SHADOW_VERT;
+-- 815: --        }
+-- 816: --      }
+-- 817: --
+-- 818: --      renderProgManager.CommitUniforms;
+-- 819: --
+-- 820: --      if ( drawSurf->jointCache ) {
+-- 821: --        glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof( idShadowVertSkinned ) );
+-- 822: --      } else {
+-- 823: --        glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof( idShadowVert ) );
+-- 824: --      }
+-- 825: --
+-- 826: --      if ( !renderZPass && r_useStencilShadowPreload.GetBool ) {
+-- 827: --        // render again with Z-pass
+-- 828: --        glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR );
+-- 829: --        glStencilOpSeparate( GL_BACK, GL_KEEP, GL_KEEP, GL_DECR );
+-- 830: --
+-- 831: --        if ( drawSurf->jointCache ) {
+-- 832: --          glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof ( idShadowVertSkinned ) );
+-- 833: --        } else {
+-- 834: --          glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof ( idShadowVert ) );
+-- 835: --        }
+-- 836: --      }
+-- 837: --    }
+-- 838: --
+-- 839: --    // cleanup the shadow specific rendering state
+-- 840: --
+-- 841: --    GL_Cull( CT_FRONT_SIDED );
+-- 842: --
+-- 843: --    // reset depth bounds
+-- 844: --    if ( r_useShadowDepthBounds.GetBool ) {
+-- 845: --      if ( r_useLightDepthBounds.GetBool ) {
+-- 846: --        GL_DepthBoundsTest( vLight->scissorRect.zmin, vLight->scissorRect.zmax );
+-- 847: --      } else {
+-- 848: --        GL_DepthBoundsTest( 0.0f, 0.0f );
+-- 849: --      }
+-- 850: --    }
+-- 851: --
+-- 852: --    // two-sided stencil test
+-- 853: --    glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_REPLACE, GL_ZERO );
+-- 854: --    glStencilOpSeparate( GL_BACK, GL_KEEP, GL_ZERO, GL_REPLACE );
+
+-- 855: end OpenGL;
+end opengl;
+
+[subtype T1s is String (1 .. 73);]
+freeze_generic T1s
+freeze_generic object_pointer
+freeze_generic forward_iterator
+freeze_generic Tforward_iteratorC
+freeze_generic reversible_iterator
+freeze_generic Treversible_iteratorC
+freeze_generic map
+freeze_generic TmapC
+freeze_generic cursor
+[type T2s is procedure (key : key_type, element : element_type)]
+[subtype T1s is not null access T2s]
+freeze_generic T1s
+[type T4s is procedure (key : key_type, element : in out element_type)]
+[subtype T3s is not null access T4s]
+freeze_generic T3s
+freeze_generic constant_reference_type
+[subtype T5s is not null access constant element_type]
+freeze_generic T5s
+freeze_generic reference_type
+[subtype T6s is not null access element_type]
+freeze_generic T6s
+[type T8s is procedure (position : cursor)]
+[subtype T7s is not null access T8s]
+freeze_generic T7s
+freeze_generic node_type
+freeze_generic node_access
+freeze_generic key_access
+freeze_generic element_access
+freeze_generic node_type
+freeze_generic map
+[subtype T11s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T11s
+[subtype T12s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T12s
+freeze_generic map_access
+freeze_generic cursor
+[subtype T13s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T13s
+[subtype T14s is access ada__streams__Troot_stream_typeC]
+freeze_generic T14s
+[subtype T15s is access ada__streams__Troot_stream_typeC]
+freeze_generic T15s
+[subtype T16s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T16s
+[subtype T17s is access ada__streams__Troot_stream_typeC]
+freeze_generic T17s
+[subtype T18s is access ada__streams__Troot_stream_typeC]
+freeze_generic T18s
+freeze_generic reference_control_type
+freeze_generic Treference_control_typeC
+freeze_generic constant_reference_type
+[subtype T19s is not null access constant element_type]
+freeze_generic T19s
+[subtype T20s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T20s
+[subtype T21s is access ada__streams__Troot_stream_typeC]
+freeze_generic T21s
+[subtype T22s is access ada__streams__Troot_stream_typeC]
+freeze_generic T22s
+[subtype T23s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T23s
+[subtype T24s is access ada__streams__Troot_stream_typeC]
+freeze_generic T24s
+[subtype T25s is access ada__streams__Troot_stream_typeC]
+freeze_generic T25s
+freeze_generic reference_type
+[subtype T26s is not null access element_type]
+freeze_generic T26s
+[subtype T27s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T27s
+[subtype T28s is access ada__streams__Troot_stream_typeC]
+freeze_generic T28s
+[subtype T29s is access ada__streams__Troot_stream_typeC]
+freeze_generic T29s
+[subtype T30s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T30s
+[subtype T31s is access ada__streams__Troot_stream_typeC]
+freeze_generic T31s
+[subtype T32s is access ada__streams__Troot_stream_typeC]
+freeze_generic T32s
+freeze_generic iterator
+freeze_generic TiteratorC
+freeze_generic map
+freeze_generic TmapC
+freeze_generic cursor
+[type T2s is procedure (key : key_type, element : element_type)]
+[subtype T1s is not null access T2s]
+freeze_generic T1s
+[type T4s is procedure (key : key_type, element : in out element_type)]
+[subtype T3s is not null access T4s]
+freeze_generic T3s
+freeze_generic constant_reference_type
+[subtype T5s is not null access constant element_type]
+freeze_generic T5s
+freeze_generic reference_type
+[subtype T6s is not null access element_type]
+freeze_generic T6s
+[type T8s is procedure (position : cursor)]
+[subtype T7s is not null access T8s]
+freeze_generic T7s
+[type T10s is procedure (position : cursor)]
+[subtype T9s is not null access T10s]
+freeze_generic T9s
+freeze_generic node_type
+freeze_generic node_access
+freeze_generic key_access
+freeze_generic element_access
+freeze_generic node_type
+freeze_generic map
+[subtype T11s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T11s
+[subtype T12s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T12s
+freeze_generic map_access
+freeze_generic cursor
+[subtype T13s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T13s
+[subtype T14s is access ada__streams__Troot_stream_typeC]
+freeze_generic T14s
+[subtype T15s is access ada__streams__Troot_stream_typeC]
+freeze_generic T15s
+[subtype T16s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T16s
+[subtype T17s is access ada__streams__Troot_stream_typeC]
+freeze_generic T17s
+[subtype T18s is access ada__streams__Troot_stream_typeC]
+freeze_generic T18s
+freeze_generic reference_control_type
+freeze_generic Treference_control_typeC
+freeze_generic constant_reference_type
+[subtype T19s is not null access constant element_type]
+freeze_generic T19s
+[subtype T20s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T20s
+[subtype T21s is access ada__streams__Troot_stream_typeC]
+freeze_generic T21s
+[subtype T22s is access ada__streams__Troot_stream_typeC]
+freeze_generic T22s
+[subtype T23s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T23s
+[subtype T24s is access ada__streams__Troot_stream_typeC]
+freeze_generic T24s
+[subtype T25s is access ada__streams__Troot_stream_typeC]
+freeze_generic T25s
+freeze_generic reference_type
+[subtype T26s is not null access element_type]
+freeze_generic T26s
+[subtype T27s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T27s
+[subtype T28s is access ada__streams__Troot_stream_typeC]
+freeze_generic T28s
+[subtype T29s is access ada__streams__Troot_stream_typeC]
+freeze_generic T29s
+[subtype T30s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T30s
+[subtype T31s is access ada__streams__Troot_stream_typeC]
+freeze_generic T31s
+[subtype T32s is access ada__streams__Troot_stream_typeC]
+freeze_generic T32s
+freeze_generic iterator
+freeze_generic TiteratorC
+freeze_generic vector
+freeze_generic TvectorC
+freeze_generic cursor
+freeze_generic constant_reference_type
+[subtype T2s is not null access constant element_type]
+freeze_generic T2s
+freeze_generic reference_type
+[subtype T3s is not null access element_type]
+freeze_generic T3s
+[type T5s is procedure (element : element_type)]
+[subtype T4s is not null access T5s]
+freeze_generic T4s
+[type T7s is procedure (element : element_type)]
+[subtype T6s is not null access T7s]
+freeze_generic T6s
+[type T9s is procedure (element : in out element_type)]
+[subtype T8s is not null access T9s]
+freeze_generic T8s
+[type T11s is procedure (element : in out element_type)]
+[subtype T10s is not null access T11s]
+freeze_generic T10s
+[type T13s is procedure (position : cursor)]
+[subtype T12s is not null access T13s]
+freeze_generic T12s
+[type T15s is procedure (position : cursor)]
+[subtype T14s is not null access T15s]
+freeze_generic T14s
+freeze_generic element_access
+freeze_generic elements_array
+freeze_generic elements_type
+freeze_generic elements_access
+freeze_generic vector
+[subtype T20s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T20s
+[subtype T21s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T21s
+freeze_generic vector_access
+freeze_generic cursor
+[subtype T22s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T22s
+[subtype T23s is access ada__streams__Troot_stream_typeC]
+freeze_generic T23s
+[subtype T24s is access ada__streams__Troot_stream_typeC]
+freeze_generic T24s
+[subtype T25s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T25s
+[subtype T26s is access ada__streams__Troot_stream_typeC]
+freeze_generic T26s
+[subtype T27s is access ada__streams__Troot_stream_typeC]
+freeze_generic T27s
+freeze_generic reference_control_type
+freeze_generic Treference_control_typeC
+freeze_generic constant_reference_type
+[subtype T28s is not null access constant element_type]
+freeze_generic T28s
+[subtype T29s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T29s
+[subtype T30s is access ada__streams__Troot_stream_typeC]
+freeze_generic T30s
+[subtype T31s is access ada__streams__Troot_stream_typeC]
+freeze_generic T31s
+[subtype T32s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T32s
+[subtype T33s is access ada__streams__Troot_stream_typeC]
+freeze_generic T33s
+[subtype T34s is access ada__streams__Troot_stream_typeC]
+freeze_generic T34s
+freeze_generic reference_type
+[subtype T35s is not null access element_type]
+freeze_generic T35s
+[subtype T36s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T36s
+[subtype T37s is access ada__streams__Troot_stream_typeC]
+freeze_generic T37s
+[subtype T38s is access ada__streams__Troot_stream_typeC]
+freeze_generic T38s
+[subtype T39s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T39s
+[subtype T40s is access ada__streams__Troot_stream_typeC]
+freeze_generic T40s
+[subtype T41s is access ada__streams__Troot_stream_typeC]
+freeze_generic T41s
+freeze_generic iterator
+freeze_generic TiteratorC
+freeze_generic vector
+freeze_generic TvectorC
+freeze_generic cursor
+[type T3s is procedure (element : element_type)]
+[subtype T2s is not null access T3s]
+freeze_generic T2s
+[type T5s is procedure (element : element_type)]
+[subtype T4s is not null access T5s]
+freeze_generic T4s
+[type T7s is procedure (element : in out element_type)]
+[subtype T6s is not null access T7s]
+freeze_generic T6s
+[type T9s is procedure (element : in out element_type)]
+[subtype T8s is not null access T9s]
+freeze_generic T8s
+freeze_generic constant_reference_type
+[subtype T10s is not null access constant element_type]
+freeze_generic T10s
+freeze_generic reference_type
+[subtype T11s is not null access element_type]
+freeze_generic T11s
+[type T13s is procedure (position : cursor)]
+[subtype T12s is not null access T13s]
+freeze_generic T12s
+[type T15s is procedure (position : cursor)]
+[subtype T14s is not null access T15s]
+freeze_generic T14s
+freeze_generic elements_array
+freeze_generic elements_type
+freeze_generic elements_access
+freeze_generic vector
+[subtype T20s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T20s
+[subtype T21s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T21s
+freeze_generic vector_access
+freeze_generic cursor
+[subtype T22s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T22s
+[subtype T23s is access ada__streams__Troot_stream_typeC]
+freeze_generic T23s
+[subtype T24s is access ada__streams__Troot_stream_typeC]
+freeze_generic T24s
+[subtype T25s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T25s
+[subtype T26s is access ada__streams__Troot_stream_typeC]
+freeze_generic T26s
+[subtype T27s is access ada__streams__Troot_stream_typeC]
+freeze_generic T27s
+freeze_generic reference_control_type
+freeze_generic Treference_control_typeC
+freeze_generic constant_reference_type
+[subtype T28s is not null access constant element_type]
+freeze_generic T28s
+[subtype T29s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T29s
+[subtype T30s is access ada__streams__Troot_stream_typeC]
+freeze_generic T30s
+[subtype T31s is access ada__streams__Troot_stream_typeC]
+freeze_generic T31s
+[subtype T32s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T32s
+[subtype T33s is access ada__streams__Troot_stream_typeC]
+freeze_generic T33s
+[subtype T34s is access ada__streams__Troot_stream_typeC]
+freeze_generic T34s
+freeze_generic reference_type
+[subtype T35s is not null access element_type]
+freeze_generic T35s
+[subtype T36s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T36s
+[subtype T37s is access ada__streams__Troot_stream_typeC]
+freeze_generic T37s
+[subtype T38s is access ada__streams__Troot_stream_typeC]
+freeze_generic T38s
+[subtype T39s is not null access ada__streams__Troot_stream_typeC]
+freeze_generic T39s
+[subtype T40s is access ada__streams__Troot_stream_typeC]
+freeze_generic T40s
+[subtype T41s is access ada__streams__Troot_stream_typeC]
+freeze_generic T41s
