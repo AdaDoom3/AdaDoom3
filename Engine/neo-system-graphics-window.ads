@@ -14,7 +14,7 @@ package Neo.System.Graphics.Window is
     end record;
   package Vector_Record_Border is new Vectors(Record_Border);
   procedure Run;
-  function Get_Borders           return Vector_Record_Border.Unsafe.Vector;
+  function Get_Borders           return Vector_Record_Border.Unprotected.Vector;
   function Get_Decoration        return Record_Border;
   function Get_Normalized_Cursor return Record_Location;
 private
@@ -56,7 +56,7 @@ private
       procedure Clip_Mouse        (Undo : in Boolean := False; Do_Hide : in Boolean := False);
       function Update             return Boolean;
       function Is_Fullscreen_Only return Boolean;
-      function Get_Borders        return Vector_Record_Border.Unsafe.Vector;
+      function Get_Borders        return Vector_Record_Border.Unprotected.Vector;
       function Get_Decoration     return Record_Border;
     end Import;
   package Detect_Menu_Mode_Entry is new Impulse("menuentry",  Preform_Detect_Menu_Mode_Entry);

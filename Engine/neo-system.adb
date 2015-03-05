@@ -111,7 +111,7 @@ package body Neo.System is
     begin
       Put_Line(To_String_2(Exception_Name(Occurrence)));
       Put_Line(To_String_2(Exception_Message(Occurrence)));
-      Set_Failure;
+      Set_Do_Fail;
       Is_Running.Set(False);
     end Handle_Exception;
   --function Localize(Item : in String_2) return String_2 is

@@ -15,12 +15,12 @@ package body Neo.System.Input is
   function Xbox        (Key     : in Enumerated_Xbox_Key;        Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding is begin return (Xbox_Key_Kind,            Player, Combo, Xbox_Key        => Key,     others => <>); end Xbox;
   function Mouse       (Key     : in Enumerated_Mouse_Key;       Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding is begin return (Mouse_Key_Kind,           Player, Combo, Mouse_Key       => Key,     others => <>); end Mouse;
   function Mouse                                                (Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding is begin return (Mouse_Cursor_Kind,        Player, Combo,                             others => <>); end Mouse;
-  function Get_Cursor                                        return Record_Location                      renames Import.Get_Cursor;
-  function Get_Devices                                       return Ordered_Map_Record_Device.Unsafe.Map is begin return Devices.Get;                                                                                                                                      end Get_Devices;
-  function Get_Device      (Identifier : in Integer_Address) return Record_Device                        is begin return Devices.Element(Identifier);                                                                                                                      end Get_Device;
-  function Has_Device      (Identifier : in Integer_Address) return Boolean                              is begin return Devices.Has_Element(Identifier);                                                                                                                  end Has_Device;
-  procedure Remove_Device  (Identifier : in Integer_Address)                                             is begin Devices.Delete(Identifier);                                                                                                                              end Remove_Device;
-  procedure Add_Device     (Identifier : in Integer_Address; Device   : in Record_Device)                is begin if not Players.Has_Element(Device.Player) then Players.Insert(Device.Player, (others => <>)); end if;             Devices.Insert(Identifier, Device);    end Add_Device;
+  function Get_Cursor                                        return Record_Location                           renames Import.Get_Cursor;
+  function Get_Devices                                       return Ordered_Map_Record_Device.Unprotected.Map is begin return Devices.Get;                                                                                                                                 end Get_Devices;
+  function Get_Device      (Identifier : in Integer_Address) return Record_Device                             is begin return Devices.Element(Identifier);                                                                                                                 end Get_Device;
+  function Has_Device      (Identifier : in Integer_Address) return Boolean                                   is begin return Devices.Has_Element(Identifier);                                                                                                             end Has_Device;
+  procedure Remove_Device  (Identifier : in Integer_Address)                                                  is begin Devices.Delete(Identifier);                                                                                                                         end Remove_Device;
+  procedure Add_Device     (Identifier : in Integer_Address; Device   : in Record_Device)                     is begin if not Players.Has_Element(Device.Player) then Players.Insert(Device.Player, (others => <>)); end if;        Devices.Insert(Identifier, Device);    end Add_Device;
   procedure Set_Device     (Identifier : in Integer_Address; Player   : in Integer_4_Positive := 1)                           is Device : Record_Device := Devices.Element(Identifier); begin Device.Player            := Player;   Devices.Replace(Identifier, Device);   end Set_Device;
   procedure Inject_Text    (Identifier : in Integer_Address; Text     : in String_2_Unbounded)                                is Device : Record_Device := Devices.Element(Identifier); begin Device.Text              := Text;     Devices.Replace(Identifier, Device);   end Inject_Text;
   procedure Inject_Trigger (Identifier : in Integer_Address; Trigger  : in Enumerated_Trigger; Position : in Float_4_Percent) is Device : Record_Device := Devices.Element(Identifier); begin Device.Triggers(Trigger) := Position; Devices.Replace(Identifier, Device);   end Inject_Trigger;
@@ -29,7 +29,6 @@ package body Neo.System.Input is
   procedure Inject_Key(Identifier : in Integer_Address; Key : in Enumerated_Key; Is_Pressed : in Boolean) is
     Device : Record_Device := Devices.Element(Identifier);
     begin
-      --Put_Line((if Is_Pressed then "Pressed " else "Released ") & Enumerated_Key'wide_image(Key) & " from" & Integer_Address'wide_image(Identifier));
       case Device.Kind is
         when Playstation_Device => if Device.Playstation_Keys(Key).Is_Pressed /= Is_Pressed then Device.Playstation_Keys(Key) := (Is_Pressed, Clock); Devices.Replace(Identifier, Device); end if;
         when Keyboard_Device    => if Device.Keyboard_Keys(Key).Is_Pressed    /= Is_Pressed then Device.Keyboard_Keys(Key)    := (Is_Pressed, Clock); Devices.Replace(Identifier, Device); end if;
@@ -63,18 +62,18 @@ package body Neo.System.Input is
         Devices.Next(Current_Device);
       end loop;
     end Set_Vibration;
-  procedure Perform_Unbind(Parameters : in Vector_String_2_Unbounded.Vector) is
+  procedure Perform_Unbind(Parameters : in Array_String_2_Unbounded) is
     begin
       null;
     end Perform_Unbind;
-  procedure Perform_Bind(Parameters : in Vector_String_2_Unbounded.Vector) is
+  procedure Perform_Bind(Parameters : in Array_String_2_Unbounded) is
     begin
     --Impulse : Record_Impulse                   := (others => <>);
     --Success : Boolean                          := False;
     --procedure Dispatch(Command : in String_2; Binding : in Record_Binding) is
     --  begin
     --    if Command = COMMAND_BIND then
-    --      for Binding of Impulse.Bindings.all loop
+    --      for Binding of Impulse.Bindings loop
     --        if
     --      end loop;
     --    elsif Command = COMMAND_UNBIND then
@@ -106,13 +105,13 @@ package body Neo.System.Input is
       null;
     end Perform_Bind;
   procedure Run is
-    Last_Time        : Time          := Clock;
-    Player           : Record_Player := (others => <>);
-    Previous_Impulse : Hashed_Map_Record_Impulse.Cursor;
-    Current_Impulse  : Hashed_Map_Record_Impulse.Cursor;
-    Current_Device   : Ordered_Map_Record_Device.Cursor;
-    Current_Player   : Ordered_Map_Record_Player.Cursor;
-    Current_Binding  : Vector_Record_Binding.Cursor;
+    Last_Time        : Time                             := Clock;
+    Player           : Record_Player                    := (others => <>);
+    Previous_Impulse : Hashed_Map_Record_Impulse.Cursor := Hashed_Map_Record_Impulse.NO_ELEMENT;
+    Current_Impulse  : Hashed_Map_Record_Impulse.Cursor := Hashed_Map_Record_Impulse.NO_ELEMENT;
+    Current_Device   : Ordered_Map_Record_Device.Cursor := Ordered_Map_Record_Device.NO_ELEMENT;
+    Current_Player   : Ordered_Map_Record_Player.Cursor := Ordered_Map_Record_Player.NO_ELEMENT;
+    Current_Binding  : Vector_Record_Binding.Cursor     := Vector_Record_Binding.NO_ELEMENT;
     begin
       Status.Set_Is_Doing_Something(False);
       Import.Initialize;
@@ -180,15 +179,15 @@ package body Neo.System.Input is
             declare
             Impulse : Record_Impulse := Impulses.Element(Current_Impulse);
             begin
-              Current_Binding := Impulse.Bindings.all.First;
-              while Impulse.Bindings.all.Has_Element(Current_Binding) loop
+              Current_Binding := Impulse.Bindings.First;
+              while Impulse.Bindings.Has_Element(Current_Binding) loop
                 declare
-                Binding : Record_Binding := Impulse.Bindings.all.Element(Current_Binding);
-                procedure Handle_Common is
+                Binding : Record_Binding := Impulse.Bindings.Element(Current_Binding);
+                procedure Combine is
                   begin
-                    Impulse.Bindings.all.Replace(Current_Binding, Binding);
+                    Impulse.Bindings.Replace(Current_Binding, Binding);
                     if Binding.Combo /= NO_COMBO then
-                      for Other_Binding of Impulse.Bindings.all.Get loop
+                      for Other_Binding of Impulse.Bindings.Get loop
                         if Other_Binding.Combo = Binding.Combo then
                           case Other_Binding.Kind is
                             when Text_Kind                                                                 => if Other_Binding.Text = NULL_STRING_2_UNBOUNDED then return; end if;
@@ -200,24 +199,24 @@ package body Neo.System.Input is
                       end loop;
                     end if;
                     Impulse.Trip(Binding);
-                    if Binding.Kind = Text_Kind then Binding.Text := NULL_STRING_2_UNBOUNDED; Impulse.Bindings.all.Replace(Current_Binding, Binding); end if;
-                  end Handle_Common;
+                    if Binding.Kind = Text_Kind then Binding.Text := NULL_STRING_2_UNBOUNDED; Impulse.Bindings.Replace(Current_Binding, Binding); end if;
+                  end Combine;
                 begin
                   Player := Players.Element(Binding.Player);
                   case Binding.Kind is
-                    when Playstation_Trigger_Kind => if Player.Playstation_Triggers(Binding.Trigger)                /= Binding.Position         then Binding.Position := Player.Playstation_Triggers(Binding.Trigger);     Handle_Common; end if;
-                    when Playstation_Stick_Kind   => if Player.Playstation_Sticks(Binding.Stick)                    /= Binding.Axis             then Binding.Axis     := Player.Playstation_Sticks(Binding.Stick);         Handle_Common; end if;
-                    when Playstation_Key_Kind     => if Player.Playstation_Keys(Binding.Playstation_Key).Is_Pressed /= Binding.State.Is_Pressed then Binding.State    := Player.Playstation_Keys(Binding.Playstation_Key); Handle_Common; end if;
-                    when Keyboard_Key_Kind        => if Player.Keyboard_Keys(Binding.Keyboard_Key).Is_Pressed       /= Binding.State.Is_Pressed then Binding.State    := Player.Keyboard_Keys(Binding.Keyboard_Key);       Handle_Common; end if;
-                    when Xbox_Trigger_Kind        => if Player.Xbox_Triggers(Binding.Trigger)                       /= Binding.Position         then Binding.Position := Player.Xbox_Triggers(Binding.Trigger);            Handle_Common; end if;
-                    when Xbox_Stick_Kind          => if Player.Xbox_Sticks(Binding.Stick)                           /= Binding.Axis             then Binding.Axis     := Player.Xbox_Sticks(Binding.Stick);                Handle_Common; end if;
-                    when Xbox_Key_Kind            => if Player.Xbox_Keys(Binding.Xbox_Key).Is_Pressed               /= Binding.State.Is_Pressed then Binding.State    := Player.Xbox_Keys(Binding.Xbox_Key);               Handle_Common; end if;
-                    when Mouse_Key_Kind           => if Player.Mouse_Keys(Binding.Mouse_Key).Is_Pressed             /= Binding.State.Is_Pressed then Binding.State    := Player.Mouse_Keys(Binding.Mouse_Key);             Handle_Common; end if;
-                    when Mouse_Cursor_Kind        => if Player.Mouse_Cursor                                         /= Binding.Location         then Binding.Location := Player.Mouse_Cursor;                              Handle_Common; end if;
-                    when Text_Kind                => if Player.Text                                                 /= Binding.Text             then Binding.Text     := Player.Text;                                      Handle_Common; end if;
+                    when Playstation_Trigger_Kind => if Player.Playstation_Triggers(Binding.Trigger)                /= Binding.Position         then Binding.Position := Player.Playstation_Triggers(Binding.Trigger);     Combine; end if;
+                    when Playstation_Stick_Kind   => if Player.Playstation_Sticks(Binding.Stick)                    /= Binding.Axis             then Binding.Axis     := Player.Playstation_Sticks(Binding.Stick);         Combine; end if;
+                    when Playstation_Key_Kind     => if Player.Playstation_Keys(Binding.Playstation_Key).Is_Pressed /= Binding.State.Is_Pressed then Binding.State    := Player.Playstation_Keys(Binding.Playstation_Key); Combine; end if;
+                    when Keyboard_Key_Kind        => if Player.Keyboard_Keys(Binding.Keyboard_Key).Is_Pressed       /= Binding.State.Is_Pressed then Binding.State    := Player.Keyboard_Keys(Binding.Keyboard_Key);       Combine; end if;
+                    when Xbox_Trigger_Kind        => if Player.Xbox_Triggers(Binding.Trigger)                       /= Binding.Position         then Binding.Position := Player.Xbox_Triggers(Binding.Trigger);            Combine; end if;
+                    when Xbox_Stick_Kind          => if Player.Xbox_Sticks(Binding.Stick)                           /= Binding.Axis             then Binding.Axis     := Player.Xbox_Sticks(Binding.Stick);                Combine; end if;
+                    when Xbox_Key_Kind            => if Player.Xbox_Keys(Binding.Xbox_Key).Is_Pressed               /= Binding.State.Is_Pressed then Binding.State    := Player.Xbox_Keys(Binding.Xbox_Key);               Combine; end if;
+                    when Mouse_Key_Kind           => if Player.Mouse_Keys(Binding.Mouse_Key).Is_Pressed             /= Binding.State.Is_Pressed then Binding.State    := Player.Mouse_Keys(Binding.Mouse_Key);             Combine; end if;
+                    when Mouse_Cursor_Kind        => if Player.Mouse_Cursor                                         /= Binding.Location         then Binding.Location := Player.Mouse_Cursor;                              Combine; end if;
+                    when Text_Kind                => if Player.Text                                                 /= Binding.Text             then Binding.Text     := Player.Text;                                      Combine; end if;
                   end case;
                 end;
-                Impulse.Bindings.all.Next(Current_Binding);
+                Impulse.Bindings.Next(Current_Binding);
               end loop;
             end;
             Impulses.Next(Current_Impulse);

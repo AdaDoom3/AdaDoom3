@@ -14,6 +14,7 @@
 -- GLfloat       Float_4_Real_C
 -- GLclampd      Float_8_Real_C
 -- GLhandleARB   Integer_Address
+with Neo.System; use Neo.System;
 package Neo.OpenGL is
   GL_VERSION_1_1                         : constant Integer_4_Unsigned_C := 16#0000_0001#;
   GL_VERSION_1_2                         : constant Integer_4_Unsigned_C := 16#0000_0001#;
@@ -395,6 +396,8 @@ package Neo.OpenGL is
   GL_ALPHA_BIAS                          : constant Integer_4_Unsigned_C := 16#0D1D#;
   GL_DEPTH_SCALE                         : constant Integer_4_Unsigned_C := 16#0D1E#;
   GL_DEPTH_BIAS                          : constant Integer_4_Unsigned_C := 16#0D1F#;
+  GL_DECR_WRAP                           : constant Integer_4_Unsigned_C := 16#8508#;
+  GL_INCR_WRAP                           : constant Integer_4_Unsigned_C := 16#8507#;
   GL_PIXEL_MAP_S_TO_S_SIZE               : constant Integer_4_Unsigned_C := 16#0CB1#;
   GL_PIXEL_MAP_I_TO_I_SIZE               : constant Integer_4_Unsigned_C := 16#0CB0#;
   GL_PIXEL_MAP_I_TO_R_SIZE               : constant Integer_4_Unsigned_C := 16#0CB2#;
@@ -965,18 +968,18 @@ package Neo.OpenGL is
     Name       : in Integer_4_Unsigned_C;                    -- GLenum pname
     Parameters : in Access_Integer_4_Unsigned_C);            -- GLuint *params
     pragma Convention(Stdcall, Access_Get_Query_Object_Unsigned);
-  type Access_Stencil_Operation is access procedure( -- glStencilOpSeparate
+  type Access_Stencil_Operation_Separate is access procedure( -- glStencilOpSeparate
     Face         : in Integer_4_Unsigned_C;          -- GLenum face
     Stencil_Fail : in Integer_4_Unsigned_C;          -- GLenum sfail
     Depth_Fail   : in Integer_4_Unsigned_C;          -- GLenum dpfail
     Depth_Pass   : in Integer_4_Unsigned_C);         -- GLenum dppass
-    pragma Convention(Stdcall, Access_Stencil_Operation);
-  type Access_Stencil_Function is access procedure( -- glStencilFuncSeparate
+    pragma Convention(Stdcall, Access_Stencil_Operation_Separate);
+  type Access_Stencil_Function_Separate is access procedure( -- glStencilFuncSeparate
     Front_Function : in Integer_4_Unsigned_C;       -- GLenum frontfunc
     Back_Function  : in Integer_4_Unsigned_C;       -- GLenum backfunc
     Reference      : in Integer_4_Signed_C;         -- GLint ref
     Mask           : in Integer_4_Unsigned_C);      -- GLuint mask
-    pragma Convention(Stdcall, Access_Stencil_Function);
+    pragma Convention(Stdcall, Access_Stencil_Function_Separate);
   type Access_Get_Uniform_From_Index is access function( -- glGetUniformBlockIndex
     Program            : in Integer_4_Unsigned_C;        -- GLuint program
     Uniform_Block_Name : in Access_Integer_1_Unsigned_C) -- const GLchar * uniformBlockName
@@ -1188,8 +1191,8 @@ package Neo.OpenGL is
   Get_Query                      : Access_Get_Query                      := null;
   Get_Query_Object               : Access_Get_Query_Object               := null;
   Get_Query_Object_Unsigned      : Access_Get_Query_Object_Unsigned      := null;
-  Stencil_Operation              : Access_Stencil_Operation              := null;
-  Stencil_Function               : Access_Stencil_Function               := null;
+  Stencil_Operation_Separate     : Access_Stencil_Operation_Separate     := null;
+  Stencil_Function_Separate      : Access_Stencil_Function_Separate      := null;
   Get_Uniform_From_Index         : Access_Get_Uniform_From_Index         := null;
   Uniform_Block_Binding          : Access_Uniform_Block_Binding          := null;
   Fence_Sync                     : Access_Fence_Sync                     := null;
@@ -1256,8 +1259,8 @@ package Neo.OpenGL is
   function To_Unchecked_Access_Get_Query                      is new Ada.Unchecked_Conversion(Address, Access_Get_Query);
   function To_Unchecked_Access_Get_Query_Object               is new Ada.Unchecked_Conversion(Address, Access_Get_Query_Object);
   function To_Unchecked_Access_Get_Query_Object_Unsigned      is new Ada.Unchecked_Conversion(Address, Access_Get_Query_Object_Unsigned);
-  function To_Unchecked_Access_Stencil_Operation              is new Ada.Unchecked_Conversion(Address, Access_Stencil_Operation);
-  function To_Unchecked_Access_Stencil_Function               is new Ada.Unchecked_Conversion(Address, Access_Stencil_Function);
+  function To_Unchecked_Access_Stencil_Operation_Separate     is new Ada.Unchecked_Conversion(Address, Access_Stencil_Operation_Separate);
+  function To_Unchecked_Access_Stencil_Function_Separate      is new Ada.Unchecked_Conversion(Address, Access_Stencil_Function_Separate);
   function To_Unchecked_Access_Get_Uniform_From_Index         is new Ada.Unchecked_Conversion(Address, Access_Get_Uniform_From_Index);
   function To_Unchecked_Access_Uniform_Block_Binding          is new Ada.Unchecked_Conversion(Address, Access_Uniform_Block_Binding);
   function To_Unchecked_Access_Fence_Sync                     is new Ada.Unchecked_Conversion(Address, Access_Fence_Sync);
@@ -1979,6 +1982,10 @@ package Neo.OpenGL is
   --   Y_Factor : in Float_4_Real_C);
   -- procedure Point_Size(
   --   Size : in Float_4_Real_C);
+  procedure Polygon_Offset( -- glPolygonOffset
+    Factor : in Float_4_Real_C; -- GLfloat factor
+    Units  : in Float_4_Real_C); -- GLfloat units
+    pragma Import(Stdcall, Polygon_Offset, "glPolygonOffset");
   procedure Polygon_Mode(
     Face : in Integer_4_Unsigned_C;
     Mode : in Integer_4_Unsigned_C);
@@ -2148,10 +2155,11 @@ package Neo.OpenGL is
   --   Mask      : in Integer_4_Unsigned_C);
   -- procedure Stencil_Mask(
   --   Mask : in Integer_4_Unsigned_C);
-  -- procedure Stencil_Operation(
-  --   Fail   : in Integer_4_Unsigned_C;
-  --   Z_Fail : in Integer_4_Unsigned_C;
-  --   Z_Pass : in Integer_4_Unsigned_C);
+  procedure Stencil_Operation(
+    Fail   : in Integer_4_Unsigned_C;
+    Z_Fail : in Integer_4_Unsigned_C;
+    Z_Pass : in Integer_4_Unsigned_C);
+    pragma Import(Stdcall, Stencil_Operation, "glStencilOp");
   -- procedure Texture_Coordinate(
   --   S : in Float_8_Real_C);
   -- procedure Texture_Coordinate(
@@ -2396,9 +2404,10 @@ package Neo.OpenGL is
   --   W : in Integer_2_Signed_C);
   -- procedure Vertex(
   --   V : in Access_Constant_Integer_2_Signed_C);
-  -- procedure Viewport(
-  --   X      : in Integer_4_Signed_C;
-  --   Y      : in Integer_4_Signed_C;
-  --   Width  : in Integer_4_Signed_C;
-  --   Height : in Integer_4_Signed_C);
+  procedure Viewport(
+    X      : in Integer_4_Signed_C;
+    Y      : in Integer_4_Signed_C;
+    Width  : in Integer_4_Signed_C;
+    Height : in Integer_4_Signed_C);
+    pragma Import(Stdcall, Viewport, "glViewport");
 end Neo.OpenGL;

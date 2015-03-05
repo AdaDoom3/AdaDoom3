@@ -1,12 +1,86 @@
+--                                                                                                                         
+--                                                                     sd+  +mNMm/                                                                         
+--                                                         +ys/o`-:sy:-NMNo hNNMMy//     -`                                                                
+--                                                     ````dMysmmMMMMMNhmMMymNNMMMMo  -:+Nh.`                                                              
+--                                           `.::::osshmmmmMMNMdMMMNNMMMNMMMMMMMMNN/ :NMMMMNh-                                                             
+--                                      `.-ssdyhNNNNNMMMMMMMMMMMMNm+/++/.sNNMMMMMNMNydMMMMm+.`                                                             
+--                                     //o//+hs://////++hdNNMMMMM:`   .  `.-yNNhNMMMMMMMMMh  -- .                                                          
+--                                 .ossdyho+++ohhmMMNmmmss/-+ys++`    ` -    .. sMMMMMMMMMs   / `                                                          
+--                               `oNm+-:         `-+ohMMMMMNdo     ::    -      `sNMNmMmMMm/  `                                                            
+--                              .hMN+              -.o/++ymMMN.     -` ```-/      `:NMMyNMMMNho-                                                           
+--                             .mNh`                 `:mdsossN+        -  ``   +.   +MMNMMMMMMMM/                                                          
+--                            .yM:                     :hNMMNm   `.  .:        `   .+MMMMMd`dMMMy                                                          
+--                           .dN/                        /MMMm   `/`                /MMMMMh/NdMMm/                                                         
+--               -/s+mNmso. .mM/                          yMMMdo   .  -+     ::    +MMMMMMMMNydMdM/                                                        
+--             -hN++ dMMMMNydN/                           `/MMMNs: `   o-  `` `    yMMMMMMMMMdsMmMN-                                                       
+--            -mMM+:hMmNMMMMMs                              /NMMMNNNNNNydsss/.   :sMNmNhsMMMMdsddMM:                                                       
+--            NMMMMs:.oNMMMMM/o//+y-          `.            .yMMMMMMMNy:`/yMMNyssMMMMMN+mMMMMMd/hMh+                                                       
+--           sMMMMy./yMMMMMMy`` .://+/      `ydys:o:-      -NMMMMMMNh++hmNNMMMMMMMh+NMMMMMMMM+/.d/`                                                        
+--           yMMMMmmNd+mMMMMd` `:o:/.`       `-ds:``      -mMMMMMdh-y:`-mMMMMMMMMMMdNmdMdMMMMo` my.                                                        
+--           yMMMMMMm- -mNMMm`/s-/oNd-         :+:-:      sMMMMMmho` +mhMMMMN+ymMMMMN-`yMMMMMM`.dMs                                                        
+--           yMMMMMMM+/ `:hN+  `.`...        :` .m/ms/   +MMMMmm+````dMMMm++- ``smNhNNydMMMMNNo./My                                                        
+--           :MMMMMMMMNs``ym-                    ./hs/ `+NMMMMM/..ydmNMMM/   `` .`+sNMMMMMMMMMy`.+:                                                        
+--            smNMMMMMMd:-dd                           sMMMMMd/  .mMMMMMM  ..   ` .MMMMMMMMNMMM:                                                           
+--             .:hmMMMh+odMd                          :NMMMNms `soMMMMMMM+``.     oMNMMMMMMmNd+.                                                           
+--                :NMMs`dMMm`                        `mMMMd::mh/MmMMMMMMMMh.-``..oNMmMMMMMMMh                                                              
+--                 -mMNyNMMM+    `--..               :MMMM-``dMMMMMMMMMMMMMNdddmmMMMMMMMMMMMm.                                                             
+--                  `yMMMMMMs     :Nh:              .mMMMMddhMMMMMMMMMMMMMMMMMMMMMMMMMMMNMMmy`                                                             
+--                    /dNMMMM+    `--               /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm/hd+`                                                               
+--                      -odNMN/   o/-...`           dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh//ho`                                                                
+--                         :mMm/  .+d:::s/          hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy++.                                                                   
+--                          .yMd`  `:o+            :hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMdo:                                                                      
+--                         .ysmM+                `-yhhMMMMMMMMMMMMMMMMMMMMMMMMMMMd`                                                                        
+--                     .`  +NMhhm`              -sNMMMMMMMMMMMMdMMMMMMMMMMMNMMMMMs       A  D  A  D  O  O  M  III                                                  
+--                    /MNd/ .N++Ms`            `yMMMMMMMhNMMMMMMMMMMMMMMMMMdNMMMN`                                                                         
+--                 ..-hNNs-.dM+.hos/.``    `./+yyMmmMMNNy.oodMMMMMMMMMMMMMMMMMMMN`                                                                         
+--                `dMd .` `sMso/hyyyMmmmmmhsshNNMM/+MMmyNymmMMMMMMMMNMMMMMMMMMMMMy                                                                         
+--                -o/.  /::-y`/dN- .h/mdMMmdoydNMMmhmMmmMMdMMMMMMMMyNmoMMMMMMMMMMMs                                                                        
+--                 /Ny-sy.``d-`so:o  `dMNsdNd:-hMMMMhMy:MMMMMMMMd:oyMNdMMMMMMMMMMMN/                                                                       
+--                 /.hh` hdmNs: +dMs mMMN+-MMMNNMMNo-sNNMMMMMMdMhdMMMdyMMMMMMMMMMMMMo`                                                                     
+--                   /.`yd:-- :/smhmhMMMho/MMMMNmMMMyMMMMMNssmohomyoydMyMMMMMMMdMMNhMh-                                                                    
+--                      /. `y:s`+dhMMosMMMMMMMMd/yMMMMMMMm.`hd//dMms-NmmMNNMMMMMMMMdhhmo                                                                   
+--                         oMd. `d+/NNhMMMmMMMMMMMMMMMMMm/+++dosmmh-hMddMMMMMMMMMMMmhmMMh`                                                                 
+--                        +h/hh+yd-/NmMmNMNMMMMMMMMMmdNds+.ymymMdo` `hhNMNNMMMMMMdMNNNNmMm`                                                                
+--                       .dmhh+-`NddMhyMNmMmMmNMMMNNMN+yMh`dy`+o`.  :yNMmmhMMMMMMMmMMMMMMMh-                                                               
+--                      -:+Mo-o- MMyoyNMNdmmMMMMMMMMMm/Md/ s/`      `-smNMNMMMMMMMNMMMMMMMMy.                                                              
+--                      -+/hdsdmsoo./ohMMh/dMMMMMMMms-:y.` ``ys`    .:ohNddMMMMMMMMMMMMMMMMMd.                                                             
+--                     `sMNNmd-.shy+hN++yNNMMMMMMMN/  `+     ..     :+-:NhNMMMMMMmNMMMMMMmMMMo                                                             
+--                    -yo:/s+:-.hmshNhmNMMMMMMMMd/-  //o               sMmsMMMMMMMMNmMMMMNMMMN/-                                                           
+--                    +dMh+h/-dohmhNNMMMMMMMNso----  `              .:+ymMyMMMMMMMM+`yMhyMMMMMMNds.                                                        
+--                 ` ` .s+ysm+hhoMMMMNmNMMd--   ..   :-.      `.  .:+ys+++ydMMMMMMdm.:yM-dMMMMdNmMh-                                                       
+--                :: -sh:oho/h/mMMMMMysdm+`        `/soo      -s     `/` `ohdNMMMMNm+ -M-:ddMMmhmhmo-                                                      
+--               /y.`omooddNh+:yMMhoMsy.` `        .`                    `smdmMMdMMMy -Mm-:hMMmmMhyo-`                                                     
+--              .hd-soyNMmhNhhNMMs-sy+`   /    `             `/      ./.  yymNMMMMMMm..yMm``yMMhNh:..-                                                     
+--             `s./yMMNMm::NMMNmmdNy          .h-..   .+:     ```   /my:. +MMmMMMMMMdd`+MMd:`hm-oh.s.`.`                                                   
+--            .ddyMNmyyNMMdNNMydMh+.          :MNmN:  `:.     :++`   -   ./NddMMMMMMMm- mdM+ .s: -:                                                        
+--           `oNmMM+  oNsmNNhMMsMNs           hhsso`   .`     /NNy.    `sNM+hyNMMMMMMMm-/hmh.``:/s/`o``-                                                   
+--         `+hMNmh+` .mN:sd++NMMNhs`:   -:`        -  -smo    .+.      `hdMMosMMMmhMMMMo`:mdM/  +/+   .                                                    
+--        .symMddd  -mMNd/-/hNho` .//     - ` ./   :o :o::              .MddsoNMMmNhNMMd:--mm-  yys                                                        
+--      :+mo/::` `oodNmNo.hMs       ` ```  .- .yhh`/s-+:       /-:s/.    MMMdNMMMmNmNMMm/o.+/.  :`.                                                        
+--    +hmohh-`-+ymsddhyMhNM:  -//`:oNhohm    ``/s+             o/+d.    :MMNMmMdMMMMMMN+` h-.+-                                                            
+--   +NNsMm++yoos-sm/moNsyhs  ``yNmooss-  `-hdo:`           `: `::.     yMMmddMMdMMMoNm-o   :-                                                             
+--  /d:../      -mh+sNs. .// .:o::oy:  `.oy/yms-do -` `    `y:-s/` `/` :hhNMNNhmoMMMdymhh   .                                                              
+-- -h:`          -hodMs :oo/so-/::.-.+--s/++d-o-.y:+Nhd/    ``/m. /`/`   hdyhmmMMmNy+hdo-                                                                  
+-- .`              `sNh.oym/-.-:so/ -:.    .ds-yh+  /mNo   :h://-`-o/    ydodhyMdMN/-ho:                                                                   
+--                   -. oN+.ss/o:   -s.--   ``ooyho. .-     .:/-.- -s ` +s/+dhymds+-                                                                       
+--                     `oo/: `./.`+   -    .``-..`` :.    .oos++`:  +so/:+/+mhhMd :.                                                                       
+--                      .- .   ./.-      ./- :ss-`  ` ..   ``:..os. /oo-hh+mmmmMN .                                                                        
+--                                          `+.      :+: . . `-/`    ..`:` .+shNs                                                                          
+--                                    .      ` .-   `/` .. .+ .` `. -:      /y--                                                                           
+--                                    `- `     .  - .s.  .-:/  -     -`    -`                                                                              
+--                                      `os`   :`   ```  `./     .   ``                                                                                    
+--                                       `-`   :`         ``     `                                                                                         
+--                                             `   --                                                                                                      
+--     
 with Ada.Text_IO;
 with Ada.Wide_Text_IO;
+with Ada.Characters.Latin_1;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
+with Ada.Containers.Multiway_Trees;
+with Ada.Containers.Indefinite_Vectors;
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Containers.Indefinite_Ordered_Maps;
-with Ada.Containers.Indefinite_Vectors;
-with Ada.Containers.Vectors;
-with Ada.Characters.Latin_1; 
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
 with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
 with Ada.Strings.Wide_Fixed;     use Ada.Strings.Wide_Fixed;
@@ -21,15 +95,17 @@ with Interfaces.C;               use Interfaces.C;
 with Interfaces;                 use Interfaces;
 with System;                     use System;
 package Neo is
+  package ASCII renames Ada.Characters.Latin_1;
   pragma Suppress(Elaboration_Check);
   Title_Is_Too_Long                   : Exception;
   Unimplemented_Feature               : Exception;
   Timer_Started_Without_Being_Stopped : Exception;
   Timer_Stopped_Without_Being_Started : Exception;
-  subtype Character_1_C is Interfaces.C.Char;
-  subtype Character_1   is Character;
-  subtype Character_2_C is Interfaces.C.WChar_T;
-  subtype Character_2   is Wide_Character;
+  subtype Stream_Element is Ada.Streams.Stream_Element;
+  subtype Character_1_C  is Interfaces.C.Char;
+  subtype Character_1    is Character;
+  subtype Character_2_C  is Interfaces.C.WChar_T;
+  subtype Character_2    is Wide_Character;
   subtype String_1_C         is Interfaces.C.Char_Array;
   subtype String_1           is String;
   subtype String_1_Unbounded is Ada.Strings.Unbounded.Unbounded_String;
@@ -98,6 +174,7 @@ package Neo is
   type Access_Procedure              is access procedure;
   type Access_Function_Localize      is access function(Item : in String_2) return String_2;
   type Access_Procedure_Put          is access procedure(Item : in String_2);
+  type Array_Stream_Element       is array(Integer_4_Positive range <>) of Stream_Element;
   type Array_Boolean              is array(Integer_4_Positive range <>) of Boolean;
   type Array_Duration             is array(Integer_4_Positive range <>) of Duration;
   type Array_Address              is array(Integer_4_Positive range <>) of Address;
@@ -147,6 +224,7 @@ package Neo is
   type Array_Float_4_Degree       is array(Integer_4_Positive range <>) of Float_4_Degree;
   type Access_Array_Address              is access all Array_Address;
   type Access_Array_Access_String_2      is access all Array_Access_String_2;
+  type Access_Array_String_2_Unbounded   is access all Array_String_2_Unbounded;
   type Access_Array_Character_1_C        is access all Array_Character_1_C;
   type Access_Array_Character_1          is access all Array_Character_1;
   type Access_Array_Character_2_C        is access all Array_Character_2_C;
@@ -200,9 +278,97 @@ package Neo is
     private
       Status : Boolean := False;
     end Protected_Status;
-  package Vector_String_2_Unbounded is new Ada.Containers.Vectors(Integer_4_Positive, String_2_Unbounded);
-  package Vector_Address            is new Ada.Containers.Vectors(Integer_4_Positive, Address);
-  procedure Set_Failure;
+  generic
+    type Type_To_Tree is private;
+  package Trees is
+      package Unprotected is new Ada.Containers.Multiway_Trees(Type_To_Tree, "=");
+      subtype Cursor is Unprotected.Cursor;
+      NO_ELEMENT : Cursor := Unprotected.NO_ELEMENT;
+      protected type Protected_Tree is
+        private
+          Current_Data : Unprotected.Tree;
+        end Protected_Tree;
+    end Trees;
+  generic
+    type Type_To_Vector is private;
+  package Vectors is
+      package Unprotected is new Ada.Containers.Indefinite_Vectors(Integer_4_Positive, Type_To_Vector);
+      subtype Cursor is Unprotected.Cursor;
+      NO_ELEMENT : Cursor := Unprotected.NO_ELEMENT;
+      protected type Protected_Vector is
+          procedure Clear;
+          procedure Set        (Data : in Unprotected.Vector);
+          procedure Next       (Position : in out Cursor);
+          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Vector);
+          procedure Append                                     (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+          procedure Prepend                                    (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+          procedure Insert     (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
+          procedure Delete     (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1);
+          function Element     (Index  : in Integer_4_Positive) return Type_To_Vector;
+          function Element     (Position : in Cursor)           return Type_To_Vector;
+          function Has_Element (Position : in Cursor)           return Boolean;
+          function First                                        return Cursor;
+          function Length                                       return Integer_4_Positive;
+          function Get                                          return Unprotected.Vector;
+        private
+          Current_Data : Unprotected.Vector;
+        end Protected_Vector;
+    end Vectors;
+  generic
+    type Type_To_Map is private;
+  package Hashed_Maps is
+      package Unprotected is new Ada.Containers.Indefinite_Hashed_Maps(String_2_Unbounded, Type_To_Map, Wide_Hash, "="); 
+      subtype Cursor is Unprotected.Cursor;
+      NO_ELEMENT : Cursor := Unprotected.NO_ELEMENT;
+      protected type Protected_Map is
+          procedure Clear;
+          procedure Set        (Data : in Unprotected.Map);
+          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
+          procedure Next       (Position : in out Cursor);
+          procedure Delete     (Position : in out Cursor);
+          procedure Delete     (Key : in String_2);
+          procedure Insert     (Key : in String_2; New_Item : in Type_To_Map);
+          procedure Replace    (Key : in String_2; New_Item : in Type_To_Map);
+          function Element     (Key : in String_2)    return Type_To_Map;
+          function Element     (Position : in Cursor) return Type_To_Map;
+          function Has_Element (Key : in String_2)    return Boolean;
+          function Has_Element (Position : in Cursor) return Boolean;
+          function Key         (Position : Cursor)    return String_2;
+          function First                              return Cursor;
+          function Get                                return Unprotected.Map;
+        private
+          Current_Data : Unprotected.Map;
+        end Protected_Map;
+    end Hashed_Maps; 
+  generic
+    type Type_To_Key is (<>);
+    type Type_To_Map is private;
+  package Ordered_Maps is
+      package Unprotected is new Ada.Containers.Indefinite_Ordered_Maps(Type_To_Key, Type_To_Map, "<", "=");
+      subtype Cursor is Unprotected.Cursor;
+      NO_ELEMENT : Cursor := Unprotected.NO_ELEMENT;
+      protected type Protected_Map is
+          procedure Clear;
+          procedure Set        (Data : in Unprotected.Map);
+          procedure Next       (Position : in out Cursor);
+          procedure Delete     (Position : in out Cursor);
+          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
+          procedure Delete     (Key : in Type_To_Key);
+          procedure Insert     (Key : in Type_To_Key; New_Item : in Type_To_Map);
+          procedure Replace    (Key : in Type_To_Key; New_Item : in Type_To_Map);
+          function Element     (Key : in Type_To_Key) return Type_To_Map;
+          function Element     (Position : in Cursor) return Type_To_Map;
+          function Has_Element (Key : in Type_To_Key) return Boolean;
+          function Has_Element (Position : in Cursor) return Boolean;
+          function Key         (Position : Cursor)    return Type_To_Key;
+          function First                              return Cursor;
+          function Get                                return Unprotected.Map;
+        private
+          Current_Data : Unprotected.Map;
+        end Protected_Map;
+    end Ordered_Maps;
+  procedure Set_Do_Fail;
+  function Do_Fail                                            return Boolean;
   function Get_Duration         (Timer : in     Record_Timer) return Duration;
   procedure Start               (Timer : in out Record_Timer);
   procedure Stop                (Timer : in out Record_Timer);
@@ -221,16 +387,14 @@ package Neo is
   procedure Set_Line_Size       (Value : in Integer_4_Positive);
   procedure Set_Put             (Value : in Access_Procedure_Put);
   procedure Set_Number_Of_Tasks (Value : in Integer_4_Positive);
-  function Split                (Item  : in String_2; On : in String_2 := " ") return Vector_String_2_Unbounded.Vector;
+  function Split                (Item  : in String_2; On : in String_2 := " ") return Array_String_2_Unbounded;
   function Localize             (Item  : in String_2) return String_2;
   function Get_Extension        (Path  : in String_2) return String_2;
-  function Length (Source : Unbounded_Wide_String) return Natural renames Ada.Strings.Wide_Unbounded.Length;
   function Get_Line_Size                              return Integer_4_Positive;
   function Get_Number_Of_Tasks                        return Integer_4_Positive;
   function Get_Number_Of_Lines                        return Integer_8_Natural;
   function Get_Log                                    return String_2;
   function Get_Input_Entry                            return String_2;
-  function Did_Fail                                   return Boolean;
   function Do_Put_Debug                               return Boolean;
   function To_Access_Constant_Character_1_C (Item : in String_1)                      return Access_Constant_Character_1_C;
   function To_Access_Constant_Character_2_C (Item : in String_2)                      return Access_Constant_Character_2_C;
@@ -295,81 +459,6 @@ package Neo is
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Access_Constant_Character_1_C, Integer_Address);
   function To_Unchecked_Integer_Address               is new Ada.Unchecked_Conversion(Address,                       Integer_Address);
   function To_Unchecked_Float_4_Real                  is new Ada.Unchecked_Conversion(Float_4_Real,                  Integer_4_Unsigned);
-  generic
-    type Type_To_Vector is private;
-  package Vectors is
-      package Unsafe is new Ada.Containers.Indefinite_Vectors(Integer_4_Positive, Type_To_Vector);
-      subtype Cursor is Unsafe.Cursor;
-      protected type Protected_Vector is
-          procedure Clear;
-          procedure Set        (Data : in Unsafe.Vector);
-          procedure Next       (Position : in out Cursor);
-          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Vector);
-          procedure Append                                     (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-          procedure Prepend                                    (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-          procedure Insert     (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1);
-          procedure Delete     (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1);
-          function Element     (Index  : in Integer_4_Positive) return Type_To_Vector;
-          function Element     (Position : in Cursor)           return Type_To_Vector;
-          function Has_Element (Position : in Cursor)           return Boolean;
-          function First                                        return Cursor;
-          function Length                                       return Integer_4_Positive;
-          function Get                                          return Unsafe.Vector;
-        private
-          Current_Data : Unsafe.Vector;
-        end Protected_Vector;
-    end Vectors;
-  generic
-    type Type_To_Map is private;
-  package Hashed_Maps is
-      package Unsafe is new Ada.Containers.Indefinite_Hashed_Maps(String_2_Unbounded, Type_To_Map, Wide_Hash, "="); use Unsafe;
-      subtype Cursor is Unsafe.Cursor;
-      protected type Protected_Map is
-          procedure Clear;
-          procedure Set        (Data : in Unsafe.Map);
-          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
-          procedure Next       (Position : in out Cursor);
-          procedure Delete     (Position : in out Cursor);
-          procedure Delete     (Key : in String_2);
-          procedure Insert     (Key : in String_2; New_Item : in Type_To_Map);
-          procedure Replace    (Key : in String_2; New_Item : in Type_To_Map);
-          function Element     (Key : in String_2)    return Type_To_Map;
-          function Element     (Position : in Cursor) return Type_To_Map;
-          function Has_Element (Key : in String_2)    return Boolean;
-          function Has_Element (Position : in Cursor) return Boolean;
-          function Key         (Position : Cursor)    return String_2;
-          function First                              return Cursor;
-          function Get                                return Unsafe.Map;
-        private
-          Current_Data : Map;
-        end Protected_Map;
-    end Hashed_Maps; 
-  generic
-    type Type_To_Key is (<>);
-    type Type_To_Map is private;
-  package Ordered_Maps is
-      package Unsafe is new Ada.Containers.Indefinite_Ordered_Maps(Type_To_Key, Type_To_Map, "<", "="); use Unsafe;
-      subtype Cursor is Unsafe.Cursor;
-      protected type Protected_Map is
-          procedure Clear;
-          procedure Set        (Data : in Unsafe.Map);
-          procedure Next       (Position : in out Cursor);
-          procedure Delete     (Position : in out Cursor);
-          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map);
-          procedure Delete     (Key : in Type_To_Key);
-          procedure Insert     (Key : in Type_To_Key; New_Item : in Type_To_Map);
-          procedure Replace    (Key : in Type_To_Key; New_Item : in Type_To_Map);
-          function Element     (Key : in Type_To_Key) return Type_To_Map;
-          function Element     (Position : in Cursor) return Type_To_Map;
-          function Has_Element (Key : in Type_To_Key) return Boolean;
-          function Has_Element (Position : in Cursor) return Boolean;
-          function Key         (Position : Cursor)    return Type_To_Key;
-          function First                              return Cursor;
-          function Get                                return Unsafe.Map;
-        private
-          Current_Data : Map;
-        end Protected_Map;
-    end Ordered_Maps; 
   PATH_LOGS               : constant String_2           := "Logs";
   PATH_SETTINGS           : constant String_2           := "Settings";
   PATH_ASSETS             : constant String_2           := "Assets";
@@ -383,16 +472,16 @@ package Neo is
   INITIAL_TIME            : constant Time               := Clock;
   CHARACTER_2_REPLACEMENT : constant Character_1        := '~';
   WORD_SIZE_IMAGE         : constant String_1           := Integer_4_Signed'image(WORD_SIZE)(Integer_4_Signed'image(WORD_SIZE)'first + 1..Integer_4_Signed'image(WORD_SIZE)'last);
-  END_LINE_1              : constant String_1           := Ada.Characters.Latin_1.CR & Ada.Characters.Latin_1.LF;
+  END_LINE_1              : constant String_1           := ASCII.CR & ASCII.LF;
   END_LINE_2              : constant String_2           := To_String_2(END_LINE_1);
-  TAB_1                   : constant String_1           := "" & Ada.Characters.Latin_1.HT;
+  TAB_1                   : constant String_1           := "" & ASCII.HT;
   TAB_2                   : constant String_2           := To_String_2(TAB_1);
   NULL_STRING_1           : constant String_1           := "";
   NULL_STRING_1_UNBOUNDED : constant String_1_Unbounded := NULL_UNBOUNDED_STRING;
   NULL_STRING_2           : constant String_2           := "";
   NULL_STRING_2_C         : constant String_2_C         := To_String_2_C(NULL_STRING_2);
   NULL_STRING_2_UNBOUNDED : constant String_2_Unbounded := NULL_UNBOUNDED_WIDE_STRING;
-  NULL_CHARACTER_1        : constant Character_1        := Ada.Characters.Latin_1.NUL;
+  NULL_CHARACTER_1        : constant Character_1        := ASCII.NUL;
   NULL_CHARACTER_1_C      : constant Character_1_C      := Interfaces.C.NUL;
   NULL_CHARACTER_2        : constant Character_2        := Character_2'val(Character_1'pos(NULL_CHARACTER_1));
   NULL_CHARACTER_2_C      : constant Character_2_C      := Character_2_C'val(Character_1_C'pos(NULL_CHARACTER_1_C));
@@ -455,9 +544,9 @@ private
   CALLBACK_TRACE_LIMIT              : constant Integer_4_Positive := 256;
   TESTING_SEPARATOR                 : constant Character_2        := Character_2'val(16#250F#);
   protected type Protected_Data is
-      procedure Set_Failure;
-      procedure Set_Input_Entry     (Value : in String_2);
+      procedure Set_Do_Fail;
       procedure Set_Do_Put_Debug    (Value : in Boolean);
+      procedure Set_Input_Entry     (Value : in String_2);
       procedure Set_Line_Size       (Value : in Integer_4_Positive);
       procedure Set_Number_Of_Tasks (Value : in Integer_4_Positive);
       procedure Set_Put             (Value : in Access_Procedure_Put);
@@ -469,8 +558,8 @@ private
       function Get_Line_Size                              return Integer_4_Positive;
       function Get_Number_Of_Tasks                        return Integer_4_Positive;
       function Get_Number_Of_Lines                        return Integer_8_Natural;
-      function Did_Fail                                   return Boolean;
       function Do_Put_Debug                               return Boolean;
+      function Do_Fail                                    return Boolean;
     private
       Current_Put             : Access_Procedure_Put     := null;--Ada.Wide_Text_IO.Put'access;
       Current_Localize        : Access_Function_Localize := null;
@@ -479,8 +568,8 @@ private
       Current_Line_Size       : Integer_4_Positive       := DEFAULT_LINE_SIZE;
       Current_Number_of_Tasks : Integer_4_Positive       := 1;
       Current_Number_Of_Lines : Integer_8_Natural        := 0;
-      Current_Failure         : Boolean                  := False;
       Current_Do_Put_Debug    : Boolean                  := False;
+      Current_Do_Fail         : Boolean                  := False;
     end Protected_Data;
   Data : Protected_Data;
 end Neo;

@@ -1,126 +1,210 @@
 package body Neo.File is
-    package body Handler is
-      procedure Save    (Path : in String_2; Item : in Type_To_Handle);
-      procedure Save    (Path : in String_2; Item : in Array_Type_To_Handle);
-      procedure Convert (Path : in String_2;             Format : in Discrete_Format);
-      function Convert  (Path : in String_2;             Format : in Discrete_Format) return Type_To_Handle;
-      function Convert  (Path : in String_2;             Format : in Discrete_Format) return Array_Type_To_Handle;
-      function Convert  (Item : in Type_To_Handle;       Format : in Discrete_Format) return Array_Stream_Element;
-      function Convert  (Item : in Type_To_Handle;       Format : in Discrete_Format) return Type_To_Handle;
-      function Convert  (Item : in Array_Type_To_Handle; Format : in Discrete_Format) return Array_Type_To_Handle;
-      function Load     (Item : in Stream_Element_Array)                              return Type_To_Handle;
-      function Load     (Item : in Stream_Element_Array)                              return Array_Type_To_Handle;
-      function Load     (Path : in String_2)                                          return Type_To_Handle;
-      function Load     (Path : in String_2)                                          return Array_Type_To_Handle;
-    end Handler;
-
-
-
-
-
-
-    
-    procedure Get_Possible_Formats(Path    : in String_2;  Formats : in Array_Record_Format) return Array_Integer_4_Signed is
-      type Vector_Enumerated_Format is new Ada.Containers.Vector;
-      Matching_Formats : Vector_Enumerated_Format;
-      Extension        : String_2       := Get_Extension(Path);
-      Header           : String_1(1..8) := (others => NULL_CHARACTER_1);
-      begin
-        for I in FORMATS'range loop
-          if FORMATS(I).Extensions /= null then
-            for J in FORMATS(I).Extensions'range loop
-              exit when To_String_2_Unbounded(FORMATS(I).Extensions(J)) = To_String_2_Unbounded(Extension);
+  procedure Save(Name : in String_2; Item : in Array_Stream_Element) is
+    begin
+      null;
+    end Save;
+  function Load(Name : in String_2) return Array_Stream_Element is
+    Junk : Stream_Element;
+    begin
+      return (Junk, Junk);
+    end Load;
+  function Get_Extension(Name : in String_2) return String_2 is
+    Extension_Text : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+    begin
+      for I in reverse Name'range loop
+        if Name(I) = '.' and I /= Name'length then return To_Lower(Name(I + 1..Name'last)); end if;
+      end loop;
+      raise Unknown;
+    end Get_Extension;
+  function Build_Path(Name : in String_2) return String_2 is
+    begin
+      return PATH_ASSETS & SPECIFICS.Separator & Get_Extension(Name) & SPECIFICS.Separator & Name;
+    end Build_Path;
+  package body Handler is
+      package body Format is
+          procedure Initialize(Item : in out Record_Controller) is
+            begin
+              if Formats.Has_Element(Kind) then raise Duplicate_Format; end if;
+              Formats.Insert(Kind, (Save, Load, To_String_2_Unbounded(To_Lower(Extensions))));
+            end Initialize;
+          procedure Finalize(Item : in out Record_Controller) is
+            begin
+              Formats.Delete(Kind);
+            end Finalize;
+        end Format;
+      procedure Save(Name : in String_2; Item : in Type_To_Handle) is
+        begin
+          Formats.Element(Match_Extension(Name)).Save(Build_Path(Name), Item);
+        end Save;
+      function Load(Name : in String_2) return Type_To_Handle is
+        begin
+          return Formats.Element(Match_Extension(Name)).Load(Build_Path(Name));
+        end Load;
+      function Match_Extension(Value : in String_2) return Enumerated_Format is
+        Current_Format : Ordered_Map_Record_Format.Cursor := Formats.First;
+        Format         : Record_Format                    := (others => <>);
+        begin
+          while Formats.Has_Element(Current_Format) loop
+            Format := Formats.Element(Current_Format);
+            for Extension of Split(To_String_2(Format.Extensions), ",") loop
+              if Extension = Get_Extension(Value) then return Formats.Key(Current_Format); end if;
             end loop;
-          end if;
-          if I = FORMATS'last then
-            Put_Debug_Line(Localize(WARN_ITEM_EXTENSION_NOT_KNOWN));
-          end if;
-        end loop;
-        if
-        String_1'read(image.stream, Signature);
-        for I in FORMATS'range loop
-          if FORMATS(I).Signatures = null then
-            Matching_Formats.Add_Back(I);
-          else
-            for J in FORMATS(I).Signatures'range loop
-              if To_String_2_Unbounded(FORMATS(I).Signatures(J)) = To_String_2_Unbounded(Signature) then
-                Matching_Formats.Add_Front(I);
+            Formats.Next(Current_Format);
+          end loop;
+          raise Unsupported;
+        end Match_Extension;
+    end Handler;
+  package body Parser is
+      procedure Skip_Set(Starting, Ending : in String_2) is Junk : String_2_Unbounded := Next_Set(Starting, Ending); begin null; end Skip_Set;
+      procedure Skip(Number_To_Skip : in Integer_4_Positive := 1) is
+        Junk : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        begin
+          for I in 1..Number_To_Skip loop Junk := Next;Put_Line(Junk); end loop;
+        end Skip;
+      function At_End return Boolean is
+        begin
+          return (if Row > Data.Last_Index then True else False);
+        end At_End;
+      procedure Assert(Text : in String_2) is
+        begin
+          Put_Line("Assert: " & Text & "  " & Slice(Data.Element(Row), Column, Length(Data.Element(Row))));
+          if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Text) /= Column then raise Unlexable; end if;
+          Column := Column + Text'length - 1;
+          Seek;
+        end Assert;
+      function Peek return String_2_Unbounded is
+        Previous_Column : Integer_4_Positive := Column;
+        Previous_Row    : Integer_4_Positive := Row;
+        Result          : String_2_Unbounded := Next;
+        begin
+          Row    := Previous_Row;
+          Column := Previous_Column;
+          return Result;
+        end Peek;
+      procedure Seek is
+        begin
+          Column := Column + 1;
+          while not At_End loop
+            loop
+              if Column > Length(Data.Element(Row)) or Data.Element(Row) = NULL_STRING_2_UNBOUNDED then
+                Column := 1;
+                Row    := Row + 1;
                 exit;
               end if;
+              if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Separator) /= Column then return;
+              --elsif not Do_Ignore_Multiple then
+              --  Column := Column + Separator'length;
+              --  return;
+              end if;
+              Column := Column + 1;
+            end loop;
+          end loop;
+        end Seek;
+      function Next return String_2_Unbounded is
+        Last   : Integer_4_Positive := Column + 1;
+        Result : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        begin
+          while Last <= Length(Data.Element(Row)) loop
+            if Index(Slice(Data.Element(Row), Column, Last), Separator) = Last then
+              --Last := Last - 1;
+              exit;
+            end if;
+            exit when Last = Length(Data.Element(Row));
+            Last := Last + 1;
+          end loop;
+          if Last = Column then return NULL_STRING_2_UNBOUNDED; end if;
+          Result := To_String_2_Unbounded(Slice(Data.Element(Row), Column, Last));
+          Column := Last;
+          Seek;
+          return Result;
+        end Next;
+      function Next_Number return Float_8_Real is
+        Entered_Digit : Boolean            := False;
+        Found_Decimal : Boolean            := False;
+        Found_Sign    : Boolean            := False;
+        Result        : Float_8_Real       := 0.0;
+        Last          : Integer_4_Positive := Column + 1;
+        begin
+          while Last <= Length(Data.Element(Row)) loop
+            if not Is_Digit(Element(Data.Element(Row), Last)) then
+              case Element(Data.Element(Row), Last) is
+                when '-' | '+' =>
+                  if Found_Sign or Entered_Digit then
+                    Last := Last - 1;
+                    exit;
+                  end if;
+                  Found_Sign := True;                    
+                when '.' =>
+                  if Found_Decimal then
+                    Last := Last - 1;
+                    exit;
+                  end if;
+                  Entered_Digit := True;
+                  Found_Decimal := True;
+                when others =>
+                  Last := Last - 1;
+                  exit;
+              end case;
+            else 
+              Entered_Digit := True;
+            end if;
+            exit when Last = Length(Data.Element(Row));
+            Last := Last + 1;
+          end loop;
+          if Last = Column then raise Unlexable; end if;
+          Result := Float_8_Real'wide_value(Slice(Data.Element(Row), Column, Last));
+          Column := Last;
+          Seek;
+          return Result;
+        end Next_Number;
+      function Next_Set(Starting, Ending : in String_2) return String_2_Unbounded is
+        Last   : Integer_4_Positive := Column + 1;
+        Result : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        begin
+          Assert(Starting);
+          while not At_End loop
+            loop
+              if Column > Length(Data.Element(Row)) then
+                Column := 1;
+                Row    := Row + 1;
+                Result := Result & END_LINE_2;
+                exit;
+              end if;
+              if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Ending) = Column then
+                Column := Column + Separator'length;
+                Seek;
+                return Result;
+              end if;
+              Result := Result & Element(Data.Element(Row), Column);
+              Column := Column + 1;
+            end loop;
+          end loop;
+          raise Unlexable;
+        end Next_Set;
+    begin
+      declare
+      Raw_Data : File_Type;
+      I        : Integer_4_Natural := 0;
+      begin
+        if Separator = NULL_STRING_2 then raise Unlexable; end if;
+        Open(Raw_Data, In_File, To_String_1(To_String_2(Neo.System.SPECIFICS.Path) & SPECIFICS.Separator & Path));
+        while not End_Of_File(Raw_Data) loop
+          Data.Append(To_String_2_Unbounded(Get_Line(Raw_Data)));
+          if Comment /= NULL_STRING_2 then
+            I := Index(Data.Last_Element, Comment);
+            if I = 1 then Data.Replace_Element(Data.Last_Index, NULL_STRING_2_UNBOUNDED); 
+            elsif I /= 0 then Data.Replace_Element(Data.Last_Index, To_String_2_Unbounded(Slice(Data.Last_Element, 1, I - 1))); end if;
+          end if;
+          if Do_Convert_Tabs then
+            loop
+              I := Index(Data.Last_Element, TAB_2);
+              exit when I = 0;
+              Data.Replace_Element(Data.Last_Index, Overwrite(Data.Last_Element, I, " "));
             end loop;
           end if;
         end loop;
-        if Size(Matching_Formats) = 0 then
-          raise Unknown_Format;
-        end if;
-      end Get_Possible_Formats;
-    ---------------
-    procedure Save(
-    ---------------
-      Path     : in String_2;
-      Graphics : in Array_Record_Graphic)
-      is
-      Format : Enumerated_Format := Get_Specifics(Graphics(1)).Specifics.Format;
-      begin
-        for I in Graphics'range loop
-          if Get_Specifics(Graphics(I)).Specifics.Format /= Format then
-            raise Attempted_To_Save_Under_Multiple_Formats;
-          end if;
-        end loop;
-        Save(Find(Format)(1), Path, Data);
-      end Save;
-    --------------
-    function Load(
-    --------------
-      Path        : in String_2;
-      Start_Frame : in Integer_4_Positive := 1)
-      return Array_Record_Graphic
-      is
-      function Get_Possible_Image_Formats
-        is new Get_Possible_Formats(Enumerated_Format, FORMATS);
-      Formats : Array_Format := Get_Possible_Image_Formats(Path);
-      begin
-        for I in Formats'range loop
-          ------------
-          Search_Tags:
-          ------------
-            declare
-            Tags : Array_Tag := Find(Formats(I));
-            begin
-              for J in Tags'range loop
-                if I = Formats'last and J = Tags'last then
-                  return Load(Tags(J), Path);
-                end if;
-                --------
-                Attempt:
-                --------
-                  begin
-                    return Load(Tags(J), Path);
-                  exception
-                    when others =>
-                      null;
-                  end Attempt;
-              end loop;
-            end Search_Tags;
-        end loop;
-      end Load;
-    function Find(
-      Format : in Enumerated_Format)
-      return Array_Tag
-      is
-      type Vector_Enumerated_Format
-        is new Ada.Containers.Vector();
-      Format  : Enumerated_Format := Get(Path);
-      Results : Vector_Enumerated_Format;
-      Formats : array(1..7) of Tag :=);
-      begin
-        for I in Formats'range loop
-          if Format = Get(Formats(I)) then
-            Results.Add(Get(Formats(I)));
-          elsif Size(Results) < 1 and then I = Formats'last then
-            raise Unsupported_Format;
-          end if;
-        end loop;
-        return To_Array(Results);
-      end Find;
-  end Neo.File;
+        Close(Raw_Data);
+        Seek;
+      end;
+    end Parser;
+end Neo.File;

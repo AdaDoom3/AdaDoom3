@@ -1,7 +1,7 @@
 package body Neo.System.Graphics.Window is
   package body Import is separate;
-  function Get_Borders    return Vector_Record_Border.Unsafe.Vector renames Import.Get_Borders;
-  function Get_Decoration return Record_Border                      renames Import.Get_Decoration;
+  function Get_Borders    return Vector_Record_Border.Unprotected.Vector renames Import.Get_Borders;
+  function Get_Decoration return Record_Border                           renames Import.Get_Decoration;
   procedure Preform_Exit_To_Menu(Binding : in Record_Binding) is
     begin
       if Binding.Kind = Mouse_Key_Kind and then Binding.State.Is_Pressed then

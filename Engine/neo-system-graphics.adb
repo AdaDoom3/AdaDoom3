@@ -5,6 +5,7 @@ package body Neo.System.Graphics is
   function Get_Specifics return Record_Specifics      is begin return Current_Specifics;               end Get_Specifics;
   procedure Finalize(Monitor : in Integer_4_Positive) is begin Drivers(Current_API).Finalize(Monitor); end Finalize;
   procedure Initialize(Monitor : in Integer_4_Positive) is
+    --Mesh : Record_Mesh := Load("player.md5mesh");
     begin
       Drivers(Current_API).Initialize(Monitor);
       if Monitor = 1 then

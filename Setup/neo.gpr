@@ -212,15 +212,15 @@ project Neo is
   ------------------
     package Compiler is
       case OPTIMIZE is
-        when "No"  => for Default_Switches("Ada")    use Switch_Compiler;
-        when "Yes" => for Default_Switches("Ada")    use Switch_Compiler & ("-O3"); 
+        when "No"  => for Default_Switches("Ada") use Switch_Compiler;
+        when "Yes" => for Default_Switches("Ada") use Switch_Compiler & ("-O3"); 
       end case;
-      for Switches("neo-command.adb")            use Switch_Compiler & ("-O2"); 
-      for Switches("neo-system-input.adb") use Switch_Compiler & ("-O3");
-      for Switches("neo-system-processor.adb")       use Switch_Compiler & ("-O1"); 
-      for Switches("neo-system-graphics-window.adb") use Switch_Compiler & ("-O3"); 
-      for Switches("neo-system-graphics.adb") use Switch_Compiler & ("-O1");  
-      for Switches("neo-system-graphics-opengl.adb") use Switch_Compiler & ("-O1"); 
+      for Switches("neo-command.adb")                       use Switch_Compiler & ("-O2"); 
+      for Switches("neo-system-input.adb")                  use Switch_Compiler & ("-O3");
+      for Switches("neo-system-processor.adb")              use Switch_Compiler & ("-O1"); 
+      for Switches("neo-system-graphics-window.adb")        use Switch_Compiler & ("-O3"); 
+      for Switches("neo-system-graphics.adb")               use Switch_Compiler & ("-O1");  
+      for Switches("neo-system-graphics-opengl.adb")        use Switch_Compiler & ("-O1"); 
       for Switches("neo-system-graphics-opengl-import.adb") use Switch_Compiler & ("-O1");
     end Compiler;
 end Neo;

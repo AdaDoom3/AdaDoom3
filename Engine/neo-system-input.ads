@@ -173,13 +173,13 @@ package Neo.System.Input is
       overriding procedure Finalize   (Controller : in out Record_Controller);
       Controller : Record_Controller;
     end Impulse;
-  procedure Perform_Unbind (Parameters : in Vector_String_2_Unbounded.Vector);
-  procedure Perform_Bind   (Parameters : in Vector_String_2_Unbounded.Vector);
+  procedure Perform_Unbind (Parameters : in Array_String_2_Unbounded);
+  procedure Perform_Bind   (Parameters : in Array_String_2_Unbounded);
   procedure Inject         (Binding : in Record_Binding); -- Injections affect all players, not task safe
   procedure Set_Vibration  (Player : in Integer_4_Positive := 1; Frequency_High, Frequency_Low : in Float_4_Percent);
   procedure Set_Device     (Identifier : in Integer_Address; Player : in Integer_4_Positive := 1);
   function Get_Device      (Identifier : in Integer_Address) return Record_Device;
-  function Get_Devices                                       return Ordered_Map_Record_Device.Unsafe.Map;
+  function Get_Devices                                       return Ordered_Map_Record_Device.Unprotected.Map;
   function Get_Cursor                                        return Record_Location;
   function Playstation     (Trigger : in Enumerated_Trigger;         Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   function Playstation     (Stick   : in Enumerated_Stick;           Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
@@ -190,8 +190,8 @@ package Neo.System.Input is
   function Xbox            (Key     : in Enumerated_Xbox_Key;        Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   function Mouse           (Key     : in Enumerated_Mouse_Key;       Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
   function Mouse                                                    (Combo : in Integer_4_Natural := NO_COMBO; Player : in Integer_4_Positive := 1) return Record_Binding;
-  package Bind   is new Action("bind",   Perform_Bind);
-  package Unbind is new Action("unbind", Perform_Unbind);
+  --package Bind   is new Action("bind",   Perform_Bind);
+  --package Unbind is new Action("unbind", Perform_Unbind);
 private
   COMMAND_UNBIND                  : constant String_2 := "unbind";
   COMMAND_BIND                    : constant String_2 := "bind";

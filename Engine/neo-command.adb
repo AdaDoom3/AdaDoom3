@@ -1,5 +1,6 @@
 package body Neo.Command is
-  package body Variable is use Hashed_Map_Record_Variable;
+  package body Variable is
+      use Hashed_Map_Record_Variable;
       protected body Protected_Type_To_Vary is
           function Get return Type_To_Vary is begin return Current; end Get;
           procedure Set(Value : in Type_To_Vary) is begin Current := Value; end Set;
@@ -71,15 +72,14 @@ package body Neo.Command is
       null;
     end Load;
   procedure Handle(Text : in String_2) is
-    Line    :          Vector_String_2_Unbounded.Vector := Split(Text);
-    COMMAND : constant String_2                         := To_String_2(Line.First_Element);
+    Line    :          Array_String_2_Unbounded := Split(Text);
+    COMMAND : constant String_2                 := To_String_2(Line(1));
     begin
-      Line.Delete_First;
-      if Actions.Has_Element(COMMAND) then Actions.Element(COMMAND).all(Line);
+      if Actions.Has_Element(COMMAND) then Actions.Element(COMMAND).all(Line(2..Line'length));
       elsif Variables.Has_Element(COMMAND) then
-        if Line.Length = 0 then
+        if Line'length = 1 then
           if Variables.Element(COMMAND).Get /= null then Put_Line(Variables.Element(COMMAND).Get.all); end if;
-        elsif Variables.Element(COMMAND).Set /= null then Variables.Element(COMMAND).Set.all(To_String_2(Line.First_Element)); end if;
+        elsif Variables.Element(COMMAND).Set /= null then Variables.Element(COMMAND).Set.all(To_String_2(Line(2))); end if;
       else raise Constraint_Error; end if;
     exception when others => Put_Line(Localize(NO_SUCH_VARIABLE_OR_ACTION));
     end Handle;

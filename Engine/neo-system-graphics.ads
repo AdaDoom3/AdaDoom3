@@ -1,3 +1,4 @@
+with Neo.File.Model; use Neo.File.Model;
 package Neo.System.Graphics is -- Essentially a private pag
   pragma Suppress(Elaboration_Check);
   Stack_Underflow : Exception;
@@ -63,7 +64,7 @@ package Neo.System.Graphics is -- Essentially a private pag
       Has_Timer_Query                  : Boolean                     := False;
       Has_Occlusion_Query              : Boolean                     := False;
     end record;
---     procedure Draw;
+--  procedure Draw;
 --     procedure Post_Process;
 --     function Is_Drawing  return Boolean; -- If the graphics are drawing no other operations can be done, Inturrupted will be raised
 --     function Get_Frame   return Record_Graphic;
@@ -110,19 +111,19 @@ private
   package Stencil_Function           is new Variable(VARIABLE_PREFIX & "stencilfun",    "", Boolean, False);
   package Depth                      is new Variable(VARIABLE_PREFIX & "depth",         "", Boolean, False);
   package Alpha_Test_Function        is new Variable(VARIABLE_PREFIX & "alphatest",     "", Boolean, False);
-  package Mask                       is new Variable(VARIABLE_PREFIX & "mask",          "", Boolean, False);   
-  type Enumerated_Depth             is (Less_Depth,                  Always_Depth,                 Greater_Depth,                     Equal_Depth);
-  type Enumerated_Depth_Stereo      is (No_Stereo,                   Near_Stereo,                  Middle_Stereo,                     Far_Stereo);
-  type Enumerated_Stereo_3D         is (No_Stereo_3D,                Side_By_Side_Stereo_3D,       Side_By_Side_Compressed_Stereo_3D, Top_And_Bottom_Compressed_Stereo_3D,
-                                        Interlaced_Stereo_3D,        Quad_Buffer_Stereo_3D,        HDMI_720_Stereo_3D);
-  type Enumerated_Stencil           is (Reference_Shift_Stencil,     Reference_Bits_Stencil,       Mask_Shift_Stencil);
-  type Enumerated_Stencil_Operation is (Keep_Stencil_Operation,      Zero_Stencil_Operation,       Replace_Stencil_Operation,         Increment_Stencil_Operation,
-                                        Decrement_Stencil_Operation, Invert_Stencil_Operation,     Increment_Wrap_Stencil_Operation,  Decrement_Wrap_Stencil_Operation);
-  type Enumerated_Stencil_Function  is (Always_Stencil,              Not_Equal_Stencil,            Less_Than_Or_Equal_To_Stencil,     Greater_Than_Stencil,
-                                        Equal_Stencil,               Never_Stencil,                Less_Stencil);
-  type Enumerated_Blend             is (Zero_Blend,                  One_Blend,                    Destination_Color_Blend,           One_Minus_Destination_Color_Blend,
-                                        Source_Alpha_Blend,          One_Minus_Source_Alpha_Blend, Destination_Alpha_Blend,           One_Minus_Destination_Alpha_Blend);
-  type Enumerated_Blend_Operation   is (Add_Blend_Operation,         Subtract_Blend_Operation,     Minimum_Blend_Operation,           Maximum_Blend_Operation);
+  package Mask                       is new Variable(VARIABLE_PREFIX & "mask",          "", Boolean, False);
+  type Enumerated_Condition          is (Always_Condition,            Not_Equal_Condition,          Less_Than_Or_Equal_To_Condition,   Greater_Than_Condition,
+                                         Equal_Condition,             Never_Condition,              Less_Than_Condition,               Greater_Than_Or_Equal_To_Condition);
+  type Enumerated_Cull               is (Face_Culling,                Two_Sided_Cull,               Back_Sided_Cull);
+  type Enumerated_Stereo             is (No_Stereo,                   Near_Stereo,                  Middle_Stereo,                     Far_Stereo);
+  type Enumerated_Stereo_3D          is (No_Stereo_3D,                Side_By_Side_Stereo_3D,       Side_By_Side_Compressed_Stereo_3D, Top_And_Bottom_Compressed_Stereo_3D,
+                                         Interlaced_Stereo_3D,        Quad_Buffer_Stereo_3D,        HDMI_720_Stereo_3D);
+  type Enumerated_Stencil            is (Reference_Shift_Stencil,     Reference_Bits_Stencil,       Mask_Shift_Stencil);
+  type Enumerated_Stencil_Operation  is (Keep_Stencil_Operation,      Zero_Stencil_Operation,       Replace_Stencil_Operation,         Increment_Stencil_Operation,
+                                         Decrement_Stencil_Operation, Invert_Stencil_Operation,     Increment_Wrap_Stencil_Operation,  Decrement_Wrap_Stencil_Operation);
+  type Enumerated_Blend              is (Zero_Blend,                  One_Blend,                    Destination_Color_Blend,           One_Minus_Destination_Color_Blend,
+                                         Source_Alpha_Blend,          One_Minus_Source_Alpha_Blend, Destination_Alpha_Blend,           One_Minus_Destination_Alpha_Blend);
+  type Enumerated_Blend_Operation    is (Add_Blend_Operation,         Subtract_Blend_Operation,     Minimum_Blend_Operation,           Maximum_Blend_Operation);
   type Record_Driver is record
       Reset                 : not null access procedure;
       Initialize            : not null access procedure(Monitor : in Integer_4_Positive);

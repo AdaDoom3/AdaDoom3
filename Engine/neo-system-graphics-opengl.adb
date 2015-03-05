@@ -2,11 +2,6 @@ with Neo.OpenGL;              use Neo.OpenGL;
 with Ada.Wide_Text_IO;        use Ada.Wide_Text_IO;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
 separate(Neo.System.Graphics) package body OpenGL is
-  Invalid_Enumeration : Exception;
-  Invalid_Operation   : Exception;
-  Stack_Underflow     : Exception;
-  Stack_Overflow      : Exception;
-  Invalid_Value       : Exception;
   package Import is
       function Get_Extensions return String_1;
       function Load_Function  (Name : in String_1) return Address;
@@ -15,6 +10,20 @@ separate(Neo.System.Graphics) package body OpenGL is
       procedure Swap_Buffers;
     end Import;
   package body Import is separate; use Import;
+  Invalid_Enumeration : Exception;
+  Invalid_Operation   : Exception;
+  Stack_Underflow     : Exception;
+  Stack_Overflow      : Exception;
+  Invalid_Value       : Exception;
+  CONDITIONS : constant array(Enumerated_Condition) of Integer_4_Unsigned_C :=(
+    Less_Than_Condition                => GL_LESS,
+    Equal_Condition                    => GL_EQUAL,
+    Never_Condition                    => GL_NEVER,
+    Always_Condition                   => GL_ALWAYS,
+    Greater_Than_Condition             => GL_GREATER,
+    Not_Equal_Condition                => GL_GREATER,
+    Less_Than_Or_Equal_To_Condition    => GL_LEQUAL,
+    Greater_Than_Or_Equal_To_Condition => GL_GEQUAL);
   procedure Set_Color_Mask(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean := True) is
     begin
       Color_Mask(
@@ -25,11 +34,7 @@ separate(Neo.System.Graphics) package body OpenGL is
     end Set_Color_Mask;
   procedure Scissor(X, Y, Width, Height : in Integer_4_Signed) is
     begin
-      Scissor(
-        X      => Integer_4_Signed_C(X),
-        Y      => Integer_4_Signed_C(Y),
-        Width  => Integer_4_Signed_C(Width),
-        Height => Integer_4_Signed_C(Height));
+      Scissor(Integer_4_Signed_C(X), Integer_4_Signed_C(Y), Integer_4_Signed_C(Width), Integer_4_Signed_C(Height));
     end Scissor;
   procedure Reset is
     begin
@@ -70,7 +75,6 @@ separate(Neo.System.Graphics) package body OpenGL is
         Current_Specifics.Has_Depth_Bounds_Test         := Index(Extensions, "EXT_depth_bounds_test")          /= 0;
         Current_Specifics.Has_Anisotropic_Filter        := Index(Extensions, "EXT_texture_filter_anisotropic") /= 0;
         Current_Specifics.Has_Direct_State_Access       := Index(Extensions, "EXT_direct_state_access")        /= 0;
-        Current_Specifics.Has_Texture_Compression       := Index(Extensions, "EXT_texture_compression_s3tc")   /= 0 and Index(Import.Get_Extensions, "ARB_texture_compression") /= 0;
         Current_Specifics.Has_Sync                      := Index(Extensions, "ARB_sync")                       /= 0;
         Current_Specifics.Has_Timer_Query               := Index(Extensions, "ARB_timer_query")                /= 0;
         Current_Specifics.Has_Multitexture              := Index(Extensions, "ARB_multitexture")               /= 0;
@@ -82,6 +86,7 @@ separate(Neo.System.Graphics) package body OpenGL is
         Current_Specifics.Has_Vertex_Buffer_Object      := Index(Extensions, "ARB_vertex_buffer_object")       /= 0;
         Current_Specifics.Has_RGB_Color_Framebuffer     := Index(Extensions, "ARB_framebuffer_sRGB")           /= 0;
         Current_Specifics.Has_Draw_Elements_Base_Vertex := Index(Extensions, "ARB_draw_elements_base_vertex")  /= 0;
+        Current_Specifics.Has_Texture_Compression       := Index(Extensions, "EXT_texture_compression_s3tc")   /= 0 and Index(Extensions, "ARB_texture_compression") /= 0;
         if Current_Specifics.Version < 2.0 then raise Unsupported; end if;
       end if;
       Reset;
@@ -107,6 +112,98 @@ separate(Neo.System.Graphics) package body OpenGL is
         when others                 => null;
       end case;
     end Check_Exceptions;
+  procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
+    begin
+      case Kind is
+        when Face_Culling    => null;
+        when Two_Sided_Cull  => Disable(GL_CULL_FACE);
+        when Back_Sided_Cull => Cull_Face((if Is_Mirror then GL_FRONT else GL_BACK));
+      end case;
+    end Cull;
+  procedure Set_Viewport(X, Y, Width, Height : in Integer_4_Signed) is
+    begin
+      Viewport(Integer_4_Signed_C(X), Integer_4_Signed_C(Y), Integer_4_Signed_C(Width), Integer_4_Signed_C(Height));
+    end Set_Viewport;
+  procedure Set_Polygon_Offset(Scale, Bias : in Float_4_Real) is
+    begin
+      if Scale = 0.0 and Bias = 0.0 then
+        Disable(GL_POLYGON_OFFSET_FILL);
+        Disable(GL_POLYGON_OFFSET_LINE);
+      else
+        Polygon_Offset(
+          Factor => Float_4_Real_C(Scale),
+          Units  => Float_4_Real_C(Bias));
+        Enable(GL_POLYGON_OFFSET_FILL);
+        Enable(GL_POLYGON_OFFSET_LINE);
+      end if;
+    end Set_Polygon_Offset;
+  procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
+    BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
+      One_Blend                         => GL_ZERO,
+      Zero_Blend                        => GL_ONE,
+      Source_Alpha_Blend                => GL_SRC_ALPHA,
+      Destination_Color_Blend           => GL_DST_COLOR,
+      Destination_Alpha_Blend           => GL_DST_ALPHA,
+      One_Minus_Source_Alpha_Blend      => GL_ONE_MINUS_SRC_ALPHA,
+      One_Minus_Destination_Color_Blend => GL_ONE_MINUS_DST_COLOR,
+      One_Minus_Destination_Alpha_Blend => GL_ONE_MINUS_DST_ALPHA);
+    begin
+      if Source = One_Blend and Destination = Zero_Blend then Disable(GL_BLEND);
+      else
+        Enable(GL_BLEND);
+        Blend_Function(BLENDS(Source), BLENDS(Destination));
+      end if;
+    end Set_Blend;
+  procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
+    OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
+      Keep_Stencil_Operation           => GL_KEEP,
+      Zero_Stencil_Operation           => GL_ZERO,
+      Invert_Stencil_Operation         => GL_INVERT,
+      Replace_Stencil_Operation        => GL_REPLACE,
+      Increment_Stencil_Operation      => GL_INCR,
+      Decrement_Stencil_Operation      => GL_DECR,
+      Increment_Wrap_Stencil_Operation => GL_INCR_WRAP,
+      Decrement_Wrap_Stencil_Operation => GL_DECR_WRAP);
+    begin
+      null;--Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
+    end Set_Stencil_Operation;
+  procedure Set_Stencil_Function(Kind : in Enumerated_Condition; Reference : in Integer_4_Signed; Mask : in Integer_4_Unsigned; Do_Test : in Boolean) is
+    begin
+      if Do_Test then Enable(GL_STENCIL_TEST);
+      else Disable(GL_STENCIL_TEST); end if;
+      --Stencil_Function(
+      --  Referece      => Integer_4_Signed_C(Reference),
+      --  Mask          => Integer_4_Unsigned_C(Mask),
+      --  Function_Kind => CONDITIONS(Kind));
+    end Set_Stencil_Function;
+  procedure Set_Stereo_Depth(Kind : in Enumerated_Condition) is
+    begin
+      Depth_Function(CONDITIONS(Kind));
+    end Set_Stereo_Depth;
+  procedure Set_Depth_Mask(Do_Enable : in Boolean := True) is
+    begin
+      Depth_Mask((if Do_Enable then GL_TRUE else GL_FALSE));
+    end Set_Depth_Mask;
+  procedure Set_Polymode_Line(Do_Enable : in Boolean := True) is
+    begin
+      Polygon_Mode(GL_FRONT_AND_BACK, (if Do_Enable then GL_LINE else GL_FILL));
+    end Set_Polymode_Line;
+  procedure Set_Depth_Bounds(Z_Minimum, Z_Maximum : in Float_8_Real) is
+    begin
+      if Z_Minimum = 0.0 and Z_Maximum = 0.0 then Disable(GL_DEPTH_BOUNDS_TEST_EXT);
+      else
+        Enable(GL_DEPTH_BOUNDS_TEST_EXT);
+        Depth_Bounds(Float_8_Real_C(Z_Minimum), Float_8_Real_C(Z_Maximum));
+      end if;
+    end Set_Depth_Bounds;
+  --procedure Color(Color : in Record_Color) is
+  --  begin
+  --    Color(
+  --      Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
+  --      Green => Float_4_Real_C(Color.Green) / Color.Green'size,
+  --      Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
+  --      Alpha => 1.0);
+  --  end Color;
   function Get_Driver return Record_Driver is
     begin
       return(
@@ -115,37 +212,6 @@ separate(Neo.System.Graphics) package body OpenGL is
         Initialize     => Initialize'access,
         Finalize       => Finalize'access);
     end Get_Driver;
---     procedure Cull(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) is
---       begin
---         case Kind is
---           when Face_Culling    => null;
---           when Two_Sided_Cull  => Disable(CULL_FACE);
---           when Back_Sided_Cull => Cull_Face((if Is_Mirror then FRONT else BACK));
---         end case;
---       end Cull;
---     procedure View_Port(X, Y, Width, Height : in Integer_4_Signed) is
---       begin
---         Viewport(
---           X      => Integer_4_Signed_C(X),
---           Y      => Integer_4_Signed_C(Y),
---           Width  => Integer_4_Signed_C(Width),
---           Height => Integer_4_Signed_C(Height));
---       end View_Port;
---     procedure Polygon_Offset(Scale, Bias : in Float_4_Real) is
---       begin
---         PolygonOffset(
---           Scale => Integer_4_Signed_C(Scale),
---           Bias  => Integer_4_Signed_C(Bias));
---       end Polygon_Offset;
---     procedure Depth_Bounds_Test(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) is
---       begin
---         if Z_Minimum = 0.0 and Z_Maximum = 0.0 then
---           Disable(DEPTH_BOUNDS_TEST);
---         else
---           Enable(DEPTH_BOUNDS_TEST);
---           Depth_Bounds(Float_4_Real_C(Z_Minimum), Float_4_Real_C(Z_Maximum));
---         end if;
---       end Depth_Bounds_Test;
 --     procedure Start_Depth_Pass(Rectane : in Record_Rectane) is
 --       begin
 --         null;
@@ -166,14 +232,6 @@ separate(Neo.System.Graphics) package body OpenGL is
 --           Blue  => Float_4_Real_C(Pixel.Color.Blue)  / Pixel.Color.Blue'size,
 --           Alpha => Float_4_Real_C(Pixel.Alpha)       / Pixel.Color.Alpha'size);
 --       end Color;
---     procedure Color(Color : in Record_Color) is
---       begin
---         Color(
---           Red   => Float_4_Real_C(Color.Red)   / Color.Red'size,
---           Green => Float_4_Real_C(Color.Green) / Color.Green'size,
---           Blue  => Float_4_Real_C(Color.Blue)  / Color.Blue'size,
---           Alpha => 1.0);
---       end Color;
 --     procedure Clear is
 --       begin
 --         Clear(DEPTH_BUFFER_BIT);
@@ -188,112 +246,18 @@ separate(Neo.System.Graphics) package body OpenGL is
 --         Clear_Stencil(Stencil_Value);
 --         Clear((if Do_Clear_Depth then DEPTH_BUFFER_BIT else 0) or STENCIL_BUFFER_BIT or COLOR_BUFFER_BIT);
 --       end Clear;
-    --procedure Set_Stereo_Depth(Stereo_Depth : in Item_Stereo_Depth.Variable) is
-    --  begin
-    --    Depth_Function((
-    --      case Depth_Function is
-    --        when Less_Depth_Function   => GL_LESS--LESS_THAN_OR_EQUAL
-    --        when Equal_Depth_Function  => GL_EQUAL
-    --        when Always_Depth_Function => GL_ALWAYS
-    --        when Greater_Than_Or_Equal => GL_GREATER_THAN_OR_EQUAL));
-    --  end Set_Stereo_Depth;
 --     procedure Set_Stereo_3D(Stereo_3D : in Enumerated_Stereo_3D) is
 --       begin
 --       end Set_Stereo_3D;
---     procedure Set_Blend(Source, Destination : in Enumerated_Blend) is
---       BLENDS : constant array(Enumerated_Blend'range) of Integer_4_Unsigned_C :=(
---         One_Blend                         => ZERO,
---         Zero_Blend                        => ONE,
---         Source_Alpha_Blend                => SOURCE_ALPHA,
---         Destination_Color_Blend           => DESTINATION_COLOR,
---         Destination_Alpha_Blend           => DESTINATION_ALPHA,
---         One_Minus_Source_Alpha_Blend      => ONE_MINUS_SOURCE_ALPHA,
---         One_Minus_Destination_Color_Blend => ONE_MINUS_DESTINATION_COLOR,
---         One_Minus_Destination_Alpha_Blend => ONE_MINUS_DESTINATION_ALPHA);
---       begin
---         if Source = One_Blend and Destination = Zero_Blend then
---           Disable(BLEND);
---         else
---           Enable(BLEND);
---           Blend_Function(BLENDS(Source), BLENDS(Destination));
---         end if;
---       end Set_Blend;
 --     procedure Set_Blend_Operation(Blend_Operation : in Enumerated_Blend_Operation) is
 --       begin
 --       end Set_Blend_Operation;
 --     procedure Set_Stencil(Stencil : in Enumerated_Stencil) is
 --       begin
 --       end Set_Stencil;
---     procedure Set_Stencil_Operation(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) is
---       OPERATIONS : constant array(Enumerated_Stencil_Operation'range) of Integer_4_Unsigned_C :=(
---         Keep_Stencil_Operation           => KEEP,
---         Zero_Stencil_Operation           => ZERO,
---         Invert_Stencil_Operation         => INVERT,
---         Replace_Stencil_Operation        => REPLACE,
---         Increment_Stencil_Operation      => INCREMENT,
---         Decrement_Stencil_Operation      => DECREMENT,
---         Increment_Wrap_Stencil_Operation => INCREMENT_WRAP,
---         Decrement_Wrap_Stencil_Operation => DECREMENT_WRAP);
---       begin
---         Stencil_Operation(OPERATIONS(Fail), OPERATIONS(Fail_Z), OPERATIONS(Pass));
---       end Set_Stencil_Operation;
---     procedure Set_Stencil_Function(Stencil : in Enumerated_Stencil_Function) is
---       begin
---         if (diff & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) then
---           if (stateBits & (GLS_STENCIL_FUNC_BITS | GLS_STENCIL_OP_BITS ) ) != 0 then
---             Enable(STENCIL_TEST);
---           else
---             Disable(STENCIL_TEST);
---           end if;
---         end if;
---         Stencil_Function(
---           Referece      => GLuint((stateBits & GLS_STENCIL_FUNC_REF_BITS ) >> GLS_STENCIL_FUNC_REF_SHIFT),
---           Mask          => GLuint((stateBits & GLS_STENCIL_FUNC_MASK_BITS ) >> GLS_STENCIL_FUNC_MASK_SHIFT)
---           Function_Kind =>(
---             case Stencil is
---               when Less_Stencil                            => LESS
---               when Equal_Stencil                           => EQUAL
---               when Never_Stencil                           => NEVER
---               when Always_Stencil                          => ALWAYS
---               when Greater_Stencil                         => GREATER
---               when Not_Equal_Stencil                       => NOT_EQUAL
---               when Less_Than_Or_Equal_To_Stencil           => LESS_THAN_OR_EQUAL
---               when Greater_Than_Or_Equal_Stencil_Operation => GREATER_THAN_OR_EQUAL));
---       end Set_Stencil_Function;
 --     procedure Set_Depth_Function(Value : in Enumerated_Depth_Function) is
 --       begin
 --       end Set_Depth_Function;
---     procedure Set_Depth_Mask( is
---       begin
---         if (diff & GLS_DEPTHMASK ) then
---           if (stateBits & GLS_DEPTHMASK ) then
---             DepthMask(FALSE);
---           else
---             DepthMask(TRUE);
---           end if;
---         end if;
---       end Set_Depth_Mask;
---     procedure Set_Polymode_Line( is
---       begin
---         if (diff & GLS_POLYMODE_LINE ) then
---           if (stateBits & GLS_POLYMODE_LINE ) then
---             PolygonMode(FRONT_AND_BACK, LINE);
---           else
---             PolygonMode(FRONT_AND_BACK, FILL);
---           end if;
---         end if;
---       end Set_Polymode_Line;
---     procedure Set_Polygon_Offset(Do_Enable : in Boolean) is
---       begin
---         if Do_Enable then
---           PolygonOffset(backEnd.State.polyOfsScale, backEnd.State.polyOfsBias);
---           Enable(POLYGON_OFFSET_FILL);
---           Enable(POLYGON_OFFSET_LINE);
---         else
---           Disable(POLYGON_OFFSET_FILL);
---           Disable(POLYGON_OFFSET_LINE);
---         end if;
---       end Set_Polygon_Offset;
 --     procedure Set_Buffer(const void *data ) is
 --       -- see which draw buffer we want to render the frame to
 --       const setBufferCommand_t * cmd = (const setBufferCommand_t *)data;
@@ -654,6 +618,9 @@ separate(Neo.System.Graphics) package body OpenGL is
 --  ================
 --  */
 --  void RB_DrawElementsWithCounters( const drawSurf_t *surf ) {
+
+
+
 --    // get vertex buffer
 --    const vertCacheHandle_t vbHandle = surf->ambientCache;
 --    idVertexBuffer * vertexBuffer;
@@ -669,6 +636,11 @@ separate(Neo.System.Graphics) package body OpenGL is
 --    }
 --    const int vertOffset = (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
 --
+
+
+
+
+
 --    // get index buffer
 --    const vertCacheHandle_t ibHandle = surf->indexCache;
 --    idIndexBuffer * indexBuffer;
@@ -746,6 +718,41 @@ separate(Neo.System.Graphics) package body OpenGL is
 --
 --  }
 --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 --
 --      RENDERLOG_PRINTF( "Binding Buffers: %p %p\n", vertexBuffer, indexBuffer );
 --

@@ -1,5 +1,6 @@
 with Neo.Windows; use Neo.Windows;
 separate(Neo.System.Graphics.Window) package body Import is
+  package Vector_Address is new Vectors(Address);
   STYLE_FULLSCREEN      : constant Integer_4_Unsigned_C := STYLE_VISIBLE_INITIALLY or STYLE_TITLEBAR_MENU or STYLE_TITLEBARLESS_AND_BORDERLESS;
   STYLE_WINDOWED        : constant Integer_4_Unsigned_C := STYLE_VISIBLE_INITIALLY or STYLE_TITLEBAR_MENU or STYLE_TITLEBAR or STYLE_BORDER_THIN_LINE or STYLE_BORDER_SIZABLE or STYLE_BOX_ICONIZE;
   Original_Clip         : aliased Record_Rectangle      := (others => <>);
@@ -9,14 +10,14 @@ separate(Neo.System.Graphics.Window) package body Import is
   Cursor_Active         :         Address               := NULL_ADDRESS;
   Cursor_Current        :         Enumerated_Cursor     := Inactive_Cursor;
   Do_Disable_Cursor     :         Boolean               := False;
-  Multi_Monitor_Windows :         Vector_Address.Vector;
+  Multi_Monitor_Windows :         Vector_Address.Unprotected.Vector;
   procedure Iconize                          is begin Assert_Dummy(Show_Window(Primary_Window, MAKE_WINDOW_GO_TO_ICONIC) = 0); end Iconize;
   function Is_Fullscreen_Only return Boolean is begin return False;                                                            end Is_Fullscreen_Only;
   procedure Set_Cursor(X, Y : in Integer_8_Signed) is
     begin null;
     end Set_Cursor;
-  function Get_Borders return Vector_Record_Border.Unsafe.Vector is
-    Borders   : Vector_Record_Border.Unsafe.Vector;
+  function Get_Borders return Vector_Record_Border.Unprotected.Vector is
+    Borders   : Vector_Record_Border.Unprotected.Vector;
     Rectangle : Record_Rectangle := (others => <>);
     function Callback_Monitor(Monitor, Device_Context : in Address; Screen : in Access_Record_Rectangle; Data : in Integer_Address) return Integer_4_Signed_C; pragma Convention(Stdcall, Callback_Monitor);
     function Callback_Monitor(Monitor, Device_Context : in Address; Screen : in Access_Record_Rectangle; Data : in Integer_Address) return Integer_4_Signed_C is
@@ -114,7 +115,7 @@ separate(Neo.System.Graphics.Window) package body Import is
           Height      => Integer_4_Signed_C(Height),
           Parent      => NULL_ADDRESS,
           Menu        => 0,
-          Instance    => NULL_ADDRESS,--Get_Current_Instance,
+          Instance    => Get_Current_Instance,
           Parameter   => NULL_ADDRESS);
         Assert(Primary_Window);
         Assert_Dummy(Show_Window(Primary_Window, MAKE_WINDOW_GO_TO_ICONIC));
@@ -163,7 +164,7 @@ separate(Neo.System.Graphics.Window) package body Import is
         when others => null; end case;
         return Define_Window_Procedure(Window, Message, Data_Unsigned, Data_Signed);
       end Callback_Window;
-    Borders : Vector_Record_Border.Unsafe.Vector;
+    Borders : Vector_Record_Border.Unprotected.Vector;
     Class   : aliased Record_Window_Class :=(
       Size       => Record_Window_Class'size / Byte'size,
       Style      => 0,

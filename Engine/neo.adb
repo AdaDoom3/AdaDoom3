@@ -3,74 +3,78 @@ package body Neo is
       function Is_Doing_Something      return Boolean       is begin return Status;   end Is_Doing_Something;
       procedure Set_Is_Doing_Something (Value : in Boolean) is begin Status := Value; end Set_Is_Doing_Something;
     end Protected_Status;
+  package body Trees is
+      protected body Protected_Tree is
+        end Protected_Tree;
+    end Trees;
   package body Ordered_Maps is
       protected body Protected_Map is
-          procedure Clear                                                        is begin Unsafe.Clear(Current_Data);                                end Clear;
-          procedure Set        (Data : in Unsafe.Map)                            is begin Current_Data := Data;                                      end Set;
-          procedure Next       (Position : in out Cursor)                        is begin Position := Unsafe.Next(Position);                         end Next;
-          procedure Delete     (Position : in out Cursor)                        is begin Unsafe.Delete(Current_Data, Position);                     end Delete;
-          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map) is begin Unsafe.Replace_Element(Current_Data, Position, New_Item);  end Replace;
-          procedure Insert     (Key : in Type_To_Key; New_Item : in Type_To_Map) is begin Unsafe.Insert(Current_Data, Key, New_Item);                end Insert;
-          procedure Replace    (Key : in Type_To_Key; New_Item : in Type_To_Map) is begin Unsafe.Replace(Current_Data, Key, New_Item);               end Replace;
-          procedure Delete     (Key : in Type_To_Key)                            is begin Unsafe.Delete(Current_Data, Key);                          end Delete;
-          function Element     (Key : in Type_To_Key) return Type_To_Map         is begin return Unsafe.Element(Current_Data, Key);                  end Element;
-          function Element     (Position : in Cursor) return Type_To_Map         is begin return Unsafe.Element(Position);                           end Element;
-          function Has_Element (Key : in Type_To_Key) return Boolean             is begin return Unsafe.Has_Element(Unsafe.Find(Current_Data, Key)); end Has_Element;
-          function Has_Element (Position : in Cursor) return Boolean             is begin return Unsafe.Has_Element(Position);                       end Has_Element;
-          function Key         (Position : Cursor)    return Type_To_Key         is begin return Unsafe.Key(Position);                               end Key;
-          function Get                                return Unsafe.Map          is begin return Current_Data;                                       end Get;
-          function First                              return Cursor              is begin return Unsafe.First(Current_Data);                         end First;
+          procedure Clear                                                        is begin Unprotected.Clear(Current_Data);                                     end Clear;
+          procedure Set        (Data : in Unprotected.Map)                       is begin Current_Data := Data;                                                end Set;
+          procedure Next       (Position : in out Cursor)                        is begin Position := Unprotected.Next(Position);                              end Next;
+          procedure Delete     (Position : in out Cursor)                        is begin Unprotected.Delete(Current_Data, Position);                          end Delete;
+          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map) is begin Unprotected.Replace_Element(Current_Data, Position, New_Item);       end Replace;
+          procedure Insert     (Key : in Type_To_Key; New_Item : in Type_To_Map) is begin Unprotected.Insert(Current_Data, Key, New_Item);                     end Insert;
+          procedure Replace    (Key : in Type_To_Key; New_Item : in Type_To_Map) is begin Unprotected.Replace(Current_Data, Key, New_Item);                    end Replace;
+          procedure Delete     (Key : in Type_To_Key)                            is begin Unprotected.Delete(Current_Data, Key);                               end Delete;
+          function Element     (Key : in Type_To_Key) return Type_To_Map         is begin return Unprotected.Element(Current_Data, Key);                       end Element;
+          function Element     (Position : in Cursor) return Type_To_Map         is begin return Unprotected.Element(Position);                                end Element;
+          function Has_Element (Key : in Type_To_Key) return Boolean             is begin return Unprotected.Has_Element(Unprotected.Find(Current_Data, Key)); end Has_Element;
+          function Has_Element (Position : in Cursor) return Boolean             is begin return Unprotected.Has_Element(Position);                            end Has_Element;
+          function Key         (Position : Cursor)    return Type_To_Key         is begin return Unprotected.Key(Position);                                    end Key;
+          function Get                                return Unprotected.Map     is begin return Current_Data;                                                 end Get;
+          function First                              return Cursor              is begin return Unprotected.First(Current_Data);                              end First;
         end Protected_Map;
     end Ordered_Maps;
   package body Hashed_Maps is
       protected body Protected_Map is
-          procedure Clear                                                        is begin Unsafe.Clear(Current_Data);                                                       end Clear;
-          procedure Set        (Data : in Unsafe.Map)                            is begin Current_Data := Data;                                                             end Set;
-          procedure Next       (Position : in out Cursor)                        is begin Position := Unsafe.Next(Position);                                                end Next;
-          procedure Delete     (Position : in out Cursor)                        is begin Unsafe.Delete(Current_Data, Position);                                            end Delete;
-          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map) is begin Unsafe.Replace_Element(Current_Data, Position, New_Item);                         end Replace;
-          procedure Insert     (Key : in String_2;    New_Item : in Type_To_Map) is begin Unsafe.Insert(Current_Data, To_String_2_Unbounded(Key), New_Item);                end Insert;
-          procedure Replace    (Key : in String_2;    New_Item : in Type_To_Map) is begin Unsafe.Replace(Current_Data, To_String_2_Unbounded(Key), New_Item);               end Replace;
-          procedure Delete     (Key : in String_2)                               is begin Unsafe.Delete(Current_Data, To_String_2_Unbounded(Key));                          end Delete;
-          function Element     (Key : in String_2)    return Type_To_Map         is begin return Unsafe.Element(Current_Data, To_String_2_Unbounded(Key));                  end Element;
-          function Element     (Position : in Cursor) return Type_To_Map         is begin return Unsafe.Element(Position);                                                  end Element;
-          function Has_Element (Key : in String_2)    return Boolean             is begin return Unsafe.Has_Element(Unsafe.Find(Current_Data, To_String_2_Unbounded(Key))); end Has_Element;
-          function Has_Element (Position : in Cursor) return Boolean             is begin return Unsafe.Has_Element(Position);                                              end Has_Element;
-          function Key         (Position : Cursor)    return String_2            is begin return To_String_2(Unsafe.Key(Position));                                         end Key;
-          function Get                                return Unsafe.Map          is begin return Current_Data;                                                              end Get;
-          function First                              return Cursor              is begin return Unsafe.First(Current_Data);                                                end First;
+          procedure Clear                                                        is begin Unprotected.Clear(Current_Data);                                                            end Clear;
+          procedure Set        (Data : in Unprotected.Map)                       is begin Current_Data := Data;                                                                       end Set;
+          procedure Next       (Position : in out Cursor)                        is begin Position := Unprotected.Next(Position);                                                     end Next;
+          procedure Delete     (Position : in out Cursor)                        is begin Unprotected.Delete(Current_Data, Position);                                                 end Delete;
+          procedure Replace    (Position : in Cursor; New_Item : in Type_To_Map) is begin Unprotected.Replace_Element(Current_Data, Position, New_Item);                              end Replace;
+          procedure Insert     (Key : in String_2;    New_Item : in Type_To_Map) is begin Unprotected.Insert(Current_Data, To_String_2_Unbounded(Key), New_Item);                     end Insert;
+          procedure Replace    (Key : in String_2;    New_Item : in Type_To_Map) is begin Unprotected.Replace(Current_Data, To_String_2_Unbounded(Key), New_Item);                    end Replace;
+          procedure Delete     (Key : in String_2)                               is begin Unprotected.Delete(Current_Data, To_String_2_Unbounded(Key));                               end Delete;
+          function Element     (Key : in String_2)    return Type_To_Map         is begin return Unprotected.Element(Current_Data, To_String_2_Unbounded(Key));                       end Element;
+          function Element     (Position : in Cursor) return Type_To_Map         is begin return Unprotected.Element(Position);                                                       end Element;
+          function Has_Element (Key : in String_2)    return Boolean             is begin return Unprotected.Has_Element(Unprotected.Find(Current_Data, To_String_2_Unbounded(Key))); end Has_Element;
+          function Has_Element (Position : in Cursor) return Boolean             is begin return Unprotected.Has_Element(Position);                                                   end Has_Element;
+          function Key         (Position : Cursor)    return String_2            is begin return To_String_2(Unprotected.Key(Position));                                              end Key;
+          function Get                                return Unprotected.Map     is begin return Current_Data;                                                                        end Get;
+          function First                              return Cursor              is begin return Unprotected.First(Current_Data);                                                     end First;
         end Protected_Map;
     end Hashed_Maps;
   package body Vectors is
       protected body Protected_Vector is
-          procedure Clear                                                                                                         is begin Unsafe.Clear(Current_Data);                                       end Clear;
-          procedure Set        (Data : in Unsafe.Vector)                                                                          is begin Current_Data := Data;                                             end Set;
-          procedure Next       (Position : in out Cursor)                                                                         is begin Unsafe.Next(Position);                                            end Next;
-          procedure Replace    (Position : in Cursor;           New_Item : in Type_To_Vector)                                     is begin Unsafe.Replace_Element(Current_Data, Position, New_Item);         end Replace; 
-          procedure Append                                     (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unsafe.Append(Current_Data, New_Item, Count_Type(Count));         end Append;
-          procedure Prepend                                    (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unsafe.Prepend(Current_Data, New_Item, Count_Type(Count));        end Prepend;
-          procedure Insert     (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unsafe.Insert(Current_Data, Before, New_Item, Count_Type(Count)); end Insert;
-          procedure Delete     (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1) is begin Unsafe.Delete(Current_Data, Count);                               end Delete;
-          function Element     (Index  : in Integer_4_Positive) return Type_To_Vector                                             is begin return Unsafe.Element(Current_Data, Index);                       end Element;
-          function Element     (Position : in Cursor)           return Type_To_Vector                                             is begin return Unsafe.Element(Position);                                  end Element;
-          function Has_Element (Position : in Cursor)           return Boolean                                                    is begin return Unsafe.Has_Element(Position);                              end Has_Element;
-          function Length                                       return Integer_4_Positive                                         is begin return Integer_4_Positive(Unsafe.Length(Current_Data));           end Length;
-          function Get                                          return Unsafe.Vector                                              is begin return Current_Data;                                              end Get;
-          function First                                        return Cursor                                                     is begin return Unsafe.First(Current_Data);                                end First;
+          procedure Clear                                                                                                         is begin Unprotected.Clear(Current_Data);                                       end Clear;
+          procedure Set        (Data : in Unprotected.Vector)                                                                     is begin Current_Data := Data;                                                  end Set;
+          procedure Next       (Position : in out Cursor)                                                                         is begin Unprotected.Next(Position);                                            end Next;
+          procedure Replace    (Position : in Cursor;           New_Item : in Type_To_Vector)                                     is begin Unprotected.Replace_Element(Current_Data, Position, New_Item);         end Replace; 
+          procedure Append                                     (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unprotected.Append(Current_Data, New_Item, Count_Type(Count));         end Append;
+          procedure Prepend                                    (New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unprotected.Prepend(Current_Data, New_Item, Count_Type(Count));        end Prepend;
+          procedure Insert     (Before : in Integer_4_Positive; New_Item : in Type_To_Vector; Count : in Integer_4_Positive := 1) is begin Unprotected.Insert(Current_Data, Before, New_Item, Count_Type(Count)); end Insert;
+          procedure Delete     (Index  : in Integer_4_Positive;                               Count : in Integer_4_Positive := 1) is begin Unprotected.Delete(Current_Data, Count);                               end Delete;
+          function Element     (Index  : in Integer_4_Positive) return Type_To_Vector                                             is begin return Unprotected.Element(Current_Data, Index);                       end Element;
+          function Element     (Position : in Cursor)           return Type_To_Vector                                             is begin return Unprotected.Element(Position);                                  end Element;
+          function Has_Element (Position : in Cursor)           return Boolean                                                    is begin return Unprotected.Has_Element(Position);                              end Has_Element;
+          function Length                                       return Integer_4_Positive                                         is begin return Integer_4_Positive(Unprotected.Length(Current_Data));           end Length;
+          function Get                                          return Unprotected.Vector                                         is begin return Current_Data;                                                   end Get;
+          function First                                        return Cursor                                                     is begin return Unprotected.First(Current_Data);                                end First;
         end Protected_Vector;
     end Vectors;
   protected body Protected_Data is
-      procedure Set_Failure                                                         is begin Current_Failure := True;                                                       end Set_Failure;
-      procedure Set_Do_Put_Debug    (Value : in Boolean)                            is begin Current_Do_Put_Debug := Value;                                                 end Set_Do_Put_Debug;
-      procedure Set_Line_Size       (Value : in Integer_4_Positive)                 is begin Current_Line_Size := Value;                                                    end Set_Line_Size;
+      procedure Set_Do_Fail                                                         is begin Current_Do_Fail         := True;                                               end Set_Do_Fail;
+      procedure Set_Do_Put_Debug    (Value : in Boolean)                            is begin Current_Do_Put_Debug    := Value;                                              end Set_Do_Put_Debug;
+      procedure Set_Line_Size       (Value : in Integer_4_Positive)                 is begin Current_Line_Size       := Value;                                              end Set_Line_Size;
       procedure Set_Number_of_Tasks (Value : in Integer_4_Positive)                 is begin Current_Number_Of_Tasks := Value;                                              end Set_Number_Of_Tasks;
-      procedure Set_Put             (Value : in Access_Procedure_Put)               is begin Current_Put := Value;                                                          end Set_Put;
-      procedure Set_Localize        (Value : in Access_Function_Localize)           is begin Current_Localize := Value;                                                     end Set_Localize;
-      procedure Set_Input_Entry     (Value : in String_2)                           is begin Current_Input_Entry := To_String_2_Unbounded(Value);                           end Set_Input_Entry;
+      procedure Set_Put             (Value : in Access_Procedure_Put)               is begin Current_Put             := Value;                                              end Set_Put;
+      procedure Set_Localize        (Value : in Access_Function_Localize)           is begin Current_Localize        := Value;                                              end Set_Localize;
+      procedure Set_Input_Entry     (Value : in String_2)                           is begin Current_Input_Entry     := To_String_2_Unbounded(Value);                       end Set_Input_Entry;
       function Localize             (Item  : in String_2) return String_2           is begin return (if Current_Localize = null then Item else Current_Localize.all(Item)); end Localize;
       function Get_Log                                    return String_2           is begin return To_String_2(Current_Log);                                               end Get_Log;
       function Get_Input_Entry                            return String_2           is begin return To_String_2(Current_Input_Entry);                                       end Get_Input_Entry;
-      function Did_Fail                                   return Boolean            is begin return Current_Failure;                                                        end Did_Fail;
+      function Do_Fail                                    return Boolean            is begin return Current_Do_Fail;                                                        end Do_Fail;
       function Do_Put_Debug                               return Boolean            is begin return Current_Do_Put_Debug;                                                   end Do_Put_Debug;
       function Get_Line_Size                              return Integer_4_Positive is begin return Current_Line_Size;                                                      end Get_Line_Size;
       function Get_Number_Of_Lines                        return Integer_8_Natural  is begin return Current_Number_Of_Lines;                                                end Get_Number_Of_Lines;
@@ -86,7 +90,7 @@ package body Neo is
           Current_Number_Of_Lines := Current_Number_Of_Lines + Count;
         end Put;
     end Protected_Data;
-  procedure Set_Failure                                                         is begin Data.Set_Failure;                                 end Set_Failure;
+  procedure Set_Do_Fail                                                         is begin Data.Set_Do_Fail;                                 end Set_Do_Fail;
   procedure New_Line            (Count : in Integer_4_Positive := 1)            is begin for I in 1..Count loop Put(END_LINE_2); end loop; end New_Line;
   procedure Put_Debug           (Item  : in Character_2)                        is begin Put_Debug(Item & "");                             end Put_Debug;
   procedure Set_Input_Entry     (Value : in String_2)                           is begin Data.Set_Input_Entry(Value);                      end Set_Input_Entry;
@@ -109,7 +113,7 @@ package body Neo is
   function Get_Line_Size                              return Integer_4_Positive is begin return Data.Get_Line_Size;                        end Get_Line_Size;
   function Get_Number_Of_Tasks                        return Integer_4_Positive is begin return Data.Get_Number_Of_Tasks;                  end Get_Number_Of_Tasks;
   function Do_Put_Debug                               return Boolean            is begin return Data.Do_Put_Debug;                         end Do_Put_Debug;
-  function Did_Fail                                   return Boolean            is begin return Data.Did_Fail;                             end Did_Fail;
+  function Do_Fail                                    return Boolean            is begin return Data.Do_Fail;                              end Do_Fail;
   --function To_String_1_C                    (Item : in String_2)                      return String_1_C                    is begin return To_String_1_C(To_String_1(Item));                                     end To_String_1_C;
   function To_String_1_C                    (Item : in String_1)                      return String_1_C                    is begin return To_C(Item, True);                                                     end To_String_1_C;
   function To_String_1                      (Item : in String_1_C)                    return String_1                      is begin return To_Ada(Item, True);                                                   end To_String_1;    
@@ -251,17 +255,29 @@ package body Neo is
       for I in 1..Get_Line_Size - 2 loop Put(Character_2'val(16#2500#)); end loop;
       Put_Line(Character_2'val(16#2518#));
     end Put_Title;
-  function Split(Item : in String_2; On : in String_2 := " ") return Vector_String_2_Unbounded.Vector is
-    Result    : Vector_String_2_Unbounded.Vector;
-    TRIMMED   : constant String_2 := Trim(Item, Both);
-    REMAINDER : constant Natural  := Index(TRIMMED, On);
-    begin
-      if REMAINDER = 0 then
-        Result.Append(To_String_2_Unbounded(TRIMMED));
+  function Split(Item : in String_2; On : in String_2 := " ") return Array_String_2_Unbounded is
+    package Vector_String_2_Unbounded is new Ada.Containers.Indefinite_Vectors(Integer_4_Positive, String_2_Unbounded);
+    function Internal(Item : in String_2; On : in String_2 := " ") return Vector_String_2_Unbounded.Vector is
+      Result    : Vector_String_2_Unbounded.Vector;
+      TRIMMED   : constant String_2 := Trim(Item, Both);
+      REMAINDER : constant Natural  := Index(TRIMMED, On);
+      begin
+        if REMAINDER = 0 then
+          Result.Append(To_String_2_Unbounded(TRIMMED));
+          return Result;
+        else Result.Append(To_String_2_Unbounded(Trim(TRIMMED(TRIMMED'first..REMAINDER - 1), Both))); end if;
+        Result.Append(Internal(TRIMMED(REMAINDER..TRIMMED'last), On));
         return Result;
-      else Result.Append(To_String_2_Unbounded(Trim(TRIMMED(TRIMMED'first..REMAINDER - 1), Both))); end if;
-      Result.Append(Split(TRIMMED(REMAINDER..TRIMMED'last), On));
-      return Result;
+      end Internal;
+    Internal_Result : Vector_String_2_Unbounded.Vector;
+    begin
+      Internal_Result := Internal(Item, On);
+      declare
+      Result : Array_String_2_Unbounded(1..Integer_4_Signed(Internal_Result.Length));
+      begin
+        for I in Result'range loop Result(I) := Internal_Result.Element(I); end loop;
+        return Result;
+      end;
     end Split;
 begin
   null; -- Create directories if absent

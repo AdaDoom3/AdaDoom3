@@ -1,9 +1,10 @@
 with Ada.Strings;
-with Ada.Finalization;
+with Ada.Finalization;             use Ada.Finalization;
 with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
 with Ada.Characters.Handling;      use Ada.Characters.Handling;
 with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
 package Neo.Command is
+  package Vector_String_2_Unbounded is new Vectors(String_2_Unbounded);
   Duplicate : Exception;
   Parse     : Exception;
   procedure Load        (Path : in String_2);
@@ -25,7 +26,7 @@ package Neo.Command is
       procedure Set (Value : in Type_To_Vary);
       function Get  return Type_To_Vary;
     private
-      type Record_Controller is new Ada.Finalization.Controlled with null record;
+      type Record_Controller is new Controlled with null record;
       protected type Protected_Type_To_Vary is
           procedure Set (Value : in Type_To_Vary);
           function Get  return Type_To_Vary;
@@ -42,13 +43,13 @@ package Neo.Command is
     end Variable;
   generic
     Name : String_2;
-    with procedure Perform(Parameters : in Vector_String_2_Unbounded.Vector);
+    with procedure Perform(Parameters : in Array_String_2_Unbounded);
   package Action is
     private
-      type Record_Controller is new Ada.Finalization.Controlled with null record;
+      type Record_Controller is new Controlled with null record;
       procedure Initialize              (Controller : in out Record_Controller);
       procedure Finalize                (Controller : in out Record_Controller);
-      procedure Not_A_Formal_Subprogram (Parameters : in Vector_String_2_Unbounded.Vector) renames Perform;
+      procedure Not_A_Formal_Subprogram (Parameters : in Array_String_2_Unbounded) renames Perform;
       LOWER_NAME : constant String_2 := To_Lower(Name);
       Controller : Record_Controller;
     end Action;
@@ -60,7 +61,7 @@ private
   MAXIMUM_POSSIBLE_VALUES_DISPLAYED : constant Integer_4_Positive := 5;
   type Access_Function_Get      is access function return String_2;
   type Access_Procedure_Set     is access procedure(Item : in String_2);
-  type Access_Procedure_Perform is access procedure(Parameters : in Vector_String_2_Unbounded.Vector);
+  type Access_Procedure_Perform is access procedure(Parameters : in Array_String_2_Unbounded);
   type Record_Variable is record
       Saved_Value : String_2_Unbounded   := NULL_STRING_2_UNBOUNDED;
       Get         : Access_Function_Get  := null;

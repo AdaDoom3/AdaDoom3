@@ -15,7 +15,7 @@ procedure Main is
     Set_Do_Put_Debug(True);
     if Do_Put_Debug then Neo.System.Text.Console.Initialize; end if;
     begin Run; exception when Occurrence: others => Handle_Exception(Occurrence); end;
-    if not Neo.System.Text.Console.Is_Running and then Did_Fail and then Is_Okay(
+    if not Neo.System.Text.Console.Is_Running and then Do_Fail and then Is_Okay(
       Icon    => Error_Icon,
       Name    => To_String_2(Neo.System.SPECIFICS.Name),
       Message => Localize("An error has occurred, would you like to view more information?"),

@@ -6,7 +6,7 @@ separate(Neo.System.Graphics.OpenGL) package body Import is
   function Get_Extensions return String_1                   is begin return To_String_1(OpenGL_Get_Extensions(Device_Context)); end Get_Extensions;
   procedure Swap_Buffers                                    is begin Assert(Swap_Buffers(Device_Context));                      end Swap_Buffers;
   procedure Initialize(Monitor : in Integer_4_Positive) is
-    Window               :         Address                  := Primary_Window;--HaFind_Window(To_String_2_C(To_String_2(Neo.System.SPECIFICS.Name)), NULL_STRING_2_C);
+    Window               :         Address                  := Primary_Window;--Find_Window(To_String_2_C(To_String_2(Neo.System.SPECIFICS.Name)), NULL_STRING_2_C);
     Rendering_Context    :         Address                  := NULL_ADDRESS;
     Specifics            :         Record_Specifics         := (others => <>);
     Message              : aliased Record_Message           := (others => <>);
