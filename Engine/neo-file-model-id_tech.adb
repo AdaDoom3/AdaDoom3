@@ -19,12 +19,12 @@ separate(Neo.File.Model) package body Id_Tech is
     end Build_Skeleton;
   function Load(Name : in String_2) return Record_Mesh is
     type Record_Internal_Vertex is record 
-        Texture      : Record_Coordinate_3D := (others => <>);
+        Texture      : Record_Coordinate_2D := (others => <>);
         Index        : Integer_4_Natural  := 0;
         Weight_Start : Integer_4_Natural  := 0;
         Weight_Count : Integer_4_Natural  := 0;
       end record;
-    package Vector_Record_Internal_Vertex is new Vectors(Record_Internal_Vertex);
+    package Map_Record_Internal_Vertex is new Ordered_Maps(Integer_4_Natural, Record_Internal_Vertex);
     type Record_Internal_Weight is record
         Joint    : Integer_4_Natural := 0;
         Amount   : Integer_4_Natural := 0;
@@ -34,7 +34,7 @@ separate(Neo.File.Model) package body Id_Tech is
     type Record_Internal_Surface is record
         Shader    : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
         Weights   : Vector_Record_Internal_Weight.Unprotected.Vector;
-        Vertices  : Vector_Record_Internal_Vertex.Unprotected.Vector;
+        Vertices  : Map_Record_Internal_Vertex.Unprotected.Map;
         Triangles : Vector_Record_Coordinate_3D.Unprotected.Vector;
       end record;
     package Vector_Record_Internal_Surface is new Vectors(Record_Internal_Surface);
@@ -49,6 +49,7 @@ separate(Neo.File.Model) package body Id_Tech is
     Shape    : Record_Mesh_Vertex       := (True, others => <>);
     Mesh     : Record_Mesh              := (True, others => <>);
     package Mesh_Parser is new Parser(Name, "//");
+    I : Integer := 1;
     use Mesh_Parser;
     begin
       Assert("MD5Version");  Skip;
@@ -70,14 +71,14 @@ separate(Neo.File.Model) package body Id_Tech is
         Assert("numverts"); Skip;
         while Peek = "vert" loop
           Skip;
-          Vertex.Index        := Integer_4_Natural(Next_Number); delay 5.0;
-          Assert("("); Vertex.Texture := (Next_Number, Next_Number, Next_Number); Assert(")");
+          Vertex.Index        := Integer_4_Natural(Next_Number);
+          Assert("("); Vertex.Texture := (Next_Number, Next_Number); Assert(")");
           Vertex.Weight_Count := Integer_4_Natural(Next_Number);
           Vertex.Weight_Start := Integer_4_Natural(Next_Number);
-          Surface.Vertices.Replace_Element(Vertex.Index, Vertex);
+          Surface.Vertices.Insert(Vertex.Index, Vertex);
         end loop; 
         Assert("numtris"); Skip;
-        while Peek = "tris" loop
+        while Peek = "tri" loop
           Skip(2);
           Surface.Triangles.Append((Next_Number, Next_Number, Next_Number));
         end loop; 

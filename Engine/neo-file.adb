@@ -55,20 +55,16 @@ package body Neo.File is
         end Match_Extension;
     end Handler;
   package body Parser is
+      function At_End return Boolean is begin return (if Row > Data.Last_Index then True else False); end At_End;
       procedure Skip_Set(Starting, Ending : in String_2) is Junk : String_2_Unbounded := Next_Set(Starting, Ending); begin null; end Skip_Set;
       procedure Skip(Number_To_Skip : in Integer_4_Positive := 1) is
         Junk : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
         begin
-          for I in 1..Number_To_Skip loop Junk := Next;Put_Line(Junk); end loop;
+          for I in 1..Number_To_Skip loop Junk := Next; end loop;
         end Skip;
-      function At_End return Boolean is
-        begin
-          return (if Row > Data.Last_Index then True else False);
-        end At_End;
       procedure Assert(Text : in String_2) is
         begin
-          Put_Line("Assert: " & Text & "  " & Slice(Data.Element(Row), Column, Length(Data.Element(Row))));
-          if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Text) /= Column then raise Unlexable; end if;
+          if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Text) /= Column then raise Invalid; end if;
           Column := Column + Text'length - 1;
           Seek;
         end Assert;
@@ -92,101 +88,78 @@ package body Neo.File is
                 exit;
               end if;
               if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Separator) /= Column then return;
-              --elsif not Do_Ignore_Multiple then
-              --  Column := Column + Separator'length;
-              --  return;
+              --if Length(Data.Element(Row)) - Column > Separator'length and then Slice(Data.Element(Row), Column, Column + Separator'length) = Separator then return;
+              elsif not Do_Ignore_Multiple then
+                Column := Column + Separator'length;
+                return;
               end if;
               Column := Column + 1;
             end loop;
           end loop;
         end Seek;
       function Next return String_2_Unbounded is
-        Last   : Integer_4_Positive := Column + 1;
-        Result : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        Result : String_2_Unbounded := To_String_2_Unbounded(Slice(Data.Element(Row), Column, Length(Data.Element(Row))));
+        I      : Integer_4_Natural  := Index(Result, Separator);
         begin
-          while Last <= Length(Data.Element(Row)) loop
-            if Index(Slice(Data.Element(Row), Column, Last), Separator) = Last then
-              --Last := Last - 1;
-              exit;
-            end if;
-            exit when Last = Length(Data.Element(Row));
-            Last := Last + 1;
-          end loop;
-          if Last = Column then return NULL_STRING_2_UNBOUNDED; end if;
-          Result := To_String_2_Unbounded(Slice(Data.Element(Row), Column, Last));
-          Column := Last;
+          if I /= 0 then Delete(Result, I, Length(Result)); end if;
+          Column := Column + Length(Result);
           Seek;
           return Result;
         end Next;
       function Next_Number return Float_8_Real is
-        Entered_Digit : Boolean            := False;
         Found_Decimal : Boolean            := False;
+        Found_Digit   : Boolean            := False;
         Found_Sign    : Boolean            := False;
-        Result        : Float_8_Real       := 0.0;
-        Last          : Integer_4_Positive := Column + 1;
+        Result        : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
         begin
-          while Last <= Length(Data.Element(Row)) loop
-            if not Is_Digit(Element(Data.Element(Row), Last)) then
-              case Element(Data.Element(Row), Last) is
+          while Column <= Length(Data.Element(Row)) loop
+            if not Is_Digit(Element(Data.Element(Row), Column)) then
+              case Element(Data.Element(Row), Column) is
                 when '-' | '+' =>
-                  if Found_Sign or Entered_Digit then
-                    Last := Last - 1;
-                    exit;
-                  end if;
+                  exit when Found_Digit or Found_Sign;
                   Found_Sign := True;                    
                 when '.' =>
-                  if Found_Decimal then
-                    Last := Last - 1;
-                    exit;
-                  end if;
-                  Entered_Digit := True;
+                  exit when Found_Decimal;
+                  Found_Digit   := True;
                   Found_Decimal := True;
-                when others =>
-                  Last := Last - 1;
-                  exit;
+                when others => exit;
               end case;
-            else 
-              Entered_Digit := True;
-            end if;
-            exit when Last = Length(Data.Element(Row));
-            Last := Last + 1;
+            elsif not Found_Digit then Found_Digit := True; end if;
+            Result := Result & Element(Data.Element(Row), Column);
+            Column := Column + 1;
           end loop;
-          if Last = Column then raise Unlexable; end if;
-          Result := Float_8_Real'wide_value(Slice(Data.Element(Row), Column, Last));
-          Column := Last;
+          if Result = NULL_STRING_2_UNBOUNDED then raise Invalid; end if;
           Seek;
-          return Result;
+          return Float_8_Real'wide_value(To_String_2(Result));
         end Next_Number;
       function Next_Set(Starting, Ending : in String_2) return String_2_Unbounded is
-        Last   : Integer_4_Positive := Column + 1;
         Result : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        Buffer : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
+        I      : Integer_4_Natural  := 0;
         begin
           Assert(Starting);
           while not At_End loop
-            loop
-              if Column > Length(Data.Element(Row)) then
-                Column := 1;
-                Row    := Row + 1;
-                Result := Result & END_LINE_2;
-                exit;
-              end if;
-              if Index(Slice(Data.Element(Row), Column, Length(Data.Element(Row))), Ending) = Column then
-                Column := Column + Separator'length;
-                Seek;
-                return Result;
-              end if;
-              Result := Result & Element(Data.Element(Row), Column);
-              Column := Column + 1;
-            end loop;
+            Buffer := To_String_2_Unbounded(Slice(Data.Element(Row), Column, Length(Data.Element(Row))));
+            I      := Index(Buffer, Ending);
+            if I = 0 then
+              Column := 1;
+              Row    := Row + 1;
+              Result := Result & Buffer & END_LINE_2;
+            else
+              Buffer := Delete(Buffer, I, Length(Buffer));
+              Column := Column + Length(Buffer) + Ending'length;
+              Seek;
+              return Result & Buffer;
+            end if;
           end loop;
-          raise Unlexable;
+          raise Invalid;
         end Next_Set;
     begin
       declare
       Raw_Data : File_Type;
       I        : Integer_4_Natural := 0;
       begin
-        if Separator = NULL_STRING_2 then raise Unlexable; end if;
+        if Separator = NULL_STRING_2 then raise Invalid; end if;
         Open(Raw_Data, In_File, To_String_1(To_String_2(Neo.System.SPECIFICS.Path) & SPECIFICS.Separator & Path));
         while not End_Of_File(Raw_Data) loop
           Data.Append(To_String_2_Unbounded(Get_Line(Raw_Data)));

@@ -1,16 +1,11 @@
-  MD5Version 678
-commandline           "mesh models/characters/player/mocap/idle_stand.mb -dest models/md5/characters/player/mocap/player.md5mesh -game Doom -prefix PLAYER_ -keep SPINNER camWaist camHead modelviewconnector camera PISTOL_ATTACHER SHOTGUN_ATTACHER MGATTACHER pgATTACHER NADE_ATTACHER CHAINSAW_ATTACHER RL_ATTACHER FL_ATTACHER BFG_ATTACHER CHAINGUN_ATTACHER Lfteye_Focus Rteye_Focus Neck -parent Waist SPINNER -parent SPINNER Waist2 -parent Neck Shldrs -parent camera camHead -parent Lfteye_Focus Head -parent Rteye_Focus Head -parent Waist2 Hips -parent PISTOL_ATTACHER Rhand -parent SHOTGUN_ATTACHER Rhand -parent MGATTACHER Rhand -parent pgATTACHER Rhand -parent NADE_ATTACHER Rhand -parent CHAINSAW_ATTACHER Rhand -parent RL_ATTACHER Lhand -parent FL_ATTACHER Rhand -parent BFG_ATTACHER Lhand -parent camWaist modelviewconnector -parent CHAINGUN_ATTACHER Rhand -skipmesh pistolBarrel -skipmesh pistolExtender -skipmesh pistolTrigger -skipmesh pistolBody -skipmesh pistolClip1 -skipmesh plasma_innerscopebot_mesh1 -skipmesh plasma_outerscopebot_mesh1 -skipmesh plasma_innerscopetop_mesh1 -skipmesh plasma_outerscopebot_mesh1 -skipmesh plasma_outerscopetop_mesh1 -skipmesh plasma_innerflap1_mesh1 -skipmesh plasma_outerflap1_mesh1 -skipmesh plasma_bolt_mesh1 -skipmesh plasma_screen_mesh1 -skipmesh plasma_body_mesh1 -skipmesh plasma_handle_mesh1 -skipmesh plasma_outerflap2_mesh4 -skipmesh plasma_innerflap2_mesh4 -skipmesh plasma_uppermon_mesh4 -skipmesh shotgun_body_mesh -skipmesh shotgun_handle_mesh -skipmesh shotgun_trigger_mesh -skipmesh shotgun_loflap_mesh -skipmesh shotgun_extender_mesh -skipmesh shotgun_upflap1_mesh -skipmesh shotgun_upflap2_mesh -skipmesh mgdisplaymesh -skipmesh mgextendermesh -skipmesh mgbodymesh -skipmesh mgclipmesh -skipmesh mgtriggermesh -skipmesh nade_cap_mesh -skipmesh nade_body_mesh -skipmesh chainsawcordmesh -skipmesh chainsawstartermesh -skipmesh chainsawblademesh -skipmesh chainsawhandlemesh -skipmesh chainsawbodymesh -skipmesh rshell1 -skipmesh rshell2 -skipmesh rshell3 -skipmesh rshell4 -skipmesh reloader1 -skipmesh handle -skipmesh aimer -skipmesh body -skipmesh flashlightmesh1 -skipmesh flashlightflaremesh -skipmesh flashlightbeammesh -skipmesh flashlightflare2mesh -skipmesh bfgmesh -skipmesh w_pistolfire -skipmesh w_pistolflash -skipmesh w_pistolmesh -skipmesh w_shotgun2barrelmesh -skipmesh w_shotgun2mesh -skipmesh w_machinegun_mesh -skipmesh w_mgfx1 -skipmesh w_mgfx2 -skipmesh w_mgfx3 -skipmesh w_mgfx4 -skipmesh w_plasmagun_mesh -skipmesh w_plasmagunfx1 -skipmesh w_plasmagunfx2 -skipmesh w_chainsaw_mesh -skipmesh w_chainsaw_chain_mesh -skipmesh w_rocketlauncher_mesh -skipmesh chaingunfx1_model -skipmesh chaingunfx2_model -skipmesh chaingunnubmodel -skipmesh chaingunbodymodel -skipmesh chaingunbarrelmodel" 
+MD5Version 10
+commandline "mesh models/characters/player/mocap/idle_stand.mb -dest models/md5/characters/player/mocap/player.md5mesh -game Doom -prefix PLAYER_ -keep SPINNER camWaist camHead modelviewconnector camera PISTOL_ATTACHER SHOTGUN_ATTACHER MGATTACHER pgATTACHER NADE_ATTACHER CHAINSAW_ATTACHER RL_ATTACHER FL_ATTACHER BFG_ATTACHER CHAINGUN_ATTACHER Lfteye_Focus Rteye_Focus Neck -parent Waist SPINNER -parent SPINNER Waist2 -parent Neck Shldrs -parent camera camHead -parent Lfteye_Focus Head -parent Rteye_Focus Head -parent Waist2 Hips -parent PISTOL_ATTACHER Rhand -parent SHOTGUN_ATTACHER Rhand -parent MGATTACHER Rhand -parent pgATTACHER Rhand -parent NADE_ATTACHER Rhand -parent CHAINSAW_ATTACHER Rhand -parent RL_ATTACHER Lhand -parent FL_ATTACHER Rhand -parent BFG_ATTACHER Lhand -parent camWaist modelviewconnector -parent CHAINGUN_ATTACHER Rhand -skipmesh pistolBarrel -skipmesh pistolExtender -skipmesh pistolTrigger -skipmesh pistolBody -skipmesh pistolClip1 -skipmesh plasma_innerscopebot_mesh1 -skipmesh plasma_outerscopebot_mesh1 -skipmesh plasma_innerscopetop_mesh1 -skipmesh plasma_outerscopebot_mesh1 -skipmesh plasma_outerscopetop_mesh1 -skipmesh plasma_innerflap1_mesh1 -skipmesh plasma_outerflap1_mesh1 -skipmesh plasma_bolt_mesh1 -skipmesh plasma_screen_mesh1 -skipmesh plasma_body_mesh1 -skipmesh plasma_handle_mesh1 -skipmesh plasma_outerflap2_mesh4 -skipmesh plasma_innerflap2_mesh4 -skipmesh plasma_uppermon_mesh4 -skipmesh shotgun_body_mesh -skipmesh shotgun_handle_mesh -skipmesh shotgun_trigger_mesh -skipmesh shotgun_loflap_mesh -skipmesh shotgun_extender_mesh -skipmesh shotgun_upflap1_mesh -skipmesh shotgun_upflap2_mesh -skipmesh mgdisplaymesh -skipmesh mgextendermesh -skipmesh mgbodymesh -skipmesh mgclipmesh -skipmesh mgtriggermesh -skipmesh nade_cap_mesh -skipmesh nade_body_mesh -skipmesh chainsawcordmesh -skipmesh chainsawstartermesh -skipmesh chainsawblademesh -skipmesh chainsawhandlemesh -skipmesh chainsawbodymesh -skipmesh rshell1 -skipmesh rshell2 -skipmesh rshell3 -skipmesh rshell4 -skipmesh reloader1 -skipmesh handle -skipmesh aimer -skipmesh body -skipmesh flashlightmesh1 -skipmesh flashlightflaremesh -skipmesh flashlightbeammesh -skipmesh flashlightflare2mesh -skipmesh bfgmesh -skipmesh w_pistolfire -skipmesh w_pistolflash -skipmesh w_pistolmesh -skipmesh w_shotgun2barrelmesh -skipmesh w_shotgun2mesh -skipmesh w_machinegun_mesh -skipmesh w_mgfx1 -skipmesh w_mgfx2 -skipmesh w_mgfx3 -skipmesh w_mgfx4 -skipmesh w_plasmagun_mesh -skipmesh w_plasmagunfx1 -skipmesh w_plasmagunfx2 -skipmesh w_chainsaw_mesh -skipmesh w_chainsaw_chain_mesh -skipmesh w_rocketlauncher_mesh -skipmesh chaingunfx1_model -skipmesh chaingunfx2_model -skipmesh chaingunnubmodel -skipmesh chaingunbodymodel -skipmesh chaingunbarrelmodel"
 
 numJoints 109
 numMeshes 15
 
-
 joints {
-
-  
-
-  "origin"	-1 ( 0 0 0 ) ( -0.7071067095 0 0 )		// 
-	
+	"origin"	-1 ( 0 0 0 ) ( -0.7071067095 0 0 )		// 
 	"Body"	0 ( 0 0.000002651 44.4758720398 ) ( 0.5991385579 0.7640674114 -0.1625256389 )		// origin
 	"Body2"	1 ( 0.0549236722 -0.1912643015 45.0571403503 ) ( 0.6171841621 0.7392068505 -0.2413620353 )		// Body
 	"Hips"	2 ( 0.1080327183 -0.2137062401 44.1131248474 ) ( 0.6171841621 0.7392068505 -0.2413620353 )		// Body2
@@ -126,7 +121,7 @@ mesh {
 	shader "models/characters/player/playerhead"
 
 	numverts 256
-	vert 0 ( 0.465512991 0.9838070273 ) 0 1
+	vert 0 ( 0.465512991 0.9838070273 ) 0 1 
 	vert 1 ( 0.4414600134 0.9349520206 ) 1 1
 	vert 2 ( 0.3931320012 0.9952939749 ) 2 1
 	vert 3 ( 0.5237169862 0.8985869884 ) 3 1
@@ -1421,7 +1416,7 @@ mesh {
 
 mesh {
 	// meshes: torso_mesh
-	shader "models/characters/player/body"
+	shader "models/characters/player/body2"
 
 	numverts 677
 	vert 0 ( 0.7719849944 0.1739491224 ) 426 1
@@ -4336,7 +4331,7 @@ mesh {
 
 mesh {
 	// meshes: legs_mesh
-	shader "models/characters/player/body2"
+	shader "models/characters/player/body"
 
 	numverts 898
 	vert 0 ( 0.4844226241 0.5566906333 ) 244 2
@@ -12822,8 +12817,8 @@ mesh {
 	weight 237 5 0.6395357847 ( -1.9879622459 -14.5922222137 1.8991892338 )
 	weight 238 6 0.3604642153 ( 1.5332955122 0.6491082907 3.6832573414 )
 	weight 239 5 0.3120179772 ( -0.2937581539 -16.6608066559 3.1838111877 )
-	weight 240 6 0.6163358092(0.0799613073 3.2277088165 3.487657547 )
-	weight241 7 0.0716462582 ( 3.7732357979 1.6986318827 5.5884442329)
+	weight 240 6 0.6163358092 ( 0.0799613073 3.2277088165 3.487657547 )
+	weight 241 7 0.0716462582 ( 3.7732357979 1.6986318827 5.5884442329 )
 	weight 242 5 0.2787030041 ( -2.908769846 -17.7731876373 1.5327250957 )
 	weight 243 6 0.7212969661 ( 2.5196433067 2.7907114029 1.3292437792 )
 	weight 244 7 0.5000047684 ( 0.9215539694 5.0178909302 0.3743585646 )

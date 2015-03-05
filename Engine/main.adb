@@ -1,4 +1,5 @@
 with Neo;                        use Neo;
+with Neo.Game;                   use Neo.Game;
 with Neo.Command;                use Neo.Command;
 with Neo.System;                 use Neo.System;
 with Neo.System.Input;           use Neo.System.Input;

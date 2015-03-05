@@ -1,4 +1,4 @@
-with Neo.System;                   use Neo.System;
+with Neo.System;                   use Neo.System; -- Only needed for SPECIFICS.Separator
 with Ada.Finalization;             use Ada.Finalization;
 with Ada.Wide_Text_IO;             use Ada.Wide_Text_IO;
 with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
@@ -45,7 +45,7 @@ package Neo.File is
     Do_Convert_Tabs    : Boolean  := True;
     Do_Ignore_Multiple : Boolean  := True;
   package Parser is -- Task unsafe
-      Unlexable : Exception;
+      Invalid : Exception;
       function At_End      return Boolean;
       function Peek        return String_2_Unbounded;
       function Next        return String_2_Unbounded;
@@ -59,7 +59,7 @@ package Neo.File is
       package Vector_String_2_Unbounded is new Vectors(String_2_Unbounded);
       Data   : Vector_String_2_Unbounded.Unprotected.Vector;
       Row    : Integer_4_Positive := 1;
-      Column : Integer_4_Positive := 1;
+      Column : Integer_4_Natural  := 0;
     end Parser;
 private
   function Get_Extension(Name : in String_2) return String_2;
