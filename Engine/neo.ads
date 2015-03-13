@@ -71,7 +71,7 @@
 --                                      `os`   :`   ```  `./     .   ``                                                                                    
 --                                       `-`   :`         ``     `                                                                                         
 --                                             `   --                                                                                                      
---     
+
 with Ada.Text_IO;
 with Ada.Wide_Text_IO;
 with Ada.Characters.Latin_1;
