@@ -1,20 +1,3 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
-separate(Neo.System.Sound.XAudio)
-package body Import
-  is
-  end Import;
+package body Neo.Command.System.Sound.XAudio
+  is pragma Source_File_Name("neo-sound-xaudio.adb");
+  end Neo.Command.System.Sound.XAudio;

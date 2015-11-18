@@ -1,37 +1,24 @@
---
---
---
---
---
---
---
--- https://github.com/AdaDoom3/AdaDoom3/blob/testgenprotectremoval/Libraries/SDL/src/video/x11/SDL_x11opengl.c
--- https://github.com/id-Software/DOOM-3/blob/master/neo/sys/linux/glimp.cpp
---
---
---
---
---
---
---
-separate(Neo.System.OpenGL)
-package Import
-  is
-  ----------------
-  -- Initialize --
-  ----------------
-    procedure Initialize(
-      Driver : in String_2)
-      is
-      begin
-        raise System_Call_Failure;
-      end Initialize;
-  --------------
-  -- Finalize --
-  --------------
-    procedure Finalize
-      is
-      begin
-        raise System_Call_Failure;
-      end Finalize;
-  end Import;
+separate(Neo.System.Graphics.OpenGL) package body Import is
+  function Load_Function(Name : in String_1) return Address is
+    begin 
+      raise Unimplemented_Feature; 
+      return NULL_ADDRESS;   
+    end Load_Function;
+  function Get_Extensions return String_1 is
+    begin
+      raise Unimplemented_Feature;  
+      return NULL_STRING_1;
+    end Get_Extensions;
+  procedure Swap_Buffers is
+    begin
+      raise Unimplemented_Feature;   
+    end Swap_Buffers;
+  procedure Initialize(Monitor : in Integer_4_Positive) is
+    begin
+      raise Unimplemented_Feature;
+    end Initialize;
+  procedure Finalize(Monitor : in Integer_4_Positive) is
+    begin
+      raise Unimplemented_Feature; 
+    end Finalize;
+end Import;

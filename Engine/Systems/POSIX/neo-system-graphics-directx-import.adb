@@ -1,30 +1,17 @@
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
---
+with
+  Neo.Link.Windows;
+use
+  Neo.Link.Windows;
 separate(Neo.System.Graphics.DirectX)
-package body Import
+package Import
   is
   ----------------
   -- Initialize --
   ----------------
-    procedure Initialize(
-      Driver : in String_2)
+    procedure Initialize
       is
       begin
-        raise Unimplemented_Feature;
+        null;
       end Initialize;
   --------------
   -- Finalize --
@@ -32,6 +19,6 @@ package body Import
     procedure Finalize
       is
       begin
-        raise Unimplemented_Feature;
+        null;
       end Finalize;
   end Import;
