@@ -98,8 +98,8 @@ project Neo is
                                           Directories := Directories & (                    Directory_Null_OpenGL, Directory_Null_XAudio, Directory_Null_Direct3D, Directory_Null_Steam);
       when "WindowsSDL" | "UnixSDL"    => Directories := Directories & (                         Directory_OpenGL                                                                      );
                                           Directories := Directories & (Directory_Null_GCM,                        Directory_Null_XAudio, Directory_Null_Direct3D, Directory_Null_Steam);
-      when "X11" | "Wayland" | "Cocoa" => Directories := Directories & (                         Directory_OpenGL,                                                      Directory_Steam);
-                                          Directories := Directories & (Directory_Null_GCM,                        Directory_Null_XAudio, Directory_Null_Direct3D                      );
+      when "X11" | "Wayland" | "Cocoa" => --Directories := Directories & (                         Directory_OpenGL,                                                      Directory_Steam);
+                                          Directories := Directories & (Directory_Null_GCM, Directory_Null_OpenGL, Directory_Null_XAudio, Directory_Null_Direct3D, Directory_Null_Steam);
     end case;
   --------------
   -- Switches --
@@ -108,7 +108,7 @@ project Neo is
       --"-u0",
       "-E");
     Switch_Linker   :=(
-      "-Wl,--enable-stdcall-fixup"
+      "-Wl",
       --"-Wl,--stack,0x40000000"
       );--"-fprofile-generate");--,                                                             -- Generate code coverage                                                                         
       --Directory_Binaries & S & "libopus"       & WORD_SIZE & Extension_Library,         --
@@ -151,6 +151,7 @@ project Neo is
           when "No"  => Switch_Linker := Switch_Linker & ("-mwindows");                 -- Remove the command console in Windows
         end case;
         Switch_Linker := Switch_Linker &(
+          "--enable-stdcall-fixup",
           External("WinDir") & S & "System32" & S & "comctl32"    & Extension_Library,
           External("WinDir") & S & "System32" & S & "D3DX9_42"    & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "gdi32"       & Extension_Library,  --
