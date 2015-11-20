@@ -108,7 +108,6 @@ project Neo is
       --"-u0",
       "-E");
     Switch_Linker   :=(
-      "-Wl",
       --"-Wl,--stack,0x40000000"
       );--"-fprofile-generate");--,                                                             -- Generate code coverage                                                                         
       --Directory_Binaries & S & "libopus"       & WORD_SIZE & Extension_Library,         --
@@ -151,7 +150,7 @@ project Neo is
           when "No"  => Switch_Linker := Switch_Linker & ("-mwindows");                 -- Remove the command console in Windows
         end case;
         Switch_Linker := Switch_Linker &(
-          "--enable-stdcall-fixup",
+          "-Wl,--enable-stdcall-fixup",
           External("WinDir") & S & "System32" & S & "comctl32"    & Extension_Library,
           External("WinDir") & S & "System32" & S & "D3DX9_42"    & Extension_Library,  --
           External("WinDir") & S & "System32" & S & "gdi32"       & Extension_Library,  --
@@ -166,6 +165,7 @@ project Neo is
           when "32" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles")      & S & "Steam" & Extension_Library);
         end case;
       when "WindowsSDL" | "UnixSDL" => Switch_Linker := Switch_Linker &(Directory_Binaries & "libsdl" & WORD_SIZE & Extension_Library);
+      when "X11" => Switch_Linker := Switch_Linker  & ("-lGL", "-lX11");    
       when others => null;
     end case;
   --------------
