@@ -21,7 +21,7 @@ project Neo is
   ------------
   -- Naming --
   ------------
-    S                                   := "/";
+    S                                   := "/"; -- Gprbuild automatically substitutes  "/" with "\" on Windows platforms
     Languages                           := ("Ada", "Project File");--, "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "Changelog", "C for Graphics", "Visual Basic", "Apple Script");
     Casing                              := "Lowercase";
     Version_Control                     := "Git";
@@ -43,7 +43,7 @@ project Neo is
     Extension_Mark_Down                 := ".md"; -- Use - instead of * to avoid changelog syntax highlighting in markdown files
     Extension_Library                   := ".lib";
     case SYSTEM is
-      when "Windows" | "WindowsSDL" => Extension_Library := ".dll"; S := "\";
+      when "Windows" | "WindowsSDL" => Extension_Library := ".dll";
       when others                   => null;
     end case;
   -----------------
@@ -108,7 +108,8 @@ project Neo is
       --"-u0",
       "-E");
     Switch_Linker   :=(
-      "-Wl,--enable-stdcall-fixup"
+      ""
+      --"Wl,--enable-stdcall-fixup"
       --"-Wl,--stack,0x40000000"
       );--"-fprofile-generate");--,                                                             -- Generate code coverage                                                                         
       --Directory_Binaries & S & "libopus"       & WORD_SIZE & Extension_Library,         --
@@ -165,6 +166,8 @@ project Neo is
           when "32" => null;--Switch_Linker := Switch_Linker & (External("ProgramFiles")      & S & "Steam" & Extension_Library);
         end case;
       when "WindowsSDL" | "UnixSDL" => Switch_Linker := Switch_Linker &(Directory_Binaries & "libsdl" & WORD_SIZE & Extension_Library);
+      when "X11" => 
+         Switch_Linker := Switch_Linker  & ("-lGL", "-lX11");	  
       when others => null;
     end case;
   --------------

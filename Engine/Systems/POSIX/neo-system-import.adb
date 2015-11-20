@@ -25,7 +25,7 @@ separate(Neo.System) package body Import is
       raise Unimplemented_Feature;  
       return False;
     end Is_Okay;
-  function Get_Specifics return Record_Specificsis
+  function Get_Specifics return Record_Specifics is
     begin
       raise Unimplemented_Feature;
       return (others => <>);
