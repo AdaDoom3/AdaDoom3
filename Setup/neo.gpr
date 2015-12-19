@@ -1,4 +1,7 @@
+--with "../Engine/Libraries/Florist/share/gpr/florist.gpr"; -- POSIX bindings for X11 systems
+
 project Neo is
+  
   -------------
   -- Options --
   -------------
@@ -22,7 +25,7 @@ project Neo is
   -- Naming --
   ------------
     S                                   := "/"; -- Gprbuild automatically substitutes  "/" with "\" on Windows platforms
-    Languages                           := ("Ada", "Project File");--, "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "Changelog", "C for Graphics", "Visual Basic", "Apple Script");
+    Languages                           := ("Ada", "C", "Project File");--, "C", "C++", "Java", "Pascal", "Shell", "Autoconf", "Changelog", "C for Graphics", "Visual Basic", "Apple Script");
     Casing                              := "Lowercase";
     Version_Control                     := "Git";
     Dot_Replacement                     := "-";
@@ -189,8 +192,8 @@ project Neo is
       for Body_Suffix("Ada")            use Extension_Ada_Body;
       --for Spec_Suffix("C++")            use Extension_C_Plus_Plus_Specification;
       --for Body_Suffix("C++")            use Extension_C_Plus_Plus_Body;
-      --for Spec_Suffix("C")              use Extension_C_Specification;
-      --for Body_Suffix("C")              use Extension_C_Body;
+      for Spec_Suffix("C")              use Extension_C_Specification;
+      for Body_Suffix("C")              use Extension_C_Body;
       --for Body_Suffix("Pascal")         use Extension_Pascal;
       for Body_Suffix("Changelog")      use Extension_Mark_Down;
       --for Body_Suffix("Java")           use Extension_Java;

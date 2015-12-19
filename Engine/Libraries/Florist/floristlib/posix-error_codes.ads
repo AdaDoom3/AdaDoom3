@@ -1,0 +1,51 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--            FLORIST (FSU Implementation of POSIX.5) COMPONENTS            --
+--                                                                          --
+--                     P O S I X . E R R O R _ C O D E S                    --
+--                                                                          --
+--                                  S p e c                                 --
+--                                                                          --
+--                                                                          --
+--  Copyright (c) 1996-1999     Florida State University (FSU), All Rights  --
+--  Reserved.                                                               --
+--                                                                          --
+--  This file is a component of FLORIST, an  implementation of an  Ada API  --
+--  for the POSIX OS services, for use with  the  GNAT  Ada  compiler  and  --
+--  the FSU Gnu Ada Runtime Library (GNARL).   The  interface  is intended  --
+--  to be close to that specified in  IEEE STD  1003.5: 1990  and IEEE STD  --
+--  1003.5b: 1996.                                                          --
+--                                                                          --
+--  FLORIST is free software;  you can  redistribute  it and/or  modify it  --
+--  under terms of the  GNU  General  Public  License as  published by the  --
+--  Free Software Foundation;  either version  2, or (at  your option) any  --
+--  later version.  FLORIST is distributed  in  the hope  that  it will be  --
+--  useful, but WITHOUT ANY WARRANTY;  without  even the implied  warranty  --
+--  of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE.  See  the GNU  --
+--  General Public License for more details.  You  should have  received a  --
+--  copy of the GNU General Public License  distributed  with  GNARL;  see  --
+--  file  COPYING.  If not,  write to  the  Free  Software  Foundation, 59  --
+--  Temple Place - Suite 330, Boston, MA 02111-1307, USA.                   --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+------------------------------------------------------------------------------
+
+--  It may seem that this mechanism should not be necessary, since the
+--  errno value supported by the C-language interface is per-thread.
+--  Unfortunately, that per-thread value may be overwritten by
+--  implicit OS service calls that take place between the point an
+--  exception is raised and the point that it is handled.  For
+--  example, if raising an exception involves calling longjmp(), the
+--  longjmp() call may overwrite the previous errno value.  Since this
+--  mechanism does add overhead, we are making its use selectable, via
+--  gnatprep.
+
+with Ada.Task_Attributes;
+package POSIX.Error_Codes is
+  new Ada.Task_Attributes (POSIX.Error_Code, POSIX.No_Error);
