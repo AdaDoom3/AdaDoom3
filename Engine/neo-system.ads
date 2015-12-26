@@ -15,35 +15,27 @@ package Neo.System is
   Unsupported                              : Exception;
   type Enumerated_Icon    is (No_Icon, Warning_Icon, Information_Icon, Error_Icon);
   type Enumerated_Buttons is (Yes_No_Buttons, Okay_Button, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
-  type Enumerated_System  is (Unknown_System,
-    Linux_System,             Linux_2_System,         Linux_2_1_System,      Linux_2_2_System,      
-    Linux_2_3_System,         Linux_2_4_System,       Linux_2_5_System,      Linux_2_6_System,      
-    Linux_3_System,           Linux_3_1_System,       Linux_3_2_System,      Linux_3_3_System,      
-    Linux_3_4_System,         Linux_3_5_System,       Linux_3_6_System,      Linux_3_7_System,      
-    Linux_3_8_System,         Linux_3_9_System,       Macintosh_System,      Macintosh_8_System,
-    Macintosh_8_5_System,     Macintosh_8_6_System,   Macintosh_9_System,    Macintosh_9_1_System,
-    Macintosh_9_2_System,     Macintosh_10_System,    Macintosh_10_1_System, Macintosh_10_2_System,
-    Macintosh_10_3_System,    Macintosh_10_4_System,  Macintosh_10_5_System, Macintosh_10_6_System,
-    Macintosh_10_7_System,    Macintosh_10_8_System,  Windows_System,        Windows_1_System,
-    Windows_1_4_System,       Windows_1_4_A_System,   Windows_1_4_B_System,  Windows_1_4_10_A_System,
-    Windows_1_4_10_B_System,  Windows_1_4_90_System,  Windows_2_System,      Windows_2_5_System,   
-    Windows_2_5_1_System,     Windows_2_6_System,     Windows_2_6_1_System,  Windows_2_6_2_System);
-  subtype Enumerated_Linux_System     is Enumerated_System range Linux_System..Linux_3_9_System;
-  subtype Enumerated_Windows_System   is Enumerated_System range Windows_System..Windows_2_6_2_System;
-  subtype Enumerated_Macintosh_System is Enumerated_System range Macintosh_System..Macintosh_10_8_System;
+  
+  type System_Type is (Unknown_System, Windows_System, Linux_System, Macintosh_System);
+  
+  type System_Version_Component_Type is (Major_Version, Minor_Version); -- On Linux called "Kernel Version" and "Major Revision" respectively.
+  
+  type System_Version_Type is array(System_Version_Component_Type) of Natural;
+  
+  type System_Requirments_Array_Type is array(System_Type range System_Type'succ(Unknown_System) .. System_Type'Last) of System_Version_Type;
+  
+  
   type Record_Specifics is record
-      Version   : Enumerated_System  := Unknown_System;
+      --Version   : Enumerated_System  := Unknown_System;
+      System    : System_Type         := Unknown_System;
+      Version   : System_Version_Type := (0, 0);
       Bit_Size  : Integer_4_Positive := Integer_4_Unsigned'size;
       Username  : String_2_Unbounded := To_String_2_Unbounded("Unnamed");
       Name      : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
       Path      : String_2_Unbounded := NULL_STRING_2_UNBOUNDED;
       Separator : Character_2        := NULL_CHARACTER_2;
     end record;
-  type Record_Requirements is record
-      Minimum_Linux     : Enumerated_Linux_System     := Linux_System;
-      Minimum_Windows   : Enumerated_Windows_System   := Windows_System;
-      Minimum_Macintosh : Enumerated_Macintosh_System := Macintosh_System;
-    end record;
+  
   procedure Trace;
   procedure Handle_Exception (Occurrence : in Exception_Occurrence);
   procedure Assert_Dummy     (Value : in Boolean);
@@ -61,7 +53,7 @@ package Neo.System is
   function Get_Specifics     return Record_Specifics;
   function Get_Last_Error    return String_2;
   function Is_Alerting       return Boolean;
-  function Is_Supported      (Requirements : in Record_Requirements) return Boolean;
+  function Is_Supported      (Requirements : in System_Requirments_Array_Type) return Boolean;
   function Is_Okay           (Name, Message : in String_2; Buttons : in Enumerated_Buttons := Okay_Button; Icon : in Enumerated_Icon := No_Icon) return Boolean with pre => Name'length > 0 and Message'length > 0;
   SPECIFICS       : constant Record_Specifics := Get_Specifics;
   PATH_VARIABLES  : constant String_2         := PATH_SETTINGS & SPECIFICS.Separator & "variables.csv";

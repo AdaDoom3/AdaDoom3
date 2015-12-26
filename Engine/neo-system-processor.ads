@@ -86,7 +86,11 @@ package Neo.System.Processor is
   SPECIFICS : constant Neo.System.Processor.Record_Specifics := Get_Specifics;
 private
   SECONDS_FOR_PROCESSOR_SPEED_TIMING : constant Duration            := 0.1;
-  REQUIREMENTS_FOR_AVX               : constant Record_Requirements := (Linux_3_System, Windows_2_6_1_System, Macintosh_10_6_System);
+  REQUIREMENTS_FOR_AVX               : constant System_Requirments_Array_Type := 
+    (Linux_System     => (2,6),    -- 2.6.30
+     Windows_System   => (6,1),    -- Actually only: 7 SP1, 2008 R2 SP1, 8 
+     Macintosh_System => (10,6));  -- 10.6.8
+  
   package Import is
       procedure Put_Stack;
       procedure Clear_Stack;

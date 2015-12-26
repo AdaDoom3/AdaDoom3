@@ -52,14 +52,17 @@ package body Neo.System is
       return Import.Is_Okay(Name, Message, Buttons, Icon);
     exception when Call_Failure => Put_Debug_Line(Localize(FAILED_IS_OKAY)); return False;
     end Is_Okay;
-  function Is_Supported(Requirements : in Record_Requirements) return Boolean is
-    begin
-      return(
-        if SPECIFICS.Version in Enumerated_Linux_System'range        then SPECIFICS.Version >= Requirements.Minimum_Linux
-        elsif SPECIFICS.Version in Enumerated_Windows_System'range   then SPECIFICS.Version >= Requirements.Minimum_Windows
-        elsif SPECIFICS.Version in Enumerated_Macintosh_System'range then SPECIFICS.Version >= Requirements.Minimum_Macintosh
-        else False);
-    end Is_Supported;
+    
+    
+  function Is_Supported(Requirements : in System_Requirments_Array_Type) return Boolean is
+  begin   
+     if Specifics.System = Unknown_System then
+	return False;
+     else
+	return Specifics.Version >= Requirements(Specifics.System);
+     end if;
+  end Is_Supported;
+  
   procedure Trace is
     Trace   : Tracebacks_Array(1..CALLBACK_TRACE_LIMIT) := (others => NULL_ADDRESS);
     Length  : Integer_4_Natural                         := 0;
@@ -129,7 +132,9 @@ package body Neo.System is
 begin
   Put_Title(Localize("SYSTEM"));
   New_Line;
-  Put_Line(Localize("Version: ")            & Enumerated_System'wide_image(SPECIFICS.Version));
+  Put_Line(Localize("System: ")             & System_Type'wide_image(SPECIFICS.System));
+  Put_Line(Localize("Major Version")        & Integer_4_Signed'wide_image(SPECIFICS.Version(Major_Version)));
+  Put_Line(Localize("Minor Version")        & Integer_4_Signed'wide_image(SPECIFICS.Version(Minor_Version)));
   Put_Line(Localize("Username: ")           & To_String_2(SPECIFICS.Username));
   Put_Line(Localize("Directory: ")          & To_String_2(SPECIFICS.Path));
   Put_Line(Localize("Name: ")               & To_String_2(SPECIFICS.Name));

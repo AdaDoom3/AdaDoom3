@@ -1,161 +1,117 @@
-separate(Neo.System) package body Import is
-  function Get_Last_Error return Integer_4_Unsigned is
-    begin
+with POSIX;
+with POSIX.Process_Identification;
+
+with Ada.Text_IO;
+with Ada.Strings.Fixed;
+with Ada.Strings.Maps;
+with Ada.Directories;
+
+separate(Neo.System) 
+
+package body Import is
+   
+   use  Ada.Strings.Fixed;
+   
+   use type POSIX.POSIX_String;
+
+   function Get_Last_Error return Integer_4_Unsigned is
+   begin
       raise Unimplemented_Feature;  
       return 0;
-    end Get_Last_Error;
-  procedure Open_Text(Path : in String_2) is
-    begin
+   end Get_Last_Error;
+   
+   
+   procedure Open_Text(Path : in String_2) is
+   begin
       raise Unimplemented_Feature;  
-    end Open_Text;
-  procedure Open_Webpage(Path : in String_2) is
-    begin
+   end Open_Text;
+   
+   
+   procedure Open_Webpage(Path : in String_2) is
+   begin
       raise Unimplemented_Feature;  
-    end Open_Webpage;
-  procedure Set_Alert(Value : in Boolean) is
-    begin
+   end Open_Webpage;
+   
+   
+   procedure Set_Alert(Value : in Boolean) is
+   begin
       raise Unimplemented_Feature;  
-    end Set_Alert;
-  procedure Execute(Path : in String_2; Do_Fullscreen : in Boolean) is
-    begin
+   end Set_Alert;
+   
+   
+   procedure Execute(Path : in String_2; Do_Fullscreen : in Boolean) is
+   begin
       raise Unimplemented_Feature;  
-    end Execute;
-  function Is_Okay(Name, Message : in String_2; Buttons : in Enumerated_Buttons; Icon : in Enumerated_Icon) return Boolean is
-    begin
+   end Execute;
+   
+   
+   function Is_Okay(Name, Message : in String_2; Buttons : in Enumerated_Buttons; Icon : in Enumerated_Icon) return Boolean is
+   begin
       raise Unimplemented_Feature;  
       return False;
-    end Is_Okay;
-  function Get_Specifics return Record_Specifics is
-    begin
-      raise Unimplemented_Feature;
-      return (others => <>);
-    end Get_Specifics;
-  end Import;
+   end Is_Okay;
+   
+   
+   function Get_Specifics return Record_Specifics is
+      
+      Proc_Self_Exe  : constant String := "/proc/self/exe";
 
+      Login_Name : constant POSIX.POSIX_String := POSIX.Process_Identification.Get_Login_Name;   
+      Release    : constant String     := POSIX.To_String(POSIX.Release);      
 
--- package body Import
---   is
---   -----------------
---   -- Get_Version --
---   -----------------
---     function Get_Version
---       return Enumerated_System
---       is
---       Name : aliased Record_Unix_Name := (others => <>);
---       begin
---         if Get_Unix_Name(Name'access) /= SUCCESS then
---           raise System_Call_Failure;
---         end if;
---         if
---         Name.System(
---           Name.System'First..
---           Name.System'First + UNIX_NAME_LINUX'Length) = UNIX_NAME_LINUX
---         then
---           case Name.Version(Name.Version'First) is
---             when '2' =>
---               case Name.Version(Name.Version'First + 2) is
---                 when '4'    => return Linux_2_4_System;
---                 when '5'    => return Linux_2_5_System;
---                 when '6'    => return Linux_2_6_System;
---                 when others => return Linux_2_System;
---                end case;
---             when '3' =>
---               case Name.Version(Name.Version'First + 2) is
---                 when '1'    => return Linux_3_1_System;
---                 when '2'    => return Linux_3_2_System;
---                 when '3'    => return Linux_3_3_System;
---                 when '4'    => return Linux_3_4_System;
---                 when '5'    => return Linux_3_5_System;
---                 when '6'    => return Linux_3_6_System;
---                 when '7'    => return Linux_3_7_System;
---                 when '8'    => return Linux_3_8_System;
---                 when '9'    => return Linux_3_9_System;
---                 when others => return Linux_3_System;
---               end case;
---             when others =>
---               return Linux_System;
---           end case;
---         elsif
---         Name.System(
---           Name.System'First..
---           Name.System'First + UNIX_NAME_MACINTOSH'Length) = UNIX_NAME_MACINTOSH
---         then
---           case Name.Version(Name.Version'First) is
---             when '8' =>
---               case Name.Version(Name.Version'First + 2) is
---                 when '5'    => return Macintosh_8_5_System;
---                 when '6'    => return Macintosh_8_6_System;
---                 when others => return Macintosh_8_System;
---               end case;
---             when '9' =>
---               case Name.Version(Name.Version'First + 4) is
---                 when '1'    => return Macintosh_9_1_System;
---                 when '2'    => return Macintosh_9_2_System;
---                 when others => return Macintosh_9_System;
---               end case;
---             when '1' =>
---               if Name.Version(Name.Version'First + 1) = '0' then
---                 case Name.Version(Name.Version'First + 3) is
---                   when '1'    => return Macintosh_10_1_System;
---                   when '2'    => return Macintosh_10_2_System;
---                   when '3'    => return Macintosh_10_3_System;
---                   when '4'    => return Macintosh_10_4_System;
---                   when '5'    => return Macintosh_10_5_System;
---                   when '6'    => return Macintosh_10_6_System;
---                   when '7'    => return Macintosh_10_7_System;
---                   when '8'    => return Macintosh_10_8_System;
---                   when others => return Macintosh_10_System;
---                 end case;
---               end if;
---             when others =>
---               return Macintosh_System;
---           end case;
---         else
---           raise System_Call_Failure;
---         end if;
---       end Get_Version;
---   ------------------
---   -- Get_Username --
---   ------------------
---     function Get_Username
---       return String_2
---       is
---       --Password : access Record_Password := Get_Password(Get_User);--getpwuid(geteuid); -- struct passwd
---       begin
---       --  if Password = null then
---       --    raise System_Call_Failure;
---       --  end if;
---       --  return Trim(Password.Name, Both);
---         raise Unsupported_Feature;
---         return DEFAULT_USERNAME;
---       end Get_Username;
---   ------------------
---   -- Open_Webpage --
---   ------------------
---     procedure Open_Webpage(
---       Path : in String_2)
---       is
---       begin
---         raise Unsupported_Feature;
---       end Open_Webpage;
---   -------------------------
---   -- Execute_Application --
---   -------------------------
---     procedure Execute_Application(
---       Executable_Path : in String_2;
---       Do_Fullscreen   : in Boolean)
---       is
---       begin
---         raise Unsupported_Feature;
---       end Execute_Application;
---   ------------------
---   -- Get_Bit_Size --
---   ------------------
---     function Get_Bit_Size
---       return Integer_4_Positive
---       is
---       begin
---         raise System_Call_Failure;
---         return WORD_SIZE;
---       end Get_Bit_Size;
---   end Import;
+      Path            : String_2_Unbounded;
+      Executable_Name : String_2_Unbounded;
+      System          : System_Type                := Unknown_System;
+      System_Version  : System_Version_Type        := (0,0);
+      
+      
+      Idx_First_Dot   : Natural := 0;
+      Idx_Second_Dot   : Natural := 0;
+      
+   begin
+      
+      if POSIX.System_Name /= "Linux" then
+	 
+	 raise Unimplemented_Feature;  	 
+	 
+      else
+	 
+	 System := Linux_System;
+	 
+	 -- proc/self/exe is available only on Linux
+	 -- For other systems see the following question on stack overflow:
+	 -- http://stackoverflow.com/questions/1023306/finding-current-executables-path-without-proc-self-exe
+	 Path := To_String_2_Unbounded(To_String_2(Ada.Directories.Full_Name(Proc_Self_Exe))); 	    
+	 
+      end if;
+      
+      -- Executable name based on the Path calculated earlier
+      --
+      Executable_Name := Delete(Path, 1, Index(Path, "\", Backward));
+      
+      -- Release is assumed to be well formatted (eg "4.2.0-18-generic")
+      --
+      Idx_First_Dot := Index(Source  => Release,
+			     Set     => Ada.Strings.Maps.To_Set('.'),
+			     From    => Release'First);
+      
+      System_Version(Major_Version) := Natural'Value(Release(Release'First .. Idx_First_Dot - 1));
+      
+      Idx_Second_Dot := Index(Source  => Release,
+			      Set     => Ada.Strings.Maps.To_Set('.'),
+			      From    => Idx_First_Dot + 1);
+      
+      System_Version(Minor_Version) := Natural'Value(Release(Idx_First_Dot + 1 .. Idx_Second_Dot - 1));
+      
+      return 
+	( Username  => To_String_2_Unbounded(To_String_2(POSIX.To_String(Login_Name))), -- It is probably a good idea to write conversion function from String to String_2_Unbounded
+	  System    => System,
+	  Version   => System_Version,
+	  Name      => Executable_Name,
+	  Path      => Path,
+	  Bit_Size  => (if POSIX.Machine = "x86_64" then 64 else 32),
+	  Separator => '/'  
+	);
+	  
+   end Get_Specifics;
+end Import;
