@@ -102,29 +102,10 @@ separate(Neo.System) package body Import is
           Name      => Delete(To_String_2_Unbounded(Directory), 1, Index(Directory, "\", Backward)),
           Path      => To_String_2_Unbounded(Directory),
           Username  => To_String_2_Unbounded(To_String_2(Username.all)),
-          Bit_Size  => (if Buffer = C_TRUE then 64 else 32),
-          Version   => (case Version.Platform_Identifier is
-            when 1 =>(case Version.Major is
-              when 4 =>(case Version.Minor is
-                when 0 =>(case Version.Service_Pack(2) is
-                  when 'B' | 'C' => Windows_1_4_B_System,
-                  when others    => Windows_1_4_A_System),
-                when 10 =>(case Version.Service_Pack(2) is
-                  when 'A'       => Windows_1_4_10_B_System,
-                  when others    => Windows_1_4_10_A_System),
-                when 90          => Windows_1_4_90_System,
-                when others      => Windows_1_4_System),
-              when others        => Windows_1_System),
-            when 2 =>(case Version.Major is
-              when 5 =>(case Version.Minor is
-                when 1           => Windows_2_5_1_System,
-                when others      => Windows_2_5_System),
-              when 6 =>(case Version.Minor is
-                when 1           => Windows_2_6_1_System,
-                when 2           => Windows_2_6_2_System,
-                when others      => Windows_2_6_System),
-              when others        => Windows_2_System),
-            when others          => Windows_System));
+	  Bit_Size  => (if Buffer = C_TRUE then 64 else 32),
+	  System    => Windows_System,	 
+	  Version   => ( Major_Version => Natural(Version.Major), Minor_Version => Natural(Version.Minor))
+	    );
         end;
     end Get_Specifics;
   function Callback_Window(Window : in Address; Message : in Integer_4_Unsigned_C; Data_Unsigned, Data_Signed : in Integer_Address) return Integer_Address; pragma Convention(Stdcall, Callback_Window);
