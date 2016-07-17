@@ -1,0 +1,49 @@
+--                                                                                                                    
+--                                                 A D A  D O O M  III                                                      
+--                                                                                                                    
+--                                         Copyright (C) 2016 Justin Squirek                                          
+-- 
+-- ACNC is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as
+-- published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  
+--                                                                                                                    
+-- ACNC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+-- of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.         
+--                                                                                                                    
+-- You should have received a copy of the GNU General Public License along with AdaV. If not, see gnu.org/licenses     
+--
+
+project AdaDoom3 is
+
+   -----------
+   -- Types --
+   -----------
+
+   type Word_Size is ("32", "64");
+   type Boolean   is ("No", "Yes");
+   type System    is ("Win32", "SDL");
+
+   --------------
+   -- Scenario --
+   --------------
+   -- In GPS, scenario variables are displayed with the latest External call on top within the widget.
+
+   SYSTEM    : System    := External ("System", "Win32");
+   DEBUG     : Boolean   := External ("Debug", "Yes");
+   OPTIMIZE  : Boolean   := External ("Optimize", "Yes");
+   WORD_SIZE : Word_Size := External ("Wordsize", "32");
+
+   --------------
+   -- Settings --
+   --------------
+
+   for Languages   use ("Ada", "Project File");
+   for Main        use ("main.adb");
+   for Exec_Dir    use "base";
+   for Object_Dir  use "obj";
+   for Source_Dirs use ("src/**", Exec_Dir & "/**");
+
+   package IDE is
+      for Documentation_Dir use "docs";
+   end IDE;
+
+end AdaDoom3;
