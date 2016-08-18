@@ -1,13 +1,14 @@
+
 --                                                                                                                    
---                                                 A D A  D O O M  III                                                    
+--                                                              A D A  D O O M  III                                                    
 --                                                                                                                    
---                                         Copyright (C) 2016 Justin Squirek                                          
+--                                                       Copyright (C) 2016 Justin Squirek                                          
 -- 
--- AdaDoom3 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
--- as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. 
+-- AdaDoom3 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+-- Software Foundation, either version 3 of the License, or (at your option) any later version. 
 --                                                                                                                    
--- AdaDoom3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
--- warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.         
+-- AdaDoom3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-- FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.         
 --                                                                                                                    
 -- You should have received a copy of the GNU General Public License along with AdaDoom3. If not, see gnu.org/licenses     
 --
@@ -488,5 +489,5 @@ separate (Neo.Model) package body Id_Tech is
       -- get model contents
       --model->contents = CM_GetNodeContents (model->node);
     end Load;
-end Id_Tech;
+end;
   

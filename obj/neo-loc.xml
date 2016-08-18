@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project >
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\GNAT\2015\lib\gcc\i686-pc-mingw32\4.9.3\adainclude\a-ztdeau.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-engine.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-engine.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-engine-renderer.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-model.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-world.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\win32\adav-win32.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 441" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 409" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 410" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 309" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 379" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 352" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-engine.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 8" line=" 70" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\src\neo-engine.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 9" line=" 76" >
+      <vfs_project>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_project>
+      <vfs_file>C:\Users\Justin\Desktop\AdaDoom3\neo.gpr</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>
