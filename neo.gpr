@@ -29,9 +29,9 @@
 --                    /dNMMMM+    `--               /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm/hd+`                                                               
 --                      -odNMN/   o/-...`           dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh//ho`                                                                
 --                         :mMm/  .+d:::s/          hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy++.                                                                   
---                          .yMd`  `:o+            :hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMdo:                                                                      
+--                          .yMd`  `:o+            :hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMdo:                                                            
 --                         .ysmM+                `-yhhMMMMMMMMMMMMMMMMMMMMMMMMMMMd`                                                                        
---                     .`  +NMhhm`              -sNMMMMMMMMMMMMdMMMMMMMMMMMNMMMMMs                                      N  E  O    E  N  G  I  N  E                                            
+--                     .`  +NMhhm`              -sNMMMMMMMMMMMMdMMMMMMMMMMMNMMMMMs                       N  E  O    E  N  G  I  N  E                                            
 --                    /MNd/ .N++Ms`            `yMMMMMMMhNMMMMMMMMMMMMMMMMMdNMMMN`                                                                         
 --                 ..-hNNs-.dM+.hos/.``    `./+yyMmmMMNNy.oodMMMMMMMMMMMMMMMMMMMN`                                                                         
 --                `dMd .` `sMso/hyyyMmmmmmhsshNNMM/+MMmyNymmMMMMMMMMNMMMMMMMMMMMMy                                                                         
@@ -75,32 +75,81 @@
 
 project Neo is
 
-   -----------
-   -- Types --
-   -----------
+  -----------
+  -- Types --
+  -----------
 
-   type Word_Size is ("32",    "64");
-   type Boolean   is ("No",    "Yes");
-   type System    is ("Win32", "SDL");
+  type Word_Size_Option is ("32",    "64");
+  type Boolean_Option   is ("No",    "Yes");
+  type System_Option    is ("Win32", "SDL");
+  type Game_Option      is ("Demo",  "DOOM");
 
-   --------------
-   -- Scenario --
-   --------------
+  --------------
+  -- Scenario --
+  --------------
 
-   SYSTEM    : System    := External ("System",   "Win32");
-   DEBUG     : Boolean   := External ("Debug",    "Yes");
-   OPTIMIZE  : Boolean   := External ("Optimize", "Yes");
-   WORD_SIZE : Word_Size := External ("Wordsize", "32");
+  SYSTEM   : System_Option    := External ("System",  "Win32");
+  DEBUG    : Boolean_Option   := External ("Debug",   "Yes");
+  BIT_SIZE : Word_Size_Option := External ("Bitsize", "64");
+  GAME     : Game_Option      := External ("Game",    "Demo");
 
-   --------------
-   -- Settings --
-   --------------
+  --------------
+  -- Settings --
+  --------------
 
-   for Languages   use ("Ada", "Project File");
-   for Main        use ("main.adb");
-   --for Exec_Dir    use "base";
-   for Object_Dir  use "obj";
-   for Source_Dirs use ("src/**", "/**"); --Exec_Dir &"/**");
-   package IDE is for Documentation_Dir use "docs"; end IDE;
+  Path_Game := "Games/" & GAME;
+  for Object_Dir  use "Temp";
+  for Source_Dirs use ("Engine/", ".", "Engine/" & SYSTEM & "/", Path_Game & "/Base/**");
+  for Main        use ("main.adb");
+  for Languages   use ("Ada", "Project File");
+  for Exec_Dir    use Path_Game;
 
+  --------------
+  -- Switches --
+  --------------
+
+  Switch_Binder   := ("-E");                 -- Store traceback in exceptions
+  Switch_Linker   := ("-fprofile-generate"); -- Generate code coverage                                                                         
+  Switch_Compiler := ("-gnateE",             -- Put extra info in exception messages
+                      "-O3",                 -- Optimize as much as possible
+                      "-gnatW8");            -- Enable wide-character unicode identifiers
+  Switch_Builder  := ("-j0",                 -- Use all available threads compilation
+                      "-k",                  -- Keep building as far as possible
+                      "-C",                  -- Use mapping file
+                      "-q",                  -- Quiet down compile messages
+                      "-s");                 -- Recompile if switches are changed
+  case DEBUG is
+    when "No"  => null;
+    when "Yes" => Switch_Compiler := Switch_Compiler & ("-fstack-check", -- Generate checks for exceeding the stack
+                                                        "-gnato",        -- Enable overflow checking for numerics
+                                                        "-gnatE",        -- Enable dynamic generic elaboration checks
+                                                        "-gnata",        -- Enable pre and post conditions
+                                                        "-g");           -- Create extended info in stack traces
+  end case;
+  case SYSTEM is
+    when "SDL" => null;
+    when "Win32" =>
+      case BIT_SIZE is
+        when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
+        when "32" => null;
+      end case;
+      Switch_Linker := Switch_Linker & ("-mwindows",                                        -- Remove the command console
+                                        "-Wl,--enable-stdcall-fixup",                       -- Suppress dll lookup warnings
+                                        External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
+                                        External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
+                                        External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
+                                        External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
+                                        External ("WinDir") & "\System32\XInput9_1_0.dll"); -- Graphics driver for the Vulkan API
+                                        -- A Vulkan driver is also necessary, but is loaded dynamically \System32\vulkan-1.dll
+  end case;
+
+  --------------
+  -- Packages --
+  --------------
+
+  package Compiler is for Default_Switches ("Ada") use Switch_Compiler; end Compiler;
+  package Linker   is for Default_Switches ("Ada") use Switch_Linker;   end Linker;
+  package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
+  package Builder  is for Default_Switches ("Ada") use Switch_Builder;
+                      for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
 end Neo;
