@@ -88,9 +88,9 @@ project Neo is
   -- Scenario --
   --------------
 
+  BIT_SIZE : Word_Size_Option := External ("Bitsize", "32");
   SYSTEM   : System_Option    := External ("System",  "Win32");
   DEBUG    : Boolean_Option   := External ("Debug",   "Yes");
-  BIT_SIZE : Word_Size_Option := External ("Bitsize", "64");
   GAME     : Game_Option      := External ("Game",    "Demo");
 
   --------------
