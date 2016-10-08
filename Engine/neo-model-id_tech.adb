@@ -13,481 +13,742 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+-- Load Id Tech modling formats - they are almost all exclusvily plain text - very slow loading...
 separate (Neo.Model) package body Id_Tech is
-  type Record_Internal_Joint is record
-      Name     : String_2_Unbounded;
-      Parent   : Int_4_Signed := -2;
-      Position : Record_Coordinate_3D;
-      Rotation : Record_Quaternion;
+
+  ------------
+  -- Common --
+  ------------
+
+  -- Internal structure that reflects how joints are layed-out by the md5mesh and md5anim data files
+  type Internal_Joint_State is record
+      Name     : Str;
+      Parent   : Int := -2;
+      Position : Point_3D;
+      Rotation : Quaternion_4D;
     end record;
-  package Vector_Record_Internal_Joint is new Vectors (Record_Internal_Joint);
-  use Vector_Record_Internal_Joint.Unprotected;
-  use Tree_Record_Animation_Joint.Unprotected;
-  function Build_Skeleton (Joints : in out Vector_Record_Internal_Joint.Unprotected.Vector) return Tree_Record_Animation_Joint.Unprotected.Tree is
-    Skeleton : Tree_Record_Animation_Joint.Unprotected.Tree;
+  package Vector_Internal_Joint is new Vectors (Internal_Joint_State);
+
+  -- Helper for bulding a skeleton from a vector of internal joint structures
+  function Build_Skeleton (Joints : in out Vector_Internal_Joint.Unsafe.Vector) return Treed_Joint.Unsafe.Tree is
+    Skeleton : Treed_Joint.Unsafe.Tree;
     begin
       for Joint of Joints loop
         if Joint.Parent = 0 then Append_Child (Skeleton, Skeleton.Root, Joint.Data, Joint.Index);
         else Skeleton.Append_Child (Joints.Element (Joint.Parent).Index, Joint.Data, Joint.Index); end if;
       end loop;
       return Skeleton;
-    end Build_Skeleton;
-  function Load (Name : in String_2) return Record_Mesh is
-    type Record_Internal_Vertex is record 
-        Texture      : Record_Coordinate_2D;
-        Index        : Int_4_Natural;
-        Weight_Start : Int_4_Natural;
-        Weight_Count : Int_4_Natural
-      end record;
-    package Map_Record_Internal_Vertex is new Ordered_Maps (Int_4_Natural, Record_Internal_Vertex);
-    type Record_Internal_Weight is record
-        Joint    : Int_4_Natural;
-        Amount   : Int_4_Natural;
-        Position : Record_Coordinate_3D;
-      end record;
-    package Vector_Record_Internal_Weight is new Vectors (Record_Internal_Weight);
-    type Record_Internal_Surface is record
-        Shader    : String_2_Unbounded;
-        Weights   : Vector_Record_Internal_Weight.Unprotected.Vector;
-        Vertices  : Map_Record_Internal_Vertex.Unprotected.Map;
-        Triangles : Vector_Record_Coordinate_3D.Unprotected.Vector;
-      end record;
-    package Vector_Record_Internal_Surface is new Vectors (Record_Internal_Surface);
-    Mesh_Surfaces : Vector_Mesh_Surface.Unprotected.Vector;
-    Surfaces      : Vector_Internal_Surface.Unprotected.Vector;
-    Joints        : Vector_Internal_Joint.Unprotected.Vector;
-    Weights       : Vector_Record_Internal_Weight.Unprotected.Vector;
-    Vertex        : Record_Internal_Vertex;
-    Surface       : Record_Internal_Surface;
-    Weight        : Record_Internal_Weight;
-    Joint         : Record_Internal_Joint;
-    Shape         : Record_Mesh_Vertex      := (True, others => <>);
-    Mesh          : Record_Mesh             := (True, others => <>);
-    package Mesh_Parser is new Parser (Name, "//", ("/*", "*/"));
-    use Mesh_Parser;
+    end;
+
+  ------------
+  -- Camera --
+  ------------
+
+  function Load (Path : Str) return Mesh_State is
+
+    -- Load an md5camera: https://modwiki.xnet.fi/MD5CAMERA_%28file_format%29
+    package Camera_Parser is new Parser (Path); use Camera_Parser;
+
+    -- MD5Version 10
+    -- commandline "-game Doom -range 617 644"
+    --
+    -- numFrames 28
+    -- frameRate 24
+    -- numCuts 3
+    --
+    -- cuts {
+    --   1
+    --   31
+    --   54
+    -- }
+    --
+    -- camera {
+    --   ( 1871.3586425781 1727.7247314453 -616.1809692383 ) ( -0.0764078647 0.0793514997 -0.6893982887 ) 54.4321250916
+    --   ( 1871.3757324219 1729.6734619141 -615.6220703125 ) ( -0.0760155693 0.0789561272 -0.6893864274 ) 54.3238334656
+    --   ( 1871.3937988281 1731.74609375 -615.0276489258 ) ( -0.0755680948 0.0785049945 -0.6893726587 ) 54.0121536255
+    -- }
+
+    Camera : Camera_State;
+    Frame  : Frame_State;
     begin
-      Next ("MD5Version");  Next;
-      Next ("commandline"); Next ("""", """");
-      Next ("numJoints");   Next;
-      Next ("numMeshes");   Next;
-      Next ("joints"); Next ("{"); while Peek /= "}" loop
-        Joint.Name := Next ("""", """");
-        Joint.Parent := Int_4_Signed (Next);
-        Next (" ("); Joint.Position := (Next, Next, Next); Next (")");
-        Next (" ("); Joint.Rotation := To_Quaternion ((Next, Next, Next)); Next (")");
+
+      -- Parse header
+      Assert ("MD5Version");  Skip;
+      Assert ("commandline"); Skip ("""", """");
+      Assert ("numFrames");   Skip;
+      Assert ("frameRate");   Camera.Frame_Rate := Next;
+      Assert ("numCuts");     Skip;
+
+      -- Parse cuts
+      Assert ("cuts", "{");
+      while Peek /= "}" loop
+        Camera.Cuts.Append (Next);
+      end loop; Assert ("}");
+
+      -- Parse frames
+      Assert ("camera", "{");
+      while Peek /= "}" loop
+        Assert ("("); Frame.Point := (Next, Next, Next); Assert (")");
+        Assert ("("); Frame.Orientation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
+        Frame.Field_Of_View := Next;
+        Camera.Append (Frame);
+      end loop; Assert ("}");
+
+      -- Return result
+      return Camera;
+    end;
+
+  ----------
+  -- Mesh --
+  ----------
+
+  function Load (Path : Str) return Mesh_State is
+
+    -- Load an md5mesh: https://modwiki.xnet.fi/MD5MESH_%28file_format%29
+    package Mesh_Parser is new Parser (Path); use Mesh_Parser;
+
+    -- MD5Version 10
+    -- commandline "keepmesh w_pistolmesh"
+    --
+    -- numJoints 2
+    -- numMeshes 1
+    --
+    -- joints {
+    --   "origin"  -1 ( 0 0 0 ) ( 0 0 0 )    // 
+    --   "pistol"  0 ( -4.7693982124 -7.3929142952 -0.2851690948 ) ( -0.1719816923 0.6224438548 0.5704225898 )   // origin
+    -- }
+    --
+    -- mesh {
+    --   // meshes: w_pistolmesh
+    --   shader "models/weapons/pistol/w_pistol"
+    --
+    --   numverts 73
+    --   vert 0 ( 0.6222810149 0.0924773812 ) 2 1
+    --   vert 1 ( 0.6222810149 0.478875041 ) 0 1
+    --   vert 2 ( 0.7565598488 0.478875041 ) 1 1
+    --
+    --   numtris 103
+    --   tri 0 2 1 0
+    --   tri 1 2 0 3
+    --   tri 2 4 1 2
+    --
+    --   numweights 57
+    --   weight 0 1 1 ( 3.4717245102 4.9919939041 0.6993011236 )
+    --   weight 1 1 1 ( 5.4410357475 4.9919939041 0.6993011832 )
+    --   weight 2 1 1 ( 3.4717233181 8.4349327087 0.8466652632 )
+    -- }
+
+    -- MD5Mesh internal structures
+    type Internal_Vertex_State is record 
+        Texture      : Point_2D;
+        Index        : Int_32_Natural;
+        Weight_Start : Int_32_Natural;
+        Weight_Count : Int_32_Natural;
+      end record;
+    package Map_Internal_Vertex is new Ordered_Maps (Int_32_Natural, Internal_Vertex_State);
+    type Internal_Weight_State is record
+        Joint    : Int_32_Natural;
+        Amount   : Int_32_Natural;
+        Position : Point_3D;
+      end record;
+    package Vector_Internal_Weight is new Vectors (Internal_Weight_State);
+    type Internal_Surface_State is record
+        Shader    : Str_Unbound;
+        Weights   : Vector_Internal_Weight.Unsafe.Vector;
+        Vertices  : Map_Internal_Vertex.Unsafe.Level;
+        Triangles : Vector_Point_3D.Unsafe.Vector;
+      end record;
+    package Vector_Internal_Surface is new Vectors (Internal_Surface_State);
+
+    -- Local variables
+    Mesh_Surfaces : Vector_Mesh_Surface.Unsafe.Vector;
+    Surfaces      : Vector_Internal_Surface.Unsafe.Vector;
+    Joints        : Vector_Internal_Joint.Unsafe.Vector;
+    Weights       : Vector_Internal_Weight.Unsafe.Vector;
+    Vertex        : Internal_Vertex_State;
+    Surface       : Internal_Surface_State;
+    Weight        : Internal_Weight_State;
+    Joint         : Internal_Joint_State;
+    Shape         : Mesh_Vertex_State;
+    Mesh          : Mesh_State;
+    begin
+
+      -- Parse header
+      Assert ("MD5Version");  Skip;
+      Assert ("commandline"); Skip ("""", """");
+      Assert ("numJoints");   Skip;
+      Assert ("numMeshes");   Skip;
+
+      -- Load joints
+      Assert ("joints", "{");
+      while Peek /= "}" loop
+        Joint.Name   := Next ("""", """");
+        Joint.Parent := Int (Next);
+        Assert ("("); Joint.Position := (Next, Next, Next); Assert (")");
+        Assert ("("); Joint.Rotation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
         Joints.Append (Joint);
-      end loop;
-      Next; while not At_End loop Next ("mesh"); Next ("{");
+      end loop; Skip;
+
+      -- Load meshes
+      while not At_EOF loop Assert ("mesh", "{");
         Next ("shader"); Surface.Shader := Next ("""", """");
-        Next ("numverts"); Next; while Peek = "vert" loop Next;
-          Vertex.Index := Int_4_Natural (Next);
+
+        -- Load verticies
+        Next ("numverts"); Skip;
+        while Peek = "vert" loop Next;
+          Vertex.Index := Int_32_Natural (Next);
           Next ("("); Vertex.Texture := (Next, Next); Next (")");
-          Vertex.Weight_Count := Int_4_Natural (Next);
-          Vertex.Weight_Start := Int_4_Natural (Next);
+          Vertex.Weight_Count := Int_32_Natural (Next);
+          Vertex.Weight_Start := Int_32_Natural (Next);
           Surface.Vertices.Insert (Vertex.Index, Vertex);
         end loop; 
-        Next ("numtris"); Next; while Peek = "tri" loop Next (2);
+
+        -- Load triangles
+        Assert ("numtris"); Skip;
+        while Peek = "tri" loop Skip (2);
           Surface.Triangles.Append ((Next, Next, Next));
         end loop; 
-        Next ("numweights"); Next; while Peek = "weight" loop Next (2);
-          Weight.Joint  := Int_4_Natural (Next);
-          Weight.Amount := Int_4_Natural (Next);
-          Next ("("); Weight.Position := (Next, Next, Next); Next (")");
+
+        -- Load weights
+        Assert ("numweights"); Skip;
+        while Peek = "weight" loop Skip (2);
+          Weight.Joint  := Int_32_Natural (Next);
+          Weight.Amount := Int_32_Natural (Next);
+          Assert ("("); Weight.Position := (Next, Next, Next); Assert (")");
           Surface.Weights.Append (Weight);
-        end loop; Next ("}");
+        end loop; Assert ("}");
+
+        -- Store data
         Surfaces.Append (Surface);
         Surface.Vertices.Clear;
         Surface.Triangles.Clear;
         Surface.Weights.Clear;
       end loop;
+
+      -- Translate internally stored data to the external format
       for Surface of Surfaces loop
         for Triangle of Surface.Triangles loop
-           for J in Surface.Vertices.Element (I).Weight_Start..Surface.Vertices.Element (I).Weight_Start + Surface.Vertices.Element (I).Weight_Count loop
-             Weights.Append ((Surface.Weights.Element (J).Amount, Surface.Weights.Element (J).Position, Joints.Element (Surface.Weights.Element (J).Joint).Name));
-           end loop;
-           Shape.Insert (I, (True, Surface.Vertices.Element (I).Texture, Weights)); 
-            Weights.Clear;
-         Mesh_Surfaces.Append (Shape);
+          for J in Surface.Vertices.Element (I).Weight_Start..
+                   Surface.Vertices.Element (I).Weight_Start +
+                   Surface.Vertices.Element (I).Weight_Count 
+          loop
+            Weights.Append ((Surface.Weights.Element (J).Amount,
+                             Surface.Weights.Element (J).Position,
+                             Joints.Element (Surface.Weights.Element (J).Joint).Name));
+          end loop;
+          Shape.Insert (I, (True, Surface.Vertices.Element (I).Texture, Weights)); 
+          Weights.Clear;
+          Mesh_Surfaces.Append (Shape);
         end loop;
-       Mesh.Surfaces.Append ( (Surface.Material, Mesh_Surfaces));
+        Mesh.Surfaces.Append ( (Surface.Material, Mesh_Surfaces));
         Mesh_Surfaces.Clear;
       end loop;
       Mesh.Skeleton := Build_Skeleton (Joints);
-      --Mesh.Bounds   := Build_Bounds (Weigh_Surfaces (Mesh.Skeleton, Mesh.Surfaces));
+      Mesh.Bounds   := Build_Bounds (Weigh_Surfaces (Mesh.Skeleton, Mesh.Surfaces));
       return Mesh;
-    end Load;
-  procedure Save (Name : in String_2; Item : in Record_Mesh) is
-    begin 
-      null;
-    end Save;
-  function Load (Name : in String_2) return Record_Animation is
-    type Record_Internal_Base_Frame_Joints (Flags : Int_1_Unsigned := 0) is record
-        Joint          : Record_Internal_Joint;
-        Start_Index    : Int_4_Positive;
-        Has_Position_X : Boolean := (Flags and 16#01#) > 0;
-        Has_Position_Y : Boolean := (Flags and 16#02#) > 0;
-        Has_Position_Z : Boolean := (Flags and 16#04#) > 0;
-        Has_Rotation_X : Boolean := (Flags and 16#08#) > 0;
-        Has_Rotation_Y : Boolean := (Flags and 16#0F#) > 0;
-        Has_Rotation_Z : Boolean := (Flags and 16#10#) > 0;
+    end;
+
+  ---------------
+  -- Animation --
+  ---------------
+
+  function Load (Path : Str) return Animation_State is
+
+    -- Load a md5anim: https://modwiki.xnet.fi/MD5ANIM_%28file_format%29
+    package Mesh_Parser is new Parser (Path); use Mesh_Parser;
+
+    -- MD5Version 10
+    -- commandline "-rename origin blah"
+    --
+    -- numFrames 6
+    -- numJoints 24
+    -- frameRate 24
+    -- numAnimatedComponents 12
+    --
+    -- hierarchy {
+    --   "origin"  -1 0 0  //
+    --   "Ruparm"  0 63 0  // origin ( Tx Ty Tz Qx Qy Qz )
+    --   "Rloarm"  1 0 0 // Ruparm
+    -- }
+    --
+    -- bounds {
+    --   ( -20.8464851379 -13.4358482361 -23.780872345 ) ( 35.4269790649 1.8852002621 -1.5502643585 )
+    --   ( -20.8273963928 -13.0156173706 -25.0898666382 ) ( 33.7135047913 3.8181664944 -1.6039829254 )
+    --   ( -20.2791900635 -16.8258895874 -27.3849925995 ) ( 31.1449451447 5.4798426628 -1.4983978271 )
+    -- }
+    --
+    -- baseframe {
+    --   ( 0 0 0 ) ( 0 0 0 )
+    --   ( -22.2841644287 0.1627351195 -9.7520523071 ) ( 0.6782681942 0.1113016978 0.5936871767 )
+    --   ( 0.1396271884 12.9590711594 0.1787396818 ) ( -0.3416547775 -0.0022040813 -0.0027665049 )
+    -- }
+    --
+    -- frame 0 {
+    --    -22.2841644287 0.1627351195 -9.7520523071 0.6782681942 0.1113016978 0.5936871767
+    --    -1.2873182297 -4.995059967 -18.8158550262 -0.3045859933 -0.4525413811 -0.5261704326
+    -- }
+
+    -- MD5Anim internal structures
+    type Internal_Base_Frame_Joints (Flags : Int_8_Unsigned := 0) is record
+        Joint       : Internal_Joint;
+        Start_Index : Int_32_Positive;
+        Position_X  : Boolean := (Flags and 16#01#) > 0;
+        Position_Y  : Boolean := (Flags and 16#02#) > 0;
+        Position_Z  : Boolean := (Flags and 16#04#) > 0;
+        Rotation_X  : Boolean := (Flags and 16#08#) > 0;
+        Rotation_Y  : Boolean := (Flags and 16#0F#) > 0;
+        Rotation_Z  : Boolean := (Flags and 16#10#) > 0;
       end record;
-    package Vector_Record_Internal_Base_Frame_Joints is new Vectors (Record_Internal_Base_Frame_Joints);
-    type Record_Internal_Bound is record
-        Minimum : Record_Coordinate_3D := (others => <>);
-        Maximum : Record_Coordinate_3D := (others => <>);
-      end record;
-    package Vector_Record_Internal_Bound is new Vectors (Record_Internal_Bound);
-    Base_Frame_Joints : Vector_Record_Internal_Base_Frame_Joints.Unprotected.Vector;
-    Frame_Data        : Vector_Float_4_Real.Unprotected.Vector;
-    Animation         : Record_Animation := (others => <>);
+    package Vector_Internal_Base_Frame_Joints is new Vectors (Internal_Base_Frame_Joints);
+    package Vector_Internal_Bound             is new Vectors (Internal_Bound);
+
+    -- Local variables
+    Base_Frame_Joints : Vector_Internal_Base_Frame_Joints.Unsafe.Vector;
+    Frame_Data        : Vector_Float_32_Real.Unsafe.Vector;
+    Animation         : Animation;
     begin
-      Next ("MD5Version");  Next;
-      Next ("commandline"); Next ("""", """");
-      Next ("numFrames");   Next;
-      Next ("numJoints");              Next;
+
+      -- Parse header
+      Next ("MD5Version");            Skip;
+      Next ("commandline");           Skip ("""", """");
+      Next ("numFrames");             Skip;
+      Next ("numJoints");             Skip;
       Next ("frameRate");             Animation.Frame_Rate := Next;
-      Next ("numAnimatedComponents"); Next;
-      Next ("hierarchy"); Next ("{"); while Peek /= "}" loop
-        Base_Frame_Joints.Append ( (
-          Data        => (Next ("""", """"), Next, others => <>),
-          Flags       => Int_1_Unsigned (Next),
-          Start_Index => Int_4_Positive (Next)));
-      end loop; Next;
-      Next ("bounds", "{"); while Peek /= "}" loop
-        Next (" ("); Bounds.Minimum := (Next, Next, Next); Next (")");
-        Next (" ("); Bounds.Maximum := (Next, Next, Next); Next (")");
-        Animation.Frames.Append (Bounds => Bounds, others => <>);
-      end loop; Next;
-      Next ("baseframe", "{"); for Joint in Base_Frame_Joints loop exit when Peek /= "}";
-        Next (" ("); Joint.Data.Position := (Next, Next, Next);      Next (")");
-        Next (" ("); Joint.Data.Rotation := (Next, Next, Next, 0.0); Next (")"); -- At this point W still needs computation
-      end loop; Next;
-      while not At_End loop
-        Next ("frame"); while Peek /= "}" loop Frame_Data.Append (Next); end loop; Next; for Frame of Animation.Frames loop
-          if Frame.Has_Position_X then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Position_Y then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Position_Z then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_X then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_Z then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
-          if Frame.Has_Rotation_Y then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+      Next ("numAnimatedComponents"); Skip;
+
+      -- Load skeleton
+      Assert ("hierarchy", "{");
+      while Peek /= "}" loop
+        Base_Frame_Joints.Append ((Data        => (Next ("""", """"), Next, others => <>),
+                                   Flags       => Int_8_Unsigned (Next),
+                                   Start_Index => Int_32_Positive (Next)));
+      end loop; Skip;
+
+      -- Load boundes for each frame
+      Assert ("bounds", "{");
+      while Peek /= "}" loop
+        Next ("("); Bounds (1) := (Next, Next, Next); Next (")");
+        Next ("("); Bounds (2) := (Next, Next, Next); Next (")");
+        Animation.Frames.Append (Bounds, others => <>);
+      end loop; Skip;
+
+      -- Load the "base frame" or starting position of the animation
+      Assert ("baseframe", "{");
+      for Joint in Base_Frame_Joints loop
+        exit when Peek /= "}";
+        Assert ("("); Joint.Data.Position := (Next, Next, Next); Assert (")");
+        Assert ("("); Joint.Data.Rotation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
+      end loop; Skip;
+
+      -- Load animation delta data
+      while not At_EOF loop
+        Assert ("frame");
+        while Peek /= "}" loop Frame_Data.Append (Next); end loop; Skip;
+        for Frame of Animation.Frames loop
+          if Frame.Position_X then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Position_Y then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Position_Z then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Rotation_X then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Rotation_Z then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
+          if Frame.Rotation_Y then Joint.Position (I) := Frame_Data.Element (Frame.Index); Frame.Index := Frame.Index + 1; end if;
         end loop;
         Animation.Frames.Append (Build_Skeleton (Joints));
       end loop;
       return Animation;
-    end Load;
-  function Load (Name : in String_2) return Record_Map is
-    Map : Record_Map := (others => <>);
+    end;
+
+  -----------
+  -- Level --
+  -----------
+
+  -- Levels or "maps" are divided into several individual files as part of the level compiliation on design process, so this requires us
+  -- to load and parse all 3 of these different data formats to load a single level.
+  function Load (Path : Str) return Level_State is
+    Level       : Level_State;
+    Actual_Path : Str := Str (1..Index (Str, "."));
     begin
+
+      -- Load collision model: https://web.archive.org/web/20130603002516/http://www.doom3world.org/phpbb2/viewtopic.php?p=151225
       declare
-      package Collision_Model_Parser is new Parser (Name, "//"); use Collision_Model_Parser;
+      package Parse_Collision_Model is new Parser (Actual_Path & ".cm"); use Parse_Collision_Model;
+
+      -- CM "1.00"
+      --
+      -- 1106216053
+      --
+      -- collisionModel "worldMap" {
+      --   vertices { /* numVertices = */ 32
+      --     /* 0 */ ( 192 -128 256 )
+      --     /* 1 */ ( -192 -128 256 )
+      --     /* 2 */ ( -192 256 256 )
+      --   }
+      --   edges { /* numEdges = */ 73
+      --     /* 0 */ ( 0 0 ) 0 0
+      --     /* 1 */ ( 0 1 ) 1 2
+      --     /* 2 */ ( 1 2 ) 1 2
+      --   }
+      --   nodes {
+      --     ( -1 0 )
+      --   }
+      --   polygons /* polygonMemory = */ 2592 {
+      --     4 ( -62 -70 -68 -72 ) ( -1 0 0 ) 208 ( -208 -128 0 ) ( -208 256 256 ) "textures/base_wall/lfwall13f3"
+      --     4 ( -63 72 -67 -71 ) ( 0 1 0 ) 256 ( -208 256 0 ) ( -192 256 256 ) "textures/base_wall/lfwall13f3"
+      --     4 ( -64 71 -66 -69 ) ( 1 0 0 ) -192 ( -192 -128 0 ) ( -192 256 256 ) "textures/base_wall/lfwall13f3"
+      --   }
+      --   brushes /* brushMemory = */ 840 {
+      --     6 {
+      --       ( 0 0 -1 ) 0
+      --       ( 0 0 1 ) 256
+      --       ( 0 -1 0 ) 128
+      --       ( 1 0 0 ) -192
+      --       ( 0 1 0 ) 256
+      --       ( -1 0 0 ) 208
+      --     } ( -208 -128 0 ) ( -192 256 256 ) "solid,opaque"
+      --   }
+      -- }
+
+      Section : Section_State;
+      Polygon : Polygon_State;
+      Brush   : Brush_State;
+      Plane   : Plane_3D;
+      Edge    : Edge_State;
       begin
-        Next ("CM"); Next ("""", """");
-        Next (Map.CRC = Int_8_Unsigned (Next));
-        while not At_End loop
-          Next ("collisionModel");
-          Section.Name := Next ("""", """");
-          Next ("{");
+
+        -- Load header
+        Assert ("CM"); Skip ("""", """");
+        Assert (Level.CRC = Int_64_Unsigned (Next));
+        while not At_EOF loop
+
+          -- Load models
+          Assert ("collisionModel"); Section.Name := Next ("""", """"); Assert ("{");
           while Peek /= "}" loop
-            Next ("vertices"); Next ("{"); Next;
+
+            -- Load verticies
+            Assert ("vertices", "{"); Skip;
             while Peek /= "}" loop
-              Next (" ("); Section.Vertices.Append (Next, Next, Next); Next (")");
-            end loop;
-            Next;
-            Next ("edges"); Next ("{"); Next;
+              Assert ("("); Section.Vertices.Append (Next, Next, Next); Assert (")");
+            end loop; Skip;
+
+            -- Load edges
+            Assert ("edges", "{"); Skip;
             while Peek /= "}" loop
-              Next (" ("); Edge.Vertex := (Int_4_Natural (Next), Int_4_Natural (Next)); Next (")");
-              Edge.Internal        := Int_4_Natural (Next);
-              Edge.Number_Of_Users := Int_4_Natural (Next);
+              Assert ("("); Edge.Vertex := (Int_32_Natural (Next), Int_32_Natural (Next)); Assert (")");
+              Edge.Internal        := Int_32_Natural (Next);
+              Edge.Number_Of_Users := Int_32_Natural (Next);
               Surface.Edges.Append (Edge);
-            end loop;
-            Next;
-            Next ("nodes"); Next ("{"); Next;
+            end loop; Skip;
+ 
+            -- Load nodes
+            Assert ("nodes", "{"); Skip;
             while Peek /= "}" loop
-              Next (" ("); Surface.Nodes.Append ( (Int_4_Natural (Next), Next)); Next (")");
-            end loop;
-            Next;
-            Next ("polygons"); Next; Next ("{");
-            while Peek /= "}" loop
-              Next;
-              Next (" (");
-              while Peek /= ")" loop Polygon.Edges.Append (Int_4_Signed (Next)); end loop;
-              Next (" ("); Polygon.Normal := (Next, Next, Next); Next (")");
-              Polygon.Distance := Next;
-              Next (" ("); Polygon.Minimum := (Next, Next, Next); Next (")");
-              Next (" ("); Polygon.Maximum := (Next, Next, Next); Next (")");
-              Polygon.Material := Next ("""", """");
-              Map.Polygons.Append (Polygon); -- Add to tree?
-            end loop;
-            Next;
-            Next ("brushes"); Next; Next ("{");
-            while Peek /= "}" loop
-              Next;
-              Next ("{");
+              Assert ("("); Surface.Nodes.Append ((Int_32_Natural (Next), Next)); Assert (")");
+            end loop; Skip;
+
+            -- Load polygons ???
+            Assert ("polygons"); Skip; Assert ("{");
+            while Peek /= "}" loop Skip; Assert ("(");
+              while Peek /= ")" loop
+                Collision_Section.Edges.Append (Int (Next));
+              end loop; Skip;
+              Assert ("("); Collision_Section.Normal := (Next, Next, Next); Assert (")");
+              Collision_Section.Distance := Next;
+              Assert ("("); Collision_Section.Minimum := (Next, Next, Next); Assert (")");
+              Assert ("("); Collision_Section.Maximum := (Next, Next, Next); Assert (")");
+              Collision_Section.Material := Next ("""", """");
+              Surface.Polygons.Append (Collision_Section); -- Add to tree?
+            end loop; Skip;
+
+            -- Load brushes
+            Assert ("brushes"); Skip; Assert ("{");
+            while Peek /= "}" loop Skip; Assert ("{");
               while Peek /= "}" loop
-                Next (" ("); Plane.Normal := ( (Next, Next, Next)); Next (")");
+                Assert ("("); Plane.Normal := ((Next, Next, Next)); Assert (")");
                 Plane.Distance := Next;
                 Brush.Normals.Append (Plane);
-              end loop;
-              Next (" ("); Brush.Minimum := (Next, Next, Next); Next (")");
-              Next (" ("); Brush.Maximum := (Next, Next, Next); Next (")");
+              end loop; SKip;
+              Assert ("("); Brush.Minimum := (Next, Next, Next); Assert (")");
+              Assert ("("); Brush.Maximum := (Next, Next, Next); Assert (")");
               for Content of Split (Next ("""", """"), ",") loop
                 if    Content = "solid"  then Brush.Is_Solid := True;
                 elsif Content = "opaque" then Brush.Is_Opaque := True;
-                elsif Content = "" then Brush. := True;
-                elsif Content = "" then Brush. := True;
                 end if;
               end loop;
-              Next;
-              Map.Brushes.Append (Brush);
-            end loop;
-            Next;
-          end loop;
-          Next;
-        end;
-        declare
-        package Map_Entity_Parser is new Parser (Name, "//");
-        begin
-          Next ("Version"); Next;
-          while not At_End loop
-            Next ("{");
-            while Peek /= "}" loop
+              Surface.Brushes.Append (Brush);
+            end loop; Skip;
+          end loop; Skip;
+
+          -- Add section to level
+          Level.Sections.Add (Section);
+        end loop;
+      end;
+
+      -- Load Level entities: https://modwiki.xnet.fi/MAP_%28file_format%29
+      declare
+      package Parse_Entities is new Parser (Actual_Path & ".map"); use Parse_Entities;
+
+      -- Version 2
+      -- // entity 0
+      -- {
+      --   "classname" "worldspawn"
+      --   "spawnflags" "1"
+      --   // brush 0
+      --   {
+      --     patchDef2
+      --     {
+      --       "textures/common/nodraw"
+      --       ( 3 3 0 0 0 )
+      --       (
+      --         ( ( -64 -64 -256 0 0 ) ( -64 -64 -192 0 -2 ) ( -64 -64 -128 0 -4 ) )
+      --         ( ( 64 -64 -256 4 0 ) ( 64 -64 -192 4 -2 ) ( 64 -64 -128 4 -4 ) )
+      --         ( ( 64 64 -256 8 0 ) ( 64 64 -192 8 -2 ) ( 64 64 -128 8 -4 ) )
+      --       )
+      --     }
+      --   }
+      --   // brush 1
+      --   {
+      --     brushDef3
+      --     {
+      --       ( -0 0 1 -64 ) ( ( 0.03125 -0 -0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --       ( 0 1 0 -64 ) ( ( 0.03125 0 0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --       ( 1 -0 0 -64 ) ( ( 0.03125 -0 -0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --       ( 0 0 -1 -64 ) ( ( 0.03125 -0 -0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --       ( 0 -1 0 -64 ) ( ( 0.03125 -0 -0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --       ( -1 0 0 -64 ) ( ( 0.03125 -0 -0 ) ( 0 0.03125 0 ) ) "textures/common/nodraw" 0 0 0
+      --     }
+      --   }
+      -- }
+
+      Patch : Patch_State;
+      Brush : Brush_State;
+      I     : Int := -1;
+      begin
+
+        -- Load header
+        Next ("Version"); Skip;
+        while not At_EOF loop Next ("{");
+          while Peek /= "}" loop
+
+            -- Handle key-value pair
+            if Peek /= "{" then
               Token := Next ("""", """");
-              if Token = "classname" then
+              if Token = "origin" then Origin := (Next, Next, Next);
+              elsif Token = "classname" then 
                 Token := Next ("""", """");
-                if Token = "" then
-                end if;
-              elsif Token = "origin" then
-              end if;
-            end loop;
-          end loop;
-        
-        
-        
-        
-        
-        
-        Data.N_N ("Version");
-        Entity.Version := Integer'wide_value (Data.Next);
-        while not Is_End (Data) loop 
-          Data.N_N ("{");
-          Token := Data.Next;
-          while Token /= "}" loop
-            if Token /= "{" then
-              Token := Trim (Token, """", Both);
-              if Token = "origin" then
-                Origin := (Float_4_Real'wide_value (Data.Next), Float_4_Real'wide_value (Data.Next), Float_4_Real'wide_value (Data.Next));
-              elsif Token = "classname" then
-                Token := Data.Next;
                 if Token = "worldspawn" then
-                  Origin := (others => 0.0);
-                  Entity.Values.Add ("classname", "worldspawn"); 
+                  Origin := (0.0, 0.0, 0.0);
+                  Level.Entities.Append ("classname", "worldspawn"); 
                 else
-                  Entity.Values.Add ("classname", Token); 
+                  Level.Entities.Append ("classname", Token); 
                 end if;
               else
-                Entity.Values.Add (Token, Data.Next);
+                Level.EntitiesAppend (Token, Next ("""", """"));
               end if;
             else
-              Token := Data.Next;
-              if Token = "brush" then
-                Map.Brushes.Add;
-                Data.N_N ("{");
-                Token := Data.Next;
-                while Token /= "}" loop
-                  while Token /= " (" loop
-                    Map.Brushes.Last.Values.Add (Token, Data.Next);
-                    Token := Data.Next;
-                  end loop;
-                  Token := Data.Next;
-                  Map.Brushes.Last.Sides.Add ( (
-                    Plane    => (if Token = "brushDef2" or Token = "brushDef3" then Data.N_Vector (4)
-                                 else Plane_From_Points (Data.N_Vector (3), Data.N_Vector (3), Data.N_Vector (3), Origin)),
-                    Texture  => Data.N_Matrix (2, 3),
-                    Origin   => Origin,
-                    Material => (if Version < 2.0 then "textures/" else "") & Data.N_File_Name));
-                  Data.N_Line; -- Quake II allows override of default flags and values, but it is not needed anymore so skip it
-                  Token := Data.Next;
+              I := I + 1;
+
+              -- Handle brush
+              Token := Next;
+              if Token = "brushDef3" then Assert ("{");
+                while Peek /= "}" 
+                  if Peek /= "(" then Skip; end if; -- Ignore junk ???
+                  Assert ("("); Brush.Plane := (Next, Next, Next, Next); Assert (")", "(");
+                  Assert ("("); Brush.Texture.X := (Next, Next, Next); Assert (")");
+                  Assert ("("); Brush.Texture.Y := (Next, Next, Next); Assert (")", ")");
+                  Brush.Material := Next ("""", """");
+                  Brush.Origin := (Next, Next, Next);
+                  Level.Brushes.Append (Brush);
                 end loop;
-              elsif Token = "patch" then -- "These were written out in the wrong order, IMHO"
-                Token := Data.N_Path;
-                Map.Patches.Add (new Record_Patch (Data.Next = "patchDef3", Data.Next, Data.Next));
-                Map.Patches.Last.Material := (if Version < 2.0 then "textures/" else "") & Token;
-                Data.N_N (" (");
-                if Map.Patches.Last.Is_Explicityly_Subdivided then
-                  Map.Patches.Last.Subdivisions := (Data.Next, Data.Next);
+
+              -- Handle patch ???
+              elsif Token = "patchDef2"  or Token = "patchDef3" then
+                Group.Material := Next ("""", """");
+                Assert ("(");
+                if Token = "patchDef3" then
+                  Patch.Subdivision_X := Next;
+                  Patch.Subdivision_Y := Next;
                 end if;
-                Map.Patches.Last.Random_Information := Data.N_Array_Integer (3);
-                Data.N_N ( (")", " ("));
-                for Vertex_Group of Map.Patches.Last.Vertices loop -- "vert = & ( (*patch)[i * patch->GetWidth + j]);"
-                  Data.N_N (" (");
-                  for Vertex of Vertex_Group loop
-                    Data.N_N (" (");
-                    Vertex := (Location => Data.N_Array_Float (3) - Origin, Texture => Data.N_Array_Float (2));
-                    Data.N_N (")");
-                  end loop;
-                  Data.N_N (")");
+                Patch.Width  := Next;
+                Patch.Height := Next;
+                Skip (3); -- Ignore junk ???
+                Assert (")", "(");
+                while Peek /= ")" loop Assert ("(");
+                  while Peek /= ")" loop
+                    Assert ("("); Group.Append (((Next, Next, Next) - Origin, (Next, Next))); Assert (")"); 
+                  end loop; Assert (")");
                 end loop;
-                Token := Data.Next;
-                while Token /= "}" loop
-                  Map.Patches.Last.Values.Add (Token, Data.Next);
-                  Token := Token.Next;
-                end loop;
-                Data.N_N ("}");
-              else -- Assume it is a Quake III brush
-                Map.Brushes.Add;
-                Token := Data.Next;
-                while Token /= "}" loop
-                  Map.Brushes.Last.Sides.Add ( (
-                    Plane    => Plane_From_Points (Data.N_Vector (3), Data.N_Vector (3), Data.N_Vector (3), Origin),
-                    Material => "textures/" & Data.Next,
-                    Texture  => ( (0.03125, 0.0, 0.0), (0.0, 0.03125, 0.0)),
-                    Origin   => Origin));
-                  Data.Next (5); -- Apparently shift, rotate, and scale are ignored
-                  Data.N_Line;
-                end loop;
-              end if;
+                Patch.Mesh.Append ("primitive" & I'Img, Group);
+
+              -- Unrecognized brush
+              else raise Parse_Error; end if;
             end if;
-            Token := Data.Next;
           end loop;
         end loop;
-        for Entity of Map.Entities loop
-          for Primitive of Entity.Primitives loop
-            for Side of Primitive.Sides loop
-              Map.Geometry_Checksum :=
-                Map.Geometry_Checksum xor 
-                Side.Plane (1) xor
-                Side.Plane (2) xor
-                Side.Plane (3);
+
+        -- Process entities 
+        for Entity of Level.Entities loop
+
+          -- Build checksum
+          for Shape of Entity.Mesh.Groups.Shapes loop
+            for Side of Shape.Sides loop
+              Level.Geometry_CRC := Level.Geometry_CRC xor Side.Plane (1) xor Side.Plane (2) xor Side.Plane (3);
             end loop;
-            Map.Geometry_Checksum := Map.Geometry_Checksum xor Side.Material;
+            Level.Geometry_CRC := Level.Geometry_CRC xor Side.Material;
           end loop;
+
+          -- 
           if Entity.Values.Element ("classname") = "worldspawn" then
             --Number_Of_Worlds > 1;
             Number_Of_Worlds := Number_Of_Worlds + 1;
+
+            -- Remove unneeded entities
             if Entity.Values.Has_Element ("removeEntities") then
-              while
-                const idKeyValue *removeEntities = entities[0]->epairs.MatchPrefix ("removeEntities", NULL);
+              for Remove_Entity of Level.Entities loop
+                Entity.Primatives.Remove ("removeEntities");
               end loop;
             end if;
+
+            -- Override materials
             if Entity.Values.Has_Element ("overrideMaterial") then
-              for Overriden_Entity of Map.Entities loop
+              for Overriden_Entity of Level.Entities loop
                 for Primitive of Overriden_Entity loop
                   case Primitive.Kind is
-                    when Brush_Primitive => for Side of Primitive.Sides loop Side.Material := Entity.Values.Element ("overrideMaterial"); end loop;
                     when Patch_Primitive => Primitive.Material := Entity.Values.Element ("overrideMaterial");
+                    when Brush_Primitive =>
+                      for Side of Primitive.Sides loop
+                        Side.Material := Entity.Values.Element ("overrideMaterial");
+                      end loop;
                   end case;
                 end loop;
               end loop;
             end if;
+
+            -- Move function groups
             if Entity.Values.Has_Element ("moveFuncGroups") then
-              for Overriden_Entity of Map.Entities loop
-                if Overriden.Entity.Element ("classname") = "func_group" then
+              for Move_Entity of Level.Entities loop
+                if Move_Entity.Element ("classname") = "func_group" then
                   Entity.Primitives.Add (Overriden_Entity.Primitives);
-                  Overriden_Entity.Primitives.Delete;
+                  Move_Entity.Primitives.Delete;
                 end if;
               end loop;
             end if;
           end if;
         end loop;
-          -- load it
-          filename = name;
-          filename.SetFileExtension (PROC_FILE_EXT);
-          src = new (TAG_COLLISION) idLexer (filename, LEXFL_NOSTRINGCONCAT | LEXFL_NODOLLARPRECOMPILE);
-          if (!src->IsLoaded 
-            common->Warning ("idCollisionModelManagerLocal::LoadProcBSP: couldn't load %s", filename.c_str);
-            delete src;
-            return;
-          }
-          if (!src->ReadToken (&token) || token.Icmp (PROC_FILE_ID) 
-            common->Warning ("idCollisionModelManagerLocal::LoadProcBSP: bad id '%s' instead of '%s'", token.c_str, PROC_FILE_ID);
-            delete src;
-            return;
-          }
-          -- parse the file
-          while (1 
-            if (!src->ReadToken (&token) 
-              break;
-            }
-            if (token == "model" | == "shadowModel" | token == "interAreaPortals" 
-              idToken token;
-              int depth;
+      end;
 
-              depth = parseFirstBrace ? 0 : 1;
-              do {
-                if (!ReadToken (&token) 
-                  return false;
-                }
-                if (token.type == TT_PUNCTUATION 
-                  if (token == "{" 
-                    depth++;
-                  } else if (token == "}" 
-                    depth--;
-                  }
-                }
-              } while (depth);
-              continue;
-            }
-            if (token == "nodes" 
-              src->ExpectTokenString ("{");
-              numProcNodes = src->ParseInt;
-              if (numProcNodes < 0 
-                src->Error ("ParseProcNodes: bad numProcNodes");
-              }
-              procNodes = (cm_procNode_t *)Mem_ClearedAlloc (numProcNodes * sizeof (cm_procNode_t), TAG_COLLISION);
-              for (i = 0; i < numProcNodes; i++ 
-                cm_procNode_t *node;
-                node = &procNodes[i];
-                src->Parse1DMatrix (4, node->plane.ToFloatPtr);
-                if (!idLexer::ExpectTokenString (" (") 
-                  return false;
-                }
+      -- Load proc file: https://modwiki.xnet.fi/PROC_%28file_format%29
+      declare
+      package Parse_Proc is new Parser (Actual_Path & ".proc"); use Parse_Proc;
 
-                for (i = 0; i < x; i++ 
-                  m[i] = idLexer::ParseFloat;
-                }
+      -- mapProcFile003
+      --
+      -- shadowModel { /* name = */ "_prelight_nkd_light_163"
+      --
+      --   /* numVerts = */ 148 /* noCaps = */ 84 /* noFrontCaps = */ 156 /* numIndexes = */ 228 /* planeBits = */ 59
+      --   ( 408 1152 256 ) ( 416 1151.2523193359 253.6074829102 ) ( 408 1152 320 ) ( 416 1151.2523193359 322.3925170898 ) ( 416 1152 240 ) 
+      --   ( 416 1152 240 ) ( 377.6666564941 1152 256 ) ( 416 1147 240 ) ( 408 1152 256 ) ( 416 1151.2523193359 253.6074829102 ) 
+      --   ( 416 1152 240 ) ( 416 1152 240 ) ( 416 1152 336 ) ( 416 1152 336 ) ( 416 1152 336 ) 
+      --   0 2 1 2 3 1 20 22 21 22 23 21 12 4 5 12 5 13 
+      --   24 26 27 24 27 25 44 46 45 46 47 45 64 66 67 64 67 65 
+      --   96 98 99 96 99 97 78 68 79 68 69 79 100 102 103 100 103 101 
+      -- }
+      --
+      -- interAreaPortals { /* numAreas = */ 34 /* numIAP = */ 43
+      --
+      --   /* interAreaPortal format is: numPoints positiveSideArea negativeSideArea ( point) ... */
+      --   /* iap 0 */ 4 1 0 ( 1168 184 192 ) ( 1040 184 192 ) ( 1040 184 400 ) ( 1168 184 400 ) 
+      --   /* iap 1 */ 4 1 2 ( 1040 184 192 ) ( 1040 -48 192 ) ( 1040 -48 400 ) ( 1040 184 400 ) 
+      --   /* iap 2 */ 4 4 1 ( 1168 -208 184 ) ( 1040 -208 184 ) ( 1040 -208 328 ) ( 1168 -208 328 ) 
+      -- }
+      --
+      -- model { /* name = */ "_area0" /* numSurfaces = */ 3
+      --
+      --   /* surface 0 */ { "textures/base_wall/lfwall27d" /* numVerts = */ 4 /* numIndexes = */ 6
+      --     ( -192 256 256 4 3 0 0 -1 ) ( 192 -128 256 -2 -3 0 0 -1 ) ( 192 256 256 4 -3 0 0 -1 ) 
+      --     ( -192 -128 256 -2 3 0 0 -1 ) 
+      --     0 1 2 3 1 0 
+      --   }
+      --
+      --   /* surface 1 */ { "textures/base_wall/lfwall27b" /* numVerts = */ 4 /* numIndexes = */ 6
+      --     ( -192 256 0 4 -3 0 0 1 ) ( 192 256 0 4 3 0 0 1 ) ( 192 -128 0 -2 3 0 0 1 ) 
+      --     ( -192 -128 0 -2 -3 0 0 1 ) 
+      --     0 1 2 3 0 2 
+      --   }
+      --
+      --   /* surface 2 */ { "textures/base_wall/lfwall13f3" /* numVerts = */ 16 /* numIndexes = */ 24
+      --     ( -192 256 256 -1 -2 0 -1 0 ) ( 192 256 256 2 -2 0 -1 0 ) ( 192 256 0 2 0 0 -1 0 ) 
+      --     ( -192 256 0 -1 0 0 -1 0 ) ( -192 -128 256 2 -2 0 1 0 ) ( 192 -128 0 -1 0 0 1 0 ) 
+      --     ( 192 -128 256 -1 -2 0 1 0 ) ( -192 -128 0 2 0 0 1 0 ) ( 192 -128 256 1 -2 -1 0 0 ) 
+      --     0 1 2 3 0 2 4 5 6 7 5 4 8 9 10 11 9 8 
+      --     12 13 14 15 12 14 
+      --   }
+      --
+      -- }
 
-                if (!idLexer::ExpectTokenString (")") 
-                  return false;
-                }
-                return true;
-                node->children[0] = src->ParseInt;
-                node->children[1] = src->ParseInt;
-              }
-              src->ExpectTokenString ("}");
-              break;
-            }
-            src->Error ("idCollisionModelManagerLocal::LoadProcBSP: bad token \"%s\"", token.c_str);
-          }
-          -- convert brushes and patches to collision data
-          for (i = 0; i < mapFile->GetNumEntities; i++ 
-            mapEnt = mapFile->GetEntity (i);
-            if (numModels >= MAX_SUBMODELS 
-              common->Error ("idCollisionModelManagerLocal::BuildModels: more than %d collision models", MAX_SUBMODELS);
-              break;
-            }
-            models[numModels] = CollisionModelForMapEntity (mapEnt);
-            if (models[ numModels] 
-              numModels++;
-            }
-          }
-          -- free the proc bsp which is only used for data optimization
-          Mem_Free (procNodes);
-          procNodes = NULL;
-          -- write the collision models to a file
-          WriteCollisionModelsToFile (mapFile->GetName, 0, numModels, mapFile->GetGeometryCRC);
-        } 
+      begin
+        Assert ("mapProcFile003");
+        while not At_EOF loop
+          Token := Next;
+
+          -- Load model
+          if Token = "model" then Assert ("{");
+
+          elsif Token = "shadowModel" then Assert ("{");
+
+          elsif Token = "interAreaPortals" then Assert ("{");
+            depth = parseFirstBrace ? 0 : 1;
+            do
+              if (!ReadToken (&token) return false;
+              if token.type = TT_PUNCTUATION then
+                if token == "{" depth++;
+                elsif token = "}" then depth--;
+                end if;
+              end if;
+            while (depth);
+
+          -- Parse nodes     
+          elsif Token = "nodes" then
+            Assert ("{");
+            Temp := Next;
+            Assert (Temp < 0);
+            for I in 1..Temp loop
+              cm_procNode_t *node;
+              node = &procNodes[i];
+              src->Parse1DMatrix (4, node->plane.ToFloatPtr);
+              Assert ("(");
+              for (i = 0; i < x; i++ 
+                m[i] = idLexer::ParseFloat;
+              end loop; Assert (")");
+              node->children = src->ParseInt src->ParseInt;
+            end loop; Assert ("}");
+          end if;
+        end loop;
+
+        -- Convert brushes and patches to collision data
+        for (i = 0; i < mapFile->GetNumEntities; i++ 
+          mapEnt = mapFile->GetEntity (i);
+          if (numModels >= MAX_SUBMODELS 
+            common->Error ("idCollisionModelManagerLocal::BuildModels: more than %d collision models", MAX_SUBMODELS);
+            break;
+          end if;
+          models[numModels] = CollisionModelForMapEntity (mapEnt);
+          if (models[ numModels] 
+            numModels++;
+          end if;
+        end loop;
+        -- free the proc bsp which is only used for data optimization
+        Mem_Free (procNodes);
+        procNodes = NULL;
+        -- write the collision models to a file
+        WriteCollisionModelsToFile (mapFile->GetName, 0, numModels, mapFile->GetGeometryCRC);
         idLexer src (LEXFL_NOFATALERRORS | LEXFL_NOSTRINGESCAPECHARS | LEXFL_NOSTRINGCONCAT | LEXFL_ALLOWPATHNAMES);
         idToken token;
         int depth;
         unsigned int c;
       end loop;
-      -- calculate edge normals
-      --checkCount++;
-      --CalculateEdgeNormals (model, model->node);
-      -- get model bounds from brush and polygon bounds
-      --CM_GetNodeBounds (&model->bounds, model->node);
-      -- get model contents
-      --model->contents = CM_GetNodeContents (model->node);
+
+      -- Calculate edge normals ???
+      -- CalculateEdgeNormals (model, model->node);=
+      -- CM_GetNodeBounds (&model->bounds, model->node);
+      -- model->contents = CM_GetNodeContents (model->node);
     end Load;
 end;
-  

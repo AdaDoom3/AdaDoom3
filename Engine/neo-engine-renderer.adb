@@ -12,901 +12,501 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+-- System independant code for rendering the global state
 package body Neo.Engine.Renderer is
 
-  type Enumerated_Condition          is (Always_Condition,            Not_Equal_Condition,          Greater_Than_Condition,            Less_Than_Or_Equal_To_Condition,  
-                                         Never_Condition,             Equal_Condition,              Less_Than_Condition,               Greater_Than_Or_Equal_To_Condition);
-  type Enumerated_Cull               is (Face_Culling,                Two_Sided_Cull,               Back_Sided_Cull);
-  type Enumerated_Stereo             is (No_Stereo,                   Near_Stereo,                  Middle_Stereo,                     Far_Stereo);
-  type Enumerated_Stereo_3D          is (No_Stereo_3D,                Side_By_Side_Stereo_3D,       Side_By_Side_Compressed_Stereo_3D, Top_And_Bottom_Compressed_Stereo_3D,
-                                         Interlaced_Stereo_3D,        Quad_Buffer_Stereo_3D,        HDMI_720_Stereo_3D);
-  type Enumerated_Stencil            is (Reference_Shift_Stencil,     Reference_Bits_Stencil,       Mask_Shift_Stencil);
-  type Enumerated_Stencil_Operation  is (Keep_Stencil_Operation,      Zero_Stencil_Operation,       Replace_Stencil_Operation,         Increment_Stencil_Operation,
-                                         Decrement_Stencil_Operation, Invert_Stencil_Operation,     Increment_Wrap_Stencil_Operation,  Decrement_Wrap_Stencil_Operation);
-  type Enumerated_Blend              is (Zero_Blend,                  One_Blend,                    Destination_Color_Blend,           One_Minus_Destination_Color_Blend,
-                                         Source_Alpha_Blend,          One_Minus_Source_Alpha_Blend, Destination_Alpha_Blend,           One_Minus_Destination_Alpha_Blend);
-  type Enumerated_Blend_Operation    is (Add_Blend_Operation,         Subtract_Blend_Operation,     Minimum_Blend_Operation,           Maximum_Blend_Operation);
-  type Record_Driver is record
-      Reset                 : not null access procedure;
-      Initialize            : not null access procedure(Monitor : in Integer_4_Positive);
-      Finalize              : not null access procedure(Monitor : in Integer_4_Positive);
---      Upload_Subimage       : not null access procedure
---      Upload_Subimage       : not null access procedure(mipLevel, x, y, z, width, height, const void * pic, int pixelPitch) ;
---      Finalize_Texture      : not null access procedure(Texture : in out Record_Texture) ;
---      Initialize_Texture    : not null access procedure(Texture : in out Record_Texture) ;
---      Render_Headset        : not null access procedure( ;
---      Make_Stereo_Image     : not null access procedure(Graphic : in Record_Graphic) ;
---      Set_Buffer            : not null access procedure(const void *data ) ;
---      Set_Polygon_Offset    : not null access procedure(Do_Enable : in Boolean) ;
---      Set_Polymode_Line     : not null access procedure(;
---      Set_Depth_Mask        : not null access procedure(;
-      Set_Color_Mask        : not null access procedure(Do_Mask_Red, Do_Mask_Green, Do_Mask_Blue, Do_Mask_Alpha : in Boolean := True);
---      Set_Depth_Function    : not null access procedure(Value : in Enumerated_Depth_Function) ;
---      Set_Stencil_Function  : not null access procedure(Stencil : in Enumerated_Stencil_Function) ;
---      Set_Stencil_Operation : not null access procedure(Fail, Fail_Z, Pass : in Enumerated_Stencil_Operation) ;
---      Set_Stencil           : not null access procedure(Stencil : in Enumerated_Stencil) ;
---      Set_Blend_Operation   : not null access procedure(Blend_Operation : in Enumerated_Blend_Operation) ;
---      Set_Blend             : not null access procedure(Source, Destination : in Enumerated_Blend) ;
---      Set_Stereo_3D         : not null access procedure(Stereo_3D : in Enumerated_Stereo_3D) ;
---      Set_Stereo_Depth      : not null access procedure(Stereo_Depth : in Item_Stereo_Depth.Variable) ;
---      Clear                 : not null access procedure(Color : in Record_Pixel; Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) is
---      Clear                 : not null access procedure(Stencil_Value : in Integer_1_Unsigned; Do_Clear_Depth : in Boolean := False) ;
---      Clear                 : not null access procedure(Color : in Record_Pixel; Do_Clear_Depth : in Boolean := False) ;
---      Clear                 : not null access procedure(;
---      Color                 : not null access procedure(Color : in Record_Color) ;
---      Color                 : not null access procedure(Pixel : in Record_Pixel) ;
---      Get_Depth_Pass        : not null access procedure(Rectane : in out Record_Rectane) ;
---      Finish_Depth_Pass     : not null access procedure(Rectane : in Record_Rectane) ;
---      Start_Depth_Pass      : not null access procedure(Rectane : in Record_Rectane) ;
---      Depth_Bounds_Test     : not null access procedure(Z_Minimum, Z_Maximum : in Float_4_Real := 0.0) ;
---      Polygon_Offset        : not null access procedure(Scale, Bias : in Float_4_Real) ;
---      View_Port             : not null access procedure(X, Y, Width, Height : in Integer_4_Signed) ;
---      Cull                  : not null access procedure(Kind : in Enumerated_Cull; Is_Mirror : in Boolean := False) ;
---      Check_Exceptions      : not null access procedure(;
-    end record;
+  -------------
+  -- Globals --
+  -------------
 
-  procedure Load_Mesh;
-  procedure Load_Texture;
-  procedure Load_Shader;
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferUsageFlags.html
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryPropertyFlags.html
-  procedure Create_Buffer (Data                      : Address;
-                           Device_Size               : Integer_Device_Size;
-                           Buffer                    : Buffer_State;
-                           Memory                    : Memory_State;
-                           Information               : Information_State
-                           Transfer_Kind             : Boolean := False
-                           Texel_Kind                : Boolean := False
-                           Buffer_Kind               : Boolean := False
-                           Is_Index_Bindable         : Boolean := False
-                           Is_Vertex_Bindable        : Boolean := False
-                           Is_Indirectly_Commandable : Boolean := False);
-  procedure Check_Command_Buffers;
-  procedure Create_Setup_Command_Buffer;
-  procedure Flush_Setup_Command_Buffer;
-  procedure Create_Command_Buffers;
-  procedure Creat
+  -- Statuses
+  Render_Status  : aliased VkSemaphore; 
+  Acquire_Status : aliased VkSemaphore;
 
+  -- Image ids
+  VkImage       : Ptr;
+  Desired_Images : aliased uint32_t = 3;
+  Images      : aliased Vector_VkImage.Unsafe.Vector;
+  Image_Index : aliased Int_32_Positive;
 
--- void VulkanExampleBase::setupSwapChain()
--- void VulkanExampleBase::setupFrameBuffer()
--- void VulkanExampleBase::setupDepthStencil()
--- uint32_t VulkanExampleBase::getMemoryType(uint32_t typeBits, VkFlags properties)
--- VkBool32 VulkanExampleBase::getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t * typeIndex)
+  -- Rendering ids
+  VkQueue, VkSurface, VkInstance, VkRenderPass : Ptr;
+  Swap_Chain             : aliased VkSwapchainKHR;
+  Command_Pool           : aliased VkCommandPool;
+  Swap_Chain_Create_Info : aliased VkSwapchainCreateInfoKHR;
 
--- void VulkanExampleBase::buildPresentCommandBuffers()
--- VulkanExampleBase::~VulkanExampleBase()
--- VulkanExampleBase::VulkanExampleBase(bool enableValidation, PFN_GetEnabledFeatures enabledFeaturesFn)
+  -- Device information
+  Device                            : aliased VkDevice;
+  Physical_Device                   : aliased VkPhysicalDevice;
+  Physical_Device_Features          : aliased VkPhysicalDeviceFeatures
+  Physical_Device_Properties        : aliased VkPhysicalDeviceProperties;
+  Physical_Device_Memory_Properties : aliased VkPhysicalDeviceMemoryProperties;
 
--- void VulkanExampleBase::submitFrame()
--- void VulkanExampleBase::prepareFrame()
--- VkSubmitInfo VulkanExampleBase::prepareSubmitInfo(
+  -------------------
+  -- CVar Settings --
+  -------------------
 
--- VkPipelineShaderStageCreateInfo VulkanExampleBase::loadShader(std::string fileName, VkShaderStageFlagBits stage)
--- void VulkanExampleBase::loadMesh(
---   std::string filename,
---   vkMeshLoader::MeshBuffer * meshBuffer,
---   std::vector<vkMeshLoader::VertexLayout> vertexLayout,
---   float scale)
--- void VulkanExampleBase::prepare()
--- void VulkanExampleBase::createPipelineCache()
--- void VulkanExampleBase::flushCommandBuffer(VkCommandBuffer commandBuffer, VkQueue queue, bool free)
--- VkCommandBuffer VulkanExampleBase::createCommandBuffer(VkCommandBufferLevel level, bool begin)
-
--- void VulkanExampleBase::createSetupCommandBuffer()
--- void VulkanExampleBase::flushSetupCommandBuffer()
--- void VulkanExampleBase::createSetupCommandBuffer()
--- void VulkanExampleBase::createCommandBuffers()
--- bool VulkanExampleBase::checkCommandBuffers()
-
-  vulkanExample = new VulkanExample();                              \
-  vulkanExample->setupWindow(hInstance, WndProc);                         \
-  vulkanExample->initSwapchain();                                 \
-  vulkanExample->prepare();                                   \
-  vulkanExample->renderLoop();                                  \
-  delete(vulkanExample);  
-
-
-    zoom = -150.0f;
-    zoomSpeed = 2.5f;
-    rotationSpeed = 0.5f;
-    rotation = { -182.5f, -38.5f, 180.0f };
-    enableTextOverlay = true;
-    title = "Vulkan Example - Skeletal animation";
-    cameraPos = { 0.0f, 0.0f, 12.0f };
-
-
-  void setupDescriptorPool()
-
-  void setupDescriptorSetLayout()
-
-  void setupDescriptorSet()
-
-  void preparePipelines()
-
-  void prepareUniformBuffers()
-
-  void updateUniformBuffers(bool viewChanged)
-
-  package body Neo.Engine.Renderer is
-  procedure Render is
+  -- Handle the setting of graphics cvars
+  procedure Set_Vertical_Sync (Val : Bool) is
+    Present_Modes VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
     begin
-      Prepare_Frame;
-      Submit_Info := .commandBufferCount = 1 .pCommandBuffers = &drawCmdBuffers[currentBuffer];
-      Queue_Submit (Queue, 1, Submit_Info, VK_NULL_HANDLE);
-      if Menu.Get then
-        runningTime += frameTimer * skinnedMesh->animationSpeed;
-        vkDeviceWaitIdle(device);
-        updateUniformBuffers(false);
-      end if;
+      -- Call vkGetPhysicalDeviceSurfacePresentModesKHR
+      vkGetPhysicalDeviceSurfacePresentModesKHR (Physical_Device, Surface, Count'Access, NULL_PTR);
+      declare Present_Modes : VkPresentModeKHR_Array (1..Count); begin
+        vkGetPhysicalDeviceSurfacePresentModesKHR (Physical_Device, Surface, Count'Access, Present_Modes'Access);
+        for Present_Mode of Present_Modes loop
+          if vsync && Present_Mode == VK_PRESENT_MODE_MAILBOX_KHR or !vsync && Present_Mode == VK_PRESENT_MODE_IMMEDIATE_KHR then
+            Current_presentMode = Present_Mode;
+            exit;
+          end if;
+        end loop
+      end;
     end;
-  procedure Prepare is
+
+  --------------
+  -- Resizing --
+  --------------
+
+  -- Set the sizes... comment here !!!
+  procedure Resize_Vulkan (Initial_Sizing : Bool := True) is
+    Pre_Transform        : aliased VkSurfaceTransformFlagBitsKHR;
+    Surface_Capabilities : aliased VkSurfaceCapabilitiesKHR;
+    Setup_Buffer         : aliased VkCommandBuffer;
+    Begin_Info           : aliased VkCommandBufferBeginInfo    := (sType               => VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+                                                                   others              => <>);
+    Memory_Barrier       : aliased VkImageMemoryBarrier        := (sType               => VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+                                                                   srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED;
+                                                                   dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED;
+                                                                   oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED;
+                                                                   newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                                                                   subresourceRange    => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
+                                                                   others              => <>);
+    Setup_Buffer_Info    : aliased VkCommandBufferAllocateInfo := (sType               => VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+                                                                   commandPool         => Command_Pool;
+                                                                   level               => VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+                                                                   commandBufferCount  => 1,
+                                                                   others              => <>);
+    Submit_Info          : aliased VkSubmitInfo                := (sType               => VK_STRUCTURE_TYPE_SUBMIT_INFO, 
+                                                                   commandBufferCount  => 1,
+                                                                   pCommandBuffers     => Setup_Buffer'Access,
+                                                                   others              => <>);
     begin
-      Load ("textures/goblin_bc3.ktx", VK_FORMAT_BC3_UNORM_BLOCK, &textures.colorMap);
 
-end;
+      -- Set Surface_Capabilities
+      vkGetPhysicalDeviceSurfaceCapabilitiesKHR (Physical_Device, Surface, Surface_Capabilities'Access);
+      Desired_Images := (if Surface_Capabilities.maxImageCount > 0 and Desired_Images > Surface_Capabilities.maxImageCount then
+                           Surface_Capabilities.maxImageCount
+                         else Desired_Images);
+ 
+      -- Take into account if this resize was called during initialization or execution
+      if Initial_Sizing then
+        if Swap_Chain_Create_Info.imageExtent = Surface_Capabilities.currentExtent then return; end if;
+        Swap_Chain_Create_Info := (imageExtent  => Surface_Capabilities.currentExtent,
+                                   oldSwapchain => Swap_Chain,
+                                   others       => Swap_Chain_Create_Info);
+        VkAssert (vkCreateSwapchainKHR (Device, Swap_Chain_Create_Info'Access, NULL_PTR, Swap_Chain'Access));
+        vkDeviceWaitIdle               (Device);
+        vkDestroySwapchainKHR          (Device, Swap_Chain_Create_Info.oldSwapchain, NULL_PTR);
+      else
+        Swap_Chain_Create_Info := (sType                 => VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+                                   surface               => Surface,
+                                   minImageCount         => Desired_Images,
+                                   imageFormat           => VK_FORMAT_B8G8R8A8_SRGB,
+                                   imageColorSpace       => VK_COLORSPACE_SRGB_NONLINEAR_KHR,
+                                   imageExtent           => Surface_Capabilities.currentExtent,
+                                   imageUsage            => VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+                                   imageArrayLayers      => 1,
+                                   imageSharingMode      => VK_SHARING_MODE_EXCLUSIVE,
+                                   queueFamilyIndexCount => 0,
+                                   pQueueFamilyIndices   => NULL_PTR,
+                                   presentMode           => presentMode,
+                                   compositeAlpha        => VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+                                   oldSwapchain          => VK_NULL_HANDLE;
+                                   clipped               => true);
 
+        -- Set vsync
+        Set_Vertical_Sync (Vertical_Sync.Get)
 
-class VulkanExample : public VulkanExampleBase
-{
-public:
-  struct {
-    vkTools::VulkanTexture colorMap;
-    vkTools::VulkanTexture floor;
-  } textures;
+        -- ???
+        Pre_Transform := (if (Surface_Capabilities.supportedTransforms and VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) > 0 then
+                            VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR
+                          else Surface_Capabilities.currentTransform);
+        VkAssert (vkCreateSwapchainKHR(Device, Swap_Chain_Create_Info'Access, NULL_PTR, Swap_Chain'Access));
+      end if;
 
-  struct {
-    VkPipelineVertexInputStateCreateInfo inputState;
-    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-    std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-  } vertices;
+      -- Call vkGetSwapchainImagesKHR
+      vkGetSwapchainImagesKHR (Device, Swap_Chain, Count'Access, NULL_PTR);
+      declare Images : VkImage_Array (1..Count); begin
+        Assert (Images'Length >= Count);
+        vkGetSwapchainImagesKHR (Device, Swap_Chain, Count'Access, Images'Access);
+        Images.Set (Images
+      end;
 
-  SkinnedMesh *skinnedMesh = nullptr;
+      -- Present images
+      VkAssert (vkAllocateCommandBuffers (Device, Setup_Buffer_Info'Access, Setup_Buffer'Access);
+      VkAssert (vkBeginCommandBuffer     (Setup_Buffer, Begin_Info'Access);
+      for Image of Images loop
+        Memory_Barrier.image := Image;
+        vkCmdPipelineBarrier (commandBuffer             => Setup_Buffer,
+                              vkCmdPipelineBarrier      => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                              dstStageMask              => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                              dependencyFlags           => 0,
+                              memoryBarrierCount        => 0,
+                              pMemoryBarriers           => null,
+                              bufferMemoryBarrierCount  => 0,
+                              pBufferMemoryBarriers     => null,
+                              imageMemoryBarrierCount   => 1,
+                              pImageMemoryBarriers      => Memory_Barrier'Access);
+      end loop;
+      vkEndCommandBuffer   (Setup_Buffer);
+      vkQueueSubmit        (Queue, 1, Submit_Info'Access, VK_NULL_HANDLE);
+      vkQueueWaitIdle      (Queue);
+      vkFreeCommandBuffers (Device, Command_Pool, 1, Setup_Buffer'Access);
+    end;
 
-  struct {
-    vkTools::UniformData vsScene;
-    vkTools::UniformData floor;
-  } uniformData;
+  ----------------
+  -- Initialize --
+  ----------------
 
-  struct {
-    glm::mat4 projection;
-    glm::mat4 model;
-    glm::mat4 bones[MAX_BONES];
-    glm::vec4 lightPos = glm::vec4(0.0f, -250.0f, 250.0f, 1.0);
-    glm::vec4 viewPos;
-  } uboVS;
+  -- Get the game window ready for rendering and initialize the global variables in the spec
+  procedure Initialize_Vulkan is 
 
-  struct {
-    glm::mat4 projection;
-    glm::mat4 model;
-    glm::vec4 lightPos = glm::vec4(0.0, 0.0f, -25.0f, 1.0);
-    glm::vec4 viewPos;
-    glm::vec2 uvOffset;
-  } uboFloor;
-
-  struct {
-    VkPipeline skinning;
-    VkPipeline texture;
-  } pipelines;
-
-  struct {
-    vkMeshLoader::MeshBuffer floor;
-  } meshes;
-
-  VkPipelineLayout pipelineLayout;
-  VkDescriptorSet descriptorSet;
-  VkDescriptorSetLayout descriptorSetLayout;
-
-  struct {
-    VkDescriptorSet skinning;
-    VkDescriptorSet floor;
-  } descriptorSets;
-
-  float runningTime = 0.0f;
-
-  VulkanExample() : VulkanExampleBase(ENABLE_VALIDATION)
-  {
-    zoom = -150.0f;
-    zoomSpeed = 2.5f;
-    rotationSpeed = 0.5f;
-    rotation = { -182.5f, -38.5f, 180.0f };
-    enableTextOverlay = true;
-    title = "Vulkan Example - Skeletal animation";
-    cameraPos = { 0.0f, 0.0f, 12.0f };
-  }
-
-  ~VulkanExample()
-  {
-  }
-
-  void setupDescriptorSet()
-  {
-    VkDescriptorSetAllocateInfo allocInfo =
-      vkTools::initializers::descriptorSetAllocateInfo(
-        descriptorPool,
-        &descriptorSetLayout,
-        1);
-
-    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &descriptorSet));
+    -- Load all of the function pointers from a dll or lib
+    procedure Import_Initialize_Vulkan_Functions is new Initialize_Vulkan_Functions (Load_Vulkan_Function);
     
-    VkDescriptorImageInfo texDescriptor =
-      vkTools::initializers::descriptorImageInfo(
-        textures.colorMap.sampler,
-        textures.colorMap.view,
-        VK_IMAGE_LAYOUT_GENERAL);
-
-    std::vector<VkWriteDescriptorSet> writeDescriptorSets =
-    {
-      -- Binding 0 : Vertex shader uniform buffer
-      vkTools::initializers::writeDescriptorSet(
-        descriptorSet,
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        0,
-        &uniformData.vsScene.descriptor),
-      -- Binding 1 : Color map 
-      vkTools::initializers::writeDescriptorSet(
-        descriptorSet,
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        1,
-        &texDescriptor)
-    };
-
-    vkUpdateDescriptorSets(device, writeDescriptorSets.size(), writeDescriptorSets.data(), 0, NULL);
-
-    -- Floor
-    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &descriptorSets.floor));
-
-    texDescriptor.imageView = textures.floor.view;
-    texDescriptor.sampler = textures.floor.sampler;
-
-    writeDescriptorSets.clear();
-
-    -- Binding 0 : Vertex shader uniform buffer
-    writeDescriptorSets.push_back(
-      vkTools::initializers::writeDescriptorSet(
-        descriptorSets.floor,
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        0,
-        &uniformData.floor.descriptor));
-    -- Binding 1 : Color map 
-    writeDescriptorSets.push_back(
-      vkTools::initializers::writeDescriptorSet(
-        descriptorSets.floor,
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        1,
-        &texDescriptor));
-
-    vkUpdateDescriptorSets(device, writeDescriptorSets.size(), writeDescriptorSets.data(), 0, NULL);
-  }
-
-
-  void updateUniformBuffers(bool viewChanged)
-  {
-    if (viewChanged)
-    {
-      uboVS.projection = glm::perspective(glm::radians(60.0f), (float)width / (float)height, 0.1f, 512.0f);
-
-      glm::mat4 viewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, zoom));
-      viewMatrix = glm::rotate(viewMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-      viewMatrix = glm::scale(viewMatrix, glm::vec3(0.025f));
-
-      uboVS.model = viewMatrix * glm::translate(glm::mat4(), glm::vec3(cameraPos.x, -cameraPos.z, cameraPos.y) * 100.0f);
-      uboVS.model = glm::rotate(uboVS.model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-      uboVS.model = glm::rotate(uboVS.model, glm::radians(rotation.z), glm::vec3(0.0f, 1.0f, 0.0f));
-      uboVS.model = glm::rotate(uboVS.model, glm::radians(-rotation.y), glm::vec3(0.0f, 0.0f, 1.0f));
-
-      uboVS.viewPos = glm::vec4(0.0f, 0.0f, -zoom, 0.0f);
-
-      uboFloor.projection = uboVS.projection;
-      uboFloor.model = viewMatrix * glm::translate(glm::mat4(), glm::vec3(cameraPos.x, -cameraPos.z, cameraPos.y) * 100.0f);
-      uboFloor.model = glm::rotate(uboFloor.model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-      uboFloor.model = glm::rotate(uboFloor.model, glm::radians(rotation.z), glm::vec3(0.0f, 1.0f, 0.0f));
-      uboFloor.model = glm::rotate(uboFloor.model, glm::radians(-rotation.y), glm::vec3(0.0f, 0.0f, 1.0f));
-      uboFloor.model = glm::translate(uboFloor.model, glm::vec3(0.0f, 0.0f, -1800.0f));
-      uboFloor.viewPos = glm::vec4(0.0f, 0.0f, -zoom, 0.0f);
-    }
-
-    -- Update bones
-    skinnedMesh->update(runningTime);
-    for (uint32_t i = 0; i < skinnedMesh->boneTransforms.size(); i++)
-    {
-      uboVS.bones[i] = glm::transpose(glm::make_mat4(&skinnedMesh->boneTransforms[i].a1));
-    }
-
-    memcpy(uniformData.vsScene.mapped, &uboVS, sizeof(uboVS));
-
-    -- Update floor animation
-    uboFloor.uvOffset.t -= 0.5f * skinnedMesh->animationSpeed * frameTimer;
-    memcpy(uniformData.floor.mapped, &uboFloor, sizeof(uboFloor));
-  }
-
-  virtual void render()
-  {
-    if (!prepared)
-      return;
-    VulkanExampleBase::prepareFrame();
-
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &drawCmdBuffers[currentBuffer];
-    VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE));
-
-    VulkanExampleBase::submitFrame();
-    if (!paused)
-    {
-      runningTime += frameTimer * skinnedMesh->animationSpeed;
-      vkDeviceWaitIdle(device);
-      updateUniformBuffers(false);
-    }
-  }
-
-  virtual void viewChanged()
-  {
-    vkDeviceWaitIdle(device);
-    updateUniformBuffers(true);
-  }
-
-  virtual void keyPressed(uint32_t keyCode)
-  {
-    switch (keyCode)
-    {
-    case 0x6B:
-    case GAMEPAD_BUTTON_R1:
-    skinnedMesh->animationSpeed += delta;
-      break;
-    case 0x6D:
-    case GAMEPAD_BUTTON_L1:
-    skinnedMesh->animationSpeed += delta;
-      break;
-    }
-  }
-
-
-
-
-  if (enableDebugMarkers)
-  {
-    vkDebug::DebugMarker::setup(device);
-  }
-  createCommandPool();
-  createSetupCommandBuffer();
-  setupSwapChain();
-  createCommandBuffers();
-  buildPresentCommandBuffers();
-  setupDepthStencil();
-  setupRenderPass();
-  createPipelineCache();
-  setupFrameBuffer();
-  flushSetupCommandBuffer();
-  // Recreate setup command buffer for derived class
-  createSetupCommandBuffer();
-  // Create a simple texture loader class
-  textureLoader = new vkTools::VulkanTextureLoader(vulkanDevice, queue, cmdPool);
-
-  -------------
-  -- Prepare --
-  -------------
-
-
-    -- Load texture
-    VulkanExampleBase::prepare();
-    textureLoader->loadTexture(
-      getAssetPath() + "textures/goblin_bc3.ktx",
-      VK_FORMAT_BC3_UNORM_BLOCK,
-      &textures.colorMap);
-
-    textureLoader->loadTexture(
-      getAssetPath() + "textures/pattern_35_bc3.ktx",
-      VK_FORMAT_BC3_UNORM_BLOCK,
-      &textures.floor);
-
-    -- Load mesh
-    skinnedMesh = new SkinnedMesh();
-    skinnedMesh->meshLoader = new VulkanMeshLoader(vulkanDevice);
-#if defined(__ANDROID__)
-    skinnedMesh->meshLoader->assetManager = androidApp->activity->assetManager;
-#endif
-    skinnedMesh->meshLoader->LoadMesh(getAssetPath() + "models/goblin.dae", 0);
-    skinnedMesh->setAnimation(0);
-
-    -- Setup bones
-    -- One vertex bone info structure per vertex
-    skinnedMesh->bones.resize(skinnedMesh->meshLoader->numVertices);
-    -- Store global inverse transform matrix of root node 
-    skinnedMesh->globalInverseTransform = skinnedMesh->meshLoader->pScene->mRootNode->mTransformation;
-    skinnedMesh->globalInverseTransform.Inverse();
-    -- Load bones (weights and IDs)
-    for (uint32_t m = 0; m < skinnedMesh->meshLoader->m_Entries.size(); m++)
-    {
-      aiMesh *paiMesh = skinnedMesh->meshLoader->pScene->mMeshes[m];
-      if (paiMesh->mNumBones > 0)
-      {
-        skinnedMesh->loadBones(m, paiMesh, skinnedMesh->bones);
-      }
-    }
-
-    -- Generate vertex buffer
-    std::vector<Vertex> vertexBuffer;
-    -- Iterate through all meshes in the file
-    -- and extract the vertex information used in this demo
-    for (uint32_t m = 0; m < skinnedMesh->meshLoader->m_Entries.size(); m++)
-    {
-      for (uint32_t i = 0; i < skinnedMesh->meshLoader->m_Entries[m].Vertices.size(); i++)
-      {
-        Vertex vertex;
-
-        vertex.pos = skinnedMesh->meshLoader->m_Entries[m].Vertices[i].m_pos;
-        vertex.pos.y = -vertex.pos.y;
-        vertex.normal = skinnedMesh->meshLoader->m_Entries[m].Vertices[i].m_normal;
-        vertex.uv = skinnedMesh->meshLoader->m_Entries[m].Vertices[i].m_tex;
-        vertex.color = skinnedMesh->meshLoader->m_Entries[m].Vertices[i].m_color;
-
-        -- Fetch bone weights and IDs
-        for (uint32_t j = 0; j < MAX_BONES_PER_VERTEX; j++)
-        {
-          vertex.boneWeights[j] = skinnedMesh->bones[skinnedMesh->meshLoader->m_Entries[m].vertexBase + i].weights[j];
-          vertex.boneIDs[j] = skinnedMesh->bones[skinnedMesh->meshLoader->m_Entries[m].vertexBase + i].IDs[j];
-        }
-
-        vertexBuffer.push_back(vertex);
-      }
-    }
-    uint32_t vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    -- Generate index buffer from loaded mesh file
-    std::vector<uint32_t> indexBuffer;
-    for (uint32_t m = 0; m < skinnedMesh->meshLoader->m_Entries.size(); m++)
-    {
-      uint32_t indexBase = indexBuffer.size();
-      for (uint32_t i = 0; i < skinnedMesh->meshLoader->m_Entries[m].Indices.size(); i++)
-      {
-        indexBuffer.push_back(skinnedMesh->meshLoader->m_Entries[m].Indices[i] + indexBase);
-      }
-    }
-    uint32_t indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
-    skinnedMesh->meshBuffer.indexCount = indexBuffer.size();
-
-    bool useStaging = true;
-
-    if (useStaging)
-    {
-      struct {
-        VkBuffer buffer;
-        VkDeviceMemory memory;
-      } vertexStaging, indexStaging;
-
-      -- Create staging buffers
-      -- Vertex data
-      createBuffer(
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-        vertexBufferSize,
-        vertexBuffer.data(),
-        &vertexStaging.buffer,
-        &vertexStaging.memory);
-      -- Index data
-      createBuffer(
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-        indexBufferSize,
-        indexBuffer.data(),
-        &indexStaging.buffer,
-        &indexStaging.memory);
-
-      -- Create device local buffers
-      -- Vertex buffer
-      createBuffer(
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        vertexBufferSize,
-        nullptr,
-        &skinnedMesh->meshBuffer.vertices.buf,
-        &skinnedMesh->meshBuffer.vertices.mem);
-      -- Index buffer
-      createBuffer(
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        indexBufferSize,
-        nullptr,
-        &skinnedMesh->meshBuffer.indices.buf,
-        &skinnedMesh->meshBuffer.indices.mem);
-
-      -- Copy from staging buffers
-      VkCommandBuffer copyCmd = VulkanExampleBase::createCommandBuffer(VK_COMMAND_BUFFER_LEVEL_PRIMARY, true);
-
-      VkBufferCopy copyRegion = {};
-
-      copyRegion.size = vertexBufferSize;
-      vkCmdCopyBuffer(
-        copyCmd,
-        vertexStaging.buffer,
-        skinnedMesh->meshBuffer.vertices.buf,
-        1,
-        &copyRegion);
-
-      copyRegion.size = indexBufferSize;
-      vkCmdCopyBuffer(
-        copyCmd,
-        indexStaging.buffer,
-        skinnedMesh->meshBuffer.indices.buf,
-        1,
-        &copyRegion);
-
-      VulkanExampleBase::flushCommandBuffer(copyCmd, queue, true);
-
-      vkDestroyBuffer(device, vertexStaging.buffer, nullptr);
-      vkFreeMemory(device, vertexStaging.memory, nullptr);
-      vkDestroyBuffer(device, indexStaging.buffer, nullptr);
-      vkFreeMemory(device, indexStaging.memory, nullptr);
-    } 
-    else
-    {
-      -- Vertex buffer
-      createBuffer(
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-        vertexBufferSize,
-        vertexBuffer.data(),
-        &skinnedMesh->meshBuffer.vertices.buf,
-        &skinnedMesh->meshBuffer.vertices.mem);
-      -- Index buffer
-      createBuffer(
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-        indexBufferSize,
-        indexBuffer.data(),
-        &skinnedMesh->meshBuffer.indices.buf,
-        &skinnedMesh->meshBuffer.indices.mem);
-    }
-    --loadMeshes();
-    VulkanExampleBase::loadMesh(getAssetPath() + "models/plane_z.obj", &meshes.floor, vertexLayout, 512.0f);
-    --setupVertexDescriptions();
-    -- Binding description
-    vertices.bindingDescriptions.resize(1);
-    vertices.bindingDescriptions[0] =
-      vkTools::initializers::vertexInputBindingDescription(
-        VERTEX_BUFFER_BIND_ID,
-        sizeof(Vertex),
-        VK_VERTEX_INPUT_RATE_VERTEX);
-
-    -- Attribute descriptions
-    -- Describes memory layout and shader positions
-    vertices.attributeDescriptions.resize(6);
-    -- Location 0 : Position
-    vertices.attributeDescriptions[0] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        0,
-        VK_FORMAT_R32G32B32_SFLOAT,
-        0);
-    -- Location 1 : Normal
-    vertices.attributeDescriptions[1] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        1,
-        VK_FORMAT_R32G32B32_SFLOAT,
-        sizeof(float) * 3);
-    -- Location 2 : Texture coordinates
-    vertices.attributeDescriptions[2] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        2,
-        VK_FORMAT_R32G32_SFLOAT,
-        sizeof(float) * 6);
-    -- Location 3 : Color
-    vertices.attributeDescriptions[3] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        3,
-        VK_FORMAT_R32G32B32_SFLOAT,
-        sizeof(float) * 8);
-    -- Location 4 : Bone weights
-    vertices.attributeDescriptions[4] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        4,
-        VK_FORMAT_R32G32B32A32_SFLOAT,
-        sizeof(float) * 11);
-    -- Location 5 : Bone IDs
-    vertices.attributeDescriptions[5] =
-      vkTools::initializers::vertexInputAttributeDescription(
-        VERTEX_BUFFER_BIND_ID,
-        5,
-        VK_FORMAT_R32G32B32A32_SINT,
-        sizeof(float) * 15);
-
-    vertices.inputState = vkTools::initializers::pipelineVertexInputStateCreateInfo();
-    vertices.inputState.vertexBindingDescriptionCount = vertices.bindingDescriptions.size();
-    vertices.inputState.pVertexBindingDescriptions = vertices.bindingDescriptions.data();
-    vertices.inputState.vertexAttributeDescriptionCount = vertices.attributeDescriptions.size();
-    vertices.inputState.pVertexAttributeDescriptions = vertices.attributeDescriptions.data();
-
-
-    -- prepareUniformBuffers();    -- Vertex shader uniform buffer block
-    createBuffer(
-      VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-      sizeof(uboVS),
-      nullptr,
-      &uniformData.vsScene.buffer,
-      &uniformData.vsScene.memory,
-      &uniformData.vsScene.descriptor);
-
-    -- Map for host access
-    VK_CHECK_RESULT(vkMapMemory(device, uniformData.vsScene.memory, 0, sizeof(uboVS), 0, (void **)&uniformData.vsScene.mapped));
-
-    -- Floor
-    createBuffer(
-      VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-      sizeof(uboFloor),
-      nullptr,
-      &uniformData.floor.buffer,
-      &uniformData.floor.memory,
-      &uniformData.floor.descriptor);
-
-    -- Map for host access
-    VK_CHECK_RESULT(vkMapMemory(device, uniformData.floor.memory, 0, sizeof(uboFloor), 0, (void **)&uniformData.floor.mapped));
-
-    updateUniformBuffers(true);
-
-    -- setupDescriptorSetLayout();
-    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
-    {
-      -- Binding 0 : Vertex shader uniform buffer
-      vkTools::initializers::descriptorSetLayoutBinding(
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        VK_SHADER_STAGE_VERTEX_BIT,
-        0),
-      -- Binding 1 : Fragment shader combined sampler
-      vkTools::initializers::descriptorSetLayoutBinding(
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        VK_SHADER_STAGE_FRAGMENT_BIT,
-        1),
-    };
-
-    VkDescriptorSetLayoutCreateInfo descriptorLayout =
-      vkTools::initializers::descriptorSetLayoutCreateInfo(
-        setLayoutBindings.data(),
-        setLayoutBindings.size());
-
-    VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &descriptorLayout, nullptr, &descriptorSetLayout));
-
-    VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo =
-      vkTools::initializers::pipelineLayoutCreateInfo(
-        &descriptorSetLayout,
-        1);
-
-    VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayout));
-
-    --preparePipelines();
-
-    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
-      vkTools::initializers::pipelineInputAssemblyStateCreateInfo(
-        VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-        0,
-        VK_FALSE);
-
-    VkPipelineRasterizationStateCreateInfo rasterizationState =
-      vkTools::initializers::pipelineRasterizationStateCreateInfo(
-        VK_POLYGON_MODE_FILL,
-        VK_CULL_MODE_BACK_BIT,
-        VK_FRONT_FACE_CLOCKWISE,
-        0);
-
-    VkPipelineColorBlendAttachmentState blendAttachmentState =
-      vkTools::initializers::pipelineColorBlendAttachmentState(
-        0xf,
-        VK_FALSE);
-
-    VkPipelineColorBlendStateCreateInfo colorBlendState =
-      vkTools::initializers::pipelineColorBlendStateCreateInfo(
-        1,
-        &blendAttachmentState);
-
-    VkPipelineDepthStencilStateCreateInfo depthStencilState =
-      vkTools::initializers::pipelineDepthStencilStateCreateInfo(
-        VK_TRUE,
-        VK_TRUE,
-        VK_COMPARE_OP_LESS_OR_EQUAL);
-
-    VkPipelineViewportStateCreateInfo viewportState =
-      vkTools::initializers::pipelineViewportStateCreateInfo(1, 1, 0);
-
-    VkPipelineMultisampleStateCreateInfo multisampleState =
-      vkTools::initializers::pipelineMultisampleStateCreateInfo(
-        VK_SAMPLE_COUNT_1_BIT,
-        0);
-
-    std::vector<VkDynamicState> dynamicStateEnables = {
-      VK_DYNAMIC_STATE_VIEWPORT,
-      VK_DYNAMIC_STATE_SCISSOR
-    };
-    VkPipelineDynamicStateCreateInfo dynamicState =
-      vkTools::initializers::pipelineDynamicStateCreateInfo(
-        dynamicStateEnables.data(),
-        dynamicStateEnables.size(),
-        0);
-
-    -- Skinned rendering pipeline
-    std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages;
-
-    shaderStages[0] = loadShader(getAssetPath() + "shaders/skeletalanimation/mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(getAssetPath() + "shaders/skeletalanimation/mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-
-    VkGraphicsPipelineCreateInfo pipelineCreateInfo =
-      vkTools::initializers::pipelineCreateInfo(
-        pipelineLayout,
-        renderPass,
-        0);
-package body Neo.Engine.Renderer is
-  procedure Render is
+    -- Structures and variables for configuration... so many
+    Layers                   : aliased Array_Str_C := (To_Str_C (), To_Str_C ());
+    Enabled_Extensions       : aliased  := Import.Get_Vulkan_Extensions;
+    Surface_Support          : VkBool32  = VK_FALSE;
+    Queue_Priority           : const float := 0.0f; 
+    Pre_Transform            : VkSurfaceTransformFlagBitsKHR  
+    Device_Extensions        : static const char *k[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+    Application_Info         : aliased VkApplicationInfo        := (sType                   => VK_STRUCTURE_TYPE_APPLICATION_INFO,
+                                                                    pApplicationName        => Get_Information.Name,
+                                                                    pEngineName             => NAME_ID & VERSION,
+                                                                    apiVersion              => VK_MAKE_VERSION (1, 0, 0),
+                                                                    others                  => <>);
+    Instance_Create_Info     : aliased VkInstanceCreateInfo     := (sType                   => VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+                                                                    pApplicationInfo        => Application_Info'Access,
+                                                                    enabledExtensionCount   => Enabled_Extensions'Length,
+                                                                    ppenabledExtensionNames => Enabled_Extensions'Access,
+                                                                    enabledLayerCount       => Layers'Length,
+                                                                    ppEnabledLayerNames     => Layers'Access,
+                                                                    others                  => <>);
+    Queue_Create_Info        : aliased VkDeviceQueueCreateInfo  := (sType                   => VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+                                                                    queueCount              => 2, -- Double buffering
+                                                                    pQueuePriorities        => Queue_Priority'Access,
+                                                                    others                  => <>);
+    Device_Features          : aliased VkPhysicalDeviceFeatures := (shaderClipDistance      => 1,
+                                                                    shaderCullDistance      => 1,
+                                                                    geometryShader          => 1,
+                                                                    shaderTessellationAndGeometryPointSize => 1,
+                                                                    others                  => <>);
+    Device_Create_Info       : aliased VkDeviceCreateInfo       := (sType                   => VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+                                                                    queueCreateInfoCount    => 1,
+                                                                    pQueueCreateInfos       => queueCreateInfo'Access,
+                                                                    pEnabledFeatures        => Device_Features'Access,
+                                                                    ppEnabledLayerNames     => kLayers,
+                                                                    enabledExtensionCount   => sizeof kDevice_Extensions / sizeof *kDevice_Extensions,
+                                                                    ppEnabledExtensionNames => kDevice_Extensions;
+                                                                    enabledLayerCount       => sizeof kLayers / sizeof *kLayers,
+                                                                    others                  => <>);
+    Command_Pool_Create_Info : aliased VkCommandPoolCreateInfo  := (sType                   => VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+                                                                    flags                   => VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+                                                                    queueFamilyIndex        => Queue_Index,
+                                                                    others                  => <>);
+    Semaphore_Create_Info    : aliased VkSemaphoreCreateInfo    := (sType                   => VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+                                                                    flags                   => 0,
+                                                                    others                  => <>);
     begin
-      Prepare_Frame;
-      Submit_Info := .commandBufferCount = 1 .pCommandBuffers = &drawCmdBuffers[currentBuffer];
-      Queue_Submit (Queue, 1, Submit_Info, VK_NULL_HANDLE);
-      if Menu.Get then
-        runningTime += frameTimer * skinnedMesh->animationSpeed;
-        vkDeviceWaitIdle(device);
-        updateUniformBuffers(false);
-      end if;
+
+      -- Initialize the system grap function pointers
+      Import.Initialize_Vulkan;
+      Import_Initialize_Vulkan_Functions;
+
+      -- Create instance
+      VkAssert (vkCreateInstance (Instance_Create_Info'Access, NULL_PTR, Instance'Access);
+
+      -- Aquire a device
+      vkEnumeratePhysicalDevices (Instance, Count'Access, NULL_PTR);
+      declare Physical_Devices : VkPhysicalDevice_Array (1..Count); begin
+        vkEnumeratePhysicalDevices (Instance, Count'Access, Physical_Devices'Access);
+        Physical_Device := Physical_Devices (Physical_Devices'First);
+      end;
+
+      -- Call vkGetPhysicalDeviceQueueFamilyProperties
+      vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, NULL_PTR);
+      declare Queue_Family_Properties : VkQueueFamilyProperties_Array (1..Count); begin
+        vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, Queue_Family_Properties'Access);
+      end;
+      
+      -- ???
+      for I in 1..Queues.Length loop 
+        if (Queue.queueFlags and VK_QUEUE_GRAPHICS_BIT) > 0 then
+          Queue_Create_Info.queueFamilyIndex := Queue_Index;
+          exit;
+        end if;
+        Assert (I /= Queues.Legnth);
+      end loop;      
+
+      -- Create a Vulkan device
+      Vk_Assert (vkCreateDevice           (Physical_Device, Device_Create_Info'Access, NULL_PTR, Device'Access);
+      vkGetPhysicalDeviceProperties       (Physical_Device, Physical_DeviceProperties'Access);
+      vkGetPhysicalDeviceMemoryProperties (Physical_Device, Physical_DeviceMemoryProperties'Access);
+      vkGetDeviceQueue                    (Device, Queue_Index, 0, Queue'Access);
+
+      -- Create the command pool
+      Vk_Assert (vkCreateCommandPool(Device, Command_Pool_Create_Info'Access, NULL_PTR, Command_Pool'Access);
+
+      -- Create surface
+      Import.createSurface                 (Instance, Surface'Access))
+      vkGetPhysicalDeviceSurfaceSupportKHR (Physical_Device, Queue_Index, Surface, Surface_Support'Access);
+      VkAssert (Surface_Support);
+
+      -- Find format
+      vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, NULL_PTR);
+      declare Surface_Formats : Array_VkSurfaceFormatKHR (1..Count);
+        vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, Surface_Formats'Access);
+        for I in 1..Surface_Formats.Length loop
+          exit when Surface_Formats.Element (I).Format = VK_FORMAT_B8G8R8A8_SRGB;
+          Assert (I /= Surface_Formats.Last_Index);
+        end loop;
+      end;
+
+      -- Set the initial sizing
+      Resize_Vulkan (Initial_Sizing => True);
+
+      -- Create semaphores
+      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Acquire_Status'Access);
+      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Render_Status'Access);
     end;
-  procedure Prepare is
-    begin
-      Load ("textures/goblin_bc3.ktx", VK_FORMAT_BC3_UNORM_BLOCK, &textures.colorMap);
-
-end;
-    pipelineCreateInfo.pVertexInputState = &vertices.inputState;
-    pipelineCreateInfo.pInputAssemblyState = &inputAssemblyState;
-    pipelineCreateInfo.pRasterizationState = &rasterizationState;
-    pipelineCreateInfo.pColorBlendState = &colorBlendState;
-    pipelineCreateInfo.pMultisampleState = &multisampleState;
-    pipelineCreateInfo.pViewportState = &viewportState;
-    pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-    pipelineCreateInfo.pDynamicState = &dynamicState;
-    pipelineCreateInfo.stageCount = shaderStages.size();
-    pipelineCreateInfo.pStages = shaderStages.data();
-
-    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.skinning));
-
-    shaderStages[0] = loadShader(getAssetPath() + "shaders/skeletalanimation/texture.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(getAssetPath() + "shaders/skeletalanimation/texture.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipelines.texture));
-
-    --setupDescriptorPool();
-    -- Example uses one ubo and one combined image sampler
-    std::vector<VkDescriptorPoolSize> poolSizes =
-    {
-      vkTools::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 2),
-      vkTools::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2),
-    };
-
-    VkDescriptorPoolCreateInfo descriptorPoolInfo =
-      vkTools::initializers::descriptorPoolCreateInfo(
-        poolSizes.size(),
-        poolSizes.data(),
-        2);
-
-    VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
-
-    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
-    {
-      -- Binding 0 : Vertex shader uniform buffer
-      vkTools::initializers::descriptorSetLayoutBinding(
-        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        VK_SHADER_STAGE_VERTEX_BIT,
-        0),
-      -- Binding 1 : Fragment shader combined sampler
-      vkTools::initializers::descriptorSetLayoutBinding(
-        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        VK_SHADER_STAGE_FRAGMENT_BIT,
-        1),
-    };
-
-    VkDescriptorSetLayoutCreateInfo descriptorLayout =
-      vkTools::initializers::descriptorSetLayoutCreateInfo(
-        setLayoutBindings.data(),
-        setLayoutBindings.size());
-
-    VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &descriptorLayout, nullptr, &descriptorSetLayout));
-
-    VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo =
-      vkTools::initializers::pipelineLayoutCreateInfo(
-        &descriptorSetLayout,
-        1);
-
-    VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayout));
-
-    -- buildCommandBuffers();
-    VkCommandBufferBeginInfo cmdBufInfo = vkTools::initializers::commandBufferBeginInfo();
-
-    VkClearValue clearValues[2];
-    clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f} };
-    clearValues[1].depthStencil = { 1.0f, 0 };
-
-    VkRenderPassBeginInfo renderPassBeginInfo = vkTools::initializers::renderPassBeginInfo();
-    renderPassBeginInfo.renderPass = renderPass;
-    renderPassBeginInfo.renderArea.offset.x = 0;
-    renderPassBeginInfo.renderArea.offset.y = 0;
-    renderPassBeginInfo.renderArea.extent.width = width;
-    renderPassBeginInfo.renderArea.extent.height = height;
-    renderPassBeginInfo.clearValueCount = 2;
-    renderPassBeginInfo.pClearValues = clearValues;
-
-    for (int32_t i = 0; i < drawCmdBuffers.size(); ++i)
-    {
-      renderPassBeginInfo.framebuffer = frameBuffers[i];
-
-      VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
-
-      vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-      VkViewport viewport = vkTools::initializers::viewport((float)width, (float)height, 0.0f, 1.0f);
-      vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
-
-      VkRect2D scissor = vkTools::initializers::rect2D(width, height, 0, 0);
-      vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
-
-      VkDeviceSize offsets[1] = { 0 };
-
-      -- Skinned mesh
-      vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, NULL);
-      vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.skinning);
-
-      vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &skinnedMesh->meshBuffer.vertices.buf, offsets);
-      vkCmdBindIndexBuffer(drawCmdBuffers[i], skinnedMesh->meshBuffer.indices.buf, 0, VK_INDEX_TYPE_UINT32);
-      vkCmdDrawIndexed(drawCmdBuffers[i], skinnedMesh->meshBuffer.indexCount, 1, 0, 0, 0);
-
-      -- Floor
-      vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets.floor, 0, NULL);
-      vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.texture);
-
-      vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshes.floor.vertices.buf, offsets);
-      vkCmdBindIndexBuffer(drawCmdBuffers[i], meshes.floor.indices.buf, 0, VK_INDEX_TYPE_UINT32);
-      vkCmdDrawIndexed(drawCmdBuffers[i], meshes.floor.indexCount, 1, 0, 0, 0);
-
-      vkCmdEndRenderPass(drawCmdBuffers[i]);
-
-      VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[i]));
-    }
-    prepared = true;
 
   --------------
   -- Finalize --
   --------------
 
-    -- Clean up used Vulkan resources 
-    -- Note : Inherited destructor cleans up resources stored in base class
-    vkDestroyPipeline(device, pipelines.skinning, nullptr);
+  -- Kill the globals
+  procedure Finalize_Vulkan is
+    begin    
+      vkDeviceWaitIdle      (Device);
+      vkDestroySemaphore    (Device,   Acquire_Status, NULL_PTR);
+      vkDestroySemaphore    (Device,   Render_Status,  NULL_PTR);
+      vkDestroyCommandPool  (Device,   Command_Pool,   NULL_PTR);
+      vkDestroySwapchainKHR (Device,   Swap_Chain,     NULL_PTR);
+      vkDestroyDevice       (Device,   NULL_PTR);
+      vkDestroyInstance     (Instance, NULL_PTR);
+      Import.Finalize_Vulkan;
+    end;
 
-    vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-    vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+  -------------
+  -- Present --
+  -------------
 
+  -- Acquire the rendered image and present it
+  procedure Render_Vulkan is
+    Present_Info : aliased VkPresentInfoKHR := (sType              => VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+                                                swapchainCount     => 1,
+                                                pSwapchains        => Swap_Chain'Access,
+                                                pImageIndices      => Image_Index'Access,
+                                                waitSemaphoreCount => 1,
+                                                pWaitSemaphores    => Render_Status'Access);
+    begin
+      vkAcquireNextImageKHR (device      => Device,
+                             swapchain   => Swap_Chain,
+                             timeout     => UINT64_MAX,
+                             semaphore   => Acquire_Status,
+                             fence       => VK_NULL_HANDLE,
+                             pImageIndex => Image_Index'Access);
+      vkQueuePresentKHR (Queue, Present_Info'Access);
+    end;
 
-    textureLoader->destroyTexture(textures.colorMap);
+  ------------------
+  -- Load_Texture --
+  ------------------
 
-    vkTools::destroyUniformData(device, &uniformData.vsScene);
+  -- Load a KTX texture into GPU memory and return the id and 
+  function Load_Texture (Path : Str) return Texture_State is
 
-    -- Destroy and free mesh resources 
-    vkMeshLoader::freeMeshBufferResources(device, &skinnedMesh->meshBuffer);
-    delete(skinnedMesh->meshLoader);
-    delete(skinnedMesh);
+    -- KTX texture format: http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+    type KTX_Header_State is record
+        Id              : Str (1..12);
+        Endianness      : Int_32_Unsigned;
+        Kind            : Int_32_Unsigned;
+        Image_Size      : Int_32_Unsigned;
+        GL_Format       : Int_32_Unsigned;
+        Internal_Format : Int_32_Unsigned;
+        Base_Format     : Int_32_Unsigned;
+        Width           : Int_32_Unsigned;
+        Height          : Int_32_Unsigned;
+        Depth           : Int_32_Unsigned;
+        Array_Length    : Int_32_Unsigned;
+        Faces           : Int_32_Unsigned;
+        Mipmap_Levels   : Int_32_Unsigned;
+        Key_Value_Bytes : Int_32_Unsigned;
+      end record with Object_Size => 440;
+
+    -- Open the file and load the header
+    File   : File_Type        := Open_File (Path);
+    Header : KTX_Header_State := KTX_Header_State'Read (File);
+
+    -- Use the header to initialize a temp array for data parsing and result 
+    Texture : array (1..Header.Mipmap_Levels, 1..Header.Array_Length, 1..Header.Faces, 1..Header.Face_Size) of Byte;
+    Result  : Texture_State ();
+
+    -- Vulkan configuration...
+    Mappable_Image         : aliased VkImage;
+    Device_Memory          : aliased VkDeviceMemory;
+    Subresource_Layout     : aliased VkSubresourceLayout;
+    Format_Properties      : aliased VkFormatProperties;
+    VkMemoryAllocateInfo memAllocInfo = vkTools::initializers::memoryAllocateInfo();
+    Memory_Requirements    : aliased VkMemoryRequirements;
+    Subresource_Range      : aliased VkImageSubresourceRange := (aspectMask         => VK_IMAGE_ASPECT_COLOR_BIT;
+                                                                 baseMipLevel       => 0;
+                                                                 levelCount         => texture->mipLevels;
+                                                                 layerCount         => 1;
+                                                                 others             => <>);
+    Buffer_Image_Copy      : aliased VkBufferImageCopy       := (imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                                                                 imageSubresource.mipLevel = i;
+                                                                 imageSubresource.baseArrayLayer = 0;
+                                                                 imageSubresource.layerCount = 1;
+                                                                 imageExtent.width = static_cast<uint32_t>(tex2D[i].dimensions().x);
+                                                                 imageExtent.height = static_cast<uint32_t>(tex2D[i].dimensions().y);
+                                                                 imageExtent.depth = 1;
+                                                                 bufferOffset = offset;
+                                                                 others             => <>);
+    Buffer_Create_Info     : aliased VkBufferCreateInfo      := (size               => tex2D.size();
+                                                                 usage              => VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                                                                 sharingMode        => VK_SHARING_MODE_EXCLUSIVE;
+                                                                 others             => <>);
+    Image_Create_Info      : aliased VkImageCreateInfo       := (imageType          => VK_IMAGE_TYPE_2D;
+                                                                 format             => format;
+                                                                 mipLevels          => texture->mipLevels;
+                                                                 arrayLayers        => 1;
+                                                                 samples            => VK_SAMPLE_COUNT_1_BIT;
+                                                                 tiling             => VK_IMAGE_TILING_OPTIMAL;
+                                                                 sharingMode        => VK_SHARING_MODE_EXCLUSIVE;
+                                                                 initialLayout      => VK_IMAGE_LAYOUT_UNDEFINED;
+                                                                 extent             => (texture->width, texture->height, 1);
+                                                                 usage              => imageUsageFlags;
+                                                                 others             => <>);
+    Submit_Info            : aliased VkSubmitInfo            := (commandBufferCount => 1;
+                                                                 waitSemaphoreCount => 0;
+                                                                 pCommandBuffers    => &cmdBuffer;
+                                                                 others             => <>);
+    Subresource            : aliased VkImageSubresource      := (aspectMask         => VK_IMAGE_ASPECT_COLOR_BIT;
+                                                                 mipLevel           => 0;
+                                                                 others             => <>);
+    Sampler_Create_Info    : aliased VkSamplerCreateInfo     := (sType              => VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+                                                                 magFilter          => VK_FILTER_LINEAR;
+                                                                 minFilter          => VK_FILTER_LINEAR;
+                                                                 mipmapMode         => VK_SAMPLER_MIPMAP_MODE_LINEAR;
+                                                                 addressModeU       => VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                                                                 addressModeV       => VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                                                                 addressModeW       => VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                                                                 mipLodBias         => 0.0f;
+                                                                 compareOp          => VK_COMPARE_OP_NEVER;
+                                                                 minLod             => 0.0f;
+                                                                 maxLod             => : 0.0f;
+                                                                 maxAnisotropy      => 8;
+                                                                 anisotropyEnable   => VK_TRUE;
+                                                                 borderColor        => VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+                                                                 others             => <>);
+    Image_View_Create_Info : aliased VkImageViewCreateInfo   := (sType              => VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+                                                                 image              => VK_NULL_HANDLE;
+                                                                 viewType           => VK_IMAGE_VIEW_TYPE_2D;
+                                                                 format             => format;
+                                                                 image              => texture->image;
+                                                                 components         => (VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G,
+                                                                                        VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A),
+                                                                 others             => <>);
+    begin
+
+      -- Use a separate command buffer for texture loading
+      VkAssert (vkBeginCommandBuffer (cmdBuffer, &cmdBufInfo));
+
+      -- Check if this support is supported for linear tiling Load mip map level 0 to linear tiling image
+      vkGetPhysicalDeviceFormatProperties (vulkanDevice->physicalDevice, format, &formatProperties);
+      Assert (formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
+
+      -- Get memory requirements for this image like size and alignmentGet sub resources layout  Includes row pitch, size offsets, etc.
+      VkAssert (vkCreateImage      (vulkanDevice->logicalDevice, &imageCreateInfo, nullptr, &mappableImage));
+      vkGetImageMemoryRequirements (vulkanDevice->logicalDevice, mappableImage, &memReqs);
+      memAllocInfo.allocationSize = memReqs.size;
+      memAllocInfo.memoryTypeIndex = vulkanDevice->getMemoryType (memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+      VkAssert (vkAllocateMemory   (vulkanDevice->logicalDevice, &memAllocInfo, nullptr, &mappableMemory));
+      VkAssert (vkBindImageMemory  (vulkanDevice->logicalDevice, mappableImage, mappableMemory, 0));
+      vkGetImageSubresourceLayout  (vulkanDevice->logicalDevice, mappableImage, &subRes, &subResLayout);
+
+      -- Map image memory
+      VkAssert (vkMapMemory (vulkanDevice->logicalDevice, mappableMemory, 0, memReqs.size, 0, &data));
+
+      if(Header.NumberOfFaces > 1)
+        if(Header.NumberOfArrayElements > 0) return TARGET_CUBE_ARRAY;
+        else return TARGET_CUBE;
+      elsif(Header.NumberOfArrayElements > 0)
+        if(Header.PixelHeight == 0) return TARGET_1D_ARRAY;
+        else return TARGET_2D_ARRAY;
+      else if(Header.PixelHeight == 0) return TARGET_1D;
+      else if(Header.PixelDepth > 0) return TARGET_3D;
+      else return TARGET_2D;
+
+      -- Assert the file is a valid KTX texture
+      Assert ("KTX 11");
+      Assert (Format != static_cast<format>(gli::FORMAT_INVALID));
+      Assert ( this->extent().y >= 1 && this->extent().z == 1)
+      Assert (Target != TARGET_2D         or (Target == TARGET_2D         && this->layers() == 1 && this->faces() == 1));
+      Assert (Target != TARGET_2D_ARRAY   or (Target == TARGET_2D_ARRAY   && this->layers() >= 1 && this->faces() == 1));
+      Assert (Target != TARGET_CUBE       or (Target == TARGET_CUBE       && this->layers() == 1 && this->faces() >= 1));
+      Assert (Target != TARGET_CUBE_ARRAY or (Target == TARGET_CUBE_ARRAY && this->layers() >= 1 && this->faces() >= 1));
+
+      -- Load the texture data
+      for Level in 1..Header.Mipmap_Levels loop
+        for Layer in 1..Header.Array_Length loop
+          for Face in 1..Header.Faces loop
+            for Element in 1..Header.Face_Size loop
+              Texture_Data (Level, Layer, Face, Element) := Byte'Read (File);
+            end loop;
+          end loop;
+        end loop;
+
+        -- Skip the MIP padding
+        Set_Position (File, 3 - ((Texture.Image_Size + 3) mod 4));
+      end loop;
+
+      vkUnmapMemory(vulkanDevice->logicalDevice, mappableMemory);
+
+      -- Setup image memory barrier
+      setImageLayout(
+        cmdBuffer,
+        texture->image, 
+        VK_IMAGE_ASPECT_COLOR_BIT, 
+        VK_IMAGE_LAYOUT_PREINITIALIZED, 
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+      -- Submit command buffer containing copy and image layout commands
+      VkAssert (vkEndCommandBuffer(cmdBuffer));
+
+      -- 
+      VkAssert (vkQueueSubmit(queue, 1, &submitInfo, nullFence));
+      VkAssert (vkQueueWaitIdle(queue));
+
+      -- Create sampler
+      VkAssert (vkCreateSampler(vulkanDevice->logicalDevice, &sampler, nullptr, &texture->sampler));
+      
+      -- Textures are not directly accessed by the shaders and are abstracted by image views containing additional information and sub resource ranges
+      VkAssert (vkCreateImageView(vulkanDevice->logicalDevice, &view, nullptr, &texture->view));
+
+      -- Fill descriptor image info that can be used for setting up descriptor sets
+      texture->descriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+      return Texture;
+    end;
+
+  ---------------
+  -- Load_Mesh --
+  ---------------
+
+  function Load_Mesh (Path : Str) return Texture_State is
+    begin
+      
+    end;
+end;

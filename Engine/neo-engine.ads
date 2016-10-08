@@ -34,6 +34,13 @@ with Neo.OpenAL;                   use Neo.OpenAL;
 -- System dependant code and main loop
 package Neo.Engine is
 
+  ---------
+  -- Run --
+  ---------
+
+  -- Main entry point, this should only be called by main.adb
+  procedure Run;
+
   -----------------
   -- Information --
   -----------------
@@ -43,7 +50,6 @@ package Neo.Engine is
 
   -- OS and user information 
   type Information_State is record
-      CPU_Mhz  : Int_64_Unsigned;
       Bit_Size : Int_32_Positive;
       OS       : Str_16_Unbound;
       Username : Str_16_Unbound;
@@ -56,20 +62,11 @@ package Neo.Engine is
   function Paste return Str;
   procedure Copy (Item : Str);
 
-  ---------
-  -- Run --
-  ---------
-
-  -- Main entry point, this should only be called by main.adb
-  procedure Run;
-
   --------------------
   -- Error_Handling --
   --------------------
 
   -- Message box function to query user action
-  type Icon_Kind    is (No_Icon, Warning_Icon, Information_Icon, Error_Icon);
-  type Buttons_Kind is (Yes_No_Buttons, Okay_Button, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
   function Ok (Name, Message : Str;
                Buttons       : Buttons_Kind := Okay_Button;
                Icon          : Icon_Kind    := No_Icon)
@@ -349,32 +346,36 @@ package Neo.Engine is
       procedure Disable;
     end;
 
-  ------------
-  -- Vulkan --
-  ------------
+  ---------------
+  -- Rendering --
+  ---------------
 
-    -- Statuses
-    Render_Status  : aliased VkSemaphore; 
-    Acquire_Status : aliased VkSemaphore;
-
-    -- Image ids
-    Image       : aliased VkImage;
-    Images      : aliased Vector_VkImage.Unsafe.Vector;
-    Image_Index : aliased Int_32_Positive;
-
-    -- Rendering ids
-    Queue                  : aliased VkQueue;
-    Surface                : aliased VkSurfaceKHR;
-    Instance               : aliased VkInstance;
-    Render_Pass            : aliased VkRenderPass;
-    Swap_Chain             : aliased VkSwapchainKHR;
-    Command_Pool           : aliased VkCommandPool;
-    Swap_Chain_Create_Info : aliased VkSwapchainCreateInfoKHR;
-
-    -- Device information
-    Device                            : aliased VkDevice;
-    Physical_Device                   : aliased VkPhysicalDevice;
-    Physical_Device_Features          : aliased VkPhysicalDeviceFeatures
-    Physical_Device_Properties        : aliased VkPhysicalDeviceProperties;
-    Physical_Device_Memory_Properties : aliased VkPhysicalDeviceMemoryProperties;
+  type Material_Kind is (Normal_Material, Specular_Material, Diffuse_Material, Alpha_Material,
+                         Mirror_Material, Occlusion_Material, Cube_Material);
+  type Light_Kind    is (Fog_Light, Blend_Light, Normal_Light);
+  type Material_State (Kind : Material_Kind := Diffuse_Material) is new Controlled with record
+      Scale            : Matrix_2x3;
+      Color            : Pixel_State;
+      Opacity_Color    : Real_32_Percent := 100.0;
+      Opacity          : Real_32_Percent := 100.0;
+      Offset           : Real_32;
+      Frame            : Int_32_Positive;
+      Frame_Rate       : Int_32_Natural; -- Non-animated materials have a zero frame rate
+      Texture          : Str_16_Unbound;
+      Fragment_Program : Str_16_Unbound;
+      Vertex_Program   : Str_16_Unbound;
+      Fragment_Images  : Vector_Str_16_Unbound.Unsafe.Vector;
+      Vertex_Args      : Vector_Vertex_Args.Unsafe.Vector;
+    end record;
+  type Mesh_Instance_State (Animated : Bool := True) is record -- will have vulkan stuff
+      Location   :
+      Rotation   :  
+      Animations :
+      Mesh       : Str_16_Unbound;
+      Skeleton   :
+    end record;
+  Meshes    : Hashed_Mesh.Safe.Map;
+  Images    : Hashed_Image.Safe.Map;
+  Shaders   : Hashed_Stream.Safe.Map;
+  Materials : Hashed_Materials.Safe.Map;
 end;

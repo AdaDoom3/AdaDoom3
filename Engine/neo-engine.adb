@@ -15,28 +15,28 @@
 
 package body Neo.Engine is
 
-  ------------
-  -- Import --
-  ------------
+  --------------
+  -- Separate --
+  --------------
 
   -- System-dependant subprograms. Note: Some may have side effects like setting of cvars or calling a private subprogram !!!
   package Import is
-
-      -- Information
-      procedure Copy           (Item : Str);
-      function Paste           return Str;
-      function Get_Information return Information_State;
 
       -- Vulkan
       procedure Initialize_Vulkan;
       procedure Finalize_Vulkan;
       procedure Create_Surface      (Instance : VkInstance; Surface : in out VkSurfaceKHR);
       function Load_Vulkan_Function (Name : Str) return Ptr;
- 
+
+      -- Information
+      procedure Copy           (Item : Str);
+      function Paste           return Str;
+      function Get_Information return Information_State;
+
       -- Input
       procedure Initialize_Input;
       procedure Finalize_Input;
-      procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent);
+      procedure Vibrate     (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent);
       function Update_Input return Bool;
 
       -- Error Handling
@@ -66,7 +66,14 @@ package body Neo.Engine is
       function Get_Decoration    return Border_State;
       function Fullscreen_Only   return Bool;
       function Only_Instance     return Bool;
-      function Update_Windowing  return Bool;
+      function Update_Windowing  return Bool; -- Set Activated and Mode cvars
+    end;
+
+  -- Rendering is reactive to global data types, the visible subprograms here are for the main window (e.g. backend)
+  package Renderer is
+      procedure Initialize;
+      procedure Present;
+      procedure Finalize;
     end;
 
   -----------------
@@ -144,20 +151,17 @@ package body Neo.Engine is
 
   -- Externally finalizable task package 
   package body Tasks is
-      Task_Error : Exception;
       procedure Finalize is new Ada.Unchecked_Deallocation (Task_Unsafe, Task_Unsafe_Ptr);
       task body Task_Unsafe is
         begin
           accept Initialize (Id : out Task_Id) do Id := Current_Task; end;
           begin Run; exception when Occurrence: others => Handle (Occurrence); end;
-          --Task_Count.Set (Task_Count.Get - 1);
+          Task_Count.Set (Task_Count.Get - 1);
         end;
       protected body Safe_Task is
           procedure Initialize is
             begin
-              if Current_Id /= NULL_TASK_ID and then not Is_Terminated (Current_id) then
-                raise Task_Error with "Task is already running";
-              end if;
+              if Current_Id /= NULL_TASK_ID and then not Is_Terminated (Current_id) then return; end if;
               Current_Task := new Task_Unsafe;
 
 -- warning: potentially blocking operation in protected operation
@@ -374,7 +378,7 @@ pragma Warnings (On);
   procedure Remove_Device (Id : Int_Ptr)                                  is begin Devices.Delete (Id); end;
   procedure Add_Device    (Id : Int_Ptr; Device  : Device_State)          is begin if not Players.Has (Device.Player) then Players.Insert (Device.Player, (others => <>)); end if; Devices.Insert (Id, Device); end;
 
-  -- Convience functions
+  -- Convenience functions
   procedure Set_Device     (Id : Int_Ptr; Player  : Int_32_Positive := 1)                  is Device : Device_State := Devices.Get (Id); begin Device.Player             := Player; Devices.Replace (Id, Device); end;
   procedure Inject_Text    (Id : Int_Ptr; Text    : Str_16_Unbound)                        is Device : Device_State := Devices.Get (Id); begin Device.Text               := Text;   Devices.Replace (Id, Device); end;
   procedure Inject_Cursor  (Id : Int_Ptr; Cursor  : Cursor_State)                          is Device : Device_State := Devices.Get (Id); begin Device.Cursor             := Cursor; Devices.Replace (Id, Device); end;
@@ -436,21 +440,21 @@ pragma Warnings (On);
       end;
 
     -- Declare locals and initialize
-    Last_Time      : Time := Clock;
+    Old_Players,
+    New_Players    : Ordered_Player.Unsafe.Map;
     Player         : Player_State;
-    Players_Unsafe : Ordered_Player.Unsafe.Map;
-    Old_Players    : Ordered_Player.Unsafe.Map;
     Devices_Unsafe : Ordered_Device.Unsafe.Map;
     Args           : Vector_Impulse_Arg.Unsafe.Vector;
+    Last_Time      : Time := Clock;
     begin
       Import.Initialize_Input;
       while Import.Update_Input loop
 
         -- Clear all of the players
-        Old_Players    := Players.Get;
-        Players_Unsafe := Players.Get;
-        for Player of Players_Unsafe loop Player := (others => <>); end loop;
-        Players.Set (Players_Unsafe);
+        Old_Players := Players.Get;
+        New_Players := Players.Get;
+        for Player of New_Players loop Player := (others => <>); end loop;
+        Players.Set (New_Players);
 
         -- Loop through all of the devices and rebuild a the players for each input frame
         Devices_Unsafe := Devices.Get;
@@ -522,7 +526,7 @@ pragma Warnings (On);
           for Impulse of Impulses.Get loop
             for Binding of Impulse.Bindings.Get loop
               if Changed (Binding, Players.Get (Binding.Player), Old_Players.Element (Binding.Player)) then
-                Args.Clear; -- TODO do not register left or right clicks or cursor movement if the cursor is not In_Main_Window in Windowed_Mode
+                Args.Clear; -- TODO do not register left or right clicks or cursor movement if the cursor is not In_Main_Window when in Windowed_Mode
                 Args.Append (Build_Impulse_Arg (Binding, Players.Get (Binding.Player)));
 
                 -- Handle combinations
@@ -570,271 +574,6 @@ goto Combo_Fail;
   package Input_Tasks is new Tasks (Run_Input);
   Input_Task : Input_Tasks.Safe_Task;
 
-  ------------
-  -- Vulkan --
-  ------------
-  -- This section has many declare blocks due to Vulkan's API style (e.g. call once to make a buffer, then again for info)
-  
-  -- Reused settings
-  Desired_Images : aliased uint32_t = 3;
-
-  -- Handle the setting of graphics cvars
-  procedure Set_Vertical_Sync (Val : Bool) is
-    Present_Modes VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
-    begin
-      -- Call vkGetPhysicalDeviceSurfacePresentModesKHR
-      vkGetPhysicalDeviceSurfacePresentModesKHR (Physical_Device, Surface, Count'Access, NULL_PTR);
-      declare Present_Modes : VkPresentModeKHR_Array (1..Count); begin
-        vkGetPhysicalDeviceSurfacePresentModesKHR (Physical_Device, Surface, Count'Access, Present_Modes'Access);
-        for Present_Mode of Present_Modes loop
-          if vsync && Present_Mode == VK_PRESENT_MODE_MAILBOX_KHR or !vsync && Present_Mode == VK_PRESENT_MODE_IMMEDIATE_KHR then
-            Current_presentMode = Present_Mode;
-            exit;
-          end if;
-        end loop
-      end;
-    end;
-
-  -- Set the sizes... comment here !!!
-  procedure Resize_Vulkan (Initial_Sizing : Bool := True) is
-    Pre_Transform        : aliased VkSurfaceTransformFlagBitsKHR;
-    Surface_Capabilities : aliased VkSurfaceCapabilitiesKHR;
-    Setup_Buffer         : aliased VkCommandBuffer;
-    Begin_Info           : aliased VkCommandBufferBeginInfo := (sType  => VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, others => <>);
-    Memory_Barrier : aliased VkImageMemoryBarrier := (sType               => VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-                                                      srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED;
-                                                      dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED;
-                                                      oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED;
-                                                      newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                                                      subresourceRange    => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
-                                                      others              => <>);
-    Setup_Buffer_Info : aliased VkCommandBufferAllocateInfo := (sType              => VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-                                                                commandPool        => Command_Pool;
-                                                                level              => VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-                                                                commandBufferCount => 1,
-                                                                others             => <>);
-    Submit_Info : aliased VkSubmitInfo := (sType              => VK_STRUCTURE_TYPE_SUBMIT_INFO, 
-                                           commandBufferCount => 1,
-                                           pCommandBuffers    => Setup_Buffer'Access,
-                                           others             => <>);
-    begin
-
-      -- Set Surface_Capabilities
-      vkGetPhysicalDeviceSurfaceCapabilitiesKHR (Physical_Device, Surface, Surface_Capabilities'Access);
-      Desired_Images := (if Surface_Capabilities.maxImageCount > 0 and Desired_Images > Surface_Capabilities.maxImageCount then
-                           Surface_Capabilities.maxImageCount
-                         else Desired_Images);
- 
-      -- Take into account if this resize was called during initialization or execution
-      if Initial_Sizing then
-        if Swap_Chain_Create_Info.imageExtent = Surface_Capabilities.currentExtent then return; end if;
-        Swap_Chain_Create_Info := (imageExtent  => Surface_Capabilities.currentExtent,
-                                   oldSwapchain => Swap_Chain,
-                                   others       => Swap_Chain_Create_Info);
-        VkAssert (vkCreateSwapchainKHR (Device, Swap_Chain_Create_Info'Access, NULL_PTR, Swap_Chain'Access));
-        vkDeviceWaitIdle               (Device);
-        vkDestroySwapchainKHR          (Device, Swap_Chain_Create_Info.oldSwapchain, NULL_PTR);
-      else
-        Swap_Chain_Create_Info := (sType                 => VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-                                   surface               => Surface,
-                                   minImageCount         => Desired_Images,
-                                   imageFormat           => VK_FORMAT_B8G8R8A8_SRGB,
-                                   imageColorSpace       => VK_COLORSPACE_SRGB_NONLINEAR_KHR,
-                                   imageExtent           => Surface_Capabilities.currentExtent,
-                                   imageUsage            => VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-                                   imageArrayLayers      => 1,
-                                   imageSharingMode      => VK_SHARING_MODE_EXCLUSIVE,
-                                   queueFamilyIndexCount => 0,
-                                   pQueueFamilyIndices   => NULL_PTR,
-                                   presentMode           => presentMode,
-                                   compositeAlpha        => VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-                                   oldSwapchain          => VK_NULL_HANDLE;
-                                   clipped               => true);
-
-        -- Set vsync
-        Set_Vertical_Sync (Vertical_Sync.Get)
-
-        -- ???
-        Pre_Transform := (if (Surface_Capabilities.supportedTransforms and VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) > 0 then
-                            VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR
-                          else Surface_Capabilities.currentTransform);
-        VkAssert (vkCreateSwapchainKHR(Device, Swap_Chain_Create_Info'Access, NULL_PTR, Swap_Chain'Access));
-      end if;
-
-      -- Call vkGetSwapchainImagesKHR
-      vkGetSwapchainImagesKHR (Device, Swap_Chain, Count'Access, NULL_PTR);
-      declare Images : VkImage_Array (1..Count); begin
-        Assert (Images'Length >= Count);
-        vkGetSwapchainImagesKHR (Device, Swap_Chain, Count'Access, Images'Access);
-        Images.Set (Images
-      end;
-
-      -- Present images
-      VkAssert (vkAllocateCommandBuffers (Device, Setup_Buffer_Info'Access, Setup_Buffer'Access);
-      VkAssert (vkBeginCommandBuffer     (Setup_Buffer, Begin_Info'Access);
-      for Image of Images loop
-        Memory_Barrier.image := Image;
-        vkCmdPipelineBarrier (commandBuffer             => Setup_Buffer,
-                              vkCmdPipelineBarrier      => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                              dstStageMask              => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                              dependencyFlags           => 0,
-                              memoryBarrierCount        => 0,
-                              pMemoryBarriers           => null,
-                              bufferMemoryBarrierCount  => 0,
-                              pBufferMemoryBarriers     => null,
-                              imageMemoryBarrierCount   => 1,
-                              pImageMemoryBarriers      => Memory_Barrier'Access);
-      end loop;
-      vkEndCommandBuffer   (Setup_Buffer);
-      vkQueueSubmit        (Queue, 1, Submit_Info'Access, VK_NULL_HANDLE);
-      vkQueueWaitIdle      (Queue);
-      vkFreeCommandBuffers (Device, Command_Pool, 1, Setup_Buffer'Access);
-    end;
-
-  -- Get the game window ready for rendering and initialize the global variables in the spec
-  procedure Initialize_Vulkan is 
-
-    -- Load all of the function pointers from a dll or lib
-    procedure Import_Initialize_Vulkan_Functions is new Initialize_Vulkan_Functions (Load_Vulkan_Function);
-    
-    -- Structures and variables for configuration... so many
-    Layers             : aliased Array_Str_C := (To_Str_C (), To_Str_C ());
-    Enabled_Extensions : aliased  := Import.Get_Vulkan_Extensions;
-    Surface_Support    : VkBool32  = VK_FALSE;
-    Queue_Priority     : const float := 0.0f; 
-    Pre_Transform      : VkSurfaceTransformFlagBitsKHR  
-    Device_Extensions  : static const char *k[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-    Application_Info : aliased VkApplicationInfo := (sType            => VK_STRUCTURE_TYPE_APPLICATION_INFO,
-                                                     pApplicationName => Get_Information.Name,
-                                                     pEngineName      => NAME_ID & VERSION,
-                                                     apiVersion       => VK_MAKE_VERSION (1, 0, 0),
-                                                     others           => <>);
-    Instance_Create_Info : aliased VkInstanceCreateInfo := (sType                   => VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-                                                            pApplicationInfo        => Application_Info'Access,
-                                                            enabledExtensionCount   => Enabled_Extensions'Length,
-                                                            ppenabledExtensionNames => Enabled_Extensions'Access,
-                                                            enabledLayerCount       => Layers'Length,
-                                                            ppEnabledLayerNames     => Layers'Access,
-                                                            others                  => <>);
-    Queue_Create_Info : aliased VkDeviceQueueCreateInfo := (sType            => VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-                                                            queueCount       => 2, -- Double buffering
-                                                            pQueuePriorities => Queue_Priority'Access,
-                                                            others           => <>);
-    Device_Features : aliased VkPhysicalDeviceFeatures := (shaderClipDistance                     => 1,
-                                                           shaderCullDistance                     => 1,
-                                                           geometryShader                         => 1,
-                                                           shaderTessellationAndGeometryPointSize => 1,
-                                                           others                                 => <>);
-    Device_Create_Info : aliased VkDeviceCreateInfo := (sType                   => VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-                                                        queueCreateInfoCount    => 1,
-                                                        pQueueCreateInfos       => queueCreateInfo'Access,
-                                                        pEnabledFeatures        => Device_Features'Access,
-                                                        ppEnabledLayerNames     => kLayers,
-                                                        enabledExtensionCount   => sizeof kDevice_Extensions / sizeof *kDevice_Extensions,
-                                                        ppEnabledExtensionNames => kDevice_Extensions;
-                                                        enabledLayerCount       => sizeof kLayers / sizeof *kLayers,
-                                                        others                  => <>);
-    Command_Pool_Create_Info : aliased VkCommandPoolCreateInfo := (sType            => VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-                                                                   flags            => VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-                                                                   queueFamilyIndex => Queue_Index,
-                                                                   others           => <>);
-    Semaphore_Create_Info : aliased VkSemaphoreCreateInfo := (sType  => VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-                                                              flags  => 0,
-                                                              others => <>);
-    begin
-
-      -- Initialize the system grap function pointers
-      Import.Initialize_Vulkan;
-      Import_Initialize_Vulkan_Functions;
-
-      -- Create instance
-      VkAssert (vkCreateInstance (Instance_Create_Info'Access, NULL_PTR, Instance'Access);
-
-      -- Aquire a device
-      vkEnumeratePhysicalDevices (Instance, Count'Access, NULL_PTR);
-      declare Physical_Devices : VkPhysicalDevice_Array (1..Count); begin
-        vkEnumeratePhysicalDevices (Instance, Count'Access, Physical_Devices'Access);
-        Physical_Device := Physical_Devices (Physical_Devices'First);
-      end;
-
-      -- Call vkGetPhysicalDeviceQueueFamilyProperties
-      vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, NULL_PTR);
-      declare Queue_Family_Properties : VkQueueFamilyProperties_Array (1..Count); begin
-        vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, Queue_Family_Properties'Access);
-      end;
-      
-      -- ???
-      for I in 1..Queues.Length loop 
-        if (Queue.queueFlags and VK_QUEUE_GRAPHICS_BIT) > 0 then
-          Queue_Create_Info.queueFamilyIndex := Queue_Index;
-          exit;
-        end if;
-        Assert (I /= Queues.Legnth);
-      end loop;      
-
-      -- Create a Vulkan device
-      Vk_Assert (vkCreateDevice           (Physical_Device, Device_Create_Info'Access, NULL_PTR, Device'Access);
-      vkGetPhysicalDeviceProperties       (Physical_Device, Physical_DeviceProperties'Access);
-      vkGetPhysicalDeviceMemoryProperties (Physical_Device, Physical_DeviceMemoryProperties'Access);
-      vkGetDeviceQueue                    (Device, Queue_Index, 0, Queue'Access);
-
-      -- Create the command pool
-      Vk_Assert (vkCreateCommandPool(Device, Command_Pool_Create_Info'Access, NULL_PTR, Command_Pool'Access);
-
-      -- Create surface
-      Import.createSurface                 (Instance, Surface'Access))
-      vkGetPhysicalDeviceSurfaceSupportKHR (Physical_Device, Queue_Index, Surface, Surface_Support'Access);
-      VkAssert (Surface_Support);
-
-      -- Find format
-      vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, NULL_PTR);
-      declare Surface_Formats : Array_VkSurfaceFormatKHR (1..Count);
-        vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, Surface_Formats'Access);
-        for I in 1..Surface_Formats.Length loop
-          exit when Surface_Formats.Element (I).Format = VK_FORMAT_B8G8R8A8_SRGB;
-          Assert (I /= Surface_Formats.Last_Index);
-        end loop;
-      end;
-
-      -- Set the initial sizing
-      Resize_Vulkan (Initial_Sizing => True);
-
-      -- Create semaphores
-      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Acquire_Status'Access);
-      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Render_Status'Access);
-    end;
-
-  -- Kill the globals
-  procedure Finalize_Vulkan is
-    begin    
-      vkDeviceWaitIdle      (Device);
-      vkDestroySemaphore    (Device,   Acquire_Status, NULL_PTR);
-      vkDestroySemaphore    (Device,   Render_Status,  NULL_PTR);
-      vkDestroyCommandPool  (Device,   Command_Pool,   NULL_PTR);
-      vkDestroySwapchainKHR (Device,   Swap_Chain,     NULL_PTR);
-      vkDestroyDevice       (Device,   NULL_PTR);
-      vkDestroyInstance     (Instance, NULL_PTR);
-      Import.Finalize_Vulkan;
-    end;
-
-  -- Acquire the rendered image and present it
-  procedure Render_Vulkan is
-    Present_Info : aliased VkPresentInfoKHR := (sType              => VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-                                                swapchainCount     => 1,
-                                                pSwapchains        => Swap_Chain'Access,
-                                                pImageIndices      => Image_Index'Access,
-                                                waitSemaphoreCount => 1,
-                                                pWaitSemaphores    => Render_Status'Access);
-    begin
-      vkAcquireNextImageKHR (device      => Device,
-                             swapchain   => Swap_Chain,
-                             timeout     => UINT64_MAX,
-                             semaphore   => Acquire_Status,
-                             fence       => VK_NULL_HANDLE,
-                             pImageIndex => Image_Index'Access);
-      vkQueuePresentKHR (Queue, Present_Info'Access);
-    end;
-
   --------------
   -- Impulses --
   --------------
@@ -852,7 +591,8 @@ goto Combo_Fail;
     end;
   procedure Callback_Exit_To_Menu (Args : Vector_Impulse_Arg.Unsafe_Array) is
     begin
-      if Args (Args'First).Press.Down then Menu.Set (True); end if; end;
+      if Args (Args'First).Press.Down then Menu.Set (True); end if;
+    end;
 
   -- Toggle fullscreen mode
   procedure Callback_Fullscreen (Args : Vector_Impulse_Arg.Unsafe_Array) is
@@ -900,21 +640,18 @@ goto Combo_Fail;
   type Activated_Kind is (Other_Activated, Click_Activated, Other_Deactivated, Minimize_Deactivated);
   package Activated is new CVar ("activated", "Query last activation action for window", Activated_Kind, Other_Activated, False);
 
-  ----------
-  -- Game --
-  ----------
+  --------------
+  -- Separate --
+  --------------
 
   -- Game task creation
   procedure Game is separate;
   package Game_Tasks is new Tasks (Game);
   Game_Task : Game_Tasks.Safe_Task;
 
-  ------------
-  -- Import --
-  ------------
-
-  -- Give the Import package access to everything in Neo.Engine's body
+  -- Give the Import and Renderer packages access to everything in Neo.Engine's body
   package body Import is separate;
+  package body Renderer is separate;
 
   ---------
   -- Run --
@@ -922,7 +659,7 @@ goto Combo_Fail;
 
   procedure Run is
 
-    -- Set the windowing mode based of the cvar Mode
+    -- Set the windowing mode based on the cvar Mode
     procedure Set_Windowing_Mode is
       begin
         case Mode.Get is
@@ -941,7 +678,7 @@ goto Combo_Fail;
       Initialize_Configuration; -- Load cvars which could affect windowing or rendering
       Import.Initialize_Windowing;
       Set_Windowing_Mode;
-      Initialize_Vulkan;
+      Renderer.Initialize;
       Input_Task.Initialize;
       Game_Task.Initialize;
 
@@ -951,6 +688,7 @@ goto Combo_Fail;
       Fullscreen.Bindings.Append   (Keyboard (F11_Key));
 
       -- Log system information in case of error reports
+      Line;
       Line ("SYSTEM INFORMATION");
       Line;
       Line ("Engine: "              & NAME_ID & " " & VERSION);
@@ -965,23 +703,26 @@ goto Combo_Fail;
       Line;
       -- Print vulkan system information
       Line;
+      Line ("CONFIGURATION");
+      Line;
+      -- Print vulkan system information
+      Line;
       Line ("GAME START!");
       Line;
 
       -- Main loop
       declare
-      Saved_Pos         : Cursor_State   := Get_Cursor;
       Current_Menu      : Bool           := Menu.Get;
       Current_Mode      : Mode_Kind      := Mode.Get;
       Current_Cursor    : Cursor_Kind    := Cursor.Get;
       Current_Activated : Activated_Kind := Activated.Get;
+      Saved_Pos         : Cursor_State   := Get_Cursor;
       begin
+
+        -- Setup
         Enter_Game.Enable;
         Input_Status.Occupied (True);
         while Import.Update_Windowing and Game_Task.Running loop
-
-          -- Render
-          Render_Vulkan;
 
           -- Set cursor
           if Current_Cursor /= Cursor.Get then
@@ -1084,13 +825,16 @@ goto Combo_Fail;
             end case;
             Current_Activated := Activated.Get;
           end if;
+
+          -- Render
+          Renderer.Present;
         end loop;
       end;
 
       -- Finalize
       Game_Task.Finalize;
       Input_Task.Finalize;
-      Finalize_Vulkan;
+      Renderer.Finalize;
       Import.Finalize_Windowing;
       Finalize_Configuration;
 

@@ -85,6 +85,12 @@ package Neo.Win32 is
   WMSZ_RIGHT       : constant Int_Ptr := 16#0000_0002#; -- 0
   WMSZ_LEFT        : constant Int_Ptr := 16#0000_0001#; -- 0
   WMSZ_TOP         : constant Int_Ptr := 16#0000_0003#; -- 0
+
+  -- http://web.archive.org/web/20160808214158/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385(v=vs.85).aspx
+  DATA_SCROLL_BAR_WIDTH                      : constant Int_C   := 9; -- SM_CYVTHUMB 0 
+  DATA_TITLE_BAR_HEIGHT                      : constant Int_C   := 31; -- SM_CYSIZE
+  DATA_BORDER_WIDTH                          : constant Int_C   := 32; -- SM_CXFRAME
+  DATA_BORDER_HEIGHT                         : constant Int_C   := 33; -- SM_CYSIZEFRAME
  
   -- https://web.archive.org/web/20140714222448/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645578(v=vs.85).aspx
   RI_MOUSE_LEFT_BUTTON_DOWN   : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
@@ -171,6 +177,12 @@ package Neo.Win32 is
   EM_SETSEL              : constant Int_32_Unsigned_C := 16#0000_00B1#; -- 0x0000
   EM_GETFIRSTVISIBLELINE : constant Int_32_Unsigned_C := 16#0000_00CE#; -- 0x0000
 
+  -- 
+  CLR_INVALID : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; --
+
+  -- 
+  SPI_GETNONCLIENTMETRICS : constant Int_32_Unsigned_C := 16#0000_0029#; -- 
+
   -- http://web.archive.org/web/20160623235135/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633589(v=vs.85).aspx
   GCLP_HCURSOR : constant Int_C := -12; -- 00
 
@@ -185,10 +197,6 @@ package Neo.Win32 is
   -- TODO Finish the renaming !!!
   WA_CLICKACTIVE : constant Int_Ptr := 16#0000_0002#; -- 0
 
-  SUBEVENT_SCROLL_BOTTOM                    : constant Int_Ptr := 16#0000_0007#;
-  SUBEVENT_SCROLL_DOWN_LINE              : constant Int_Ptr := 16#0000_0001#;
-  SUBEVENT_KEY_IS_RIGHT_SIDED                 : constant Int_16_Unsigned_C := 16#0002#;
-
   -- 
   WS_TOPMOST : constant Int_32_Unsigned_C := 16#0000_0008#; -- 0x00000000L
   WS_POPUP          : constant Int_32_Unsigned_C := 16#8000_0000#; -- WS_POPUP
@@ -199,6 +207,11 @@ package Neo.Win32 is
   WS_MAXIMIZEBOX                          : constant Int_32_Unsigned_C := 16#0002_0000#; -- 
   WS_SYSMENU                        : constant Int_32_Unsigned_C := 16#0008_0000#; -- WS_SYSMENU
   WS_BORDER                     : constant Int_32_Unsigned_C := 16#0080_0000#; -- WS_BORDER
+
+  SUBEVENT_SCROLL_BOTTOM                    : constant Int_Ptr := 16#0000_0007#;
+  SUBEVENT_SCROLL_DOWN_LINE              : constant Int_Ptr := 16#0000_0001#;
+  SUBEVENT_KEY_IS_RIGHT_SIDED                 : constant Int_16_Unsigned_C := 16#0002#;
+
   STYLE_BOX_FULLSCREEN                       : constant Int_32_Unsigned_C := 16#0001_0000#; -- WS_
   STYLE_CHILD                                : constant Int_32_Unsigned_C := 16#4000_0000#; -- WS_
   STYLE_ALIGN_TEXT_TO_LEFT                   : constant Int_32_Unsigned_C := 16#0000_0000#; -- WS_
@@ -210,14 +223,10 @@ package Neo.Win32 is
   STYLE_VISIBLE_INITIALLY                    : constant Int_32_Unsigned_C := 16#1000_0000#; -- WS_
   STYLE_BORDER_SIZABLE                       : constant Int_32_Unsigned_C := 16#0004_0000#; -- WS_
 
+  DATA_VERTICAL_RESOLUTION                   : constant Int_C   := 10; -- SM_CXHTHUMB
+  DATA_HORIZONTAL_RESOLUTION                 : constant Int_C   := 8; -- SM_CYDLGFRAME
 
-  CLR_INVALID                  : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; --
-  DATA_SCROLL_BAR_WIDTH                      : constant Int_C   := 9;
-  DATA_VERTICAL_RESOLUTION                   : constant Int_C   := 10;
-  DATA_HORIZONTAL_RESOLUTION                 : constant Int_C   := 8;
-  DATA_TITLE_BAR_HEIGHT                      : constant Int_C   := 31;
-  DATA_BORDER_WIDTH                          : constant Int_C   := 32;
-  DATA_BORDER_HEIGHT                         : constant Int_C   := 33;
+
   MEMORY_MOVEABLE                            : constant Int_32_Unsigned_C := 16#0000_0002#;
   MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Int_32_Unsigned_C := 16#0000_16000#;
   CLIPBOARD_UNICODE_TEXT                     : constant Int_32_Unsigned_C := 16#0000_000D#;
@@ -249,7 +258,6 @@ package Neo.Win32 is
   FONT_FIXED_PITCH                           : constant Int_32_Unsigned_C := 16#0000_0001#;
   MESSAGE_GET_FONT                           : constant Int_32_Unsigned_C := 16#0000_0031#;
   SET_WINDOW_STYLE_EXTRA                     : constant Int_C   := -20;
-  SPI_GETNONCLIENTMETRICS                     : constant Int_32_Unsigned_C := 16#0000_0029#; -- 
   BRUSH_WINDOW                               : constant Int_Ptr      := 16#0005#; -- COLOR_WINDOW
 
   ---------------
@@ -573,8 +581,8 @@ package Neo.Win32 is
              
   -- https://web.archive.org/web/20160801144224/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724451(v=vs.85).aspx                       
   function GetVersionExW (lpVersionInfo : access OSVERSIONINFOEX) -- LPOSVERSIONINFOEX
-                         return Int_C                             -- BOOL 
-                         with Import => True, Convention => StdCall, External_Name => "GetVersionExW";
+                          return Int_C                            -- BOOL 
+                          with Import => True, Convention => StdCall, External_Name => "GetVersionExW";
        
   -- https://web.archive.org/web/20141228222857/http://msdn.microsoft.com/en-us/library/windows/desktop/ms724432(v=vs.85).aspx                             
   function GetUserNameW (lpBuffer :        Ptr_Str_16_C; -- LPTSTR  
@@ -608,8 +616,8 @@ package Neo.Win32 is
                         with Import => True, Convention => StdCall, External_Name => "GlobalAlloc";
   
   -- https://web.archive.org/web/20150109225811/http://msdn.microsoft.com/en-us/library/windows/desktop/aa366584(v=vs.85).aspx                             
-  function GlobalLock (hMem : Ptr)  -- HGLOBAL 
-                       return Ptr   -- LPVOID 
+  function GlobalLock (hMem : Ptr) -- HGLOBAL 
+                       return Ptr  -- LPVOID 
                        with Import => True, Convention => StdCall, External_Name => "GlobalLock";
                  
   -- https://web.archive.org/web/20130719230854/http://msdn.microsoft.com/en-us/library/windows/desktop/aa366595(v=vs.85).aspx                   

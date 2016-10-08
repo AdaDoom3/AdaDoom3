@@ -38,7 +38,7 @@ with Interfaces.C;                 use Interfaces.C;
 with Interfaces;                   use Interfaces;
 with System;                       use System;
 
--- System independant base code including data types, path settings, parsing, and IO. All of the boiler-plate stuff goes here
+-- System independant base code including data types, path settings, parsing, and IO. All of the boiler-plate stuff goes here.
 package Neo is
 
   -----------
@@ -269,10 +269,11 @@ package Neo is
   ----------
   --
   -- The cvar package or "console variable" is the core of a game engine. It represents a changable setting and could be loaded from a
-  -- configuration file or set via an in-game or external console window. In the Neo engine this little package is the core of communication
-  -- between tasks and upon instantiation will also be able to parse itself from a console's commandline, so there are 2 ways to set a cvar:
-  -- have it be parsed as a string form the console's "Submit" procedure or by directly using the "Set" and "Get" subprograms within the
-  -- instantiated package. However, it is limited to only discrete types (integers and enumerations)
+  -- configuration file or set via an in-game or external console window. In the Neo engine this package allows communication between
+  -- between tasks and upon instantiation will also be able to parse itself from a console's commandline, so there are 2 ways to set a
+  -- cvar: have it be parsed as a string form the console's "Submit" procedure or by directly using the "Set" and "Get" subprograms
+  -- within the instantiated package. However, it is limited to only discrete types (integers and enumerations).
+  --
   -- Ex.
   --   ...
   --   type Graphics_Kind is (Low_Quality, Medium_Quanlity, High_Quality, Ultra_Quality);
@@ -345,7 +346,7 @@ package Neo is
   -- Color --
   -----------
 
-  -- Putting a color type like this within the base package means the renderer, image types, and GUI components can all communicate color date
+  -- A three byte color type R8G8B8
   type Color_State is record
       Red   : Int_8_Unsigned;
       Green : Int_8_Unsigned;
@@ -504,6 +505,9 @@ package Neo is
   PATH_SEP      : constant Str_16   := "/";
   NULL_PTR      : constant Ptr      := NULL_ADDRESS;
 
+  -- ???
+  package Vector_Str_16_Unbound is new Ada.Containers.Indefinite_Vectors (Int_32_Positive, Str_16_Unbound);
+
   -------------
   -- Parsing --
   -------------
@@ -512,8 +516,7 @@ package Neo is
   --
 
   -- Subprograms to load raw data (say raw binrary data for sharders)
-  procedure Save (Path : Str; Item : Stream_Element_Array);
-  function Load  (Path : Str) return Stream_Element_Array;
+  function Load (Path : Str) return Stream_Element_Array;
 
   -- A package for catagorizing sets of parsers that load a single data file (e.g. an image format)
   generic
@@ -522,15 +525,13 @@ package Neo is
   package Handler is
 
       -- 
-      procedure Save (Path : Str; Item : T);
       function Load  (Path : Str) return T;
 
       -- 
       generic
         Kind       : Format_T;
-        Save       : access procedure (Path : Str; Item : T);
-        Load       : access function  (Path : Str) return T;
         Extensions : Str; -- Separated by commas: "tga,png,tga"
+        with function Load (Path : Str) return T;
       package Format is end;
     end;
 
@@ -573,7 +574,11 @@ package Neo is
       procedure Skip     (Amount : Int_32_Positive := 1);
 
       -- Assert that the next item must match the text argument
-      procedure Assert   (Text : Str);
+      procedure Assert (Text               : Str);
+      procedure Assert (T1, T2             : Str);
+      procedure Assert (T1, T2, T3         : Str);
+      procedure Assert (T1, T2, T3, T4     : Str);
+      procedure Assert (T1, T2, T3, T4, T5 : Str);
     end;
 
   ---------------
@@ -684,16 +689,11 @@ package Neo is
         end;
 
       -- Easy conversion to static arrays and back from the vector types
-      type Unsafe_Array   is array (Int_32_Positive range <>) of Vec_T;
-      type Unsafe_Array_C is array (Int_32_Positive range <>) of Vec_T with Convention => C;
-      function To_Safe_Vector    (Item : Unsafe_Array)   return Safe_Vector;
-      function To_Safe_Vector    (Item : Unsafe_Array_C) return Safe_Vector;
-      function To_Unsafe_Vector  (Item : Unsafe_Array)   return Unsafe.Vector;
-      function To_Unsafe_Vector  (Item : Unsafe_Array_C) return Unsafe.Vector;
-      function To_Unsafe_Array   (Item : Unsafe.Vector)  return Unsafe_Array;
-      function To_Unsafe_Array_C (Item : Unsafe.Vector)  return Unsafe_Array;
-      function To_Unsafe_Array   (Item : Safe_Vector)    return Unsafe_Array is (To_Unsafe_Array (Item.Get));
-      function To_Unsafe_Array_C (Item : Safe_Vector)    return Unsafe_Array is (To_Unsafe_Array_C (Item.Get));
+      type Unsafe_Array is array (Int_32_Positive range <>) of Vec_T;
+      function To_Safe_Vector   (Item : Unsafe_Array)  return Safe_Vector;
+      function To_Unsafe_Vector (Item : Unsafe_Array)  return Unsafe.Vector;
+      function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;
+      function To_Unsafe_Array  (Item : Safe_Vector)   return Unsafe_Array is (To_Unsafe_Array (Item.Get));
     end;
 
   -- Task-safe and normal hashed map type with sensible defaults

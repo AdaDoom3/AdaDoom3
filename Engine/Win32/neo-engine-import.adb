@@ -30,6 +30,8 @@ separate (Neo.Engine) package body Import is
     Buffer  : aliased Int_C;
     Version : aliased OSVERSIONINFOEX;
     begin
+
+      -- Fetch strings
       Assert (GetVersionExW (Version'Unchecked_Access));
       Assert (GetModuleFileNameW (NULL_PTR, Dir'Unrestricted_Access, Dir'Length));
 
@@ -45,8 +47,7 @@ separate (Neo.Engine) package body Import is
         Assert (IsWow64Process (GetCurrentProcess, Buffer'Unchecked_Access));
 
         -- Return the junk
-        return (CPU_Mhz   => 0,
-                Name      => Delete (To_Str_16_Unbound (To_Str (Dir)), 1, Index (To_Str (Dir), "\", Backward)), -- Get first-level directory
+        return (Name      => Delete (To_Str_16_Unbound (To_Str (Dir)), 1, Index (To_Str (Dir), "\", Backward)), -- Get first-level directory
                 Path      => To_Str_16_Unbound (To_Str (Dir)),
                 Username  => To_Str_16_Unbound (To_Str (Username.All)),
                 Bit_Size  => (if Buffer = 1 then 64 else 32),
@@ -106,8 +107,7 @@ separate (Neo.Engine) package body Import is
   WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (PATH_CURSOR_INACTIVE  & ".cur");
 
   -- Main "HWND"s for the invisible input window and actual game window
-  Game  : aliased Ptr;
-  Input : aliased Ptr;
+  Game, Input : aliased Ptr;
 
   -- Window handles for multi-monitor mode
   package Vector_Ptr is new Vectors (Ptr);
@@ -136,7 +136,7 @@ separate (Neo.Engine) package body Import is
 
   -- Create a new surface
   procedure Create_Surface (Instance : VkInstance; Surface : in out VkSurfaceKHR) is
-    Surface_Create_Info : aliased VkXcbSurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleNULL, others => <>);
+    Surface_Create_Info : aliased VkWin32SurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleNULL, others => <>);
     begin -- TODO Multi_Monitor_Mode
       Vulkan.Assert (vkCreateWin32SurfaceKHR (Instance, Surface_Create_Info'Access, NULL_PTR, Surface'Access));
     end;
@@ -291,10 +291,9 @@ separate (Neo.Engine) package body Import is
   STYLE_WINDOWED   : constant Int_32_Unsigned_C := STYLE_VISIBLE_INITIALLY or WS_SYSMENU or WS_CAPTION or WS_BORDER or STYLE_BORDER_SIZABLE or WS_MAXIMIZEBOX;
 
   -- Icons and cursors
-  Icon            : Ptr;
-  Cursor_Inactive : Ptr;
-  Cursor_Active   : Ptr;
-  Original_Clip   : aliased RECT := (others => <>);
+  Icon, Cursor_Inactive, Cursor_Active : Ptr;
+
+  Original_Clip : aliased RECT := (others => <>);
 
   -- Conversion functions for rectangles and borders
   function To_Border (Rectangle : RECT)    return Border_State is ((Int_64 (Rectangle.top), Int_64 (Rectangle.bottom), Int_64 (Rectangle.left), Int_64 (Rectangle.right)));
@@ -387,9 +386,8 @@ separate (Neo.Engine) package body Import is
   -- Check if another instance of the game is running
   function Only_Instance return Bool is
     Handle : Ptr;
-    Window : Ptr;
+    Window : Ptr := FindWindowW (GAME_NAME'Access, null);
     begin
-      Window := FindWindowW (GAME_NAME'Access, null);
       if Window /= NULL_PTR then
         Ignore (ShowWindow (Window, SW_SHOWNORMAL) = 0);
         Handle := SetFocus (Window);
@@ -460,7 +458,7 @@ separate (Neo.Engine) package body Import is
             when others => null; end case;
             return 0;
 
-          -- Extract sizing even information then let the engine modify the final result 
+          -- Extract sizing event information then let the engine modify the final result 
           when WM_SIZING =>
             declare
             Result : Ptr_RECT := To_Ptr_RECT (lParam);
@@ -495,12 +493,12 @@ separate (Neo.Engine) package body Import is
       if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, GENERIC_ICON); end if;
 
       -- Load cursors
-      Cursor_Invisible := LoadImageW (hinst     => GetModuleHandleNULL,
-                                      lpszName  => WIN32_PATH_CURSOR_INVISIBLE'Access,
-                                      uType     => LOAD_CUR,
-                                      cxDesired => 0,
-                                      cyDesired => 0,
-                                      fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
+      Cursor_Inactive := LoadImageW (hinst     => GetModuleHandleNULL,
+                                     lpszName  => WIN32_PATH_CURSOR_INACTIVE'Access,
+                                     uType     => LOAD_CUR,
+                                     cxDesired => 0,
+                                     cyDesired => 0,
+                                     fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
       if Cursor_Inactive = NULL_PTR then Cursor_Inactive := LoadCursorW (NULL_PTR, GENERIC_CURSOR); end if;
       Cursor_Active := LoadImageW (hinst     => GetModuleHandleNULL,
                                    lpszName  => WIN32_PATH_CURSOR_ACTIVE'Access,
@@ -652,7 +650,7 @@ separate (Neo.Engine) package body Import is
   -- Input --
   -----------
 
-  -- Map of "VKeys" to our key type (https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx)
+  -- Map of "VKeys" to our key type: https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
   VK_MAP : constant array (VK_LBUTTON..VK_OEM_CLEAR) of Key_Kind :=(
     Null_Key,           Null_Key,         Cancel_Key,           Null_Key, -- There are mouse "keys" here, but we don't care
     Null_Key,           Null_Key,         Null_Key,             Backspace_Key,
@@ -726,9 +724,7 @@ separate (Neo.Engine) package body Import is
   procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent) is
     Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'Last)),
                                              wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'Last)));
-    begin
-      if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'Unchecked_Access) = 0); end if;
-    end;
+    begin if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'Unchecked_Access) = 0); end if; end;
 
   -- Fetch raw cursor coordinates from the system cursor
   function Get_Cursor return Cursor_state is
@@ -774,7 +770,7 @@ separate (Neo.Engine) package body Import is
                     Inject_Key (Id   => Id,
                                 Down => Keyboard.Message = WM_KEYDOWN or Keyboard.Message = WM_SYSKEYDOWN,
                                 Key  => (case VK_MAP (Keyboard.VKey) is
-                                           when Shift_Key => (if Keyboard.MakeCode = KEY_MAKE_CODE_FOR_LEFT          then Left_Shift_Key else Right_Shift_Key),
+                                           when Shift_Key => (if Keyboard.MakeCode = KEY_MAKE_CODE_FOR_LEFT           then Left_Shift_Key else Right_Shift_Key),
                                            when Ctrl_Key  => (if (Keyboard.Flags and SUBEVENT_KEY_IS_RIGHT_SIDED) = 0 then Left_Ctrl_Key  else Right_Ctrl_Key),
                                            when Alt_Key   => (if (Keyboard.Flags and SUBEVENT_KEY_IS_RIGHT_SIDED) = 0 then Left_Alt_Key   else Right_Alt_Key),
                                            when others    => VK_MAP (Keyboard.VKey)));
@@ -805,7 +801,7 @@ separate (Neo.Engine) package body Import is
                     Inject_Button (Id     => Id,
                                    Down   => True,
                                    Button => (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Mouse.usButtons) and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0
-                                              then (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Left_Button else Wheel_Down_Button)
+                                              then (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Left_Button  else Wheel_Down_Button)
                                               else (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Right_Button else Wheel_Up_Button)));
                   end if;
                 end;
@@ -958,100 +954,86 @@ separate (Neo.Engine) package body Import is
   -- Console --
   -------------
 
-  -- This is a mess. Also, why doesn't SelectObject work ???
+  -- Why doesn't SelectObject work ???
   procedure Run_Console is 
 
-    -- Console button organization hack - this needs to be less rigid
+    -- Console stuff
     type Button_State is record
         Message : Str (1..4);
         Action  : access procedure;
       end record;
     CONSOLE_BUTTONS : constant array (1..3) of Button_State := (("Save", Save_Log'Access), ("Send", Send_Log'Access), ("Quit", null));
+    Current_Input : Char_16        := NULL_CHAR_16;
+    Current_Log   : Str_16_Unbound := NULL_STR_16_UNBOUND;
+    Current_Lines : Int_64_Natural := 0;
+    Buttons       : array (CONSOLE_BUTTONS'range) of Ptr;
 
     -- Constants
-    NUMBER_OF_OUTPUT_ROWS  : constant Int_32_Unsigned_C := 25;
-    ERROR_REPORTING_URL    : constant Str               := "http://www.google.com";
-    LABEL_OUTPUT           : constant Str               := "Output";
-    LABEL_ERROR            : constant Str               := "Error";
-    LABEL_INPUT_ENTRY      : constant Str               := "Input";
-    NAME_POSTFIX           : constant Str               := " Console";
-    FAILED_BROWSE_FOR_SAVE : constant Str               := "0 to browse for save!";
-    FAILED_INITIALIZE      : constant Str               := "0 to initialize console!";
-    FAILED_ALREADY_OPEN    : constant Str               := "0 to initialize console because it is open!";
-    FAILED_NOT_OPEN        : constant Str               := "0 to finalize console because it is not open!";
-    FONT_CONSOLE           : aliased  Str_C             := To_Str_C ("Courier New");
-    FONT_DIALOG            : aliased  Str_C             := To_Str_C ("Tahoma");
-    NAME_BUTTON            : aliased  Str_C             := To_Str_C ("Button");
-    NAME_GROUP             : aliased  Str_C             := To_Str_C ("Group");
-    NAME_EDIT              : aliased  Str_C             := To_Str_C ("Edit");
-    DO_DISABLE_RESIZE      : constant Bool              := False;
-    FONT_GROUP_BOX_SIZE    : constant Real              := 1.2;
-    GROUP_BOX_SIDE_MARGIN  : constant Real              := 1.2;
-    IDENTIFIER_START       : constant Int               := 16#0000_0666#;
-    PIXELS_PER_INCH        : constant Int_C             := 72;
-    BUTTON_WIDTH_DLU       : constant Int_C             := 50;
-    BUTTON_HEIGHT_DLU      : constant Int_C             := 14;
-    FONT_CONSOLE_SIZE      : constant Int_C             := -11;
-    MARGIN_BUTTON          : constant Int_C             := 4;
-    MARGIN                 : constant Int_C             := 7;
-    SCROLL_FACTOR          : constant Int_64_Natural    := 500;
-    Hack                   : aliased  Str_C             := To_Str_C ("HACK TO GET DIALOG BASE UNITS");
+    NUMBER_OF_OUTPUT_ROWS : constant Int_32_Unsigned_C := 25;
+    SCROLL_FACTOR         : constant Int_64_Natural    := 500;
+    DO_DISABLE_RESIZE     : constant Bool  := False;
+    GROUP_BOX_SIDE_MARGIN : constant Real  := 1.2;
+    FONT_GROUP_BOX_SIZE   : constant Real  := 1.2;
+    FONT_CONSOLE_SIZE     : constant Int_C := -11;
+    PIXELS_PER_INCH       : constant Int_C := 72;
+    BUTTON_WIDTH_DLU      : constant Int_C := 50;
+    BUTTON_HEIGHT_DLU     : constant Int_C := 14;
+    MARGIN_BUTTON         : constant Int_C := 4;
+    MARGIN                : constant Int_C := 7;
+    IDENTIFIER_START      : constant Int   := 666;
+
+    -- Text
+    ERROR_REPORTING_URL : constant Str  := "http://www.google.com";
+    LABEL_INPUT_ENTRY   : constant Str  := "Input";
+    LABEL_OUTPUT        : constant Str  := "Output";
+    FONT_CONSOLE        : aliased Str_C := To_Str_C ("Courier New");
+    FONT_DIALOG         : aliased Str_C := To_Str_C ("Tahoma");
+    NAME_BUTTON         : aliased Str_C := To_Str_C ("Button");
+    NAME_GROUP          : aliased Str_C := To_Str_C ("Group");
+    NAME_EDIT           : aliased Str_C := To_Str_C ("Edit");
 
     -- Variables
-    Message                 : aliased MSG := (others => <>);
-    Buffer                  : aliased Str_C (1..99999);
-    Metrics                 : aliased NONCLIENTMETRICS;
-    Text_Metric             : aliased TEXTMETRIC;
-    Class                   : aliased WNDCLASSEX;
-    Rectangle               : aliased RECT;
-    Output_Group_Box        :         Ptr;
-    Input_Group_Box         :         Ptr;
-    Edit_Background         :         Ptr;
-    Font_Text_Box           :         Ptr;
-    Font_Buttons            :         Ptr;
-    Output_Box              :         Ptr;
-    Input_Box               :         Ptr;
-    Context                 :         Ptr;
-    Console                 :         Ptr;
-    Icon                    :         Ptr;
-    Y                       :         Int_C;
-    Message_Box_Font_Height :         Int_C;
-    Dialog_Base_Unit_Height :         Int_C;
-    Dialog_Base_Unit_Width  :         Int_C;
-    Output_Box_Height       :         Int_C;
-    Output_Box_Width        :         Int_C;
-    Input_Box_Height        :         Int_C;
-    Start_Selection         :         Int_C;
-    End_Selection           :         Int_C;
-    Margin_Group_Top        :         Int_C;
-    Margin_Group            :         Int_C;
-    Current_Height          :         Int_C;
-    Current_Width           :         Int_C;
-    Console_Height          :         Int_C;
-    Console_Width           :         Int_C;
-    Button_Height           :         Int_C;
-    Button_Width            :         Int_C;
-    Right_Count             :         Int_C;
-    Left_Count              :         Int_C;
-    Number_Of_Lines         :         Int_C;
-    Current_Line            :         Int_C;
-    Text_Box_Font_Height    :         Int_C          := 1;
-    Text_Box_Font_Width     :         Int_C          := 1;
-    Dialog_Font_Height      :         Int_C          := 1;
-    Dialog_Font_Width       :         Int_C          := 1;
-    Is_At_Bottom            :         Bool           := True;
-    Is_First_Time           :         Bool           := True;
-    Was_At_Bottom           :         Bool           := False;
-    Was_At_Minimum_Width    :         Bool           := False;
-    Was_At_Minimum_Height   :         Bool           := False;
-    Button_Font_Set         :         Bool           := False;
-    Do_Process_Character    :         Bool           := False;
-    Do_Skip_Message         :         Bool           := False;
-    Current_Input           :         Char_16        := NULL_CHAR_16;
-    Current_Log             :         Str_16_Unbound := NULL_STR_16_UNBOUND;
-    Current_Lines           :         Int_64_Natural := 0;
-    Buttons                 : array (CONSOLE_BUTTONS'range) of Ptr;
- 
+    Message     : aliased MSG := (others => <>);
+    Buffer      : aliased Str_C (1..99999);
+    Metrics     : aliased NONCLIENTMETRICS;
+    Class       : aliased WNDCLASSEX;
+    Text_Metric : aliased TEXTMETRIC;
+    Rectangle   : aliased RECT;
+
+    -- Window, font, and icon pointers
+    Output_Group_Box, Input_Group_Box,
+    Font_Text_Box, Font_Buttons,
+    Output_Box, Input_Box,
+    Edit_Background,
+    Context,
+    Console,
+    Icon : Ptr;
+
+    -- Sizing variables
+    Y,
+    Message_Box_Font_Height,
+    Dialog_Base_Unit_Height, Dialog_Base_Unit_Width,
+    Output_Box_Height, Output_Box_Width, Input_Box_Height,
+    Start_Selection, End_Selection,
+    Margin_Group_Top, Margin_Group,
+    Current_Height, Current_Width,
+    Console_Height, Console_Width,
+    Button_Height, Button_Width,
+    Right_Count, Left_Count,
+    Number_Of_Lines,
+    Text_Box_Font_Height, Text_Box_Font_Width,
+    Current_Line : Int_C;
+
+    -- Flags
+    Is_At_Bottom,
+    Is_First_Time : Bool := True;
+    Was_At_Bottom,
+    Was_At_Minimum_Width,
+    Was_At_Minimum_Height,
+    Button_Font_Set,
+    Do_Process_Character,
+    Do_Skip_Message : Bool := False;
+
     -- Message procedures for convience
     procedure Set_Text (Handle : Ptr; Text : Str) is begin Assert (SendMessageW (Handle, WM_SETTEXT, 0, To_Int_Ptr (To_Str_C (Text)'Address))); end;
     procedure Set_Font (Handle, Font : Ptr)       is begin Ignore (SendMessageW (Handle, WM_SETFONT, 0, To_Int_Ptr (Font))); end;
@@ -1074,7 +1056,7 @@ separate (Neo.Engine) package body Import is
         Margin_Group      := Int_C (Float (Text_Metric.tmHeight) / GROUP_BOX_SIDE_MARGIN);
         Margin_Group_Top  := Int_C (Float (Text_Metric.tmHeight) * FONT_GROUP_BOX_SIZE);
         Box_Padding       := Int_C (Float (Text_Box_Font_Width) / 1.5);
-        Output_Box_Width  := 2 * Box_Padding + (Text_Box_Font_Width  * Int_C (Line_Size)) + GetSystemMetrics (DATA_SCROLL_BAR_WIDTH);
+        Output_Box_Width  := 2 * Box_Padding + (Text_Box_Font_Width  * Int_C (Line_Size)) + GetSystemMetrics (SM_CYVTHUMB);
         Output_Box_Height := 2 * Box_Padding + (Text_Box_Font_Height * Int_C (NUMBER_OF_OUTPUT_ROWS));
         Input_Box_Height  := 2 * Box_Padding + Text_Box_Font_Height;
         Console_Width     := (MARGIN * Dialog_Base_Unit_Width + Margin_Group + Border_Width) * 2 + Output_Box_Width;
@@ -1194,7 +1176,7 @@ separate (Neo.Engine) package body Import is
           -- Find the newly created message-box window 
           Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'Length));
           Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'Length));
-          if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = CLASS_NAME_DIALOG and To_Str (Window_Text) = To_Str (Hack) then
+          if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = CLASS_NAME_DIALOG and To_Str (Window_Text) = To_Str (CONSOLE_NAME) then
 
             -- Get the dialog base units then close the message box
             Ignore (EnumChildWindows (Window, EnumWindowsProc'Address, 0));
@@ -1210,7 +1192,7 @@ separate (Neo.Engine) package body Import is
 
         -- Create a message box and a callback that checks newly created windows, then wait for Dialog_Base_Unit_Width to be set
         Hook := SetWindowsHookExW (WH_CBT, CBTProc'Address, NULL_PTR, GetCurrentThreadId);
-        Ignore (MessageBoxW (NULL_PTR, GAME_NAME'Access, Hack'Unchecked_Access, 0));
+        Ignore (MessageBoxW (NULL_PTR, GAME_NAME'Access, CONSOLE_NAME'Unchecked_Access, 0));
         Wait_For_Set_With_Infinite_Loop;
       end;
 
@@ -1591,6 +1573,7 @@ separate (Neo.Engine) package body Import is
       -- Hide the main window then kill it
       Ignore (ShowWindow (Console, SW_HIDE));
       Assert (DestroyWindow (Console));
+      Console := NULL_PTR;
       Assert (UnregisterClassW (CONSOLE_NAME'Access, NULL_PTR));
       Assert (ReleaseDC (GetDesktopWindow, Context));
     end;

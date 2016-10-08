@@ -1,160 +1,3 @@
-  generic
-    type Vec_T is private;
-  package Vectors is
-      package Unsafe is new Ada.Containers.Indefinite_Vectors (Int_32_Positive, Vec_T); use Unsafe;
-      subtype Cursor is Unsafe.Cursor;
-      NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
-      protected type Vector is
-          procedure Clear;
-          procedure Set     (Data : Unsafe.Vector);
-          procedure Next    (Pos : in out Cursor);
-          procedure Replace (Pos :        Cursor;      New_Item : Vec_T);
-          procedure Append                            (New_Item : Vec_T; Count : Int_32_Positive := 1);
-          procedure Prepend                           (New_Item : Vec_T; Count : Int_32_Positive := 1);
-          procedure Insert  (Before : Int_32_Positive; New_Item : Vec_T; Count : Int_32_Positive := 1);
-          procedure Delete  (Index  : Int_32_Positive;                   Count : Int_32_Positive := 1);
-          function Has      (Pos    : Cursor)          return Bool            is (Has (Pos));
-          function Get      (Pos    : Cursor)          return Bool            is (Has (Pos));
-          function Get      (Pos    : Cursor)          return Vec_T           is (Element (Pos));
-          function Get      (Index  : Int_32_Positive) return Vec_T           is (Element (Data, Index));
-          function Get                                 return Unsafe.Vector   is (Data);
-          function First                               return Cursor          is (First (Data));
-          function Length                              return Int_32_Positive is (Int_32_Positive (Length (Data)));
-        private
-          Data : Unsafe.Vector;
-        end;
-    end;
-  generic
-    type Map_T is private;
-  package Hashed is
-      package Unsafe is new Ada.Containers.Indefinite_Hashed_Maps (Str_16_Unbound, Map_T, Wide_Hash, "="); use Unsafe;
-      subtype Cursor is Unsafe.Cursor;
-      NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
-      protected type Map is
-          procedure Clear;
-          procedure Set     (Data : Unsafe.Map);
-          procedure Next    (Pos : in out Cursor);
-          procedure Delete  (Pos : in out Cursor);
-          procedure Delete  (Key : Str_16);
-          procedure Replace (Pos : Cursor; New_Item : Map_T);
-          procedure Replace (Key : Str_16; New_Item : Map_T);
-          procedure Insert  (Key : Str_16; New_Item : Map_T);
-          function Has      (Key : Str_16) return Bool   is (Has (Find (Data, To_Str_16_Unbound (Key))));
-          function Has      (Pos : Cursor) return Bool   is (Has (Pos));
-          function Key      (Pos : Cursor) return Str_16 is (To_Str_16 (Key (Pos)));
-          function Get      (Key : Str_16) return Map_T  is (Element (Data, To_Str_16_Unbound (Key)));
-          function Get      (Pos : Cursor) return Map_T  is (Element (Pos));
-          function Get                     return Map    is (Data);
-          function First                   return Cursor is (First (Data));
-        private
-          Data : Unsafe.Map;
-        end;
-    end;
-  generic
-    type Key_T is (<>);
-    type Map_T is private;
-  package Ordered is
-      package Unsafe is new Ada.Containers.Indefinite_Ordered_Maps (Key_T, Map_T, "<", "="); use Unsafe;
-      subtype Cursor is Unsafe.Cursor;
-      NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
-      protected type Map is
-          procedure Clear;
-          procedure Set     (Data : Unsafe.Map);
-          procedure Next    (Pos : in out Cursor);
-          procedure Delete  (Pos : in out Cursor);
-          procedure Delete  (Key : Key_T);
-          procedure Replace (Pos : Cursor; New_Item : Map_T);
-          procedure Replace (Key : Key_T;  New_Item : Map_T);
-          procedure Insert  (Key : Key_T;  New_Item : Map_T);
-          function Has      (Key : Key_T)  return Bool   is (Has (Find (Data, Key)));
-          function Has      (Pos : Cursor) return Bool   is (Has (Pos));
-          function Key      (Pos : Cursor) return Key_T  is (Key (Pos));
-          function Get      (Pos : Cursor) return Map_T  is (Element (Pos));
-          function Get      (Key : Key_T)  return Map_T  is (Element (Data, Key));
-          function Get                     return Map    is (Data);
-          function First                   return Cursor is (First (Data));
-        private
-          Data : Unsafe.Map;
-        end;
-    end;
-
-         procedure Clear
-          procedure Iterate      (Parent : Cursor; Process : not null access procedure (Pos : Cursor));
-          procedure Iterate_Back (Parent : Cursor; Process : not null access procedure (Pos : Cursor));
-          procedure Prepend      (Parent : Cursor;         New_Item : Tree_T; Count : Int_32_Positive := 1);
-          procedure Append       (Parent : Cursor;         New_Item : Tree_T; Count : Int_32_Positive := 1);
-          procedure Insert       (Parent, Before : Cursor; New_Item : Tree_T; Count : Int_32_Positive := 1; Pos : out Cursor);
-          procedure Copy_Subtree (Parent, Before, Source : Cursor);
-          procedure Splice       (Parent, Before, Source : Cursor; Source_Tree : in out Tree);
-          function Next          (Pos    : Cursor) return Cursor;
-          function Previous      (Pos    : Cursor) return Cursor;
-          function Parent        (Pos    : Cursor) return Cursor;
-          function Is_Leaf       (Pos    : Cursor) return Bool;
-          function Subtree_Nodes (Pos    : Cursor) return Int_32_Positive;
-          function First         (Parent      : Cursor) return Cursor;
-          function First         (Parent      : Cursor) return Tree_T;
-          function Last          (Parent      : Cursor) return Tree_T;
-          function Last          (Parent      : Cursor) return Cursor;
-          function "="           (Left, Right : Cursor) return Bool;
-          function "="           (Left, Right : Unsafe.Tree) return Bool;
-          function Empty                                return Bool;
-          function Nodes                                return Int_32_Positive;
-          function Root                                 return Cursor; 
-
-          function Has              (Pos : Cursor) return Bool;
-          function Equal_Subtree    (Left_Pos  : Cursor; Right_Pos : Cursor) return Bool;
-          function "="              (Left, Right : Tree) return Bool;
-          function Is_Empty         (Container : Tree) return Bool;
-          function Node_Count       (Container : Tree) return Count_Type;
-          function Subtree_Nodes    (Pos : Cursor) return Count_Type;
-          function Depth            (Pos : Cursor) return Count_Type;
-          function Is_Root          (Pos : Cursor) return Bool;
-          function Is_Leaf          (Pos : Cursor) return Bool;
-          function Root             (Container : Tree) return Cursor;
-          procedure Clear           (Container : in out Tree);
-          function Element          (Pos : Cursor) return Element_Type;
-          procedure Replace         (Container : in out Tree;  Pos  : Cursor; New_Item  : Element_Type);
-          procedure Query           (Pos : Cursor; Process  : not null access procedure (Element : Element_Type));
-          procedure Update          (Container : in out Tree; Pos  : Cursor; Process   : not null access procedure (Element : in out Element_Type));
-          function Reference        (Container : aliased in out Tree; Pos  : Cursor) return Reference_Type;
-          procedure Assign          (Target : in out Tree; Source : Tree);
-          function Copy             (Source : Tree) return Tree;
-          procedure Move            (Target : in out Tree; Source : in out Tree);
-          procedure Delete_Leaf     (Container : in out Tree; Pos  : in out Cursor);
-          procedure Delete_Subtree  (Container : in out Tree; Pos  : in out Cursor);
-          procedure Swap            (Container : in out Tree; I, J      : Cursor);
-          function Find             (Container : Tree; Item      : Element_Type) return Cursor;
-          function Find_In_Subtree  (Pos : Cursor;Item     : Element_Type) return Cursor;
-          function Ancestor_Find    (Pos : Cursor; Item     : Element_Type) return Cursor;
-          function Contains         (Container : Tree; Item      : Element_Type) return Bool;
-          procedure Iterate         (Container : Tree; Process   : not null access procedure (Pos : Cursor));
-          procedure Iterate_Subtree (Pos  : Cursor; Process   : not null access procedure (Pos : Cursor));
-          function Iterate          (Container : Tree) return Tree_Iterator_Interfaces.Forward_Iterator'Class;
-          function Iterate_Subtree  (Pos : Cursor) return Tree_Iterator_Interfaces.Forward_Iterator'Class;
-          function Iterate          (Container : Tree; Parent    : Cursor)  return Tree_Iterator_Interfaces.Reversible_Iterator'Class;
-          function Child_Count      (Parent : Cursor) return Count_Type;
-          function Child_Depth      (Parent, Child : Cursor) return Count_Type;
-          procedure Insert          (Container : in out Tree; Parent        : Cursor; Before : Cursor; New_Item : Element_Type; Pos : out Cursor; Count : Count_Type := 1);
-          procedure Insert          (Container : in out Tree; Parent        : Cursor; Before : Cursor; New_Item : Element_Type;                   Count : Count_Type := 1);
-          procedure Prepend         (Container : in out Tree; Parent        : Cursor;                  New_Item : Element_Type;                   Count : Count_Type := 1);
-          procedure Append          (Container : in out Tree; Parent        : Cursor;                  New_Item : Element_Type;                   Count : Count_Type := 1);
-          procedure Delete          (Container : in out Tree; Parent        : Cursor);
-          procedure Copy_Subtree    (Target    : in out Tree; Parent        : Cursor; Before : Cursor; Source : Cursor);
-          procedure Splice_Subtree  (Target    : in out Tree; Parent        : Cursor; Before : Cursor; Source : in out Tree; Pos : in out Cursor);
-          procedure Splice_Subtree  (Container : in out Tree; Parent        : Cursor; Before : Cursor;                       Pos : Cursor);
-          procedure Splice          (Target    : in out Tree; Target_Parent : Cursor; Before : Cursor; Source : in out Tree; Source_Parent : Cursor);
-          procedure Splice          (Container : in out Tree; Target_Parent : Cursor; Before : Cursor;                       Source_Parent : Cursor);
-          function Parent           (Pos : Cursor) return Cursor;
-          function First            (Parent : Cursor) return Cursor;
-          function First            (Parent : Cursor) return Element_Type;
-          function Last             (Parent : Cursor) return Cursor;
-          function Last             (Parent : Cursor) return Element_Type;
-          function Next             (Pos : Cursor) return Cursor;
-          function Previous         (Pos : Cursor) return Cursor;
-          procedure Next            (Pos : in out Cursor);
-          procedure Previous        (Pos : in out Cursor);
-          procedure Iterate         (Parent : Cursor; Process : not null access procedure (Pos : Cursor));
-          procedure Reverse_Iterate (Parent : Cursor; Process : not null access procedure (Pos : Cursor));
 
   procedure Load_Mesh;
   procedure Load_Texture;
@@ -787,7 +630,7 @@ public:
         &descriptorSetLayout,
         1);
 
-    VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayout));
+    VK_CHECK_RESULT( (device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayout));
 
     --preparePipelines();
 
@@ -1001,3 +844,166 @@ end;
     vkMeshLoader::freeMeshBufferResources(device, &skinnedMesh->meshBuffer);
     delete(skinnedMesh->meshLoader);
     delete(skinnedMesh);
+
+
+
+
+
+    VkBuffer
+vkCmdCopyBuffer
+vkDestroyBuffer
+vkFreeMemory
+vkMapMemory
+vkCreateDescriptorSetLayout
+vkCreatePipelineLayout
+VkPipelineShaderStageCreateInfo
+VkShaderStageFlagBits
+VkVertexInputBindingDescription
+VkVertexInputAttributeDescription
+VkPipelineLayout
+VkDescriptorSet descriptorSet;
+VkDescriptorSetLayout descriptorSetLayout;
+vkAllocateDescriptorSets
+vkUpdateDescriptorSets
+VkDeviceMemory
+VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
+vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+VkViewport viewport = vkTools::initializers::viewport((float)width, (float)height, 0.0f, 1.0f);
+vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
+VkRect2D scissor = vkTools::initializers::rect2D(width, height, 0, 0);
+vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
+VkDeviceSize offsets[1] = { 0 };
+-- Skinned mesh
+vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, NULL);
+vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.skinning);
+vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &skinnedMesh->meshBuffer.vertices.buf, offsets);
+vkCmdBindIndexBuffer(drawCmdBuffers[i], skinnedMesh->meshBuffer.indices.buf, 0, VK_INDEX_TYPE_UINT32);
+vkCmdDrawIndexed(drawCmdBuffers[i], skinnedMesh->meshBuffer.indexCount, 1, 0, 0, 0);
+vkCmdEndRenderPass(drawCmdBuffers[i]);
+
+vkDestroyImageView(vulkanDevice->logicalDevice, texture.view, nullptr);
+vkDestroyImage(vulkanDevice->logicalDevice, texture.image, nullptr);
+vkDestroySampler(vulkanDevice->logicalDevice, texture.sampler, nullptr);
+vkFreeMemory(vulkanDevice->logicalDevice, texture.deviceMemory, nullptr);
+VkMemoryAllocateInfo memoryAllocateInfo();
+
+VkCommandBufferAllocateInfo commandBufferAllocateInfo(
+VkCommandPool commandPool,
+VkCommandBufferLevel level,
+uint32_t bufferCount);
+
+VkCommandPoolCreateInfo commandPoolCreateInfo();
+VkCommandBufferBeginInfo commandBufferBeginInfo();
+VkCommandBufferInheritanceInfo commandBufferInheritanceInfo();
+
+VkRenderPassBeginInfo renderPassBeginInfo();
+VkRenderPassCreateInfo renderPassCreateInfo();
+
+VkImageMemoryBarrier imageMemoryBarrier();
+VkBufferMemoryBarrier bufferMemoryBarrier();
+VkMemoryBarrier memoryBarrier();
+
+VkImageCreateInfo imageCreateInfo();
+VkSamplerCreateInfo samplerCreateInfo();
+VkImageViewCreateInfo imageViewCreateInfo();
+VkFramebufferCreateInfo framebufferCreateInfo();
+VkSemaphoreCreateInfo semaphoreCreateInfo();
+VkFenceCreateInfo fenceCreateInfo(VkFenceCreateFlags flags = VK_FLAGS_NONE);
+VkEventCreateInfo eventCreateInfo();
+VkSubmitInfo submitInfo();
+VkViewport viewport(
+VkRect2D rect2D(
+VkBufferCreateInfo bufferCreateInfo();
+VkBufferCreateInfo bufferCreateInfo(
+VkBufferUsageFlags usage, 
+VkDeviceSize size);
+VkDescriptorPoolCreateInfo descriptorPoolCreateInfo(
+uint32_t poolSizeCount,
+VkDescriptorPoolSize* pPoolSizes,
+uint32_t maxSets);
+VkDescriptorPoolSize descriptorPoolSize(
+VkDescriptorType type,
+uint32_t descriptorCount);
+VkDescriptorSetLayoutBinding descriptorSetLayoutBinding(
+VkDescriptorType type, 
+VkShaderStageFlags stageFlags, 
+VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo(
+const VkDescriptorSetLayoutBinding* pBindings,
+VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo(
+const VkDescriptorSetLayout* pSetLayouts,
+VkDescriptorSetAllocateInfo descriptorSetAllocateInfo(
+VkDescriptorPool descriptorPool,
+const VkDescriptorSetLayout* pSetLayouts,
+VkDescriptorImageInfo descriptorImageInfo(
+VkSampler sampler,
+VkImageView imageView,
+VkImageLayout imageLayout);
+VkWriteDescriptorSet writeDescriptorSet(
+VkDescriptorSet dstSet, 
+VkDescriptorType type, 
+VkDescriptorBufferInfo* bufferInfo);
+VkWriteDescriptorSet writeDescriptorSet(
+VkDescriptorSet dstSet, 
+VkDescriptorType type, 
+uint32_t binding, 
+VkDescriptorImageInfo* imageInfo);
+
+VkVertexInputBindingDescription vertexInputBindingDescription(
+uint32_t binding, 
+uint32_t stride, 
+VkVertexInputRate inputRate);
+
+VkVertexInputAttributeDescription vertexInputAttributeDescription(
+uint32_t binding,
+uint32_t location,
+VkFormat format,
+uint32_t offset);
+
+VkPipelineVertexInputStateCreateInfo pipelineVertexInputStateCreateInfo();
+
+VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo(
+VkPrimitiveTopology topology,
+VkPipelineInputAssemblyStateCreateFlags flags,
+VkBool32 primitiveRestartEnable);
+
+VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo(
+VkPolygonMode polygonMode,
+VkCullModeFlags cullMode,
+VkFrontFace frontFace,
+VkPipelineRasterizationStateCreateFlags flags);
+
+VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState(
+VkColorComponentFlags colorWriteMask,
+VkBool32 blendEnable);
+
+VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo(
+uint32_t attachmentCount,
+const VkPipelineColorBlendAttachmentState* pAttachments);
+
+VkPipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfo(
+VkBool32 depthTestEnable,
+VkBool32 depthWriteEnable,
+VkCompareOp depthCompareOp);
+
+VkPipelineViewportStateCreateInfo pipelineViewportStateCreateInfo(
+VkPipelineViewportStateCreateFlags flags);
+
+VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo(
+VkSampleCountFlagBits rasterizationSamples,
+VkPipelineMultisampleStateCreateFlags flags);
+
+VkPipelineDynamicStateCreateInfo pipelineDynamicStateCreateInfo(
+VkPipelineDynamicStateCreateFlags flags);
+
+VkPipelineTessellationStateCreateInfo pipelineTessellationStateCreateInfo(
+VkGraphicsPipelineCreateInfo pipelineCreateInfo(
+VkPipelineLayout layout,
+VkRenderPass renderPass,
+VkPipelineCreateFlags flags);
+
+VkComputePipelineCreateInfo computePipelineCreateInfo(
+VkPipelineLayout layout,
+VkPipelineCreateFlags flags);
+VkPushConstantRange pushConstantRange(
+VkShaderStageFlags stageFlags,
+VkBindSparseInfo bindSparseInfo();

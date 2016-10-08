@@ -85,6 +85,20 @@ package body Neo is
           function First                               return Cursor                               is (Unsafe.First                (This));
           function Length                              return Int_32_Positive                      is (Int_32_Positive             (Unsafe.Length (This)));
         end;
+        type Unsafe_Array   is array (Int_32_Positive range <>) of Vec_T;
+        function To_Safe_Vector   (Item : Unsafe_Array) return Safe_Vector   is Result : Safe_Vector; begin Result.Set (To_Unsafe_Vector (Item)); return Result; end;
+        function To_Unsafe_Vector (Item : Unsafe_Array) return Unsafe.Vector is
+          Result : Unsafe.Vector;
+          begin
+            for I in Item loop Result.Append (I); end loop;
+            return Result;
+          end;
+        function To_Unsafe_Array (Item : Unsafe.Vector) return Unsafe_Array is
+          Result : Unsafe_Array (1..Length (Item);
+          begin
+            for I in 1..Item.Length loop Result (I) := Item.Element (I); end loop;
+            return Result;
+          end;
     end;
   package body Hashed is
       protected body Safe_Map is
@@ -251,8 +265,9 @@ package body Neo is
     end;
 
   -- Split a string into an array of strings based on a separator (e.g. comma)
-  function Split (Item : Str; On : Str := " ") return Array_Str_16_Unbound is
-    package Vector_Str_16_Unbound is new Ada.Containers.Indefinite_Vectors (Int_32_Positive, Str_16_Unbound);
+  function Split (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe_Array is
+
+    -- Its recursive
     function Internal (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Vector is
       Result    : Vector_Str_16_Unbound.Vector;
       TRIMMED   : constant Str  := Trim (Item, Both);
@@ -265,15 +280,8 @@ package body Neo is
         Result.Append (Internal (TRIMMED (REMAINDER..TRIMMED'Last), On));
         return Result;
       end;
-    Internal_Result : Vector_Str_16_Unbound.Vector;
     begin
-      Internal_Result := Internal (Item, On);
-      declare
-      Result : Array_Str_16_Unbound (1..Int_32 (Internal_Result.Length));
-      begin
-        for I in Result'Range loop Result (I) := Internal_Result.Element (I); end loop;
-        return Result;
-      end;
+      return To_Unsafe_Array (Internal (Item, On));
     end;
 
   -------------
