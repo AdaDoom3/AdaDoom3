@@ -21,57 +21,56 @@ package body Neo is
 
   package body Trees is
       protected body Safe_Tree is
-          procedure Clear                                                                                         is begin null; end;
-          procedure Replace         (Pos    : Cursor; Item : Tree_T)                                              is begin null; end;
-          procedure Query           (Pos    : Cursor; Process : not null access procedure (Item : Tree_T))        is begin null; end;
-          procedure Update          (Pos    : Cursor; Process : not null access procedure (Item : in out Tree_T)) is begin null; end;
-          procedure Iterate_Subtree (Pos    : Cursor; Process : not null access procedure (Pos : Cursor))         is begin null; end;
-          procedure Iterate                          (Process : not null access procedure (Pos : Cursor))         is begin null; end;
-          procedure Iterate         (Parent : Cursor; Process : not null access procedure (Pos : Cursor))         is begin null; end;
-          procedure Iterate_Back    (Parent : Cursor; Process : not null access procedure (Pos : Cursor))         is begin null; end;
-          procedure Set             (Source : Unsafe.Tree)                                                        is begin null; end;
-          procedure Move            (Source : in out Unsafe.Tree)                                                 is begin null; end;
-          procedure Delete_Leaf     (Pos    : in out Cursor)                                                      is begin null; end;
-          procedure Delete_Subtree  (Pos    : in out Cursor)                                                      is begin null; end;
-          procedure Swap            (I, J   : Cursor)                                                             is begin null; end;
-          procedure Delete          (Parent         : Cursor)                                                     is begin null; end;
-          procedure Prepend         (Parent         : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin null; end;
-          procedure Append          (Parent         : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin null; end;
-          procedure Insert          (Parent, Before : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin null; end;
-          procedure Splice_Subtree  (Parent, Before, Pos           : Cursor)                                      is begin null; end;
-          procedure Splice          (Parent, Before, Source_Parent : Cursor)                                      is begin null; end;
-          procedure Copy_Subtree    (Parent, Before, Source        : Cursor)                                      is begin null; end;
-          procedure Next            (Pos    : in out Cursor)                                                      is begin null; end;
-          procedure Previous        (Pos    : in out Cursor)                                                      is begin null; end;
-          function Subtree_Nodes    (Pos    : Cursor)                return Int_32_Positive                       is (1);
-          function Depth            (Pos    : Cursor)                return Int_32_Positive                       is (1);
-          function "="              (L, R   : Cursor)                return Bool                                  is (True);
-          function Is_Root          (Pos    : Cursor)                return Bool                                  is (True);
-          function Is_Leaf          (Pos    : Cursor)                return Bool                                  is (True);
-          function Has              (Pos    : Cursor)                return Bool                                  is (True);
-          function Has              (Item   : Tree_T)                return Bool                                  is (True);
-          function Equals           (Item   : Unsafe.Tree)           return Bool                                  is (True);
-          function Find             (Item   : Tree_T)                return Cursor                                is (NO_ELEMENT);
-          function Get              (Pos    : Cursor)                return Tree_T                                is (Unsafe.Element (Pos));
-          function Find_In_Subtree  (Pos    : Cursor; Item : Tree_T) return Cursor                                is (NO_ELEMENT);
-          function Ancestor_Find    (Pos    : Cursor; Item : Tree_T) return Cursor                                is (NO_ELEMENT);
-          function Child_Count      (Parent        : Cursor)         return Int_32_Positive                       is (1);
-          function Child_Depth      (Parent, Child : Cursor)         return Int_32_Positive                       is (1);
-          function Parent           (Pos    : Cursor)                return Cursor                                is (NO_ELEMENT);
-          function First            (Parent : Cursor)                return Cursor                                is (NO_ELEMENT);
-          function First            (Parent : Cursor)                return Tree_T                                is (Unsafe.Element (Parent));
-          function Last             (Parent : Cursor)                return Tree_T                                is (Unsafe.Element (Parent));
-          function Last             (Parent : Cursor)                return Cursor                                is (NO_ELEMENT);
-          function Is_Empty                                          return Bool                                  is (True);
-          function Node_Count                                        return Int_32_Positive                       is (1);
-          function Root                                              return Cursor                                is (NO_ELEMENT);
+          procedure Set             (Source : Unsafe.Tree)                                                        is begin This := Source;                                                        end;
+          procedure Clear                                                                                         is begin Unsafe.Clear                    (This);                                end;
+          procedure Replace         (Pos    : Cursor; Item : Tree_T)                                              is begin Unsafe.Replace_Element          (This, Pos, Item);                     end;
+          procedure Query           (Pos    : Cursor; Process : not null access procedure (Item : Tree_T))        is begin Unsafe.Query_Element            (Pos, Process);                        end;
+          procedure Update          (Pos    : Cursor; Process : not null access procedure (Item : in out Tree_T)) is begin Unsafe.Update_Element           (This, Pos, Process);                  end;
+          procedure Iterate_Subtree (Pos    : Cursor; Process : not null access procedure (Pos : Cursor))         is begin Unsafe.Iterate_Subtree          (Pos, Process);                        end;
+          procedure Iterate                          (Process : not null access procedure (Pos : Cursor))         is begin Unsafe.Iterate                  (This, Process);                       end;
+          procedure Iterate         (Parent : Cursor; Process : not null access procedure (Pos : Cursor))         is begin Unsafe.Iterate_Children         (This, Parent);                        end;
+          procedure Iterate_Back    (Parent : Cursor; Process : not null access procedure (Pos : Cursor))         is begin Unsafe.Reverse_Iterate_Children (Parent, Process);                     end;
+          procedure Move            (Source : in out Unsafe.Tree)                                                 is begin Unsafe.Move                     (This, Source);                        end;
+          procedure Delete_Leaf     (Pos    : in out Cursor)                                                      is begin Unsafe.Delete_Leaf              (This, Pos);                           end;
+          procedure Delete_Subtree  (Pos    : in out Cursor)                                                      is begin Unsafe.Delete_Subtree           (This, Pos);                           end;
+          procedure Swap            (I, J   : Cursor)                                                             is begin Unsafe.Swap                     (Tree, I, J);                          end;
+          procedure Delete          (Parent         : Cursor)                                                     is begin Unsafe.Delete_Children          (This, Parent);                        end;
+          procedure Prepend         (Parent         : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin Unsafe.Prepend_Child            (This, Parent, Item, Count);           end;
+          procedure Append          (Parent         : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin Unsafe.Append_Child             (This, Parent, Item, Count);           end;
+          procedure Insert          (Parent, Before : Cursor; Item : Tree_T; Count : Int_32_Positive := 1)        is begin Unsafe.Insert_Child             (This, Parent, Before, Item, Count);   end;
+          procedure Splice_Subtree  (Parent, Before, Pos           : Cursor)                                      is begin Unsafe.Splice_Subtree           (This, Parent, before, Pos);           end;
+          procedure Splice          (Parent, Before, Source_Parent : Cursor)                                      is begin Unsafe.Splice_Children          (This, Parent, Before, Source_Parent); end;
+          procedure Copy_Subtree    (Parent, Before, Source        : Cursor)                                      is begin Unsafe.Copy_Subtree             (This, Parent, Before, Source);        end;
+          procedure Next            (Pos    : in out Cursor)                                                      is begin Unsafe.Next_Sibling             (Pos);                                 end;
+          procedure Previous        (Pos    : in out Cursor)                                                      is begin Unsafe.Previous_Sibling         (Pos);                                 end;
+          function Subtree_Nodes    (Pos    : Cursor)                return Int_32_Positive                       is (Unsafe.Subtree_Node_Count            (Pos));
+          function Depth            (Pos    : Cursor)                return Int_32_Positive                       is (Unsafe.Depth                         (Pos));
+          function "="              (L, R   : Cursor)                return Bool                                  is (Unsafe.Equal_Subtree                 (L, R));
+          function Is_Root          (Pos    : Cursor)                return Bool                                  is (Unsafe.Is_Root                       (Pos));
+          function Is_Leaf          (Pos    : Cursor)                return Bool                                  is (Unsafe.Is_Leaf                       (Pos));
+          function Has              (Pos    : Cursor)                return Bool                                  is (Unsafe.Has_Element                   (Pos));
+          function Equals           (Item   : Unsafe.Tree)           return Bool                                  is (Unsafe."="                           (This, Item);
+          function Find             (Item   : Tree_T)                return Cursor                                is (Unsafe.Find                          (This, Item));
+          function Get              (Pos    : Cursor)                return Tree_T                                is (Unsafe.Element                       (Pos));
+          function Find_In_Subtree  (Pos    : Cursor; Item : Tree_T) return Cursor                                is (Unsafe.Find_In_Subtree               (Pos, Item));
+          function Ancestor_Find    (Pos    : Cursor; Item : Tree_T) return Cursor                                is (Unsafe.Ancestor_Find                 (Pos, Item));
+          function Child_Count      (Parent        : Cursor)         return Int_32_Positive                       is (Unsafe.Child_Count                   (Parent));
+          function Child_Depth      (Parent, Child : Cursor)         return Int_32_Positive                       is (Unsafe.Child_Depth                   (Parent, Child));
+          function Parent           (Pos    : Cursor)                return Cursor                                is (Unsafe.Parent                        (Pos));
+          function First            (Parent : Cursor)                return Cursor                                is (Unsafe.First_Child                   (Parent));
+          function First            (Parent : Cursor)                return Tree_T                                is (Unsafe.First_Child_Element           (Parent));
+          function Last             (Parent : Cursor)                return Tree_T                                is (Unsafe.Last_Child_Element            (Parent));
+          function Last             (Parent : Cursor)                return Cursor                                is (Unsafe.Last_Child                    (Parent));
+          function Node_Count                                        return Int_32_Positive                       is (Unsafe.Node_Count                    (This));
+          function Root                                              return Cursor                                is (Unsafe.Root                          (This));
+          function Is_Empty                                          return Bool                                  is (This.Is_Empty);
           function Get                                               return Unsafe.Tree                           is (This);
         end;
     end;
   package body Vectors is
       protected body Safe_Vector is
-          procedure Clear                                                                          is begin Unsafe.Clear           (This);                            end;
           procedure Set     (Val : Unsafe.Vector)                                                  is begin This := Val;                                              end;
+          procedure Clear                                                                          is begin Unsafe.Clear           (This);                            end;
           procedure Next    (Pos : in out Cursor)                                                  is begin Unsafe.Next            (Pos);                             end;
           procedure Replace (Pos :        Cursor;      Item : Vec_T)                               is begin Unsafe.Replace_Element (This, Pos, Item);                 end;
           procedure Append                            (Item : Vec_T; Count : Int_32_Positive := 1) is begin Unsafe.Append          (This, Item,  Count_Type (Count)); end;
@@ -102,8 +101,8 @@ package body Neo is
     end;
   package body Hashed is
       protected body Safe_Map is
-          procedure Clear                                    is begin Unsafe.Clear           (This);                                end;
           procedure Set     (Val : Unsafe.Map)               is begin This := Val;                                                  end;
+          procedure Clear                                    is begin Unsafe.Clear           (This);                                end;
           procedure Next    (Pos : in out Cursor)            is begin Unsafe.Next            (Pos);                                 end;
           procedure Delete  (Pos : in out Cursor)            is begin Unsafe.Delete          (This, Pos);                           end;
           procedure Delete  (Key : Str)                      is begin Unsafe.Delete          (This, To_Str_16_Unbound (Key));       end;
@@ -120,9 +119,9 @@ package body Neo is
         end;
     end;
   package body Ordered is
-      protected body Safe_Map is
-          procedure Clear                                    is begin Unsafe.Clear           (This);            end;         
+      protected body Safe_Map is       
           procedure Set     (Val : Unsafe.Map)               is begin This := Val;                              end;
+          procedure Clear                                    is begin Unsafe.Clear           (This);            end;  
           procedure Next    (Pos : in out Cursor)            is begin Unsafe.Next            (Pos);             end;
           procedure Delete  (Pos : in out Cursor)            is begin Unsafe.Delete          (This, Pos);       end;
           procedure Delete  (Key : Key_T)                    is begin Unsafe.Delete          (This, Key);       end;
