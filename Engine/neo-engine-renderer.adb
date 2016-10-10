@@ -180,7 +180,7 @@ package body Neo.Engine.Renderer is
     Surface_Support          : VkBool32  = VK_FALSE;
     Queue_Priority           : const float := 0.0f; 
     Pre_Transform            : VkSurfaceTransformFlagBitsKHR  
-    Device_Extensions        : static const char *k[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+    Device_Extensions        : static const char *k[] =  VK_KHR_SWAPCHAIN_EXTENSION_NAME};
     Application_Info         : aliased VkApplicationInfo        := (sType                   => VK_STRUCTURE_TYPE_APPLICATION_INFO,
                                                                     pApplicationName        => Get_Information.Name,
                                                                     pEngineName             => NAME_ID & VERSION,
@@ -327,7 +327,7 @@ package body Neo.Engine.Renderer is
   -- Load a KTX texture into GPU memory and return the id and 
   function Load_Texture (Path : Str) return Texture_State is
 
-    -- KTX texture format: http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+    -- KTX texture format: http:-- web.archive.org/web/20160811201320/https:-- www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
     type KTX_Header_State is record
         Id              : Str (1..12);
         Endianness      : Int_32_Unsigned;
@@ -501,12 +501,94 @@ package body Neo.Engine.Renderer is
       return Texture;
     end;
 
+  -----------------
+  -- Load_Shader --
+  -----------------
+
+  function Load_Shader (Path : Str) return 
+
   ---------------
   -- Load_Mesh --
   ---------------
 
   function Load_Mesh (Path : Str) return Texture_State is
+    Mesh : Mesh_State := Load (Path);
     begin
       
+    end;
+    
+  -----------------------
+  -- Task_Render_Light --
+  -----------------------
+
+  procedure Run_Render_Light is
+    begin
+    end;
+  package Task_Render_Light is new Tasks (Run_Render_Light);
+  package Vector_Render_Light is new Vectors (Task_Render_Light.Safe_Task);
+
+  -------------------
+  -- Task_Frontend --
+  -------------------
+  
+  -- The frontend - also performs the step of filling the depth buffer Visible_Surface_Determination
+  procedure Run_Frontend is
+    Area : Int;
+    procedure Point_In_Area is
+      begin
+      end;
+    begin
+      for View of Views loop
+
+        -- Setup the view matrix
+        Viewer := (Axis.XX, Axis.YX, Axis.ZX, -Origin.X * Axis.XX - Origin.Y * YX - Origin.Z * Axis.ZX,
+                   Axis.XY, Axis.YY, Axis.ZY, -Origin.X * Axis.XY - Origin.Y * YY - Origin.Z * Axis.ZY,
+                   Axis.XZ, Axis.YZ, Axis.ZZ, -Origin.X * Axis.XZ - Origin.Y * YZ - Origin.Z * Axis.ZZ);
+
+        -- Setup the projection matrix (use the ol' "infinite far z trick")
+        Jitter_Values := (if Jitter.Get then (Random_Float, Random_Float) else  (others => <>));
+        R_SetupProjectionMatrix
+
+        -- Setup render matricies for faster culliong
+        View.Render_Projection := Transpose (View.Projection);
+        View.World_Space.MVP := View.Render_Projection * Transpose (View.World_Space.Model_View);
+        View.Frustum := ((4)(3) => Z_Near.Get, others => -Get_Frustum_Planes (View.World_Space.MVP));
+
+        -- Walk the BSP tree to find the current area
+        Iterate (View.Level, Point_In_Area);
+        View.Area := Area;
+
+        -- Determin all possible connected areas for light-behind-door culling
+        
+
+        -- Add or remove GUI surfaces
+
+        -- Fill the depth buffer
+        for Mesh of View.Meshes loop
+          case Mesh.Material.Coverage is
+            when Opaque_Coverage =>
+            when Perferated_Coverage =>
+              for Stage of Mesh.Material.Stages loop
+              end loop;
+          when others => null; end case;
+        end loop;
+
+        -- Trigger light render
+      end loop;
+    end;
+  package Task_Frontend is new Tasks (Run_Frontend);
+  Frontend : Task_Frontend.Safe_Task;
+
+  -----------------
+  -- Run_Backend --
+  -----------------
+
+  procedure Run_Backend is
+    begin
+
+      -- Post process
+
+      -- Present
+
     end;
 end;
