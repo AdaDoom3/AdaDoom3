@@ -516,16 +516,127 @@ package body Neo.Engine.Renderer is
     begin
       
     end;
+
+  ---------------
+  -- Load_Mesh --
+  ---------------
+
+  function Load_Mesh (Path : Str) return Texture_State is
+    Mesh : Mesh_State := Load (Path);
+    begin
+      
+    end;
     
   -----------------------
   -- Task_Render_Light --
   -----------------------
 
-  procedure Run_Render_Light is
+  task body Task_Render_Light is
     begin
+      loop
+
+        -------------
+        -- Prepare --
+        -------------
+
+        accept Prepare (Light : ) do
+          View.View_Entities.Append (Render_Lights.Shadow_Only_View_Entities);
+
+          -- Evaluate light shader registers
+
+          -- Additve lights with no stage in the light shader is positive, remove the light
+          if Light.Kind = Fog_Light or Light.Kind = Blend_Light then
+            Outter: for Stage of Light.Stages loop
+              if Light.Stage.Registers.Condition_Register then
+
+                -- Snap tiny values to zero
+                for Register of Light.Stage.Registers loop
+                  if Register < 0.001 then Register := 0.0; end if;
+                end loop;
+
+                -- We found a light that add something
+                for Register of Light.Stage.Registers loop
+                  exit Outter when Register > 0.0;
+                end loop;              
+              end if;
+              if Stage = Light.Stages.Last then 
+
+  -- We didn't find any addition to the scene
+  goto Skip_Light;
+              end if;
+            end loop Outter;
+          end if;
+
+          -- Copy date to backend
+
+          -- Create a "fog plane" to represent light far clip plane
+
+          -- Calculate the matrix that projects the zero-to-one cube to exactly cover the light frustum in clip space
+
+          -- Calculate the project bounds, either not clipped at all, near clipped, or fully clipped
+        
+          -- Build the scissor
+
+          -- Create interactions with all entities the light may touch and add entities that may cast shadows
+          for Reference of Light.References loop
+
+            -- Some lights have their center of projection outside of the world so ignore areas not connected to the light center
+            if not Light.World.Areas_Are_Connected (Light.Area, Reference.Area, PS_BLOCK_VIEW) then
+
+              -- Check the models in this area
+              for Model of Reference.Entities loop
+                if not (vLight->entityInteractionState[ edef->index ] != viewLight_t::INTERACTION_UNCHECKED or else
+                        
+                        -- A large fraction of static entity / light pairs will still have no interactions even though they are both present in the same area(s)
+                        eModel != NULL && !eModel->IsDynamicModel() && inter == INTERACTION_EMPTY or else
+                        
+                        -- We don't want the lights on weapons to illuminate anything else. There are two assumptions here - that
+                        -- allowLightInViewID is only used for weapon lights, and that all weapons will have weaponDepthHack. A more general
+                        -- solution would be to have an allowLightOnEntityID field.
+                        light->parms.allowLightInViewID && light->parms.pointLight && !eParms.weaponDepthHack or else
+
+                        --
+                        (eParms.noShadow || ( eModel && !eModel->ModelHasShadowCastingSurfaces() ) ) && !edef->IsDirectlyVisible() or else
+                        eModel && !eModel->ModelHasInteractingSurfaces() && !eModel->ModelHasShadowCastingSurfaces() or else
+                        inter == NULL and (eParms.noDynamicInteractions or R_CullModelBoundsToLight( light, edef->localReferenceBounds, edef->modelRenderMatrix )) or else 
+                        edef->IsDirectlyVisible() 
+                        !lightCastsShadows 
+
+              end loop;
+            end if;
+          end loop;
+        end
+        end;
+
+      ------------
+      -- Render --
+      ------------
+
+      accept Render ( : ) do
+           -- Note the usage of vertexcache.Position that abstrace VBO or not VBO
+           RB_ARB2_CreateDrawInteractions(const drawSurf_t *surf )
+           {
+               for ( ; surf ; surf=surf->nextOnLight ) 
+               {
+                  idDrawVert  *ac = (idDrawVert *)vertexCache.Position( surf->geo->ambientCache );
+              qglColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( idDrawVert ), ac->color );
+                  qglVertexAttribPointerARB( 11, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->normal.ToFloatPtr() );
+                  qglVertexAttribPointerARB( 10, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->tangents[1].ToFloatPtr() );
+                  qglVertexAttribPointerARB( 9, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->tangents[0].ToFloatPtr() );
+                  qglVertexAttribPointerARB( 8, 2, GL_FLOAT, false, sizeof( idDrawVert ), ac->st.ToFloatPtr() );
+                  qglVertexPointer( 3, GL_FLOAT, sizeof( idDrawVert ), ac->xyz.ToFloatPtr() );
+                  
+                  RB_CreateSingleDrawInteractions( surf, RB_ARB2_DrawInteraction );
+               }
+           }
+        end;
+<<Skip_Light>>
+-- !!!
+
+      end loop;
     end;
-  package Task_Render_Light is new Tasks (Run_Render_Light);
-  package Vector_Render_Light is new Vectors (Task_Render_Light.Safe_Task);
+  package Task_Render_Light is new Tasks (Task_Render_Light);
+  package Hashed_Render_Light is new Vectors (Task_Render_Light.Safe_Task);
 
   -------------------
   -- Task_Frontend --
@@ -535,6 +646,9 @@ package body Neo.Engine.Renderer is
   procedure Run_Frontend is
     Area : Int;
     procedure Point_In_Area is
+      begin
+      end;
+    procedure Flood_Portals is
       begin
       end;
     begin
@@ -555,11 +669,28 @@ package body Neo.Engine.Renderer is
         View.Frustum := ((4)(3) => Z_Near.Get, others => -Get_Frustum_Planes (View.World_Space.MVP));
 
         -- Walk the BSP tree to find the current area
-        Iterate (View.Level, Point_In_Area);
+        View.Level.Iterate (Point_In_Area);
         View.Area := Area;
 
+        -- Add lights
+        for Light of View.Lights loop
+          if not Render_Lights.Has_Element (Light.Name) then
+            Render_Lights.Append (Light.Name);
+            Render_LightS.Element (Light.Name).Initialize (Light);
+          end if;
+        end loop;
+
+        -- Check each light
+        for Render_Light of Render_Lights loop
+          if not View.Lights.Has_Element (Render_Light.Name) or Render_Light.Area = -1 then
+            Render_Lights.Remove (Render_Light.Name);
+          end if;
+          Render_Light.Prepare;
+        end loop;
+
         -- Determin all possible connected areas for light-behind-door culling
-        
+        if Area = OUTSIDE_AREA then View.Connected_Areas := (others => True)
+        else View.Level.Portals.Iterate_Subtree (Flood_Portals); end if;
 
         -- Add or remove GUI surfaces
 
@@ -574,6 +705,7 @@ package body Neo.Engine.Renderer is
         end loop;
 
         -- Trigger light render
+        for Render_Light of Render_Lights loop Render_Light.Render; end loop;
       end loop;
     end;
   package Task_Frontend is new Tasks (Run_Frontend);
