@@ -13,18 +13,46 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Strings.Wide_Unbounded.Wide_Hash;
+with Neo.Arrays; use Neo.Arrays;
 
-package World is
-  type Record_Object;
-  type Record_Object (Kind : Enumerated_Object) is record
-      case Kind is
-        when Bone_Object =>
-        when Camera_Object =>
-        when Light_Object =>
-        when Geometry_Object =>
-        when Morph_Object =>
-        when Material_Object =>
-        when Prop_Object =>
-        when Animation_Object =>
-      end case;
-    end record;
+generic
+  type Map_T is private;
+package Neo.Hashed is
+
+  -----------------
+  -- Hashed Maps --
+  -----------------
+
+  -- Base type
+  package Unsafe is new Ada.Containers.Indefinite_Hashed_Maps (Str_Unbound, Map_T, Wide_Hash, "=");
+  subtype Cursor is Unsafe.Cursor;
+  NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
+
+  -- Fetch a sorted list of keys
+  function Keys (Val : Unsafe.Map) return Array_Str_Unbound;
+
+  -- Wrapped type
+  protected type Safe_Map is
+      procedure Clear;
+      procedure Set     (Val : Unsafe.Map);
+      procedure Next    (Pos : in out Cursor);
+      procedure Delete  (Pos : in out Cursor);
+      procedure Delete  (Key : Str);
+      procedure Replace (Pos : Cursor; Item : Map_T);
+      procedure Replace (Key : Str; Item : Map_T);
+      procedure Insert  (Key : Str; Item : Map_T);
+      function Has      (Key : Str)    return Bool;
+      function Has      (Pos : Cursor) return Bool;
+      function Key      (Pos : Cursor) return Str;
+      function Get      (Key : Str)    return Map_T;
+      function Get      (Pos : Cursor) return Map_T;
+      function Get                     return Unsafe.Map;
+      function Keys                    return Array_Str_Unbound; -- See below
+      function First                   return Cursor;
+      function Length                  return Natural;
+    private
+      This : Unsafe.Map;
+    end;
+end;

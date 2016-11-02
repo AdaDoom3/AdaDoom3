@@ -80,10 +80,7 @@ package body Neo.Engine is
   -- Information --
   -----------------
 
-  -- OS information
   function Get_Information return Information_State is (Import.Get_Information);
-
-  -- Clipboad
   function Paste return Str is begin return Import.Paste; exception when others => Line ("Failed paste!"); return NULL_STR; end;
   procedure Copy (Item : Str) is begin Import.Copy (Item); exception when others => Line ("Failed copy!"); end;
 
@@ -91,7 +88,6 @@ package body Neo.Engine is
   -- Networking --
   ----------------
 
-  -- All unimplemented...
   procedure Silence  (Connection : in out Connection_State) is begin null; end;
   procedure Vocalize (Connection : in out Connection_State) is begin null; end;
   procedure Connect  (Connection : in out Connection_State; Address   : Str) is begin null; end;
@@ -106,7 +102,6 @@ package body Neo.Engine is
   -- Error Handing --
   -------------------
 
-  -- Print a stack-trace
   procedure Trace is
     Traces : Tracebacks_Array (1..1024);
     Length : Int_32_Natural;
@@ -125,7 +120,7 @@ package body Neo.Engine is
   -- Subprograms used during alerts. They are non-vital so don't propagate errors
   Alert_Status : Safe_Status;
   function Alerting return Bool is (Alert_Status.Occupied);
-  procedure Alert (Val  : Bool := True) is
+  procedure Alert (Val : Bool := True) is
     begin
       Alert_Status.Occupied (Val); Import.Alert (Val);
     exception when others => Line ("Failed to alert!"); end;
@@ -142,14 +137,11 @@ package body Neo.Engine is
       Running.Set (False);
     end;
 
-  ---------------
-  -- Processor --
-  ---------------
+  -----------
+  -- Tasks --
+  -----------
 
-  -- CVar for tracking number of tasks
   package Task_Count is new CVar ("taskcount", "Number of running tasks", Int_32_Positive, 1, Settable => False);
-
-  -- Externally finalizable task package 
   package body Tasks is
       procedure Finalize is new Ada.Unchecked_Deallocation (Task_Unsafe, Task_Unsafe_Ptr);
       task body Task_Unsafe is
@@ -211,12 +203,9 @@ pragma Warnings (On);
   procedure Send_Log is begin Import.Open_Webpage (ERROR_REPORTING_URL); exception when others => Line ("Failed to send log!"); end;
   procedure Save_Log is
     use Ada.Streams.Stream_IO;
+    Path        : Str_8 := To_Str_8 (To_Str (Get_Information.Username) & Date_Str & ".txt");
     File        : Ada.Streams.Stream_IO.File_Type;
     File_Stream : Ada.Streams.Stream_IO.Stream_Access;
-    Offset      : Time_Offset := UTC_Time_Offset (Clock);
-    Path        : Str_8       := To_Str_8 (To_Str (Get_Information.Username)) & "_" &
-      Trim (Month (Clock, Offset)'Img, Both) & "-" & Trim (Day (Clock, Offset)'Img, Both) & "-" & Trim (Year (Clock, Offset)'Img, Both) & "_" &
-      Trim (Hour  (Clock, Offset)'Img, Both) & "-" & Trim (Minute (Clock, 0)'Img,   Both) & "-" & Trim (Second (Clock)'Img,       Both) & ".txt";
     begin
       Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (To_Str (Get_Information.Path) & PATH_SEP & PATH_LOGS & PATH_SEP) & Path);
       File_Stream := Ada.Streams.Stream_IO.Stream (File);
@@ -322,7 +311,7 @@ pragma Warnings (On);
               Y => (Main_Window.Top  + ((Main_Window.Bottom - Main_Window.Top)  / 2)));
     end;
 
-  -- Comment here!
+  -- Internal state for storing registered impules
   type Impulse_State is record
       Callback : not null access procedure (Args : Vector_Impulse_Arg.Unsafe_Array);
       Bindings : not null access Vector_Binding.Safe_Vector;
@@ -331,14 +320,12 @@ pragma Warnings (On);
   package Hashed_Impulse is new Hashed (Impulse_State);
   Impulses : Hashed_Impulse.Safe_Map;
   package body Impulse is
-
-      -- Comment here!
       Duplicate : Exception;
 
       -- Rename the impulse callback to make it passable to outter scopes...
       procedure Informal_Callback (Args : Vector_Impulse_Arg.Unsafe_Array) renames Callback;
 
-      -- Comment here!
+      -- Constructor overhead...
       type Control_State is new Controlled with null record;
       procedure Initialize (Control : in out Control_State);
       procedure Finalize (Control : in out Control_State);
@@ -352,7 +339,7 @@ pragma Warnings (On);
           end;
       Control : Control_State;
 
-      -- Comment here!
+      -- Enable or disable triggering
       procedure Enable  is Impulse : Impulse_State := Impulses.Get (Name); begin Impulse.Enabled := True;  Impulses.Replace (Name, Impulse); end;
       procedure Disable is Impulse : Impulse_State := Impulses.Get (Name); begin Impulse.Enabled := False; Impulses.Replace (Name, Impulse); end;
     end;
@@ -688,9 +675,6 @@ goto Combo_Fail;
       Fullscreen.Bindings.Append   (Keyboard (F11_Key));
 
       -- Log system information in case of error reports
-      Line;
-      Line ("SYSTEM INFORMATION");
-      Line;
       Line ("Engine: "              & NAME_ID & " " & VERSION);
       Line ("OS: "                  & To_Str (Get_Information.OS));
       Line ("Username: "            & To_Str (Get_Information.Username));
@@ -698,17 +682,6 @@ goto Combo_Fail;
       Line ("Name: "                & To_Str (Get_Information.Name));
       Line ("Application bit size"  & To_Str (WORD_SIZE'Img));
       Line ("System bit size:"      & To_Str (Get_Information.Bit_Size'Img));
-      Line;
-      Line ("GRAPHICS INFORMATION");
-      Line;
-      -- Print vulkan system information
-      Line;
-      Line ("CONFIGURATION");
-      Line;
-      -- Print vulkan system information
-      Line;
-      Line ("GAME START!");
-      Line;
 
       -- Main loop
       declare

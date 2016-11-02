@@ -47,11 +47,11 @@ separate (Neo.Engine) package body Import is
         Assert (IsWow64Process (GetCurrentProcess, Buffer'Unchecked_Access));
 
         -- Return the junk
-        return (Name      => Delete (To_Str_16_Unbound (To_Str (Dir)), 1, Index (To_Str (Dir), "\", Backward)), -- Get first-level directory
-                Path      => To_Str_16_Unbound (To_Str (Dir)),
-                Username  => To_Str_16_Unbound (To_Str (Username.All)),
+        return (Name      => Delete (To_Str_Unbound (To_Str (Dir)), 1, Index (To_Str (Dir), "\", Backward)), -- Get first-level directory
+                Path      => To_Str_Unbound (To_Str (Dir)),
+                Username  => To_Str_Unbound (To_Str (Username.All)),
                 Bit_Size  => (if Buffer = 1 then 64 else 32),
-                OS        => To_Str_16_Unbound (NULL_STR & -- ???
+                OS        => To_Str_Unbound (NULL_STR & -- ???
 
                              -- Identify the version of Windows if it older than 7 - this is officially deprecated...
                              (case Version.dwPlatformId is
@@ -445,7 +445,7 @@ separate (Neo.Engine) package body Import is
           -- Inject characters into player one (this unfortunatly could not be separated from the windowing thread easily)
           when WM_CHAR =>
             if (GetKeyState (Int_C (VK_CONTROL)) and 16#8000#) = 0 then -- Do not inject text into the input system if ctrl is held
-              Inject_Into_Player_1 ((Text_Impulse, (Text_Impulse, 1, NO_COMBO), To_Str_16_Unbound (Char_16'Val (Int (wParam)))));
+              Inject_Into_Player_1 ((Text_Impulse, (Text_Impulse, 1, NO_COMBO), To_Str_Unbound (Char_16'Val (Int (wParam)))));
             end if;
 
           -- Pass window action information to the engine
@@ -954,7 +954,7 @@ separate (Neo.Engine) package body Import is
   -- Console --
   -------------
 
-  -- Why doesn't SelectObject work ???
+  -- Why doesn't SelectObject work ??? And implement autocompelete ???
   procedure Run_Console is 
 
     -- Console stuff
@@ -1482,7 +1482,7 @@ separate (Neo.Engine) package body Import is
 
           -- Set the text in the output box
           Is_At_Bottom := Scrollbar_At_Bottom;
-          Current_Log  := To_Str_16_Unbound (Log);
+          Current_Log  := To_Str_Unbound (Log);
           Current_Line := SendMessageW (Output_Box, EM_GETFIRSTVISIBLELINE, 0, 0);
           Ignore (SendMessageW (Output_Box, EM_GETSEL, To_Int_Ptr (Start_Selection'Address), To_Int_Ptr (End_Selection'Address)));
           Ignore (SendMessageW (Output_Box, WM_SETREDRAW, 0, 0));

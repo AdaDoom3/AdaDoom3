@@ -614,21 +614,28 @@ package body Neo.Engine.Renderer is
 
       accept Render ( : ) do
            -- Note the usage of vertexcache.Position that abstrace VBO or not VBO
-           RB_ARB2_CreateDrawInteractions(const drawSurf_t *surf )
-           {
-               for ( ; surf ; surf=surf->nextOnLight ) 
-               {
-                  idDrawVert  *ac = (idDrawVert *)vertexCache.Position( surf->geo->ambientCache );
-              qglColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( idDrawVert ), ac->color );
-                  qglVertexAttribPointerARB( 11, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->normal.ToFloatPtr() );
-                  qglVertexAttribPointerARB( 10, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->tangents[1].ToFloatPtr() );
-                  qglVertexAttribPointerARB( 9, 3, GL_FLOAT, false, sizeof( idDrawVert ), ac->tangents[0].ToFloatPtr() );
-                  qglVertexAttribPointerARB( 8, 2, GL_FLOAT, false, sizeof( idDrawVert ), ac->st.ToFloatPtr() );
-                  qglVertexPointer( 3, GL_FLOAT, sizeof( idDrawVert ), ac->xyz.ToFloatPtr() );
-                  
-                  RB_CreateSingleDrawInteractions( surf, RB_ARB2_DrawInteraction );
-               }
-           }
+          for Surface of View.Light_Surfaces loop
+
+            -- Prepare GPU data
+            qglColorPointer           (4, GL_UNSIGNED_BYTE, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->color );
+            qglVertexAttribPointerARB (11, 3, GL_FLOAT, false, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->normal.ToFloatPtr() );
+            qglVertexAttribPointerARB (10, 3, GL_FLOAT, false, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->tangents[1].ToFloatPtr() );
+            qglVertexAttribPointerARB (9, 3, GL_FLOAT, false, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->tangents[0].ToFloatPtr() );
+            qglVertexAttribPointerARB (8, 2, GL_FLOAT, false, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->st.ToFloatPtr() );
+            qglVertexPointer          (3, GL_FLOAT, sizeof( idDrawVert ), vertexCache.Position( surf->geo->ambientCache->xyz.ToFloatPtr() );
+
+            -- Modify the light projection if needed
+            if Surface.Space /= Backend.Current_Space then
+              Backend.Current_Space := Surface.Space;
+              qgLoadMatrixf (Surface.Space.Model_View_Matrix);
+            end if;
+
+            -- Modify light scissor if needed
+            if Surface.Scissor /= Backend.Current_Scissor then
+              Backend.Current_Scissor := Surface.Scissor;
+              
+            end if;
+          end loop;
         end;
 <<Skip_Light>>
 -- !!!

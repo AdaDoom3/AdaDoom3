@@ -691,11 +691,13 @@ separate (Neo.Model) package body Id_Tech is
         while not At_EOF loop
           Token := Next;
 
-          -- Load model
+          -- Parse model structure
           if Token = "model" then Assert ("{");
 
+          -- Parse shadow models
           elsif Token = "shadowModel" then Assert ("{");
 
+          -- Parse portals
           elsif Token = "interAreaPortals" then Assert ("{");
             depth = parseFirstBrace ? 0 : 1;
             do
