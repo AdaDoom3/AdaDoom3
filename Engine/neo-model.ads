@@ -238,93 +238,57 @@ package Neo.Model is
   -- A Material or "shader" is a grouping of texture maps and settings that define what a given entity, decal, or map element will look
   -- like and how it might be affected by light or camera position.
   --
-  -- The Neo Engine implementation of materials is loosly based on Ut4 and IdTech4's, but lacks dynamic capabilities like conditionals
-  -- and node-graph-style computations.
+  -- This implementation of materials offloads all of the work into separate shader programs so no logic has to be contained within the
+  -- actual material record.
   --
   -- References.
   --   https://web.archive.org/web/20150303182930/https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/MaterialProperties/
   --   https://web.archive.org/web/20160305174701/https://www.iddevnet.com/doom3/materials.php
   --
 
-  type Domain_Kind  is (Surface_Domain, Decal_Domain, Post_Process_Domain, Light_Domain);
-  type Decal_Kind   is (Normal_Decal,   Stain_Decal,  Translucent_Decal,   Emissive_Decal);
-  type Blend_Kind   is (Opaque_Blend,   Masked_Blend, Translucent_Blend,   Additive_Blend, Modulate_Blend);
-  type Shading_Kind is (Unlit_Shading,  Lit_Shading,  Subsurface_Shading,  Skin_Shading,   Clear_Coat_Shading, Profile_Shading);
+  type Domain_Kind   is (Surface_Domain, Decal_Domain,   Post_Process_Domain, Light_Domain,    Menu_Domain);
+  type Blend_Kind    is (Opaque_Blend,   Masked_Blend,   Additive_Blend,      Modulate_Blend,  Mirror_Blend, Remote_Blend);
+  type Shading_Kind  is (Unlit_Shading,  Lit_Shading,    Subsurface_Shading,  Profile_Shading, Skin_Shading, Clear_Coat_Shading);
+  type Cube_Map_Kind is (No_Cube_Map,    Image_Cube_Map, Camera_Cube_Map,     Mirror_Cube_Map);
 
-  type Blend_State (Kind : Blend_Kind := Opaque_Blend) is record
-      case Kind is
-        when 
-      Opacity_Mask_Clip : Real;
-
-    end record;
-
-
-
-
-
-
-
-
-
-
-
-
-  type Filter_Kind  is (No_Filter,       Nearest_Filter, Linear_Filter);
-  type Color_Kind   is (No_Color,        Use_Color,      Use_Inverse_Color);
-  type Blend_Kind   is (Remote_Blend,    Mirror_Blend,   Specular_Blend, Diffuse_Blend,
-                        Bump_Blend, 
-                        Occlusion_Blend, Cube_Blend,     Darken_Blend,   Lighten_Blend);
-
-  -- Mat
-  type Material_State (Kind : Material_Kind := Normal_Sorting) is record
-      Z_Fight_Offset : ;
-      Coverage       : Coverage_Kind   := Perforated_Coverage;
-      Shadowing      : Shadowing_Kind  := Normal_Shadowing;
-      Overlaying     : Overlaying_Kind := Normal_Overlaying;
-      Siding         : Siding_Kind     := Normal_Siding;
-      Reflective     : Bool            := False;
-      Foggable       : Bool            := False;
-      Unsmoothed_Tan : Bool            := False;
-
-      case Kind is
-        when Decal_Material => Stay_Duration, Fade_Duration : Duration;
-                               Start_Color, End_Color       : Color;
-        when GUI_Material =>   Menu_Name                    : Str_Unbound;
+  type Stage_State (Static : Bool := True) is record
+      case Static is
+        when True  => Texture : Str_Unbound;
+        when False =>
+          Fragment_Program  : Str_Unbound;
+          Fragment_Textures : Vector_Str_Unbound;
       end case;
     end record;
 
-
-
-
-
-
-
-  type Stage_State (Frame_Num : Natural := 0) is record
-      Texture         : Str_Unbound     := NULL_STR_UNBOUND;
-      Surface         : 
-      Filter          : Filter_Kind     := No_Filter;
-      Vert_Color      : Vert_Color_Kind := No_Color;
-      Transform       : Transform_4D    := (others => <>);
-      Color           : Color_State     := COLOR_BLACK;
-      Scroll_Speed    : Real            := 0.0; -- Scrolls per second
-      Rotate_Speed    : Real            := 0.0; -- Rotations per second
-      Z_Fight_Offset  : Real            := 0.0;
-      Color_Opacity   : Real_Percent    := 0.0;
-      General_Opacity : Real_Percent    := 100.0;
-      Alpha_Opacity   : Real_Percent    := 100.0;
-      Alpha_Clamp     : Bool            := False; -- Prevent alpha channel from tiling
-      Clamp           : Bool            := False;
-
-      -- Animated materials have more than one frame
-      case Frame_Num is when 0      => null;
-                        when others => Texture_Frames    : Array_Str_Unbound (1..Frame_Num);
-                                       Frame, Frame_Rate : Positive;
-                                       Do_Loop           : Bool;
-    end record;
-  package Ordered_Stage is new Ordered (Blend_Kind, Stage_State);
-
-  type Material_State is record
-
+  type Material_State (Kind : Domain_Kind := Surface_Domain; Static : Bool := True) is record
+      Shadow_Self    : Bool;
+      Cast_Shadow    : Bool;
+      Two_Sided      : Bool;
+      Smoothed_Tan   : Bool;
+      Transform      : Transform_4D;
+      Vertex_Program : Str_Unbound;
+      case Kind is
+        when Light_Domain => Pattern : Stage_State (Static);
+        when Menu_Domain  => Menu_Id : Str_Unbound;
+        when others =>
+          Blend                : Blend_Kind;  
+          Cube_Map             : Cube_Map_Kind; -- When No_Cube_Map or Mirror_Cube_Map the component Cube_Map_Texture is ignored
+          Cube_Map_Texture     : Str_Unbound;   -- Assumes _px, _py, _pz, _nx, _ny, _nz for the positive and negative sides
+          Base_Color           : Stage_State (Static);
+          Metallic             : Stage_State (Static);
+          Specular             : Stage_State (Static);
+          Roughness            : Stage_State (Static);
+          Emissive_Color       : Stage_State (Static);
+          Opacity              : Stage_State (Static);
+          Opacity_Mask         : Stage_State (Static);
+          Normal               : Stage_State (Static);
+          Displacement         : Stage_State (Static);
+          Subsurface_Color     : Stage_State (Static);
+          Clear_Coat           : Stage_State (Static);
+          Clear_Coat_Roughness : Stage_State (Static);
+          Ambient_Occlusion    : Stage_State (Static);
+          Refraction           : Stage_State (Static);
+      when others => null; end case;
     end record;
   package Hashed_Material is new Hashed (Material_State);
 
@@ -335,4 +299,5 @@ package Neo.Model is
   function Load (Path : Str) return Mesh_State;
   function Load (Path : Str) return Level_State;
   function Load (Path : Str) return Camera_State;
+  function Load (Path : Str) return Material_State;
 end;
