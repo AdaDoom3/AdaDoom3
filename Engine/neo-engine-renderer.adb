@@ -1,3 +1,4 @@
+
 --                                                                                                                                      --
 --                                                         N E O  E N G I N E                                                           --
 --                                                                                                                                      --
@@ -55,8 +56,8 @@ package body Neo.Engine.Renderer is
       declare Present_Modes : VkPresentModeKHR_Array (1..Count); begin
         vkGetPhysicalDeviceSurfacePresentModesKHR (Physical_Device, Surface, Count'Access, Present_Modes'Access);
         for Present_Mode of Present_Modes loop
-          if vsync && Present_Mode == VK_PRESENT_MODE_MAILBOX_KHR or !vsync && Present_Mode == VK_PRESENT_MODE_IMMEDIATE_KHR then
-            Current_presentMode = Present_Mode;
+          if vsync and Present_Mode = VK_PRESENT_MODE_MAILBOX_KHR or not vsync and Present_Mode = VK_PRESENT_MODE_IMMEDIATE_KHR then
+            Current_presentMode := Present_Mode;
             exit;
           end if;
         end loop
@@ -147,16 +148,16 @@ package body Neo.Engine.Renderer is
       VkAssert (vkBeginCommandBuffer     (Setup_Buffer, Begin_Info'Access);
       for Image of Images loop
         Memory_Barrier.image := Image;
-        vkCmdPipelineBarrier (commandBuffer             => Setup_Buffer,
-                              vkCmdPipelineBarrier      => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                              dstStageMask              => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                              dependencyFlags           => 0,
-                              memoryBarrierCount        => 0,
-                              pMemoryBarriers           => null,
-                              bufferMemoryBarrierCount  => 0,
-                              pBufferMemoryBarriers     => null,
-                              imageMemoryBarrierCount   => 1,
-                              pImageMemoryBarriers      => Memory_Barrier'Access);
+        vkCmdPipelineBarrier (commandBuffer            => Setup_Buffer,
+                              vkCmdPipelineBarrier     => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                              dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                              dependencyFlags          => 0,
+                              memoryBarrierCount       => 0,
+                              pMemoryBarriers          => null,
+                              bufferMemoryBarrierCount => 0,
+                              pBufferMemoryBarriers    => null,
+                              imageMemoryBarrierCount  => 1,
+                              pImageMemoryBarriers     => Memory_Barrier'Access);
       end loop;
       vkEndCommandBuffer   (Setup_Buffer);
       vkQueueSubmit        (Queue, 1, Submit_Info'Access, VK_NULL_HANDLE);
@@ -182,8 +183,8 @@ package body Neo.Engine.Renderer is
     Pre_Transform            : VkSurfaceTransformFlagBitsKHR  
     Device_Extensions        : static const char *k[] =  VK_KHR_SWAPCHAIN_EXTENSION_NAME};
     Application_Info         : aliased VkApplicationInfo        := (sType                   => VK_STRUCTURE_TYPE_APPLICATION_INFO,
-                                                                    pApplicationName        => Get_Information.Name,
-                                                                    pEngineName             => NAME_ID & VERSION,
+                                                                    pApplicationName        => To_Str (Get_Information.Name),
+                                                                    pEngineName             => NAME_ID & " " & VERSION,
                                                                     apiVersion              => VK_MAKE_VERSION (1, 0, 0),
                                                                     others                  => <>);
     Instance_Create_Info     : aliased VkInstanceCreateInfo     := (sType                   => VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
@@ -220,7 +221,7 @@ package body Neo.Engine.Renderer is
                                                                     others                  => <>);
     begin
 
-      -- Initialize the system grap function pointers
+      -- Grap function pointers
       Import.Initialize_Vulkan;
       Import_Initialize_Vulkan_Functions;
 
@@ -228,20 +229,10 @@ package body Neo.Engine.Renderer is
       VkAssert (vkCreateInstance (Instance_Create_Info'Access, NULL_PTR, Instance'Access);
 
       -- Aquire a device
-      vkEnumeratePhysicalDevices (Instance, Count'Access, NULL_PTR);
-      declare Physical_Devices : VkPhysicalDevice_Array (1..Count); begin
-        vkEnumeratePhysicalDevices (Instance, Count'Access, Physical_Devices'Access);
-        Physical_Device := Physical_Devices (Physical_Devices'First);
-      end;
+      Physical_Devices := vkEnumeratePhysicalDevicesAda (Instance);
 
       -- Call vkGetPhysicalDeviceQueueFamilyProperties
-      vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, NULL_PTR);
-      declare Queue_Family_Properties : VkQueueFamilyProperties_Array (1..Count); begin
-        vkGetPhysicalDeviceQueueFamilyProperties (Physical_Device, Count'Access, Queue_Family_Properties'Access);
-      end;
-      
-      -- ???
-      for I in 1..Queues.Length loop 
+      for Queue of vkGetPhysicalDeviceQueueFamilyPropertiesAda (Physical_Device) loop 
         if (Queue.queueFlags and VK_QUEUE_GRAPHICS_BIT) > 0 then
           Queue_Create_Info.queueFamilyIndex := Queue_Index;
           exit;
@@ -264,21 +255,17 @@ package body Neo.Engine.Renderer is
       VkAssert (Surface_Support);
 
       -- Find format
-      vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, NULL_PTR);
-      declare Surface_Formats : Array_VkSurfaceFormatKHR (1..Count);
-        vkGetPhysicalDeviceSurfaceFormatsKHR (Physical_Device, Surface, Count'Access, Surface_Formats'Access);
-        for I in 1..Surface_Formats.Length loop
-          exit when Surface_Formats.Element (I).Format = VK_FORMAT_B8G8R8A8_SRGB;
-          Assert (I /= Surface_Formats.Last_Index);
-        end loop;
-      end;
+      for Surface_Format of vkGetPhysicalDeviceSurfaceFormatsKHRAda (Physical_Device, Surface) loop
+        exit when Surface_Format.Format = VK_FORMAT_B8G8R8A8_SRGB;
+        Assert (I /= Surface_Format.Last_Index);
+      end loop;
 
       -- Set the initial sizing
       Resize_Vulkan (Initial_Sizing => True);
 
       -- Create semaphores
-      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Acquire_Status'Access);
-      Vk_Assert (vkCreateSemaphore (Device, Semaphore_Create_Info'Access, NULL_PTR, Render_Status'Access);
+      Vk_Assert (vkCreateSemaphoreAda (Device, Semaphore_Create_Info'Access, NULL_PTR, Acquire_Status'Access);
+      Vk_Assert (vkCreateSemaphoreAda (Device, Semaphore_Create_Info'Access, NULL_PTR, Render_Status'Access);
     end;
 
   --------------
@@ -365,13 +352,16 @@ package body Neo.Engine.Renderer is
                                                                  levelCount         => texture->mipLevels;
                                                                  layerCount         => 1;
                                                                  others             => <>);
-    Buffer_Image_Copy      : aliased VkBufferImageCopy       := (imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-                                                                 imageSubresource.mipLevel = i;
-                                                                 imageSubresource.baseArrayLayer = 0;
-                                                                 imageSubresource.layerCount = 1;
-                                                                 imageExtent.width = static_cast<uint32_t>(tex2D[i].dimensions().x);
-                                                                 imageExtent.height = static_cast<uint32_t>(tex2D[i].dimensions().y);
-                                                                 imageExtent.depth = 1;
+    Buffer_Image_Copy      : aliased VkBufferImageCopy       := (
+    Image_Subresource      : aliased VkImageSubresource      := (aspectMask         => VK_IMAGE_ASPECT_COLOR_BIT,
+                                                                 mipLevel           => i,
+                                                                 baseArrayLayer     => 0,
+                                                                 layerCount         => 1,
+                                                                 others             => <>);
+
+                                              imageExtent    := (width = static_cast<uint32_t>(tex2D[i].dimensions().x);
+                                                                 height = static_cast<uint32_t>(tex2D[i].dimensions().y);
+                                                                 depth = 1;
                                                                  bufferOffset = offset;
                                                                  others             => <>);
     Buffer_Create_Info     : aliased VkBufferCreateInfo      := (size               => tex2D.size();
@@ -452,12 +442,11 @@ package body Neo.Engine.Renderer is
 
       -- Assert the file is a valid KTX texture
       Assert ("KTX 11");
-      Assert (Format != static_cast<format>(gli::FORMAT_INVALID));
-      Assert ( this->extent().y >= 1 && this->extent().z == 1)
-      Assert (Target != TARGET_2D         or (Target == TARGET_2D         && this->layers() == 1 && this->faces() == 1));
-      Assert (Target != TARGET_2D_ARRAY   or (Target == TARGET_2D_ARRAY   && this->layers() >= 1 && this->faces() == 1));
-      Assert (Target != TARGET_CUBE       or (Target == TARGET_CUBE       && this->layers() == 1 && this->faces() >= 1));
-      Assert (Target != TARGET_CUBE_ARRAY or (Target == TARGET_CUBE_ARRAY && this->layers() >= 1 && this->faces() >= 1));
+      Assert (this->extent().y >= 1 and this->extent().z == 1)
+      Assert (Target != TARGET_2D         or (Target = TARGET_2D         and this->layers() = 1  and this->faces() = 1));
+      Assert (Target != TARGET_2D_ARRAY   or (Target = TARGET_2D_ARRAY   and this->layers() >= 1 and this->faces() = 1));
+      Assert (Target != TARGET_CUBE       or (Target = TARGET_CUBE       and this->layers() = 1  and this->faces() >= 1));
+      Assert (Target != TARGET_CUBE_ARRAY or (Target = TARGET_CUBE_ARRAY and this->layers() >= 1 and this->faces() >= 1));
 
       -- Load the texture data
       for Level in 1..Header.Mipmap_Levels loop
@@ -491,10 +480,10 @@ package body Neo.Engine.Renderer is
       VkAssert (vkQueueWaitIdle(queue));
 
       -- Create sampler
-      VkAssert (vkCreateSampler(vulkanDevice->logicalDevice, &sampler, nullptr, &texture->sampler));
+      VkAssert (vkCreateSampler (vulkanDevice->logicalDevice, &sampler, nullptr, &texture->sampler));
       
       -- Textures are not directly accessed by the shaders and are abstracted by image views containing additional information and sub resource ranges
-      VkAssert (vkCreateImageView(vulkanDevice->logicalDevice, &view, nullptr, &texture->view));
+      VkAssert (vkCreateImageView (vulkanDevice->logicalDevice, &view, nullptr, &texture->view));
 
       -- Fill descriptor image info that can be used for setting up descriptor sets
       texture->descriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;

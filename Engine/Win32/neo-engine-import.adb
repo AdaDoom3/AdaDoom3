@@ -95,7 +95,7 @@ separate (Neo.Engine) package body Import is
   -------------
 
   -- Window titles
-  APP_NAME           : constant Str  := To_Str (Get_Information.Name);
+  APP_NAME           : constant Str := To_Str (Get_Information.Name);
   GAME_NAME          : aliased Str_C := To_Str_C (APP_NAME);
   INPUT_NAME         : aliased Str_C := To_Str_C (APP_NAME & " Input");
   CONSOLE_NAME       : aliased Str_C := To_Str_C (APP_NAME & " Console");
@@ -268,16 +268,16 @@ separate (Neo.Engine) package body Import is
                                 lpCaption => C_Name'Unchecked_Access,
                                 lpText    => C_Message'Unchecked_Access,
                                 uType     => (if Game = NULL_PTR then MB_SYSTEMMODAL else 0)
-                                             or (case Icon is
-                                                   when No_Icon          => 0,
-                                                   when Error_Icon       => MB_ICONERROR,
-                                                   when Warning_Icon     => MB_ICONWARNING,
-                                                   when Information_Icon => MB_ICONINFORMATION)
-                                             or (case Buttons is
-                                                   when Okay_Button          => MB_OK,
-                                                   when Yes_No_Buttons       => MB_YESNO,
-                                                   when Okay_Cancel_Buttons  => MB_OKCANCEL,
-                                                   when Retry_Cancel_Buttons => MB_RETRYCANCEL)) is
+                                              or (case Icon is
+                                                    when No_Icon          => 0,
+                                                    when Error_Icon       => MB_ICONERROR,
+                                                    when Warning_Icon     => MB_ICONWARNING,
+                                                    when Information_Icon => MB_ICONINFORMATION)
+                                              or (case Buttons is
+                                                    when Okay_Button          => MB_OK,
+                                                    when Yes_No_Buttons       => MB_YESNO,
+                                                    when Okay_Cancel_Buttons  => MB_OKCANCEL,
+                                                    when Retry_Cancel_Buttons => MB_RETRYCANCEL)) is
                 when IDOK | IDRETRY | IDYES => True, -- It's OK!
                 when others => False);               -- Boo
     end;
@@ -292,7 +292,6 @@ separate (Neo.Engine) package body Import is
 
   -- Icons and cursors
   Icon, Cursor_Inactive, Cursor_Active : Ptr;
-
   Original_Clip : aliased RECT := (others => <>);
 
   -- Conversion functions for rectangles and borders
@@ -964,7 +963,7 @@ separate (Neo.Engine) package body Import is
       end record;
     CONSOLE_BUTTONS : constant array (1..3) of Button_State := (("Save", Save_Log'Access), ("Send", Send_Log'Access), ("Quit", null));
     Current_Input : Char_16        := NULL_CHAR_16;
-    Current_Log   : Str_16_Unbound := NULL_STR_16_UNBOUND;
+    Current_Log   : Str_Unbound    := NULL_STR_UNBOUND;
     Current_Lines : Int_64_Natural := 0;
     Buttons       : array (CONSOLE_BUTTONS'range) of Ptr;
 
@@ -1010,29 +1009,29 @@ separate (Neo.Engine) package body Import is
     Icon : Ptr;
 
     -- Sizing variables
-    Y,
-    Message_Box_Font_Height,
-    Dialog_Base_Unit_Height, Dialog_Base_Unit_Width,
     Output_Box_Height, Output_Box_Width, Input_Box_Height,
+    Dialog_Base_Unit_Height, Dialog_Base_Unit_Width,
+    Text_Box_Font_Height, Text_Box_Font_Width,
     Start_Selection, End_Selection,
     Margin_Group_Top, Margin_Group,
     Current_Height, Current_Width,
     Console_Height, Console_Width,
     Button_Height, Button_Width,
     Right_Count, Left_Count,
+    Message_Box_Font_Height,
     Number_Of_Lines,
-    Text_Box_Font_Height, Text_Box_Font_Width,
+    Y,
     Current_Line : Int_C;
 
     -- Flags
-    Is_At_Bottom,
-    Is_First_Time : Bool := True;
     Was_At_Bottom,
-    Was_At_Minimum_Width,
-    Was_At_Minimum_Height,
     Button_Font_Set,
     Do_Process_Character,
+    Was_At_Minimum_Width,
+    Was_At_Minimum_Height,
     Do_Skip_Message : Bool := False;
+    Is_At_Bottom,
+    Is_First_Time : Bool := True;
 
     -- Message procedures for convience
     procedure Set_Text (Handle : Ptr; Text : Str) is begin Assert (SendMessageW (Handle, WM_SETTEXT, 0, To_Int_Ptr (To_Str_C (Text)'Address))); end;

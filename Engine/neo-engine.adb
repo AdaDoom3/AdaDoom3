@@ -327,9 +327,9 @@ pragma Warnings (On);
 
       -- Constructor overhead...
       type Control_State is new Controlled with null record;
+      procedure Finalize   (Control : in out Control_State);
       procedure Initialize (Control : in out Control_State);
-      procedure Finalize (Control : in out Control_State);
-      procedure Finalize (Control : in out Control_State) is begin Impulses.Delete (Name); end;
+      procedure Finalize   (Control : in out Control_State) is begin Impulses.Delete (Name); end;
       procedure Initialize (Control : in out Control_State) is
         begin 
           if Impulses.Has (Name) then raise Duplicate; end if;
@@ -532,7 +532,7 @@ goto Combo_Fail;
                 Impulse.Callback (Vector_Impulse_Arg.To_Unsafe_Array (Args));
               end if;
 <<Combo_Fail>>
- -- !!!
+-- !!!
 
             end loop;
           end loop;
@@ -662,7 +662,6 @@ goto Combo_Fail;
       Initialize_Console; -- Always show the separate console... for now
 
       -- Initialize
-      Initialize_Configuration; -- Load cvars which could affect windowing or rendering
       Import.Initialize_Windowing;
       Set_Windowing_Mode;
       Renderer.Initialize;
@@ -809,7 +808,6 @@ goto Combo_Fail;
       Input_Task.Finalize;
       Renderer.Finalize;
       Import.Finalize_Windowing;
-      Finalize_Configuration;
 
     -- Handle exceptions
     exception when Occurrence: others => Handle (Occurrence);

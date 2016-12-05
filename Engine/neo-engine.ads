@@ -11,7 +11,7 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
 --                                                                                                                                      --
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                                      --    
 
 with Ada.Streams.Stream_IO;
 with Ada.Finalization;             use Ada.Finalization;
@@ -25,13 +25,14 @@ with System;                       use System;
 with Interfaces;                   use Interfaces;
 with Interfaces.C;                 use Interfaces.C;
 with GNAT.Traceback;               use GNAT.Traceback;
-with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic; 
-
+with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
+with Neo.Compress;                 use Neo.Compress;
+with Neo.Opus;                     use Neo.Opus;
+with Neo.Vulkan;                   use Neo.Vulkan;
+with Neo.OpenAL;                   use Neo.OpenAL;
 with Neo.Vectors;
 with Neo.Ordered;
 with Neo.Hashed;
-with Neo.Vulkan; use Neo.Vulkan;
-with Neo.OpenAL; use Neo.OpenAL;
 
 package Neo.Engine is
 
@@ -269,15 +270,15 @@ package Neo.Engine is
   procedure Vibrate (Hz_High, Hz_Low : Real_32_Percent; Player : Positive := 1);
 
   -- Various cursor operations
-  procedure Set_Cursor            (Pos : Cursor_State);
-  function  Get_Cursor            return Cursor_State;
-  function  Get_Cursor_Normalized return Cursor_State;
+  procedure Set_Cursor           (Pos : Cursor_State);
+  function Get_Cursor            return Cursor_State;
+  function Get_Cursor_Normalized return Cursor_State;
 
   -- Operations to assign devices to different players or query each device's state
   package Ordered_Device is new Ordered (Int_Ptr, Device_State);
   procedure Set_Device (Id : Int_Ptr; Player : Positive := 1);
-  function  Get_Device (Id : Int_Ptr) return Device_State;
-  function  Get_Devices               return Ordered_Device.Unsafe.Map;
+  function Get_Device  (Id : Int_Ptr) return Device_State;
+  function Get_Devices                return Ordered_Device.Unsafe.Map;
 
   -------------
   -- Impulse --
@@ -352,23 +353,7 @@ package Neo.Engine is
   -- Rendering --
   ---------------
 
-  type Material_Kind is (Normal_Material, Specular_Material, Diffuse_Material, Alpha_Material,
-                         Mirror_Material, Occlusion_Material, Cube_Material);
   type Light_Kind    is (Fog_Light, Blend_Light, Normal_Light);
-  type Material_State (Kind : Material_Kind := Diffuse_Material) is new Controlled with record
-      Scale            : Matrix_2x3;
-      Color            : Pixel_State;
-      Opacity_Color    : Real_32_Percent := 100.0;
-      Opacity          : Real_32_Percent := 100.0;
-      Offset           : Real_32;
-      Frame            : Positive;
-      Frame_Rate       : Natural; -- Non-animated materials have a zero frame rate
-      Texture          : Str_Unbound;
-      Fragment_Program : Str_Unbound;
-      Vertex_Program   : Str_Unbound;
-      Fragment_Images  : Vector_Str_Unbound.Unsafe.Vector;
-      Vertex_Args      : Vector_Vertex_Args.Unsafe.Vector;
-    end record;
   type Mesh_Instance_State (Animated : Bool := True) is record -- will have vulkan stuff
       Location   :
       Rotation   :  

@@ -1,77 +1,55 @@
 
---                                                                                                                         
---                                                                     sd+  +mNMm/                                                                         
---                                                         +ys/o`-:sy:-NMNo hNNMMy//     -`                                                                
---                                                     ````dMysmmMMMMMNhmMMymNNMMMMo  -:+Nh.`                                                              
---                                           `.::::osshmmmmMMNMdMMMNNMMMNMMMMMMMMNN/ :NMMMMNh-                                                             
---                                      `.-ssdyhNNNNNMMMMMMMMMMMMNm+/++/.sNNMMMMMNMNydMMMMm+.`                                                             
---                                     //o//+hs://////++hdNNMMMMM:`   .  `.-yNNhNMMMMMMMMMh  -- .                                                          
---                                 .ossdyho+++ohhmMMNmmmss/-+ys++`    ` -    .. sMMMMMMMMMs   / `                                                          
---                               `oNm+-:         `-+ohMMMMMNdo     ::    -      `sNMNmMmMMm/  `                                                            
---                              .hMN+              -.o/++ymMMN.     -` ```-/      `:NMMyNMMMNho-                                                           
---                             .mNh`                 `:mdsossN+        -  ``   +.   +MMNMMMMMMMM/                                                          
---                            .yM:                     :hNMMNm   `.  .:        `   .+MMMMMd`dMMMy                                                          
---                           .dN/                        /MMMm   `/`                /MMMMMh/NdMMm/                                                         
---               -/s+mNmso. .mM/                          yMMMdo   .  -+     ::    +MMMMMMMMNydMdM/                                                        
---             -hN++ dMMMMNydN/                           `/MMMNs: `   o-  `` `    yMMMMMMMMMdsMmMN-                                                       
---            -mMM+:hMmNMMMMMs                              /NMMMNNNNNNydsss/.   :sMNmNhsMMMMdsddMM:                                                       
---            NMMMMs:.oNMMMMM/o//+y-          `.            .yMMMMMMMNy:`/yMMNyssMMMMMN+mMMMMMd/hMh+                                                       
---           sMMMMy./yMMMMMMy`` .://+/      `ydys:o:-      -NMMMMMMNh++hmNNMMMMMMMh+NMMMMMMMM+/.d/`                                                        
---           yMMMMmmNd+mMMMMd` `:o:/.`       `-ds:``      -mMMMMMdh-y:`-mMMMMMMMMMMdNmdMdMMMMo` my.                                                        
---           yMMMMMMm- -mNMMm`/s-/oNd-         :+:-:      sMMMMMmho` +mhMMMMN+ymMMMMN-`yMMMMMM`.dMs                                                        
---           yMMMMMMM+/ `:hN+  `.`...        :` .m/ms/   +MMMMmm+````dMMMm++- ``smNhNNydMMMMNNo./My                                                        
---           :MMMMMMMMNs``ym-                    ./hs/ `+NMMMMM/..ydmNMMM/   `` .`+sNMMMMMMMMMy`.+:                                                        
---            smNMMMMMMd:-dd                           sMMMMMd/  .mMMMMMM  ..   ` .MMMMMMMMNMMM:                                                           
---             .:hmMMMh+odMd                          :NMMMNms `soMMMMMMM+``.     oMNMMMMMMmNd+.                                                           
---                :NMMs`dMMm`                        `mMMMd::mh/MmMMMMMMMMh.-``..oNMmMMMMMMMh                                                              
---                 -mMNyNMMM+    `--..               :MMMM-``dMMMMMMMMMMMMMNdddmmMMMMMMMMMMMm.                                                             
---                  `yMMMMMMs     :Nh:              .mMMMMddhMMMMMMMMMMMMMMMMMMMMMMMMMMMNMMmy`                                                             
---                    /dNMMMM+    `--               /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm/hd+`                                                               
---                      -odNMN/   o/-...`           dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh//ho`                                                                
---                         :mMm/  .+d:::s/          hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMy++.                                                                   
---                          .yMd`  `:o+            :hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMdo:                                                            
---                         .ysmM+                `-yhhMMMMMMMMMMMMMMMMMMMMMMMMMMMd`                                                                        
---                     .`  +NMhhm`              -sNMMMMMMMMMMMMdMMMMMMMMMMMNMMMMMs                       N  E  O    E  N  G  I  N  E                                            
---                    /MNd/ .N++Ms`            `yMMMMMMMhNMMMMMMMMMMMMMMMMMdNMMMN`                                                                         
---                 ..-hNNs-.dM+.hos/.``    `./+yyMmmMMNNy.oodMMMMMMMMMMMMMMMMMMMN`                                                                         
---                `dMd .` `sMso/hyyyMmmmmmhsshNNMM/+MMmyNymmMMMMMMMMNMMMMMMMMMMMMy                                                                         
---                -o/.  /::-y`/dN- .h/mdMMmdoydNMMmhmMmmMMdMMMMMMMMyNmoMMMMMMMMMMMs                                                                        
---                 /Ny-sy.``d-`so:o  `dMNsdNd:-hMMMMhMy:MMMMMMMMd:oyMNdMMMMMMMMMMMN/                                                                       
---                 /.hh` hdmNs: +dMs mMMN+-MMMNNMMNo-sNNMMMMMMdMhdMMMdyMMMMMMMMMMMMMo`                                                                     
---                   /.`yd:-- :/smhmhMMMho/MMMMNmMMMyMMMMMNssmohomyoydMyMMMMMMMdMMNhMh-                                                                    
---                      /. `y:s`+dhMMosMMMMMMMMd/yMMMMMMMm.`hd//dMms-NmmMNNMMMMMMMMdhhmo                                                                   
---                         oMd. `d+/NNhMMMmMMMMMMMMMMMMMm/+++dosmmh-hMddMMMMMMMMMMMmhmMMh`                                                                 
---                        +h/hh+yd-/NmMmNMNMMMMMMMMMmdNds+.ymymMdo` `hhNMNNMMMMMMdMNNNNmMm`                                                                
---                       .dmhh+-`NddMhyMNmMmMmNMMMNNMN+yMh`dy`+o`.  :yNMmmhMMMMMMMmMMMMMMMh-                                                               
---                      -:+Mo-o- MMyoyNMNdmmMMMMMMMMMm/Md/ s/`      `-smNMNMMMMMMMNMMMMMMMMy.                                                              
---                      -+/hdsdmsoo./ohMMh/dMMMMMMMms-:y.` ``ys`    .:ohNddMMMMMMMMMMMMMMMMMd.                                                             
---                     `sMNNmd-.shy+hN++yNNMMMMMMMN/  `+     ..     :+-:NhNMMMMMMmNMMMMMMmMMMo                                                             
---                    -yo:/s+:-.hmshNhmNMMMMMMMMd/-  //o               sMmsMMMMMMMMNmMMMMNMMMN/-                                                           
---                    +dMh+h/-dohmhNNMMMMMMMNso----  `              .:+ymMyMMMMMMMM+`yMhyMMMMMMNds.                                                        
---                 ` ` .s+ysm+hhoMMMMNmNMMd--   ..   :-.      `.  .:+ys+++ydMMMMMMdm.:yM-dMMMMdNmMh-                                                       
---                :: -sh:oho/h/mMMMMMysdm+`        `/soo      -s     `/` `ohdNMMMMNm+ -M-:ddMMmhmhmo-                                                      
---               /y.`omooddNh+:yMMhoMsy.` `        .`                    `smdmMMdMMMy -Mm-:hMMmmMhyo-`                                                     
---              .hd-soyNMmhNhhNMMs-sy+`   /    `             `/      ./.  yymNMMMMMMm..yMm``yMMhNh:..-                                                     
---             `s./yMMNMm::NMMNmmdNy          .h-..   .+:     ```   /my:. +MMmMMMMMMdd`+MMd:`hm-oh.s.`.`                                                   
---            .ddyMNmyyNMMdNNMydMh+.          :MNmN:  `:.     :++`   -   ./NddMMMMMMMm- mdM+ .s: -:                                                        
---           `oNmMM+  oNsmNNhMMsMNs           hhsso`   .`     /NNy.    `sNM+hyNMMMMMMMm-/hmh.``:/s/`o``-                                                   
---         `+hMNmh+` .mN:sd++NMMNhs`:   -:`        -  -smo    .+.      `hdMMosMMMmhMMMMo`:mdM/  +/+   .                                                    
---        .symMddd  -mMNd/-/hNho` .//     - ` ./   :o :o::              .MddsoNMMmNhNMMd:--mm-  yys                                                        
---      :+mo/::` `oodNmNo.hMs       ` ```  .- .yhh`/s-+:       /-:s/.    MMMdNMMMmNmNMMm/o.+/.  :`.                                                        
---    +hmohh-`-+ymsddhyMhNM:  -//`:oNhohm    ``/s+             o/+d.    :MMNMmMdMMMMMMN+` h-.+-                                                            
---   +NNsMm++yoos-sm/moNsyhs  ``yNmooss-  `-hdo:`           `: `::.     yMMmddMMdMMMoNm-o   :-                                                             
---  /d:../      -mh+sNs. .// .:o::oy:  `.oy/yms-do -` `    `y:-s/` `/` :hhNMNNhmoMMMdymhh   .                                                              
--- -h:`          -hodMs :oo/so-/::.-.+--s/++d-o-.y:+Nhd/    ``/m. /`/`   hdyhmmMMmNy+hdo-                                                                  
--- .`              `sNh.oym/-.-:so/ -:.    .ds-yh+  /mNo   :h://-`-o/    ydodhyMdMN/-ho:                                                                   
---                   -. oN+.ss/o:   -s.--   ``ooyho. .-     .:/-.- -s ` +s/+dhymds+-                                                                       
---                     `oo/: `./.`+   -    .``-..`` :.    .oos++`:  +so/:+/+mhhMd :.                                                                       
---                      .- .   ./.-      ./- :ss-`  ` ..   ``:..os. /oo-hh+mmmmMN .                                                                        
---                                          `+.      :+: . . `-/`    ..`:` .+shNs                                                                          
---                                    .      ` .-   `/` .. .+ .` `. -:      /y--                                                                           
---                                    `- `     .  - .s.  .-:/  -     -`    -`                                                                              
---                                      `os`   :`   ```  `./     .   ``                                                                                    
---                                       `-`   :`         ``     `                                                                                         
---                                             `   --                                                                                                      
+--
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%/.             ,\&@@@@@@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/.                         ,(@@@@@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#                                  .%@@@@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                                        .#@@@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                                              ,@@@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%.                                                 .@@@@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#                                                      ,&@@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,                                                         #@@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                                                            .@@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#                                                              ,@@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                                                                .@
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,                                                                 # 
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                                                                  .
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#                              ,(&&%).                              
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                           .@@@@@@@@@@@.                           
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          )@@@@@@@@@@@@@(                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                                  N  E  O    E  N  G  I  N  E
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                          @@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                          
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&   
+--                                                                                          
 
 project Neo is
 
@@ -79,10 +57,10 @@ project Neo is
   -- Types --
   -----------
 
-  type Word_Size_Option is ("32",    "64");
-  type Boolean_Option   is ("No",    "Yes");
-  type System_Option    is ("Win32", "SDL");
-  type Game_Option      is ("Demo",  "DOOM");
+  type Word_Size_Option is ("32",     "64");
+  type Boolean_Option   is ("No",     "Yes");
+  type System_Option    is ("Win32",  "SDL");
+  type Game_Option      is ("Neotek", "DOOM");
 
   --------------
   -- Scenario --
@@ -100,8 +78,8 @@ project Neo is
   Path_Game := "Games/" & GAME;
   for Object_Dir  use "Temp";
   for Source_Dirs use ("Engine/", ".", "Engine/" & SYSTEM & "/", Path_Game & "/Base/**");
-  for Main        use ("main.adb");
   for Languages   use ("Ada", "Project File");
+  for Main        use ("main.adb");
   for Exec_Dir    use Path_Game;
 
   --------------
@@ -113,13 +91,13 @@ project Neo is
   Switch_Compiler := ("-gnateE",             -- Put extra info in exception messages
                       "-O3",                 -- Optimize as much as possible
                       "-gnatW8");            -- Enable wide-character unicode identifiers
-  Switch_Builder  := ("-j0",                 -- Use all available threads compilation
+  Switch_Builder  := ("-j0",                 -- Use all available threads for compilation
                       "-k",                  -- Keep building as far as possible
                       "-C",                  -- Use mapping file
                       "-q",                  -- Quiet down compile messages
                       "-s");                 -- Recompile if switches are changed
   case DEBUG is
-    when "No"  => null;
+    when "No"  => Switch_Compiler := Switch_Compiler & ("-gnatp");       -- Surpress all checks !!!
     when "Yes" => Switch_Compiler := Switch_Compiler & ("-fstack-check", -- Generate checks for exceeding the stack
                                                         "-gnato",        -- Enable overflow checking for numerics
                                                         "-gnatE",        -- Enable dynamic generic elaboration checks
@@ -130,8 +108,8 @@ project Neo is
     when "SDL" => null;
     when "Win32" =>
       case BIT_SIZE is
-        when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
         when "32" => null;
+        when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
       end case;
       Switch_Linker := Switch_Linker & ("-mwindows",                                        -- Remove the command console
                                         "-Wl,--enable-stdcall-fixup",                       -- Suppress dll lookup warnings
@@ -140,7 +118,7 @@ project Neo is
                                         External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
                                         External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
                                         External ("WinDir") & "\System32\XInput9_1_0.dll"); -- Graphics driver for the Vulkan API
-                                        -- A Vulkan driver is also necessary, but is loaded dynamically \System32\vulkan-1.dll
+                                        -- A Vulkan driver is also necessary, but is loaded dynamically Ex. "\System32\vulkan-1.dll"
   end case;
 
   --------------

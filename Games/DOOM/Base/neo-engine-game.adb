@@ -15,5 +15,5 @@
 
 separate (Neo.Engine) procedure Game is
   begin
-     loop null; end loop; -- Insert code here.
+     null; -- Insert code here.
   end;
