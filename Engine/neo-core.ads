@@ -14,4 +14,4 @@
 --                                                                                                                                      --
 
 -- Separator for the "Core" layer consisting of system and data format independant functionality
-package Neo.Core with Pure is end;
+package Neo.Core is end;

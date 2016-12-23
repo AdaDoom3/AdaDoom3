@@ -309,7 +309,7 @@ package body Neo.Core.Console is
     exception when others => return Locales; end;
 
   -- Initalized data
-  LOCALE : constant Hashed_Locale.Unsafe.Map := Initialize_Localization;
+  LOCALE : Hashed_Locale.Unsafe.Map; -- constant Hashed_Locale.Unsafe.Map := Initialize_Localization;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
@@ -334,9 +334,9 @@ package body Neo.Core.Console is
 
   -- Setup and shutdown
   procedure Initialize (Control : in out Control_State) is
-    package Parse_Config is new Parser (PATH_CONFIG, "--"); use Parse_Config;
+    -- package Parse_Config is new Parser (PATH_CONFIG, "--"); use Parse_Config;
     begin
-      while not At_EOF loop Submit (Next_Line); end loop;
+      null; -- while not At_EOF loop Submit (Next_Line); end loop;
     exception when others => null; end; -- There is no configuration file.. automatically use defaults
   procedure Finalize (Control : in out Control_State) is
     Data : File_Type;
@@ -363,7 +363,7 @@ package body Neo.Core.Console is
         end if;
       end loop;
       Close (Data);
-    end;
+    exception when others => Line ("Configuration save failed!"); end;
 
   -- Instance of the "controller" to trigger controlled actions
   Controller : Control_State;

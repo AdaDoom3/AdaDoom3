@@ -20,13 +20,14 @@ package body Neo.Engine is
   --------------
 
   -- System-dependant subprograms. Note: Some may have side effects like setting of cvars or calling a private subprogram !!!
-  package Import is
+  package System is
 
       -- Vulkan
-      procedure Initialize_Vulkan;
-      procedure Finalize_Vulkan;
-      procedure Create_Surface      (Instance : VkInstance; Surface : in out VkSurfaceKHR);
-      function Load_Vulkan_Function (Name : Str) return Ptr;
+      procedure Initialize_Vulkan_Library;
+      procedure Finalize_Vulkan_Library;
+      function Create_Surface        (Instance : Ptr) return Ptr;
+      function Get_Vulkan_Subprogram (Name : Str)     return Ptr;
+      function Get_Extensions                         return Str_8_C;
 
       -- Information
       procedure Copy           (Item : Str);
@@ -67,7 +68,7 @@ package body Neo.Engine is
       function Fullscreen_Only   return Bool;
       function Only_Instance     return Bool;
       function Update_Windowing  return Bool; -- Set Activated and Mode cvars
-    end;
+    end; use System;
 
   -- Rendering is reactive to global data types, the visible subprograms here are for the main window (e.g. backend)
   package Renderer is
@@ -80,9 +81,9 @@ package body Neo.Engine is
   -- Information --
   -----------------
 
-  function Get_Information return Information_State is (Import.Get_Information);
-  function Paste return Str is begin return Import.Paste; exception when others => Line ("Failed paste!"); return NULL_STR; end;
-  procedure Copy (Item : Str) is begin Import.Copy (Item); exception when others => Line ("Failed copy!"); end;
+  function Get_Information return Information_State renames System.Get_Information;
+  function Paste           return Str               renames System.Paste;
+  procedure Copy           (Item : Str)             renames System.Copy;
 
   ----------------
   -- Networking --
@@ -102,39 +103,33 @@ package body Neo.Engine is
   -- Error Handing --
   -------------------
 
-  procedure Trace is
-    Traces : Tracebacks_Array (1..1024);
-    Length : Int_32_Natural;
-    begin
-      Call_Chain (Traces, Length);
-      Line ("Call stack:");
-      for I in 1..Length loop Line (Traces (I)); end loop;
-    end;
-
   -- Display a message-box prompt, if this fails we have serious problems
-  function Ok (Name, Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames Import.Ok;
+  function Ok (Name, Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames System.Ok;
 
   -- Fetch imported system error codes
-  function Last_Error return Str is ("System error: " & To_Str (Trim (Import.Last_Error'Img, Both)));
+  function Last_Error return Str is ("System error: " & To_Str (Trim (System.Last_Error'Img, Both)));
 
   -- Subprograms used during alerts. They are non-vital so don't propagate errors
   Alert_Status : Safe_Status;
   function Alerting return Bool is (Alert_Status.Occupied);
   procedure Alert (Val : Bool := True) is
     begin
-      Alert_Status.Occupied (Val); Import.Alert (Val);
-    exception when others => Line ("Failed to alert!"); end;
+      Alert_Status.Occupied (Val);
+      Alert (Val);
+    end;
 
   -- Called by all tasks (including the main execution) during an error to report exception and trace information
   procedure Handle (Occurrence : Exception_Occurrence) is
+    Traces : Tracebacks_Array (1..1024);
+    Length : Int_32_Natural;
     begin
       Line;
       Line (To_Str (Exception_Name    (Occurrence)));
       Line (To_Str (Exception_Message (Occurrence)));
       Line (Last_Error);   
       Line;   
-      Trace;
-      Running.Set (False);
+      Call_Chain (Traces, Length);
+      Line (To_Str (Symbolic_Traceback (Traces)));
     end;
 
   -----------
@@ -191,7 +186,7 @@ pragma Warnings (On);
   ERROR_REPORTING_URL : Str := "www.google.com";
 
   -- Console task
-  package Console_Tasks is new Tasks (Import.Run_Console);
+  package Console_Tasks is new Tasks (Run_Console);
   Console_Task : Console_Tasks.Safe_Task;
 
   -- External access to console task
@@ -200,26 +195,26 @@ pragma Warnings (On);
   procedure Finalize_Console is begin Console_Task.Finalize; end;
 
   -- Console button actions
-  procedure Send_Log is begin Import.Open_Webpage (ERROR_REPORTING_URL); exception when others => Line ("Failed to send log!"); end;
+  procedure Send_Log is begin Open_Webpage (ERROR_REPORTING_URL); end;
   procedure Save_Log is
     use Ada.Streams.Stream_IO;
     Path        : Str_8 := To_Str_8 (To_Str (Get_Information.Username) & Date_Str & ".txt");
     File        : Ada.Streams.Stream_IO.File_Type;
     File_Stream : Ada.Streams.Stream_IO.Stream_Access;
     begin
-      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (To_Str (Get_Information.Path) & PATH_SEP & PATH_LOGS & PATH_SEP) & Path);
+      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (To_Str (Get_Information.Path) & "/" & PATH_LOGS & "/") & Path);
       File_Stream := Ada.Streams.Stream_IO.Stream (File);
       for Element of Log loop Char_16'Write (File_Stream, Element); end loop;
       Ada.Streams.Stream_IO.Close (File);
-      Import.Open_Text (To_Str (Get_Information.Path) & PATH_SEP & PATH_LOGS & PATH_SEP & To_Str (Path));
-    exception when others => Line ("Failed to save log!"); end;
+      Open_Text (To_Str (Get_Information.Path) & "/" & PATH_LOGS & "/" & To_Str (Path));
+    end;
 
   ---------------
   -- Windowing --
   ---------------
 
   -- Renames for fetching system and game window properties
-  function Get_Windows return Vector_Border.Unsafe_Array renames Import.Get_Windows;
+  function Get_Windows return Vector_Border.Unsafe_Array renames System.Get_Windows;
 
   -- Resize window respecting minimum narrow and wide aspect ratios
   MINIMUM_FACTOR : constant Int_64_Positive := 256;
@@ -227,7 +222,7 @@ pragma Warnings (On);
                        Bottom_Right_Resize, Bottom_Left_Resize, Bottom_Resize,    Other_Resize);
   function Resize (Kind : Resize_Kind; Border : Border_State) return Border_State is
     Result         : Border_State := Border;
-    Decoration     : Border_State := Import.Get_Decoration;
+    Decoration     : Border_State := Get_Decoration;
     Extra_Width    : Int_64 := Decoration.Right  + Decoration.Left;
     Extra_Height   : Int_64 := Decoration.Bottom + Decoration.Top;
     Current_Width  : Int_64 := (if Border.Right  - Border.Left - Extra_Width  < MINIMUM_FACTOR then MINIMUM_FACTOR else Border.Right - Border.Left - Extra_Width);
@@ -287,8 +282,8 @@ pragma Warnings (On);
   DURATION_BEFORE_POLLING : constant Duration := 0.005; -- Suitable input response range is 0.05 (poor) to 0.005 (excellent)
 
   -- Global mouse cursor operations
-  procedure Set_Cursor (Pos : Cursor_State) renames Import.Set_Cursor;
-  function Get_Cursor return Cursor_state renames Import.Get_Cursor;
+  procedure Set_Cursor (Pos : Cursor_State) renames System.Set_Cursor;
+  function Get_Cursor return Cursor_state renames System.Get_Cursor;
   function Get_Cursor_Normalized return Cursor_State is
     Main_Window : Border_State := Get_Windows (1);
     Cursor      : Cursor_State := Get_Cursor;
@@ -297,8 +292,8 @@ pragma Warnings (On);
     end;
 
   -- Main game window operations
-  function In_Main_Window (Cursor : Cursor_State := Import.Get_Cursor) return Bool is
-    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then Import.Get_Decoration else (others => 0));
+  function In_Main_Window (Cursor : Cursor_State := Get_Cursor) return Bool is
+    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then Get_Decoration else (others => 0));
     Main_Window : Border_State := Get_Windows (1);
     begin
       return Cursor.X >= Main_Window.Left + Decoration.Left and Cursor.X <= Main_Window.Right  - Decoration.Right and
@@ -333,10 +328,10 @@ pragma Warnings (On);
       procedure Initialize (Control : in out Control_State) is
         begin 
           if Impulses.Has (Name) then raise Duplicate; end if;
-            Impulses.Insert (Name, (Callback => Informal_Callback'Unrestricted_Access,
-                                    Bindings => Bindings'Unrestricted_Access,
-                                    Enabled  => True));
-          end;
+          Impulses.Insert (Name, (Callback => Informal_Callback'Unrestricted_Access,
+                                  Bindings => Bindings'Unrestricted_Access,
+                                  Enabled  => True));
+        end;
       Control : Control_State;
 
       -- Enable or disable triggering
@@ -389,6 +384,16 @@ pragma Warnings (On);
       end loop;
     end;
 
+  -- Vibrate a specific player's Xbox controllers
+  procedure Vibrate (Hz_High, Hz_Low : Real_32_Percent; Player : Int_32_Positive := 1) is
+    begin
+      for Device in Devices.Get.Iterate loop
+        if Ordered_Device.Unsafe.Element (Device).Player = Player then
+          Vibrate (Ordered_Device.Unsafe.Key (Device), Hz_High, Hz_Low);
+        end if;
+      end loop;
+    end;
+
   -- Main input loop
   procedure Run_Input is
 
@@ -434,8 +439,8 @@ pragma Warnings (On);
     Args           : Vector_Impulse_Arg.Unsafe.Vector;
     Last_Time      : Time := Clock;
     begin
-      Import.Initialize_Input;
-      while Import.Update_Input loop
+      System.Initialize_Input;
+      while System.Update_Input loop
 
         -- Clear all of the players
         Old_Players := Players.Get;
@@ -455,9 +460,11 @@ pragma Warnings (On);
               for Key in Key_Kind'Range loop
                 if Device.Keys (Key).Down then
                   if Device.Keys (Key).Last < Player.Keys (Key).Last or Player.Keys (Key).Last = Get_Start_Time then
+                    --Line ("Down! " & Key_Kind'Wide_Image (Key) & " " & Positive'Wide_Image (Device.Player));
                     Build_Key_Down (Key, Device, Player);
                   end if;
                 elsif Device.Keys (Key).Last < Player.Keys (Key).Last then
+                  --Line ("Up! " & Key_Kind'Wide_Image (Key) & " " & Positive'Wide_Image (Device.Player));
                   Build_Key_Down (Key, Device, Player);
                 end if;
               end loop;
@@ -544,17 +551,7 @@ goto Combo_Fail;
         -- Delay the main loop if you have some spare time
         delay DURATION_BEFORE_POLLING - (Clock - Last_Time); Last_Time := Clock;
       end loop;
-      Import.Finalize_Input;
-    end;
-
-  -- Vibrate a specific player's Xbox controllers
-  procedure Vibrate (Hz_High, Hz_Low : Real_32_Percent; Player : Int_32_Positive := 1) is
-    begin
-      for Device in Devices.Get.Iterate loop
-        if Ordered_Device.Unsafe.Element (Device).Player = Player then
-          Import.Vibrate (Ordered_Device.Unsafe.Key (Device), Hz_High, Hz_Low);
-        end if;
-      end loop;
+      System.Finalize_Input;
     end;
 
   -- Input task creation
@@ -607,17 +604,16 @@ goto Combo_Fail;
     end;
   procedure Callback_Bind (Args : Array_Str_16_Unbound) is
     begin
-      case Args'Length is
-        when 1 =>
-          Line ("Bind an impulse to an input value");
-          Line ("bind [player#] [impulse] [value]");
-      when others => null; end case;
+      null;
     end;
   function Save_Binds return Str is (NULL_STR);
 
   -- Command declarations
-  package Bind   is new Command ("bind",   Callback_Bind, Save_Binds'Access);
-  package Unbind is new Command ("unbind", Callback_Unbind);
+  package Bind is new Command ("bind",
+                               "Bind an impulse to an input value",
+                               "bind [player#] [impulse] [value]",
+                               Callback => Callback_Bind,
+                               Save => Save_Binds'Access);
 
   -----------
   -- CVars --
@@ -636,8 +632,8 @@ goto Combo_Fail;
   package Game_Tasks is new Tasks (Game);
   Game_Task : Game_Tasks.Safe_Task;
 
-  -- Give the Import and Renderer packages access to everything in Neo.Engine's body
-  package body Import is separate;
+  -- Give the System and Renderer packages access to everything in Neo.Engine's body
+  package body System is separate;
   package body Renderer is separate;
 
   ---------
@@ -650,19 +646,20 @@ goto Combo_Fail;
     procedure Set_Windowing_Mode is
       begin
         case Mode.Get is
-          when Multi_Monitor_Mode => Import.Initialize_Multi_Monitor; Import.Clip_Cursor (False); 
-          when Windowed_Mode      => Import.Make_Windowed;            Import.Clip_Cursor (False); 
-          when Fullscreen_Mode    => Import.Maximize;                 Import.Clip_Cursor;                        
+          when Multi_Monitor_Mode => Initialize_Multi_Monitor; Clip_Cursor (False); 
+          when Windowed_Mode      => Make_Windowed;            Clip_Cursor (False); 
+          when Fullscreen_Mode    => Maximize;                 Clip_Cursor;                        
         end case;
       end;
     begin
+      Use_Ada_Put;
 
       -- Make sure this is the only game instance running and launch console by default
-      if not Import.Only_Instance then return; end if;
+      if not Only_Instance then return; end if;
       Initialize_Console; -- Always show the separate console... for now
 
       -- Initialize
-      Import.Initialize_Windowing;
+      Initialize_Windowing;
       Set_Windowing_Mode;
       Renderer.Initialize;
       Input_Task.Initialize;
@@ -694,17 +691,17 @@ goto Combo_Fail;
         -- Setup
         Enter_Game.Enable;
         Input_Status.Occupied (True);
-        while Import.Update_Windowing and Game_Task.Running loop
+        while Update_Windowing and Game_Task.Running loop
 
           -- Set cursor
           if Current_Cursor /= Cursor.Get then
-            if Menu.Get then Import.Set_Cursor_Style (Cursor.Get); end if;
+            if Menu.Get then Set_Cursor_Style (Cursor.Get); end if;
             Current_Cursor := Cursor.Get;
           end if;
 
           -- Handle mode switching
           if Current_Mode /= Mode.Get then
-            if Current_Mode = Multi_Monitor_Mode then Import.Finalize_Multi_Monitor; end if;
+            if Current_Mode = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
             Set_Windowing_Mode;
             if Mode.Get /= Multi_Monitor_Mode then -- Decide to set or save cursor position
               if not In_Main_Window then Set_Cursor (Main_Window_Center); end if;
@@ -719,16 +716,16 @@ goto Combo_Fail;
             if Menu.Get then
               Cursor_Status.Occupied (False);
               Exit_To_Menu.Disable;
-              if Mode.Get /= Fullscreen_Mode then Import.Clip_Cursor (False); end if;
-              Import.Set_Cursor_Style (Cursor.Get);
+              if Mode.Get /= Fullscreen_Mode then Clip_Cursor (False); end if;
+              Set_Cursor_Style (Cursor.Get);
               Set_Cursor (Saved_Pos);
-              Import.Hide_Cursor (False);
+              Hide_Cursor (False);
               Enter_Game.Enable;
             else
               Saved_Pos := Get_Cursor;
               Enter_Game.Disable;
-              Import.Hide_Cursor;
-              Import.Clip_Cursor;
+              Hide_Cursor;
+              Clip_Cursor;
               Cursor_Status.Occupied (True);
               Exit_To_Menu.Enable;
             end if;
@@ -743,23 +740,23 @@ goto Combo_Fail;
                 case Mode.Get is
                   when Windowed_Mode =>
                     Input_Status.Occupied (True);
-                    if Menu.Get then Import.Set_Cursor_Style (Cursor.Get);
+                    if Menu.Get then Set_Cursor_Style (Cursor.Get);
                     else
                       Cursor_Status.Occupied (False);
                       Exit_To_Menu.Disable;
                       Enter_Game.Enable;
                     end if;
                   when Multi_Monitor_Mode | Fullscreen_Mode =>
-                    Import.Maximize;
-                    if Mode.Get = Multi_Monitor_Mode then Import.Initialize_Multi_Monitor; end if;
-                    if Menu.Get then Import.Set_Cursor_Style (Cursor.Get);
+                    Maximize;
+                    if Mode.Get = Multi_Monitor_Mode then Initialize_Multi_Monitor; end if;
+                    if Menu.Get then Set_Cursor_Style (Cursor.Get);
                     elsif Mode.Get = Multi_Monitor_Mode then
-                      Import.Hide_Cursor;
+                      Hide_Cursor;
                       Set_Cursor (Saved_Pos);
                       Cursor_Status.Occupied (True);
                     else
-                      Import.Hide_Cursor;
-                      Import.Clip_Cursor;
+                      Hide_Cursor;
+                      Clip_Cursor;
                       Set_Cursor (Saved_Pos);
                       Cursor_Status.Occupied (True);                      
                     end if;
@@ -769,11 +766,11 @@ goto Combo_Fail;
                   when Multi_Monitor_Mode | Fullscreen_Mode => null; -- Should not happen
                   when Windowed_Mode =>
                     Input_Status.Occupied (True);
-                    if Menu.Get then Import.Set_Cursor_Style (Cursor.Get);
+                    if Menu.Get then Set_Cursor_Style (Cursor.Get);
                     elsif In_Main_Window then
                       Saved_Pos := Get_Cursor;
-                      Import.Hide_Cursor;
-                      Import.Clip_Cursor;
+                      Hide_Cursor;
+                      Clip_Cursor;
                       Cursor_Status.Occupied (True);
                     else -- This is a title-bar click in game mode - tricky, tricky...
                       Cursor_Status.Occupied (False);
@@ -784,30 +781,30 @@ goto Combo_Fail;
               when Other_Deactivated | Minimize_Deactivated =>
                 if not Menu.Get and In_Main_Window then Set_Cursor (Saved_Pos); end if;
                 Input_Status.Occupied (False);
-                Import.Clip_Cursor (False);
-                Import.Set_Cursor_Style (System_Cursor);
-                Import.Hide_Cursor (False);
+                Clip_Cursor (False);
+                Set_Cursor_Style (System_Cursor);
+                Hide_Cursor (False);
                 if Activated.Get = Other_Deactivated then
                   case Mode.Get is
-                    when Multi_Monitor_Mode => Import.Finalize_Multi_Monitor; Import.Minimize;
-                    when Fullscreen_Mode    => Import.Minimize; 
+                    when Multi_Monitor_Mode => Finalize_Multi_Monitor; Minimize;
+                    when Fullscreen_Mode    => Minimize; 
                     when Windowed_Mode      => null;
                   end case;
-                elsif Mode.Get = Multi_Monitor_Mode then Import.Finalize_Multi_Monitor; end if;
+                elsif Mode.Get = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
             end case;
             Current_Activated := Activated.Get;
           end if;
 
           -- Render
-          Renderer.Present;
+          --Renderer.Present;
         end loop;
       end;
 
       -- Finalize
-      Game_Task.Finalize;
+      Finalize_Windowing;
       Input_Task.Finalize;
-      Renderer.Finalize;
-      Import.Finalize_Windowing;
+      --Renderer.Finalize;
+      Game_Task.Finalize;
 
     -- Handle exceptions
     exception when Occurrence: others => Handle (Occurrence);

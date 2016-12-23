@@ -44,8 +44,8 @@ package Neo is
   -- Paths --
   -----------
 
-  PATH_LOGS            : constant Wide_String := "./Logs/";
-  PATH_ASSETS          : constant Wide_String := "./Assets/";
+  PATH_LOGS            : constant Wide_String := "/Logs/";
+  PATH_ASSETS          : constant Wide_String := "/Assets/";
   PATH_LOCALE          : constant Wide_String := "locale.csv";
   PATH_CONFIG          : constant Wide_String := "config.txt";
   PATH_ICON            : constant Wide_String := PATH_ASSETS & "icon";
@@ -97,7 +97,7 @@ package Neo is
   subtype Int_64_Signed     is Long_Long_Integer;
   subtype Int_64_Signed_C   is Int_64_Signed;
   subtype Int_64_Natural    is Int_64_Unsigned;
-  subtype Int_64_Positive   is Int_64_Signed range 1..Int_64'last;
+  subtype Int_64_Positive   is Int_64_Signed range 1..Int_64_Signed'last;
   subtype Int_Size_C        is Interfaces.C.Size_T;
 
   -- Floating point reals
@@ -118,23 +118,26 @@ package Neo is
 
   -- Abbreviations for convience
   subtype Bool         is Boolean;
+  subtype Char         is Char_16;
   subtype Ptr          is Address;
   subtype Stream       is Ada.Streams.Stream_Element;
   subtype Byte         is Int_8_Unsigned;
-  subtype Int          is Int_32;
-  subtype Int_C        is Int_32_C;
+  subtype Int          is Int_32_Signed;
+  subtype Int_C        is Int_32_Signed_C;
   subtype Real         is Real_32;
+  subtype Real_Range   is Real_32_Range;
   subtype Real_Percent is Real_32_Percent;
   subtype Int_64       is Int_64_Signed;
   subtype Int_64_C     is Int_64_Signed_C;
-  subtype Int_32       is Int_32_Signed;
-  subtype Int_32_C     is Int_32_Signed_C;
   subtype Int_16       is Int_16_Signed;
   subtype Int_16_C     is Int_16_Signed_C;
   subtype Int_8        is Int_8_Signed;
   subtype Int_8_C      is Int_8_Signed_C;
   subtype Str          is Wide_String;
   subtype Str_Unbound  is Str_16_Unbound;
+
+  -- Stream types
+  subtype Array_Stream is Stream_Element_Array;
 
   -- Access types
   type Ptr_Str_16            is access all Str_16;
@@ -217,6 +220,7 @@ package Neo is
   function To_Str_16              (Item : Ptr_Const_Char_16_C) return Str_16;
   function To_Str_8               (Item : Str_8_C)             return Str_8               is (To_Ada                       (Item, True));
   function To_Str_8_C             (Item : Str_8)               return Str_8_C             is (To_C                         (Item, True));
+  function To_Str_8_C             (Item : Str_16)              return Str_8_C             is (To_Str_8_C                   (To_Str_8 (Item)));
   function To_Str_16              (Item : Char_16)             return Str_16              is                               ("" & Item);
   function To_Str_16              (Item : Str_8_C)             return Str_16              is (To_Str_16                    (To_Str_8 (Item)));
   function To_Str_16              (Item : Ptr_Const_Char_8_C)  return Str_16              is (To_Str_16                    (To_Str_8 (Item)));
@@ -238,9 +242,10 @@ package Neo is
   function To_Str                 (Item : Char_8)              return Str_16              renames To_Str_16;
   function To_Str                 (Item : Str_16_Unbound)      return Str_16              renames To_Str_16;
   function To_Ptr_Char_8_C        (Item : Str_8_C)             return Ptr_Char_8_C        is (To_Ptr_Char_8_C              (Item (Item'First)'Address));
+  function To_Ptr_Char_8_C        (Item : Str_16)              return Ptr_Char_8_C        is (To_Ptr_Char_8_C              (To_Str_8_C (Item)));
   function To_Ptr_Char_16_C       (Item : Str_16)              return Ptr_Char_16_C       is (To_Ptr_Char_16_C             (To_Str_16_C (Item)'Address));
   function To_Ptr_Const_Char_16_C (Item : Str_16_C)            return Ptr_Const_Char_16_C is (To_Ptr_Const_Char_16_C       (Item (Item'First)'Address));
-  function To_Ptr_Const_Char_16_C (Item : Str_16)              return Ptr_Const_Char_16_C is (To_Ptr_Const_Char_16_C       (To_C (Item)));
+  function To_Ptr_Const_Char_16_C (Item : Str_16)              return Ptr_Const_Char_16_C is (To_Ptr_Const_Char_16_C       (To_Str_16_C (Item)));
   function To_Ptr_Const_Char_8_C2 (Item : Str_8_C)             return Ptr_Const_Char_8_C  is (To_Ptr_Const_Char_8_C        (Item (Item'First)'Address));
   function To_Ptr_Const_Char_8_C  (Item : Str_8)               return Ptr_Const_Char_8_C  is (To_Ptr_Const_Char_8_C2       (To_C (Item)));
   function To_Char_8              (Item : Char_16)             return Char_8;
@@ -356,8 +361,8 @@ package Neo is
   COLOR_SKY_BLUE     : constant Color_State := (16#87#, 16#CE#, 16#EB#);
   COLOR_CHARCOAL     : constant Color_State := (16#46#, 16#46#, 16#46#);
   COLOR_HOT_PINK     : constant Color_State := (16#FC#, 16#0F#, 16#C0#);
-  COLOR_GOLDENROD    : constant Color_State := (16#DA#, 16#A5#, 16#20#);
   COLOR_NAVY_BLUE    : constant Color_State := (16#00#, 16#00#, 16#80#);
+  COLOR_GOLDEN_ROD   : constant Color_State := (16#DA#, 16#A5#, 16#20#);
   COLOR_LIGHT_BLUE   : constant Color_State := (16#AD#, 16#D8#, 16#E6#);
   COLOR_ROYAL_BLUE   : constant Color_State := (16#08#, 16#4C#, 16#9E#);
   COLOR_AQUAMARINE   : constant Color_State := (16#7F#, 16#FF#, 16#D4#);

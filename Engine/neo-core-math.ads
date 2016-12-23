@@ -15,6 +15,7 @@
 
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics; use Ada.Numerics;
+with Neo.Core.Vectors;
 
 package Neo.Core.Math is
 
@@ -34,6 +35,7 @@ package Neo.Core.Math is
   type Point_2D is record X, Y       : Real; end record;
   type Point_3D is record X, Y, Z    : Real; end record; -- Listing 2.8
   type Point_4D is record X, Y, Z, W : Real; end record;
+  package Vector_Point_2D is new Vectors (Point_2D);
   package Vector_Point_3D is new Vectors (Point_3D);
 
   -- 3D Operations
@@ -264,6 +266,7 @@ package Neo.Core.Math is
 
   -- Definition
   type Plane_4D is new Vector_4D; -- Listing 3.4
+  package Vector_Plane is new Vectors (Plane_4D);
 
   -- Operations 
   function Reflect (F : Plane_4D)                   return Transform_4D;                                           -- Listing 3.5

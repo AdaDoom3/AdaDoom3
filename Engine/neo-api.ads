@@ -14,4 +14,4 @@
 --                                                                                                                                      --
 
 -- Separator for the API layer consisting of thin bindings to foreign or dynamic C libraries
-package Neo.API with Pure is end;
+package Neo.API is end;

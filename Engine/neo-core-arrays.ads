@@ -14,7 +14,7 @@
 --                                                                                                                                      --
                  
 with Ada.Containers.Generic_Array_Sort;
-with Neo.Vectors;
+with Neo.Core.Vectors;
 
 package Neo.Core.Arrays is
 
@@ -26,6 +26,7 @@ package Neo.Core.Arrays is
   package Vector_Bool                 is new Vectors (Bool);
   package Vector_Duration             is new Vectors (Duration);
   package Vector_Ptr                  is new Vectors (Ptr);
+  package Vector_Str_8_Unbound        is new Vectors (Str_8_Unbound);
   package Vector_Str_16_Unbound       is new Vectors (Unbounded_Wide_String);
   package Vector_Str_Unbound          renames Vector_Str_16_Unbound;
   package Vector_Ptr_Str_16           is new Vectors (Ptr_Str_16);
@@ -74,13 +75,13 @@ package Neo.Core.Arrays is
   package Vector_Real_32_Positive     is new Vectors (Real_32_Positive);
   package Vector_Real_32_Percent      is new Vectors (Real_32_Percent);
   package Vector_Real_32_Degree       is new Vectors (Real_32_Degree);
-  subtype Array_Stream                is Stream_Element_Array;
   subtype Array_Bool                  is Vector_Bool.Unsafe_Array;
   subtype Array_Duration              is Vector_Duration.Unsafe_Array;
   subtype Array_Ptr                   is Vector_Ptr.Unsafe_Array;
   subtype Array_Ptr_Str_16            is Vector_Ptr_Str_16.Unsafe_Array;
   subtype Array_Str_16_Unbound        is Vector_Str_16_Unbound.Unsafe_Array;
   subtype Array_Str_Unbound           is Array_Str_16_Unbound;
+  subtype Array_Str_8_Unbound         is Vector_Str_8_Unbound.Unsafe_Array;
   subtype Array_Char_8_C              is Vector_Char_8_C.Unsafe_Array;
   subtype Array_Char_8                is Vector_Char_8.Unsafe_Array;
   subtype Array_Char_16_C             is Vector_Char_16_C.Unsafe_Array;

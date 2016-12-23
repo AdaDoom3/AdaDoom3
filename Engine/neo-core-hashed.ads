@@ -15,7 +15,7 @@
 
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
-with Neo.Arrays; use Neo.Arrays;
+with Neo.Core.Arrays; use Neo.Core.Arrays;
 
 generic
   type Map_T is private;

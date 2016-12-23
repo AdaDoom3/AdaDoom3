@@ -13,8 +13,10 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Ada.Containers;  use Ada.Containers;
 with Neo.Core.Math;   use Neo.Core.Math;
 with Neo.Core.Arrays; use Neo.Core.Arrays;
+with Neo.Core.Console; use Neo.Core.Console;
 with Neo.Core.Trees;
 with Neo.Core.Hashed;
 with Neo.Core.Vectors;
@@ -96,14 +98,14 @@ package Neo.Data.Model is
           Normal : Point_3D;
       end case;
     end record;
-  package Vector_Vertex is new Vectors (Vertex_State); -- Indicies start at 0 !!!
+  package Vector_Vertex is new Vectors (Vertex_State); 
 
   type Triangle_Array is array (1..3) of Natural;
   package Vector_Triangle is new Vectors (Triangle_Array);
 
   type Mesh_State is record
       Material : Str_Unbound;
-      Vertices : Vector_Vertex.Unsafe.Vector; 
+      Vertices : Vector_Vertex.Unsafe.Vector; -- Starts at 0 !!!
       Indicies : Vector_Triangle.Unsafe.Vector;
       Bounding : Bounding_State;
     end record;
@@ -121,10 +123,11 @@ package Neo.Data.Model is
   -----------
 
   type Partition_Kind is (Normal_Partition, Area_Partition, Opaque_Partition);
+
   type Partition_Node_State (Kind : Partition_Kind := Normal_Partition) is record
       Is_Positive : Bool;
       case Kind is
-        when Area_Partition   => Area_Id : INteger;
+        when Area_Partition   => Area_Id : Int;
         when Normal_Partition => Plane   : Plane_4D;
         when Opaque_Partition => null;
       end case;
@@ -137,9 +140,10 @@ package Neo.Data.Model is
       Origin   : Point_3D := (0.0, 0.0, 0.0);
       Plane    : Plane_4D;
     end record;
-  package Vector_Brush_Side is new Vectors (Brush_Side_State);
-  package Vector_Brush      is new Vectors (Vector_Brush_Side.Unsafe.Vector);
+  package Vector_Brush_Side  is new Vectors (Brush_Side_State);
+  package Vector_Brush       is new Vectors (Vector_Brush_Side.Unsafe.Vector);
   package Hashed_Str_Unbound is new Hashed (Str_Unbound);
+
   type Entity_State is record
       Origin     : Point_3D;
       Key_Values : Hashed_Str_Unbound.Unsafe.Map;
@@ -148,7 +152,6 @@ package Neo.Data.Model is
     end record;
   package Vector_Entity is new Vectors (Entity_State);
 
-  package Vector_Plane is new Vectors (Plane_4D);
   type Clip_State is record
       Bounding      : Bounding_State;
       Sides         : Vector_Plane.Unsafe.Vector;
@@ -200,19 +203,54 @@ package Neo.Data.Model is
     end record;
   package Vector_Collision is new Vectors (Collision_State);
 
-  type AI_State is record
-      Bounding        : Bounding_State;
-      Gravity         : Vector_3D;
-      Max_Step_Height : Real;
-      Min_Floor_Cos   : Real;
-    end record;
+  -- type Area_Kind is (Ladder_Area, Floor_Area, Liquid_Area);
+  --
+  -- type Area_Side_State is record
+  --     Kind  : Area_Kind;
+  --     Plane : Plane_3D;
+  --   end record;
+  -- package Vector_Area is new Vectors (Area_Side_State);
+  --
+  -- type Area_State is record
+  --     Bounding          : Bounding_State;
+  --     Sides             : Vector_Area.Unsafe_Vector;
+  --     Center            : Point_3D;
+  --     Is_Ledge          : Bool;
+  --     Is_Liquid         : Bool;
+  --     Is_Walk_Reachable : Bool;
+  --     Is_Fly_Reachable  : Bool;
+  --     Contains_Water    : Bool;
+  --     Contains_Portal   : Bool;
+  --     Contains_Obstacle : Bool;
+  --     Can_Walk          : Bool;
+  --     Can_Crouch        : Bool;
+  --     Can_Ledge_Walk    : Bool;
+  --     Can_Barrier_Jump  : Bool;
+  --     Can_Jump          : Bool;
+  --     Can_Fly           : Bool;
+  --     Can_Go_By_Special : Bool;
+  --     Can_Go_By_Water   : Bool;
+  --     Can_Go_By_Air     : Bool;
+  --   end record;
+  -- package Vector_Area is new Vectors (Area_State);
+  --
+  -- type Area_Cluster_State is record
+  --   end record;
+  --
+  -- type AI_State is record
+  --     Bounding        : Bounding_State;
+  --     Gravity         : Vector_3D;
+  --     Max_Step_Height : Real;
+  --     Min_Floor_Cos   : Real;
+  --     Clusters        : Vector_Cluster.Unsafe.Vector;
+  --   end record;
 
   type Level_State is record
       Geometry_CRC : Int_64_Unsigned;
       Collisions   : Vector_Collision.Unsafe.Vector;
       Entities     : Vector_Entity.Unsafe.Vector;
       Partitions   : Treed_Partition_Node.Unsafe.Tree;
-      AI           : AI_State;
+  --    AI           : AI_State;
     end record;
   package Hashed_Level_State is new Hashed (Level_State);
 
@@ -329,4 +367,5 @@ package Neo.Data.Model is
   function Load (Path : Str) return Animation_State;
   function Load (Path : Str) return Skeletal_Mesh_State;
   function Load (Path : Str) return Hashed_Material.Unsafe.Map;
+  function Load (Path : Str) return Vector_Mesh.Unsafe.Vector;
 end;

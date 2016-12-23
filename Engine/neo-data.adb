@@ -43,43 +43,46 @@ package body Neo.Data is
 
   package body Handler is
 
-      -- Exceptions for bad formats or incorrect extensions
-      Unsupported, Duplicate_Format : Exception;
+    -- Exceptions for bad formats or incorrect extensions
+    Unsupported, Duplicate_Format : Exception;
 
-      -- Internal format for relating extensions to callbacks
-      type Format_State is record
-          Load       : not null access function (Path : Str) return T;
-          Extensions : Str_Unbound;
-        end record;
-      package Ordered_Format is new Ordered (Format_T, Format_State);
-      Formats : Ordered_Format.Safe_Map;
+    -- Internal format for relating extensions to callbacks
+    type Format_State is record
+        Load       : not null access function (Path : Str) return T;
+        Extensions : Str_Unbound;
+      end record;
+    package Ordered_Format is new Ordered (Format_T, Format_State);
+    Formats : Ordered_Format.Safe_Map;
 
-      -- Dispatch to a stored callback based on the extension of the path
-      function Load (Path : Str) return T is 
-        Ext_Val : Str := Path (Index (Path, ".")..Path'Last);
-        begin
-          for Format of Formats.Get loop
-            for Extension of Split (To_Str (Format.Extensions), ",") loop
-              if Extension = Ext_Val then return Formats.Get (Format_T'Wide_Value (To_Str (Extension))).Load (Path); end if;
-            end loop;
+    -- Dispatch to a stored callback based on the extension of the path
+    function Load (Path : Str) return T is 
+      Ext_Val : Str := Path (Index (Path, ".", Backward) + 1..Path'Last);
+      begin
+        Put_Line (Ext_Val);
+        for Format of Formats.Get loop
+          for Extension of Split (To_Str (Format.Extensions), ",") loop
+            Put_Line (S (Extension));
+            if Extension = Ext_Val then return Format.Load (Path); end if;
           end loop;
-          raise Unsupported;
-        end;
+        end loop;
+        raise Unsupported;
+      end;
 
-      -- Package for registering format callbacks
-      package body Format is
-          function Informal_Load (Path : Str) return T renames Format.Load;
-          type Controller_State is new Controlled with null record;
-          procedure Finalize   (Item : in out Controller_State);
-          procedure Initialize (Item : in out Controller_State);
-          procedure Finalize   (Item : in out Controller_State) is begin Formats.Delete (Kind); end;
-          procedure Initialize (Item : in out Controller_State) is
-            begin
-              if Formats.Has (Kind) then raise Duplicate_Format; end if;
-              Formats.Insert (Kind, (Informal_Load'Access, To_Str_Unbound (To_Lower (Extensions))));
-            end;
-        end;
-    end;
+    -- Package for registering format callbacks
+    package body Format is
+        function Informal_Load (Path : Str) return T renames Format.Load;
+        type Controller_State is new Controlled with null record;
+        procedure Finalize   (Item : in out Controller_State);
+        procedure Initialize (Item : in out Controller_State);
+        procedure Finalize   (Item : in out Controller_State) is begin Formats.Delete (Kind); end;
+        procedure Initialize (Item : in out Controller_State) is
+          begin
+            if Formats.Has (Kind) then raise Duplicate_Format; end if;
+            Formats.Insert (Kind, (Informal_Load'Access, To_Str_Unbound (To_Lower (Extensions))));
+          end;
+        Controller : Controller_State;
+      end;
+  end;
 
   ------------
   -- Parser --
@@ -111,17 +114,17 @@ package body Neo.Data is
           end if;
 
           -- Multi-line comment removal
-          if Trimmed_Comment_Start /= NULL_STR then
-            if In_Multiline_Comment and then
-              Index (This.Last_Element, Trimmed_Comment_End) + Trimmed_Comment_End'Length /= This.Last_Index
-            then
-              In_Multiline_Comment := False;
-              This.Replace_Element (This.Last_Index, Head (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
-            elsif Index (This.Last_Element, Trimmed_Comment_Start) /= 0 then
-              In_Multiline_Comment := True;
-              This.Replace_Element (This.Last_Index, Tail (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
-            else This.Replace_Element (This.Last_Index, NULL_STR_UNBOUND); end if;
-          end if;
+          -- if Trimmed_Comment_Start /= NULL_STR then
+          --   if In_Multiline_Comment and then
+          --     Index (This.Last_Element, Trimmed_Comment_End) + Trimmed_Comment_End'Length /= This.Last_Index
+          --   then
+          --     In_Multiline_Comment := False;
+          --     This.Replace_Element (This.Last_Index, Head (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
+          --   elsif Index (This.Last_Element, Trimmed_Comment_Start) /= 0 then
+          --     In_Multiline_Comment := True;
+          --     This.Replace_Element (This.Last_Index, Tail (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
+          --   else This.Replace_Element (This.Last_Index, NULL_STR_UNBOUND); end if;
+          -- end if;
 
           -- Tab replacement
           if Tab_Replacement /= NULL_CHAR_16 then
@@ -136,153 +139,168 @@ package body Neo.Data is
         return Vector_Str_16_Unbound.To_Unsafe_Array (This);
       end;
 
-      -- Internal variables
-      This    : Array_Str_Unbound := Load;
-      Row     : Positive          := 1;
-      Column  : Natural           := 0;
-      Invalid : Exception;
+    -- Internal variables
+    This    : Array_Str_Unbound := Load;
+    Row     : Positive          := 1;
+    Column  : Positive           := 1;
+    Invalid : Exception;
 
-      -- Internal procedure for skipping whitespace
-      procedure Seek is
-        begin
-          Column := Column + 1;
-          while not At_EOF loop
-            loop
-              if Column > Length (This (Row)) or else This (Row) = NULL_STR_UNBOUND then
-                Column := 1;
-                Row    := Row + 1;
-                exit;
-              end if;
-              if Index (Slice (This (Row), Column, Length (This (Row))), "" & Separator) /= Column then return; end if;
-              Column := Column + 1;
-            end loop;
-          end loop;
-        end;
-
-      -- Position
-      function At_EOF return Bool is ((if Row > This'Last then True else False));
-      function At_EOL return Bool is
-        Previous_Column : Positive    := Column;
-        Previous_Row    : Positive    := Row;
-        Result          : Str_Unbound := Next;
-        begin
-          Column          := Previous_Column;
-          Previous_Column := Row;
-          Row             := Previous_Row;
-          return Previous_Column /= Row;
-        end;
-
-      -- Skip
-      procedure Skip_Set (Starting, Ending : Str) is Junk : Str_Unbound := Next_Set (Starting, Ending); begin null; end;
-      procedure Skip_Set (Ending : Str) is begin Skip_Set ("" & Element (This (Row), Column), Ending); end;
-      procedure Skip_Line is begin Row := Row + 1; Column := 1; end;
-      procedure Skip (Amount : Positive := 1) is
-        Junk : Str_Unbound;
-        begin for I in 1..Amount loop Junk := Next; end loop; end;
-
-      -- Skip until
-      procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False);
-      procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False);
-      procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False);
-      procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False);
-      procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False);
-
-      -- Assert
-      procedure Assert (T1, T2             : Str) is begin Assert (T1);             Assert (T2); end;
-      procedure Assert (T1, T2, T3         : Str) is begin Assert (T1, T2);         Assert (T3); end;
-      procedure Assert (T1, T2, T3, T4     : Str) is begin Assert (T1, T2, T3);     Assert (T4); end;
-      procedure Assert (T1, T2, T3, T4, T5 : Str) is begin Assert (T1, T2, T3, T4); Assert (T5); end;
-      procedure Assert (Text : Str) is
-        begin
-          if Index (Slice (This (Row), Column, Length (This (Row))), Text) /= Column then raise Invalid; end if;
-          Column := Column + Text'length - 1;
-          Seek;
-        end;
-
-      -- Check ahead without advancing
-      function Peek_U return Str_Unbound is
-        Previous_Column : Positive    := Column;
-        Previous_Row    : Positive    := Row;
-        Result          : Str_Unbound := Next;
-        begin
-          Row    := Previous_Row;
-          Column := Previous_Column;
-          return Result;
-        end;
-
-      -- Next number
-      function Next_Internal return Real_64 is
-        Found_Decimal : Bool := False;
-        Found_Digit   : Bool := False;
-        Found_Sign    : Bool := False;
-        Result        : Str_Unbound;
-        begin
-          while Column <= Length (This (Row)) loop
-            if not Is_Digit (Element (This (Row), Column)) then
-              case Element (This (Row), Column) is
-                when '-' | '+' => exit when Found_Digit or Found_Sign;
-                                  Found_Sign := True;                    
-                when '.' =>       exit when Found_Decimal;
-                                  Found_Digit   := True;
-                                  Found_Decimal := True;
-                when others =>    exit;
-              end case;
-            elsif not Found_Digit then Found_Digit := True; end if;
-            Result := Result & Element (This (Row), Column);
-            Column := Column + 1;
-          end loop;
-          if Result = NULL_STR_UNBOUND then raise Invalid; end if;
-          Seek;
-          return Real_64'Wide_Value (To_Str (Result));
-        end;
-      function Next return Real_64         renames Next_Internal;
-      function Next return Real            is (Real            (Next_Internal));
-      function Next return Byte            is (Byte            (Next_Internal));
-      function Next return Int             is (Int             (Next_Internal));
-      function Next return Int_32_Unsigned is (Int_32_Unsigned (Next_Internal));
-      function Next return Int_64          is (Int_64          (Next_Internal));
-      function Next return Int_64_Unsigned is (Int_64_Unsigned (Next_Internal));
-
-      -- Next string
-      function Next_Line return Str_Unbound is
-        Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
-        begin
-          Parser.Skip_Line;
-          return Result;
-        end;
-      function Next return Str_Unbound is
-        Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
-        I      : Natural := Index (Result, "" & Separator);
-        begin
-          if I /= 0 then Delete (Result, I, Length (Result)); end if;
-          Column := Column + Length (Result);
-          Seek;
-          return Result;
-        end;
-
-      -- Next delimited group or set
-      function Next_Set (Ending : Str) return Str_Unbound is (Next_Set ("" & Element (This (Row), Column), Ending));
-      function Next_Set (Starting, Ending : Str) return Str_Unbound is
-        Result : Str_Unbound;
-        Buffer : Str_Unbound;
-        I      : Natural;
-        begin
-          Assert (Starting);
-          while not At_EOF loop
-            Buffer := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
-            I      := Index (Buffer, Ending);
-            if I = 0 then
+    -- Internal procedure for skipping whitespace
+    procedure Seek is
+      begin
+        Column := Column + 1;
+        while not At_EOF loop
+          loop
+            if Column > Length (This (Row)) or else This (Row) = NULL_STR_UNBOUND then
               Column := 1;
               Row    := Row + 1;
-              Result := Result & Buffer & EOL;
-            else
-              Buffer := Delete (Buffer, I, Length (Buffer));
-              Column := Column + Length (Buffer) + Ending'length;
-              Seek;
-              return Result & Buffer;
+              exit;
             end if;
+            if Index (Slice (This (Row), Column, Length (This (Row))), "" & Separator) /= Column then return; end if;
+            Column := Column + 1;
           end loop;
-          raise Invalid;
-        end;
-    end;
+        end loop;
+      end;
+
+    -- Position
+    function At_EOF return Bool is ((if Row > This'Last then True else False));
+    function At_EOL return Bool is
+      Previous_Column : Positive    := Column;
+      Previous_Row    : Positive    := Row;
+      Result          : Str_Unbound := Next;
+      begin
+        Column          := Previous_Column;
+        Previous_Column := Row;
+        Row             := Previous_Row;
+        return Previous_Column /= Row;
+      end;
+
+    -- Skip
+    procedure Skip_Set (Starting, Ending : Str) is Junk : Str_Unbound := Next_Set (Starting, Ending); begin null; end;
+    procedure Skip_Set (Ending : Str) is begin Skip_Set ("" & Element (This (Row), Column), Ending); end;
+    procedure Skip_Line is begin Row := Row + 1; Column := 1; end;
+    procedure Skip (Amount : Positive := 1) is
+      Junk : Str_Unbound;
+      begin
+        for I in 1..Amount loop Junk := Next; end loop;
+      end;
+
+    -- Skip until.. this could stand a cleaning
+    procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (1 => U (Text)),                          Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2)),                         Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3)),                 Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4)),         Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4), U (T5)), Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (T : Array_Str_Unbound; Fail_On_EOF : Bool := False) is
+      Start_Column : Positive := Column;
+      Start_Row    : Positive := Row;
+      begin
+        while not At_EOF loop
+          for I of T loop
+            if S (I) = Peek then return; end if;
+          end loop;
+        end loop;
+        if Fail_On_EOF then raise Invalid; end if;
+        Column := Start_Column;
+        Row    := Start_Row;
+      end;
+
+    -- Assert
+    procedure Assert (T1, T2             : Str) is begin Assert (T1);             Assert (T2); end;
+    procedure Assert (T1, T2, T3         : Str) is begin Assert (T1, T2);         Assert (T3); end;
+    procedure Assert (T1, T2, T3, T4     : Str) is begin Assert (T1, T2, T3);     Assert (T4); end;
+    procedure Assert (T1, T2, T3, T4, T5 : Str) is begin Assert (T1, T2, T3, T4); Assert (T5); end;
+    procedure Assert (Text : Str) is
+      begin
+        if Index (Slice (This (Row), Column, Length (This (Row))), Text) /= Column then raise Invalid; end if;
+        Column := Column + Text'length - 1;
+        Seek;
+      end;
+
+    -- Check ahead without advancing
+    function Peek_U return Str_Unbound is
+      Previous_Column : Positive    := Column;
+      Previous_Row    : Positive    := Row;
+      Result          : Str_Unbound := Next;
+      begin
+        Row    := Previous_Row;
+        Column := Previous_Column;
+        return Result;
+      end;
+
+    -- Next number
+    function Next_Internal return Real_64 is
+      Found_Decimal : Bool := False;
+      Found_Digit   : Bool := False;
+      Found_Sign    : Bool := False;
+      Result        : Str_Unbound;
+      begin
+        while Column <= Length (This (Row)) loop
+          if not Is_Digit (Element (This (Row), Column)) then
+            case Element (This (Row), Column) is
+              when '-' | '+' => exit when Found_Digit or Found_Sign;
+                                Found_Sign := True;                    
+              when '.' =>       exit when Found_Decimal;
+                                Found_Digit   := True;
+                                Found_Decimal := True;
+              when others =>    exit;
+            end case;
+          elsif not Found_Digit then Found_Digit := True; end if;
+          Result := Result & Element (This (Row), Column);
+          Column := Column + 1;
+        end loop;
+        if Result = NULL_STR_UNBOUND then raise Invalid; end if;
+        Seek;
+        return Real_64'Wide_Value (To_Str (Result));
+      end;
+    function Next return Real_64         renames Next_Internal;
+    function Next return Real            is (Real            (Next_Internal));
+    function Next return Byte            is (Byte            (Next_Internal));
+    function Next return Int             is (Int             (Next_Internal));
+    function Next return Int_32_Unsigned is (Int_32_Unsigned (Next_Internal));
+    function Next return Int_64          is (Int_64          (Next_Internal));
+    function Next return Int_64_Unsigned is (Int_64_Unsigned (Next_Internal));
+
+    -- Next string
+    function Next_Line return Str_Unbound is
+      Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+      begin
+        Parser.Skip_Line;
+        return Result;
+      end;
+    function Next return Str_Unbound is
+      Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+      I      : Natural := Index (Result, "" & Separator);
+      begin
+        if I /= 0 then Delete (Result, I, Length (Result)); end if;
+        Column := Column + Length (Result);
+        Seek;
+        return Result;
+      end;
+
+    -- Next delimited group or set
+    function Next_Set (Ending : Str) return Str_Unbound is (Next_Set ("" & Element (This (Row), Column), Ending));
+    function Next_Set (Starting, Ending : Str) return Str_Unbound is
+      Result : Str_Unbound;
+      Buffer : Str_Unbound;
+      I      : Natural;
+      begin
+        Assert (Starting);
+        while not At_EOF loop
+          Buffer := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+          I      := Index (Buffer, Ending);
+          if I = 0 then
+            Column := 1;
+            Row    := Row + 1;
+            Result := Result & Buffer & EOL;
+          else
+            Buffer := Delete (Buffer, I, Length (Buffer));
+            Column := Column + Length (Buffer) + Ending'length;
+            Seek;
+            return Result & Buffer;
+          end if;
+        end loop;
+        raise Invalid;
+      end;
+  end;
 end;

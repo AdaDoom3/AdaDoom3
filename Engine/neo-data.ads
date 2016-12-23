@@ -14,8 +14,9 @@
 --                                                                                                                                      --
 
 with Ada.Finalization; use Ada.Finalization;
+with Ada.Wide_Text_IO; use Ada.Wide_Text_IO;
 with Neo.Core.Arrays;  use Neo.Core.Arrays;
-with Neo.Core.Vectors; 
+with Neo.Core.Vectors; use Neo.Core;
 with Neo.Core.Ordered;
 
 -- Separator for the "Data" layer consisting of packages for loading and understanding common file formats
@@ -140,9 +141,12 @@ package Neo.Data is
 
       -- Procedures for ignoring data or skiping useless information
       procedure Skip_Line;
-      procedure Skip_Set             (Ending : Str);
-      procedure Skip_Set   (Starting, Ending : Str);
-      procedure Skip       (Amount : Positive := 1);
+      procedure Skip_Set           (Ending : Str);
+      procedure Skip_Set (Starting, Ending : Str);
+      procedure Skip     (Amount : Positive := 1);
+
+      -- Skip_Until is a mix between peek and skip, it will skip strings until the target gets peeked
+      procedure Skip_Until (T    : Array_Str_Unbound; Fail_On_EOF : Bool := False); -- Wish this could have Text instead of T...
       procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False);

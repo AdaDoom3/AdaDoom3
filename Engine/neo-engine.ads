@@ -13,8 +13,10 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
+with Ada.Unchecked_Deallocation;   
 with Ada.Streams.Stream_IO;
 with Ada.Finalization;             use Ada.Finalization;
+with Ada.Containers;               use Ada.Containers;
 with Ada.Exceptions;               use Ada.Exceptions;
 with Ada.Calendar;                 use Ada.Calendar;
 with Ada.Strings;                  use Ada.Strings;
@@ -26,13 +28,15 @@ with Interfaces;                   use Interfaces;
 with Interfaces.C;                 use Interfaces.C;
 with GNAT.Traceback;               use GNAT.Traceback;
 with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
-with Neo.Compress;                 use Neo.Compress;
-with Neo.Opus;                     use Neo.Opus;
-with Neo.Vulkan;                   use Neo.Vulkan;
-with Neo.OpenAL;                   use Neo.OpenAL;
-with Neo.Vectors;
-with Neo.Ordered;
-with Neo.Hashed;
+--with Neo.API.Opus;                 use Neo.API.Opus;
+with Neo.API.Vulkan;               use Neo.API.Vulkan;
+--with Neo.API.OpenAL;               use Neo.API.OpenAL;
+--with Neo.Core.Compress;            use Neo.Core.Compress;
+with Neo.Core.Arrays;              use Neo.Core.Arrays;
+with Neo.Core.Console;             use Neo.Core.Console;
+with Neo.Core.Vectors;             use Neo.Core;
+with Neo.Core.Ordered;
+with Neo.Core.Hashed;
 
 package Neo.Engine is
 
@@ -61,6 +65,9 @@ package Neo.Engine is
   -- Error_Handling --
   --------------------
 
+  type Icon_Kind is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
+  type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
+
   -- Message box function to query user action
   function Ok (Name, Message : Str;
                Buttons       : Buttons_Kind := Okay_Button;
@@ -79,29 +86,21 @@ package Neo.Engine is
   -------------
   -- Tasking --
   -------------
-  
+
+  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
   generic
-    type Task_Unsafe is limited private;
+    with procedure Run;
   package Tasks is
+      task type Task_Unsafe is entry Initialize (Id : out Task_ID); end;
       type Task_Unsafe_Ptr is access all Task_Unsafe;
       protected type Safe_Task is
           procedure Initialize;
           procedure Finalize;
-          function Get_ID  return Task_Id;
           function Running return Bool;
         private
           Current_Task : Task_Unsafe_Ptr := null;
           Current_Id   : Task_Id         := NULL_TASK_ID;
         end;
-    end;
-
-  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
-  generic
-    with procedure Run;
-  package Simple_Tasks is
-      task type Task_Unsafe is entry Initialize (Id : out Task_ID); end;
-      type Task_Unsafe_Ptr is access all Task_Unsafe;
-      type Safe_Task renames Tasks.Safe_Task;
     end;
 
   ---------------
@@ -130,11 +129,11 @@ package Neo.Engine is
       Left   : Int_64;
       Right  : Int_64;
     end record;
-  type Border_Array is array (Positive range <>) of Border_State;
-  function Get_Windows return Border_Array;
+  package Vector_Border is new Vectors (Border_State);
+  function Get_Windows return Vector_Border.Unsafe_Array;
 
   ----------------
-  -- Networking --
+  -- Connection --
   ----------------
 
   -- Unimplemented...
@@ -349,20 +348,23 @@ package Neo.Engine is
       procedure Disable;
     end;
 
-  ---------------
-  -- Rendering --
-  ---------------
+  --------------
+  -- Entities --
+  --------------
 
-  type Light_Kind    is (Fog_Light, Blend_Light, Normal_Light);
-  type Mesh_Instance_State (Animated : Bool := True) is record -- will have vulkan stuff
-      Location   :
-      Rotation   :  
-      Animations :
-      Mesh       : Str_Unbound;
-      Skeleton   :
-    end record;
-  Meshes    : Hashed_Mesh.Safe.Map;
-  Images    : Hashed_Image.Safe.Map;
-  Shaders   : Hashed_Stream.Safe.Map;
-  Materials : Hashed_Materials.Safe.Map;
+  type Surface_State is record
+      
+
+  -- type Light_Kind    is (Fog_Light, Blend_Light, Normal_Light);
+  -- type Mesh_Instance_State (Animated : Bool := True) is record -- will have vulkan stuff
+  --     Location   :
+  --     Rotation   :  
+  --     Animations :
+  --     Mesh       : Str_Unbound;
+  --     Skeleton   :
+  --   end record;
+  -- Meshes    : Hashed_Mesh.Safe.Map;
+  -- Images    : Hashed_Image.Safe.Map;
+  -- Shaders   : Hashed_Stream.Safe.Map;
+  -- Materials : Hashed_Materials.Safe.Map;
 end;

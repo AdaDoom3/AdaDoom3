@@ -171,4 +171,66 @@ package Neo.API.ZStandard is
                                   input  : access ZSTD_inBuffer_s) -- 
                                   return size_t -- 
                                   with Import => True, Convention => C, External_Name => "ZSTD_decompressStream";
+
+   --  Compression using a predefined Dictionary (see dictBuilder/zdict.h).
+   --  Note : This function load the dictionary, resulting in a significant startup time.
+   function ZSTD_compress_usingDict
+     (ctx  : ZSTD_CCtx_ptr;
+      dst  : ICS.chars_ptr; dstCapacity : IC.size_t;
+      src  : ICS.chars_ptr; srcSize     : IC.size_t;
+      dict : ICS.chars_ptr; dictSize    : IC.size_t;
+      compressionLevel : IC.int) return IC.size_t;
+   pragma Import (C, ZSTD_compress_usingDict, "ZSTD_compress_usingDict");
+
+   --  Decompression using a predefined Dictionary (see dictBuilder/zdict.h).
+   --  Dictionary must be identical to the one used during compression.
+   --  Note : This function load the dictionary, resulting in a significant startup time
+   function ZSTD_decompress_usingDict
+     (dctx : ZSTD_DCtx_ptr;
+      dst  : ICS.chars_ptr; dstCapacity : IC.size_t;
+      src  : ICS.chars_ptr; srcSize     : IC.size_t;
+      dict : ICS.chars_ptr; dictSize    : IC.size_t) return IC.size_t;
+   pragma Import (C, ZSTD_decompress_usingDict, "ZSTD_decompress_usingDict");
+
+   ---------------------------
+   --  Fast Dictionary API  --
+   ---------------------------
+
+   --  Create a digested dictionary, ready to start compression operation without startup delay.
+   --  `dict` can be released after creation
+   function ZSTD_createCDict
+     (dict : ICS.chars_ptr; dictSize : IC.size_t;
+      compressionLevel : IC.int) return ZSTD_CDict_ptr;
+   pragma Import (C, ZSTD_createCDict, "ZSTD_createCDict");
+
+   function ZSTD_freeCDict (CDict : ZSTD_CDict_ptr) return IC.size_t;
+   pragma Import (C, ZSTD_freeCDict, "ZSTD_freeCDict");
+
+   --  Compression using a pre-digested Dictionary.
+   --  Faster startup than ZSTD_compress_usingDict(), recommended when same dictionary is
+   --  used multiple times.  Note that compression level is decided during dictionary creation.
+   function ZSTD_compress_usingCDict
+     (ctx   : ZSTD_CCtx_ptr;
+      dst   : ICS.chars_ptr; dstCapacity : IC.size_t;
+      src   : ICS.chars_ptr; srcSize     : IC.size_t;
+      CDict : ZSTD_CDict_ptr) return IC.size_t;
+   pragma Import (C, ZSTD_compress_usingCDict, "ZSTD_compress_usingCDict");
+
+   --  Create a digested dictionary, ready to start decompression operation without startup delay.
+   --  `dict` can be released after creation
+   function ZSTD_createDDict (dict : ICS.chars_ptr; dictSize : IC.size_t) return ZSTD_DDict_ptr;
+   pragma Import (C, ZSTD_createDDict, "ZSTD_createDDict");
+
+   function ZSTD_freeDDict (ddict : ZSTD_DDict_ptr) return IC.size_t;
+   pragma Import (C, ZSTD_freeDDict, "ZSTD_freeDDict");
+
+   --  Decompression using a digested Dictionary
+   --  Faster startup than ZSTD_decompress_usingDict(), recommended when same dictionary is
+   --  used multiple times.
+   function ZSTD_decompress_usingDDict
+     (dctx  : ZSTD_DCtx_ptr;
+      dst   : ICS.chars_ptr; dstCapacity : IC.size_t;
+      src   : ICS.chars_ptr; srcSize     : IC.size_t;
+      ddict : ZSTD_DDict_ptr) return IC.size_t;
+   pragma Import (C, ZSTD_decompress_usingDDict, "ZSTD_decompress_usingDDict");
 end;

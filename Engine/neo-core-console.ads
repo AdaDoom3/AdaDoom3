@@ -16,9 +16,9 @@
 with Ada.Locales;      use Ada.Locales;
 with Ada.Wide_Text_IO; use Ada.Wide_Text_IO; 
 with Ada.Finalization; use Ada.Finalization;
-with Neo.Arrays;       use Neo.Arrays;
-with Neo.Parsing;      use Neo.Parsing;
-with Neo.Hashed;  
+with Neo.Core.Arrays;  use Neo.Core.Arrays;
+with Neo.Core.Hashed;  use Neo.Core;
+with Neo.Data;         use Neo.Data; -- Necessary ??? It violates the layer organization
 
 package Neo.Core.Console is
 
@@ -41,7 +41,7 @@ package Neo.Core.Console is
   procedure Line_Size   (Val  : Positive);
   procedure Input_Entry (Val  : Str);
   procedure Set_Put     (Val  : Ptr_Procedure_Put);
-  procedure Use_Ada_Put ;
+  procedure Use_Ada_Put;
 
   -- Commandline submission
   procedure Submit      (Text : Str);
@@ -65,7 +65,11 @@ package Neo.Core.Console is
   --
 
   generic
-    Name : Str;
+    Name    : Str;
+    Info    : Str;
+    Usage   : Str;
+    Arg_Min : Natural := 0;
+    Arg_Max : Natural := Arg_Min;
     with procedure Callback (Args : Array_Str_Unbound);
     Save : access function return Str := null;
   package Command is end; 

@@ -1,0 +1,18 @@
+-- Neo 0.1a config: 12-22-2016-10h21m15s
+-- Note: To restore default values simply delete this file.
+
+-- CVars
+widey 
+menu 
+activated 
+mode 
+taskcount 
+narrowx 
+cursor 
+narrowy 
+winheight 
+winwidth 
+widex 
+
+-- bind
+

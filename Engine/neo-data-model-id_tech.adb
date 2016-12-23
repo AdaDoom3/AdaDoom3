@@ -32,8 +32,8 @@ separate (Neo.Data.Model) package body Id_Tech is
     Skeleton : Treed_Joint.Unsafe.Tree;
     begin
       for Joint of Joints loop
-        if Joint.Parent = 0 then Skeleton.Append_Child (Skeleton.Root, Joint.External);
-        else Skeleton.Append_Child (Skeleton.Find (Joints.Element (Joint.Parent).External), Joint.External); end if;
+        if Joint.Parent = -1 then Skeleton.Append_Child (Skeleton.Root, Joint.External);
+        else Skeleton.Append_Child (Skeleton.Find (Joints.Element (Joint.Parent + 1).External), Joint.External); end if;
       end loop;
       return Skeleton;
     end;
@@ -194,7 +194,7 @@ separate (Neo.Data.Model) package body Id_Tech is
       end record;
     package Vector_Internal_Weight is new Vectors (Internal_Weight_State);
     type Internal_Vertex_State is record 
-        External     : Vertex_State (True, False);
+        External     : Vertex_State (Has_Weights => True);
         Index        : Natural;
         Weight_Start : Natural;
         Weight_Count : Natural;
@@ -242,7 +242,7 @@ separate (Neo.Data.Model) package body Id_Tech is
 
         -- Load verticies
         Assert ("numverts"); Skip;
-        while Peek = "vert" loop Skip; Assert ("(");
+        while Peek = "vert" loop Skip (2); Assert ("(");
           Vertex.External.Texture := (Next, Next); Assert (")");
           Vertex.Weight_Count     := Next;
           Vertex.Weight_Start     := Next;
@@ -251,11 +251,11 @@ separate (Neo.Data.Model) package body Id_Tech is
 
         -- Load triangles
         Assert ("numtris"); Skip;
-        while Peek = "tri" loop Skip; Surface.Triangles.Append ((Next, Next, Next)); end loop; 
+        while Peek = "tri" loop Skip (2); Surface.Triangles.Append ((Next, Next, Next)); end loop; 
 
         -- Load weights
         Assert ("numweights"); Skip;
-        while Peek = "weight" loop Skip;
+        while Peek = "weight" loop Skip (2);
           Weight.Joint_Index     := Next;
           Weight.External.Amount := Next; Assert ("(");
           Weight.External.Point  := (Next, Next, Next); Assert (")");
@@ -307,7 +307,7 @@ separate (Neo.Data.Model) package body Id_Tech is
     package Mesh_Parser is new Parser (Path); use Mesh_Parser;
 
     -- MD5Version 10
-    -- commandline "-rename origin blah"
+    -- commandline "-rename origin ..."
     --
     -- numFrames 6
     -- numJoints 24
@@ -339,9 +339,9 @@ separate (Neo.Data.Model) package body Id_Tech is
 
     -- Internal structure
     type Internal_Joint_Base_State is record
-        Data  : Internal_Joint_State;
-        Flags : Byte;
-        Start : Positive;
+        Data  : Internal_Joint_State := (others => <>);
+        Flags : Byte := 0;
+        Start : Natural := 0;
       end record;
     package Vector_Internal_Joint_Base is new Vectors (Internal_Joint_Base_State);
 
@@ -417,8 +417,8 @@ separate (Neo.Data.Model) package body Id_Tech is
     Actual_Path : Str := Path (Path'First..Index (Path, "."));
     begin
 
-      -- Load the AI data: 
-      declare package Parse_AI is new Parser (Actual_Path & ".aas48"); use Parse_AI;
+      -- Load the area awareness system data: https://modwiki.xnet.fi/The_Doom_3_AAS_system
+      -- declare package Parse_AI is new Parser (Actual_Path & ".aas48"); use Parse_AI;
 
       -- DewmAAS "1.07"
       --
@@ -470,8 +470,6 @@ separate (Neo.Data.Model) package body Id_Tech is
       --   0 ( -1 )
       --   1 ( 2 )
       --   2 ( -3 )
-      --   3 ( -4 )
-      --   4 ( -5 )
       -- }
       --
       -- faces 3529 {
@@ -502,8 +500,10 @@ separate (Neo.Data.Model) package body Id_Tech is
       --   0 ( 0 0 0 )
       --   1 ( 0 2 464 )
       --   2 ( 2 0 3 )
-      --   3 ( 92 4 37 )
-      --   4 ( 6 5 0 )
+      -- }
+      --
+      -- portals ?? {
+      --   0 ( 0 0 0 0 0 )
       -- }
       --
       -- portalIndex 88 {
@@ -517,43 +517,50 @@ separate (Neo.Data.Model) package body Id_Tech is
       --   1 ( 2 2 0 1 )
       --   2 ( 3 3 1 2 )
       -- }
-
-      begin
-
-        -- Load header
-        Assert ("DewmAAS"); Skip_Set ("""", """");
-
-        -- Load settings, we only care about a couple of these
-        Assert ("settings", "{");
-        while Peek /= "}" loop
-          Token := Next;
-          if Token = "bboxes" then Assert ("{", "(");
-            AI.Bounding.A := (Next, Next, Next); Assert (")", "-", "(");
-            AI.Bounding.B := (Next, Next, Next); Assert (")", "}");
-          elsif Token = "gravity" then Assert ("=", "(");
-            AI.Gravity := (Next, Next, Next); Assert (")");
-          elsif Token = "maxStepHeight" then Assert ("=");
-            AI.Max_Step_Height := Next;
-          elsif Token = "minFloorCos" then Assert ("=");
-            AI.Min_Floor_Cos := Next;
-          end if;
-        end loop;
-
-        -- Handle planes and verticies
-
-        -- Handle edges
-
-        -- Handle faces
-
-        -- Handle areas
-
-        -- Handle partitions
-
-        -- Handle portals
-
-        -- Clusters
-
-      end;
+      -- 
+      -- begin
+      -- 
+      --   -- Load header
+      --   Assert ("DewmAAS"); Skip_Set ("""", """");
+      -- 
+      --   -- Load settings
+      --   Assert ("settings", "{");
+      --   while Peek /= "}" loop
+      --     Token := Next;
+      --     if Token = "bboxes" then Assert ("{", "(");
+      --       AI.Bounding.A := (Next, Next, Next); Assert (")", "-", "(");
+      --       AI.Bounding.B := (Next, Next, Next); Assert (")", "}");
+      --     elsif Token = "gravity" then Assert ("=", "(");
+      --       AI.Gravity := (Next, Next, Next); Assert (")");
+      --     elsif Token = "maxStepHeight" then Assert ("=");
+      --       AI.Max_Step_Height := Next;
+      --     elsif Token = "minFloorCos" then Assert ("=");
+      --       AI.Min_Floor_Cos := Next;
+      --     end if;
+      --   end loop;
+      -- 
+      --   -- Load planes
+      --   Assert ("planes"); Skip; Assert ("{");
+      --   while Peek /= "}" loop Skip; Assert ("(");
+      --     Planes.Append (Next, Next, Next, Next); Assert (")");
+      --   end loop; 
+      -- 
+      --   -- Load verticies
+      --   Assert ("vertices"); Skip; Assert ("{");
+      --   while Peek /= "}" loop Skip; Assert ("(");
+      --     Verticies.Append (Next, Next, Next); Assert (")");
+      --   end loop;
+      -- 
+      --   -- Handle edges
+      --   Assert ("edges"); Skip; Assert ("{");
+      --   while Peek /= "}" loop Skip; Assert ("(");
+      -- 
+      --   -- Handle faces
+      --   -- Handle areas
+      --   -- Handle partitions
+      --   -- Handle portals
+      --   -- Clusters
+      -- exception when Invalid_File => Line ("Continuting without AAS file for " & Path); end;
 
       -- Load entities: https://modwiki.xnet.fi/MAP_%28file_format%29
       declare package Parse_Entities is new Parser (Actual_Path & ".map"); use Parse_Entities;
@@ -662,7 +669,7 @@ separate (Neo.Data.Model) package body Id_Tech is
                 -- Parse vertices
                 while Peek /= ")" loop Assert ("(");
                   while Peek /= ")" loop Assert ("(");
-                    Patch.Vertices.Append ((False, False, (Next, Next), (Next, Next, Next) - Entity.Origin)); Assert (")"); 
+                    Patch.Vertices.Append ((False, (Next, Next), (Next, Next, Next) - Entity.Origin, others => <>)); Assert (")"); 
                   end loop; Assert (")");
                 end loop; Skip;
 

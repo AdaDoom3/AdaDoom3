@@ -112,7 +112,7 @@ package body Neo is
       return To_Str (Buffer);
     end;
   function To_Str_16 (Item : Ptr_Const_Char_16_C) return Str is
-    Length : Int_32 := 0;
+    Length : Int := 0;
     Buffer : Str_Unbound;
     Temp   : Ptr_Const_Char_16_C := Item;
     begin
@@ -124,7 +124,7 @@ package body Neo is
       return To_Str (Buffer);
     end;          
   function To_Str_8 (Item : Ptr_Const_Char_8_C) return Str_8 is 
-    Length : Int_32 := 0;
+    Length : Int := 0;
     Buffer : Str_8_Unbound;
     Temp   : Ptr_Const_Char_8_C := Item;
     begin

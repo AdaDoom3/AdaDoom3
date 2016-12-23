@@ -20,7 +20,7 @@ separate (Neo.Data.Model) package body Wavefront is
   -- Mesh --
   ----------
 
-  function Load (Path : Str) return Skeletal_Mesh_State is
+  function Load (Path : Str) return Vector_Mesh.Unsafe.Vector is
 
     -- Load an obj mesh: https://web.archive.org/web/20160810123453/https://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
     package Mesh_Parser is new Parser (Path, Comment => "#"); use Mesh_Parser;
@@ -91,34 +91,34 @@ separate (Neo.Data.Model) package body Wavefront is
     -- f 1205/532/1050 1212/533/1050 1213/534/1051 1202/535/1052 1205/532/1052 
     -- # 32 polygons
 
-    Meshes   : Vector_Mesh_State.Unsafe.Vector;
+    Meshes   : Vector_Mesh.Unsafe.Vector;
     Indicies : Vector_Int_32_Natural.Unsafe.Vector;
     Normals  : Vector_Point_3D.Unsafe.Vector;
     Texture  : Vector_Point_2D.Unsafe.Vector;
-    Vertex   : Vertex_State (Has_Weights => True);
-    Index    : Int_32_Natural;
+    Vertex   : Vertex_State (Has_Weights => False);
+    Index    : Int;
     Mesh     : Mesh_State;
     begin
 
       -- Handle groups
       while not At_EOF loop
 
-        -- Load verticies
+        -- Load Vertices
         while Peek = "v" loop Skip; 
-          Mesh.Verticies.Append ((Next, Next, Next))
+          Mesh.Vertices.Append ((Point => (Next, Next, Next), others => <>));
         end loop;
-        Assert (Mesh.Verticies.Length > 0);
+        Assert (Mesh.Vertices.Length > 0);
 
         -- Load vertex normals
         while Peek = "vn" loop Skip;
           Normals.Append ((Next, Next, Next));
-        end loop
+        end loop;
         Assert (Normals.Length > 0);
 
         -- Load vertex texture coordinates
         while Peek = "vt" loop Skip;
           Texture.Append ((Next, Next)); Skip; -- Skip the weight
-        end loop
+        end loop;
         Assert (Texture.Length > 0);
         
         -- Load material
@@ -133,17 +133,17 @@ separate (Neo.Data.Model) package body Wavefront is
           -- Load polygon face
           while not At_EOL loop
             Index  := Next; Assert ("/"); 
-            Vertex := Mesh.Verticies.Element (Index);
+            Vertex := Mesh.Vertices.Element (Index);
             if Vertex.Texture = (0.0, 0.0) then Index := -1; end if;
             Vertex.Normal  := Normals.Element (Next); Assert ("/");
             Vertex.Texture := Texture.Element (Next);
 
-            -- Duplicate verticies when different normals or texture points are encountered for the same vertex
+            -- Duplicate Vertices when different normals or texture points are encountered for the same vertex
             if Index = -1 then
-              Mesh.Verticies.Append (Vertex);
-              Indicies.Append (Mesh.Verticies.Last_Index - 1);
+              Mesh.Vertices.Append (Vertex);
+              Indicies.Append (Mesh.Vertices.Last_Index - 1);
             else
-              Mesh.Verticies.Replace (Index, Vertex);
+              Mesh.Vertices.Replace_Element (Index, Vertex);
               Indicies.Append (Index - 1);
             end if;
           end loop;
@@ -159,7 +159,7 @@ separate (Neo.Data.Model) package body Wavefront is
         Meshes.Append (Mesh);
         Normals.Clear;
         Texture.Clear;
-        Mesh.Verticies.Clear;
+        Mesh.Vertices.Clear;
         Mesh.Indicies.Clear;
       end loop;
       return Meshes;

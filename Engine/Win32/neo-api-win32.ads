@@ -16,7 +16,7 @@
 with Ada.Unchecked_Conversion;
 
 -- Custom binding to the infamous Win32 API: http://web.archive.org/web/20150115092801/http://msdn.microsoft.com/en-us/library/windows/apps/dn424765.aspx
-package Neo.Win32 is
+package Neo.API.Win32 is
 
   -----------
   -- Types --
@@ -54,6 +54,15 @@ package Neo.Win32 is
   -- Flags --
   -----------
 
+  -- https://blogs.msdn.microsoft.com/openspecification/2010/04/01/about-the-access_mask-structure/
+  GENERIC_READ  : constant Int_32_Unsigned_C := 16#8000_0000#; -- 0x00000000
+  GENERIC_WRITE : constant Int_32_Unsigned_C := 16#4000_0000#; -- 0x00000000
+
+  -- https://web.archive.org/web/20161024170359/https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
+  FILE_SHARE_READ  : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x00000000
+  FILE_SHARE_WRITE : constant Int_32_Unsigned_C := 16#0000_0002#; -- 0x00000000
+  OPEN_EXISTING    : constant Int_32_Unsigned_C := 3;             -- 0
+
   -- https://web.archive.org/web/20160525074306/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943(v=vs.85).aspx
   PM_REMOVE : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
 
@@ -85,10 +94,10 @@ package Neo.Win32 is
   WMSZ_TOP         : constant Int_Ptr := 16#0000_0003#; -- 0
 
   -- http://web.archive.org/web/20160808214158/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385(v=vs.85).aspx
-  SM_CYVTHUMB    : constant Int_C := 9;  -- 0 
-  SM_CYSIZE      : constant Int_C := 31; -- 0
-  SM_CXFRAME     : constant Int_C := 32; -- 0
-  SM_CYSIZEFRAME : constant Int_C := 33; -- 0
+  SM_CYVTHUMB : constant Int_C := 9;  -- 0 
+  SM_CYSIZE   : constant Int_C := 31; -- 0
+  SM_CXFRAME  : constant Int_C := 32; -- 0
+  SM_CYFRAME  : constant Int_C := 33; -- 0
  
   -- https://web.archive.org/web/20140714222448/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645578(v=vs.85).aspx
   RI_MOUSE_LEFT_BUTTON_DOWN   : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
@@ -108,6 +117,11 @@ package Neo.Win32 is
   RIM_TYPEKEYBOARD : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0
   RIM_TYPEMOUSE    : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0
     
+  -- https://web.archive.org/web/20160821131741/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645597%28v=vs.85%29.aspx
+  RIDI_DEVICENAME    : constant Int_32_Unsigned_C := 16#2000_0007#; -- 0x00000000
+  RIDI_DEVICEINFO    : constant Int_32_Unsigned_C := 16#2000_000b#; -- 0x00000000
+  RIDI_PREPARSEDDATA : constant Int_32_Unsigned_C := 16#2000_0005#; -- 0x00000000
+
   -- https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
   SW_SHOWNORMAL    : constant Int_C := 1; -- 0
   SW_HIDE          : constant Int_C := 0; -- 0
@@ -224,7 +238,6 @@ package Neo.Win32 is
   DATA_VERTICAL_RESOLUTION                   : constant Int_C   := 10; -- SM_CXHTHUMB
   DATA_HORIZONTAL_RESOLUTION                 : constant Int_C   := 8; -- SM_CYDLGFRAME
 
-
   MEMORY_MOVEABLE                            : constant Int_32_Unsigned_C := 16#0000_0002#;
   MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Int_32_Unsigned_C := 16#0000_16000#;
   CLIPBOARD_UNICODE_TEXT                     : constant Int_32_Unsigned_C := 16#0000_000D#;
@@ -298,7 +311,7 @@ package Neo.Win32 is
     
   -- https://web.archive.org/web/20120511143301/http://msdn.microsoft.com/en-us/library/windows/desktop/ms679348(v=vs.85).aspx
   type FLASHWINFO is record
-      cbSize    : Int_32_Unsigned_C; -- UINT  
+      cbSize    : Int_32_Unsigned_C := FLASHWINFO'Size / Byte'Size; -- UINT  
       hwnd      : Ptr;               -- HWND  
       dwFlags   : Int_32_Unsigned_C; -- DWORD 
       uCount    : Int_32_Unsigned_C; -- UINT  
@@ -360,7 +373,7 @@ package Neo.Win32 is
     
   -- https://web.archive.org/web/20150114082405/http://msdn.microsoft.com/en-us/library/windows/desktop/dd145065(v=vs.85).aspx
   type MONITORINFO is record
-      cbSize    : Int_32_Unsigned_C; -- DWORD 
+      cbSize    : Int_32_Unsigned_C := MONITORINFO'Size / Byte'Size; -- DWORD 
       rcMonitor : RECT;              -- RECT  
       rcWork    : RECT;              -- RECT  
       dwFlags   : Int_32_Unsigned_C; -- DWORD 
@@ -384,7 +397,7 @@ package Neo.Win32 is
     
   -- https://web.archive.org/web/20160527143421/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
   type WNDCLASSEX is record
-      cbSize        : Int_32_Unsigned_C;   -- UINT      
+      cbSize        : Int_32_Unsigned_C := WNDCLASSEX'Size / Byte'Size;   -- UINT      
       style         : Int_32_Unsigned_C;   -- UINT      
       lpfnWndProc   : Ptr;                 -- WNDPROC   
       cbClsExtra    : Int_C;               -- int       
@@ -393,8 +406,8 @@ package Neo.Win32 is
       hIcon         : Ptr;                 -- HICON     
       hCursor       : Ptr;                 -- HCURSOR   
       hbrBackground : Int_Ptr;             -- HBRUSH    
-      lpszMenuName  : Ptr_Const_Char_16_C; -- LPCTSTR   
-      lpszClassName : Ptr_Const_Char_16_C; -- LPCTSTR   
+      lpszMenuName  : Ptr;--Ptr_Const_Char_16_C; -- LPCTSTR   
+      lpszClassName : Ptr;--Ptr_Const_Char_16_C; -- LPCTSTR   
       hIconSm       : Ptr;                 -- HICON     
     end record with Convention => C;
     
@@ -473,7 +486,7 @@ package Neo.Win32 is
   
   -- https://web.archive.org/web/20121031105705/http://msdn.microsoft.com/en-us/library/windows/desktop/bb787537(v=vs.85).aspx
   type SCROLLINFO is record
-      cbSize    : Int_32_Unsigned_C; -- UINT 
+      cbSize    : Int_32_Unsigned_C := SCROLLINFO'Size / Byte'Size; -- UINT 
       fMask     : Int_32_Unsigned_C; -- UINT ??? := 16#001F#
       nMin      : Int_C;             -- int  
       nMax      : Int_C;             -- int  
@@ -511,7 +524,7 @@ package Neo.Win32 is
   
   -- https://web.archive.org/web/20160808212528/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729175(v=vs.85).aspx
   type NONCLIENTMETRICS is record
-      cbSize             :         Int_32_Unsigned_C; -- UINT
+      cbSize             :         Int_32_Unsigned_C := NONCLIENTMETRICS'Size / Byte'Size; -- UINT
       iBorderWidth       :         Int_C;             -- int     
       iScrollWidth       :         Int_C;             -- int     
       iScrollHeight      :         Int_C;             -- int     
@@ -568,6 +581,50 @@ package Neo.Win32 is
   -----------------
   -- Subprograms --
   -----------------
+
+  -- https://web.archive.org/web/20161024170359/https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
+  function CreateFileW (lpFileName            : Ptr;               -- LPCTSTR
+                        dwDesiredAccess       : Int_32_Unsigned_C; -- DWORD
+                        dwShareMode           : Int_32_Unsigned_C; -- DWORD
+                        lpSecurityAttributes  : Ptr;               -- LPSECURITY_ATTRIBUTES
+                        dwCreationDisposition : Int_32_Unsigned_C; -- DWORD
+                        dwFlagsAndAttributes  : Int_32_Unsigned_C; -- DWORD
+                        hTemplateFile         : Ptr)               -- HANDLE
+                        return Ptr                                 -- HANDLE
+                        with Import => True, Convention => StdCall, External_Name => "CreateFileW";
+
+  -- https://web.archive.org/web/20140310215229/http://msdn.microsoft.com/en-us/library/windows/hardware/ff539681(v=vs.85).aspx
+  function HidD_GetProductString (HidDeviceObject : Ptr;               -- HANDLE 
+                                  Buffer          : Ptr;               -- PVOID  
+                                  BufferLength    : Int_32_Unsigned_C) -- ULONG  
+                                  return Int_C                         -- BOOLEAN
+                                  with Import => True, Convention => StdCall, External_Name => "HidD_GetProductString";
+
+  -- https://web.archive.org/web/20140529093020/http://msdn.microsoft.com/en-us/library/windows/hardware/ff538959(v=vs.85).aspx
+  function HidD_GetManufacturerString (HidDeviceObject : Ptr;               -- HANDLE 
+                                       Buffer          : Ptr;               -- PVOID  
+                                       BufferLength    : Int_32_Unsigned_C) -- ULONG  
+                                       return Int_C                         -- BOOLEAN
+                                       with Import => True, Convention => StdCall, External_Name => "HidD_GetManufacturerString";
+
+  -- https://web.archive.org/web/20160821131741/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645597%28v=vs.85%29.aspx
+  function GetRawInputDeviceInfoW (hDevice   : Ptr;               -- HANDLE
+                                   uiCommand : Int_32_Unsigned_C; -- UINT
+                                   pData     : Ptr;               -- LPVOID
+                                   pcbSize   : Ptr)               -- PUINT 
+                                   return Int_32_Unsigned_C       -- UINT 
+                                   with Import => True, Convention => StdCall, External_Name => "GetRawInputDeviceInfoW";
+
+  -- https://web.archive.org/web/20161114174855/https://msdn.microsoft.com/en-us/library/windows/desktop/ms683212(v=vs.85).aspx
+  function GetProcAddress (hModule    : Ptr;     -- HMODULE
+                           lpProcName : Str_8_C) -- LPCSTR
+                           return Ptr            -- FARPROC 
+                           with Import => True, Convention => StdCall, External_Name => "GetProcAddress";
+
+  -- https://web.archive.org/web/20160216085152/https://msdn.microsoft.com/en-us/library/windows/desktop/ms683152(v=vs.85).aspx
+  function FreeLibrary (hModule : Ptr) -- HMODULE
+                        return Int_C   -- BOOL
+                        with Import => True, Convention => StdCall, External_Name => "FreeLibrary";
 
   -- https://web.archive.org/web/20160608204937/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644945(v=vs.85).aspx
   procedure PostQuitMessage (nExitCode : Int_C) -- int 

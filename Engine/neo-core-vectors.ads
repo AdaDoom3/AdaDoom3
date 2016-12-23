@@ -30,7 +30,7 @@ package Neo.Core.Vectors is
   NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
 
   -- Array conversions
-  type Unsafe_Array is array (Positive range <>) of Vec_T;
+  type Unsafe_Array is array (Positive range <>) of Vec_T with Convention => C;
   type Ptr_Unsafe_Array is access all Unsafe_Array;
   function To_Unsafe_Vector (Item : Unsafe_Array)  return Unsafe.Vector;
   function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;

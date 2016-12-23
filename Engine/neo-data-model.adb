@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
--- Isolate parsers for different formats into separate packages and consolidate them here
+-- Isolate parsers for different model formats into separate packages and consolidate them here
 package body Neo.Data.Model is
 
   -----------------
@@ -21,15 +21,17 @@ package body Neo.Data.Model is
   -----------------
 
   function To_Triangles (Polygon : Vector_Int_32_Natural.Unsafe.Vector) return Vector_Triangle.Unsafe.Vector is
-    begin -- 0 (i) (i + 1)  [for i in 1..(n - 2)] 
+    Result : Vector_Triangle.Unsafe.Vector;
+    begin
+      return Result; -- 0 (i) (i + 1)  [for i in 1..(n - 2)] 
     --0 1 2
     --0 2 3
-      for I in 0..Patch_Height loop
-        for J in 1..Patch_Width loop
-          Triangle := (if J mod 2 = 0 then (I * Patch_Width + J - 1, I * Patch_Width + J, (I + 1) * Patch_Width + J - 1)
-                       else (I * Patch_Width + J - 1, (I + 1) * Patch_Width + J - 2, (I + 1) * Patch_Width + J - 1));
-        end loop;
-      end loop;
+    --  for I in 0..Patch_Height loop
+    --    for J in 1..Patch_Width loop
+    --      Triangle := (if J mod 2 = 0 then (I * Patch_Width + J - 1, I * Patch_Width + J, (I + 1) * Patch_Width + J - 1)
+    --                   else (I * Patch_Width + J - 1, (I + 1) * Patch_Width + J - 2, (I + 1) * Patch_Width + J - 1));
+    --    end loop;
+    --  end loop;
     end;
 
   --function To_Mesh (Plane : Plane_3D) return Mesh_State is
@@ -60,10 +62,10 @@ package body Neo.Data.Model is
   -------------
 
   -- Separate packages (one for each Model.Format_Kind)
-  package Filmbox is
-      function Load (Path : Str) return Mesh_State;
+  package Wavefront is
+      function Load (Path : Str) return Vector_Mesh.Unsafe.Vector;
     end;
-  package body Filmbox is separate;
+  package body Wavefront is separate;
   package Id_Tech is
       function Load (Path : Str) return Level_State;
       function Load (Path : Str) return Camera_State;
@@ -74,7 +76,7 @@ package body Neo.Data.Model is
   package body Id_Tech is separate;
 
   -- Create the loaders
-  package Mesh          is new Handler (Format_Kind, Mesh_State);
+  package Mesh          is new Handler (Format_Kind, Vector_Mesh.Unsafe.Vector);
   package Level         is new Handler (Format_Kind, Level_State);
   package Camera        is new Handler (Format_Kind, Camera_State);
   package Animation     is new Handler (Format_Kind, Animation_State);
@@ -82,15 +84,15 @@ package body Neo.Data.Model is
   package Material      is new Handler (Format_Kind, Hashed_Material.Unsafe.Map);
 
   -- Register the formats in the loaders
-  package Filmbox_Mesh          is new Mesh.Format          (Filmbox_Format, Filmbox.Load, "fbx");
-  package Id_Tech_Level         is new Level.Format         (Id_Tech_Format, Id_Tech.Load, "proc,cm,map,aas48");
-  package Id_Tech_Camera        is new Camera.Format        (Id_Tech_Format, Id_Tech.Load, "md5camera");
-  package Id_Tech_Material      is new Material.Format      (Id_Tech_Format, Id_Tech.Load, "mtr");
-  package Id_Tech_Animation     is new Animation.Format     (Id_Tech_Format, Id_Tech.Load, "md5anim");
-  package Id_Tech_Skeletal_Mesh is new Skeletal_Mesh.Format (Id_Tech_Format, Id_Tech.Load, "md5mesh,bmd5mesh");
+  package Wavefront_Mesh        is new Mesh.Format          (Wavefront_Format, Wavefront.Load, "obj");
+  package Id_Tech_Level         is new Level.Format         (Id_Tech_Format,   Id_Tech.Load,   "proc,cm,map,aas48");
+  package Id_Tech_Camera        is new Camera.Format        (Id_Tech_Format,   Id_Tech.Load,   "md5camera");
+  package Id_Tech_Material      is new Material.Format      (Id_Tech_Format,   Id_Tech.Load,   "mtr");
+  package Id_Tech_Animation     is new Animation.Format     (Id_Tech_Format,   Id_Tech.Load,   "md5anim");
+  package Id_Tech_Skeletal_Mesh is new Skeletal_Mesh.Format (Id_Tech_Format,   Id_Tech.Load,   "md5mesh");
 
   -- Redirect internal handlers to public load functions
-  function Load (Path : Str) return Mesh_State                 renames Mesh.Load;
+  function Load (Path : Str) return Vector_Mesh.Unsafe.Vector  renames Mesh.Load;
   function Load (Path : Str) return Level_State                renames Level.Load;
   function Load (Path : Str) return Camera_State               renames Camera.Load;
   function Load (Path : Str) return Animation_State            renames Animation.Load;

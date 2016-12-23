@@ -15,16 +15,17 @@
 
 package body Neo.API.Vulkan is
 
-  -- Initialization of global function pointers with OS specific driver
-  generic
-    with function Get_Vulkan_Subprogram (Name : Str) return Ptr;
-  procedure Initialize_Vulkan is
+  -- For easy result assertion for Vulkan subprograms
+  procedure VkAssert (result : Int_32_Unsigned_C) is begin Assert (result = VK_SUCCESS); end;
+  
+  -- Load function pointers to the Vulkan dynamic library
+  procedure Initialize is
 
     -- Assert the pointer is not null
     function Get (Name : Str) return Ptr is
       Result : Ptr := Get_Vulkan_Subprogram (Name);
       begin
-        Assert (Ptr);
+        Assert (Result);
         return Result;
       end;
 
@@ -32,38 +33,38 @@ package body Neo.API.Vulkan is
     begin
       vkGetPhysicalDeviceProperties             := To_Ptr_vkGetPhysicalDeviceProperties             (Get ("vkGetPhysicalDeviceProperties"));
       vkGetPhysicalDeviceMemoryProperties       := To_Ptr_vkGetPhysicalDeviceMemoryProperties       (Get ("vkGetPhysicalDeviceMemoryProperties"));
-      vkGetPhysicalDeviceQueueFamilyProperties  := To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties  (Get ("vkGetPhysicalDeviceQueueFamilyProperties");
-      vkGetDeviceQueue                          := To_Ptr_vkGetDeviceQueue                          (Get ("vkGetDeviceQueue");
-      vkCreateInstance                          := To_Ptr_vkCreateInstance                          (Get ("vkCreateInstance");
-      vkEnumeratePhysicalDevices                := To_Ptr_vkEnumeratePhysicalDevices                (Get ("vkEnumeratePhysicalDevices");
-      vkCreateDevice                            := To_Ptr_vkCreateDevice                            (Get ("vkCreateDevice");
-      vkCreateCommandPool                       := To_Ptr_vkCreateCommandPool                       (Get ("vkCreateCommandPool");
-      vkGetPhysicalDeviceSurfaceSupportKHR      := To_Ptr_vkGetPhysicalDeviceSurfaceSupportKHR      (Get ("vkGetPhysicalDeviceSurfaceSupportKHR");
-      vkGetPhysicalDeviceSurfaceFormatsKHR      := To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR      (Get ("vkGetPhysicalDeviceSurfaceFormatsKHR");
+      vkGetPhysicalDeviceQueueFamilyProperties  := To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties  (Get ("vkGetPhysicalDeviceQueueFamilyProperties"));
+      vkGetDeviceQueue                          := To_Ptr_vkGetDeviceQueue                          (Get ("vkGetDeviceQueue"));
+      vkCreateInstance                          := To_Ptr_vkCreateInstance                          (Get ("vkCreateInstance"));
+      vkEnumeratePhysicalDevices                := To_Ptr_vkEnumeratePhysicalDevices                (Get ("vkEnumeratePhysicalDevices"));
+      vkCreateDevice                            := To_Ptr_vkCreateDevice                            (Get ("vkCreateDevice"));
+      vkCreateCommandPool                       := To_Ptr_vkCreateCommandPool                       (Get ("vkCreateCommandPool"));
+      vkGetPhysicalDeviceSurfaceSupportKHR      := To_Ptr_vkGetPhysicalDeviceSurfaceSupportKHR      (Get ("vkGetPhysicalDeviceSurfaceSupportKHR"));
+      vkGetPhysicalDeviceSurfaceFormatsKHR      := To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR      (Get ("vkGetPhysicalDeviceSurfaceFormatsKHR"));
       vkGetPhysicalDeviceSurfaceCapabilitiesKHR := To_Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR (Get ("vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
       vkGetPhysicalDeviceSurfacePresentModesKHR := To_Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR (Get ("vkGetPhysicalDeviceSurfacePresentModesKHR"));
-      vkCreateSwapchainKHR                      := To_Ptr_vkCreateSwapchainKHR                      (Get ("vkCreateSwapchainKHR");
-      vkGetSwapchainImagesKHR                   := To_Ptr_vkGetSwapchainImagesKHR                   (Get ("vkGetSwapchainImagesKHR");
-      vkAllocateCommandBuffers                  := To_Ptr_vkAllocateCommandBuffers                  (Get ("vkAllocateCommandBuffers");
-      vkBeginCommandBuffer                      := To_Ptr_vkBeginCommandBuffer                      (Get ("vkBeginCommandBuffer");
-      vkCmdPipelineBarrier                      := To_Ptr_vkCmdPipelineBarrier                      (Get ("vkCmdPipelineBarrier");
-      vkEndCommandBuffer                        := To_Ptr_vkEndCommandBuffer                        (Get ("vkEndCommandBuffer");
-      vkQueueSubmit                             := To_Ptr_vkQueueSubmit                             (Get ("vkQueueSubmit");
-      vkQueueWaitIdle                           := To_Ptr_vkQueueWaitIdle                           (Get ("vkQueueWaitIdle");
-      vkFreeCommandBuffers                      := To_Ptr_vkFreeCommandBuffers                      (Get ("vkFreeCommandBuffers");
-      vkCreateSemaphore                         := To_Ptr_vkCreateSemaphore                         (Get ("vkCreateSemaphore");
-      vkDeviceWaitIdle                          := To_Ptr_vkDeviceWaitIdle                          (Get ("vkDeviceWaitIdle");
-      vkDestroySemaphore                        := To_Ptr_vkDestroySemaphore                        (Get ("vkDestroySemaphore");
-      vkDestroyCommandPool                      := To_Ptr_vkDestroyCommandPool                      (Get ("vkDestroyCommandPool");
-      vkDestroySwapchainKHR                     := To_Ptr_vkDestroySwapchainKHR                     (Get ("vkDestroySwapchainKHR");
-      vkDestroyDevice                           := To_Ptr_vkDestroyDevice                           (Get ("vkDestroyDevice");
-      vkDestroyInstance                         := To_Ptr_vkDestroyInstance                         (Get ("vkDestroyInstance");
-      vkAcquireNextImageKHR                     := To_Ptr_vkAcquireNextImageKHR                     (Get ("vkAcquireNextImageKHR");
-      vkQueuePresentKHR                         := To_Ptr_vkQueuePresentKHR                         (Get ("vkQueuePresentKHR");
-      vkWaitForFences                           := To_Ptr_vkWaitForFences                           (Get ("vkWaitForFences");
-      vkResetFences                             := To_Ptr_vkResetFences                             (Get ("vkResetFences");
-      vkGetFenceStatus                          := To_Ptr_vkGetFenceStatus                          (Get ("vkGetFenceStatus");
-      vkDestroyFence                            := To_Ptr_vkDestroyFence                            (Get ("vkDestroyFence");
-      vkCreateFence                             := To_Ptr_vkCreateFence                             (Get ("vkCreateFence");
+      vkCreateSwapchainKHR                      := To_Ptr_vkCreateSwapchainKHR                      (Get ("vkCreateSwapchainKHR"));
+      vkGetSwapchainImagesKHR                   := To_Ptr_vkGetSwapchainImagesKHR                   (Get ("vkGetSwapchainImagesKHR"));
+      vkAllocateCommandBuffers                  := To_Ptr_vkAllocateCommandBuffers                  (Get ("vkAllocateCommandBuffers"));
+      vkBeginCommandBuffer                      := To_Ptr_vkBeginCommandBuffer                      (Get ("vkBeginCommandBuffer"));
+      vkCmdPipelineBarrier                      := To_Ptr_vkCmdPipelineBarrier                      (Get ("vkCmdPipelineBarrier"));
+      vkEndCommandBuffer                        := To_Ptr_vkEndCommandBuffer                        (Get ("vkEndCommandBuffer"));
+      vkQueueSubmit                             := To_Ptr_vkQueueSubmit                             (Get ("vkQueueSubmit"));
+      vkQueueWaitIdle                           := To_Ptr_vkQueueWaitIdle                           (Get ("vkQueueWaitIdle"));
+      vkFreeCommandBuffers                      := To_Ptr_vkFreeCommandBuffers                      (Get ("vkFreeCommandBuffers"));
+      vkCreateSemaphore                         := To_Ptr_vkCreateSemaphore                         (Get ("vkCreateSemaphore"));
+      vkDeviceWaitIdle                          := To_Ptr_vkDeviceWaitIdle                          (Get ("vkDeviceWaitIdle"));
+      vkDestroySemaphore                        := To_Ptr_vkDestroySemaphore                        (Get ("vkDestroySemaphore"));
+      vkDestroyCommandPool                      := To_Ptr_vkDestroyCommandPool                      (Get ("vkDestroyCommandPool"));
+      vkDestroySwapchainKHR                     := To_Ptr_vkDestroySwapchainKHR                     (Get ("vkDestroySwapchainKHR"));
+      vkDestroyDevice                           := To_Ptr_vkDestroyDevice                           (Get ("vkDestroyDevice"));
+      vkDestroyInstance                         := To_Ptr_vkDestroyInstance                         (Get ("vkDestroyInstance"));
+      vkAcquireNextImageKHR                     := To_Ptr_vkAcquireNextImageKHR                     (Get ("vkAcquireNextImageKHR"));
+      vkQueuePresentKHR                         := To_Ptr_vkQueuePresentKHR                         (Get ("vkQueuePresentKHR"));
+      vkWaitForFences                           := To_Ptr_vkWaitForFences                           (Get ("vkWaitForFences"));
+      vkResetFences                             := To_Ptr_vkResetFences                             (Get ("vkResetFences"));
+      vkGetFenceStatus                          := To_Ptr_vkGetFenceStatus                          (Get ("vkGetFenceStatus"));
+      vkDestroyFence                            := To_Ptr_vkDestroyFence                            (Get ("vkDestroyFence"));
+      vkCreateFence                             := To_Ptr_vkCreateFence                             (Get ("vkCreateFence"));
     end;
 end;

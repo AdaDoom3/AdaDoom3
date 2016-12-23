@@ -13,7 +13,12 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Neo.Data.Model; use Neo.Data.Model;
 separate (Neo.Engine) procedure Game is
+  Mesh      : Skeletal_Mesh_State := Load ("C:\AdaDoom3\Games\DOOM\Assets\Models\Bob\bob_lamp_update.md5mesh");
+  --Animation : Animation_State     := Load ("C:\AdaDoom3\Games\DOOM\Assets\Models\Bob\bob_lamp_update.md5anim");
   begin
-     null; -- Insert code here.
+    loop
+      delay 0.2; -- Insert code here.
+    end loop;
   end;

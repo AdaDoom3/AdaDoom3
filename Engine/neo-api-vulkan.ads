@@ -13,8 +13,15 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Neo.Core.Arrays; use Neo.Core.Arrays;
+
 -- Custom binding to the Vulkan API: http://web.archive.org/save/_embed/https://www.khronos.org/files/vulkan10-reference-guide.pdf
 package Neo.API.Vulkan is
+
+  -- Initialization of global function pointers with OS specific driver
+  generic
+    with function Get_Vulkan_Subprogram (Name : Str) return Ptr;
+  procedure Initialize;
 
   -----------
   -- Types --
@@ -33,6 +40,7 @@ package Neo.API.Vulkan is
   -- VkSemaphoreCreateFlagBits     Int_32_Unsigned_C
   -- VkCommandPoolCreateFlags      Int_32_Unsigned_C
   -- VkDeviceQueueCreateFlags      Int_32_Unsigned_C
+  -- VkQueueFlags                  Int_32_Unsigned_C
   -- VkInstanceCreateFlags         Int_32_Unsigned_C
   -- VkInstanceCreateFlags         Int_32_Unsigned_C
   -- VkSampleCountFlags            Int_32_Unsigned_C
@@ -44,6 +52,8 @@ package Neo.API.Vulkan is
   -- VkImageAspectFlagBits         Int_32_Unsigned_C
   -- VkImageUsageFlags             Int_32_Unsigned_C
   -- VkImageLayout                 Int_32_Unsigned_C
+  -- vkDependencyFlags             Int_32_Unsigned_C
+  -- VkFence                       Ptr
   -- VkImage                       Ptr
   -- VkQueue                       Ptr
   -- VkDevice                      Ptr
@@ -62,16 +72,24 @@ package Neo.API.Vulkan is
   -- VkSwapchainCreateFlagsKHR     Int_32_Unsigned_C
   -- VkPresentModeKHR              Int_32_Unsigned_C
   -- VkWin32SurfaceCreateFlagsKHR  Int_32_Unsigned_C
+  -- VkQueueFlagBits               Int_32_Unsigned_C
 
   ---------------
   -- Constants --
   ---------------
 
-  -- http://nopper.tv/Vulkan/1.0/VkColorSpaceKHR.html
-  VK_COLORSPACE_SRGB_NONLINEAR_KHR : constant Int_32_Unsigned_C := 0; -- VkColorSpaceKHR
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageMemoryBarrier.html
+  VK_QUEUE_FAMILY_IGNORED : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; -- (~0U)
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDependencyFlags.html
+  VK_DEPENDENCY_BY_REGION_BIT : constant Int_32_Unsigned_C := 1; -- VkDependencyFlags
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryHeap.html
   VK_MEMORY_HEAP_DEVICE_LOCAL_BIT : constant Int_32_Unsigned_C := 1; -- VkMemoryHeapFlagBits
+
+  -- http://nopper.tv/Vulkan/1.0/VkColorSpaceKHR.html
+  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR : constant Int_32_Unsigned_C := 0; -- VkColorSpaceKHR
+  VK_COLORSPACE_SRGB_NONLINEAR_KHR  : constant Int_32_Unsigned_C := 0; -- VkColorSpaceKHR
 
   -- http://vulkan-spec-chunked.ahcox.com/apes09.html
   VK_KHR_SURFACE_EXTENSION_NAME       : constant Str_8_C := "VK_KHR_surface";       -- ???
@@ -94,6 +112,12 @@ package Neo.API.Vulkan is
   VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT : constant Int_32_Unsigned_C := 2; -- VkCommandBufferUsageFlagBits
   VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     : constant Int_32_Unsigned_C := 4; -- VkCommandBufferUsageFlagBits
   
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkQueueFamilyProperties.html
+  VK_QUEUE_GRAPHICS_BIT       : constant Int_32_Unsigned_C := 16#0000_0001#; -- VkQueueFlagBits
+  VK_QUEUE_COMPUTE_BIT        : constant Int_32_Unsigned_C := 16#0000_0002#; -- VkQueueFlagBits
+  VK_QUEUE_TRANSFER_BIT       : constant Int_32_Unsigned_C := 16#0000_0004#; -- VkQueueFlagBits
+  VK_QUEUE_SPARSE_BINDING_BIT : constant Int_32_Unsigned_C := 16#0000_0008#; -- VkQueueFlagBits
+
   -- http://nopper.tv/Vulkan/1.0/VkCompositeAlphaFlagBitsKHR.html
   VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR          : constant Int_32_Unsigned_C := 1; -- VkCompositeAlphaFlagBitsKHR
   VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  : constant Int_32_Unsigned_C := 2; -- VkCompositeAlphaFlagBitsKHR
@@ -135,12 +159,15 @@ package Neo.API.Vulkan is
   VK_MEMORY_PROPERTY_HOST_CACHED_BIT      : constant Int_32_Unsigned_C := 8;  -- VkMemoryPropertyFlagBits
   VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : constant Int_32_Unsigned_C := 16; -- VkMemoryPropertyFlagBits
 
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryType.html
-  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT     : constant Int_32_Unsigned_C := 1;  -- VkMemoryPropertyFlagBits 
-  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT     : constant Int_32_Unsigned_C := 2;  -- VkMemoryPropertyFlagBits 
-  VK_MEMORY_PROPERTY_HOST_COHERENT_BIT    : constant Int_32_Unsigned_C := 4;  -- VkMemoryPropertyFlagBits 
-  VK_MEMORY_PROPERTY_HOST_CACHED_BIT      : constant Int_32_Unsigned_C := 8;  -- VkMemoryPropertyFlagBits 
-  VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : constant Int_32_Unsigned_C := 16; -- VkMemoryPropertyFlagBits 
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageUsageFlagBits.html
+  VK_IMAGE_USAGE_TRANSFER_SRC_BIT             : constant Int_32_Unsigned_C := 1;   -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_TRANSFER_DST_BIT             : constant Int_32_Unsigned_C := 2;   -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_SAMPLED_BIT                  : constant Int_32_Unsigned_C := 4;   -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_STORAGE_BIT                  : constant Int_32_Unsigned_C := 8;   -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT         : constant Int_32_Unsigned_C := 16;  -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : constant Int_32_Unsigned_C := 32;  -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     : constant Int_32_Unsigned_C := 64;  -- VkImageUsageFlagBits
+  VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT         : constant Int_32_Unsigned_C := 128; -- VkImageUsageFlagBits
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageLayout.html
   VK_IMAGE_LAYOUT_UNDEFINED                        : constant Int_32_Unsigned_C := 0;          -- VkImageLayout
@@ -165,16 +192,6 @@ package Neo.API.Vulkan is
   VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR : constant Int_32_Unsigned_C := 128; -- VkSurfaceTransformFlagBitsKHR
   VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR                      : constant Int_32_Unsigned_C := 256; -- VkSurfaceTransformFlagBitsKHR
 
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageUsageFlagBits.html
-  VK_IMAGE_USAGE_TRANSFER_SRC_BIT             : constant Int_32_Unsigned_C := 1;   -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_TRANSFER_DST_BIT             : constant Int_32_Unsigned_C := 2;   -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_SAMPLED_BIT                  : constant Int_32_Unsigned_C := 4;   -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_STORAGE_BIT                  : constant Int_32_Unsigned_C := 8;   -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT         : constant Int_32_Unsigned_C := 16;  -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : constant Int_32_Unsigned_C := 32;  -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     : constant Int_32_Unsigned_C := 64;  -- VkImageUsageFlagBits
-  VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT         : constant Int_32_Unsigned_C := 128; -- VkImageUsageFlagBits
-
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAccessFlagBits.html
   VK_ACCESS_INDIRECT_COMMAND_READ_BIT          : constant Int_32_Unsigned_C := 1;     -- VkAccessFlagBits
   VK_ACCESS_INDEX_READ_BIT                     : constant Int_32_Unsigned_C := 2;     -- VkAccessFlagBits
@@ -193,6 +210,25 @@ package Neo.API.Vulkan is
   VK_ACCESS_HOST_WRITE_BIT                     : constant Int_32_Unsigned_C := 16384; -- VkAccessFlagBits
   VK_ACCESS_MEMORY_READ_BIT                    : constant Int_32_Unsigned_C := 32768; -- VkAccessFlagBits
   VK_ACCESS_MEMORY_WRITE_BIT                   : constant Int_32_Unsigned_C := 65536; -- VkAccessFlagBits
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineStageFlagBits.html
+  VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT                    : constant Int_32_Unsigned_C := 16#0000_0001#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT                  : constant Int_32_Unsigned_C := 16#0000_0002#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_VERTEX_INPUT_BIT                   : constant Int_32_Unsigned_C := 16#0000_0004#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_VERTEX_SHADER_BIT                  : constant Int_32_Unsigned_C := 16#0000_0008#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    : constant Int_32_Unsigned_C := 16#0000_0010#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT : constant Int_32_Unsigned_C := 16#0000_0020#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT                : constant Int_32_Unsigned_C := 16#0000_0040#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT                : constant Int_32_Unsigned_C := 16#0000_0080#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           : constant Int_32_Unsigned_C := 16#0000_0100#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            : constant Int_32_Unsigned_C := 16#0000_0200#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        : constant Int_32_Unsigned_C := 16#0000_0400#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT                 : constant Int_32_Unsigned_C := 16#0000_0800#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_TRANSFER_BIT                       : constant Int_32_Unsigned_C := 16#0000_1000#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 : constant Int_32_Unsigned_C := 16#0000_2000#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_HOST_BIT                           : constant Int_32_Unsigned_C := 16#0000_4000#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT                   : constant Int_32_Unsigned_C := 16#0000_8000#; -- VkPipelineStageFlagBits
+  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT                   : constant Int_32_Unsigned_C := 16#0001_0000#; -- VkPipelineStageFlagBits 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkResult.html
   VK_SUCCESS                        : constant Int_32_Unsigned_C := 0;                                  -- VkResult
@@ -476,13 +512,13 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtent2D.html
   type VkExtent2D is record
-      width  : Int_32_Unsigned_C;  -- uint32_t
-      height : Int_32_Unsigned_C;  -- uint32_t
+      width  : Int_32_Unsigned_C := 0;  -- uint32_t
+      height : Int_32_Unsigned_C := 0;  -- uint32_t
     end record with Convention => C;
 
   -- http://nopper.tv/Vulkan/1.0/VkWin32SurfaceCreateInfoKHR.html
   type VkWin32SurfaceCreateInfoKHR is record
-      sType     : Int_32_Unsigned_C; -- VkStructureType
+      sType     : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR; -- VkStructureType
       pNext     : Ptr;               -- const void*
       flags     : Int_32_Unsigned_C; -- VkWin32SurfaceCreateFlagsKHR
       hinstance : Ptr;               -- HINSTANCE
@@ -491,23 +527,23 @@ package Neo.API.Vulkan is
 
   -- http://nopper.tv/Vulkan/1.0/VkSwapchainCreateInfoKHR.html
   type VkSwapchainCreateInfoKHR is record
-      sType                 : Int_32_Unsigned_C;     -- VkStructureType
-      pNext                 : Ptr;                   -- const void*
-      flags                 : Int_32_Unsigned_C;     -- VkSwapchainCreateFlagsKHR
-      surface               : Ptr;                   -- VkSurfaceKHR
-      minImageCount         : Int_32_Unsigned_C;     -- uint32_t
-      imageFormat           : Int_32_Unsigned_C;     -- VkFormat
-      imageColorSpace       : Int_32_Unsigned_C;     -- VkColorSpaceKHR
-      imageExtent           : VkExtent2D;            -- VkExtent2D
-      imageArrayLayers      : Int_32_Unsigned_C;     -- uint32_t
-      imageUsage            : Int_32_Unsigned_C;     -- VkImageUsageFlags
-      imageSharingMode      : Int_32_Unsigned_C;     -- VkSharingMode
-      queueFamilyIndexCount : Int_32_Unsigned_C;     -- uint32_t
-      pQueueFamilyIndices   : Ptr_Int_32_Unsigned_C; -- const uint32_t*
-      preTransform          : Int_32_Unsigned_C;     -- VkSurfaceTransformFlagBitsKHR
-      compositeAlpha        : Int_32_Unsigned_C;     -- VkCompositeAlphaFlagBitsKHR
-      presentMode           : Int_32_Unsigned_C;     -- VkPresentModeKHR
-      clipped               : Int_32_Unsigned_C;     -- VkBool32
+      sType                 : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR; -- VkStructureType
+      pNext                 : Ptr := NULL_PTR;                   -- const void*
+      flags                 : Int_32_Unsigned_C := 0;     -- VkSwapchainCreateFlagsKHR
+      surface               : Ptr := NULL_PTR;                   -- VkSurfaceKHR
+      minImageCount         : Int_32_Unsigned_C := 0;     -- uint32_t
+      imageFormat           : Int_32_Unsigned_C := 0;     -- VkFormat
+      imageColorSpace       : Int_32_Unsigned_C := 0;     -- VkColorSpaceKHR
+      imageExtent           : VkExtent2D := (others => <>);            -- VkExtent2D
+      imageArrayLayers      : Int_32_Unsigned_C := 0;     -- uint32_t
+      imageUsage            : Int_32_Unsigned_C := 0;     -- VkImageUsageFlags
+      imageSharingMode      : Int_32_Unsigned_C := 0;     -- VkSharingMode
+      queueFamilyIndexCount : Int_32_Unsigned_C := 0;     -- uint32_t
+      pQueueFamilyIndices   : Ptr_Int_32_Unsigned_C := null; -- const uint32_t*
+      preTransform          : Int_32_Unsigned_C := 0;     -- VkSurfaceTransformFlagBitsKHR
+      compositeAlpha        : Int_32_Unsigned_C := 0;     -- VkCompositeAlphaFlagBitsKHR
+      presentMode           : Int_32_Unsigned_C := 0;     -- VkPresentModeKHR
+      clipped               : Int_32_Unsigned_C := 0;     -- VkBool32
       oldSwapchain          : Ptr;                   -- VkSwapchainKHR
     end record with Convention => C;
         
@@ -624,9 +660,9 @@ package Neo.API.Vulkan is
       maxFragmentDualSrcAttachments                   : Int_32_Unsigned_C;              -- uint32_t     
       maxFragmentCombinedOutputResources              : Int_32_Unsigned_C;              -- uint32_t     
       maxComputeSharedMemorySize                      : Int_32_Unsigned_C;              -- uint32_t     
-      maxComputeWorkGroupCount                        : Array_Int_32_Unsigned_C (0..2); -- uint32_t [3]
+      maxComputeWorkGroupCount                        : Array_Int_32_Unsigned_C (1..3); -- uint32_t [3]
       maxComputeWorkGroupInvocations                  : Int_32_Unsigned_C;              -- uint32_t     
-      maxComputeWorkGroupSize                         : Array_Int_32_Unsigned_C (0..2); -- uint32_t [3]
+      maxComputeWorkGroupSize                         : Array_Int_32_Unsigned_C (1..3); -- uint32_t [3]
       subPixelPrecisionBits                           : Int_32_Unsigned_C;              -- uint32_t     
       subTexelPrecisionBits                           : Int_32_Unsigned_C;              -- uint32_t     
       mipmapPrecisionBits                             : Int_32_Unsigned_C;              -- uint32_t     
@@ -635,8 +671,8 @@ package Neo.API.Vulkan is
       maxSamplerLodBias                               : Real;                           -- float
       maxSamplerAnisotropy                            : Real;                           -- float
       maxViewports                                    : Int_32_Unsigned_C;              -- uint32_t     
-      maxViewportDimensions                           : Array_Int_32_Unsigned_C (0..1); -- uint32_t [2]
-      viewportBoundsRange                             : Array_Real_32 (0..1);           -- float [2]
+      maxViewportDimensions                           : Array_Int_32_Unsigned_C (1..2); -- uint32_t [2]
+      viewportBoundsRange                             : Array_Real_32 (1..2);           -- float [2]
       viewportSubPixelBits                            : Int_32_Unsigned_C;              -- uint32_t     
       minMemoryMapAlignment                           : Int_Size_C;                     -- size_t
       minTexelBufferOffsetAlignment                   : Int_64_Unsigned_C;              -- VkDeviceSize
@@ -669,8 +705,8 @@ package Neo.API.Vulkan is
       maxCullDistances                                : Int_32_Unsigned_C;              -- uint32_t     
       maxCombinedClipAndCullDistances                 : Int_32_Unsigned_C;              -- uint32_t     
       discreteQueuePriorities                         : Int_32_Unsigned_C;              -- uint32_t     
-      pointSizeRange                                  : Array_Real_32 (0..1);           -- float [2]
-      lineWidthRange                                  : Array_Real_32 (0..1);           -- float [2]
+      pointSizeRange                                  : Array_Real_32 (1..2);           -- float [2]
+      lineWidthRange                                  : Array_Real_32 (1..2);           -- float [2]
       pointSizeGranularity                            : Real;                           -- float
       lineWidthGranularity                            : Real;                           -- float
       strictLines                                     : Int_32_Unsigned_C;              -- VkBool32
@@ -691,15 +727,15 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceProperties.html
   type VkPhysicalDeviceProperties is record
-      apiVersion        : Int_32_Unsigned_C;                -- uint32_t
-      driverVersion     : Int_32_Unsigned_C;                -- uint32_t
-      vendorID          : Int_32_Unsigned_C;                -- uint32_t
-      deviceID          : Int_32_Unsigned_C;                -- uint32_t
-      deviceType        : Int_32_Unsigned_C;                -- VkPhysicalDeviceType                
-      deviceName        : Array_Char_8_C (0 .. 255);        -- char [VK_MAX_PHYSICAL_DEVICE_NAME_SIZE]
-      pipelineCacheUUID : Array_Int_8_Unsigned_C (0..15);   -- uint8_t [VK_UUID_SIZE]
-      limits            : VkPhysicalDeviceLimits;           -- VkPhysicalDeviceLimits              
-      sparseProperties  : VkPhysicalDeviceSparseProperties; -- VkPhysicalDeviceSparseProperties
+      apiVersion        : Int_32_Unsigned_C := 0;                -- uint32_t
+      driverVersion     : Int_32_Unsigned_C := 0;                -- uint32_t
+      vendorID          : Int_32_Unsigned_C := 0;                -- uint32_t
+      deviceID          : Int_32_Unsigned_C := 0;                -- uint32_t
+      deviceType        : Int_32_Unsigned_C := 0;                -- VkPhysicalDeviceType                
+      deviceName        : Str_8_C (1..256) := (others => NULL_CHAR_8_C);        -- char [VK_MAX_PHYSICAL_DEVICE_NAME_SIZE]
+      pipelineCacheUUID : Array_Int_8_Unsigned_C (1..25) := (others => 0);   -- uint8_t [VK_UUID_SIZE]
+      limits            : VkPhysicalDeviceLimits := (others => <>);           -- VkPhysicalDeviceLimits              
+      sparseProperties  : VkPhysicalDeviceSparseProperties := (others => <>); -- VkPhysicalDeviceSparseProperties
     end record with Convention => C;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryType.html
@@ -714,9 +750,16 @@ package Neo.API.Vulkan is
       flags : Int_32_Unsigned_C; -- VkMemoryHeapFlags
     end record with Convention => C;
 
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtent3D.html
+  type VkExtent3D is record
+      width  : Int_32_Unsigned_C; -- uint32_t
+      height : Int_32_Unsigned_C; -- uint32_t
+      depth  : Int_32_Unsigned_C; -- uint32_t
+    end record with Convention => C;
+
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
-  type Array_VkMemoryType is array (0 .. 31) of VkMemoryType; -- VkMemoryType [VK_MAX_MEMORY_TYPES]
-  type Array_VkMemoryHeap is array (0 .. 15) of VkMemoryHeap; -- VkMemoryHeap [VK_MAX_MEMORY_HEAPS]
+  type Array_VkMemoryType is array (1..32) of VkMemoryType; -- VkMemoryType [VK_MAX_MEMORY_TYPES]
+  type Array_VkMemoryHeap is array (1..16) of VkMemoryHeap; -- VkMemoryHeap [VK_MAX_MEMORY_HEAPS]
   type VkPhysicalDeviceMemoryProperties is record
       memoryTypeCount : Int_32_Unsigned_C;   -- uint32_t
       memoryTypes     : Array_VkMemoryType;  -- VkMemoryType [VK_MAX_MEMORY_TYPES]
@@ -740,10 +783,10 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferBeginInfo.html
   type VkCommandBufferBeginInfo is record
-      sType            : Int_32_Unsigned_C; -- VkStructureType
-      pNext            : Ptr;               -- const void*
-      flags            : Int_32_Unsigned_C; -- VkCommandBufferUsageFlags
-      pInheritanceInfo : Ptr;               -- const VkCommandBufferInheritanceInfo*
+      sType            : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO; -- VkStructureType
+      pNext            : Ptr := NULL_PTR;               -- const void*
+      flags            : Int_32_Unsigned_C := 0; -- VkCommandBufferUsageFlags
+      pInheritanceInfo : Ptr := NULL_PTR;               -- const VkCommandBufferInheritanceInfo*
     end record with Convention => C;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageSubresourceRange.html
@@ -771,138 +814,171 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferAllocateInfo.html
   type VkCommandBufferAllocateInfo is record
-      sType              : Int_32_Unsigned_C; -- VkStructureType
-      pNext              : Ptr;               -- const void*
-      commandPool        : Ptr;               -- VkCommandPool
-      level              : Int_32_Unsigned_C; -- VkCommandBufferLevel
-      commandBufferCount : Int_32_Unsigned_C; -- uint32_t
+      sType              : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO; -- VkStructureType
+      pNext              : Ptr := NULL_PTR;               -- const void*
+      commandPool        : Ptr := NULL_PTR;               -- VkCommandPool
+      level              : Int_32_Unsigned_C := 0; -- VkCommandBufferLevel
+      commandBufferCount : Int_32_Unsigned_C := 0; -- uint32_t
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSubmitInfo.html
   type VkSubmitInfo is record
-      sType                : Int_32_Unsigned_C;     -- VkStructureType
-      pNext                : Ptr;                   -- const void*
-      waitSemaphoreCount   : Int_32_Unsigned_C;     -- uint32_t
-      pWaitSemaphores      : Ptr;                   -- const VkSemaphore*
-      pWaitDstStageMask    : Ptr_Int_32_Unsigned_C; -- VkPipelineStageFlags
-      commandBufferCount   : Int_32_Unsigned_C;     -- uint32_t
-      pCommandBuffers      : Ptr;                   -- const VkCommandBuffer* 
-      signalSemaphoreCount : Int_32_Unsigned_C;     -- uint32_t
-      pSignalSemaphores    : Ptr;                   -- const VkSemaphore*
+      sType                : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_SUBMIT_INFO;     -- VkStructureType
+      pNext                : Ptr := NULL_PTR;                   -- const void*
+      waitSemaphoreCount   : Int_32_Unsigned_C := 0;     -- uint32_t
+      pWaitSemaphores      : Ptr := NULL_PTR;                   -- const VkSemaphore*
+      pWaitDstStageMask    : Ptr_Int_32_Unsigned_C := null; -- VkPipelineStageFlags
+      commandBufferCount   : Int_32_Unsigned_C := 0;     -- uint32_t
+      pCommandBuffers      : Ptr := NULL_PTR;                   -- const VkCommandBuffer* 
+      signalSemaphoreCount : Int_32_Unsigned_C := 0;     -- uint32_t
+      pSignalSemaphores    : Ptr := NULL_PTR;                   -- const VkSemaphore*
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkApplicationInfo.html
   type VkApplicationInfo is record
-      sType              : Int_32_Unsigned_C; -- VkStructureType
-      pNext              : Ptr;               -- const void*
-      pApplicationName   : Ptr_Char_8_C;      -- const char*
-      applicationVersion : Int_32_Unsigned_C; -- uint32_t
-      pEngineName        : Ptr_Char_8_C;      -- const char*
-      engineVersion      : Int_32_Unsigned_C; -- uint32_t
-      apiVersion         : Int_32_Unsigned_C; -- uint32_t
+      sType              : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_APPLICATION_INFO; -- VkStructureType
+      pNext              : Ptr := NULL_PTR;               -- const void*
+      pApplicationName   : Ptr_Char_8_C := null;      -- const char*
+      applicationVersion : Int_32_Unsigned_C := 0; -- uint32_t
+      pEngineName        : Ptr_Char_8_C := null;      -- const char*
+      engineVersion      : Int_32_Unsigned_C := 0; -- uint32_t
+      apiVersion         : Int_32_Unsigned_C := 0; -- uint32_t
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkInstanceCreateInfo.html
   type VkInstanceCreateInfo is record
-      sType                   : Int_32_Unsigned_C; -- VkStructureType
-      pNext                   : Ptr;               -- const void* 
-      flags                   : Int_32_Unsigned_C; -- VkInstanceCreateFlags
-      pApplicationInfo        : Ptr;               -- const VkApplicationInfo*
-      enabledLayerCount       : Int_32_Unsigned_C; -- uint32_t
-      ppEnabledLayerNames     : Ptr;               -- const char* const* 
-      enabledExtensionCount   : Int_32_Unsigned_C; -- uint32_t
-      ppEnabledExtensionNames : Ptr;               -- const char* const* 
+      sType                   : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; -- VkStructureType
+      pNext                   : Ptr := NULL_PTR;               -- const void* 
+      flags                   : Int_32_Unsigned_C := 0; -- VkInstanceCreateFlags
+      pApplicationInfo        : access VkApplicationInfo; -- const VkApplicationInfo*
+      enabledLayerCount       : Int_32_Unsigned_C := 0; -- uint32_t
+      ppEnabledLayerNames     : Ptr := NULL_PTR;               -- const char* const* 
+      enabledExtensionCount   : Int_32_Unsigned_C := 0; -- uint32_t
+      ppEnabledExtensionNames : Ptr_Char_8_C := null;               -- const char* const* 
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDeviceQueueCreateInfo.html
   type VkDeviceQueueCreateInfo is record
-      sType            :        Int_32_Unsigned_C; -- VkStructureType
-      pNext            :        Ptr;               -- const void*
-      flags            :        Int_32_Unsigned_C; -- VkDeviceQueueCreateFlags
-      queueFamilyIndex :        Int_32_Unsigned_C; -- uint32_t
-      queueCount       :        Int_32_Unsigned_C; -- uint32_t
-      pQueuePriorities : access Real_32;           -- const float* 
+      sType            :        Int_32_Unsigned_C := VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO; -- VkStructureType
+      pNext            :        Ptr := NULL_PTR;               -- const void*
+      flags            :        Int_32_Unsigned_C := 0; -- VkDeviceQueueCreateFlags
+      queueFamilyIndex :        Int_32_Unsigned_C := 0; -- uint32_t
+      queueCount       :        Int_32_Unsigned_C := 0; -- uint32_t
+      pQueuePriorities : access Real_32_C;         -- const float* 
+    end record with Convention => C;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkQueueFamilyProperties.html
+  type VkQueueFamilyProperties is record
+      queueFlags                  : Int_32_Unsigned_C; -- VkQueueFlags    
+      queueCount                  : Int_32_Unsigned_C; -- uint32_t        
+      timestampValidBits          : Int_32_Unsigned_C; -- uint32_t        
+      minImageTransferGranularity : VkExtent3D;        -- VkExtent3D      
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDeviceCreateInfo.html
   type VkDeviceCreateInfo is record
-      sType                   : Int_32_Unsigned_C; -- VkStructureType
-      pNext                   : Ptr;               -- const void* 
-      flags                   : Int_32_Unsigned_C; -- VkDeviceCreateFlags
-      queueCreateInfoCount    : Int_32_Unsigned_C; -- uint32_t
-      pQueueCreateInfos       : Ptr;               -- const VkDeviceQueueCreateInfo*
-      enabledLayerCount       : Int_32_Unsigned_C; -- uint32_t
-      ppEnabledLayerNames     : Ptr;               -- const char* const*
-      enabledExtensionCount   : Int_32_Unsigned_C; -- uint32_t
-      ppEnabledExtensionNames : Ptr;               -- const char* const*
-      pEnabledFeatures        : Ptr;               -- const VkPhysicalDeviceFeatures*
+      sType                   : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO; -- VkStructureType
+      pNext                   : Ptr := NULL_PTR;               -- const void* 
+      flags                   : Int_32_Unsigned_C := 0; -- VkDeviceCreateFlags
+      queueCreateInfoCount    : Int_32_Unsigned_C := 0; -- uint32_t
+      pQueueCreateInfos       : access VkDeviceQueueCreateInfo := null;               -- const VkDeviceQueueCreateInfo*
+      enabledLayerCount       : Int_32_Unsigned_C := 0; -- uint32_t
+      ppEnabledLayerNames     : Ptr := NULL_PTR;               -- const char* const*
+      enabledExtensionCount   : Int_32_Unsigned_C := 0; -- uint32_t
+      ppEnabledExtensionNames : Ptr := NULL_PTR;               -- const char* const*
+      pEnabledFeatures        : access VkPhysicalDeviceFeatures := null;               -- const VkPhysicalDeviceFeatures*
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandPoolCreateInfo.html
   type VkCommandPoolCreateInfo is record
-      sType            : Int_32_Unsigned_C; -- VkStructureType
-      pNext            : Ptr;               -- const void*
-      flags            : Int_32_Unsigned_C; -- VkCommandPoolCreateFlags
-      queueFamilyIndex : Int_32_Unsigned_C; -- uint32_t
+      sType            : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO; -- VkStructureType
+      pNext            : Ptr := NULL_PTR;               -- const void*
+      flags            : Int_32_Unsigned_C := 0; -- VkCommandPoolCreateFlags
+      queueFamilyIndex : Int_32_Unsigned_C := 0; -- uint32_t
     end record with Convention => C;
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSemaphoreCreateInfo.html
   type VkSemaphoreCreateInfo is record
-      sType : Int_32_Unsigned_C; -- VkStructureType
-      pNext : Ptr;               -- const void* 
-      flags : Int_32_Unsigned_C; -- VkSemaphoreCreateFlags
+      sType : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO; -- VkStructureType
+      pNext : Ptr := NULL_PTR;               -- const void* 
+      flags : Int_32_Unsigned_C := 0; -- VkSemaphoreCreateFlags
     end record with Convention => C;
         
   -- http://nopper.tv/Vulkan/1.0/vkQueuePresentKHR.html
   type VkPresentInfoKHR is record
-      sType              : Int_32_Unsigned_C;     -- VkStructureType
-      pNext              : Ptr;                   -- const void*
-      waitSemaphoreCount : Int_32_Unsigned_C;     -- uint32_t
-      pWaitSemaphores    : Ptr;                   -- const VkSemaphore*
-      swapchainCount     : Int_32_Unsigned_C;     -- uint32_t 
-      pSwapchains        : Ptr;                   -- const VkSwapchainKHR* 
-      pImageIndices      : Ptr_Int_32_Unsigned_C; -- uint32_t
-      pResults           : Ptr_Int_32_Unsigned_C; -- VkResult
+      sType              : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;     -- VkStructureType
+      pNext              : Ptr := NULL_PTR;                   -- const void*
+      waitSemaphoreCount : Int_32_Unsigned_C := 0;     -- uint32_t
+      pWaitSemaphores    : Ptr := NULL_PTR;                   -- const VkSemaphore*
+      swapchainCount     : Int_32_Unsigned_C := 0;     -- uint32_t 
+      pSwapchains        : Ptr := NULL_PTR;                   -- const VkSwapchainKHR* 
+      pImageIndices      : Ptr_Int_32_Unsigned_C := null; -- uint32_t
+      pResults           : Ptr_Int_32_Unsigned_C := null; -- VkResult
     end record with Convention => C;
+
+  -- https://vulkan.lunarg.com/doc/view/1.0.26.0/windows/vkspec.chunked/ch29s05.html#VkSurfaceFormatKHR
+  type VkSurfaceFormatKHR is record
+      format     : Int_32_Unsigned_C := 0; -- VkFormat
+      colorSpace : Int_32_Unsigned_C := 0; -- VkColorSpaceKHR
+    end record with Convention => C;
+
+  ------------
+  -- Arrays --
+  ------------
+
+  type Array_VkSurfaceFormatKHR is array (Positive range <>) of VkSurfaceFormatKHR;
+  type Array_VkQueueFamilyProperties is array (Positive range <>) of VkQueueFamilyProperties;
+  type Ptr_Array_VkSurfaceFormatKHR is access all Array_VkSurfaceFormatKHR;
+  type Ptr_Array_VkQueueFamilyProperties is access all Array_VkQueueFamilyProperties;
 
   ---------------
   -- Functions --
   ---------------
 
-  -- http://nopper.tv/Vulkan/1.0/vkCreateWin32SurfaceKHR.html
-  type vkCreateWin32SurfaceKHR is access all function (instance    :        Ptr;                         -- VkInstance
+  -- Assert VK_SUCCESS
+  procedure vkAssert (result : Int_32_Unsigned_C); -- VkResult
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceFeatures.html
+  --type Ptr_vkGetPhysicalDeviceFeatures is access procedure (VkPhysicalDevice                            physicalDevice,
+  --                                                          VkPhysicalDeviceFeatures*                   pFeatures)
+  --                                                     with Convention => C;
+  --function To_Ptr_vkGetPhysicalDeviceFeatures is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceFeatures);
+  --vkGetPhysicalDeviceFeatures : Ptr_vkGetPhysicalDeviceFeatures;                                 
+
+  -- https://harrylovescode.gitbooks.io/vulkan-api/content/chap05/chap05-windows.html
+  type Ptr_vkCreateWin32SurfaceKHR is access function (instance    :        Ptr;                         -- VkInstance
                                                        pCreateInfo : access VkWin32SurfaceCreateInfoKHR; -- const VkWin32SurfaceCreateInfoKHR*
                                                        pAllocator  :        Ptr;                         -- const VkAllocationCallbacks*
-                                                       pSurface    : access VkSurfaceKHR)                -- VkSurfaceKHR*
+                                                       pSurface    : access Ptr)                         -- VkSurfaceKHR*
                                                        return Int_32_Unsigned_C                          -- VkResult
                                                        with Convention => C;
   function To_Ptr_vkCreateWin32SurfaceKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateWin32SurfaceKHR);
   vkCreateWin32SurfaceKHR : Ptr_vkCreateWin32SurfaceKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceProperties.html
-  type Ptr_vkGetPhysicalDeviceProperties is access procedure (physicalDevice :        VkPhysicalDevice;           -- VkPhysicalDevice
+  type Ptr_vkGetPhysicalDeviceProperties is access procedure (physicalDevice :        Ptr;           -- VkPhysicalDevice
                                                               pProperties    : access VkPhysicalDeviceProperties) -- VkPhysicalDeviceProperties*
                                                               with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceProperties);
   vkGetPhysicalDeviceProperties : Ptr_vkGetPhysicalDeviceProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceMemoryProperties.html
-  type Ptr_vkGetPhysicalDeviceMemoryProperties is access procedure (physicalDevice    :        VkPhysicalDevice;                 -- VkPhysicalDevice
+  type Ptr_vkGetPhysicalDeviceMemoryProperties is access procedure (physicalDevice    :        Ptr;                 -- VkPhysicalDevice
                                                                     pMemoryProperties : access VkPhysicalDeviceMemoryProperties) -- VkPhysicalDeviceMemoryProperties*
                                                                     with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceMemoryProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceMemoryProperties);
   vkGetPhysicalDeviceMemoryProperties : Ptr_vkGetPhysicalDeviceMemoryProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html
-  type Ptr_vkGetPhysicalDeviceQueueFamilyProperties is access procedure (physicalDevice            :        VkPhysicalDevice;        -- VkPhysicalDevice 
+  type Ptr_vkGetPhysicalDeviceQueueFamilyProperties is access procedure (physicalDevice            :        Ptr;        -- VkPhysicalDevice 
                                                                          pQueueFamilyPropertyCount :        Ptr_Int_32_Unsigned_C;   -- uint32_t*
-                                                                         pQueueFamilyProperties    : access VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
+                                                                         pQueueFamilyProperties    : Ptr_Array_VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
                                                                          with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceQueueFamilyProperties);
   vkGetPhysicalDeviceQueueFamilyProperties : Ptr_vkGetPhysicalDeviceQueueFamilyProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetDeviceQueue.html
-  type Ptr_vkGetDeviceQueue is access procedure (device           : VkDevice;          -- VkDevice
+  type Ptr_vkGetDeviceQueue is access procedure (device           : Ptr;          -- VkDevice
                                                  queueFamilyIndex : Int_32_Unsigned_C; -- uint32_t 
                                                  queueIndex       : Int_32_Unsigned_C; -- uint32_t 
                                                  pQueue           : Ptr)               -- VkQueue*
@@ -911,10 +987,10 @@ package Neo.API.Vulkan is
   vkGetDeviceQueue : Ptr_vkGetDeviceQueue;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateInstance.html
-  type Ptr_vkCreateInstance is access function (pCreateInfo : Ptr;       -- const VkInstanceCreateInfo*
-                                                pAllocator  : Ptr;       -- const VkAllocationCallbacks*
-                                                pInstance   : Ptr)       -- VkInstance*
-                                                return Int_32_Unsigned_C -- VkResult
+  type Ptr_vkCreateInstance is access function (pCreateInfo : access VkInstanceCreateInfo; -- const VkInstanceCreateInfo*
+                                                pAllocator  :        Ptr;                  -- const VkAllocationCallbacks*
+                                                pInstance   :        Ptr)                  -- VkInstance*
+                                                return Int_32_Unsigned_C                   -- VkResult
                                                 with Convention => C;
   function To_Ptr_vkCreateInstance is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateInstance);
   vkCreateInstance : Ptr_vkCreateInstance; 
@@ -922,15 +998,15 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEnumeratePhysicalDevices.html
   type Ptr_vkEnumeratePhysicalDevices is access function (instance             : Ptr;                   -- VkInstance
                                                           pPhysicalDeviceCount : Ptr_Int_32_Unsigned_C; -- uint32_t*
-                                                          pPhysicalDevices     : Ptr)                   -- VkPhysicalDevice*
+                                                          pPhysicalDevices     : Ptr_Array_Ptr)         -- VkPhysicalDevice*
                                                           return Int_32_Unsigned_C                      -- VkResult
                                                           with Convention => C;
   function To_Ptr_vkEnumeratePhysicalDevices is new Ada.Unchecked_Conversion (Ptr, Ptr_vkEnumeratePhysicalDevices);
   vkEnumeratePhysicalDevices : Ptr_vkEnumeratePhysicalDevices;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateDevice.html
-  type Ptr_vkCreateDevice is access function (physicalDevice : VkPhysicalDevice; -- VkPhysicalDevice
-                                              pCreateInfo    : Ptr;              -- const VkDeviceCreateInfo*
+  type Ptr_vkCreateDevice is access function (physicalDevice : Ptr; -- VkPhysicalDevice
+                                              pCreateInfo    : access VkDeviceCreateInfo;              -- const VkDeviceCreateInfo*
                                               pAllocator     : Ptr;              -- const VkAllocationCallbacks*
                                               pDevice        : Ptr)              -- VkDevice*
                                               return Int_32_Unsigned_C           -- VkResult
@@ -939,8 +1015,8 @@ package Neo.API.Vulkan is
   vkCreateDevice : Ptr_vkCreateDevice;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateCommandPool.html
-  type Ptr_vkCreateCommandPool is access function (device       : VkDevice; -- VkDevice 
-                                                   pCreateInfo  : Ptr;      -- const VkCommandPoolCreateInfo* 
+  type Ptr_vkCreateCommandPool is access function (device       : Ptr; -- VkDevice 
+                                                   pCreateInfo  : access VkCommandPoolCreateInfo;      -- const VkCommandPoolCreateInfo* 
                                                    pAllocator   : Ptr;      -- const VkAllocationCallbacks*
                                                    pCommandPool : Ptr)      -- VkCommandPool* 
                                                    return Int_32_Unsigned_C -- VkResult
@@ -949,9 +1025,9 @@ package Neo.API.Vulkan is
   vkCreateCommandPool : Ptr_vkCreateCommandPool;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceSupportKHR.html
-  type Ptr_vkGetPhysicalDeviceSurfaceSupportKHR is access function (physicalDevice   : VkPhysicalDevice;      -- VkPhysicalDevice
+  type Ptr_vkGetPhysicalDeviceSurfaceSupportKHR is access function (physicalDevice   : Ptr;      -- VkPhysicalDevice
                                                                     queueFamilyIndex : Int_32_Unsigned_C;     -- uint32_t
-                                                                    surface          : VkSurfaceKHR;          -- VkSurfaceKHR
+                                                                    surface          : Ptr;          -- VkSurfaceKHR
                                                                     pSupported       : Ptr_Int_32_Unsigned_C) -- VkBool32*
                                                                     return Int_32_Unsigned_C                  -- VkResult
                                                                     with Convention => C;
@@ -959,18 +1035,18 @@ package Neo.API.Vulkan is
   vkGetPhysicalDeviceSurfaceSupportKHR : Ptr_vkGetPhysicalDeviceSurfaceSupportKHR;    
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceFormatsKHR.html
-  type Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is access function (physicalDevice      :        VkPhysicalDevice;      -- VkPhysicalDevice
-                                                                    surface             :        VkSurfaceKHR;          -- VkSurfaceKHR
+  type Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is access function (physicalDevice      :        Ptr;      -- VkPhysicalDevice
+                                                                    surface             :        Ptr;          -- VkSurfaceKHR
                                                                     pSurfaceFormatCount :        Ptr_Int_32_Unsigned_C; -- uint32_t* 
-                                                                    pSurfaceFormats     : access VkSurfaceFormatKHR)    -- VkSurfaceFormatKHR*
+                                                                    pSurfaceFormats     : Ptr_Array_VkSurfaceFormatKHR)    -- VkSurfaceFormatKHR*
                                                                     return Int_32_Unsigned_C                            -- VkResult 
                                                                     with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR);
   vkGetPhysicalDeviceSurfaceFormatsKHR : Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR; 
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html
-  type Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR is access function (physicalDevice       :        VkPhysicalDevice;         -- VkPhysicalDevice
-                                                                         surface              :        VkSurfaceKHR;             -- VkSurfaceKHR
+  type Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR is access function (physicalDevice       :        Ptr;         -- VkPhysicalDevice
+                                                                         surface              :        Ptr;             -- VkSurfaceKHR
                                                                          pSurfaceCapabilities : access VkSurfaceCapabilitiesKHR) -- VkSurfaceCapabilitiesKHR*
                                                                          return Int_32_Unsigned_C                                -- VkResult
                                                                          with Convention => C;
@@ -978,18 +1054,18 @@ package Neo.API.Vulkan is
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR : Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfacePresentModesKHR.html
-  type Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR is access function (physicalDevice    :        VkPhysicalDevice; -- VkPhysicalDevice
-                                                                         surface           :        VkSurfaceKHR;     -- VkSurfaceKHR
-                                                                         pPresentModeCount : Ptr_Int_32_Unsigned_C;   -- uint32_t* 
-                                                                         pPresentModes     : access VkPresentModeKHR) -- VkPresentModeKHR*
-                                                                         return Int_32_Unsigned_C                     -- VkResult 
+  type Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR is access function (physicalDevice    : Ptr;                   -- VkPhysicalDevice
+                                                                         surface           : Ptr;                   -- VkSurfaceKHR
+                                                                         pPresentModeCount : Ptr_Int_32_Unsigned_C; -- uint32_t* 
+                                                                         pPresentModes     : Ptr_Int_32_Unsigned_C) -- VkPresentModeKHR*
+                                                                         return Int_32_Unsigned_C                   -- VkResult 
                                                                          with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR);
   vkGetPhysicalDeviceSurfacePresentModesKHR : Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkCreateSwapchainKHR.html
-  type Ptr_vkCreateSwapchainKHR is access function (device      : VkDevice;  -- VkDevice
-                                                    pCreateInfo : Ptr;       -- const VkSwapchainCreateInfoKHR*
+  type Ptr_vkCreateSwapchainKHR is access function (device      : Ptr;  -- VkDevice
+                                                    pCreateInfo : access VkSwapchainCreateInfoKHR;       -- const VkSwapchainCreateInfoKHR*
                                                     pAllocator  : Ptr;       -- const VkAllocationCallbacks*
                                                     pSwapchain  : Ptr)       -- VkSwapchainKHR*
                                                     return Int_32_Unsigned_C -- VkResult
@@ -998,18 +1074,18 @@ package Neo.API.Vulkan is
   vkCreateSwapchainKHR : Ptr_vkCreateSwapchainKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetSwapchainImagesKHR.html 
-  type Ptr_vkGetSwapchainImagesKHR is access function (device               : VkDevice;              -- VkDevice
-                                                       swapchain            : VkSwapchainKHR;        -- VkSwapchainKHR
+  type Ptr_vkGetSwapchainImagesKHR is access function (device               : Ptr;              -- VkDevice
+                                                       swapchain            : Ptr;        -- VkSwapchainKHR
                                                        pSwapchainImageCount : Ptr_Int_32_Unsigned_C; -- uint32_t*  
-                                                       pSwapchainImages     : Ptr)                   -- VkImage*
+                                                       pSwapchainImages     : Ptr_Array_Ptr)                   -- VkImage*
                                                        return Int_32_Unsigned_C                      -- VkResult
                                                        with Convention => C;
   function To_Ptr_vkGetSwapchainImagesKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetSwapchainImagesKHR);
   vkGetSwapchainImagesKHR : Ptr_vkGetSwapchainImagesKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkAllocateCommandBuffers.html
-  type Ptr_vkAllocateCommandBuffers is access function (device          : VkDevice; -- VkDevice                                    
-                                                        pAllocateInfo   : Ptr;      -- const VkCommandBufferAllocateInfo*
+  type Ptr_vkAllocateCommandBuffers is access function (device          : Ptr; -- VkDevice                                    
+                                                        pAllocateInfo   : access VkCommandBufferAllocateInfo;      -- const VkCommandBufferAllocateInfo*
                                                         pCommandBuffers : Ptr)      -- VkCommandBuffer*
                                                         return Int_32_Unsigned_C    -- VkResult
                                                         with Convention => C;
@@ -1017,64 +1093,64 @@ package Neo.API.Vulkan is
   vkAllocateCommandBuffers : Ptr_vkAllocateCommandBuffers;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkBeginCommandBuffer.html
-  type Ptr_vkBeginCommandBuffer is access function (commandBuffer : VkCommandBuffer; -- VkCommandBuffer                             
-                                                    pBeginInfo    : Ptr)             -- const VkCommandBufferBeginInfo*
+  type Ptr_vkBeginCommandBuffer is access function (commandBuffer : Ptr; -- VkCommandBuffer                             
+                                                    pBeginInfo    : access VkCommandBufferBeginInfo)             -- const VkCommandBufferBeginInfo*
                                                     return Int_32_Unsigned_C         -- VkResult
                                                     with Convention => C;
   function To_Ptr_vkBeginCommandBuffer is new Ada.Unchecked_Conversion (Ptr, ptr_vkBeginCommandBuffer);
   vkBeginCommandBuffer : Ptr_vkBeginCommandBuffer;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEndCommandBuffer.html
-  type Ptr_vkCmdPipelineBarrier is access procedure (commandBuffer            : VkCommandBuffer;      -- VkCommandBuffer
-                                                     srcStageMask             : VkPipelineStageFlags; -- VkPipelineStageFlags
-                                                     dstStageMask             : VkPipelineStageFlags; -- VkPipelineStageFlags
-                                                     dependencyFlags          : VkDependencyFlags;    -- VkDependencyFlags
+  type Ptr_vkCmdPipelineBarrier is access procedure (commandBuffer            : Ptr;      -- VkCommandBuffer
+                                                     srcStageMask             : Int_32_Unsigned_C; -- VkPipelineStageFlags
+                                                     dstStageMask             : Int_32_Unsigned_C; -- VkPipelineStageFlags
+                                                     dependencyFlags          : Int_32_Unsigned_C;    -- VkDependencyFlags
                                                      memoryBarrierCount       : Int_32_Unsigned_C;    -- uint32_t
                                                      pMemoryBarriers          : Ptr;                  -- const VkMemoryBarrier*
                                                      bufferMemoryBarrierCount : Int_32_Unsigned_C;    -- uint32_t
                                                      pBufferMemoryBarriers    : Ptr;                  -- const VkBufferMemoryBarrier*
                                                      imageMemoryBarrierCount  : Int_32_Unsigned_C;    -- uint32_t
-                                                     pImageMemoryBarriers     : Ptr)                  -- const VkImageMemoryBarrier*
+                                                     pImageMemoryBarriers     : access VkImageMemoryBarrier)                  -- const VkImageMemoryBarrier*
                                                      with Convention => C;
   function To_Ptr_vkCmdPipelineBarrier is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCmdPipelineBarrier);
   vkCmdPipelineBarrier : Ptr_vkCmdPipelineBarrier;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEndCommandBuffer.html
-  type Ptr_vkEndCommandBuffer is access function (commandBuffer : VkCommandBuffer) -- VkCommandBuffer                             
+  type Ptr_vkEndCommandBuffer is access function (commandBuffer : Ptr) -- VkCommandBuffer                             
                                                   return Int_32_Unsigned_C         -- VkResult 
                                                   with Convention => C;
   function To_Ptr_vkEndCommandBuffer is new Ada.Unchecked_Conversion (Ptr, Ptr_vkEndCommandBuffer);
   vkEndCommandBuffer : Ptr_vkEndCommandBuffer;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkQueueSubmit.html
-  type Ptr_vkQueueSubmit is access function (queue       : VkQueue;           -- VkQueue                                     
+  type Ptr_vkQueueSubmit is access function (queue       : Ptr;           -- VkQueue                                     
                                              submitCount : Int_32_Unsigned_C; -- uint32_t                                    
-                                             pSubmits    : Ptr;               -- const VkSubmitInfo*
-                                             fence       : VkFence)           -- VkFence
+                                             pSubmits    : access VkSubmitInfo;               -- const VkSubmitInfo*
+                                             fence       : Ptr)           -- VkFence
                                              return Int_32_Unsigned_C         -- VkResult
                                              with Convention => C;
   function To_Ptr_vkQueueSubmit is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueueSubmit);
   vkQueueSubmit : Ptr_vkQueueSubmit;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkQueueWaitIdle.html
-  type Ptr_vkQueueWaitIdle is access function (queue : VkQueue)         -- VkQueue
+  type Ptr_vkQueueWaitIdle is access function (queue : Ptr)         -- VkQueue
                                                return Int_32_Unsigned_C -- VkResult
                                                with Convention => C;
   function To_Ptr_vkQueueWaitIdle is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueueWaitIdle);
-  Ptr_vkQueueWaitIdle : Ptr_vkQueueWaitIdle; 
+  vkQueueWaitIdle : Ptr_vkQueueWaitIdle; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSemaphore.html
-  type Ptr_vkFreeCommandBuffers is access procedure (device      : VkDevice;          -- VkDevice
-                                                     pCreateInfo : VkCommandPool;     -- const VkSemaphoreCreateInfo*
-                                                     pAllocator  : Int_32_Unsigned_C; -- const VkAllocationCallbacks*
-                                                     pSemaphore  : Ptr)               -- VkSemaphore*
+  type Ptr_vkFreeCommandBuffers is access procedure (device      : Ptr;          -- VkDevice
+                                                     pCreateInfo : Ptr;     -- VkCommandPool                               
+                                                     pAllocator  : Int_32_Unsigned_C; -- uint32_t                                    
+                                                     pSemaphore  : Ptr)               -- VkCommandBuffer*
                                                      with Convention => C;
   function To_Ptr_vkFreeCommandBuffers is new Ada.Unchecked_Conversion (Ptr, Ptr_vkFreeCommandBuffers);
   vkFreeCommandBuffers : Ptr_vkFreeCommandBuffers;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSemaphore.html
-  type Ptr_vkCreateSemaphore is access function (device      : VkDevice;  -- VkDevice                                    
-                                                 pCreateInfo : Ptr;       -- const VkSemaphoreCreateInfo* 
+  type Ptr_vkCreateSemaphore is access function (device      : Ptr;  -- VkDevice                                    
+                                                 pCreateInfo : access VkSemaphoreCreateInfo;       -- const VkSemaphoreCreateInfo* 
                                                  pAllocator  : Ptr;       -- const VkAllocationCallbacks* 
                                                  pSemaphore  : Ptr)       -- VkSemaphore*
                                                  return Int_32_Unsigned_C -- VkResult
@@ -1083,55 +1159,55 @@ package Neo.API.Vulkan is
   vkCreateSemaphore : Ptr_vkCreateSemaphore;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDeviceWaitIdle.html
-  type Ptr_vkDeviceWaitIdle is access function (device : VkDevice)       -- VkDevice
-                                                return Int_32_Unsigned_C -- VkResult
+  type Ptr_vkDeviceWaitIdle is access function (device : Ptr)        -- VkDevice
+                                                return Int_32_Unsigned_C; -- VkResult
   function To_Ptr_vkDeviceWaitIdle is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDeviceWaitIdle);
   vkDeviceWaitIdle : Ptr_vkDeviceWaitIdle;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroySemaphore.html
-  type vkDestroySemaphore is access procedure vkDestroySemaphore (device     : VkDevice; -- VkDevice                                    
-                                                                  semaphore  : Ptr;      -- VkSemaphore                                 
-                                                                  pAllocator : Ptr;      -- const VkAllocationCallbacks* 
-                                                                  with Convention => C;
+  type Ptr_vkDestroySemaphore is access procedure (device     : Ptr; -- VkDevice                                    
+                                                   semaphore  : Ptr;      -- VkSemaphore                                 
+                                                   pAllocator : Ptr)      -- const VkAllocationCallbacks* 
+                                                   with Convention => C;
   function To_Ptr_vkDestroySemaphore is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroySemaphore);
   vkDestroySemaphore : Ptr_vkDestroySemaphore;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyCommandPool.html
-  type Ptr_vkDestroyCommandPool is access procedure (device      : VkDevice;      -- VkDevice
-                                                     commandPool : VkCommandPool; -- VkCommandPool
+  type Ptr_vkDestroyCommandPool is access procedure (device      : Ptr;      -- VkDevice
+                                                     commandPool : Ptr; -- VkCommandPool
                                                      pAllocator  : Ptr)           -- const VkAllocationCallbacks*    
                                                      with Convention => C;
   function To_Ptr_vkDestroyCommandPool is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyCommandPool);
   vkDestroyCommandPool : Ptr_vkDestroyCommandPool;
 
   -- http://nopper.tv/Vulkan/1.0/vkDestroySwapchainKHR.html
-  type Ptr_vkDestroySwapchainKHR is access procedure (device     : VkDevice;       -- VkDevice 
-                                                      swapchain  : VkSwapchainKHR; -- VkSwapchainKHR
+  type Ptr_vkDestroySwapchainKHR is access procedure (device     : Ptr;       -- VkDevice 
+                                                      swapchain  : Ptr; -- VkSwapchainKHR
                                                       pAllocator : Ptr)            -- const VkAllocationCallbacks*
                                                       with Convention => C;
   function To_Ptr_vkDestroySwapchainKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroySwapchainKHR);
   vkDestroySwapchainKHR : Ptr_vkDestroySwapchainKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDevice.html
-  type Ptr_vkDestroyDevice is access procedure (device     : VkDevice -- VkDevice                                    
-                                                pAllocator : Ptr)     -- const VkAllocationCallbacks*
+  type Ptr_vkDestroyDevice is access procedure (device     : Ptr; -- VkDevice                                    
+                                                pAllocator : Ptr)      -- const VkAllocationCallbacks*
                                                 with Convention => C;
   function To_Ptr_vkDestroyDevice is new Ada.Unchecked_Conversion (Ptr,  Ptr_vkDestroyDevice);
   vkDestroyDevice : Ptr_vkDestroyDevice; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyInstance.html
   type Ptr_vkDestroyInstance is access procedure (instance   : Ptr; -- VkInstance
-                                                  pAllocator : Ptr; -- const VkAllocationCallbacks*
+                                                  pAllocator : Ptr) -- const VkAllocationCallbacks*
                                                   with Convention => C;
   function To_Ptr_vkDestroyInstance is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyInstance);
   vkDestroyInstance : Ptr_vkDestroyInstance;
 
   -- http://web.archive.org/web/20160608223244/https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html#vkAcquireNextImageKHR
-  type Ptr_vkAcquireNextImageKHR is access function (device      : VkDevice;              -- VkDevice                                    
-                                                     swapchain   : VkSwapchainKHR;        -- VkSwapchainKHR                              
+  type Ptr_vkAcquireNextImageKHR is access function (device      : Ptr;              -- VkDevice                                    
+                                                     swapchain   : Ptr;        -- VkSwapchainKHR                              
                                                      timeout     : Int_64_Unsigned_C;     -- uint64_t                                    
                                                      semaphore   : Ptr;                   -- VkSemaphore                                 
-                                                     fence       : VkFence;               -- VkFence                                     
+                                                     fence       : Ptr;               -- VkFence                                     
                                                      pImageIndex : Ptr_Int_32_Unsigned_C) -- uint32_t*  
                                                      return Int_32_Unsigned_C             -- VkResult
                                                      with Convention => C;
@@ -1139,15 +1215,15 @@ package Neo.API.Vulkan is
   vkAcquireNextImageKHR : Ptr_vkAcquireNextImageKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkQueuePresentKHR.html
-  type Ptr_vkQueuePresentKHR is access function (queue        : VkQueue;  -- VkQueue
-                                                 pPresentInfo : Ptr)      -- const VkPresentInfoKHR*
+  type Ptr_vkQueuePresentKHR is access function (queue        : Ptr;  -- VkQueue
+                                                 pPresentInfo : access VkPresentInfoKHR)      -- const VkPresentInfoKHR*
                                                  return Int_32_Unsigned_C -- VkResult
                                                  with Convention => C;
   function To_Ptr_vkQueuePresentKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueuePresentKHR);
   vkQueuePresentKHR : Ptr_vkQueuePresentKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkWaitForFences.html
-  type Ptr_vkWaitForFences is access function (device     : VkDevice;          -- VkDevice
+  type Ptr_vkWaitForFences is access function (device     : Ptr;          -- VkDevice
                                                fenceCount : Int_32_Unsigned_C; -- uint32_t
                                                pFences    : Ptr;               -- const VkFence* 
                                                waitAll    : Int_32_Unsigned_C; -- VkBool32
@@ -1158,7 +1234,7 @@ package Neo.API.Vulkan is
   vkWaitForFences : Ptr_vkWaitForFences; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkResetFences.html
-  type Ptr_vkResetFences is access function (device     : VkDevice;          -- VkDevice
+  type Ptr_vkResetFences is access function (device     : Ptr;          -- VkDevice
                                              fenceCount : Int_32_Unsigned_C; -- uint32_t
                                              pFences    : Ptr)               -- const VkFence*  
                                              return Int_32_Unsigned_C        -- VkResul
@@ -1167,23 +1243,23 @@ package Neo.API.Vulkan is
   vkResetFences : Ptr_vkResetFences;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetFenceStatus.html
-  type Ptr_vkGetFenceStatus is access function (device : VkDevice;       -- VkDevice
-                                                fence  : VkFence)        -- VkFence
+  type Ptr_vkGetFenceStatus is access function (device : Ptr;       -- VkDevice
+                                                fence  : Ptr)        -- VkFence
                                                 return Int_32_Unsigned_C -- VkResult
                                                 with Convention => C; 
   function To_Ptr_vkGetFenceStatus is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetFenceStatus);
   vkGetFenceStatus : Ptr_vkGetFenceStatus; 
 
   -- http://web.archive.org/web/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyFence.html
-  type Ptr_vkDestroyFence is access procedure (device     : VkDevice; -- VkDevice
-                                               fence      : VkFence;  -- VkFence
+  type Ptr_vkDestroyFence is access procedure (device     : Ptr; -- VkDevice
+                                               fence      : Ptr;  -- VkFence
                                                pAllocator : Ptr)      -- const VkAllocationCallbacks*
                                                with Convention => C;
   function To_Ptr_vkDestroyFence is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyFence);
   vkDestroyFence : Ptr_vkDestroyFence;
 
   -- http://web.archive.org/web/20160324124456/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateFence.html
-  type Ptr_vkCreateFence is access function (device      : VkDevice;  -- VkDevice
+  type Ptr_vkCreateFence is access function (device      : Ptr;  -- VkDevice
                                              pCreateInfo : Ptr;       -- const VkFenceCreateInfo*
                                              pAllocator  : Ptr;       -- const VkAllocationCallbacks*
                                              pFence      : Ptr)       -- VkFence*
