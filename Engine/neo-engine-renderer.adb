@@ -40,6 +40,24 @@ separate (Neo.Engine) package body Renderer is
   -- Amount of idle frontend light job tasks that are allowed to sit idle until tasks start being destroyed
   MAX_IDLE_LIGHT_JOBS : constant Positive := 10;
 
+  --------------
+  -- Separate --
+  --------------
+
+  -- Graphics card command building and submission. Because the command building for a scene stack oriented a single task is sufficient.
+  package Backend is
+      procedure Run_Backend;
+      package Task_Backend is new Tasks (Run_Backend);
+      Backend : Task_Backend.Safe_Task;
+    end;
+
+  -- Preprocess, animate, flood lights, and turn our internal representation of game state into something the graphics card can handle
+  package Frontend is
+      procedure Run_Frontend;
+      package Task_Frontend is new Tasks (Run_Frontend);
+      Backend : Task_Frontend.Safe_Task;
+    end;
+
   -------------
   -- Globals --
   -------------
@@ -47,10 +65,12 @@ separate (Neo.Engine) package body Renderer is
   -- Current recogonized width and height of the render surface
   Current_Width, Current_Height : aliased Natural := 0;
 
+  -- Frame buffer
+  Images : aliased Array_Ptr (1..3) := null;
+
   -- Handles
   Instance, Surface, Swap_Chain, Command_Pool, Graphics_Queue, Present_Queue,
   Render_Status, Acquire_Status, Physical_Device, Device : aliased Ptr := NULL_PTR;
-  Images : aliased Array_Ptr (1..3) := null;
 
   -- Settings, and instance information
   Family_Index, Present_Family, Present_Mode, Image_Index : aliased Int_32_Unsigned_C := 0;
@@ -95,141 +115,141 @@ separate (Neo.Engine) package body Renderer is
       vkFreeCommandBuffers (Device, Command_Pool 1, Command_Buffer'Unchecked_Access);
     end;
 
-  -- -----------
-  -- -- Image --
-  -- -----------
+  -----------
+  -- Image --
+  -----------
 
-  -- -- Controller
-  -- type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
-  --     Properties : Int_32_Unsigned_C;
-  --     Layout     : Int_32_Unsigned_C;
-  --     Data       : Ptr;
-  --   end record;
-  -- procedure Initialize (Image : in out Image_State);
-  -- procedure Finalize   (Image : in out Image_State);
+  -- Controller
+  type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
+      Properties : Int_32_Unsigned_C;
+      Layout     : Int_32_Unsigned_C;
+      Data       : Ptr;
+    end record;
+  procedure Initialize (Image : in out Image_State);
+  procedure Finalize   (Image : in out Image_State);
 
-  -- -- Copy used for staging
-  -- function Copy (Image : in out Image_State) return Image_State is
-  --   Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
-  --   Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
-  --                                                         baseArrayLayer => 0,
-  --                                                         mipLevel       => 0,
-  --                                                         layerCount     => 1,
-  --                                                         others         => <>);
-  --   Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
-  --                                                         dstSubresource => Subresource,
-  --                                                         srcOffset      => (0, 0, 0),
-  --                                                         dstOffset      => (0, 0, 0),
-  --                                                         extent         => (Width, Height, depth => 1),
-  --                                                         others         => <>);
-  --   begin
-  --     Begin_Commands (Command_Buffer);
-  --     vkCmdCopyImage (commandBuffer  => Command_Buffer,
-  --                     srcImage       => Image,
-  --                     srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-  --                     dstImage       => Result,
-  --                     dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-  --                     regionCount    => 1,
-  --                     pRegions       => Image_Copy'Unchecked_Access);
-  --     End_Commands (Command_Buffer);
-  --     return Result;
-  --   end;
+  -- Copy used for staging
+  function Copy (Image : in out Image_State) return Image_State is
+    Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
+    Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
+                                                          baseArrayLayer => 0,
+                                                          mipLevel       => 0,
+                                                          layerCount     => 1,
+                                                          others         => <>);
+    Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
+                                                          dstSubresource => Subresource,
+                                                          srcOffset      => (0, 0, 0),
+                                                          dstOffset      => (0, 0, 0),
+                                                          extent         => (Width, Height, depth => 1),
+                                                          others         => <>);
+    begin
+      Begin_Commands (Command_Buffer);
+      vkCmdCopyImage (commandBuffer  => Command_Buffer,
+                      srcImage       => Image,
+                      srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                      dstImage       => Result,
+                      dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                      regionCount    => 1,
+                      pRegions       => Image_Copy'Unchecked_Access);
+      End_Commands (Command_Buffer);
+      return Result;
+    end;
  
-  -- -- Grab a view 
-  -- function Make_View (Image : in out Image_State) return ___ is
-  --   Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
-  --                                                                            baseMipLevel   => 0,
-  --                                                                            levelCount     => 1,
-  --                                                                            baseArrayLayer => 0,
-  --                                                                            layerCount     => 1,
-  --                                                                            others         => <>),
-  --                                                       image            => image,
-  --                                                       viewType         => VK_IMAGE_VIEW_TYPE_2D,
-  --                                                       format           => format,
-  --                                                       others           => <>);
-  --   begin
-  --     vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
-  --     return Result;
-  --   end;
+  -- Grab a view 
+  function Make_View (Image : in out Image_State) return ___ is
+    Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
+                                                                             baseMipLevel   => 0,
+                                                                             levelCount     => 1,
+                                                                             baseArrayLayer => 0,
+                                                                             layerCount     => 1,
+                                                                             others         => <>),
+                                                        image            => image,
+                                                        viewType         => VK_IMAGE_VIEW_TYPE_2D,
+                                                        format           => format,
+                                                        others           => <>);
+    begin
+      vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
+      return Result;
+    end;
 
-  -- -- Controlled primatives
-  -- procedure Initialize (Image : in out Image_State) is
-  --   Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
-  --   Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
-  --                                                          extent         => (width, height, depth => 1),
-  --                                                          mipLevels      => 1,
-  --                                                          arrayLayers    => 1,
-  --                                                          format         => format,
-  --                                                          tiling         => tiling,
-  --                                                          initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
-  --                                                          usage          => usage,
-  --                                                          samples        => VK_SAMPLE_COUNT_1_BIT,
-  --                                                          sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
-  --                                                          others         => <>);
-  --   Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
-  --                                                          others         => <>);
-  --   begin
-  --     vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
-  --     vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
-  --     vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
-  --     vkBindImageMemory (Device, image, imageMemory, 0);
-  --   end;
-  -- procedure Finalize (Image : in out Image_State) is
-  --   begin
-  --     null;
-  --   end;
-  -- procedure Adjust (Image : in out Image_State) is
-  --   Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
-  --   Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
-  --                                                     newLayout           => newLayout,
-  --                                                     srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-  --                                                     dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-  --                                                     image               => image);
-  --   begin
+  -- Controlled primatives
+  procedure Initialize (Image : in out Image_State) is
+    Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
+    Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
+                                                           extent         => (width, height, depth => 1),
+                                                           mipLevels      => 1,
+                                                           arrayLayers    => 1,
+                                                           format         => format,
+                                                           tiling         => tiling,
+                                                           initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
+                                                           usage          => usage,
+                                                           samples        => VK_SAMPLE_COUNT_1_BIT,
+                                                           sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
+                                                           others         => <>);
+    Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
+                                                           others         => <>);
+    begin
+      vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
+      vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
+      vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
+      vkBindImageMemory (Device, image, imageMemory, 0);
+    end;
+  procedure Finalize (Image : in out Image_State) is
+    begin
+      null;
+    end;
+  procedure Adjust (Image : in out Image_State) is
+    Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
+    Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
+                                                      newLayout           => newLayout,
+                                                      srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      image               => image);
+    begin
 
-  --     -- ???
-  --     if newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-  --       Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
-  --       if format = VK_FORMAT_D32_SFLOAT_S8_UINT or format = VK_FORMAT_D24_UNORM_S8_UINT then
-  --         Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
-  --       end if;
-  --     else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
+      -- ???
+      if newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+        Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
+        if format := VK_FORMAT_D32_SFLOAT_S8_UINT or format := VK_FORMAT_D24_UNORM_S8_UINT then
+          Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
+        end if;
+      else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
 
-  --     -- ???
-  --     Barrier.subresourceRange.baseMipLevel   := 0;
-  --     Barrier.subresourceRange.levelCount     := 1;
-  --     Barrier.subresourceRange.baseArrayLayer := 0;
-  --     Barrier.subresourceRange.layerCount     := 1;
+      -- ???
+      Barrier.subresourceRange.baseMipLevel   := 0;
+      Barrier.subresourceRange.levelCount     := 1;
+      Barrier.subresourceRange.baseArrayLayer := 0;
+      Barrier.subresourceRange.layerCount     := 1;
 
-  --     -- Set new image layout
-  --     if oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
-  --     elsif oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-  --     elsif oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
-  --     elsif oldLayout = VK_IMAGE_LAYOUT_UNDEFINED and newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-  --       Barrier.srcAccessMask := 0;
-  --       Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-  --     else raise Program_Error with "Unknown image layout transition?!"; end if;
+      -- Set new image layout
+      if oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout := VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_UNDEFINED and newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+        Barrier.srcAccessMask := 0;
+        Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+      else raise Program_Error with "Unknown image layout transition?!"; end if;
 
-  --     -- Send transition commands
-  --     Begin_Commands (Command_Buffer);
-  --     vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
-  --                           srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-  --                           dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-  --                           dependencyFlags          => 0,
-  --                           memoryBarrierCount       => 0,
-  --                           pMemoryBarriers          => null,
-  --                           bufferMemoryBarrierCount => 0,
-  --                           pBufferMemoryBarriers    => null,
-  --                           imageMemoryBarrierCount  => 1,
-  --                           pImageMemoryBarriers     => Barrier);
-  --     End_Commands (Command_Buffer);
-  --   end;
+      -- Send transition commands
+      Begin_Commands (Command_Buffer);
+      vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
+                            srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                            dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                            dependencyFlags          => 0,
+                            memoryBarrierCount       => 0,
+                            pMemoryBarriers          => null,
+                            bufferMemoryBarrierCount => 0,
+                            pBufferMemoryBarriers    => null,
+                            imageMemoryBarrierCount  => 1,
+                            pImageMemoryBarriers     => Barrier);
+      End_Commands (Command_Buffer);
+    end;
 
   -------------
   -- Texture --
@@ -243,15 +263,15 @@ separate (Neo.Engine) package body Renderer is
 
   -- Controlled primatives
   procedure Initialize (Texture : in out Texture_State) is
-    Subresource : aliased VkImageSubresource := (aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-                                                mipLevel = 0;
-                                                arrayLayer = 0;
+    Subresource : aliased VkImageSubresource := (aspectMask := VK_IMAGE_ASPECT_COLOR_BIT;
+                                                mipLevel := 0;
+                                                arrayLayer := 0;
                                                 others => <>);
     VkSubresourceLayout stagingImageLayout;
     vkGetImageSubresourceLayout(Device, stagingImage, &subresource, &stagingImageLayout);
     void* data;
-    VDeleter<VkImage> stagingImage{Device, vkDestroyImage};
-    VDeleter<VkDeviceMemory> stagingImageMemory{Device, vkFreeMemory};
+    VDeleter<VkImage> stagingImageDevice, vkDestroyImageend;
+    VDeleter<VkDeviceMemory> stagingImageMemoryDevice, vkFreeMemoryend;
     Staging_Image : Image_State (texWidth,
                                 texHeight,
                                 VK_FORMAT_R8G8B8A8_UNORM,
@@ -263,8 +283,8 @@ separate (Neo.Engine) package body Renderer is
 
       -- Pad 
       if stagingImageLayout.rowPitch /= texWidth * 4 then
-          uint8_t* dataBytes = reinterpret_cast<uint8_t*>(data);
-          for (int y = 0; y < texHeight; y++) {
+          uint8_t* dataBytes := reinterpret_cast<uint8_t*>(data);
+          for (int y := 0; y < texHeight; y++) 
               memcpy(&dataBytes[y * stagingImageLayout.rowPitch], &pixels[y * texWidth * 4], texWidth * 4);
       else memcpy (data, pixels, imageSize); end if;
 
@@ -330,10 +350,8 @@ separate (Neo.Engine) package body Renderer is
     begin
       vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, buffer.replace));
       for I in 1..Memory_Properties.memoryTypeCount loop
-        if (Memory_Properties.memoryTypeBits and 2**I) > 0 and (Memory_Properties.memoryTypes (I).propertyFlags and Properties) = Properties then
-          Allocate_Info.memoryTypeIndex := I;
-          exit;
-        elsif I = Memory_Properties.memoryTypeCount then raise Program_Error with "Failed to find suitable memory type!?"; end if;
+        if not ((Memory_Properties.memoryTypeBits and 2**I) > 0 and (Memory_Properties.memoryTypes (I).propertyFlags and Properties) = Properties) then Assert (Memory_Properties.memoryTypeCount);
+        else Allocate_Info.memoryTypeIndex := I; exit; end if;
       end loop;
       vkAssert (vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, bufferMemory.replace));
       vkBindBufferMemory (Device, buffer, bufferMemory, 0);
@@ -401,299 +419,6 @@ separate (Neo.Engine) package body Renderer is
       vkFreeMemory
       vkFreeMemory
     end;
-
-  --------------
-  -- Frontend --
-  --------------
-
-  -- 
-  procedure Run_Light_Job is
-    begin
-      View.View_Entities.Append (Render_Lights.Shadow_Only_View_Entities);
-
-      -- Evaluate light shader registers
-
-      -- Additve lights with no stage in the light shader is positive, remove the light
-      if Light.Kind = Fog_Light or Light.Kind = Blend_Light then
-        Outter: for Stage of Light.Stages loop
-          if Light.Stage.Registers.Condition_Register then
-
-            -- Snap tiny values to zero
-            for Register of Light.Stage.Registers loop
-              if Register < 0.001 then Register := 0.0; end if;
-            end loop;
-
-            -- We found a light that add something
-            for Register of Light.Stage.Registers loop
-              exit Outter when Register > 0.0;
-            end loop;              
-          end if;
-          if Stage = Light.Stages.Last then 
-
--- We didn't find any addition to the scene
-goto Skip_Light;
-          end if;
-        end loop Outter;
-      end if;
-
-      -- Copy data to backend
-
-      -- Create a "fog plane" to represent light far clip plane
-
-      -- Calculate the matrix that projects the zero-to-one cube to exactly cover the light frustum in clip space
-
-      -- Calculate the project bounds, either not clipped at all, near clipped, or fully clipped
-        
-      -- Build the scissor
-
-      -- Create interactions with all entities the light may touch and add entities that may cast shadows
-      for Reference of Light.References loop
-
-        -- Some lights have their center of projection outside of the world so ignore areas not connected to the light center
-        if not Light.World.Areas_Are_Connected (Light.Area, Reference.Area, PS_BLOCK_VIEW) then
-
-          -- Check the models in this area
-          for Model of Reference.Entities loop
-            if not (vLight->entityInteractionState[ edef->index ] != viewLight_t::INTERACTION_UNCHECKED or else
-                        
-              -- A large fraction of static entity / light pairs will still have no interactions even though they are both present in the same area(s)
-              eModel != NULL && !eModel->IsDynamicModel && inter == INTERACTION_EMPTY or else
-                        
-                -- We don't want the lights on weapons to illuminate anything else. There are two assumptions here - that
-                -- allowLightInViewID is only used for weapon lights, and that all weapons will have weaponDepthHack. A more general
-                -- solution would be to have an allowLightOnEntityID field.
-                light->parms.allowLightInViewID && light->parms.pointLight && !eParms.weaponDepthHack or else
-
-                --
-                (eParms.noShadow || ( eModel && !eModel->ModelHasShadowCastingSurfaces ) ) && !edef->IsDirectlyVisible or else
-                eModel && !eModel->ModelHasInteractingSurfaces && !eModel->ModelHasShadowCastingSurfaces or else
-                inter == NULL and (eParms.noDynamicInteractions or R_CullModelBoundsToLight( light, edef->localReferenceBounds, edef->modelRenderMatrix )) or else 
-                edef->IsDirectlyVisible 
-                !lightCastsShadows 
-            then
-
-            end if;
-          end loop;
-        end if;
-      end loop;
-    end;
-  
-  -- The frontend - also performs the step of filling the depth buffer Visible_Surface_Determination
-  procedure Run_Frontend is
-    Area : ;
-    BSP  : ;
-    Pos  : ;
-
-    -- Recursivly find lights and entities by flowing from an origin through visible portals that the view origin can see into
-    procedure Flood_View_Through_Portals (Origin : Vector_3D; Planes : in out Vector_Plane_4D.Unsafe.Vector) is
-      portalStack_t ps;
-      ps.next = NULL;
-      ps.p = NULL;
-      idScreenRect r;
-      idVec3 v;
-      idVec3 ndc;
-      begin
-        Portals.Planes := Planes;
-        Portals.Rectangle := View.Scissor;
-
-        -- If we are outside the world, mark everything
-        if View.Area < 0 then
-          for I in 1..Length (Planes) loop
-            Area_Screen_Rect (I) := View.Scissor;
-            Portals.Add_Area_To_View (Portal)
-          end loop;
-        else
-          portalArea_t * area = &portalAreas[ areaNum ];
-
-          -- Cull models and lights to the current collection of planes
-          AddAreaToView ( areaNum, ps );
-          if Is_Empty (Area_Screen_Rect (Area)) then
-            Area_Screen_Rect (Area) := Portals.Rect;
-          else
-            Area_Screen_Rect (Area) := Join (Portals.Rect, Area_Screen_Rect (Area));
-          end if;
-
-          -- Go through all the portals
-          for Portal of Portals loop
-            
-            -- Check the portal isn't a closed door and that it is facing the view
-            Distance := Portal.Plane.Distance (Origin);
-            if not Portal.Double_Portal.Is_View_Block and Distance < -0.1 then
-
-              -- If we are very close to the portal surface, avoid clipping that may cause areas to vanish
-              if Distance < 1.0 then
-                New_Portals := Portals;
-                New_Portals.Append (Portal);
-                Flood_View_Through_Portals (Origin, New_Portals);
-              else
-
-                -- Clip the portal winding to all of the planes
-                for Plane of Portal.Planes loop
-                  exit when not Is_Clip_In_Place (Portal.Winding, Plane);
-                end loop;
-
-                -- Continue only if the portal is visible and not fogged out
-                if Portal.Winding.Points.Length /= 0 and Is_Fogged (Portal) then
-
-                  -- Go through the portal
-                  New_Portals.Append (Portal);
-
-                  -- Scissor things outside the screen pixel bounding box
-                  New_Portals.Rect := Screen_Rect_From_Winding (Portal.Winding, Identity_Space);
-                  View_Width  := View.Port.X2 - View.Port.X1;
-                  View_Height := View.Port.Y2 - View.Port.Y1;
-                  for Point of Portal.Winding.Points loop
-                    R_LocalPointToGlobal (space->modelMatrix, (*w)[i].ToVec3(), v);
-                    R_GlobalToNormalizedDeviceCoordinates (v, ndc);
-                    Screen_Rect.Points.Append (X => (ndc[0] * 0.5 + 0.5) * viewWidth,
-                                               Y => (ndc[1] * 0.5 + 0.5) * viewHeight);
-                  end loop;
-                  r.Expand();
-
-                  -- Slop might have spread it a pixel outside, so trim it back
-                  New_Portals.Rect.Intersect (Portals.Rect);
-
-                  -- Generate a set of clipping planes to restrict the view visibility beyond the scissor
-                  for Point of Winding.Points loop
-                    newStack.portalPlanes[newStack.numPortalPlanes].Normal().Cross( origin - w[j].ToVec3(), origin - w[i].ToVec3() );
-
-                    -- Skip degenerates
-                    if newStack.portalPlanes[newStack.numPortalPlanes].Normalize() >= 0.01f then
-                      newStack.portalPlanes[newStack.numPortalPlanes].FitThroughPoint( origin );
-                    end if;
-                  end loop;
-                end if;
-              end if;
-            end if;
-
-            -- 
-            newStack.portalPlanes[newStack.numPortalPlanes] = p->plane;
-            Flood_View_Through_Portals (origin, Portal.Into_Area, New_Portals);
-          end loop;
-        end if;
-      end;
-    begin
-      for View of Views loop
-
-        -- Setup the view matrix
-        Viewer := (Axis.XX, Axis.YX, Axis.ZX, -Origin.X * Axis.XX - Origin.Y * YX - Origin.Z * Axis.ZX,
-                   Axis.XY, Axis.YY, Axis.ZY, -Origin.X * Axis.XY - Origin.Y * YY - Origin.Z * Axis.ZY,
-                   Axis.XZ, Axis.YZ, Axis.ZZ, -Origin.X * Axis.XZ - Origin.Y * YZ - Origin.Z * Axis.ZZ);
-
---         -- Setup the projection matrix (use the ol' "infinite far z trick")
---         Jitter_Values := (if Jitter.Get then (Random_Float, Random_Float) else  (others => <>));
---         R_SetupProjectionMatrix
-
-        -- Setup render matricies for faster culliong
-        View.Render_Projection := Transpose (View.Projection);
-        View.World_Space.MVP := View.Render_Projection * Transpose (View.World_Space.Model_View);
-        View.Frustum := ((4)(3) => Z_Near.Get, others => -Get_Frustum_Planes (View.World_Space.MVP));
-
-        -- Walk the BSP tree to find the area where the view origin is
-        BSP := View.Level.Partitions.Get;
-        Pos := BSP.Root;
-        loop
-          Node := Get (Pos);
-          case Node.Kind is
-            when Area_Partition   => Area := Node.Area_Id; exit;
-            when Opaque_Partition => raise In_Solid;
-            when Normal_Partition => Pos := (if View.Origin * Normal (Node.Plane) + Node.Plane.W > 0 then First (Pos) else Last (Pos));
-          end case;
-        end loop;
-
-        -- Flood through portals
-        Flood_View_Through_Portals (Origin, Area, View.Planes);
-
-        -- Reset the amount of light jobs if changed (this will need tuning)
-        if Length (View.Lights) < Length (Light_Jobs) then
-          Light_Jobs.Append (new Vector_Lights.Unsafe.Vector (Length (View.Lights) - Length (Light_Jobs)));
-        elsif Length (View.Lights) + MAX_IDLE_LIGHT_JOBS > Length (Light_Jobs) then
-          Light_Jobs.Remove (1..Length (View.Lights) + MAX_IDLE_LIGHT_JOBS - Length (Light_Jobs));
-        end if;
-
-        -- Kick-off light projection and searching for lit models then wait for them to finish
-        for I in 1..Length (View.Lights) loop
-          Light_Jobs.Element (I).Do_Pass (View.Lights.Element (I));
-        end loop;
-        for Light_Job of Light_Jobs loop
-          Light_Job.Confirm_Completion;
-        end loop;
-
---         -- Determine all possible connected areas for light-behind-door culling
---         if Area = OUTSIDE_AREA then View.Connected_Areas := (others => True)
---         else View.Level.Portals.Iterate_Subtree (Flood_Portals); end if;
-
-        -- R_SortDrawSurfs            // A simple C qsort call. C++ sort would have been faster thanks to inlining.       
-        -- R_GenerateSubViews
-        -- R_AddDrawViewCmd 
-      end loop;
-    end;
-  package Task_Frontend is new Tasks (Run_Frontend);
-  Frontend : Task_Frontend.Safe_Task;
-
-  -----------------
-  -- Run_Backend --
-  -----------------
-
-  procedure Run_Backend is
-    VkRect2D scissor = {};
-    VkViewport viewport = {};
-        float parm[4];
-    begin
-      loop
-
-        -- Update dynamic viewport state and window clipping
-        viewport := (height   => View.Port.y2 + 1 - View.Port.y1,
-                     width    => View.Port.x2 + 1 - View.Port.x1,
-                     minDepth => 0.0,
-                     maxDepth => 1.0);
-        vkCmdSetViewport (drawCmdBuffers[i], 0, 1, Current_View_Port'Unchecked_Access);
-
-        -- Update dynamic scissor which may be smaller than the viewport for subviews
-        scissor.extent.width =  backEnd.View.Port.x1 + viewDef->scissor.x1;
-        scissor.extent.height = backEnd.View.Port.y1 + viewDef->scissor.y1;
-        scissor.offset.x = viewDef->scissor.x2 + 1 - viewDef->scissor.x1;
-        scissor.offset.y = viewDef->scissor.y2 + 1 - viewDef->scissor.y1;
-        vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
-
-        -- Force face culling to set next time
-        backEnd.glState.faceCulling = -1;   
-
-        -- Ensure depth writes are enabled for the depth clear
-        GL_State (GLS_DEFAULT);
-
-        -- Clear the depth buffer and set the stencil to 128 for shadowing
-        GL_Clear (false, true, true, STENCIL_SHADOW_TEST_VALUE, 0.0, 0.0, 0.0, 0.0);
-
-        -- Normal face culling
-        GL_Cull (CT_FRONT_SIDED);
-
-        -- Bind one global Vertex Array Object (VAO)
-        qglBindVertexArray (glConfig.global_vao);
-
-        -- Set eye position shader parameter
-        SetVertexParm (RENDERPARM_GLOBALEYEPOS, (View.Origin.X, View.Origin.Y, View.Origin.Z, 1.0));
-
-        -- Sets overbright to make world brighter - this value is baked into the specularScale and diffuseScale values for lighting.glsl
-        SetFragmentParm (RENDERPARM_OVERBRIGHT, (others => r_lightScale.GetFloat() * 0.5));
-
-        -- Set projection Matrix prameter
-        SetVertexParms (RENDERPARM_PROJMATRIX_X, R_MatrixTranspose(backEnd.viewDef->projectionMatrix), 4);
-
-        -- Fill the depth buffer for surfaces - starting with subview surfaces, then opaque surfaces, and finally perforated surfaces
-        for Surface_Sort in Surface_Sort_Kind'Range loop
-          for Surfaces of View.Surfaces.Element (Surface_Sort) loop
-            for Surface of Surfaces loop
-
-            end loop;
-          end loop;
-        end loop;
-
-        -- 
-      end loop;
-    end;
-  package Task_Backend is new Tasks (Run_Backend);
-  Backend : Task_Backend.Safe_Task;
 
   ----------
   -- Main --
@@ -857,8 +582,8 @@ goto Skip_Light;
         -- Find the best physical device and by looping through all of them and verifying requirements
         for Current_Physical_Device of Physical_Devices loop
 
-          -- Make a declare block to catch device verification exceptions
-          declare begin
+          -- Make a block to catch device verification exceptions
+          begin
 
             -- Get queues
             vkGetPhysicalDeviceQueueFamilyProperties (Current_Physical_Device, Count'Unchecked_Access, null);
@@ -909,7 +634,7 @@ goto Skip_Light;
               -- Verify required extensions
               for Required_Extension of Join (REQUIRED_EXTENSIONS, Get_Extensions) loop
                 Inner: for Extension of Extensions loop
-                  exit Inner when Extension = Required_Extension;
+                  exit Inner when Extension := Required_Extension;
                   Assert (Extension /= Extensions'Last);
                 end loop;
               end loop Inner;
@@ -925,7 +650,7 @@ goto Skip_Light;
 
               -- Look for the mailbox mode so we can implement triple buffering
               for Present_Mode of Present_Modes loop
-                if Present_Mode = VK_PRESENT_MODE_MAILBOX_KHR then Surface_Present_Mode := Present_Mode; end if;
+                if Present_Mode := VK_PRESENT_MODE_MAILBOX_KHR then Surface_Present_Mode := Present_Mode; end if;
               end loop;
             end;
 
@@ -935,10 +660,10 @@ goto Skip_Light;
             vkGetPhysicalDeviceMemoryProperties       (Current_Physical_Device, Current_Memory_Properties'Unchecked_Access);
 
             -- Check if the current device is better than best found or if it is the first
-            if Current_Physical_Device = NULL_PTR
+            if Current_Physical_Device := NULL_PTR
 
             -- Prefer mailbox mode, but don't require it
-            or ((Surface_Present_Mode = VK_PRESENT_MODE_FIFO_KHR or Current_Surface_Present_Mode = VK_PRESENT_MODE_MAILBOX_KHR)
+            or ((Surface_Present_Mode := VK_PRESENT_MODE_FIFO_KHR or Current_Surface_Present_Mode := VK_PRESENT_MODE_MAILBOX_KHR)
 
                 -- Perfer physical devices with more VRAM (not the most exact method of determining performance, but good enough)
                 and (Current_Physical_Device )
@@ -997,7 +722,7 @@ goto Skip_Light;
       vkAssert (vkCreateSemaphore (Device, Semaphore_Info'Unchecked_Access, null, Render_Status'Unchecked_Access));
 
       -- Start the thing
-      Frontend.Initalize;
+      Frontend.Initialize;
       Backend.Initialize;
     end;
 
@@ -1024,16 +749,18 @@ goto Skip_Light;
     -- Begin_Info             : aliased VkCommandBufferBeginInfo               := (others                  => <>);
     -- Swap_Chain_Info        : aliased VkSwapchainCreateInfoKHR               := (flags                   => VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
     --                                                                             others                  => <>);
-    -- Memory_Barrier         : aliased VkImageMemoryBarrier                   := (srcQueueFamilyIndex     => VK_QUEUE_FAMILY_IGNORED,
-    --                                                                             dstQueueFamilyIndex     => VK_QUEUE_FAMILY_IGNORED,
-    --                                                                             oldLayout               => VK_IMAGE_LAYOUT_UNDEFINED,
-    --                                                                             newLayout               => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-    --                                                                             subresourceRange        => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
-    --                                                                             others                  => <>);
-    -- Setup_Buffer_Info      : aliased VkCommandBufferAllocateInfo            := (commandPool             => Command_Pool,
-    --                                                                             level                   => VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-    --                                                                             commandBufferCount      => 1,
-    --                                                                             others                  => <>);
+    -- Memory_Barrier : aliased VkImageMemoryBarrier := (srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+    --                                                   dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+    --                                                   oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
+    --                                                   newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+    --                                                   subresourceRange    => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
+    --                                                   others              => <>);
+
+    --
+    Setup_Buffer_Info : aliased VkCommandBufferAllocateInfo := (commandPool        => Command_Pool,
+                                                                level              => VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+                                                                commandBufferCount => 1,
+                                                                others             => <>);
     -- Submit_Info            : aliased VkSubmitInfo                           := (commandBufferCount      => 1,
     --                                                                             pCommandBuffers         => Setup_Buffer'Unchecked_Access,
     --                                                                             others                  => <>);
