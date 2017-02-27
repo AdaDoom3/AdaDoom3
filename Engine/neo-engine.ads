@@ -28,16 +28,14 @@ with Interfaces;                   use Interfaces;
 with Interfaces.C;                 use Interfaces.C;
 with GNAT.Traceback;               use GNAT.Traceback;
 with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
---with Neo.API.Opus;                 use Neo.API.Opus;
-with Neo.API.Vulkan;               use Neo.API.Vulkan;
---with Neo.API.OpenAL;               use Neo.API.OpenAL;
---with Neo.Core.Compress;            use Neo.Core.Compress;
+with Neo.Core.Compression;         use Neo.Core.Compression;
 with Neo.Core.Arrays;              use Neo.Core.Arrays;
 with Neo.Core.Console;             use Neo.Core.Console;
 with Neo.Core.Vectors;             use Neo.Core;
 with Neo.Core.Ordered;
 with Neo.Core.Hashed;
 
+-- 
 package Neo.Engine is
 
   -- Main entry point, this should only be called by main.adb
@@ -124,10 +122,10 @@ package Neo.Engine is
 
   -- Window and desktop location and size information
   type Border_State is record
-      Top    : Int_64;
-      Bottom : Int_64;
-      Left   : Int_64;
-      Right  : Int_64;
+      Top    : Int_64 := 0;
+      Bottom : Int_64 := 0;
+      Left   : Int_64 := 0;
+      Right  : Int_64 := 0;
     end record;
   package Vector_Border is new Vectors (Border_State);
   function Get_Windows return Vector_Border.Unsafe_Array;
@@ -138,14 +136,15 @@ package Neo.Engine is
 
   -- Unimplemented...
   type Connection_State is record
-      IDK : Integer;
+      IP : Str_Unbound;
     end record;
   type Connection_Info_State is record
-      IP              : Str (1..64);
-      Packets_Read    : Int_64_Unsigned;
-      Packets_Written : Int_64_Unsigned;
-      Bytes_Read      : Int_64_Unsigned;
-      Bytes_Written   : Int_64_Unsigned;
+      Last_Sent       : ;
+      Last_Reply      : ;
+      Packets_Read    : Int_64_Unsigned := 0;
+      Packets_Written : Int_64_Unsigned := 0;
+      Bytes_Read      : Int_64_Unsigned := 0;
+      Bytes_Written   : Int_64_Unsigned := 0;
     end record;
   procedure Silence  (Connection : in out Connection_State);
   procedure Vocalize (Connection : in out Connection_State);
@@ -233,8 +232,8 @@ package Neo.Engine is
       Y : Int_64 := 0;
     end record;
   type Stick_State is record
-      X : Real_Range;
-      Y : Real_Range;
+      X : Real_Range := 0.0;
+      Y : Real_Range := 0.0;
     end record;
   type Press_State is record
       Down : Bool := False;
@@ -253,15 +252,15 @@ package Neo.Engine is
       Player : Positive := 1;
       case Kind is
         when Gamepad_Device =>
-          Triggers : Trigger_Array;
-          Gamepad  : Gamepad_Array;
-          Sticks   : Stick_Array;
+          Triggers : Trigger_Array := (others => (others => <>));
+          Gamepad  : Gamepad_Array := (others => (others => <>));
+          Sticks   : Stick_Array   := (others => (others => <>));
         when Keyboard_Device =>
-          Keys     : Key_Array;
-          Text     : Str_Unbound;
+          Keys     : Key_Array     := (others => (others => <>));
+          Text     : Str_Unbound   := NULL_STR_UNBOUND;
         when Mouse_Device =>
-          Mouse    : Mouse_Array;
-          Cursor   : Cursor_State;
+          Mouse    : Mouse_Array   := (others => (others => <>));
+          Cursor   : Cursor_State  := (others => <>);
       end case;
     end record;
 
@@ -327,7 +326,7 @@ package Neo.Engine is
       case Kind is
         when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State;
         when Stick_Impulse   => Stick   : Stick_State;
-        when Trigger_Impulse => Trigger : Real_32_Percent;
+        when Trigger_Impulse => Trigger : Percent;
         when Cursor_Impulse  => Cursor  : Cursor_State;
         when Text_Impulse    => Text    : Str_Unbound;
       end case;
@@ -348,23 +347,33 @@ package Neo.Engine is
       procedure Disable;
     end;
 
-  --------------
-  -- Entities --
-  --------------
+  -----------
+  -- World --
+  -----------
 
-  type Surface_State is record
-      
+  Meshes    : Hashed_Mesh.Safe.Map;
+  Levels    : Hashed_Level.Safe_Map;
+  Images    : Hashed_Image.Safe.Map;
+  Shaders   : Hashed_Stream.Safe.Map;
+  Materials : Hashed_Materials.Safe.Map;
+    
+  type Position_State is record
+      Orientation : ;
+      Position    : ;
+      Area        : ;
+      World       : Positive      := 1;
+    end record;
 
-  -- type Light_Kind    is (Fog_Light, Blend_Light, Normal_Light);
-  -- type Mesh_Instance_State (Animated : Bool := True) is record -- will have vulkan stuff
-  --     Location   :
-  --     Rotation   :  
-  --     Animations :
-  --     Mesh       : Str_Unbound;
-  --     Skeleton   :
-  --   end record;
-  -- Meshes    : Hashed_Mesh.Safe.Map;
-  -- Images    : Hashed_Image.Safe.Map;
-  -- Shaders   : Hashed_Stream.Safe.Map;
-  -- Materials : Hashed_Materials.Safe.Map;
+  type World_State is record
+      Start_Time : Time;
+      Elapsed    : Duration;
+    end record;
+
+  type Player_Primary_State is record
+      Orientation : ;
+      Position    : ;
+      Area        : ;
+      World       : Positive      := 1;
+      View        : Frustum_State := (others => <>);
+    end record;
 end;

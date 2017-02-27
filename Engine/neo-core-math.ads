@@ -17,12 +17,8 @@ with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Numerics; use Ada.Numerics;
 with Neo.Core.Vectors;
 
+-- Based on Foundations of Game Engine Development Vol. 1: http://foundationsofgameenginedev.com/FGED1-code.cpp
 package Neo.Core.Math is
-
-  ----------------
-  -- Mathmatics --
-  ----------------
-  -- Based on Foundations of Game Engine Development Vol. 1: http://foundationsofgameenginedev.com/FGED1-code.cpp
 
   type Dimension_Kind is (X_Dimension, Y_Dimension, Z_Dimension);
   package Elementary_Functions is new Ada.Numerics.Generic_Elementary_Functions (Real); use Elementary_Functions;
@@ -209,6 +205,7 @@ package Neo.Core.Math is
                                                                                         A.Z, B.Z, C.Z, P.Z));
 
   -- Operations
+  function Transpose  () return Matrix_3D;
   function Rotate     (Angle : Real; Kind : Dimension_Kind) return Matrix_3D;    -- Listing 2.1
   function Rotate     (Angle : Real; Axis : Vector_3D)      return Matrix_3D;    -- Listing 2.2
   function Reflect    (A : Vector_3D)                       return Matrix_3D;    -- Listing 2.3
@@ -290,6 +287,14 @@ package Neo.Core.Math is
 
   -- Operations
   function Transform (L : Line_3D; H : Transform_4D) return Line_3D; -- Listing 3.11
+
+  -------------
+  -- Frustum --
+  -------------
+
+  type Frustum_State is record
+      Target, Right, Up, Beginning, Ending : Vector_3D := ZERO_VECTOR_3D;
+    end record;
 
   -------------
   -- Algebra -- Listing 4.1 and Table 4.6

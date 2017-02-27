@@ -39,24 +39,7 @@ separate (Neo.Engine) package body Renderer is
 
   -- Amount of idle frontend light job tasks that are allowed to sit idle until tasks start being destroyed
   MAX_IDLE_LIGHT_JOBS : constant Positive := 10;
-
-  --------------
-  -- Separate --
-  --------------
-
-  -- Graphics card command building and submission. Because the command building for a scene stack oriented a single task is sufficient.
-  package Backend is
-      procedure Run_Backend;
-      package Task_Backend is new Tasks (Run_Backend);
-      Backend : Task_Backend.Safe_Task;
-    end;
-
-  -- Preprocess, animate, flood lights, and turn our internal representation of game state into something the graphics card can handle
-  package Frontend is
-      procedure Run_Frontend;
-      package Task_Frontend is new Tasks (Run_Frontend);
-      Backend : Task_Frontend.Safe_Task;
-    end;
+  FOG_SCALE           : constant Float    := 0.001;
 
   -------------
   -- Globals --
@@ -115,141 +98,141 @@ separate (Neo.Engine) package body Renderer is
       vkFreeCommandBuffers (Device, Command_Pool 1, Command_Buffer'Unchecked_Access);
     end;
 
-  -----------
-  -- Image --
-  -----------
+  -- -----------
+  -- -- Image --
+  -- -----------
 
-  -- Controller
-  type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
-      Properties : Int_32_Unsigned_C;
-      Layout     : Int_32_Unsigned_C;
-      Data       : Ptr;
-    end record;
-  procedure Initialize (Image : in out Image_State);
-  procedure Finalize   (Image : in out Image_State);
+  -- -- Controller
+  -- type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
+  --     Properties : Int_32_Unsigned_C;
+  --     Layout     : Int_32_Unsigned_C;
+  --     Data       : Ptr;
+  --   end record;
+  -- procedure Initialize (Image : in out Image_State);
+  -- procedure Finalize   (Image : in out Image_State);
 
-  -- Copy used for staging
-  function Copy (Image : in out Image_State) return Image_State is
-    Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
-    Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
-                                                          baseArrayLayer => 0,
-                                                          mipLevel       => 0,
-                                                          layerCount     => 1,
-                                                          others         => <>);
-    Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
-                                                          dstSubresource => Subresource,
-                                                          srcOffset      => (0, 0, 0),
-                                                          dstOffset      => (0, 0, 0),
-                                                          extent         => (Width, Height, depth => 1),
-                                                          others         => <>);
-    begin
-      Begin_Commands (Command_Buffer);
-      vkCmdCopyImage (commandBuffer  => Command_Buffer,
-                      srcImage       => Image,
-                      srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                      dstImage       => Result,
-                      dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                      regionCount    => 1,
-                      pRegions       => Image_Copy'Unchecked_Access);
-      End_Commands (Command_Buffer);
-      return Result;
-    end;
+  -- -- Copy used for staging
+  -- function Copy (Image : in out Image_State) return Image_State is
+  --   Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
+  --   Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
+  --                                                         baseArrayLayer => 0,
+  --                                                         mipLevel       => 0,
+  --                                                         layerCount     => 1,
+  --                                                         others         => <>);
+  --   Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
+  --                                                         dstSubresource => Subresource,
+  --                                                         srcOffset      => (0, 0, 0),
+  --                                                         dstOffset      => (0, 0, 0),
+  --                                                         extent         => (Width, Height, depth => 1),
+  --                                                         others         => <>);
+  --   begin
+  --     Begin_Commands (Command_Buffer);
+  --     vkCmdCopyImage (commandBuffer  => Command_Buffer,
+  --                     srcImage       => Image,
+  --                     srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+  --                     dstImage       => Result,
+  --                     dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+  --                     regionCount    => 1,
+  --                     pRegions       => Image_Copy'Unchecked_Access);
+  --     End_Commands (Command_Buffer);
+  --     return Result;
+  --   end;
  
-  -- Grab a view 
-  function Make_View (Image : in out Image_State) return ___ is
-    Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
-                                                                             baseMipLevel   => 0,
-                                                                             levelCount     => 1,
-                                                                             baseArrayLayer => 0,
-                                                                             layerCount     => 1,
-                                                                             others         => <>),
-                                                        image            => image,
-                                                        viewType         => VK_IMAGE_VIEW_TYPE_2D,
-                                                        format           => format,
-                                                        others           => <>);
-    begin
-      vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
-      return Result;
-    end;
+  -- -- Grab a view 
+  -- function Make_View (Image : in out Image_State) return ___ is
+  --   Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
+  --                                                                            baseMipLevel   => 0,
+  --                                                                            levelCount     => 1,
+  --                                                                            baseArrayLayer => 0,
+  --                                                                            layerCount     => 1,
+  --                                                                            others         => <>),
+  --                                                       image            => image,
+  --                                                       viewType         => VK_IMAGE_VIEW_TYPE_2D,
+  --                                                       format           => format,
+  --                                                       others           => <>);
+  --   begin
+  --     vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
+  --     return Result;
+  --   end;
 
-  -- Controlled primatives
-  procedure Initialize (Image : in out Image_State) is
-    Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
-    Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
-                                                           extent         => (width, height, depth => 1),
-                                                           mipLevels      => 1,
-                                                           arrayLayers    => 1,
-                                                           format         => format,
-                                                           tiling         => tiling,
-                                                           initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
-                                                           usage          => usage,
-                                                           samples        => VK_SAMPLE_COUNT_1_BIT,
-                                                           sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
-                                                           others         => <>);
-    Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
-                                                           others         => <>);
-    begin
-      vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
-      vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
-      vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
-      vkBindImageMemory (Device, image, imageMemory, 0);
-    end;
-  procedure Finalize (Image : in out Image_State) is
-    begin
-      null;
-    end;
-  procedure Adjust (Image : in out Image_State) is
-    Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
-    Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
-                                                      newLayout           => newLayout,
-                                                      srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-                                                      dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-                                                      image               => image);
-    begin
+  -- -- Controlled primatives
+  -- procedure Initialize (Image : in out Image_State) is
+  --   Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
+  --   Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
+  --                                                          extent         => (width, height, depth => 1),
+  --                                                          mipLevels      => 1,
+  --                                                          arrayLayers    => 1,
+  --                                                          format         => format,
+  --                                                          tiling         => tiling,
+  --                                                          initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
+  --                                                          usage          => usage,
+  --                                                          samples        => VK_SAMPLE_COUNT_1_BIT,
+  --                                                          sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
+  --                                                          others         => <>);
+  --   Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
+  --                                                          others         => <>);
+  --   begin
+  --     vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
+  --     vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
+  --     vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
+  --     vkBindImageMemory (Device, image, imageMemory, 0);
+  --   end;
+  -- procedure Finalize (Image : in out Image_State) is
+  --   begin
+  --     null;
+  --   end;
+  -- procedure Adjust (Image : in out Image_State) is
+  --   Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
+  --   Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
+  --                                                     newLayout           => newLayout,
+  --                                                     srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+  --                                                     dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+  --                                                     image               => image);
+  --   begin
 
-      -- ???
-      if newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-        Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
-        if format := VK_FORMAT_D32_SFLOAT_S8_UINT or format := VK_FORMAT_D24_UNORM_S8_UINT then
-          Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
-        end if;
-      else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
+  --     -- ???
+  --     if newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+  --       Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
+  --       if format := VK_FORMAT_D32_SFLOAT_S8_UINT or format := VK_FORMAT_D24_UNORM_S8_UINT then
+  --         Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
+  --       end if;
+  --     else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
 
-      -- ???
-      Barrier.subresourceRange.baseMipLevel   := 0;
-      Barrier.subresourceRange.levelCount     := 1;
-      Barrier.subresourceRange.baseArrayLayer := 0;
-      Barrier.subresourceRange.layerCount     := 1;
+  --     -- ???
+  --     Barrier.subresourceRange.baseMipLevel   := 0;
+  --     Barrier.subresourceRange.levelCount     := 1;
+  --     Barrier.subresourceRange.baseArrayLayer := 0;
+  --     Barrier.subresourceRange.layerCount     := 1;
 
-      -- Set new image layout
-      if oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
-        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
-      elsif oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
-        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-      elsif oldLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout := VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
-        Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-        Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
-      elsif oldLayout := VK_IMAGE_LAYOUT_UNDEFINED and newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-        Barrier.srcAccessMask := 0;
-        Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-      else raise Program_Error with "Unknown image layout transition?!"; end if;
+  --     -- Set new image layout
+  --     if oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
+  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
+  --     elsif oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
+  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+  --     elsif oldLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout := VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
+  --       Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+  --       Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
+  --     elsif oldLayout := VK_IMAGE_LAYOUT_UNDEFINED and newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+  --       Barrier.srcAccessMask := 0;
+  --       Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+  --     else raise Program_Error with "Unknown image layout transition?!"; end if;
 
-      -- Send transition commands
-      Begin_Commands (Command_Buffer);
-      vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
-                            srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                            dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                            dependencyFlags          => 0,
-                            memoryBarrierCount       => 0,
-                            pMemoryBarriers          => null,
-                            bufferMemoryBarrierCount => 0,
-                            pBufferMemoryBarriers    => null,
-                            imageMemoryBarrierCount  => 1,
-                            pImageMemoryBarriers     => Barrier);
-      End_Commands (Command_Buffer);
-    end;
+  --     -- Send transition commands
+  --     Begin_Commands (Command_Buffer);
+  --     vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
+  --                           srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+  --                           dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+  --                           dependencyFlags          => 0,
+  --                           memoryBarrierCount       => 0,
+  --                           pMemoryBarriers          => null,
+  --                           bufferMemoryBarrierCount => 0,
+  --                           pBufferMemoryBarriers    => null,
+  --                           imageMemoryBarrierCount  => 1,
+  --                           pImageMemoryBarriers     => Barrier);
+  --     End_Commands (Command_Buffer);
+  --   end;
 
   -------------
   -- Texture --
@@ -350,8 +333,10 @@ separate (Neo.Engine) package body Renderer is
     begin
       vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, buffer.replace));
       for I in 1..Memory_Properties.memoryTypeCount loop
-        if not ((Memory_Properties.memoryTypeBits and 2**I) > 0 and (Memory_Properties.memoryTypes (I).propertyFlags and Properties) = Properties) then Assert (Memory_Properties.memoryTypeCount);
-        else Allocate_Info.memoryTypeIndex := I; exit; end if;
+        if (Memory_Properties.memoryTypeBits and 2**I) > 0 and (Memory_Properties.memoryTypes (I).propertyFlags and Properties) := Properties then
+          Allocate_Info.memoryTypeIndex := I;
+          exit;
+        elsif I = Memory_Properties.memoryTypeCount then raise Program_Error with "Failed to find suitable memory type!?"; end if;
       end loop;
       vkAssert (vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, bufferMemory.replace));
       vkBindBufferMemory (Device, buffer, bufferMemory, 0);
@@ -421,6 +406,67 @@ separate (Neo.Engine) package body Renderer is
     end;
 
   ----------
+  -- Draw --
+  ----------
+  --
+  --
+  --
+
+  procedure Draw () is
+    idIndexBuffer * indexBuffer := (if vertexCache.CacheIsStatic( surf.indexCache ) &vertexCache.staticData.indexBuffer
+                                     else &vertexCache.frameData[vertexCache.drawListNum].indexBuffer);
+    idVertexBuffer * vertexBuffer  := (if vertexCache.CacheIsStatic( surf.ambientCache ) &vertexCache.staticData.vertexBuffer
+                                        else vertexBuffer = &vertexCache.frameData[vertexCache.drawListNum].vertexBuffer);
+    begin
+
+      -- 
+      if surf.jointCache then
+        idJointBuffer jointBuffer;
+        Assert (!vertexCache.GetJointBuffer( surf.jointCache, &jointBuffer )
+        assert( ( jointBuffer.GetOffset() & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) == 0);
+        const GLuint ubo = reinterpret_cast< GLuint >( jointBuffer.GetAPIObject());
+        qglBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset(), jointBuffer.GetNumJoints() * sizeof( idJointMat ));
+      end
+      renderProgManager.CommitUniforms;
+
+      -- 
+      if backEnd.glState.currentIndexBuffer /= (GLuint)indexBuffer.GetAPIObject() or not r_useStateCaching.Get then
+        qglBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, (GLuint)indexBuffer.GetAPIObject());
+        backEnd.glState.currentIndexBuffer = (GLuint)indexBuffer.GetAPIObject;
+      end if;
+
+      -- 
+      if backEnd.glState.vertexLayout != LAYOUT_DRAW_VERT or backEnd.glState.currentVertexBuffer /= (GLuint)vertexBuffer.GetAPIObject or not r_useStateCaching.Get then
+        qglBindBufferARB( GL_ARRAY_BUFFER_ARB, (GLuint)vertexBuffer.GetAPIObject());
+        backEnd.glState.currentVertexBuffer = (GLuint)vertexBuffer.GetAPIObject;
+
+        -- 
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_VERTEX);
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_NORMAL);
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR);
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR2);
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_ST);
+        qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_TANGENT);
+
+        -- 
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_VERTEX, 3, GL_FLOAT, GL_FALSE, sizeof( idDrawVert ), (void *)( DRAWVERT_XYZ_OFFSET ));
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_NORMAL, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_NORMAL_OFFSET ));
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR_OFFSET ));
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR2_OFFSET ));
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_ST, 2, GL_HALF_FLOAT, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_ST_OFFSET ));
+        qglVertexAttribPointerARB( PC_ATTRIB_INDEX_TANGENT, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_TANGENT_OFFSET ));
+        backEnd.glState.vertexLayout = LAYOUT_DRAW_VERT;
+      end
+      
+      -- 
+      qglDrawElementsBaseVertex( GL_TRIANGLES, 
+                    r_singleTriangle.GetBool() ? 3 : surf.numIndexes,
+                    GL_INDEX_TYPE,
+                    (triIndex_t *)(int)( ibHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK,
+                    (int)( surf.ambientCache >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK / sizeof ( idDrawVert ));
+    end;
+    
+  ----------
   -- Main --
   ----------
   --
@@ -435,9 +481,7 @@ separate (Neo.Engine) package body Renderer is
 
     -- Create shader model
     function Load_Shader (Path : Str) return Ptr is
-      Shader_Module_Info : aliased VkShaderModuleCreateInfo := (codeSize => code.size;
-                                                                pCode    => (uint32_t*) code.data,
-                                                                others   => <>);
+      Shader_Module_Info : aliased VkShaderModuleCreateInfo := (codeSize => code.size, pCode => (uint32_t*) code.data, others => <>);
       begin vkAssert (vkCreateShaderModule (Device, Shader_Module_Info'Unchecked_Access, null, shaderModule.replace)); end;
 
     -- Temporary variables for fetching and testing physical devices
@@ -668,7 +712,6 @@ separate (Neo.Engine) package body Renderer is
                 -- Perfer physical devices with more VRAM (not the most exact method of determining performance, but good enough)
                 and (Current_Physical_Device )
             then
-
               Surface_Present_Mode := Current_Surface_Present_Mode;
               Surface_Capabilities := Current_Surface_Capabilities;
               Device_Properties    := Current_Physical_Device_Properties;
@@ -744,62 +787,83 @@ separate (Neo.Engine) package body Renderer is
     -- Count                  : aliased Int_32_Unsigned_C                      := 0;
     -- Pre_Transform          : aliased Int_32_Unsigned_C                      := 0;
     -- Setup_Buffer           : aliased Ptr                                    := null;
+
     -- Vertex_Shader_Model    : aliased VkShaderModule                         := Load_Shader ("shaders/vert.spv");
     -- Fragment_Shader_Model  : aliased VkShaderModule                         := Load_Shader ("shaders/frag.spv");
     -- Begin_Info             : aliased VkCommandBufferBeginInfo               := (others                  => <>);
-    -- Swap_Chain_Info        : aliased VkSwapchainCreateInfoKHR               := (flags                   => VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
-    --                                                                             others                  => <>);
-    -- Memory_Barrier : aliased VkImageMemoryBarrier := (srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-    --                                                   dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-    --                                                   oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
-    --                                                   newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-    --                                                   subresourceRange    => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
-    --                                                   others              => <>);
+
+    -- 
+    Swap_Chain_Info : aliased VkSwapchainCreateInfoKHR := (flags  => VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
+                                                           others => <>);
+
+    --
+    Memory_Barrier : aliased VkImageMemoryBarrier := (srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
+                                                      newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                                      subresourceRange    => (VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1),
+                                                      others              => <>);
 
     --
     Setup_Buffer_Info : aliased VkCommandBufferAllocateInfo := (commandPool        => Command_Pool,
                                                                 level              => VK_COMMAND_BUFFER_LEVEL_PRIMARY,
                                                                 commandBufferCount => 1,
                                                                 others             => <>);
-    -- Submit_Info            : aliased VkSubmitInfo                           := (commandBufferCount      => 1,
-    --                                                                             pCommandBuffers         => Setup_Buffer'Unchecked_Access,
-    --                                                                             others                  => <>);
-    -- Color_Attachment       : aliased VkAttachmentDescription                := (format                  => swapChainImageFormat,
-    --                                                                             samples                 => VK_SAMPLE_COUNT_1_BIT,
-    --                                                                             loadOp                  => VK_ATTACHMENT_LOAD_OP_CLEAR,
-    --                                                                             storeOp                 => VK_ATTACHMENT_STORE_OP_STORE,
-    --                                                                             stencilLoadOp           => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-    --                                                                             stencilStoreOp          => VK_ATTACHMENT_STORE_OP_DONT_CARE,
-    --                                                                             initialLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
-    --                                                                             finalLayout             => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-    --                                                                             others                  => <>);
-    -- Depth_Attachment       : aliased VkAttachmentDescription                := (format                  => findDepthFormat,
-    --                                                                             samples                 => VK_SAMPLE_COUNT_1_BIT,
-    --                                                                             loadOp                  => VK_ATTACHMENT_LOAD_OP_CLEAR,
-    --                                                                             storeOp                 => VK_ATTACHMENT_STORE_OP_DONT_CARE,
-    --                                                                             stencilLoadOp           => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-    --                                                                             stencilStoreOp          => VK_ATTACHMENT_STORE_OP_DONT_CARE,
-    --                                                                             initialLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
-    --                                                                             finalLayout             => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-    --                                                                             others                  => <>);
-    -- Color_Reference        : aliased VkAttachmentReference                  := (attachment              => 0,
-    --                                                                             layout                  => VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-    --                                                                             others                  => <>);
-    -- Depth_Reference        : aliased VkAttachmentReference                  := (attachment              => 1,
-    --                                                                             layout                  => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-    --                                                                             others                  => <>);
-    -- Subpass_Description    : aliased VkSubpassDescription                   := (pipelineBindPoint       => VK_PIPELINE_BIND_POINT_GRAPHICS,
-    --                                                                             colorAttachmentCount    => 1,
-    --                                                                             pColorAttachments       => &colorAttachmentRef,
-    --                                                                             pDepthStencilAttachment => &depthAttachmentRef,
-    --                                                                             others                  => <>);
-    -- Subpass_Dependency     : aliased VkSubpassDependency                    := (srcSubpass              => VK_SUBPASS_EXTERNAL,
-    --                                                                             dstSubpass              => 0,
-    --                                                                             srcStageMask            => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-    --                                                                             srcAccessMask           => 0,
-    --                                                                             dstStageMask            => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-    --                                                                             dstAccessMask           => VK_ACCESS_COLOR_ATTACHMENT_READ_BIT or VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-    --                                                                             others                  => <>);
+
+    -- 
+    Submit_Info : aliased VkSubmitInfo := (commandBufferCount => 1,
+                                           pCommandBuffers    => Setup_Buffer'Unchecked_Access,
+                                           others             => <>);
+
+    -- 
+    Color_Attachment : aliased VkAttachmentDescription := (format         => swapChainImageFormat,
+                                                           samples        => VK_SAMPLE_COUNT_1_BIT,
+                                                           loadOp         => VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                           storeOp        => VK_ATTACHMENT_STORE_OP_STORE,
+                                                           stencilLoadOp  => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                           stencilStoreOp => VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                           initialLayout  => VK_IMAGE_LAYOUT_UNDEFINED,
+                                                           finalLayout    => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                                           others         => <>);
+
+    -- 
+    Depth_Attachment : aliased VkAttachmentDescription := (format         => findDepthFormat,
+                                                           samples        => VK_SAMPLE_COUNT_1_BIT,
+                                                           loadOp         => VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                           storeOp        => VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                           stencilLoadOp  => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                           stencilStoreOp => VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                           initialLayout  => VK_IMAGE_LAYOUT_UNDEFINED,
+                                                           finalLayout    => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                                                           others         => <>);
+
+    -- 
+    Color_Reference : aliased VkAttachmentReference := (attachment => 0,
+                                                        layout     => VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                                        others     => <>);
+
+    -- 
+    Depth_Reference : aliased VkAttachmentReference := (attachment => 1,
+                                                        layout     => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                                                        others     => <>);
+
+    -- 
+    Subpass_Description : aliased VkSubpassDescription := (pipelineBindPoint       => VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                                           colorAttachmentCount    => 1,
+                                                           pColorAttachments       => &colorAttachmentRef,
+                                                           pDepthStencilAttachment => &depthAttachmentRef,
+                                                           others                  => <>);
+
+    -- 
+    Subpass_Dependency : aliased VkSubpassDependency := (srcSubpass    => VK_SUBPASS_EXTERNAL,
+                                                         dstSubpass    => 0,
+                                                         srcStageMask  => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                                         srcAccessMask => 0,
+                                                         dstStageMask  => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                                         dstAccessMask => VK_ACCESS_COLOR_ATTACHMENT_READ_BIT or VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                                                         others        => <>);
+
+    -- 
     -- Attachments            : aliased Array_VkAttachmentDescription          := (colorAttachment, depthAttachment);
     -- Render_Pass_Info       : aliased VkRenderPassCreateInfo                 := (attachmentCount         => attachments.size,
     --                                                                             pAttachments            => attachments.data,

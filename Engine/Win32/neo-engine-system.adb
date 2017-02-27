@@ -24,68 +24,55 @@ separate (Neo.Engine) package body System is
 
   -- Get OS and executable information
   function Get_Information_Internal return Information_State is
-    Dir     : aliased Str_C (1..4096);
-    Buffer  : aliased Int_C := 7;
-    Version : aliased OSVERSIONINFOEX := (others => <>);
+    Version : aliased OSVERSIONINFOEX     := (others => <>);
+    Folder  : aliased Str_C (1..MAX_PATH) := (others => NULL_CHAR_C);
+    Buffer  : aliased Int_C               := 0;
     begin
 
       -- Fetch strings
-      Ignore (GetVersionExW (Version'Unchecked_Access));
+      Ignore (GetVersionExW (Version'unchecked_access));
       Line (Int_32_Unsigned_C'Wide_Image (GetLastError));
-      Assert (GetModuleFileNameW (NULL_PTR, Dir'Unrestricted_Access, Dir'Length));
+      Assert (GetModuleFileNameW (NULL_PTR, Folder'Unrestricted_Access, Folder'length));
 
-      -- Snip off the exe name
-      Dir (Int_Size_C (Index (To_Str (Dir), "\", Backward))) := NULL_Char_16_C;          
+      -- Remove the name
+      Folder (Int_Size_C (Index (To_Str (Folder), "\", Backward))) := NULL_CHAR_C;          
       
       -- Get buffer size
-      --Assert (GetUserNameW (null, Buffer'Unchecked_Access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER); 
+      Assert (GetUserNameW (null, Buffer'unchecked_access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER); 
       declare
+      function Get_Version return Str is (Version.wki100_ver_major'img & Version.wki100_ver_minor'img);
       Username : aliased Ptr_Str_16_C := new Str_C (1..Int_Size_C (Buffer) + 5);
       begin
-        --Assert (GetUserNameW (Username, Buffer'Unchecked_Access));
-        Assert (IsWow64Process (GetCurrentProcess, Buffer'Unchecked_Access));
-
-        -- Return the junk
-        return (Name      => Delete (To_Str_Unbound (To_Str (Dir)), 1, Index (To_Str (Dir), "\", Backward)), -- Get first-level directory
-                Path      => To_Str_Unbound (To_Str (Dir)),
-                Username  => To_Str_Unbound (To_Str (Username.All)),
+        Assert (GetUserNameW (Username, Buffer'unchecked_access));
+        Assert (IsWow64Process (GetCurrentProcess, Buffer'unchecked_access));
+        return (Name      => Delete (To_Str_Unbound (To_Str (Folder)), 1, Index (To_Str (Folder), "\", Backward)), -- First-level
+                Path      => To_Str_Unbound (To_Str (Folder)),
+                Username  => To_Str_Unbound (To_Str (Username.all)),
                 Bit_Size  => (if Buffer = 1 then 64 else 32),
-                OS        => To_Str_Unbound (NULL_STR & -- ???
-
-                             -- Identify the version of Windows if it older than 7... Why Microsoft ???
-                             (case Version.dwPlatformId is
-                                when 1 =>
-                                  (case Version.dwMajorVersion is
-                                     when 4 =>
-                                       (case Version.dwMinorVersion is
-                                          when 0 =>
-                                            (case Version.szCSDVersion (2) is
-                                               when 'B' | 'C' => "Windows_1_32_B_System",
-                                               when others    => "Windows_1_32_A_System"),
-                                          when 10 =>
-                                             (case Version.szCSDVersion (2) is
-                                                when 'A'    => "Windows_1_32_10_B_System",
-                                                when others => "Windows_1_32_10_A_System"),
-                                          when 90     => "Windows_1_32_90_System",
-                                          when others => "Windows_1_32_System"),
-                                    when others => "Windows_1_System"),
-                                when 2 =>
-                                  (case Version.dwMajorVersion is
-                                     when 5 =>
-                                       (case Version.dwMinorVersion is
-                                          when 1      => "Windows_2_5_1_System",
-                                          when others => "Windows_2_5_System"),
-                                     when 6 =>
-                                       (case Version.dwMinorVersion is
-                                          when 1      => "Windows_2_6_1_System",
-                                          when 2      => "Windows_2_6_2_System",
-                                          when others => "Windows_2_6_System"),
-                                     when others => "Windows_2_System"),
-                                when others => "Windows_System")));
+                OS        => To_Str_Unbound (NULL_STR & "Windows " &
+                               (case Version.wki100_ver_major is
+                                  when 5 =>
+                                    (case Version.wki100_ver_minor is
+                                       when 0 => "2000"
+                                       when 1 => "XP"
+                                       when 2 => "XP x64"
+                                       when others => Get_Version)
+                                  when 6 =>
+                                    (case Version.wki100_ver_minor is
+                                       when 0 => "Vista"
+                                       when 1 => "7"
+                                       when 2 => "8"
+                                       when 3 => "8.1"
+                                       when others => Get_Version)
+                                  when 10 => 
+                                    (case Version.wki100_ver_minor is
+                                       when 0 => "10"
+                                       when others => "10." & Get_Version) -- "The last version of Windows..."
+                                  when others => Get_Version)));
         end;
     end;
 
-  -- Constant for removal of overhead since OS data is not expected to change
+  -- Constant info to remove overhead
   INFORMATION_INTERNAL : constant Information_State := Get_Information_Internal;
   function Get_Information return Information_State is (INFORMATION_INTERNAL);
 
@@ -94,47 +81,54 @@ separate (Neo.Engine) package body System is
   -------------
 
   -- Window titles
-  APP_NAME           : constant Str := To_Str (Get_Information.Name);
-  GAME_NAME          : aliased Str_C := To_Str_C (APP_NAME);
-  INPUT_NAME         : aliased Str_C := To_Str_C (APP_NAME & " Input");
-  CONSOLE_NAME       : aliased Str_C := To_Str_C (APP_NAME & " Console");
-  MULTI_MONITOR_NAME : aliased Str_C := To_Str_C (APP_NAME & " Multi-monitor");
+  APP_NAME           : constant Str   := To_Str (Get_Information.Name);
+  GAME_NAME          : aliased  Str_C := To_Str_C (APP_NAME);
+  INPUT_NAME         : aliased  Str_C := To_Str_C (APP_NAME & " Input");
+  CONSOLE_NAME       : aliased  Str_C := To_Str_C (APP_NAME & " Console");
+  MULTI_MONITOR_NAME : aliased  Str_C := To_Str_C (APP_NAME & " Multi-monitor");
 
   -- Asset paths
-  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (Get_Information.Path & PATH_ICON             & ".ico");-- & NULL_CHAR_16);
+  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (Get_Information.Path & PATH_ICON             & ".ico");
   WIN32_PATH_CURSOR_ACTIVE   : aliased Str_C := To_Str_C (Get_Information.Path & PATH_CURSOR_ACTIVE    & ".cur");
   WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (Get_Information.Path & PATH_CURSOR_INACTIVE  & ".cur");
 
-  -- Main "HWND"s for the invisible input window and actual game window
+  -- Main "HWND"s for the invisible input window and game window
   Game, Input : aliased Ptr;
 
   -- Window handles for multi-monitor mode
   package Vector_Ptr is new Vectors (Ptr);
   Multi_Monitor_Windows : Vector_Ptr.Unsafe.Vector;
 
+  -------------
+  -- Console --
+  -------------
+
+  -- A task-isolated GUI console application for debugging
+  procedure Run_Console is separate;
+
   ------------
   -- Vulkan --
   ------------
 
-  -- Pointer to dll
+  -- Pointer to the driver dll
   Vulkan_DLL : Ptr := LoadLibraryW (To_Str_C ("vulkan-1.dll"));
 
   -- Load a pointer to a procedure based on a name
   function Get_Vulkan_Subprogram (Name : Str) return Ptr is (GetProcAddress (Vulkan_DLL, To_Str_8_C (Name)));
 
   -- Fetch extension strings
-  function Get_Extensions return Str_8_C is (VK_KHR_SURFACE_EXTENSION_NAME & VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+  function Get_Vulkan_Extensions return Str_8_C is (VK_KHR_SURFACE_EXTENSION_NAME & VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
 
   -- Finalization and initialization (mostly revolve around loading the dll)
   procedure Finalize_Vulkan_Library is begin Assert (FreeLibrary (Vulkan_DLL)); end;
   procedure Initialize_Vulkan_Library is begin vkCreateWin32SurfaceKHR := To_Ptr_vkCreateWin32SurfaceKHR (Get_Vulkan_Subprogram ("vkCreateWin32SurfaceKHR")); end;
 
   -- Create a new surface
-  function Create_Surface (Instance : Ptr) return Ptr is
-    Result              : aliased Ptr;
-    Surface_Create_Info : aliased VkWin32SurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleNULL, others => <>);
+  function Create_Vulkan_Surface (Instance : Ptr) return Ptr is
+    Result       : aliased Ptr                         := NULL_PTR;
+    Surface_Info : aliased VkWin32SurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleNULL, others => <>);
     begin
-      Assert (vkCreateWin32SurfaceKHR (Instance, Surface_Create_Info'Access, NULL_PTR, Result'Access));
+      Assert (vkCreateWin32SurfaceKHR (Instance, Surface_Info'access, NULL_PTR, Result'access));
       Assert (Result);
       return Result;
     end;
@@ -147,36 +141,36 @@ separate (Neo.Engine) package body System is
   procedure Copy (Item : Str) is
 
     -- Declare a new type to handle an unchecked conversion
-    type Text_Array is array (Item'First..Item'Last + 1) of Char_16_C;
+    type Text_Array is array (Item'first..Item'last + 1) of Char_16_C;
     type Ptr_Text_Array is access all Text_Array;
     function To_Ptr_Text_Array is new Ada.Unchecked_Conversion (Ptr, Ptr_Text_Array);
-    Text : Ptr_Text_Array;
+    Text : Ptr_Text_Array := null;
 
     -- Prepare global data
-    Data : Ptr;
+    Data : Ptr := NULL_PTR;
     begin
-      Data := GlobalAlloc (MEMORY_MOVEABLE or MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE, Text_Array'Object_Size / Byte'Object_Size);
+      Data := GlobalAlloc (GMEM_MOVEABLE, Text_Array'object_size / Byte'object_size);
       Assert (Data);
       Text := To_Ptr_Text_Array (GlobalLock (Data));
       Assert (Text /= null);
-      Text (Text.All'Last) := NULL_Char_16_C; -- Null terminate
+      Text (Text.all'last) := NULL_CHAR_C; 
 
       -- Write the text to data and send it to the clipboard
       for I in Item'Range loop Text (I) := To_Char_16_C (Item (I)); end loop;
       Assert (GlobalUnlock (Data) = 0);
       Assert (OpenClipboard (NULL_PTR) /= 0 and then GlobalFree (Data) = NULL_PTR);
       Assert (EmptyClipboard);
-      Assert (SetClipboardData (CLIPBOARD_UNICODE_TEXT, Data));
+      Assert (SetClipboardData (CF_UNICODETEXT, Data));
       Assert (CloseClipboard);
     end;
 
   -- Grab the current clipboard text
   function Paste return Str is
-    Text : Ptr_Const_Char_16_C;
-    Data : Ptr;
+    Text : Ptr_Const_Char_16_C := null;
+    Data : Ptr                 := NULL_PTR;
     begin
       Assert (OpenClipboard (NULL_PTR));
-      Data := GetClipboardData (CLIPBOARD_UNICODE_TEXT); Assert (Data);
+      Data := GetClipboardData (CF_UNICODETEXT); Assert (Data);
       Text := To_Ptr_Const_Char_16_C (GlobalLock (Data));
       Assert (CloseClipboard);
       return To_Str (Text);
@@ -195,18 +189,18 @@ separate (Neo.Engine) package body System is
 
   -- Make the main game window flash (or stop flashing)
   procedure Alert (Val : Bool) is
-    Flash_Info : aliased FLASHWINFO := (dwFlags => (if Val then FLASH_CONTINUOUSLY else FLASH_END), others => <>);
+    Flash_Info : aliased FLASHWINFO := (dwFlags => (if Val then FLASH_CONTINUOUSLY else FLASHW_STOP), others => <>);
     begin
       Assert (Game);
-      Assert (FlashWindowEx (Flash_Info'Unchecked_Access));
+      Assert (FlashWindowEx (Flash_Info'unchecked_access));
     end;
 
   -- Execute a commandline statement
   procedure Execute (Path : Str) is
-    Startup_Info : aliased STARTUPINFO;
-    Process_Info : aliased PROCESS_INFORMATION;
+    Startup_Info : aliased STARTUPINFO         := (others => <>);
+    Process_Info : aliased PROCESS_INFORMATION := (others => <>);
     begin
-      Assert (Path'Length <= MAXIMUM_PATH_LENGTH);
+      Assert (Path'length <= MAX_PATH - 1); -- Subtract one to account for null terminator
       Assert (CreateProcessW (lpApplicationName    => null,
                               lpCommandLine        => To_Ptr_Char_16_C (Path),
                               lpProcessAttributes  => NULL_PTR,
@@ -215,8 +209,8 @@ separate (Neo.Engine) package body System is
                               dwCreationFlags      => 0,
                               lpEnvironment        => NULL_PTR,
                               lpCurrentDirectory   => null,
-                              lpStartupInfo        => Startup_Info'Unchecked_Access,
-                              lpProcessInformation => Process_Info'Unchecked_Access));
+                              lpStartupInfo        => Startup_Info'unchecked_access,
+                              lpProcessInformation => Process_Info'unchecked_access));
     end;
 
   -- Create a message box 
@@ -230,28 +224,28 @@ separate (Neo.Engine) package body System is
     Force_Custom_Icon : Ptr; 
     function CBTProc (nCode : Int_C; wParam, lParam : Int_Ptr) return Int_Ptr with Convention => Stdcall;
     function CBTProc (nCode : Int_C; wParam, lParam : Int_Ptr) return Int_Ptr is
-      Class_Name  : aliased Str_C (1..1024);
-      Window_Text : aliased Str_C (1..1024);
-      Window      :         Ptr := To_Ptr (Int_Ptr (wParam));
-      Icon        :         Ptr := NULL_PTR;
+      Class_Name  : aliased Str_C (1..1024) := (others => NULL_CHAR_C);
+      Window_Text : aliased Str_C (1..1024) := (others => NULL_CHAR_C);
+      Window      :         Ptr             := To_Ptr (Int_Ptr (wParam));
+      Icon        :         Ptr             := NULL_PTR;
       begin
 
         -- Identify the message box by class and window text
-        Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'Length));
-        Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'Length) = 0);
-        if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = CLASS_NAME_DIALOG and To_Str (Window_Text) = Name then
+        Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'length));
+        Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'length) = 0);
+        if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = DIALOG_CLASS and To_Str (Window_Text) = Name then
 
           -- Load that icon!
           Icon := LoadImageW (hinst     => NULL_PTR,
-                              lpszName  => WIN32_PATH_ICON'Access,
-                              uType     => LOAD_ICO,
+                              lpszName  => WIN32_PATH_ICON'access,
+                              uType     => IMAGE_ICON,
                               cxDesired => 0,
                               cyDesired => 0,
-                              fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
-          if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, GENERIC_ICON); end if;
+                              fuLoad    => LR_LOADFROMFILE or LR_DEFAULTSIZE);
+          if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, IDI_APPLICATION); end if;
 
           -- Well that was fun...
-          Ignore (SendMessageW (Window, MESSAGE_SET_ICON, 0, To_Int_Ptr (Icon)) = 0);
+          Ignore (SendMessageW (Window, WM_SETICON, 0, To_Int_Ptr (Icon)) = 0);
           Assert (UnhookWindowsHookEx (Force_Custom_Icon));
         else Ignore (CallNextHookEx (Force_Custom_Icon, nCode, wParam, lParam) = 0); end if;
         return 0;
@@ -259,12 +253,12 @@ separate (Neo.Engine) package body System is
     begin
 
       -- Create a hook to find the message box window which will then be able to set the icon
-      Force_Custom_Icon := SetWindowsHookExW (WH_CBT, CBTProc'Address, NULL_PTR, GetCurrentThreadId);
+      Force_Custom_Icon := SetWindowsHookExW (WH_CBT, CBTProc'unchecked_access, NULL_PTR, GetCurrentThreadId);
 
       -- Do the call
       return (case MessageBoxW (hWnd      => Game,
-                                lpCaption => C_Name'Unchecked_Access,
-                                lpText    => C_Message'Unchecked_Access,
+                                lpCaption => C_Name'unchecked_access,
+                                lpText    => C_Message'unchecked_access,
                                 uType     => (if Game = NULL_PTR then MB_SYSTEMMODAL else 0)
                                               or (case Icon is
                                                     when No_Icon          => 0,
@@ -285,16 +279,16 @@ separate (Neo.Engine) package body System is
   ---------------
 
   -- Styles for game windowing modes
-  STYLE_FULLSCREEN : constant Int_32_Unsigned_C := STYLE_VISIBLE_INITIALLY or WS_SYSMENU or WS_POPUP   or WS_TOPMOST;
-  STYLE_WINDOWED   : constant Int_32_Unsigned_C := STYLE_VISIBLE_INITIALLY or WS_SYSMENU or WS_CAPTION or WS_BORDER or STYLE_BORDER_SIZABLE or WS_MAXIMIZEBOX;
+  STYLE_FULLSCREEN : constant Int_32_Unsigned_C := WS_VISIBLE or WS_SYSMENU or WS_POPUP   or WS_TOPMOST;
+  STYLE_WINDOWED   : constant Int_32_Unsigned_C := WS_VISIBLE or WS_SYSMENU or WS_CAPTION or WS_BORDER or STYLE_BORDER_SIZABLE or WS_MAXIMIZEBOX;
 
   -- Icons and cursors
-  Icon, Cursor_Inactive, Cursor_Active : Ptr;
+  Icon, Cursor_Inactive, Cursor_Active : Ptr := NULL_PTR;
   Original_Clip : aliased RECT := (others => <>);
 
   -- Conversion functions for rectangles and borders
-  function To_Border (Rectangle : RECT)    return Border_State is ((Int_64 (Rectangle.top), Int_64 (Rectangle.bottom), Int_64 (Rectangle.left), Int_64 (Rectangle.right)));
-  function To_RECT (Border : Border_State) return RECT         is ((Int_C (Border.Left), Int_C (Border.Top), Int_C (Border.Right), Int_C (Border.Bottom)));
+  function To_Border (Rectangle : RECT)      return Border_State is ((Int_64 (Rectangle.top), Int_64 (Rectangle.bottom), Int_64 (Rectangle.left), Int_64 (Rectangle.right)));
+  function To_RECT   (Border : Border_State) return RECT         is ((Int_C  (Border.Left),   Int_C  (Border.Top),       Int_C  (Border.Right),   Int_C  (Border.Bottom)));
 
   -- Find out if the API supports windowed mode (e.g. phone)
   function Fullscreen_Only return Bool is (False);
@@ -316,9 +310,9 @@ separate (Neo.Engine) package body System is
     begin
       if Game = NULL_PTR then
         Game := CreateWindowExW (dwExStyle    => 0,
-                                 lpClassName  => GAME_NAME'Access,
-                                 lpWindowName => GAME_NAME'Access,
-                                 dwStyle      => (if Fullscreen then STYLE_FULLSCREEN else STYLE_WINDOWED) or STYLE_ICONIC_INITIALLY,
+                                 lpClassName  => GAME_NAME'access,
+                                 lpWindowName => GAME_NAME'access,
+                                 dwStyle      => (if Fullscreen then STYLE_FULLSCREEN else STYLE_WINDOWED) or WS_MINIMIZE,
                                  x            => Int_C (X),
                                  y            => Int_C (Y),
                                  nWidth       => Int_C (Width),
@@ -331,7 +325,7 @@ separate (Neo.Engine) package body System is
         Ignore (ShowWindow (Game, SW_SHOWMINIMIZED));
         Ignore (ShowWindow (Game, SW_RESTORE));
       else
-        Assert (SetWindowLongW (Game, SET_WINDOW_STYLE, (if Fullscreen then STYLE_FULLSCREEN else STYLE_WINDOWED)) /= 0);
+        Assert (SetWindowLongW (Game, GWL_STYLE, (if Fullscreen then STYLE_FULLSCREEN else STYLE_WINDOWED)) /= 0);
         Assert (SetWindowPos (hWnd            => Game,
                               hWndInsertAfter => NULL_PTR,
                               X               => Int_C (X),
@@ -342,15 +336,15 @@ separate (Neo.Engine) package body System is
       end if;
     end;
 
-  -- Comment here !!!
+  -- Style changes to switch window modes
   procedure Maximize is
     Context : Ptr := GetDC (GetDesktopWindow);
     begin
       Assert (Context);
       Adjust_Windowing (X          => 0,
                         Y          => 0,
-                        Width      => Int_64_Positive (GetDeviceCaps (Context, DATA_HORIZONTAL_RESOLUTION)),
-                        Height     => Int_64_Positive (GetDeviceCaps (Context, DATA_VERTICAL_RESOLUTION)),
+                        Width      => Int_64_Positive (GetDeviceCaps (Context, SM_CYDLGFRAME)),
+                        Height     => Int_64_Positive (GetDeviceCaps (Context, SM_CXHTHUMB)),
                         Fullscreen => True);
       Assert (ReleaseDC (GetDesktopWindow, Context));
     end;
@@ -358,8 +352,8 @@ separate (Neo.Engine) package body System is
     Context : Ptr := GetDC (GetDesktopWindow);
     begin
       Assert (Context);
-      Adjust_Windowing (X          => Int_64 (GetDeviceCaps (Context, DATA_HORIZONTAL_RESOLUTION)) / 2 - Windowed_Width.Get  / 2,
-                        Y          => Int_64 (GetDeviceCaps (Context, DATA_VERTICAL_RESOLUTION))   / 2 - Windowed_Height.Get / 2,
+      Adjust_Windowing (X          => Int_64 (GetDeviceCaps (Context, SM_CYDLGFRAME)) / 2 - Windowed_Width.Get  / 2,
+                        Y          => Int_64 (GetDeviceCaps (Context, SM_CXHTHUMB))   / 2 - Windowed_Height.Get / 2,
                         Width      => Windowed_Width.Get,
                         Height     => Windowed_Height.Get,
                         Fullscreen => False);
@@ -382,8 +376,8 @@ separate (Neo.Engine) package body System is
 
   -- Check if another instance of the game is running
   function Only_Instance return Bool is
-    Handle : Ptr;
-    Window : Ptr := FindWindowW (GAME_NAME'Access, null);
+    Handle : Ptr := NULL_PTR;
+    Window : Ptr := FindWindowW (GAME_NAME'access, null);
     begin
       if Window /= NULL_PTR then
         Ignore (ShowWindow (Window, SW_SHOWNORMAL) = 0);
@@ -399,29 +393,29 @@ separate (Neo.Engine) package body System is
   procedure Hide_Cursor (Do_Hide : Bool := True) is
     begin
 
-      -- Modify the "internal display counter"...
+      -- Modify the "internal display counter"
       if Do_Hide then while ShowCursor (0) > -1 loop null; end loop;
       else            while ShowCursor (1) <  0 loop null; end loop; end if;
     end;
 
   -- Restrict or unrestrict cursor movement (also hide or show cursor)
   procedure Clip_Cursor (Do_Clip : Boolean := True) is
-    Rectangle : aliased RECT;
+    Rectangle : aliased RECT := (others => <>);
     begin
-      Assert (GetWindowRect (Game, Rectangle'Unchecked_Access));
+      Assert (GetWindowRect (Game, Rectangle'unchecked_access));
 
       -- Unclip cursor
       if not Do_Clip and Original_Clip /= (others => <>) then
-        Assert (ClipCursor (Original_Clip'Unchecked_Access));
+        Assert (ClipCursor (Original_Clip'unchecked_access));
         Original_Clip := (others => <>);
 
       -- Clip it
       elsif Do_Clip then
         if Original_Clip = (others => <>) then
-          Assert (GetClipCursor (Original_Clip'Unchecked_Access));
+          Assert (GetClipCursor (Original_Clip'unchecked_access));
           Assert (Original_Clip /= (others => <>));
         end if;
-        Assert (ClipCursor (Rectangle'Unchecked_Access));
+        Assert (ClipCursor (Rectangle'unchecked_access));
       end if;
     end;
 
@@ -460,7 +454,7 @@ separate (Neo.Engine) package body System is
             declare
             Result : Ptr_RECT := To_Ptr_RECT (lParam);
             begin
-              Result.All := To_RECT (Resize (Border => To_Border (Result.All),
+              Result.all := To_RECT (Resize (Border => To_Border (Result.all),
                                              Kind   => (case wParam is
                                                           when WMSZ_LEFT        => Left_Resize,
                                                           when WMSZ_RIGHT       => Right_Resize,
@@ -476,55 +470,55 @@ separate (Neo.Engine) package body System is
         return DefWindowProcW (hwnd, uMsg, wParam, lParam);
       end;
 
-    -- Register the application class
-    Class : aliased WNDCLASSEX;
+    -- Main window class
+    Class : aliased WNDCLASSEX := (others => <>);
     begin
 
       -- Load the game window icon
       Icon := LoadImageW (hinst     => GetModuleHandleNULL,
-                          lpszName  => WIN32_PATH_ICON'Access,
-                          uType     => LOAD_ICO,
+                          lpszName  => WIN32_PATH_ICON'access,
+                          uType     => IMAGE_ICON,
                           cxDesired => 0,
                           cyDesired => 0,
-                          fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
-      if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, GENERIC_ICON); end if;
+                          fuLoad    => LR_LOADFROMFILE or LR_DEFAULTSIZE);
+      if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, IDI_APPLICATION); end if;
 
       -- Load cursors
       Cursor_Inactive := LoadImageW (hinst     => GetModuleHandleNULL,
-                                     lpszName  => WIN32_PATH_CURSOR_INACTIVE'Access,
-                                     uType     => LOAD_CUR,
+                                     lpszName  => WIN32_PATH_CURSOR_INACTIVE'access,
+                                     uType     => IMAGE_CURSOR,
                                      cxDesired => 0,
                                      cyDesired => 0,
-                                     fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
+                                     fuLoad    => LR_LOADFROMFILE or LR_DEFAULTSIZE);
       if Cursor_Inactive = NULL_PTR then Cursor_Inactive := LoadCursorW (NULL_PTR, GENERIC_CURSOR); end if;
       Cursor_Active := LoadImageW (hinst     => GetModuleHandleNULL,
-                                   lpszName  => WIN32_PATH_CURSOR_ACTIVE'Access,
-                                   uType     => LOAD_CUR,
+                                   lpszName  => WIN32_PATH_CURSOR_ACTIVE'access,
+                                   uType     => IMAGE_CURSOR,
                                    cxDesired => 0,
                                    cyDesired => 0,
-                                   fuLoad    => LOAD_FROM_FILE);
+                                   fuLoad    => LR_LOADFROMFILE);
       if Cursor_Active = NULL_PTR then Cursor_Active := LoadCursorW (NULL_PTR, GENERIC_CURSOR); end if;
 
       -- Register the main window class (the actual window creation is done in Adjust_Windowing)
-      Class := (lpfnWndProc   => WindowProc'Address,
+      Class := (lpfnWndProc   => WindowProc'unchecked_access,
                 hInstance     => GetModuleHandleNULL,
                 hIconSm       => Icon,
                 hIcon         => Icon,
                 hCursor       => Cursor_Inactive,
-                hbrBackground => BRUSH_GRAY,
-                lpszClassName => GAME_NAME'Address,--To_Ptr_Const_Char_16_C (GAME_NAME),
+                hbrBackground => COLOR_GRAYTEXT,
+                lpszClassName => To_Ptr_Const_Char_16_C (GAME_NAME),
                 others        => <>);
-      Assert (RegisterClassExW (Class'Access));
+      Assert (RegisterClassExW (Class'access));
     end;
 
   -- Pump the OS message loop
   function Update_Windowing return Bool is
-    Message : aliased MSG;
+    Message : aliased MSG := (others => <>);
     begin
-      while PeekMessageW (Message'Access, Game, 0, 0, PM_REMOVE) /= 0 loop
+      while PeekMessageW (Message'access, Game, 0, 0, PM_REMOVE) /= 0 loop
         if Message.message = WM_QUIT then return False; end if;
-        Ignore (TranslateMessage (Message'Access));
-        Ignore (DispatchMessageW (Message'Access));
+        Ignore (TranslateMessage (Message'access));
+        Ignore (DispatchMessageW (Message'access));
       end loop;
       return True;
     end;
@@ -536,7 +530,7 @@ separate (Neo.Engine) package body System is
         Ignore (ShowWindow (Game, SW_HIDE) = 0);
         Ignore (DestroyWindow (Game));
       end if;
-      Ignore (UnregisterClassW (Game_Name'Access, NULL_PTR));
+      Ignore (UnregisterClassW (Game_Name'access, NULL_PTR));
       Game := NULL_PTR;
     end;
 
@@ -547,16 +541,16 @@ separate (Neo.Engine) package body System is
     -- Callback for hook
     function MonitorEnumProc (hMonitor, hdcMonitor : Ptr; lprcMonitor : Ptr_RECT; dwData : Ptr_Int_Ptr) return Int_C with Convention => Stdcall;
     function MonitorEnumProc (hMonitor, hdcMonitor : Ptr; lprcMonitor : Ptr_RECT; dwData : Ptr_Int_Ptr) return Int_C is
-      Info : aliased MONITORINFO;
+      Info : aliased MONITORINFO := (others => <>);
       begin
-        Assert (GetMonitorInfoW (hMonitor, Info'Unchecked_Access));
+        Assert (GetMonitorInfoW (hMonitor, Info'unchecked_access));
         Monitors.Append (To_Border (Info.rcMonitor));
         return 1;
       end;
     begin
 
       -- Call hook
-      Assert (EnumDisplayMonitors (NULL_PTR, null, MonitorEnumProc'Address, 0));
+      Assert (EnumDisplayMonitors (NULL_PTR, null, MonitorEnumProc'unchecked_access, 0));
       Assert (Monitors.Length > 0);
       return Vector_Border.To_Unsafe_Array (Monitors);
     end;
@@ -570,9 +564,9 @@ separate (Neo.Engine) package body System is
     
       -- Return only the main window
       declare
-      Result : aliased RECT;
+      Result : aliased RECT := (others => <>);
       begin
-        Assert (GetWindowRect (Game, Result'Unchecked_Access));
+        Assert (GetWindowRect (Game, Result'unchecked_access));
         return (1 => To_Border (Result));
       end;
     end;
@@ -589,29 +583,25 @@ separate (Neo.Engine) package body System is
       end;
 
     -- Register a new class specifically for multi-monitor windows
-    Class : aliased WNDCLASSEX := (cbSize        => WNDCLASSEX'Size / Byte'Size,
-                                   style         => 0,
-                                   lpfnWndProc   => WindowProc'Address,
-                                   cbClsExtra    => 0,
-                                   cbWndExtra    => 0,
+    Class : aliased WNDCLASSEX := (cbSize        => WNDCLASSEX'object_size / Byte'object_size,
+                                   lpfnWndProc   => WindowProc'unchecked_access,
                                    hInstance     => GetModuleHandleNULL,
                                    hIconSm       => Icon,
                                    hIcon         => Icon,
-                                   hbrBackground => BRUSH_GRAY,
-                                   lpszMenuName  => NULL_PTR,
-                                   lpszClassName => MULTI_MONITOR_NAME'Address,--To_Ptr_Const_Char_16_C (MULTI_MONITOR_NAME),
+                                   hbrBackground => COLOR_GRAYTEXT,
+                                   lpszClassName => To_Ptr_Const_Char_16_C (MULTI_MONITOR_NAME),
                                    hCursor       => (case Cursor.Get is
                                                        when Inactive_Cursor => Cursor_Inactive,
                                                        when Active_Cursor   => Cursor_Active,
                                                        when System_Cursor   => LoadCursorW (NULL_PTR, GENERIC_CURSOR)));
     begin
-      Assert (RegisterClassExW (Class'Unchecked_Access));
+      Assert (RegisterClassExW (Class'unchecked_access));
 
       -- For every monitor border create a window that fits it
       for Monitor of Get_Monitors loop
         if Monitor.Left /= 0 and Monitor.Top /= 0 then
           Multi_Monitor_Windows.Append (CreateWindowExW (dwExStyle => 0,
-                                                         dwStyle      => STYLE_FULLSCREEN or STYLE_NO_ACTIVATE,
+                                                         dwStyle      => STYLE_FULLSCREEN or WS_DISABLED,
                                                          x            => Int_C (Monitor.Left),
                                                          y            => Int_C (Monitor.Top),
                                                          nWidth       => Int_C (Monitor.Right  - Monitor.Left),
@@ -620,8 +610,8 @@ separate (Neo.Engine) package body System is
                                                          hMenu        => 0,
                                                          hInstance    => GetModuleHandleNULL,
                                                          lpParam      => NULL_PTR,
-                                                         lpClassName  => MULTI_MONITOR_NAME'Access,
-                                                         lpWindowName => MULTI_MONITOR_NAME'Access));
+                                                         lpClassName  => MULTI_MONITOR_NAME'access,
+                                                         lpWindowName => MULTI_MONITOR_NAME'access));
           Assert (Multi_Monitor_Windows.Last_Element);
           Ignore (ShowWindow (Multi_Monitor_Windows.Last_Element, SW_SHOWNORMAL));
           Assert (UpdateWindow (Multi_Monitor_Windows.Last_Element));
@@ -640,7 +630,7 @@ separate (Neo.Engine) package body System is
         Ignore (ShowWindow (Window, SW_HIDE));
         Assert (DestroyWindow (Window));
       end loop;
-      Assert (UnregisterClassW (MULTI_MONITOR_NAME'Access, NULL_PTR));
+      Assert (UnregisterClassW (MULTI_MONITOR_NAME'access, NULL_PTR));
     end;
 
   -----------
@@ -715,19 +705,19 @@ separate (Neo.Engine) package body System is
     PA1_Key,            Clear_Key);
 
   -- Internal representation of Xvox controllers
-  Gamepads : aliased array (0..3) of XINPUT_GAMEPAD;
+  Gamepads : aliased array (0..3) of XINPUT_GAMEPAD := (others => (others => <>));
 
   -- Vibrate an Xbox controller
   procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent) is
-    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'Last)),
-                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'Last)));
-    begin if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'Unchecked_Access) = 0); end if; end;
+    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'last)),
+                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'last)));
+    begin if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'unchecked_access) = 0); end if; end;
 
   -- Fetch raw cursor coordinates from the system cursor
   function Get_Cursor return Cursor_state is
-    Pt : aliased POINT;
+    Pt : aliased POINT := (others => <>);
     begin
-      Assert (GetCursorPos (Pt'Unchecked_Access));
+      Assert (GetCursorPos (Pt'unchecked_access));
       return (Int_64 (Pt.X), Int_64 (Pt.Y));
     end;
 
@@ -735,35 +725,35 @@ separate (Neo.Engine) package body System is
   procedure Initialize_Input is
     function WindowProc (hwnd : Ptr; uMsg : Int_32_Unsigned_C; wParam, lParam : Int_Ptr) return Int_Ptr with Convention => Stdcall;
     function WindowProc (hwnd : Ptr; uMsg : Int_32_Unsigned_C; wParam, lParam : Int_Ptr) return Int_Ptr is
-      Id     :         Int_Ptr;
-      Bytes  : aliased Int_32_Unsigned_C;
-      Header : aliased RAWINPUTHEADER;
+      Id     :         Int_Ptr           := 0;
+      Bytes  : aliased Int_32_Unsigned_C := 0;
+      Header : aliased RAWINPUTHEADER    := (others => <>);
       begin
         case uMsg is
           when WM_CLOSE => PostQuitMessage (0); return 0;
           when WM_INPUT =>
 
             -- Find if the input message belongs to a mouse or keyboard
-            Bytes := RAWINPUTHEADER'Object_Size / Byte'Object_Size;
+            Bytes := RAWINPUTHEADER'object_size / Byte'object_size;
             Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                      uiCommand    => GET_DEVICE_HEADER,
-                                     pData        => Header'Address,
-                                     pcbSize      => Bytes'Address,
-                                     cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWINPUTHEADER'Object_Size / Byte'Object_Size);
+                                     pData        => Header'unchecked_access,
+                                     pcbSize      => Bytes'unchecked_access,
+                                     cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWINPUTHEADER'object_size / Byte'object_size);
             Id := To_Int_Ptr (Header.hDevice);
             if not Devices.Has (Id) then return DefWindowProcW (hwnd, uMsg, wParam, lParam); end if;
             case Header.dwType is
 
               -- Its a keyboard...
               when RIM_TYPEKEYBOARD =>
-                Bytes := Int_32_Unsigned_C (RAWKEYBOARD'Object_Size / Byte'Object_Size);
+                Bytes := Int_32_Unsigned_C (RAWKEYBOARD'object_size / Byte'object_size);
                 declare Keyboard : aliased RAWKEYBOARD; begin
                   Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                            uiCommand    => GET_DEVICE_DATA,
-                                           pData        => Keyboard'Address,
-                                           pcbSize      => Bytes'Address,
-                                           cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWKEYBOARD'Object_Size / Byte'Object_Size);
-                  if Keyboard.VKey <= VK_MAP'Last and Keyboard.VKey >= VK_MAP'First then
+                                           pData        => Keyboard'unchecked_access,
+                                           pcbSize      => Bytes'unchecked_access,
+                                           cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWKEYBOARD'object_size / Byte'object_size);
+                  if Keyboard.VKey <= VK_MAP'last and Keyboard.VKey >= VK_MAP'first then
                     Inject_Key (Id   => Id,
                                 Down => Keyboard.Message = WM_KEYDOWN or Keyboard.Message = WM_SYSKEYDOWN,
                                 Key  => (case VK_MAP (Keyboard.VKey) is
@@ -776,13 +766,13 @@ separate (Neo.Engine) package body System is
 
               -- Its a mouse...
               when RIM_TYPEMOUSE =>
-                Bytes := Int_32_Unsigned_C (RAWMOUSE'Object_Size / Byte'Object_Size);
+                Bytes := Int_32_Unsigned_C (RAWMOUSE'object_size / Byte'object_size);
                 declare Mouse : aliased RAWMOUSE; begin
                   Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                            uiCommand    => GET_DEVICE_DATA,
-                                           pData        => Mouse'Address,
-                                           pcbSize      => Bytes'Address,
-                                           cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWMOUSE'Object_Size / Byte'Object_Size);
+                                           pData        => Mouse'unchecked_access,
+                                           pcbSize      => Bytes'unchecked_access,
+                                           cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWMOUSE'object_size / Byte'object_size);
                   if Mouse.lLastX /= 0 or Mouse.lLastY /= 0 then Inject_Cursor (Id, (Int_64 (Mouse.lLastX), Int_64 (Mouse.lLastY))); end if;
                   if    (Mouse.usButtons and RI_MOUSE_LEFT_BUTTON_DOWN)   > 0 then Inject_Button (Id, Left_Button,   True);
                   elsif (Mouse.usButtons and RI_MOUSE_LEFT_BUTTON_UP)     > 0 then Inject_Button (Id, Left_Button,   False);
@@ -808,24 +798,20 @@ separate (Neo.Engine) package body System is
       end;
 
     -- Register the input class and create the hidden input window 
-    Class : aliased WNDCLASSEX := (cbSize        => WNDCLASSEX'Size / Byte'Size,
-                                   style         => 0,
-                                   lpfnWndProc   => WindowProc'Address,
-                                   cbClsExtra    => 0,
-                                   cbWndExtra    => 0,
+    Class : aliased WNDCLASSEX := (lpfnWndProc   => WindowProc'unchecked_access,
                                    hInstance     => GetModuleHandleNULL,
-                                   hIconSm       => LoadIconW (GetModuleHandleNULL, GENERIC_ICON),
-                                   hIcon         => LoadIconW (GetModuleHandleNULL, GENERIC_ICON),
+                                   hIconSm       => LoadIconW (GetModuleHandleNULL, IDI_APPLICATION),
+                                   hIcon         => LoadIconW (GetModuleHandleNULL, IDI_APPLICATION),
                                    hCursor       => LoadCursorW (NULL_PTR, GENERIC_CURSOR),
-                                   hbrBackground => BRUSH_GRAY,
-                                   lpszMenuName  => NULL_PTR, --null,
-                                   lpszClassName => INPUT_NAME'Address);--To_Ptr_Const_Char_16_C (INPUT_NAME));
+                                   hbrBackground => COLOR_GRAYTEXT,
+                                   lpszClassName => To_Ptr_Const_Char_16_C (INPUT_NAME),
+                                   others        => <>);
     begin
-      Assert (RegisterClassExW (Class'Unchecked_Access));
+      Assert (RegisterClassExW (Class'unchecked_access));
       Input := CreateWindowExW (dwExStyle    => 0,
-                                lpClassName  => INPUT_NAME'Access,
-                                lpWindowName => INPUT_NAME'Access,
-                                dwStyle      => STYLE_NO_ACTIVATE,
+                                lpClassName  => INPUT_NAME'access,
+                                lpWindowName => INPUT_NAME'access,
+                                dwStyle      => WS_DISABLED,
                                 x            => 0,
                                 y            => 0,
                                 nWidth       => 0,
@@ -835,30 +821,32 @@ separate (Neo.Engine) package body System is
                                 hInstance    => GetModuleHandleNULL,
                                 lpParam      => NULL_PTR);
       Assert (Input);
+
+      -- Register classes of input devices with Raw Input so that the event loop will recieve thier messages
       declare
       type Array_RAWINPUTDEVICE is array (Positive range <>) of RAWINPUTDEVICE;
       Setups : aliased Array_RAWINPUTDEVICE := ((GENERIC_DESKTOP, USE_RAW_KEYBOARD, RIDEV_INPUTSINK, Input),
                                                 (GENERIC_DESKTOP, USE_RAW_MOUSE,    RIDEV_INPUTSINK, Input));
       begin
-        Assert (RegisterRawInputDevices (Setups'Address, Setups'Length, RAWINPUTDEVICE'Size / Byte'Size));
+        Assert (RegisterRawInputDevices (Setups'unchecked_access, Setups'length, RAWINPUTDEVICE'object_size / Byte'object_size));
       end;
     end;
 
-  -- Unregister devices by overwriting and kill the input window
+  -- Unregister input devices by overwriting the setup values then kill the input window
   procedure Finalize_Input is
     Null_Setup : aliased RAWINPUTDEVICE := (GENERIC_DESKTOP, USE_RAW_MOUSE, STOP_READING_TOP_LEVEL_DEVICES, NULL_PTR);
     begin
-      Ignore (RegisterRawInputDevices (Null_Setup'Address, Null_Setup'Size / RAWINPUTDEVICE'Size, RAWINPUTDEVICE'Size / Byte'Size));
+      Ignore (RegisterRawInputDevices (Null_Setup'unchecked_access, Null_Setup'object_size / RAWINPUTDEVICE'object_size, RAWINPUTDEVICE'object_size / Byte'object_size));
       if Input /= NULL_PTR then Ignore (DestroyWindow (Input)); end if;
       Input := NULL_PTR;
     end;
 
   -- Pump messages, check device connectivity, and poll devices that don't send messages
   function Update_Input return Bool is
-    Device_Count   : aliased Int_32_Unsigned_C;
-    State          : aliased XINPUT_STATE;
-    Message        : aliased MSG;
-    Has_Gamepad    : Array_Bool (1..4);
+    Device_Count   : aliased Int_32_Unsigned_C := 0;
+    State          : aliased XINPUT_STATE      := (others => <>);
+    Message        : aliased MSG               := (others => <>);
+    Has_Gamepad    : Array_Bool (1..4)         := (others => False);
     Current_Device : Ordered_Device.Cursor;
 
     -- Perform range or boolean checks for devices then inject results
@@ -871,23 +859,23 @@ separate (Neo.Engine) package body System is
       end;
     procedure Unpack_Stick (Player : Int; Stick : Stick_Kind; X, Y : Int_16_Signed_C) is
       begin
-        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real_32_Range (Real (X) / Real (Int_16_Signed_C'Last))
-                                                 else          Real_32_Range (Real (X) / Real (Int_16_Signed_C'First))),
-                                                (if Y > 0 then Real_32_Range (Real (Y) / Real (Int_16_Signed_C'Last))
-                                                 else          Real_32_Range (Real (Y) / Real (Int_16_Signed_C'First)))));
+        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real_Range (Real (X) / Real (Int_16_Signed_C'last))
+                                                 else          Real_Range (Real (X) / Real (Int_16_Signed_C'first))),
+                                                (if Y > 0 then Real_Range (Real (Y) / Real (Int_16_Signed_C'last))
+                                                 else          Real_Range (Real (Y) / Real (Int_16_Signed_C'first)))));
       end;
 
-    -- Preform black magic
+    -- Perform black magic
     function Get_Device_Name (Device : Ptr) return Str is
       Buff : Str_16_c (1..500);
       Buff_S : aliased Int_32_Unsigned_C := 500;
       Buff2 : Str_16_c (1..500);
-      Buff_S2 : aliased Int_32_Unsigned_C := Buff2'Length * Char_16_C'Size;
+      Buff_S2 : aliased Int_32_Unsigned_C := Buff2'length * Char_16_C'object_size;
       File : Ptr;
       Result : Str_Unbound;
       begin
-        Assert (GetRawInputDeviceInfoW (Device, RIDI_DEVICENAME, Buff (1)'Address, Buff_S'Address));
-        File := CreateFileW (lpFileName            => Buff'Address,
+        Assert (GetRawInputDeviceInfoW (Device, RIDI_DEVICENAME, Buff (1)'unchecked_access, Buff_S'unchecked_access));
+        File := CreateFileW (lpFileName            => Buff'unchecked_access,
                              dwDesiredAccess       => GENERIC_READ or GENERIC_WRITE,
                              dwShareMode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
                              lpSecurityAttributes  => NULL_PTR,
@@ -895,19 +883,21 @@ separate (Neo.Engine) package body System is
                              dwFlagsAndAttributes  => 0,
                              hTemplateFile         => NULL_PTR);
         Assert (File);
-        Assert (HidD_GetProductString(Buff (1)'Address, Buff2 (1)'Address, Buff_S2));
-        --CloseHandle (File);
+        Assert (HidD_GetProductString(Buff (1)'unchecked_access, Buff2 (1)'unchecked_access, Buff_S2));
+        CloseHandle (File);
         return To_Str (Buff);
       end;
-
-    -- Check if an input device has been added or removed... This needs more comments !!!
     begin
-      Assert (GetRawInputDeviceList (NULL_PTR, Device_Count'Unchecked_Access, RAWINPUTDEVICELIST'Object_Size / Byte'Object_Size) /= -1);
+
+      -- Fetch a complete list of RawInput devices for querying purposes
+      Assert (GetRawInputDeviceList (NULL_PTR, Device_Count'unchecked_access, RAWINPUTDEVICELIST'object_size / Byte'object_size) /= -1);
       Assert (Device_Count);
       declare
-      List : aliased array (1..Int (Device_Count)) of RAWINPUTDEVICELIST;
+      List : aliased array (1..Int (Device_Count)) of RAWINPUTDEVICELIST := (others => (others => <>));
       begin
-        Assert (GetRawInputDeviceList (List'Address, Device_Count'Unchecked_Access, RAWINPUTDEVICELIST'Object_Size / Byte'Object_Size) /= -1);
+        Assert (GetRawInputDeviceList (List'unchecked_access, Device_Count'unchecked_access, RAWINPUTDEVICELIST'object_size / Byte'object_size) /= -1);
+
+        -- Look for keyboards and mice then add them to the internal list of devices if they are new
         for I in List'Range loop
           if not Has_Device (To_Int_Ptr (List (I).hDevice)) then
             case List (I).dwType is
@@ -916,34 +906,42 @@ separate (Neo.Engine) package body System is
             when others => null; end case;
           end if;
         end loop;
+
+        -- Remove unplugged or unused devices
         Current_Device := Devices.First;
         while Devices.Has (Current_Device) loop
+
+          -- XInput devices
           if Devices.Key (Current_Device) in 0..3 then
             Has_Gamepad (Int (Devices.Key (Current_Device)) + 1) := True;
-            if XInputGetState (Int_32_Unsigned_C (Devices.Key (Current_Device)), State'Unchecked_Access) /= 0 then Devices.Delete (Current_Device); end if;
+            if XInputGetState (Int_32_Unsigned_C (Devices.Key (Current_Device)), State'unchecked_access) /= 0 then Devices.Delete (Current_Device); end if;
+
+          -- RawInput devices
           else
             for J in List'Range loop
               exit when Devices.Key (Current_Device) = To_Int_Ptr (List (J).hDevice);
-              if J = List'Last then Devices.Delete (Current_Device); end if;
+              if J = List'last then Devices.Delete (Current_Device); end if;
             end loop;
           end if;
           Devices.Next (Current_Device);
         end loop;
+
+        -- Query the XInput API for Xbox 360 controllers and add them to our device list
         for I in Gamepads'Range loop
-          if not Has_Gamepad (I + 1) and then XInputGetState (Int_32_Unsigned_C (I), State'Unchecked_Access) = 0 then Add_Device (Int_Ptr (I), (Gamepad_Device, others => <>)); end if;
+          if not Has_Gamepad (I + 1) and then XInputGetState (Int_32_Unsigned_C (I), State'unchecked_access) = 0 then Add_Device (Int_Ptr (I), (Gamepad_Device, others => <>)); end if;
         end loop;
       end;
 
       -- Pump the message loop
-      while PeekMessageW (Message'Unchecked_Access, Input, 0, 0, PM_REMOVE) /= 0 loop
+      while PeekMessageW (Message'unchecked_access, Input, 0, 0, PM_REMOVE) /= 0 loop
         if Message.message = WM_QUIT then return False; end if;
-        Ignore (TranslateMessage (Message'Unchecked_Access));
-        Ignore (DispatchMessageW (Message'Unchecked_Access));
+        Ignore (TranslateMessage (Message'unchecked_access));
+        Ignore (DispatchMessageW (Message'unchecked_access));
       end loop;
 
-      -- Inject Xbox controller input
+      -- Inject Xbox 360 controller input
       begin for I in Gamepads'Range loop
-        if XInputGetState (Int_32_Unsigned_C (I), State'Unchecked_Access) = 0 and then Gamepads (I) /= State.Gamepad then
+        if XInputGetState (Int_32_Unsigned_C (I), State'unchecked_access) = 0 and then Gamepads (I) /= State.Gamepad then
           Unpack_Button (I, XINPUT_GAMEPAD_A,              A_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_B,              B_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_X,              X_Button);
@@ -962,639 +960,11 @@ separate (Neo.Engine) package body System is
           -- Convert ranges
           if State.Gamepad.sThumbLX /= Gamepads (I).sThumbLX or State.Gamepad.sThumbLY /= Gamepads (I).sThumbLY then Unpack_Stick (I, Left_Stick,  State.Gamepad.sThumbLX, State.Gamepad.sThumbLY); end if;
           if State.Gamepad.sThumbRX /= Gamepads (I).sThumbRX or State.Gamepad.sThumbRY /= Gamepads (I).sThumbRY then Unpack_Stick (I, Right_Stick, State.Gamepad.sThumbRX, State.Gamepad.sThumbRY); end if;
-          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real (State.Gamepad.bLeftTrigger)  / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
-          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real (State.Gamepad.bRightTrigger) / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
+          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real (State.Gamepad.bLeftTrigger)  / Real (Int_8_Unsigned_C'last) * 100.0); end if;
+          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real (State.Gamepad.bRightTrigger) / Real (Int_8_Unsigned_C'last) * 100.0); end if;
           Gamepads (I) := State.Gamepad;
         end if;
       end loop; exception when others => null; end; -- Random crashes ???
       return True;
     end;
-
-  -------------
-  -- Console --
-  -------------
-
-  -- Why doesn't SelectObject work ??? And implement autocompelete ???
-  procedure Run_Console is 
-
-    -- Console stuff
-    type Button_State is record
-        Message : Str (1..4);
-        Action  : access procedure;
-      end record;
-    CONSOLE_BUTTONS : constant array (1..3) of Button_State := (("Save", Save_Log'Access), ("Send", Send_Log'Access), ("Quit", null));
-    Current_Input : Char_16        := NULL_CHAR_16;
-    Current_Log   : Str_Unbound    := NULL_STR_UNBOUND;
-    Current_Lines : Int_64_Natural := 0;
-    Buttons       : array (CONSOLE_BUTTONS'range) of Ptr;
-
-    -- Constants
-    NUMBER_OF_OUTPUT_ROWS : constant Int_32_Unsigned_C := 25;
-    SCROLL_FACTOR         : constant Int_64_Natural    := 500;
-    DO_DISABLE_RESIZE     : constant Bool  := False;
-    GROUP_BOX_SIDE_MARGIN : constant Real  := 1.2;
-    FONT_GROUP_BOX_SIZE   : constant Real  := 1.2;
-    FONT_CONSOLE_SIZE     : constant Int_C := -11;
-    PIXELS_PER_INCH       : constant Int_C := 72;
-    BUTTON_WIDTH_DLU      : constant Int_C := 50;
-    BUTTON_HEIGHT_DLU     : constant Int_C := 14;
-    MARGIN_BUTTON         : constant Int_C := 4;
-    MARGIN                : constant Int_C := 7;
-    IDENTIFIER_START      : constant Int   := 666;
-
-    -- Text
-    ERROR_REPORTING_URL : constant Str  := "http://www.google.com";
-    LABEL_INPUT_ENTRY   : constant Str  := "Input";
-    LABEL_OUTPUT        : constant Str  := "Output";
-    FONT_CONSOLE        : aliased Str_C := To_Str_C ("Courier New");
-    FONT_DIALOG         : aliased Str_C := To_Str_C ("Tahoma");
-    NAME_BUTTON         : aliased Str_C := To_Str_C ("Button");
-    NAME_GROUP          : aliased Str_C := To_Str_C ("Group");
-    NAME_EDIT           : aliased Str_C := To_Str_C ("Edit");
-
-    -- Variables
-    Message     : aliased MSG := (others => <>);
-    Buffer      : aliased Str_C (1..2**9) := (others => NULL_CHAR_16_C); -- !!!
-    Metrics     : aliased NONCLIENTMETRICS := (others => <>);
-    Class       : aliased WNDCLASSEX := (others => <>);
-    Text_Metric : aliased TEXTMETRIC := (others => <>);
-    Rectangle   : aliased RECT := (others => <>);
-
-    -- Window, font, and icon pointers
-    Output_Group_Box, Input_Group_Box,
-    Font_Text_Box, Font_Buttons,
-    Output_Box, Input_Box,
-    Edit_Background,
-    Context,
-    Console,
-    Icon : aliased Ptr := NULL_PTR;
-
-    -- Sizing variables
-    Output_Box_Height, Output_Box_Width, Input_Box_Height,
-    Dialog_Base_Unit_Height, Dialog_Base_Unit_Width,
-    Text_Box_Font_Height, Text_Box_Font_Width,
-    Start_Selection, End_Selection,
-    Margin_Group_Top, Margin_Group,
-    Current_Height, Current_Width,
-    Console_Height, Console_Width,
-    Button_Height, Button_Width,
-    Right_Count, Left_Count,
-    Message_Box_Font_Height,
-    Number_Of_Lines,
-    Y,
-    Current_Line : aliased  Int_C := 0;
-
-    -- Flags
-    Was_At_Bottom,
-    Button_Font_Set,
-    Do_Process_Character,
-    Was_At_Minimum_Width,
-    Was_At_Minimum_Height,
-    Do_Skip_Message : Bool := False;
-    Is_At_Bottom,
-    Is_First_Time : Bool := True;
-
-    -- Message procedures for convience
-    procedure Set_Text (Handle : Ptr; Text : Str) is begin Assert (SendMessageW (Handle, WM_SETTEXT, 0, To_Int_Ptr (To_Str_C (Text)'Address))); end;
-    procedure Set_Font (Handle, Font : Ptr)       is begin Ignore (SendMessageW (Handle, WM_SETFONT, 0, To_Int_Ptr (Font))); end;
-
-    -- Return true if the output text window's scrollbar is at the bottom
-    function Scrollbar_At_Bottom return Bool is
-      Scroll_Info : aliased SCROLLINFO;
-      begin
-        Ignore (GetScrollInfo (Output_Box, 1, Scroll_Info'Unchecked_Access));
-        return Scroll_Info.nPos + Number_of_Lines >= Scroll_Info.nMax;
-      end;
-
-    -- A single function for setting all GUI sizing globals
-    procedure Set_Sizes is
-      Minimum_Width : Int_C;
-      Box_Padding   : Int_C;
-      Border_Height : Int_C := GetSystemMetrics (SM_CYFRAME);
-      Border_Width  : Int_C := GetSystemMetrics (SM_CXFRAME);
-      begin
-        Margin_Group      := Int_C (Float (Text_Metric.tmHeight) / GROUP_BOX_SIDE_MARGIN);
-        Margin_Group_Top  := Int_C (Float (Text_Metric.tmHeight) * FONT_GROUP_BOX_SIZE);
-        Box_Padding       := Int_C (Float (Text_Box_Font_Width) / 1.5);
-        Output_Box_Width  := 2 * Box_Padding + (Text_Box_Font_Width  * Int_C (Line_Size)) + GetSystemMetrics (SM_CYVTHUMB);
-        Output_Box_Height := 2 * Box_Padding + (Text_Box_Font_Height * Int_C (NUMBER_OF_OUTPUT_ROWS));
-        Input_Box_Height  := 2 * Box_Padding + Text_Box_Font_Height;
-        Console_Width     := (MARGIN * Dialog_Base_Unit_Width + Margin_Group + Border_Width) * 2 + Output_Box_Width;
-        Console_Height    := (MARGIN * Dialog_Base_Unit_Height) * 4 + (Border_Height + Margin_Group + Margin_Group_Top) * 2
-                             + Output_Box_Height + Input_Box_Height + BUTTON_HEIGHT + GetSystemMetrics (SM_CYSIZE);
-        if Buttons'Length > 0 then
-          Minimum_Width := (Buttons'Length - 1) * MARGIN_BUTTON * Dialog_Base_Unit_Width + MARGIN * 2 * Dialog_Base_Unit_Width + BUTTON_WIDTH * Buttons'Length + Border_Width * 2;
-          if Console_Width < Minimum_Width then
-            Output_Box_Width := Output_Box_Width + Minimum_Width - Console_Width;
-            Console_Width := Minimum_Width;
-          end if;
-        end if;
-        if Current_Height < Console_Height or (Was_At_Minimum_Height and Current_Height > Console_Height) then Current_Height := Console_Height; end if;
-        if Current_Width  < Console_Width  or (Was_At_Minimum_Width  and Current_Width  > Console_Width)  then Current_Width  := Console_Width; end if;
-        Output_Box_Width      := Current_Width  - (Console_Width  - Output_Box_Width);
-        Output_Box_Height     := Current_Height - (Console_Height - Output_Box_Height);
-        Was_At_Minimum_Height := Current_Height < Console_Height + Border_Height;
-        Was_At_Minimum_Width  := Current_Width  < Console_Width  + Border_Width;
-        Number_Of_Lines       := (Output_Box_Height - 2 * Box_Padding) / Text_Box_Font_Height;
-      end;
-
-    -- Create and set fonts for the output box
-    procedure Create_Fonts is 
-      Font_Size : aliased SIZE;
-      Some_BS   : aliased Str_C := To_Str_C ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-      begin
-        if not Button_Font_Set then
-          Font_Buttons := CreateFontW (nHeight            => Message_Box_Font_Height,
-                                       nWidth             => 0,
-                                       nEscapement        => 0,
-                                       nOrientation       => 0,
-                                       fnWeight           => FONT_WEIGHT_LIGHT,
-                                       fdwItalic          => 0,
-                                       fdwUnderline       => 0,
-                                       fdwStrikeOut       => 0,
-                                       fdwCharSet         => DEFAULT_CHARACTER_SET,
-                                       fdwOutputPrecision => FONT_OUT_DEFAULT_PRECISION,
-                                       fdwClipPrecision   => FONT_CLIP_DEFAULT_PRECISION,
-                                       fdwQuality         => FONT_DEFAULT_QUALITY,
-                                       fdwPitchAndFamily  => FONT_FAMILY_MODERN or FONT_FIXED_PITCH,
-                                       lpszFace           => FONT_DIALOG'Unchecked_Access);
-          Assert (Font_Buttons);
-        end if;
-        Font_Text_Box := CreateFontW (nHeight            => FONT_CONSOLE_SIZE,
-                                      nWidth             => 0,
-                                      nEscapement        => 0,
-                                      nOrientation       => 0,
-                                      fnWeight           => FONT_WEIGHT_LIGHT,
-                                      fdwItalic          => 0,
-                                      fdwUnderline       => 0,
-                                      fdwStrikeOut       => 0,
-                                      fdwCharSet         => DEFAULT_CHARACTER_SET,
-                                      fdwOutputPrecision => FONT_OUT_DEFAULT_PRECISION,
-                                      fdwClipPrecision   => FONT_CLIP_DEFAULT_PRECISION,
-                                      fdwQuality         => FONT_DEFAULT_QUALITY,
-                                      fdwPitchAndFamily  => FONT_FAMILY_MODERN or FONT_FIXED_PITCH,
-                                      lpszFace           => FONT_CONSOLE'Unchecked_Access);
-        Assert (Font_Text_Box);
-        Ignore (SelectObject (Context, Font_Text_Box)); -- ???
-        Assert (GetTextMetricsW (Context, Text_Metric'Unchecked_Access));
-        Text_Box_Font_Height := Text_Metric.tmHeight;
-        Assert (GetTextExtentPoint32W (hdc      => Context,
-                                       lpString => Some_BS'Unchecked_Access,
-                                       c        => 52,
-                                       lpSize   => Font_Size'Unchecked_Access));
-        Text_Box_Font_Width := Int_C ((Font_Size.cx / 26 + 1) / 2);
-        Ignore (SelectObject (Context, Font_Buttons)); -- ???
-        Assert (GetTextMetricsW (Context, Text_Metric'Unchecked_Access));
-      end;
-
-    -- Set the global variable Dialog_Base_Unit_Width used in calculating all UI proportions by spawning a message box and measuring it
-    procedure Get_Sizes_From_Message_Box is
-      Hook : Ptr;
-
-      -- Procedure to wait for the callback-callback (below) to set Dialog_Base_Unit_Width
-      procedure Wait_For_Set_With_Infinite_Loop is
-        begin
-          for I in Int'range loop -- The Windows API made me do it
-            exit when Dialog_Base_Unit_Width /= 0;
-            delay 0.0001;
-          end loop;
-          if Dialog_Base_Unit_Width = 0 then raise Program_Error; end if;
-        end;
-
-      -- Callback to acquire message box
-      function CBTProc (nCode : Int_C; wParam, lParam : Int_Ptr) return Int_Ptr with Convention => Stdcall;
-      function CBTProc (nCode : Int_C; wParam, lParam : Int_Ptr) return Int_Ptr is
-        Class_Name  : aliased Str_C (1..256);
-        Window_Text : aliased Str_C (1..256);
-        Window      :         Ptr := To_Ptr (Int_Ptr (wParam));
-
-        -- Once we find the message box we have to look through its children to find a button
-        function EnumWindowsProc (hwnd : Ptr; lParam : Int_Ptr) return Int_C with Convention => Stdcall;
-        function EnumWindowsProc (hwnd : Ptr; lParam : Int_Ptr) return Int_C is
-          Rectangle : aliased RECT;
-          begin
-
-            -- Find a message box button to calculate dialog base units
-            Assert (GetClassNameW (hwnd, Class_Name'Unrestricted_Access, Class_Name'Length));
-            Ignore (GetWIndowTextW (hwnd, Window_Text'Unrestricted_Access, Window_Text'Length));
-            if Dialog_Base_Unit_Width = 0 and "Button" = To_Str (Class_Name) then
-
-              -- Do the Microsoft recommended math and measurements: https://support.microsoft.com/en-us/kb/125681
-              Assert (GetWindowRect (hwnd, Rectangle'Unchecked_Access));
-              Button_Width            := (Rectangle.right  - Rectangle.left);
-              Button_Height           := (Rectangle.bottom - Rectangle.top);
-              Ignore (SelectObject (Context, To_Ptr (Int_Ptr (To_Int_32_Unsigned (SendMessageW (hwnd, MESSAGE_GET_FONT, 0, 0)))))); -- ???
-              Assert (GetTextMetricsW (Context, Text_Metric'Unchecked_Access));
-              Message_Box_Font_Height := Text_Metric.tmHeight;
-              Dialog_Base_Unit_Width  := Button_Width  / BUTTON_WIDTH_DLU;
-              Dialog_Base_Unit_Height := Button_Height / BUTTON_HEIGHT_DLU;
-            end if;
-            return 1;
-          end;
-        begin
-
-          -- Find the newly created message-box window 
-          Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'Length));
-          Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'Length));
-          if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = CLASS_NAME_DIALOG and To_Str (Window_Text) = To_Str (CONSOLE_NAME) then
-
-            -- Get the dialog base units then close the message box
-            Ignore (EnumChildWindows (Window, EnumWindowsProc'Address, 0));
-            Wait_For_Set_With_Infinite_Loop;
-            Assert (DestroyWindow (Window));
-            Assert (UnhookWindowsHookEx (Hook));
-
-          -- Not the message box, continue the hook
-          else Ignore (CallNextHookEx (Hook, nCode, wParam, lParam)); end if;
-          return 0;
-        end;
-      begin
-
-        -- Create a message box and a callback that checks newly created windows, then wait for Dialog_Base_Unit_Width to be set
-        Hook := SetWindowsHookExW (WH_CBT, CBTProc'Address, NULL_PTR, GetCurrentThreadId);
-        Ignore (MessageBoxW (NULL_PTR, GAME_NAME'Access, CONSOLE_NAME'Unchecked_Access, 0));
-        Wait_For_Set_With_Infinite_Loop;
-      end;
-
-    -- Console window callback
-    function WindowProc (hwnd : Ptr; uMsg : Int_32_Unsigned_C; wParam, lParam : Int_Ptr) return Int_Ptr with Convention => Stdcall;
-    function WindowProc (hwnd : Ptr; uMsg : Int_32_Unsigned_C; wParam, lParam : Int_Ptr) return Int_Ptr is
-
-      -- Conversion function
-      function To_Windows_Color (Color : Color_State) return Int_32_Unsigned_C is (Int_32_Unsigned_C (Shift_Left (Int_32_Unsigned (Color.Green), 8) or
-                                                                                                      Shift_Left (Int_32_Unsigned (Color.Blue), 16) or
-                                                                                                                  Int_32_Unsigned (Color.Red)));
-      begin
-        case uMsg is
-          when WM_CLOSE => PostQuitMessage (0); return 1;
-          when WM_SYSCOMMAND => if wParam = Int_Ptr (SC_KEYMENU) or wParam = Int_Ptr (SC_SCREENSAVE) then return 1; end if;
-          when WM_CREATE => Edit_Background := CreateSolidBrush (To_Windows_Color (COLOR_BACKGROUND)); Assert (Edit_Background);
-
-          -- Set colors
-          when WM_CTLCOLORSTATIC | WM_CTLCOLOREDIT =>
-            if To_Ptr (lParam) = Output_Box or To_Ptr (lParam) = Input_Box then
-              Assert (SetBkColor   (To_Ptr (Int_Ptr (wParam)), To_Windows_Color (COLOR_BACKGROUND)) /= CLR_INVALID);
-              Assert (SetTextColor (To_Ptr (Int_Ptr (wParam)), To_Windows_Color (COLOR_FOREGROUND)) /= CLR_INVALID);
-              return To_Int_Ptr (Edit_Background);
-            end if;
-
-          -- Check for button presses
-          when WM_COMMAND =>
-            for I in CONSOLE_BUTTONS'range loop
-              if wParam = Int_Ptr (I + IDENTIFIER_START) then
-                if CONSOLE_BUTTONS (I).Action = null then PostQuitMessage (0);
-                else CONSOLE_BUTTONS (I).Action.All; end if;
-                return 1;
-              end if;
-            end loop;
-
-          -- Restrict resizing
-          when WM_GETMINMAXINFO =>
-            declare
-            Min_Max : Ptr_MINMAXINFO := To_Ptr_MINMAXINFO (lParam);
-            begin
-              Min_Max.ptMinTrackSize.x := Console_Width;
-              Min_Max.ptMinTrackSize.y := Console_Height;
-              return 1;
-            end;
-
-          -- Resize main and child windows
-          when WM_SIZE =>
-            if wParam /= Int_Ptr (SIZE_MINIMIZED) then
-
-              -- !!!
-              Ignore (SetWindowLongW (Console, SET_WINDOW_STYLE_EXTRA, WS_EX_COMPOSITED));
-              Assert (GetWindowRect (Console, Rectangle'Unchecked_Access));
-              Was_At_Minimum_Height := False;
-              Was_At_Minimum_Width  := False;
-              Is_At_Bottom          := Scrollbar_At_Bottom;
-              Current_Width         := Rectangle.Right  - Rectangle.Left;
-              Current_Height        := Rectangle.Bottom - Rectangle.Top;
-              Set_Sizes;
-              Assert (SetWindowPos (hWnd            => Console,
-                                    hWndInsertAfter => NULL_PTR,
-                                    X               => Rectangle.Left,
-                                    Y               => Rectangle.Top,
-                                    cx              => Current_Width,
-                                    cy              => Current_Height,
-                                    uFlags          => 0));
-              Y := Dialog_Base_Unit_Width * MARGIN;
-              Assert (SetWindowPos (hWnd            => Output_Group_Box,
-                                    hWndInsertAfter => NULL_PTR,
-                                    X               => Dialog_Base_Unit_Width * MARGIN,
-                                    Y               => Y,
-                                    cx              => Output_Box_Width + Margin_Group * 2,
-                                    cy              => Output_Box_Height + Margin_Group_Top + Margin_Group,
-                                    uFlags          => 0));
-              Y := Y + Margin_Group_Top;
-              Assert (SetWindowPos (hWnd            => Output_Box,
-                                    hWndInsertAfter => NULL_PTR,
-                                    X               => Margin_Group + Dialog_Base_Unit_Width * MARGIN,
-                                    Y               => Y,
-                                    cx              => Output_Box_Width,
-                                    cy              => Output_Box_Height,
-                                    uFlags          => 0));
-              Y := Y + Output_Box_Height + Dialog_Base_Unit_Width * MARGIN + Margin_Group;
-              Assert (SetWindowPos (hWnd            => Input_Group_Box,
-                                    hWndInsertAfter => NULL_PTR,
-                                    X               => Dialog_Base_Unit_Width * MARGIN,
-                                    Y               => Y,
-                                    cy              => Input_Box_Height + Margin_Group_Top + Margin_Group,
-                                    cx              => Output_Box_Width + Margin_Group * 2,
-                                    uFlags          => 0));
-              Y := Y + Margin_Group_Top;
-              Assert (SetWindowPos (hWnd            => Input_Box,
-                                    hWndInsertAfter => NULL_PTR,
-                                    X               => Margin_Group + Dialog_Base_Unit_Width * MARGIN,
-                                    Y               => Y,
-                                    cx              => Output_Box_Width,
-                                    cy              => Input_Box_Height,
-                                    uFlags          => 0));
-              Y := Y + Input_Box_Height + Dialog_Base_Unit_Width * MARGIN + Margin_Group;
-
-              -- Button repositioning
-              Right_Count := 0;
-              Left_Count  := 0;
-              for I in Buttons'range loop
-                Assert (SetWindowPos (hWnd            => Buttons (I),
-                                      hWndInsertAfter => NULL_PTR,
-                                      cx              => Button_Width,
-                                      cy              => Button_Height,
-                                      uFlags          => 0,
-                                      Y               => Y,
-                                      X               => (if CONSOLE_BUTTONS (I).Action /= null then -- Left justify
-                                                            Dialog_Base_Unit_Width * (MARGIN + Left_Count * MARGIN_BUTTON) + Left_Count * BUTTON_WIDTH
-                                                          else -- Right justify
-                                                            Output_Box_Width + Margin_Group * 2 + Dialog_Base_Unit_Width * MARGIN - (Right_Count + 1) * BUTTON_WIDTH
-                                                            - Dialog_Base_Unit_Width * Right_Count * MARGIN_BUTTON)));
-                if CONSOLE_BUTTONS (I).Action = null then Right_Count := Right_Count + 1;
-                else Left_Count := Left_Count + 1; end if;
-              end loop;
-
-              -- Keep the scrollbar at the bottom if it was before resizing
-              if Is_At_Bottom then Ignore (SendMessageW (Output_Box, WM_VSCROLL, SUBEVENT_SCROLL_BOTTOM, 0)); end if;
-              Assert (RedrawWindow (hwnd, null, NULL_PTR, 1));
-              Ignore (SetWindowLongW (Console, SET_WINDOW_STYLE_EXTRA, 0));
-              return 1;
-            end if;
-        when others => null; end case;
-        return DefWindowProcW (hwnd, uMsg, wParam, lParam);
-      end;
-    begin 
-
-      -- Load the context which is used globally
-      Context := GetDC (GetDesktopWindow);
-      Assert (Context);
-
-      -- Load the icon
-      Icon := LoadImageW (hinst     => GetModuleHandleNULL, -- Loads the icon nicely for the Aero theme, but on "classic" theme it looks pixelated on the title bar
-                          lpszName  => WIN32_PATH_ICON'Access,
-                          uType     => LOAD_ICO,
-                          cxDesired => 0,
-                          cyDesired => 0,
-                          fuLoad    => LOAD_FROM_FILE or DEFAULT_ICON_SIZE);
-      if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleNULL, GENERIC_ICON); end if;
-
-      -- Set global font and size variables
-      if SystemParametersInfoW (SPI_GETNONCLIENTMETRICS, 0, Metrics'Address, Metrics.cbSize) = 0 then Button_Font_Set := False; -- Fails under XP....
-      else Font_Buttons := CreateFontIndirectW (Metrics.lfMessageFont'Unchecked_Access); Assert (Font_Buttons); end if;
-      Get_Sizes_From_Message_Box;
-      Create_Fonts;      
-      Set_Sizes;
-
-      -- Create the main console window
-      Class := (lpfnWndProc   => WindowProc'Address,
-                hInstance     => GetModuleHandleNULL,
-                hIconSm       => Icon,
-                hIcon         => Icon,
-                hCursor       => LoadCursorW (NULL_PTR, GENERIC_CURSOR),
-                hbrBackground => BRUSH_WINDOW,
-                lpszClassName => CONSOLE_NAME'Address,--To_Ptr_Const_Char_16_C (CONSOLE_NAME),
-                others        => <>);
-      Assert (RegisterClassExW (Class'Unchecked_Access));
-      Console := CreateWindowExW (lpClassName  => CONSOLE_NAME'Unchecked_Access,
-                                  lpWindowName => CONSOLE_NAME'Unchecked_Access,
-                                  x            => GetDeviceCaps (Context, DATA_HORIZONTAL_RESOLUTION) / 2 - Console_Width  / 2,
-                                  y            => GetDeviceCaps (Context, DATA_VERTICAL_RESOLUTION)   / 2 - Console_Height / 2,
-                                  nWidth       => Console_Width,
-                                  nHeight      => Console_Height,
-                                  hWndParent   => NULL_PTR,
-                                  hMenu        => 0,
-                                  hInstance    => GetModuleHandleNULL,
-                                  lpParam      => NULL_PTR,
-                                  dwExStyle    => 0,
-                                  dwStyle      =>
-                                    STYLE_ICONIC_INITIALLY or
-                                    STYLE_BORDER_SIZABLE   or
-                                    WS_SYSMENU    or
-                                    WS_BORDER or
-                                    WS_MAXIMIZEBOX      or
-                                    STYLE_BOX_FULLSCREEN);
-      Assert (Console);
-
-      -- Create the output box border
-      Output_Group_Box := CreateWindowExW (lpClassName  => NAME_BUTTON'Unchecked_Access,
-                                           lpWindowName => null,
-                                           x            => 0,
-                                           y            => 0,
-                                           nWidth       => 0,
-                                           nHeight      => 0,
-                                           hWndParent   => Console,
-                                           hMenu        => 0,
-                                           hInstance    => GetModuleHandleNULL,
-                                           lpParam      => NULL_PTR,
-                                           dwExStyle    => 0,
-                                           dwStyle      => STYLE_VISIBLE_INITIALLY or BS_GROUPBOX or STYLE_CHILD);
-      Assert (Output_Group_Box);
-      Set_Font (Output_Group_Box, Font_Buttons);
-      Set_Text (Output_Group_Box, Localize (LABEL_OUTPUT));
-
-      -- Create the output box
-      Output_Box := CreateWindowExW (lpClassName  => NAME_EDIT'Unchecked_Access,
-                                     lpWindowName => null,
-                                     x            => 0,
-                                     y            => 0,
-                                     nWidth       => 0,
-                                     nHeight      => 0,
-                                     hWndParent   => Console,
-                                     hMenu        => 0,
-                                     hInstance    => GetModuleHandleNULL,
-                                     lpParam      => NULL_PTR,
-                                     dwExStyle    => 0,
-                                     dwStyle      =>
-                                       WS_VSCROLL   or
-                                       STYLE_VISIBLE_INITIALLY         or
-                                       WS_BORDER          or
-                                       STYLE_ALIGN_TEXT_TO_LEFT        or
-                                       STYLE_MULTI_LINE                or
-                                       STYLE_NO_USER_EDITING           or
-                                       STYLE_CHILD);
-      Assert (Output_Box);
-      Set_Font (Output_Box, Font_Text_Box);
-
-      -- Create the input box border
-      Input_Group_Box := CreateWindowExW (lpClassName  => NAME_BUTTON'Unchecked_Access,
-                                          lpWindowName => null,
-                                          x            => 0,
-                                          y            => 0,
-                                          nHeight      => 0,
-                                          nWidth       => 0,
-                                          hWndParent   => Console,
-                                          hMenu        => 0,
-                                          hInstance    => GetModuleHandleNULL,
-                                          lpParam      => NULL_PTR,
-                                          dwExStyle    => 0,
-                                          dwStyle      => STYLE_VISIBLE_INITIALLY or BS_GROUPBOX or STYLE_CHILD);
-      Assert (Input_Group_Box);
-      Set_Font (Input_Group_Box, Font_Buttons);
-      Set_Text (Input_Group_Box, LABEL_INPUT_ENTRY);
-
-      -- Create the input box
-      Input_Box := CreateWindowExW (lpClassName  => NAME_EDIT'Unchecked_Access,
-                                    lpWindowName => null,
-                                    x            => 0,
-                                    y            => 0,
-                                    nWidth       => 0,
-                                    nHeight      => 0,
-                                    hWndParent   => Console,
-                                    hMenu        => 0,
-                                    hInstance    => GetModuleHandleNULL,
-                                    lpParam      => NULL_PTR,
-                                    dwExStyle    => 0,
-                                    dwStyle      =>
-                                      STYLE_VISIBLE_INITIALLY  or
-                                      WS_BORDER   or
-                                      STYLE_ALIGN_TEXT_TO_LEFT or
-                                      STYLE_MULTI_LINE         or
-                                      STYLE_CHILD);
-      Assert (Input_Box);
-      Set_Font (Input_Box, Font_Text_Box);
-
-      -- Create the buttons
-      for I in Buttons'range loop
-        Buttons (I) := CreateWindowExW (lpClassName  => NAME_BUTTON'Unchecked_Access,
-                                        lpWindowName => null,
-                                        nWidth       => 0,
-                                        nHeight      => 0,
-                                        hWndParent   => Console,
-                                        hMenu        => Int_Ptr (I + IDENTIFIER_START),
-                                        hInstance    => GetModuleHandleNULL,
-                                        lpParam      => NULL_PTR,
-                                        dwExStyle    => 0,
-                                        dwStyle      => STYLE_PUSH_BUTTON or STYLE_VISIBLE_INITIALLY or STYLE_CHILD,
-                                        y            => 0,
-                                        x            => 0);
-        Assert (Buttons (I));
-        Set_Font (Buttons (I), Font_Buttons);
-        Set_Text (Buttons (I), Localize (CONSOLE_BUTTONS (I).Message));
-      end loop;
-
-      -- Force the console window into the foreground
-      Ignore (ShowWindow (Console, SW_SHOWMINIMIZED)); -- "The fact that this works is a major windows bug, good find!"
-      Ignore (ShowWindow (Console, SW_RESTORE));
-      Assert (SetFocus (Output_Box));
-
-      -- Main loop
-      while Message.message /= WM_QUIT loop
-
-        -- Handle new output
-        if Length (Current_Log) /= Log'Length then
-
-          -- Set the text in the output box
-          Is_At_Bottom := Scrollbar_At_Bottom;
-          Current_Log  := To_Str_Unbound (Log);
-          Current_Line := SendMessageW (Output_Box, EM_GETFIRSTVISIBLELINE, 0, 0);
-          Ignore (SendMessageW (Output_Box, EM_GETSEL, To_Int_Ptr (Start_Selection'Address), To_Int_Ptr (End_Selection'Address)));
-          Ignore (SendMessageW (Output_Box, WM_SETREDRAW, 0, 0));
-          Set_Text (Output_Box, Log);
-          Ignore (SendMessageW (Output_Box, EM_SETSEL, Int_Ptr (Start_Selection), Int_Ptr (End_Selection)));
-
-          -- If the scroll bar was at the bottom, make sure it stays there            
-          if Is_At_Bottom or Is_First_Time then
-            Is_First_Time := False;
-            Ignore (SendMessageW (Output_Box, WM_VSCROLL, SUBEVENT_SCROLL_BOTTOM, 0));
-            Current_Line := SendMessageW (Output_Box, EM_GETFIRSTVISIBLELINE, 0, 0);
-          else
-            for I in 1..Current_Line loop Ignore (SendMessageW (Output_Box, WM_VSCROLL, SUBEVENT_SCROLL_DOWN_LINE, 0)); end loop;
-          end if;
-          Current_Lines := Lines;
-          Assert (SendMessageW (Output_Box, WM_SETREDRAW, 1, 0));
-        end if;
-
-        -- Pump the message loop
-        if PeekMessageW (Message'Unchecked_Access, Console, 0, 0, PM_REMOVE) /= 0 then
-          case Message.message is
-
-            -- Scale mouse scrolling
-            when WM_MOUSEWHEEL =>
-              if GetFocus /= Output_Box then
-                for I in 1..Current_Lines / SCROLL_FACTOR loop 
-                   Ignore (SendMessageW (Output_Box,
-                                         WM_VSCROLL, 
-
-                                         -- Figure out the direction of the scroll
-                                         (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Message.wParam)
-                                          and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0 then 1 else 0), 0));
-                end loop;
-              end if;
-
-            -- Capture paste events (Ctrl + V) into the input box and change focus
-            when WM_KEYDOWN =>
-              Do_Process_Character := True;
-              if Int_16_Unsigned_C (Message.wParam) = VK_V_KEY
-                and then (GetKeyState (Int_C (VK_CONTROL)) and 16#8000#) > 0 -- Is Ctrl pressed?
-                and then GetFocus /= Input_Box
-              then
-                Input_Entry (Input_Entry & Paste);
-                Set_Text (Input_Box, Input_Entry);
-              end if;
-
-            -- Put the character in the right spot
-            when WM_CHAR =>
-              if Do_Process_Character then
-                Do_Process_Character := False;
-                Current_Input := Char_16'Val (Int (Message.wParam));
-                if not Is_Control (Current_Input) then
-                  Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Buffer'Length), To_Int_Ptr (Buffer'Address)));
-                  Input_Entry (To_Str (Buffer) & Current_Input);
-                  if GetFocus /= Input_Box then Set_Text (Input_Box, Input_Entry); end if;
-
-                -- !!!
-                elsif Current_Input = To_Char_16 (ASCII.CR) then
-                  Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Buffer'Length), To_Int_Ptr (Buffer'Address)));
-                  Input_Entry (To_Str (Buffer));
-                  if Input_Entry /= NULL_STR then
-                    Line (Input_Entry);
-                    if Input_Entry /= NULL_STR then
-                      Submit (Input_Entry);
-                      Input_Entry (NULL_STR);
-                      Set_Text (Input_Box, NULL_STR);
-                    end if;
-                  end if;
-                  Do_Skip_Message := True;
-
-                -- !!!
-                elsif Current_Input = To_Char_16 (ASCII.BS) and Input_Entry /= NULL_STR then
-                  -- Input_Entry (Input_Entry (1..Input_Entry'Last - 1));
-                  if GetFocus /= Input_Box then Set_Text (Input_Box, Input_Entry); end if;
-                elsif Current_Input = To_Char_16 (ASCII.HT) then Do_Skip_Message := True; end if;
-              end if;
-          when others => null; end case;
-
-          -- Pass on the message if we didn't handle it already
-          if not Do_Skip_Message then
-            Ignore (TranslateMessage (Message'unchecked_access));
-            Ignore (DispatchMessageW (Message'unchecked_access));
-          end if;
-          Do_Skip_Message := False;
-        end if;
-      end loop;
-
-      -- Hide the main window then kill it
-      Ignore (ShowWindow (Console, SW_HIDE));
-      Assert (DestroyWindow (Console));
-      Console := NULL_PTR;
-      Assert (UnregisterClassW (CONSOLE_NAME'Access, NULL_PTR));
-      Assert (ReleaseDC (GetDesktopWindow, Context));
-    end;
-  end;
+end;

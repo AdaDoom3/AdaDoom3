@@ -811,7 +811,12 @@ package Neo.API.Vulkan is
       image               : Ptr;                     -- VkImage
       subresourceRange    : VkImageSubresourceRange; -- VkImageSubresourceRange
     end record with Convention => C;
-        
+
+typedef struct VkExtensionProperties {
+    char        extensionName[VK_MAX_EXTENSION_NAME_SIZE];
+    uint32_t    specVersion;
+} VkExtensionProperties;
+
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferAllocateInfo.html
   type VkCommandBufferAllocateInfo is record
       sType              : Int_32_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO; -- VkStructureType

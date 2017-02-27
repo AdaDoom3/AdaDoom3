@@ -20,145 +20,183 @@ package Neo.API.Opus is
   -- Types --
   -----------
 
-  -- opus_int16        Int_16_Signed_C
   -- opus_uint16       Int_16_Unsigned_C
-  -- opus_int32        Int_32_Signed_C
+  -- opus_int16        Int_16_Signed_C
   -- opus_uint32       Int_32_Unsigned_C
+  -- opus_int32        Int_C
   -- OpusEncoder*      Ptr
   -- OpusDecoder*      Ptr
+  -- OpusMSEncoder*    Ptr
+  -- OpusMSDecoder*    Ptr
   -- OpusRepacketizer* Ptr
+
+  ---------------
+  -- Constants --
+  ---------------
+
+  OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST : constant Int_32_Unsigned_C := 5120; -- 0
+  OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST : constant Int_32_Unsigned_C := 5122; -- 0
+
+  ------------
+  -- Macros --
+  ------------
+
+  -- #define OPUS_MULTISTREAM_GET_ENCODER_STATE (x,y) OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST,
+  --                                                  (((void)((x) == (opus_int32)0)),
+  --                                                  (opus_int32)(x)),
+  --                                                  ((y) + ((y) - (OpusEncoder**)(y)))
+
+  -- #define PUS_MULTISTREAM_GET_DECODER_STATE (x,y) OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST,
+  --                                                 (((void)((x) == (opus_int32)0)),
+  --                                                 (opus_int32)(x)), __opus_check_int(x),
+  --                                                 ((y) + ((y) - (OpusDecoder**)(y)))
 
   -----------------
   -- Subprograms --
   -----------------
 
-#define OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST 5120
-#define OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST 5122
+  -- https://web.archive.org/web/20141013022344/http://opus-codec.org/docs/html_api/opus__multistream_8h.html#a8642aa9cf16115229a655574d832293b
+  function opus_multistream_encoder_get_size (streams         : Int_C; -- int
+                                              coupled_streams : Int_C) -- int
+                                              return Int_C             -- opus_int32
+                                              with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_get_size"; 
+                                              
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga9bed3af8a080ab97b8af48007758fa14
+  function opus_multistream_surround_encoder_get_size (channels : Int_C; -- int
+                                                       mapping  : Int_C) -- int
+                                                       return Int_C;     -- opus_int32
+                                                       with Import => True, Convention => StdCall, External_Name => "opus_multistream_surround_encoder_get_size"; 
 
-#define OPUS_MULTISTREAM_GET_ENCODER_STATE(x,y) OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST, __opus_check_int(x), __opus_check_encstate_ptr(y)
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaeb64c648ed8155f824ca8d9a93ccecae
+  function opus_multistream_encoder_create (Fs              : Int_C; -- opus_int32
+                                            channels        : Int_C; -- int
+                                            streams         : Int_C; -- int
+                                            coupled_streams : Int_C; -- int
+                                            mapping         : Ptr;   -- const unsigned char*
+                                            application     : Int_C; -- int 
+                                            error           : Int_C) -- int*
+                                            return Ptr               -- OpusMSEncoder*
+                                            with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_create"; 
 
-#define OPUS_MULTISTREAM_GET_DECODER_STATE(x,y) OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST, __opus_check_int(x), __opus_check_decstate_ptr(y)
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga8d87c08ecbe6ed4ce1ede4e58718b621
+  function opus_multistream_surround_encoder_create (Fs              : Int_C;     -- opus_int32
+                                                     channels        : Int_C;     -- int
+                                                     mapping_family  : Int_C;     -- int
+                                                     streams         : Ptr_Int_C; -- int*
+                                                     coupled_streams : Ptr_Int_C; -- int*
+                                                     mapping         : Ptr;       -- unsigned char*
+                                                     application     : Int_C;     -- int 
+                                                     error           : Ptr_Int_C) -- int*
+                                                     return Ptr                   -- OpusMSEncoder*
+                                                     with Import => True, Convention => StdCall, External_Name => "opus_multistream_surround_encoder_create"; 
 
-typedef struct OpusMSEncoder OpusMSEncoder;
+  -- https://web.archive.org/web/20141013022344/http://opus-codec.org/docs/html_api/opus__multistream_8h.html#ac29b1055be0cc29af5729ad55b9ead53
+  function opus_multistream_encoder_init (st              : Ptr;   -- OpusMSEncoder*
+                                          Fs              : Int_C; -- opus_int32
+                                          channels        : Int_C; -- int 
+                                          streams         : Int_C; -- int 
+                                          coupled_streams : Int_C; -- int 
+                                          mapping         : Ptr;   -- const unsigned char*
+                                          application     : Int_C) -- int 
+                                          return Int_C             -- int
+                                          with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_init"; 
 
-typedef struct OpusMSDecoder OpusMSDecoder;
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga993bfbae18b2dbfd641e50e51cef4484
+  function opus_multistream_surround_encoder_init (st              : Ptr;       -- OpusMSEncoder*
+                                                   Fs              : Int_C;     -- opus_int32 
+                                                   channels        : Int_C;     -- int 
+                                                   mapping_family  : Int_C;     -- int 
+                                                   streams         : Ptr_Int_C; -- int*
+                                                   coupled_streams : Ptr_Int_C; -- int*
+                                                   mapping         : Ptr;       -- unsigned char*
+                                                   application     : Int_C)     -- int
+                                                   return Int_C                 -- int 
+                                                   with Import => True, Convention => StdCall, External_Name => "opus_multistream_surround_encoder_init"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT opus_int32 opus_multistream_encoder_get_size(
-      int streams,
-      int coupled_streams
-);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga9e1000f220d9872e9f3b6e4f2417b445
+  function opus_multistream_encode (st             : Ptr;                 -- OpusMSEncoder*
+                                    pcm            : Ptr_Int_16_Signed_C; -- const opus_int16*
+                                    frame_size     : Int_C;               -- int
+                                    data           : Ptr;                 -- unsigned char*
+                                    max_data_bytes : Int_C)               -- opus_int32
+                                    return Int_C                          -- int
+                                    with Import => True, Convention => StdCall, External_Name => "opus_multistream_encode"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT opus_int32 opus_multistream_surround_encoder_get_size(
-      int channels,
-      int mapping_family
-);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaff832211e572536941b9d6094f9f42ce
+  function opus_multistream_encode_float (st             : Ptr;           -- OpusMSEncoder*
+                                          pcm            : Ptr_Real_32_C; -- const float*
+                                          frame_size     : Int_C;         -- int
+                                          data           : Ptr;           -- unsigned char*
+                                          max_data_bytes : Int_C)         -- opus_int32
+                                          return Int_C                    -- int 
+                                          with Import => True, Convention => StdCall, External_Name => "opus_multistream_encode_float"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT OpusMSEncoder *opus_multistream_encoder_create(
-      opus_int32 Fs,
-      int channels,
-      int streams,
-      int coupled_streams,
-      const unsigned char *mapping,
-      int application,
-      int *error
-) OPUS_ARG_NONNULL(5);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaec819b8d4b38350aba6959cee7d33f94
+  procedure opus_multistream_encoder_destroy (st : Ptr) -- OpusMSEncoder*
+                                              with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_destroy"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT OpusMSEncoder *opus_multistream_surround_encoder_create(
-      opus_int32 Fs,
-      int channels,
-      int mapping_family,
-      int *streams,
-      int *coupled_streams,
-      unsigned char *mapping,
-      int application,
-      int *error
-) OPUS_ARG_NONNULL(5);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gae14328330c548dede66c494f51e33707
+  function opus_multistream_encoder_ctl (st      : Ptr;   -- OpusMSEncoder*
+                                         request : Int_C) -- int
+                                                          -- ...
+                                         return Int_C     -- int 
+                                         with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_ctl"; 
 
-OPUS_EXPORT int opus_multistream_encoder_init(
-      OpusMSEncoder *st,
-      opus_int32 Fs,
-      int channels,
-      int streams,
-      int coupled_streams,
-      const unsigned char *mapping,
-      int application
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(6);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga38d745963e7903890c80278bc2569c39
+  function opus_multistream_decoder_get_size (streams         : Int_C; -- int
+                                              coupled_streams : Int_C) -- int
+                                              return Int_C             -- opus_int32 
 
-OPUS_EXPORT int opus_multistream_surround_encoder_init(
-      OpusMSEncoder *st,
-      opus_int32 Fs,
-      int channels,
-      int mapping_family,
-      int *streams,
-      int *coupled_streams,
-      unsigned char *mapping,
-      int application
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(6);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga3c0e342774174c471e61cedba53755c9
+  function opus_multistream_decoder_create (Fs              : Int_C;     -- opus_int32 
+                                            channels        : Int_C;     -- int
+                                            streams         : Int_C;     -- int 
+                                            coupled_streams : Int_C;     -- int 
+                                            mapping         : Ptr;       -- const unsigned char*
+                                            error           : Ptr_Int_C) -- int*
+                                            return Ptr                   -- OpusMSDecoder*
+                                            with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_create"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_encode(
-    OpusMSEncoder *st,
-    const opus_int16 *pcm,
-    int frame_size,
-    unsigned char *data,
-    opus_int32 max_data_bytes
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2) OPUS_ARG_NONNULL(4);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga09a4d14fc497d4f6fbe76bd1c5d45436
+  function opus_multistream_decoder_init (st              : Ptr;   -- OpusMSDecoder*
+                                          Fs              : Int_C; -- opus_int32 
+                                          channels        : Int_C; -- int 
+                                          streams         : Int_C; -- int 
+                                          coupled_streams : Int_C; -- int 
+                                          mapping         : Ptr;   -- const unsigned char*
+                                          return Int_C             -- int
+                                          with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_init"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_encode_float(
-      OpusMSEncoder *st,
-      const float *pcm,
-      int frame_size,
-      unsigned char *data,
-      opus_int32 max_data_bytes
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2) OPUS_ARG_NONNULL(4);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaa4b89541efe01970cf52e4a336db3ad0
+  function opus_multistream_decode (st         : Ptr;                 -- OpusMSDecoder*
+                                    data       : Ptr;                 -- const unsigned char*
+                                    len        : Int_C;               -- opus_int32
+                                    pcm        : Ptr_Int_16_Signed_C; -- opus_int16*
+                                    frame_size : Int_C;               -- int
+                                    decode_fec : Int_C)               -- int 
+                                    return Int_C                      -- int
+                                    with Import => True, Convention => StdCall, External_Name => "opus_multistream_decode"; 
 
-OPUS_EXPORT void opus_multistream_encoder_destroy(OpusMSEncoder *st);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga620e67c67872f8ea0b67a200c729630a
+  function opus_multistream_decode_float (st         : Ptr;         -- OpusMSDecoder*
+                                          data       : Ptr;         -- const unsigned char*
+                                          len        : Int_C;       -- opus_int32
+                                          pcm        : Ptr_Real_32; -- float*
+                                          frame_size : Int_C;       -- int
+                                          decode_fec : Int_C)       -- int
+                                          return Int_C              -- int
+                                          with Import => True, Convention => StdCall, External_Name => "opus_multistream_decode_float"; 
 
-OPUS_EXPORT int opus_multistream_encoder_ctl(OpusMSEncoder *st, int request, ...) OPUS_ARG_NONNULL(1);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga4b3dca8d46e5868cc133f3f6d2b57688
+  function opus_multistream_decoder_ctl (st      : Ptr;   -- OpusMSDecoder*
+                                         request : Int_C) -- int
+                                                          -- ... 
+                                         return Int_C     -- int
+                                         with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_ctl"; 
 
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT opus_int32 opus_multistream_decoder_get_size(
-      int streams,
-      int coupled_streams
-);
-
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT OpusMSDecoder *opus_multistream_decoder_create(
-      opus_int32 Fs,
-      int channels,
-      int streams,
-      int coupled_streams,
-      const unsigned char *mapping,
-      int *error
-) OPUS_ARG_NONNULL(5);
-
-OPUS_EXPORT int opus_multistream_decoder_init(
-      OpusMSDecoder *st,
-      opus_int32 Fs,
-      int channels,
-      int streams,
-      int coupled_streams,
-      const unsigned char *mapping
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(6);
-
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_decode(
-    OpusMSDecoder *st,
-    const unsigned char *data,
-    opus_int32 len,
-    opus_int16 *pcm,
-    int frame_size,
-    int decode_fec
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(4);
-
-OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_decode_float(
-    OpusMSDecoder *st,
-    const unsigned char *data,
-    opus_int32 len,
-    float *pcm,
-    int frame_size,
-    int decode_fec
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(4);
-
-OPUS_EXPORT int opus_multistream_decoder_ctl(OpusMSDecoder *st, int request, ...) OPUS_ARG_NONNULL(1);
-
-OPUS_EXPORT void opus_multistream_decoder_destroy(OpusMSDecoder *st);
+  -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaaec72b484eabc78d7869221c6d2ce080
+  procedure opus_multistream_decoder_destroy (st : Ptr) -- OpusMSDecoder*
+                                             with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_destroy"; 
 
   -- https://web.archive.org/web/20150618131942/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__encoder.html#gaefeb7dc1d6e3b59dea5ea674c86e9c18
   function opus_encoder_get_size (channels : Int_C) -- int
@@ -318,8 +356,8 @@ OPUS_EXPORT void opus_multistream_decoder_destroy(OpusMSDecoder *st);
                                       with Import => True, Convention => StdCall, External_Name => "opus_repacketizer_get_size"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#gab42ff7c3f8a49ff5029fcf60f3b853f0
-  function opus_repacketizer_init (rp : Ptr) -- OpusRepacketizer*
-                                   return OpusRepacketizer * -- 
+  function opus_repacketizer_init (rp : Ptr)  -- OpusRepacketizer*
+                                   return Ptr -- OpusRepacketizer*
                                    with Import => True, Convention => StdCall, External_Name => "opus_repacketizer_init"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#ga6f8813666ef851550ecf8658a731ff7d

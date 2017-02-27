@@ -55,1342 +55,1095 @@ package Neo.API.OpenAL is
   AL_TRUE  : constant Int_8_Unsigned_C := 1; -- 0
 
   -- 2.7. AL Errors
-  AL_NO_ERROR          : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0x0000
-  AL_INVALID_NAME      : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0x0000
-  AL_INVALID_ENUM      : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0x0000
-  AL_INVALID_VALUE     : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0x0000
-  AL_INVALID_OPERATION : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0x0000
-  AL_OUT_OF_MEMORY     : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0x0000
+  AL_NO_ERROR          : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0000
+  AL_INVALID_NAME      : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0000
+  AL_INVALID_ENUM      : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0000
+  AL_INVALID_VALUE     : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0000
+  AL_INVALID_OPERATION : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0000
+  AL_OUT_OF_MEMORY     : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0000
 
   -- 3.1.1. Simple Queries
-  AL_DOPPLER_FACTOR : constant Int_32_Unsigned_C := 16#0000_C000#; -- 0x0000
-  AL_SPEED_OF_SOUND : constant Int_32_Unsigned_C := 16#0000_C003#; -- 0x0000
-  AL_DISTANCE_MODEL : constant Int_32_Unsigned_C := 16#0000_D000#; -- 0x0000
+  AL_DOPPLER_FACTOR : constant Int_32_Unsigned_C := 16#0000_C000#; -- 0000
+  AL_SPEED_OF_SOUND : constant Int_32_Unsigned_C := 16#0000_C003#; -- 0000
+  AL_DISTANCE_MODEL : constant Int_32_Unsigned_C := 16#0000_D000#; -- 0000
 
   -- 3.1.2. String Queries
-  AL_VENDOR     : constant Int_32_Unsigned_C := 16#0000_B001#; -- 0x0000
-  AL_VERSION    : constant Int_32_Unsigned_C := 16#0000_B002#; -- 0x0000
-  AL_RENDERER   : constant Int_32_Unsigned_C := 16#0000_B003#; -- 0x0000
-  AL_EXTENSIONS : constant Int_32_Unsigned_C := 16#0000_B004#; -- 0x0000
+  AL_VENDOR     : constant Int_32_Unsigned_C := 16#0000_B001#; -- 0000
+  AL_VERSION    : constant Int_32_Unsigned_C := 16#0000_B002#; -- 0000
+  AL_RENDERER   : constant Int_32_Unsigned_C := 16#0000_B003#; -- 0000
+  AL_EXTENSIONS : constant Int_32_Unsigned_C := 16#0000_B004#; -- 0000
 
   -- 3.4. Attenuation By Distance
-  AL_INVERSE_DISTANCE          : constant Int_32_Unsigned_C := 16#0000_D001#; -- 0x0000
-  AL_INVERSE_DISTANCE_CLAMPED  : constant Int_32_Unsigned_C := 16#0000_D002#; -- 0x0000
-  AL_LINEAR_DISTANCE           : constant Int_32_Unsigned_C := 16#0000_D003#; -- 0x0000
-  AL_LINEAR_DISTANCE_CLAMPED   : constant Int_32_Unsigned_C := 16#0000_D004#; -- 0x0000
-  AL_EXPONENT_DISTANCE         : constant Int_32_Unsigned_C := 16#0000_D005#; -- 0x0000
-  AL_EXPONENT_DISTANCE_CLAMPED : constant Int_32_Unsigned_C := 16#0000_D006#; -- 0x0000
+  AL_INVERSE_DISTANCE          : constant Int_32_Unsigned_C := 16#0000_D001#; -- 0000
+  AL_INVERSE_DISTANCE_CLAMPED  : constant Int_32_Unsigned_C := 16#0000_D002#; -- 0000
+  AL_LINEAR_DISTANCE           : constant Int_32_Unsigned_C := 16#0000_D003#; -- 0000
+  AL_LINEAR_DISTANCE_CLAMPED   : constant Int_32_Unsigned_C := 16#0000_D004#; -- 0000
+  AL_EXPONENT_DISTANCE         : constant Int_32_Unsigned_C := 16#0000_D005#; -- 0000
+  AL_EXPONENT_DISTANCE_CLAMPED : constant Int_32_Unsigned_C := 16#0000_D006#; -- 0000
 
   -- 4.1. Basic Listener and Source Attributes
-  AL_POSITION : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0x0000
-  AL_VELOCITY : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0x0000
-  AL_GAIN     : constant Int_32_Unsigned_C := 16#0000_100A#; -- 0x0000
+  AL_POSITION : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0000
+  AL_VELOCITY : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0000
+  AL_GAIN     : constant Int_32_Unsigned_C := 16#0000_100A#; -- 0000
 
   -- 4.2.1. Listener Attributes
-  AL_ORIENTATION : constant Int_32_Unsigned_C := 16#0000_100F#; -- 0x0000
+  AL_ORIENTATION : constant Int_32_Unsigned_C := 16#0000_10#; -- 0000
 
   -- 4.3.2. Source Attributes
-  AL_SOURCE_RELATIVE    : constant Int_32_Unsigned_C := 16#0000_0202#; -- 0x000
-  AL_SOURCE_TYPE        : constant Int_32_Unsigned_C := 16#0000_1027#; -- 0x0000
-  AL_UNDETERMINED       : constant Int_32_Unsigned_C := 16#0000_1030#; -- 0x0000
-  AL_STATIC             : constant Int_32_Unsigned_C := 16#0000_1028#; -- 0x0000
-  AL_STREAMING          : constant Int_32_Unsigned_C := 16#0000_1029#; -- 0x0000
-  AL_LOOPING            : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0x0000
-  AL_BUFFER             : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0x0000
-  AL_BUFFERS_QUEUED     : constant Int_32_Unsigned_C := 16#0000_1015#; -- 0x0000
-  AL_BUFFERS_PROCESSED  : constant Int_32_Unsigned_C := 16#0000_1016#; -- 0x0000
-  AL_MIN_GAIN           : constant Int_32_Unsigned_C := 16#0000_100D#; -- 0x0000
-  AL_MAX_GAIN           : constant Int_32_Unsigned_C := 16#0000_100E#; -- 0x0000
-  AL_REFERENCE_DISTANCE : constant Int_32_Unsigned_C := 16#0000_1020#; -- 0x0000
-  AL_ROLLOFF_FACTOR     : constant Int_32_Unsigned_C := 16#0000_1021#; -- 0x0000
-  AL_MAX_DISTANCE       : constant Int_32_Unsigned_C := 16#0000_1023#; -- 0x0000
-  AL_PITCH              : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0x0000
-  AL_DIRECTION          : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0x0000
-  AL_CONE_INNER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0x0000
-  AL_CONE_OUTER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0x0000
-  AL_CONE_OUTER_GAIN    : constant Int_32_Unsigned_C := 16#0000_1022#; -- 0x0000
-  AL_SEC_OFFSET         : constant Int_32_Unsigned_C := 16#0000_1024#; -- 0x0000
-  AL_SAMPLE_OFFSET      : constant Int_32_Unsigned_C := 16#0000_1025#; -- 0x0000
-  AL_BYTE_OFFSET        : constant Int_32_Unsigned_C := 16#0000_1026#; -- 0x0000
+  AL_SOURCE_RELATIVE    : constant Int_32_Unsigned_C := 16#0000_0202#; -- 000
+  AL_SOURCE_TYPE        : constant Int_32_Unsigned_C := 16#0000_1027#; -- 0000
+  AL_UNDETERMINED       : constant Int_32_Unsigned_C := 16#0000_1030#; -- 0000
+  AL_STATIC             : constant Int_32_Unsigned_C := 16#0000_1028#; -- 0000
+  AL_STREAMING          : constant Int_32_Unsigned_C := 16#0000_1029#; -- 0000
+  AL_LOOPING            : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0000
+  AL_BUFFER             : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0000
+  AL_BUFFERS_QUEUED     : constant Int_32_Unsigned_C := 16#0000_1015#; -- 0000
+  AL_BUFFERS_PROCESSED  : constant Int_32_Unsigned_C := 16#0000_1016#; -- 0000
+  AL_MIN_GAIN           : constant Int_32_Unsigned_C := 16#0000_100D#; -- 0000
+  AL_MAX_GAIN           : constant Int_32_Unsigned_C := 16#0000_100E#; -- 0000
+  AL_REFERENCE_DISTANCE : constant Int_32_Unsigned_C := 16#0000_1020#; -- 0000
+  AL_ROLLOFF_FACTOR     : constant Int_32_Unsigned_C := 16#0000_1021#; -- 0000
+  AL_MAX_DISTANCE       : constant Int_32_Unsigned_C := 16#0000_1023#; -- 0000
+  AL_PITCH              : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0000
+  AL_DIRECTION          : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0000
+  AL_CONE_INNER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0000
+  AL_CONE_OUTER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0000
+  AL_CONE_OUTER_GAIN    : constant Int_32_Unsigned_C := 16#0000_1022#; -- 0000
+  AL_SEC_OFFSET         : constant Int_32_Unsigned_C := 16#0000_1024#; -- 0000
+  AL_SAMPLE_OFFSET      : constant Int_32_Unsigned_C := 16#0000_1025#; -- 0000
+  AL_BYTE_OFFSET        : constant Int_32_Unsigned_C := 16#0000_1026#; -- 0000
 
   -- 4.3.6. Managing Source Execution
-  AL_SOURCE_STATE : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0x0000
-  AL_INITIAL      : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0x0000
-  AL_PLAYING      : constant Int_32_Unsigned_C := 16#0000_1012#; -- 0x0000
-  AL_PAUSED       : constant Int_32_Unsigned_C := 16#0000_1013#; -- 0x0000
-  AL_STOPPED      : constant Int_32_Unsigned_C := 16#0000_1014#; -- 0x0000
+  AL_SOURCE_STATE : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0000
+  AL_INITIAL      : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0000
+  AL_PLAYING      : constant Int_32_Unsigned_C := 16#0000_1012#; -- 0000
+  AL_PAUSED       : constant Int_32_Unsigned_C := 16#0000_1013#; -- 0000
+  AL_STOPPED      : constant Int_32_Unsigned_C := 16#0000_1014#; -- 0000
 
   -- 5.3.1. Buffer Attributes
-  AL_FREQUENCY : constant Int_32_Unsigned_C := 16#0000_2001#; -- 0x0000
-  AL_BITS      : constant Int_32_Unsigned_C := 16#0000_2002#; -- 0x0000
-  AL_CHANNELS  : constant Int_32_Unsigned_C := 16#0000_2003#; -- 0x0000
-  AL_SIZE      : constant Int_32_Unsigned_C := 16#0000_2004#; -- 0x0000
+  AL_FREQUENCY : constant Int_32_Unsigned_C := 16#0000_2001#; -- 0000
+  AL_BITS      : constant Int_32_Unsigned_C := 16#0000_2002#; -- 0000
+  AL_CHANNELS  : constant Int_32_Unsigned_C := 16#0000_2003#; -- 0000
+  AL_SIZE      : constant Int_32_Unsigned_C := 16#0000_2004#; -- 0000
 
   -- 5.3.4. Specifying Buffer Content
-  AL_FORMAT_MONO8    : constant Int_32_Unsigned_C := 16#0000_1100#; -- 0x0000
-  AL_FORMAT_MONO16   : constant Int_32_Unsigned_C := 16#0000_1101#; -- 0x0000
-  AL_FORMAT_STEREO8  : constant Int_32_Unsigned_C := 16#0000_1102#; -- 0x0000
-  AL_FORMAT_STEREO16 : constant Int_32_Unsigned_C := 16#0000_1103#; -- 0x0000
+  AL_FORMAT_MONO8    : constant Int_32_Unsigned_C := 16#0000_1100#; -- 0000
+  AL_FORMAT_MONO16   : constant Int_32_Unsigned_C := 16#0000_1101#; -- 0000
+  AL_FORMAT_STEREO8  : constant Int_32_Unsigned_C := 16#0000_1102#; -- 0000
+  AL_FORMAT_STEREO16 : constant Int_32_Unsigned_C := 16#0000_1103#; -- 0000
 
   -- ALC Boolean
   ALC_FALSE : constant Int_8_Unsigned_C := 0; -- 0
   ALC_TRUE  : constant Int_8_Unsigned_C := 1; -- 0
 
   -- 6.2.1. Context Attributes
-  ALC_FREQUENCY      : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0x0000
-  ALC_REFRESH        : constant Int_32_Unsigned_C := 16#0000_1008#; -- 0x0000
-  ALC_SYNC           : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0x0000
-  ALC_MONO_SOURCES   : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0x0000
-  ALC_STEREO_SOURCES : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0x0000
+  ALC_FREQUENCY      : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0000
+  ALC_REFRESH        : constant Int_32_Unsigned_C := 16#0000_1008#; -- 0000
+  ALC_SYNC           : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0000
+  ALC_MONO_SOURCES   : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0000
+  ALC_STEREO_SOURCES : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0000
 
   -- 6.3.6. Query for Error Conditions
-  ALC_NO_ERROR        : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0x0000
-  ALC_INVALID_DEVICE  : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0x0000
-  ALC_INVALID_CONTEXT : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0x0000
-  ALC_INVALID_ENUM    : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0x0000
-  ALC_INVALID_VALUE   : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0x0000
-  ALC_OUT_OF_MEMORY   : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0x0000
+  ALC_NO_ERROR        : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0000
+  ALC_INVALID_DEVICE  : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0000
+  ALC_INVALID_CONTEXT : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0000
+  ALC_INVALID_ENUM    : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0000
+  ALC_INVALID_VALUE   : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0000
+  ALC_OUT_OF_MEMORY   : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0000
 
   -- 6.3.7. String Query
-  ALC_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0x0000
-  ALC_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0x0000
-  ALC_EXTENSIONS               : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0x0000
+  ALC_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0000
+  ALC_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0000
+  ALC_EXTENSIONS               : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0000
 
   -- 6.3.8. Integer Query
-  ALC_ATTRIBUTES_SIZE : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0x0000
-  ALC_ALL_ATTRIBUTES  : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0x0000
-  ALC_MAJOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1000#; -- 0x0000
-  ALC_MINOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0x0000
+  ALC_ATTRIBUTES_SIZE : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0000
+  ALC_ALL_ATTRIBUTES  : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0000
+  ALC_MAJOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1000#; -- 0000
+  ALC_MINOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0000
 
   -- 6.4.2. Capture
-  ALC_CAPTURE_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_310#; -- 0x0000
-  ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_311#; -- 0x0000
-  ALC_CAPTURE_SAMPLES                  : constant Int_32_Unsigned_C := 16#0000_312#; -- 0x0000
+  ALC_CAPTURE_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_310#; -- 0000
+  ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_311#; -- 0000
+  ALC_CAPTURE_SAMPLES                  : constant Int_32_Unsigned_C := 16#0000_312#; -- 0000
 
-#ifndef AL_LOKI_IMA_ADPCM_format
-#define AL_LOKI_IMA_ADPCM_format 1
-#define AL_FORMAT_IMA_ADPCM_MONO16_EXT           0x10000
-#define AL_FORMAT_IMA_ADPCM_STEREO16_EXT         0x10001
-#endif
+  -- 
+  AL_LOKI_IMA_ADPCM_format     : constant Int_32_Unsigned_C := 1
+  AL_FORMAT_IMA_ADPCM_MONO16_EXT      : constant Int_32_Unsigned_C :=      10000
+  AL_FORMAT_IMA_ADPCM_STEREO16_EXT    : constant Int_32_Unsigned_C :=      10001
 
-#ifndef AL_LOKI_WAVE_format
-#define AL_LOKI_WAVE_format 1
-#define AL_FORMAT_WAVE_EXT                       0x10002
-#endif
+  --
+  AL_LOKI_WAVE_format: constant Int_32_Unsigned_C :=  1
+  AL_FORMAT_WAVE_EXT                 : constant Int_32_Unsigned_C :=       10002
 
-#ifndef AL_EXT_vorbis
-#define AL_EXT_vorbis 1
-#define AL_FORMAT_VORBIS_EXT                     0x10003
-#endif
+  --
+  AL_EXT_vorbis 1
+  AL_FORMAT_VORBIS_EXT                 : constant Int_32_Unsigned_C :=     10003
 
-#ifndef AL_LOKI_quadriphonic
-#define AL_LOKI_quadriphonic 1
-#define AL_FORMAT_QUAD8_LOKI                     0x10004
-#define AL_FORMAT_QUAD16_LOKI                    0x10005
-#endif
+  --
+  AL_LOKI_quadriphonic 1
+  AL_FORMAT_QUAD8_LOKI                  : constant Int_32_Unsigned_C :=    10004
+  AL_FORMAT_QUAD16_LOKI             : constant Int_32_Unsigned_C :=        10005
 
-#ifndef AL_EXT_float32
-#define AL_EXT_float32 1
-#define AL_FORMAT_MONO_FLOAT32                   0x10010
-#define AL_FORMAT_STEREO_FLOAT32                 0x10011
-#endif
+  --
+  AL_EXT_float32 1
+  AL_FORMAT_MONO_FLOAT32          : constant Int_32_Unsigned_C :=          10010
+  AL_FORMAT_STEREO_FLOAT32        : constant Int_32_Unsigned_C :=          10011
 
-#ifndef AL_EXT_double
-#define AL_EXT_double 1
-#define AL_FORMAT_MONO_DOUBLE_EXT                0x10012
-#define AL_FORMAT_STEREO_DOUBLE_EXT              0x10013
-#endif
+  --
+  AL_EXT_double 1
+  AL_FORMAT_MONO_DOUBLE_EXT       : constant Int_32_Unsigned_C :=          10012
+  AL_FORMAT_STEREO_DOUBLE_EXT     : constant Int_32_Unsigned_C :=          10013
 
-#ifndef AL_EXT_MULAW
-#define AL_EXT_MULAW 1
-#define AL_FORMAT_MONO_MULAW_EXT                 0x10014
-#define AL_FORMAT_STEREO_MULAW_EXT               0x10015
-#endif
+  --
+  AL_EXT_MULAW 1
+  AL_FORMAT_MONO_MULAW_EXT   : constant Int_32_Unsigned_C :=               10014
+  AL_FORMAT_STEREO_MULAW_EXT : constant Int_32_Unsigned_C :=               10015
 
-#ifndef AL_EXT_ALAW
-#define AL_EXT_ALAW 1
-#define AL_FORMAT_MONO_ALAW_EXT                  0x10016
-#define AL_FORMAT_STEREO_ALAW_EXT                0x10017
-#endif
+  --
+  AL_EXT_ALAW : constant Int_32_Unsigned_C :=  1
+  AL_FORMAT_MONO_ALAW_EXT    : constant Int_32_Unsigned_C :=               10016
+  AL_FORMAT_STEREO_ALAW_EXT : constant Int_32_Unsigned_C :=                10017
 
-#ifndef ALC_LOKI_audio_channel
-#define ALC_LOKI_audio_channel 1
-#define ALC_CHAN_MAIN_LOKI                       0x500001
-#define ALC_CHAN_PCM_LOKI                        0x500002
-#define ALC_CHAN_CD_LOKI                         0x500003
-#endif
+  --
+  ALC_LOKI_audio_channel: constant Int_32_Unsigned_C :=  1
+  ALC_CHAN_MAIN_LOKI     : constant Int_32_Unsigned_C :=                   0x500001
+  ALC_CHAN_PCM_LOKI      : constant Int_32_Unsigned_C :=                   0x500002
+  ALC_CHAN_CD_LOKI       : constant Int_32_Unsigned_C :=                   0x500003
 
-#ifndef AL_EXT_MCFORMATS
-#define AL_EXT_MCFORMATS 1
-#define AL_FORMAT_QUAD8                          0x1204
-#define AL_FORMAT_QUAD16                         0x1205
-#define AL_FORMAT_QUAD32                         0x1206
-#define AL_FORMAT_REAR8                          0x1207
-#define AL_FORMAT_REAR16                         0x1208
-#define AL_FORMAT_REAR32                         0x1209
-#define AL_FORMAT_51CHN8                         0x120A
-#define AL_FORMAT_51CHN16                        0x120B
-#define AL_FORMAT_51CHN32                        0x120C
-#define AL_FORMAT_61CHN8                         0x120D
-#define AL_FORMAT_61CHN16                        0x120E
-#define AL_FORMAT_61CHN32                        0x120F
-#define AL_FORMAT_71CHN8                         0x1210
-#define AL_FORMAT_71CHN16                        0x1211
-#define AL_FORMAT_71CHN32                        0x1212
-#endif
+  --
+  AL_EXT_MCFORMATS : constant Int_32_Unsigned_C := 1
+  AL_FORMAT_QUAD8   : constant Int_32_Unsigned_C :=                        1204
+  AL_FORMAT_QUAD16   : constant Int_32_Unsigned_C :=                       1205
+  AL_FORMAT_QUAD32  : constant Int_32_Unsigned_C :=                        1206
+  AL_FORMAT_REAR8    : constant Int_32_Unsigned_C :=                       1207
+  AL_FORMAT_REAR16   : constant Int_32_Unsigned_C :=                       1208
+  AL_FORMAT_REAR32    : constant Int_32_Unsigned_C :=                      1209
+  AL_FORMAT_51CHN8    : constant Int_32_Unsigned_C :=                      120A
+  AL_FORMAT_51CHN16   : constant Int_32_Unsigned_C :=                      120B
+  AL_FORMAT_51CHN32   : constant Int_32_Unsigned_C :=                      120C
+  AL_FORMAT_61CHN8    : constant Int_32_Unsigned_C :=                      120D
+  AL_FORMAT_61CHN16   : constant Int_32_Unsigned_C :=                      120E
+  AL_FORMAT_61CHN32   : constant Int_32_Unsigned_C :=                      120
+  AL_FORMAT_71CHN8    : constant Int_32_Unsigned_C :=                      1210
+  AL_FORMAT_71CHN16    : constant Int_32_Unsigned_C :=                     1211
+  AL_FORMAT_71CHN32    : constant Int_32_Unsigned_C :=                     1212
 
-#ifndef AL_EXT_MULAW_MCFORMATS
-#define AL_EXT_MULAW_MCFORMATS 1
-#define AL_FORMAT_MONO_MULAW                     0x10014
-#define AL_FORMAT_STEREO_MULAW                   0x10015
-#define AL_FORMAT_QUAD_MULAW                     0x10021
-#define AL_FORMAT_REAR_MULAW                     0x10022
-#define AL_FORMAT_51CHN_MULAW                    0x10023
-#define AL_FORMAT_61CHN_MULAW                    0x10024
-#define AL_FORMAT_71CHN_MULAW                    0x10025
-#endif
+  --
+  AL_EXT_MULAW_MCFORMATS : constant Int_32_Unsigned_C := 1
+  AL_FORMAT_MONO_MULAW    : constant Int_32_Unsigned_C :=                  10014
+  AL_FORMAT_STEREO_MULAW  : constant Int_32_Unsigned_C :=                  10015
+  AL_FORMAT_QUAD_MULAW    : constant Int_32_Unsigned_C :=                  10021
+  AL_FORMAT_REAR_MULAW    : constant Int_32_Unsigned_C :=                  10022
+  AL_FORMAT_51CHN_MULAW   : constant Int_32_Unsigned_C :=                  10023
+  AL_FORMAT_61CHN_MULAW   : constant Int_32_Unsigned_C :=                  10024
+  AL_FORMAT_71CHN_MULAW    : constant Int_32_Unsigned_C :=                 10025
 
-#ifndef AL_EXT_IMA4
-#define AL_EXT_IMA4 1
-#define AL_FORMAT_MONO_IMA4                      0x1300
-#define AL_FORMAT_STEREO_IMA4                    0x1301
-#endif
+  --
+  AL_EXT_IMA4  : constant Int_32_Unsigned_C := 1
+  AL_FORMAT_MONO_IMA4   : constant Int_32_Unsigned_C :=                    1300
+  AL_FORMAT_STEREO_IMA4 : constant Int_32_Unsigned_C :=                    1301
 
-#ifndef AL_EXT_STATIC_BUFFER
-#define AL_EXT_STATIC_BUFFER 1
+  --
+  AL_EXT_STATIC_BUFFER : constant Int_32_Unsigned_C :=  1
 
+  --
+  AL_EXT_source_distance_model  : constant Int_32_Unsigned_C := 1
+  AL_SOURCE_DISTANCE_MODEL     : constant Int_32_Unsigned_C :=              0x200
 
-#ifndef AL_EXT_source_distance_model
-#define AL_EXT_source_distance_model 1
-#define AL_SOURCE_DISTANCE_MODEL                 0x200
-#endif
+  --
+  AL_SOFT_buffer_sub_data  : constant Int_32_Unsigned_C := 1
+  AL_BYTE_RW_OFFSETS_SOFT  : constant Int_32_Unsigned_C :=                 1031
+  AL_SAMPLE_RW_OFFSETS_SOFT : constant Int_32_Unsigned_C :=                 1032
 
-#ifndef AL_SOFT_buffer_sub_data
-#define AL_SOFT_buffer_sub_data 1
-#define AL_BYTE_RW_OFFSETS_SOFT                  0x1031
-#define AL_SAMPLE_RW_OFFSETS_SOFT                0x1032
+  --
+  ALC_EXT_EFX : constant Int_32_Unsigned_C :=  1
 
-#ifndef ALC_EXT_EFX
-#define ALC_EXT_EFX 1
-#include "efx.h"
-#endif
+  --
+  ALC_EXT_disconnect : constant Int_32_Unsigned_C :=  1
+  ALC_CONNECTED   : constant Int_32_Unsigned_C :=                          0x313
 
-#ifndef ALC_EXT_disconnect
-#define ALC_EXT_disconnect 1
-#define ALC_CONNECTED                            0x313
-#endif
+  --
+  ALC_EXT_thread_local_context: constant Int_32_Unsigned_C :=  1
 
-#ifndef ALC_EXT_thread_local_context
-#define ALC_EXT_thread_local_context 1
+  --
+  ALC_EFX_MAJOR_VERSION    : constant Int_32_Unsigned_C :=                 0x20001
+  ALC_EFX_MINOR_VERSION    : constant Int_32_Unsigned_C :=                 0x20002
+  ALC_MAX_AUXILIARY_SENDS  : constant Int_32_Unsigned_C :=                 0x20003
 
-
-#define ALC_EFX_MAJOR_VERSION                    0x20001
-#define ALC_EFX_MINOR_VERSION                    0x20002
-#define ALC_MAX_AUXILIARY_SENDS                  0x20003
-
-
-
-
-#ifndef AL_SOFT_direct_channels
-#define AL_SOFT_direct_channels 1
-#define AL_DIRECT_CHANNELS_SOFT                  0x1033
+  --
+  AL_SOFT_direct_channels  : constant Int_32_Unsigned_C :=  1
+  AL_DIRECT_CHANNELS_SOFT : constant Int_32_Unsigned_C :=                  1033
 #endif
 
 #ifndef ALC_SOFT_loopback
-#define ALC_SOFT_loopback 1
-#define ALC_FORMAT_CHANNELS_SOFT                 0x1990
-#define ALC_FORMAT_TYPE_SOFT                     0x1991
+  ALC_SOFT_loopback : constant Int_32_Unsigned_C :=  1
+  ALC_FORMAT_CHANNELS_SOFT : constant Int_32_Unsigned_C :=                 1990
+  ALC_FORMAT_TYPE_SOFT     : constant Int_32_Unsigned_C :=                 1991
 
-/* Sample types */
-#define ALC_BYTE_SOFT                            0x1400
-#define ALC_UNSIGNED_BYTE_SOFT                   0x1401
-#define ALC_SHORT_SOFT                           0x1402
-#define ALC_UNSIGNED_SHORT_SOFT                  0x1403
-#define ALC_INT_SOFT                             0x1404
-#define ALC_UNSIGNED_INT_SOFT                    0x1405
-#define ALC_FLOAT_SOFT                           0x1406
+  -- Sample types 
+  ALC_BYTE_SOFT           : constant Int_32_Unsigned_C :=                  1400
+  ALC_UNSIGNED_BYTE_SOFT : constant Int_32_Unsigned_C :=                   1401
+  ALC_SHORT_SOFT         : constant Int_32_Unsigned_C :=                   1402
+  ALC_UNSIGNED_SHORT_SOFT: constant Int_32_Unsigned_C :=                   1403
+  ALC_INT_SOFT           : constant Int_32_Unsigned_C :=                   1404
+  ALC_UNSIGNED_INT_SOFT  : constant Int_32_Unsigned_C :=                   1405
+  ALC_FLOAT_SOFT         : constant Int_32_Unsigned_C :=                   1406
 
-/* Channel configurations */
-#define ALC_MONO_SOFT                            0x1500
-#define ALC_STEREO_SOFT                          0x1501
-#define ALC_QUAD_SOFT                            0x1503
-#define ALC_5POINT1_SOFT                         0x1504
-#define ALC_6POINT1_SOFT                         0x1505
-#define ALC_7POINT1_SOFT                         0x1506
+  -- Channel configurations 
+  ALC_MONO_SOFT         : constant Int_32_Unsigned_C :=                    1500
+  ALC_STEREO_SOFT       : constant Int_32_Unsigned_C :=                    1501
+  ALC_QUAD_SOFT        : constant Int_32_Unsigned_C :=                     1503
+  ALC_5POINT1_SOFT     : constant Int_32_Unsigned_C :=                     1504
+  ALC_6POINT1_SOFT    : constant Int_32_Unsigned_C :=                      1505
+  ALC_7POINT1_SOFT     : constant Int_32_Unsigned_C :=                     1506
 
 
 #ifndef AL_EXT_STEREO_ANGLES
-#define AL_EXT_STEREO_ANGLES 1
-#define AL_STEREO_ANGLES                         0x1030
+  AL_EXT_STEREO_ANGLES : constant Int_32_Unsigned_C := 1
+  AL_STEREO_ANGLES     : constant Int_32_Unsigned_C :=                     1030
 #endif
 
 #ifndef AL_EXT_SOURCE_RADIUS
-#define AL_EXT_SOURCE_RADIUS 1
-#define AL_SOURCE_RADIUS                         0x1031
+  AL_EXT_SOURCE_RADIUS : constant Int_32_Unsigned_C := 1
+  AL_SOURCE_RADIUS    : constant Int_32_Unsigned_C :=                      1031
 #endif
 
 #ifndef AL_SOFT_source_latency
-#define AL_SOFT_source_latency 1
-#define AL_SAMPLE_OFFSET_LATENCY_SOFT            0x1200
-#define AL_SEC_OFFSET_LATENCY_SOFT               0x1201
+  AL_SOFT_source_latency 1
+  AL_SAMPLE_OFFSET_LATENCY_SOFT : constant Int_32_Unsigned_C :=            1200
+  AL_SEC_OFFSET_LATENCY_SOFT    : constant Int_32_Unsigned_C :=            1201
 typedef int64_t ALint64SOFT;
 typedef uint64_t ALuint64SOFT;
 
-
-
-
-
-/* Listener properties. */
-#define AL_METERS_PER_UNIT                       0x20004
-
-/* Source properties. */
-#define AL_DIRECT_FILTER                         0x20005
-#define AL_AUXILIARY_SEND_FILTER                 0x20006
-#define AL_AIR_ABSORPTION_FACTOR                 0x20007
-#define AL_ROOM_ROLLOFF_FACTOR                   0x20008
-#define AL_CONE_OUTER_GAINHF                     0x20009
-#define AL_DIRECT_FILTER_GAINHF_AUTO             0x2000A
-#define AL_AUXILIARY_SEND_FILTER_GAIN_AUTO       0x2000B
-#define AL_AUXILIARY_SEND_FILTER_GAINHF_AUTO     0x2000C
-
-
-/* Effect properties. */
-
-/* Reverb effect parameters */
-#define AL_REVERB_DENSITY                        0x0001
-#define AL_REVERB_DIFFUSION                      0x0002
-#define AL_REVERB_GAIN                           0x0003
-#define AL_REVERB_GAINHF                         0x0004
-#define AL_REVERB_DECAY_TIME                     0x0005
-#define AL_REVERB_DECAY_HFRATIO                  0x0006
-#define AL_REVERB_REFLECTIONS_GAIN               0x0007
-#define AL_REVERB_REFLECTIONS_DELAY              0x0008
-#define AL_REVERB_LATE_REVERB_GAIN               0x0009
-#define AL_REVERB_LATE_REVERB_DELAY              0x000A
-#define AL_REVERB_AIR_ABSORPTION_GAINHF          0x000B
-#define AL_REVERB_ROOM_ROLLOFF_FACTOR            0x000C
-#define AL_REVERB_DECAY_HFLIMIT                  0x000D
-
-/* EAX Reverb effect parameters */
-#define AL_EAXREVERB_DENSITY                     0x0001
-#define AL_EAXREVERB_DIFFUSION                   0x0002
-#define AL_EAXREVERB_GAIN                        0x0003
-#define AL_EAXREVERB_GAINHF                      0x0004
-#define AL_EAXREVERB_GAINLF                      0x0005
-#define AL_EAXREVERB_DECAY_TIME                  0x0006
-#define AL_EAXREVERB_DECAY_HFRATIO               0x0007
-#define AL_EAXREVERB_DECAY_LFRATIO               0x0008
-#define AL_EAXREVERB_REFLECTIONS_GAIN            0x0009
-#define AL_EAXREVERB_REFLECTIONS_DELAY           0x000A
-#define AL_EAXREVERB_REFLECTIONS_PAN             0x000B
-#define AL_EAXREVERB_LATE_REVERB_GAIN            0x000C
-#define AL_EAXREVERB_LATE_REVERB_DELAY           0x000D
-#define AL_EAXREVERB_LATE_REVERB_PAN             0x000E
-#define AL_EAXREVERB_ECHO_TIME                   0x000F
-#define AL_EAXREVERB_ECHO_DEPTH                  0x0010
-#define AL_EAXREVERB_MODULATION_TIME             0x0011
-#define AL_EAXREVERB_MODULATION_DEPTH            0x0012
-#define AL_EAXREVERB_AIR_ABSORPTION_GAINHF       0x0013
-#define AL_EAXREVERB_HFREFERENCE                 0x0014
-#define AL_EAXREVERB_LFREFERENCE                 0x0015
-#define AL_EAXREVERB_ROOM_ROLLOFF_FACTOR         0x0016
-#define AL_EAXREVERB_DECAY_HFLIMIT               0x0017
-
-/* Chorus effect parameters */
-#define AL_CHORUS_WAVEFORM                       0x0001
-#define AL_CHORUS_PHASE                          0x0002
-#define AL_CHORUS_RATE                           0x0003
-#define AL_CHORUS_DEPTH                          0x0004
-#define AL_CHORUS_FEEDBACK                       0x0005
-#define AL_CHORUS_DELAY                          0x0006
-
-/* Distortion effect parameters */
-#define AL_DISTORTION_EDGE                       0x0001
-#define AL_DISTORTION_GAIN                       0x0002
-#define AL_DISTORTION_LOWPASS_CUTOFF             0x0003
-#define AL_DISTORTION_EQCENTER                   0x0004
-#define AL_DISTORTION_EQBANDWIDTH                0x0005
-
-/* Echo effect parameters */
-#define AL_ECHO_DELAY                            0x0001
-#define AL_ECHO_LRDELAY                          0x0002
-#define AL_ECHO_DAMPING                          0x0003
-#define AL_ECHO_FEEDBACK                         0x0004
-#define AL_ECHO_SPREAD                           0x0005
-
-/* Flanger effect parameters */
-#define AL_FLANGER_WAVEFORM                      0x0001
-#define AL_FLANGER_PHASE                         0x0002
-#define AL_FLANGER_RATE                          0x0003
-#define AL_FLANGER_DEPTH                         0x0004
-#define AL_FLANGER_FEEDBACK                      0x0005
-#define AL_FLANGER_DELAY                         0x0006
-
-/* Frequency shifter effect parameters */
-#define AL_FREQUENCY_SHIFTER_FREQUENCY           0x0001
-#define AL_FREQUENCY_SHIFTER_LEFT_DIRECTION      0x0002
-#define AL_FREQUENCY_SHIFTER_RIGHT_DIRECTION     0x0003
-
-/* Vocal morpher effect parameters */
-#define AL_VOCAL_MORPHER_PHONEMEA                0x0001
-#define AL_VOCAL_MORPHER_PHONEMEA_COARSE_TUNING  0x0002
-#define AL_VOCAL_MORPHER_PHONEMEB                0x0003
-#define AL_VOCAL_MORPHER_PHONEMEB_COARSE_TUNING  0x0004
-#define AL_VOCAL_MORPHER_WAVEFORM                0x0005
-#define AL_VOCAL_MORPHER_RATE                    0x0006
-
-/* Pitchshifter effect parameters */
-#define AL_PITCH_SHIFTER_COARSE_TUNE             0x0001
-#define AL_PITCH_SHIFTER_FINE_TUNE               0x0002
-
-/* Ringmodulator effect parameters */
-#define AL_RING_MODULATOR_FREQUENCY              0x0001
-#define AL_RING_MODULATOR_HIGHPASS_CUTOFF        0x0002
-#define AL_RING_MODULATOR_WAVEFORM               0x0003
-
-/* Autowah effect parameters */
-#define AL_AUTOWAH_ATTACK_TIME                   0x0001
-#define AL_AUTOWAH_RELEASE_TIME                  0x0002
-#define AL_AUTOWAH_RESONANCE                     0x0003
-#define AL_AUTOWAH_PEAK_GAIN                     0x0004
-
-/* Compressor effect parameters */
-#define AL_COMPRESSOR_ONOFF                      0x0001
-
-/* Equalizer effect parameters */
-#define AL_EQUALIZER_LOW_GAIN                    0x0001
-#define AL_EQUALIZER_LOW_CUTOFF                  0x0002
-#define AL_EQUALIZER_MID1_GAIN                   0x0003
-#define AL_EQUALIZER_MID1_CENTER                 0x0004
-#define AL_EQUALIZER_MID1_WIDTH                  0x0005
-#define AL_EQUALIZER_MID2_GAIN                   0x0006
-#define AL_EQUALIZER_MID2_CENTER                 0x0007
-#define AL_EQUALIZER_MID2_WIDTH                  0x0008
-#define AL_EQUALIZER_HIGH_GAIN                   0x0009
-#define AL_EQUALIZER_HIGH_CUTOFF                 0x000A
-
-/* Effect type */
-#define AL_EFFECT_FIRST_PARAMETER                0x0000
-#define AL_EFFECT_LAST_PARAMETER                 0x8000
-#define AL_EFFECT_TYPE                           0x8001
-
-/* Effect types, used with the AL_EFFECT_TYPE property */
-#define AL_EFFECT_NULL                           0x0000
-#define AL_EFFECT_REVERB                         0x0001
-#define AL_EFFECT_CHORUS                         0x0002
-#define AL_EFFECT_DISTORTION                     0x0003
-#define AL_EFFECT_ECHO                           0x0004
-#define AL_EFFECT_FLANGER                        0x0005
-#define AL_EFFECT_FREQUENCY_SHIFTER              0x0006
-#define AL_EFFECT_VOCAL_MORPHER                  0x0007
-#define AL_EFFECT_PITCH_SHIFTER                  0x0008
-#define AL_EFFECT_RING_MODULATOR                 0x0009
-#define AL_EFFECT_AUTOWAH                        0x000A
-#define AL_EFFECT_COMPRESSOR                     0x000B
-#define AL_EFFECT_EQUALIZER                      0x000C
-#define AL_EFFECT_EAXREVERB                      0x8000
-
-/* Auxiliary Effect Slot properties. */
-#define AL_EFFECTSLOT_EFFECT                     0x0001
-#define AL_EFFECTSLOT_GAIN                       0x0002
-#define AL_EFFECTSLOT_AUXILIARY_SEND_AUTO        0x0003
-
-/* NULL Auxiliary Slot ID to disable a source send. */
-#define AL_EFFECTSLOT_NULL                       0x0000
-
-
-/* Filter properties. */
-
-/* Lowpass filter parameters */
-#define AL_LOWPASS_GAIN                          0x0001
-#define AL_LOWPASS_GAINHF                        0x0002
-
-/* Highpass filter parameters */
-#define AL_HIGHPASS_GAIN                         0x0001
-#define AL_HIGHPASS_GAINLF                       0x0002
-
-/* Bandpass filter parameters */
-#define AL_BANDPASS_GAIN                         0x0001
-#define AL_BANDPASS_GAINLF                       0x0002
-#define AL_BANDPASS_GAINHF                       0x0003
-
-/* Filter type */
-#define AL_FILTER_FIRST_PARAMETER                0x0000
-#define AL_FILTER_LAST_PARAMETER                 0x8000
-#define AL_FILTER_TYPE                           0x8001
-
-/* Filter types, used with the AL_FILTER_TYPE property */
-#define AL_FILTER_NULL                           0x0000
-#define AL_FILTER_LOWPASS                        0x0001
-#define AL_FILTER_HIGHPASS                       0x0002
-#define AL_FILTER_BANDPASS                       0x0003
-
-/* Filter ranges and defaults. */
-
-/* Lowpass filter */
-#define AL_LOWPASS_MIN_GAIN                      (0.0f)
-#define AL_LOWPASS_MAX_GAIN                      (1.0f)
-#define AL_LOWPASS_DEFAULT_GAIN                  (1.0f)
-
-#define AL_LOWPASS_MIN_GAINHF                    (0.0f)
-#define AL_LOWPASS_MAX_GAINHF                    (1.0f)
-#define AL_LOWPASS_DEFAULT_GAINHF                (1.0f)
-
-/* Highpass filter */
-#define AL_HIGHPASS_MIN_GAIN                     (0.0f)
-#define AL_HIGHPASS_MAX_GAIN                     (1.0f)
-#define AL_HIGHPASS_DEFAULT_GAIN                 (1.0f)
-
-#define AL_HIGHPASS_MIN_GAINLF                   (0.0f)
-#define AL_HIGHPASS_MAX_GAINLF                   (1.0f)
-#define AL_HIGHPASS_DEFAULT_GAINLF               (1.0f)
-
-/* Bandpass filter */
-#define AL_BANDPASS_MIN_GAIN                     (0.0f)
-#define AL_BANDPASS_MAX_GAIN                     (1.0f)
-#define AL_BANDPASS_DEFAULT_GAIN                 (1.0f)
-
-#define AL_BANDPASS_MIN_GAINHF                   (0.0f)
-#define AL_BANDPASS_MAX_GAINHF                   (1.0f)
-#define AL_BANDPASS_DEFAULT_GAINHF               (1.0f)
-
-#define AL_BANDPASS_MIN_GAINLF                   (0.0f)
-#define AL_BANDPASS_MAX_GAINLF                   (1.0f)
-#define AL_BANDPASS_DEFAULT_GAINLF               (1.0f)
-
-
-/* Effect parameter ranges and defaults. */
-
-/* Standard reverb effect */
-#define AL_REVERB_MIN_DENSITY                    (0.0f)
-#define AL_REVERB_MAX_DENSITY                    (1.0f)
-#define AL_REVERB_DEFAULT_DENSITY                (1.0f)
-
-#define AL_REVERB_MIN_DIFFUSION                  (0.0f)
-#define AL_REVERB_MAX_DIFFUSION                  (1.0f)
-#define AL_REVERB_DEFAULT_DIFFUSION              (1.0f)
-
-#define AL_REVERB_MIN_GAIN                       (0.0f)
-#define AL_REVERB_MAX_GAIN                       (1.0f)
-#define AL_REVERB_DEFAULT_GAIN                   (0.32f)
-
-#define AL_REVERB_MIN_GAINHF                     (0.0f)
-#define AL_REVERB_MAX_GAINHF                     (1.0f)
-#define AL_REVERB_DEFAULT_GAINHF                 (0.89f)
-
-#define AL_REVERB_MIN_DECAY_TIME                 (0.1f)
-#define AL_REVERB_MAX_DECAY_TIME                 (20.0f)
-#define AL_REVERB_DEFAULT_DECAY_TIME             (1.49f)
-
-#define AL_REVERB_MIN_DECAY_HFRATIO              (0.1f)
-#define AL_REVERB_MAX_DECAY_HFRATIO              (2.0f)
-#define AL_REVERB_DEFAULT_DECAY_HFRATIO          (0.83f)
-
-#define AL_REVERB_MIN_REFLECTIONS_GAIN           (0.0f)
-#define AL_REVERB_MAX_REFLECTIONS_GAIN           (3.16f)
-#define AL_REVERB_DEFAULT_REFLECTIONS_GAIN       (0.05f)
-
-#define AL_REVERB_MIN_REFLECTIONS_DELAY          (0.0f)
-#define AL_REVERB_MAX_REFLECTIONS_DELAY          (0.3f)
-#define AL_REVERB_DEFAULT_REFLECTIONS_DELAY      (0.007f)
-
-#define AL_REVERB_MIN_LATE_REVERB_GAIN           (0.0f)
-#define AL_REVERB_MAX_LATE_REVERB_GAIN           (10.0f)
-#define AL_REVERB_DEFAULT_LATE_REVERB_GAIN       (1.26f)
-
-#define AL_REVERB_MIN_LATE_REVERB_DELAY          (0.0f)
-#define AL_REVERB_MAX_LATE_REVERB_DELAY          (0.1f)
-#define AL_REVERB_DEFAULT_LATE_REVERB_DELAY      (0.011f)
-
-#define AL_REVERB_MIN_AIR_ABSORPTION_GAINHF      (0.892f)
-#define AL_REVERB_MAX_AIR_ABSORPTION_GAINHF      (1.0f)
-#define AL_REVERB_DEFAULT_AIR_ABSORPTION_GAINHF  (0.994f)
-
-#define AL_REVERB_MIN_ROOM_ROLLOFF_FACTOR        (0.0f)
-#define AL_REVERB_MAX_ROOM_ROLLOFF_FACTOR        (10.0f)
-#define AL_REVERB_DEFAULT_ROOM_ROLLOFF_FACTOR    (0.0f)
-
-#define AL_REVERB_MIN_DECAY_HFLIMIT              AL_FALSE
-#define AL_REVERB_MAX_DECAY_HFLIMIT              AL_TRUE
-#define AL_REVERB_DEFAULT_DECAY_HFLIMIT          AL_TRUE
-
-/* EAX reverb effect */
-#define AL_EAXREVERB_MIN_DENSITY                 (0.0f)
-#define AL_EAXREVERB_MAX_DENSITY                 (1.0f)
-#define AL_EAXREVERB_DEFAULT_DENSITY             (1.0f)
-
-#define AL_EAXREVERB_MIN_DIFFUSION               (0.0f)
-#define AL_EAXREVERB_MAX_DIFFUSION               (1.0f)
-#define AL_EAXREVERB_DEFAULT_DIFFUSION           (1.0f)
-
-#define AL_EAXREVERB_MIN_GAIN                    (0.0f)
-#define AL_EAXREVERB_MAX_GAIN                    (1.0f)
-#define AL_EAXREVERB_DEFAULT_GAIN                (0.32f)
-
-#define AL_EAXREVERB_MIN_GAINHF                  (0.0f)
-#define AL_EAXREVERB_MAX_GAINHF                  (1.0f)
-#define AL_EAXREVERB_DEFAULT_GAINHF              (0.89f)
-
-#define AL_EAXREVERB_MIN_GAINLF                  (0.0f)
-#define AL_EAXREVERB_MAX_GAINLF                  (1.0f)
-#define AL_EAXREVERB_DEFAULT_GAINLF              (1.0f)
-
-#define AL_EAXREVERB_MIN_DECAY_TIME              (0.1f)
-#define AL_EAXREVERB_MAX_DECAY_TIME              (20.0f)
-#define AL_EAXREVERB_DEFAULT_DECAY_TIME          (1.49f)
-
-#define AL_EAXREVERB_MIN_DECAY_HFRATIO           (0.1f)
-#define AL_EAXREVERB_MAX_DECAY_HFRATIO           (2.0f)
-#define AL_EAXREVERB_DEFAULT_DECAY_HFRATIO       (0.83f)
-
-#define AL_EAXREVERB_MIN_DECAY_LFRATIO           (0.1f)
-#define AL_EAXREVERB_MAX_DECAY_LFRATIO           (2.0f)
-#define AL_EAXREVERB_DEFAULT_DECAY_LFRATIO       (1.0f)
-
-#define AL_EAXREVERB_MIN_REFLECTIONS_GAIN        (0.0f)
-#define AL_EAXREVERB_MAX_REFLECTIONS_GAIN        (3.16f)
-#define AL_EAXREVERB_DEFAULT_REFLECTIONS_GAIN    (0.05f)
-
-#define AL_EAXREVERB_MIN_REFLECTIONS_DELAY       (0.0f)
-#define AL_EAXREVERB_MAX_REFLECTIONS_DELAY       (0.3f)
-#define AL_EAXREVERB_DEFAULT_REFLECTIONS_DELAY   (0.007f)
-
-#define AL_EAXREVERB_DEFAULT_REFLECTIONS_PAN_XYZ (0.0f)
-
-#define AL_EAXREVERB_MIN_LATE_REVERB_GAIN        (0.0f)
-#define AL_EAXREVERB_MAX_LATE_REVERB_GAIN        (10.0f)
-#define AL_EAXREVERB_DEFAULT_LATE_REVERB_GAIN    (1.26f)
-
-#define AL_EAXREVERB_MIN_LATE_REVERB_DELAY       (0.0f)
-#define AL_EAXREVERB_MAX_LATE_REVERB_DELAY       (0.1f)
-#define AL_EAXREVERB_DEFAULT_LATE_REVERB_DELAY   (0.011f)
-
-#define AL_EAXREVERB_DEFAULT_LATE_REVERB_PAN_XYZ (0.0f)
-
-#define AL_EAXREVERB_MIN_ECHO_TIME               (0.075f)
-#define AL_EAXREVERB_MAX_ECHO_TIME               (0.25f)
-#define AL_EAXREVERB_DEFAULT_ECHO_TIME           (0.25f)
-
-#define AL_EAXREVERB_MIN_ECHO_DEPTH              (0.0f)
-#define AL_EAXREVERB_MAX_ECHO_DEPTH              (1.0f)
-#define AL_EAXREVERB_DEFAULT_ECHO_DEPTH          (0.0f)
-
-#define AL_EAXREVERB_MIN_MODULATION_TIME         (0.04f)
-#define AL_EAXREVERB_MAX_MODULATION_TIME         (4.0f)
-#define AL_EAXREVERB_DEFAULT_MODULATION_TIME     (0.25f)
-
-#define AL_EAXREVERB_MIN_MODULATION_DEPTH        (0.0f)
-#define AL_EAXREVERB_MAX_MODULATION_DEPTH        (1.0f)
-#define AL_EAXREVERB_DEFAULT_MODULATION_DEPTH    (0.0f)
-
-#define AL_EAXREVERB_MIN_AIR_ABSORPTION_GAINHF   (0.892f)
-#define AL_EAXREVERB_MAX_AIR_ABSORPTION_GAINHF   (1.0f)
-#define AL_EAXREVERB_DEFAULT_AIR_ABSORPTION_GAINHF (0.994f)
-
-#define AL_EAXREVERB_MIN_HFREFERENCE             (1000.0f)
-#define AL_EAXREVERB_MAX_HFREFERENCE             (20000.0f)
-#define AL_EAXREVERB_DEFAULT_HFREFERENCE         (5000.0f)
-
-#define AL_EAXREVERB_MIN_LFREFERENCE             (20.0f)
-#define AL_EAXREVERB_MAX_LFREFERENCE             (1000.0f)
-#define AL_EAXREVERB_DEFAULT_LFREFERENCE         (250.0f)
-
-#define AL_EAXREVERB_MIN_ROOM_ROLLOFF_FACTOR     (0.0f)
-#define AL_EAXREVERB_MAX_ROOM_ROLLOFF_FACTOR     (10.0f)
-#define AL_EAXREVERB_DEFAULT_ROOM_ROLLOFF_FACTOR (0.0f)
-
-#define AL_EAXREVERB_MIN_DECAY_HFLIMIT           AL_FALSE
-#define AL_EAXREVERB_MAX_DECAY_HFLIMIT           AL_TRUE
-#define AL_EAXREVERB_DEFAULT_DECAY_HFLIMIT       AL_TRUE
-
-/* Chorus effect */
-#define AL_CHORUS_WAVEFORM_SINUSOID              (0)
-#define AL_CHORUS_WAVEFORM_TRIANGLE              (1)
-
-#define AL_CHORUS_MIN_WAVEFORM                   (0)
-#define AL_CHORUS_MAX_WAVEFORM                   (1)
-#define AL_CHORUS_DEFAULT_WAVEFORM               (1)
-
-#define AL_CHORUS_MIN_PHASE                      (-180)
-#define AL_CHORUS_MAX_PHASE                      (180)
-#define AL_CHORUS_DEFAULT_PHASE                  (90)
-
-#define AL_CHORUS_MIN_RATE                       (0.0f)
-#define AL_CHORUS_MAX_RATE                       (10.0f)
-#define AL_CHORUS_DEFAULT_RATE                   (1.1f)
-
-#define AL_CHORUS_MIN_DEPTH                      (0.0f)
-#define AL_CHORUS_MAX_DEPTH                      (1.0f)
-#define AL_CHORUS_DEFAULT_DEPTH                  (0.1f)
-
-#define AL_CHORUS_MIN_FEEDBACK                   (-1.0f)
-#define AL_CHORUS_MAX_FEEDBACK                   (1.0f)
-#define AL_CHORUS_DEFAULT_FEEDBACK               (0.25f)
-
-#define AL_CHORUS_MIN_DELAY                      (0.0f)
-#define AL_CHORUS_MAX_DELAY                      (0.016f)
-#define AL_CHORUS_DEFAULT_DELAY                  (0.016f)
-
-/* Distortion effect */
-#define AL_DISTORTION_MIN_EDGE                   (0.0f)
-#define AL_DISTORTION_MAX_EDGE                   (1.0f)
-#define AL_DISTORTION_DEFAULT_EDGE               (0.2f)
-
-#define AL_DISTORTION_MIN_GAIN                   (0.01f)
-#define AL_DISTORTION_MAX_GAIN                   (1.0f)
-#define AL_DISTORTION_DEFAULT_GAIN               (0.05f)
-
-#define AL_DISTORTION_MIN_LOWPASS_CUTOFF         (80.0f)
-#define AL_DISTORTION_MAX_LOWPASS_CUTOFF         (24000.0f)
-#define AL_DISTORTION_DEFAULT_LOWPASS_CUTOFF     (8000.0f)
-
-#define AL_DISTORTION_MIN_EQCENTER               (80.0f)
-#define AL_DISTORTION_MAX_EQCENTER               (24000.0f)
-#define AL_DISTORTION_DEFAULT_EQCENTER           (3600.0f)
-
-#define AL_DISTORTION_MIN_EQBANDWIDTH            (80.0f)
-#define AL_DISTORTION_MAX_EQBANDWIDTH            (24000.0f)
-#define AL_DISTORTION_DEFAULT_EQBANDWIDTH        (3600.0f)
-
-/* Echo effect */
-#define AL_ECHO_MIN_DELAY                        (0.0f)
-#define AL_ECHO_MAX_DELAY                        (0.207f)
-#define AL_ECHO_DEFAULT_DELAY                    (0.1f)
-
-#define AL_ECHO_MIN_LRDELAY                      (0.0f)
-#define AL_ECHO_MAX_LRDELAY                      (0.404f)
-#define AL_ECHO_DEFAULT_LRDELAY                  (0.1f)
-
-#define AL_ECHO_MIN_DAMPING                      (0.0f)
-#define AL_ECHO_MAX_DAMPING                      (0.99f)
-#define AL_ECHO_DEFAULT_DAMPING                  (0.5f)
-
-#define AL_ECHO_MIN_FEEDBACK                     (0.0f)
-#define AL_ECHO_MAX_FEEDBACK                     (1.0f)
-#define AL_ECHO_DEFAULT_FEEDBACK                 (0.5f)
-
-#define AL_ECHO_MIN_SPREAD                       (-1.0f)
-#define AL_ECHO_MAX_SPREAD                       (1.0f)
-#define AL_ECHO_DEFAULT_SPREAD                   (-1.0f)
-
-/* Flanger effect */
-#define AL_FLANGER_WAVEFORM_SINUSOID             (0)
-#define AL_FLANGER_WAVEFORM_TRIANGLE             (1)
-
-#define AL_FLANGER_MIN_WAVEFORM                  (0)
-#define AL_FLANGER_MAX_WAVEFORM                  (1)
-#define AL_FLANGER_DEFAULT_WAVEFORM              (1)
-
-#define AL_FLANGER_MIN_PHASE                     (-180)
-#define AL_FLANGER_MAX_PHASE                     (180)
-#define AL_FLANGER_DEFAULT_PHASE                 (0)
-
-#define AL_FLANGER_MIN_RATE                      (0.0f)
-#define AL_FLANGER_MAX_RATE                      (10.0f)
-#define AL_FLANGER_DEFAULT_RATE                  (0.27f)
-
-#define AL_FLANGER_MIN_DEPTH                     (0.0f)
-#define AL_FLANGER_MAX_DEPTH                     (1.0f)
-#define AL_FLANGER_DEFAULT_DEPTH                 (1.0f)
-
-#define AL_FLANGER_MIN_FEEDBACK                  (-1.0f)
-#define AL_FLANGER_MAX_FEEDBACK                  (1.0f)
-#define AL_FLANGER_DEFAULT_FEEDBACK              (-0.5f)
-
-#define AL_FLANGER_MIN_DELAY                     (0.0f)
-#define AL_FLANGER_MAX_DELAY                     (0.004f)
-#define AL_FLANGER_DEFAULT_DELAY                 (0.002f)
-
-/* Frequency shifter effect */
-#define AL_FREQUENCY_SHIFTER_MIN_FREQUENCY       (0.0f)
-#define AL_FREQUENCY_SHIFTER_MAX_FREQUENCY       (24000.0f)
-#define AL_FREQUENCY_SHIFTER_DEFAULT_FREQUENCY   (0.0f)
-
-#define AL_FREQUENCY_SHIFTER_MIN_LEFT_DIRECTION  (0)
-#define AL_FREQUENCY_SHIFTER_MAX_LEFT_DIRECTION  (2)
-#define AL_FREQUENCY_SHIFTER_DEFAULT_LEFT_DIRECTION (0)
-
-#define AL_FREQUENCY_SHIFTER_DIRECTION_DOWN      (0)
-#define AL_FREQUENCY_SHIFTER_DIRECTION_UP        (1)
-#define AL_FREQUENCY_SHIFTER_DIRECTION_OFF       (2)
-
-#define AL_FREQUENCY_SHIFTER_MIN_RIGHT_DIRECTION (0)
-#define AL_FREQUENCY_SHIFTER_MAX_RIGHT_DIRECTION (2)
-#define AL_FREQUENCY_SHIFTER_DEFAULT_RIGHT_DIRECTION (0)
-
-/* Vocal morpher effect */
-#define AL_VOCAL_MORPHER_MIN_PHONEMEA            (0)
-#define AL_VOCAL_MORPHER_MAX_PHONEMEA            (29)
-#define AL_VOCAL_MORPHER_DEFAULT_PHONEMEA        (0)
-
-#define AL_VOCAL_MORPHER_MIN_PHONEMEA_COARSE_TUNING (-24)
-#define AL_VOCAL_MORPHER_MAX_PHONEMEA_COARSE_TUNING (24)
-#define AL_VOCAL_MORPHER_DEFAULT_PHONEMEA_COARSE_TUNING (0)
-
-#define AL_VOCAL_MORPHER_MIN_PHONEMEB            (0)
-#define AL_VOCAL_MORPHER_MAX_PHONEMEB            (29)
-#define AL_VOCAL_MORPHER_DEFAULT_PHONEMEB        (10)
-
-#define AL_VOCAL_MORPHER_MIN_PHONEMEB_COARSE_TUNING (-24)
-#define AL_VOCAL_MORPHER_MAX_PHONEMEB_COARSE_TUNING (24)
-#define AL_VOCAL_MORPHER_DEFAULT_PHONEMEB_COARSE_TUNING (0)
-
-#define AL_VOCAL_MORPHER_PHONEME_A               (0)
-#define AL_VOCAL_MORPHER_PHONEME_E               (1)
-#define AL_VOCAL_MORPHER_PHONEME_I               (2)
-#define AL_VOCAL_MORPHER_PHONEME_O               (3)
-#define AL_VOCAL_MORPHER_PHONEME_U               (4)
-#define AL_VOCAL_MORPHER_PHONEME_AA              (5)
-#define AL_VOCAL_MORPHER_PHONEME_AE              (6)
-#define AL_VOCAL_MORPHER_PHONEME_AH              (7)
-#define AL_VOCAL_MORPHER_PHONEME_AO              (8)
-#define AL_VOCAL_MORPHER_PHONEME_EH              (9)
-#define AL_VOCAL_MORPHER_PHONEME_ER              (10)
-#define AL_VOCAL_MORPHER_PHONEME_IH              (11)
-#define AL_VOCAL_MORPHER_PHONEME_IY              (12)
-#define AL_VOCAL_MORPHER_PHONEME_UH              (13)
-#define AL_VOCAL_MORPHER_PHONEME_UW              (14)
-#define AL_VOCAL_MORPHER_PHONEME_B               (15)
-#define AL_VOCAL_MORPHER_PHONEME_D               (16)
-#define AL_VOCAL_MORPHER_PHONEME_F               (17)
-#define AL_VOCAL_MORPHER_PHONEME_G               (18)
-#define AL_VOCAL_MORPHER_PHONEME_J               (19)
-#define AL_VOCAL_MORPHER_PHONEME_K               (20)
-#define AL_VOCAL_MORPHER_PHONEME_L               (21)
-#define AL_VOCAL_MORPHER_PHONEME_M               (22)
-#define AL_VOCAL_MORPHER_PHONEME_N               (23)
-#define AL_VOCAL_MORPHER_PHONEME_P               (24)
-#define AL_VOCAL_MORPHER_PHONEME_R               (25)
-#define AL_VOCAL_MORPHER_PHONEME_S               (26)
-#define AL_VOCAL_MORPHER_PHONEME_T               (27)
-#define AL_VOCAL_MORPHER_PHONEME_V               (28)
-#define AL_VOCAL_MORPHER_PHONEME_Z               (29)
-
-#define AL_VOCAL_MORPHER_WAVEFORM_SINUSOID       (0)
-#define AL_VOCAL_MORPHER_WAVEFORM_TRIANGLE       (1)
-#define AL_VOCAL_MORPHER_WAVEFORM_SAWTOOTH       (2)
-
-#define AL_VOCAL_MORPHER_MIN_WAVEFORM            (0)
-#define AL_VOCAL_MORPHER_MAX_WAVEFORM            (2)
-#define AL_VOCAL_MORPHER_DEFAULT_WAVEFORM        (0)
-
-#define AL_VOCAL_MORPHER_MIN_RATE                (0.0f)
-#define AL_VOCAL_MORPHER_MAX_RATE                (10.0f)
-#define AL_VOCAL_MORPHER_DEFAULT_RATE            (1.41f)
-
-/* Pitch shifter effect */
-#define AL_PITCH_SHIFTER_MIN_COARSE_TUNE         (-12)
-#define AL_PITCH_SHIFTER_MAX_COARSE_TUNE         (12)
-#define AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE     (12)
-
-#define AL_PITCH_SHIFTER_MIN_FINE_TUNE           (-50)
-#define AL_PITCH_SHIFTER_MAX_FINE_TUNE           (50)
-#define AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE       (0)
-
-/* Ring modulator effect */
-#define AL_RING_MODULATOR_MIN_FREQUENCY          (0.0f)
-#define AL_RING_MODULATOR_MAX_FREQUENCY          (8000.0f)
-#define AL_RING_MODULATOR_DEFAULT_FREQUENCY      (440.0f)
-
-#define AL_RING_MODULATOR_MIN_HIGHPASS_CUTOFF    (0.0f)
-#define AL_RING_MODULATOR_MAX_HIGHPASS_CUTOFF    (24000.0f)
-#define AL_RING_MODULATOR_DEFAULT_HIGHPASS_CUTOFF (800.0f)
-
-#define AL_RING_MODULATOR_SINUSOID               (0)
-#define AL_RING_MODULATOR_SAWTOOTH               (1)
-#define AL_RING_MODULATOR_SQUARE                 (2)
-
-#define AL_RING_MODULATOR_MIN_WAVEFORM           (0)
-#define AL_RING_MODULATOR_MAX_WAVEFORM           (2)
-#define AL_RING_MODULATOR_DEFAULT_WAVEFORM       (0)
-
-/* Autowah effect */
-#define AL_AUTOWAH_MIN_ATTACK_TIME               (0.0001f)
-#define AL_AUTOWAH_MAX_ATTACK_TIME               (1.0f)
-#define AL_AUTOWAH_DEFAULT_ATTACK_TIME           (0.06f)
-
-#define AL_AUTOWAH_MIN_RELEASE_TIME              (0.0001f)
-#define AL_AUTOWAH_MAX_RELEASE_TIME              (1.0f)
-#define AL_AUTOWAH_DEFAULT_RELEASE_TIME          (0.06f)
-
-#define AL_AUTOWAH_MIN_RESONANCE                 (2.0f)
-#define AL_AUTOWAH_MAX_RESONANCE                 (1000.0f)
-#define AL_AUTOWAH_DEFAULT_RESONANCE             (1000.0f)
-
-#define AL_AUTOWAH_MIN_PEAK_GAIN                 (0.00003f)
-#define AL_AUTOWAH_MAX_PEAK_GAIN                 (31621.0f)
-#define AL_AUTOWAH_DEFAULT_PEAK_GAIN             (11.22f)
-
-/* Compressor effect */
-#define AL_COMPRESSOR_MIN_ONOFF                  (0)
-#define AL_COMPRESSOR_MAX_ONOFF                  (1)
-#define AL_COMPRESSOR_DEFAULT_ONOFF              (1)
-
-/* Equalizer effect */
-#define AL_EQUALIZER_MIN_LOW_GAIN                (0.126f)
-#define AL_EQUALIZER_MAX_LOW_GAIN                (7.943f)
-#define AL_EQUALIZER_DEFAULT_LOW_GAIN            (1.0f)
-
-#define AL_EQUALIZER_MIN_LOW_CUTOFF              (50.0f)
-#define AL_EQUALIZER_MAX_LOW_CUTOFF              (800.0f)
-#define AL_EQUALIZER_DEFAULT_LOW_CUTOFF          (200.0f)
-
-#define AL_EQUALIZER_MIN_MID1_GAIN               (0.126f)
-#define AL_EQUALIZER_MAX_MID1_GAIN               (7.943f)
-#define AL_EQUALIZER_DEFAULT_MID1_GAIN           (1.0f)
-
-#define AL_EQUALIZER_MIN_MID1_CENTER             (200.0f)
-#define AL_EQUALIZER_MAX_MID1_CENTER             (3000.0f)
-#define AL_EQUALIZER_DEFAULT_MID1_CENTER         (500.0f)
-
-#define AL_EQUALIZER_MIN_MID1_WIDTH              (0.01f)
-#define AL_EQUALIZER_MAX_MID1_WIDTH              (1.0f)
-#define AL_EQUALIZER_DEFAULT_MID1_WIDTH          (1.0f)
-
-#define AL_EQUALIZER_MIN_MID2_GAIN               (0.126f)
-#define AL_EQUALIZER_MAX_MID2_GAIN               (7.943f)
-#define AL_EQUALIZER_DEFAULT_MID2_GAIN           (1.0f)
-
-#define AL_EQUALIZER_MIN_MID2_CENTER             (1000.0f)
-#define AL_EQUALIZER_MAX_MID2_CENTER             (8000.0f)
-#define AL_EQUALIZER_DEFAULT_MID2_CENTER         (3000.0f)
-
-#define AL_EQUALIZER_MIN_MID2_WIDTH              (0.01f)
-#define AL_EQUALIZER_MAX_MID2_WIDTH              (1.0f)
-#define AL_EQUALIZER_DEFAULT_MID2_WIDTH          (1.0f)
-
-#define AL_EQUALIZER_MIN_HIGH_GAIN               (0.126f)
-#define AL_EQUALIZER_MAX_HIGH_GAIN               (7.943f)
-#define AL_EQUALIZER_DEFAULT_HIGH_GAIN           (1.0f)
-
-#define AL_EQUALIZER_MIN_HIGH_CUTOFF             (4000.0f)
-#define AL_EQUALIZER_MAX_HIGH_CUTOFF             (16000.0f)
-#define AL_EQUALIZER_DEFAULT_HIGH_CUTOFF         (6000.0f)
-
-
-/* Source parameter value ranges and defaults. */
-#define AL_MIN_AIR_ABSORPTION_FACTOR             (0.0f)
-#define AL_MAX_AIR_ABSORPTION_FACTOR             (10.0f)
-#define AL_DEFAULT_AIR_ABSORPTION_FACTOR         (0.0f)
-
-#define AL_MIN_ROOM_ROLLOFF_FACTOR               (0.0f)
-#define AL_MAX_ROOM_ROLLOFF_FACTOR               (10.0f)
-#define AL_DEFAULT_ROOM_ROLLOFF_FACTOR           (0.0f)
-
-#define AL_MIN_CONE_OUTER_GAINHF                 (0.0f)
-#define AL_MAX_CONE_OUTER_GAINHF                 (1.0f)
-#define AL_DEFAULT_CONE_OUTER_GAINHF             (1.0f)
-
-#define AL_MIN_DIRECT_FILTER_GAINHF_AUTO         AL_FALSE
-#define AL_MAX_DIRECT_FILTER_GAINHF_AUTO         AL_TRUE
-#define AL_DEFAULT_DIRECT_FILTER_GAINHF_AUTO     AL_TRUE
-
-#define AL_MIN_AUXILIARY_SEND_FILTER_GAIN_AUTO   AL_FALSE
-#define AL_MAX_AUXILIARY_SEND_FILTER_GAIN_AUTO   AL_TRUE
-#define AL_DEFAULT_AUXILIARY_SEND_FILTER_GAIN_AUTO AL_TRUE
-
-#define AL_MIN_AUXILIARY_SEND_FILTER_GAINHF_AUTO AL_FALSE
-#define AL_MAX_AUXILIARY_SEND_FILTER_GAINHF_AUTO AL_TRUE
-#define AL_DEFAULT_AUXILIARY_SEND_FILTER_GAINHF_AUTO AL_TRUE
-
-/* Listener parameter value ranges and defaults. */
-#define AL_MIN_METERS_PER_UNIT                   FLT_MIN
-#define AL_MAX_METERS_PER_UNIT                   FLT_MAX
-#define AL_DEFAULT_METERS_PER_UNIT               (1.0f)
+  -- Listener properties
+  AL_METERS_PER_UNIT                       0x20004
+
+  -- Source properties
+  AL_DIRECT_FILTER                         0x20005
+  AL_AUXILIARY_SEND_FILTER                 0x20006
+  AL_AIR_ABSORPTION_FACTOR                 0x20007
+  AL_ROOM_ROLLOFF_FACTOR                   0x20008
+  AL_CONE_OUTER_GAINHF                     0x20009
+  AL_DIRECT_FILTER_GAINHF_AUTO             0x2000A
+  AL_AUXILIARY_SEND_FILTER_GAIN_AUTO       0x2000B
+  AL_AUXILIARY_SEND_FILTER_GAINHF_AUTO     0x2000C
+
+
+  -- Effect properties
+
+  -- Reverb effect parameters 
+  AL_REVERB_DENSITY                        0001
+  AL_REVERB_DIFFUSION                      0002
+  AL_REVERB_GAIN                           0003
+  AL_REVERB_GAINHF                         0004
+  AL_REVERB_DECAY_TIME                     0005
+  AL_REVERB_DECAY_HFRATIO                  0006
+  AL_REVERB_REFLECTIONS_GAIN               0007
+  AL_REVERB_REFLECTIONS_DELAY              0008
+  AL_REVERB_LATE_REVERB_GAIN               0009
+  AL_REVERB_LATE_REVERB_DELAY              000A
+  AL_REVERB_AIR_ABSORPTION_GAINHF          000B
+  AL_REVERB_ROOM_ROLLOFF_FACTOR            000C
+  AL_REVERB_DECAY_HFLIMIT                  000D
+
+  -- EAX Reverb effect parameters 
+  AL_EAXREVERB_DENSITY                     0001
+  AL_EAXREVERB_DIFFUSION                   0002
+  AL_EAXREVERB_GAIN                        0003
+  AL_EAXREVERB_GAINHF                      0004
+  AL_EAXREVERB_GAINLF                      0005
+  AL_EAXREVERB_DECAY_TIME                  0006
+  AL_EAXREVERB_DECAY_HFRATIO               0007
+  AL_EAXREVERB_DECAY_LFRATIO               0008
+  AL_EAXREVERB_REFLECTIONS_GAIN            0009
+  AL_EAXREVERB_REFLECTIONS_DELAY           000A
+  AL_EAXREVERB_REFLECTIONS_PAN             000B
+  AL_EAXREVERB_LATE_REVERB_GAIN            000C
+  AL_EAXREVERB_LATE_REVERB_DELAY           000D
+  AL_EAXREVERB_LATE_REVERB_PAN             000E
+  AL_EAXREVERB_ECHO_TIME                   00
+  AL_EAXREVERB_ECHO_DEPTH                  0010
+  AL_EAXREVERB_MODULATION_TIME             0011
+  AL_EAXREVERB_MODULATION_DEPTH            0012
+  AL_EAXREVERB_AIR_ABSORPTION_GAINHF       0013
+  AL_EAXREVERB_HFREFERENCE                 0014
+  AL_EAXREVERB_LFREFERENCE                 0015
+  AL_EAXREVERB_ROOM_ROLLOFF_FACTOR         0016
+  AL_EAXREVERB_DECAY_HFLIMIT               0017
+
+  -- Chorus effect parameters 
+  AL_CHORUS_WAVEFORM                       0001
+  AL_CHORUS_PHASE                          0002
+  AL_CHORUS_RATE                           0003
+  AL_CHORUS_DEPTH                          0004
+  AL_CHORUS_FEEDBACK                       0005
+  AL_CHORUS_DELAY                          0006
+
+  -- Distortion effect parameters 
+  AL_DISTORTION_EDGE                       0001
+  AL_DISTORTION_GAIN                       0002
+  AL_DISTORTION_LOWPASS_CUTOFF             0003
+  AL_DISTORTION_EQCENTER                   0004
+  AL_DISTORTION_EQBANDWIDTH                0005
+
+  -- Echo effect parameters 
+  AL_ECHO_DELAY                            0001
+  AL_ECHO_LRDELAY                          0002
+  AL_ECHO_DAMPING                          0003
+  AL_ECHO_FEEDBACK                         0004
+  AL_ECHO_SPREAD                           0005
+
+  -- Flanger effect parameters 
+  AL_FLANGER_WAVEFORM                      0001
+  AL_FLANGER_PHASE                         0002
+  AL_FLANGER_RATE                          0003
+  AL_FLANGER_DEPTH                         0004
+  AL_FLANGER_FEEDBACK                      0005
+  AL_FLANGER_DELAY                         0006
+
+  -- Frequency shifter effect parameters 
+  AL_FREQUENCY_SHIFTER_FREQUENCY           0001
+  AL_FREQUENCY_SHIFTER_LEFT_DIRECTION      0002
+  AL_FREQUENCY_SHIFTER_RIGHT_DIRECTION     0003
+
+  -- Vocal morpher effect parameters 
+  AL_VOCAL_MORPHER_PHONEMEA               : constant Int_32_Unsigned_C := 0001
+  AL_VOCAL_MORPHER_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := 0002
+  AL_VOCAL_MORPHER_PHONEMEB              : constant Int_32_Unsigned_C :=  0003
+  AL_VOCAL_MORPHER_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := 0004
+  AL_VOCAL_MORPHER_WAVEFORM               : constant Int_32_Unsigned_C := 0005
+  AL_VOCAL_MORPHER_RATE                   : constant Int_32_Unsigned_C := 0006
+
+  -- Pitchshifter effect parameters 
+  AL_PITCH_SHIFTER_COARSE_TUNE          : constant Int_32_Unsigned_C :=   0001
+  AL_PITCH_SHIFTER_FINE_TUNE           : constant Int_32_Unsigned_C :=    0002
+
+  -- Ringmodulator effect parameters 
+  AL_RING_MODULATOR_FREQUENCY          : constant Int_32_Unsigned_C :=    0001
+  AL_RING_MODULATOR_HIGHPASS_CUTOFF    : constant Int_32_Unsigned_C :=    0002
+  AL_RING_MODULATOR_WAVEFORM           : constant Int_32_Unsigned_C :=    0003
+
+  -- Autowah effect parameters 
+  AL_AUTOWAH_ATTACK_TIME              : constant Int_32_Unsigned_C :=     0001
+  AL_AUTOWAH_RELEASE_TIME            : constant Int_32_Unsigned_C :=      0002
+  AL_AUTOWAH_RESONANCE               : constant Int_32_Unsigned_C :=      0003
+  AL_AUTOWAH_PEAK_GAIN              : constant Int_32_Unsigned_C :=       0004
+
+  -- Compressor effect parameters 
+  AL_COMPRESSOR_ONOFF               : constant Int_32_Unsigned_C :=       0001
+
+  -- Equalizer effect parameters 
+  AL_EQUALIZER_LOW_GAIN            : constant Int_32_Unsigned_C :=        0001
+  AL_EQUALIZER_LOW_CUTOFF          : constant Int_32_Unsigned_C :=        0002
+  AL_EQUALIZER_MID1_GAIN           : constant Int_32_Unsigned_C :=        0003
+  AL_EQUALIZER_MID1_CENTER         : constant Int_32_Unsigned_C :=        0004
+  AL_EQUALIZER_MID1_WIDTH          : constant Int_32_Unsigned_C :=        0005
+  AL_EQUALIZER_MID2_GAIN           : constant Int_32_Unsigned_C :=        0006
+  AL_EQUALIZER_MID2_CENTER         : constant Int_32_Unsigned_C :=        0007
+  AL_EQUALIZER_MID2_WIDTH          : constant Int_32_Unsigned_C :=        0008
+  AL_EQUALIZER_HIGH_GAIN           : constant Int_32_Unsigned_C :=        0009
+  AL_EQUALIZER_HIGH_CUTOFF         : constant Int_32_Unsigned_C :=        000A
+
+  -- Effect type 
+  AL_EFFECT_FIRST_PARAMETER        : constant Int_32_Unsigned_C :=        0000
+  AL_EFFECT_LAST_PARAMETER         : constant Int_32_Unsigned_C :=        0x8000
+  AL_EFFECT_TYPE                   : constant Int_32_Unsigned_C :=        0x8001
+
+  -- Effect types, used with the AL_EFFECT_TYPE property 
+  AL_EFFECT_NULL                     : constant Int_32_Unsigned_C :=      0000
+  AL_EFFECT_REVERB                   : constant Int_32_Unsigned_C :=      0001
+  AL_EFFECT_CHORUS                   : constant Int_32_Unsigned_C :=      0002
+  AL_EFFECT_DISTORTION               : constant Int_32_Unsigned_C :=      0003
+  AL_EFFECT_ECHO                     : constant Int_32_Unsigned_C :=      0004
+  AL_EFFECT_FLANGER                  : constant Int_32_Unsigned_C :=      0005
+  AL_EFFECT_FREQUENCY_SHIFTER        : constant Int_32_Unsigned_C :=      0006
+  AL_EFFECT_VOCAL_MORPHER            : constant Int_32_Unsigned_C :=      0007
+  AL_EFFECT_PITCH_SHIFTER            : constant Int_32_Unsigned_C :=      0008
+  AL_EFFECT_RING_MODULATOR           : constant Int_32_Unsigned_C :=      0009
+  AL_EFFECT_AUTOWAH                  : constant Int_32_Unsigned_C :=      000A
+  AL_EFFECT_COMPRESSOR               : constant Int_32_Unsigned_C :=      000B
+  AL_EFFECT_EQUALIZER                 : constant Int_32_Unsigned_C :=     000C
+  AL_EFFECT_EAXREVERB                  : constant Int_32_Unsigned_C :=    0x8000
+
+  -- Auxiliary Effect Slot properties
+  AL_EFFECTSLOT_EFFECT                   : constant Int_32_Unsigned_C :=  0001
+  AL_EFFECTSLOT_GAIN                     : constant Int_32_Unsigned_C :=  0002
+  AL_EFFECTSLOT_AUXILIARY_SEND_AUTO      : constant Int_32_Unsigned_C :=  0003
+
+  -- NULL Auxiliary Slot ID to disable a source send
+  AL_EFFECTSLOT_NULL                     : constant Int_32_Unsigned_C :=  0000
+
+
+  -- Filter properties
+
+  -- Lowpass filter parameters 
+  AL_LOWPASS_GAIN                        : constant Int_32_Unsigned_C :=  0001
+  AL_LOWPASS_GAINHF                      : constant Int_32_Unsigned_C :=  0002
+
+  -- Highpass filter parameters 
+  AL_HIGHPASS_GAIN                      : constant Int_32_Unsigned_C :=   0001
+  AL_HIGHPASS_GAINLF                    : constant Int_32_Unsigned_C :=   0002
+
+  -- Bandpass filter parameters 
+  AL_BANDPASS_GAIN                      : constant Int_32_Unsigned_C :=   0001
+  AL_BANDPASS_GAINLF                    : constant Int_32_Unsigned_C :=   0002
+  AL_BANDPASS_GAINHF                    : constant Int_32_Unsigned_C :=   0003
+
+  -- Filter type 
+  AL_FILTER_FIRST_PARAMETER             : constant Int_32_Unsigned_C :=   0000
+  AL_FILTER_LAST_PARAMETER              : constant Int_32_Unsigned_C :=   0x8000
+  AL_FILTER_TYPE                        : constant Int_32_Unsigned_C :=   0x8001
+
+  -- Filter types, used with the AL_FILTER_TYPE property 
+  AL_FILTER_NULL                       : constant Int_32_Unsigned_C :=    0000
+  AL_FILTER_LOWPASS                    : constant Int_32_Unsigned_C :=    0001
+  AL_FILTER_HIGHPASS                   : constant Int_32_Unsigned_C :=    0002
+  AL_FILTER_BANDPASS                   : constant Int_32_Unsigned_C :=    0003
+
+  -- Filter ranges and defaults
+
+  -- Lowpass filter 
+  AL_LOWPASS_MIN_GAIN                      (0.0)
+  AL_LOWPASS_MAX_GAIN                      (1.0)
+  AL_LOWPASS_DEFAULT_GAIN                  (1.0)
+
+  AL_LOWPASS_MIN_GAINHF                    (0.0)
+  AL_LOWPASS_MAX_GAINHF                    (1.0)
+  AL_LOWPASS_DEFAULT_GAINHF                (1.0)
+
+  -- Highpass filter 
+  AL_HIGHPASS_MIN_GAIN                     (0.0)
+  AL_HIGHPASS_MAX_GAIN                     (1.0)
+  AL_HIGHPASS_DEFAULT_GAIN                 (1.0)
+
+  AL_HIGHPASS_MIN_GAINLF                   (0.0)
+  AL_HIGHPASS_MAX_GAINLF                   (1.0)
+  AL_HIGHPASS_DEFAULT_GAINLF               (1.0)
+
+  -- Bandpass filter 
+  AL_BANDPASS_MIN_GAIN                     (0.0)
+  AL_BANDPASS_MAX_GAIN                     (1.0)
+  AL_BANDPASS_DEFAULT_GAIN                 (1.0)
+
+  AL_BANDPASS_MIN_GAINHF                   (0.0)
+  AL_BANDPASS_MAX_GAINHF                   (1.0)
+  AL_BANDPASS_DEFAULT_GAINHF               (1.0)
+
+  AL_BANDPASS_MIN_GAINLF                   (0.0)
+  AL_BANDPASS_MAX_GAINLF                   (1.0)
+  AL_BANDPASS_DEFAULT_GAINLF               (1.0)
+
+
+  -- Effect parameter ranges and defaults
+
+  -- Standard reverb effect 
+  AL_REVERB_MIN_DENSITY                    (0.0)
+  AL_REVERB_MAX_DENSITY                    (1.0)
+  AL_REVERB_DEFAULT_DENSITY                (1.0)
+
+  AL_REVERB_MIN_DIFFUSION                  (0.0)
+  AL_REVERB_MAX_DIFFUSION                  (1.0)
+  AL_REVERB_DEFAULT_DIFFUSION              (1.0)
+
+  AL_REVERB_MIN_GAIN                       (0.0)
+  AL_REVERB_MAX_GAIN                       (1.0)
+  AL_REVERB_DEFAULT_GAIN                   (0.32f)
+
+  AL_REVERB_MIN_GAINHF                     (0.0)
+  AL_REVERB_MAX_GAINHF                     (1.0)
+  AL_REVERB_DEFAULT_GAINHF                 (0.89f)
+
+  AL_REVERB_MIN_DECAY_TIME                 (0.1f)
+  AL_REVERB_MAX_DECAY_TIME                 (20.0)
+  AL_REVERB_DEFAULT_DECAY_TIME             (1.49f)
+
+  AL_REVERB_MIN_DECAY_HFRATIO              (0.1f)
+  AL_REVERB_MAX_DECAY_HFRATIO              (2.0)
+  AL_REVERB_DEFAULT_DECAY_HFRATIO          (0.83f)
+
+  AL_REVERB_MIN_REFLECTIONS_GAIN           (0.0)
+  AL_REVERB_MAX_REFLECTIONS_GAIN           (3.16f)
+  AL_REVERB_DEFAULT_REFLECTIONS_GAIN       (0.05f)
+
+  AL_REVERB_MIN_REFLECTIONS_DELAY          (0.0)
+  AL_REVERB_MAX_REFLECTIONS_DELAY          (0.3f)
+  AL_REVERB_DEFAULT_REFLECTIONS_DELAY      (0.007f)
+
+  AL_REVERB_MIN_LATE_REVERB_GAIN           (0.0)
+  AL_REVERB_MAX_LATE_REVERB_GAIN           (10.0)
+  AL_REVERB_DEFAULT_LATE_REVERB_GAIN       (1.26f)
+
+  AL_REVERB_MIN_LATE_REVERB_DELAY          (0.0)
+  AL_REVERB_MAX_LATE_REVERB_DELAY          (0.1f)
+  AL_REVERB_DEFAULT_LATE_REVERB_DELAY      (0.011f)
+
+  AL_REVERB_MIN_AIR_ABSORPTION_GAINHF      (0.892f)
+  AL_REVERB_MAX_AIR_ABSORPTION_GAINHF      (1.0)
+  AL_REVERB_DEFAULT_AIR_ABSORPTION_GAINHF  (0.994f)
+
+  AL_REVERB_MIN_ROOM_ROLLOFF_FACTOR        (0.0)
+  AL_REVERB_MAX_ROOM_ROLLOFF_FACTOR        (10.0)
+  AL_REVERB_DEFAULT_ROOM_ROLLOFF_FACTOR    (0.0)
+
+  AL_REVERB_MIN_DECAY_HFLIMIT              AL_FALSE
+  AL_REVERB_MAX_DECAY_HFLIMIT              AL_TRUE
+  AL_REVERB_DEFAULT_DECAY_HFLIMIT          AL_TRUE
+
+  -- EAX reverb effect 
+  AL_EAXREVERB_MIN_DENSITY                 (0.0)
+  AL_EAXREVERB_MAX_DENSITY                 (1.0)
+  AL_EAXREVERB_DEFAULT_DENSITY             (1.0)
+
+  AL_EAXREVERB_MIN_DIFFUSION               (0.0)
+  AL_EAXREVERB_MAX_DIFFUSION               (1.0)
+  AL_EAXREVERB_DEFAULT_DIFFUSION           (1.0)
+
+  AL_EAXREVERB_MIN_GAIN                    (0.0)
+  AL_EAXREVERB_MAX_GAIN                    (1.0)
+  AL_EAXREVERB_DEFAULT_GAIN                (0.32f)
+
+  AL_EAXREVERB_MIN_GAINHF                  (0.0)
+  AL_EAXREVERB_MAX_GAINHF                  (1.0)
+  AL_EAXREVERB_DEFAULT_GAINHF              (0.89f)
+
+  AL_EAXREVERB_MIN_GAINLF                  (0.0)
+  AL_EAXREVERB_MAX_GAINLF                  (1.0)
+  AL_EAXREVERB_DEFAULT_GAINLF              (1.0)
+
+  AL_EAXREVERB_MIN_DECAY_TIME              (0.1f)
+  AL_EAXREVERB_MAX_DECAY_TIME              (20.0)
+  AL_EAXREVERB_DEFAULT_DECAY_TIME          (1.49f)
+
+  AL_EAXREVERB_MIN_DECAY_HFRATIO           (0.1f)
+  AL_EAXREVERB_MAX_DECAY_HFRATIO           (2.0)
+  AL_EAXREVERB_DEFAULT_DECAY_HFRATIO       (0.83f)
+
+  AL_EAXREVERB_MIN_DECAY_LFRATIO           (0.1f)
+  AL_EAXREVERB_MAX_DECAY_LFRATIO           (2.0)
+  AL_EAXREVERB_DEFAULT_DECAY_LFRATIO       (1.0)
+
+  AL_EAXREVERB_MIN_REFLECTIONS_GAIN        (0.0)
+  AL_EAXREVERB_MAX_REFLECTIONS_GAIN        (3.16f)
+  AL_EAXREVERB_DEFAULT_REFLECTIONS_GAIN    (0.05f)
+
+  AL_EAXREVERB_MIN_REFLECTIONS_DELAY       (0.0)
+  AL_EAXREVERB_MAX_REFLECTIONS_DELAY       (0.3f)
+  AL_EAXREVERB_DEFAULT_REFLECTIONS_DELAY   (0.007f)
+
+  AL_EAXREVERB_DEFAULT_REFLECTIONS_PAN_XYZ (0.0)
+
+  AL_EAXREVERB_MIN_LATE_REVERB_GAIN        (0.0)
+  AL_EAXREVERB_MAX_LATE_REVERB_GAIN        (10.0)
+  AL_EAXREVERB_DEFAULT_LATE_REVERB_GAIN    (1.26f)
+
+  AL_EAXREVERB_MIN_LATE_REVERB_DELAY       (0.0)
+  AL_EAXREVERB_MAX_LATE_REVERB_DELAY       (0.1f)
+  AL_EAXREVERB_DEFAULT_LATE_REVERB_DELAY   (0.011f)
+
+  AL_EAXREVERB_DEFAULT_LATE_REVERB_PAN_XYZ (0.0)
+
+  AL_EAXREVERB_MIN_ECHO_TIME               (0.075f)
+  AL_EAXREVERB_MAX_ECHO_TIME               (0.25f)
+  AL_EAXREVERB_DEFAULT_ECHO_TIME           (0.25f)
+
+  AL_EAXREVERB_MIN_ECHO_DEPTH              (0.0)
+  AL_EAXREVERB_MAX_ECHO_DEPTH              (1.0)
+  AL_EAXREVERB_DEFAULT_ECHO_DEPTH          (0.0)
+
+  AL_EAXREVERB_MIN_MODULATION_TIME         (0.04f)
+  AL_EAXREVERB_MAX_MODULATION_TIME         (4.0)
+  AL_EAXREVERB_DEFAULT_MODULATION_TIME     (0.25f)
+
+  AL_EAXREVERB_MIN_MODULATION_DEPTH        (0.0)
+  AL_EAXREVERB_MAX_MODULATION_DEPTH        (1.0)
+  AL_EAXREVERB_DEFAULT_MODULATION_DEPTH    (0.0)
+
+  AL_EAXREVERB_MIN_AIR_ABSORPTION_GAINHF   (0.892f)
+  AL_EAXREVERB_MAX_AIR_ABSORPTION_GAINHF   (1.0)
+  AL_EAXREVERB_DEFAULT_AIR_ABSORPTION_GAINHF (0.994f)
+
+  AL_EAXREVERB_MIN_HFREFERENCE             (1000.0)
+  AL_EAXREVERB_MAX_HFREFERENCE             (20000.0)
+  AL_EAXREVERB_DEFAULT_HFREFERENCE         (5000.0)
+
+  AL_EAXREVERB_MIN_LFREFERENCE             (20.0)
+  AL_EAXREVERB_MAX_LFREFERENCE             (1000.0)
+  AL_EAXREVERB_DEFAULT_LFREFERENCE         (250.0)
+
+  AL_EAXREVERB_MIN_ROOM_ROLLOFF_FACTOR     (0.0)
+  AL_EAXREVERB_MAX_ROOM_ROLLOFF_FACTOR     (10.0)
+  AL_EAXREVERB_DEFAULT_ROOM_ROLLOFF_FACTOR (0.0)
+
+  AL_EAXREVERB_MIN_DECAY_HFLIMIT         : constant Int_32_Unsigned_C :=  AL_FALSE
+  AL_EAXREVERB_MAX_DECAY_HFLIMIT          : constant Int_32_Unsigned_C := AL_TRUE
+  AL_EAXREVERB_DEFAULT_DECAY_HFLIMIT     : constant Int_32_Unsigned_C :=  AL_TRUE
+
+  -- Chorus effect 
+  AL_CHORUS_WAVEFORM_SINUSOID           : constant Int_32_Unsigned_C :=   (0)
+  AL_CHORUS_WAVEFORM_TRIANGLE           : constant Int_32_Unsigned_C :=   (1)
+
+  AL_CHORUS_MIN_WAVEFORM                : constant Int_32_Unsigned_C :=   (0)
+  AL_CHORUS_MAX_WAVEFORM                : constant Int_32_Unsigned_C :=   (1)
+  AL_CHORUS_DEFAULT_WAVEFORM            : constant Int_32_Unsigned_C :=   (1)
+
+  AL_CHORUS_MIN_PHASE                    : constant Int_32_Unsigned_C :=  (-180)
+  AL_CHORUS_MAX_PHASE                   : constant Int_32_Unsigned_C :=   (180)
+  AL_CHORUS_DEFAULT_PHASE                : constant Int_32_Unsigned_C :=  (90)
+
+  AL_CHORUS_MIN_RATE                       (0.0)
+  AL_CHORUS_MAX_RATE                       (10.0)
+  AL_CHORUS_DEFAULT_RATE                   (1.1f)
+
+  AL_CHORUS_MIN_DEPTH                      (0.0)
+  AL_CHORUS_MAX_DEPTH                      (1.0)
+  AL_CHORUS_DEFAULT_DEPTH                  (0.1f)
+
+  AL_CHORUS_MIN_FEEDBACK                   (-1.0)
+  AL_CHORUS_MAX_FEEDBACK                   (1.0)
+  AL_CHORUS_DEFAULT_FEEDBACK               (0.25f)
+
+  AL_CHORUS_MIN_DELAY                      (0.0)
+  AL_CHORUS_MAX_DELAY                      (0.016f)
+  AL_CHORUS_DEFAULT_DELAY                  (0.016f)
+
+  -- Distortion effect 
+  AL_DISTORTION_MIN_EDGE                   (0.0)
+  AL_DISTORTION_MAX_EDGE                   (1.0)
+  AL_DISTORTION_DEFAULT_EDGE               (0.2f)
+
+  AL_DISTORTION_MIN_GAIN                   (0.01f)
+  AL_DISTORTION_MAX_GAIN                   (1.0)
+  AL_DISTORTION_DEFAULT_GAIN               (0.05f)
+
+  AL_DISTORTION_MIN_LOWPASS_CUTOFF         (80.0)
+  AL_DISTORTION_MAX_LOWPASS_CUTOFF         (24000.0)
+  AL_DISTORTION_DEFAULT_LOWPASS_CUTOFF     (8000.0)
+
+  AL_DISTORTION_MIN_EQCENTER               (80.0)
+  AL_DISTORTION_MAX_EQCENTER               (24000.0)
+  AL_DISTORTION_DEFAULT_EQCENTER           (3600.0)
+
+  AL_DISTORTION_MIN_EQBANDWIDTH            (80.0)
+  AL_DISTORTION_MAX_EQBANDWIDTH            (24000.0)
+  AL_DISTORTION_DEFAULT_EQBANDWIDTH        (3600.0)
+
+  -- Echo effect 
+  AL_ECHO_MIN_DELAY                        (0.0)
+  AL_ECHO_MAX_DELAY                        (0.207f)
+  AL_ECHO_DEFAULT_DELAY                    (0.1f)
+
+  AL_ECHO_MIN_LRDELAY                      (0.0)
+  AL_ECHO_MAX_LRDELAY                      (0.404f)
+  AL_ECHO_DEFAULT_LRDELAY                  (0.1f)
+
+  AL_ECHO_MIN_DAMPING                      (0.0)
+  AL_ECHO_MAX_DAMPING                      (0.99f)
+  AL_ECHO_DEFAULT_DAMPING                  (0.5f)
+
+  AL_ECHO_MIN_FEEDBACK                     (0.0)
+  AL_ECHO_MAX_FEEDBACK                     (1.0)
+  AL_ECHO_DEFAULT_FEEDBACK                 (0.5f)
+
+  AL_ECHO_MIN_SPREAD                       (-1.0)
+  AL_ECHO_MAX_SPREAD                       (1.0)
+  AL_ECHO_DEFAULT_SPREAD                   (-1.0)
+
+  -- Flanger effect 
+  AL_FLANGER_WAVEFORM_SINUSOID             (0)
+  AL_FLANGER_WAVEFORM_TRIANGLE             (1)
+
+  AL_FLANGER_MIN_WAVEFORM                  (0)
+  AL_FLANGER_MAX_WAVEFORM                  (1)
+  AL_FLANGER_DEFAULT_WAVEFORM              (1)
+
+  AL_FLANGER_MIN_PHASE                     (-180)
+  AL_FLANGER_MAX_PHASE                     (180)
+  AL_FLANGER_DEFAULT_PHASE                 (0)
+
+  AL_FLANGER_MIN_RATE                      (0.0)
+  AL_FLANGER_MAX_RATE                      (10.0)
+  AL_FLANGER_DEFAULT_RATE                  (0.27f)
+
+  AL_FLANGER_MIN_DEPTH                     (0.0)
+  AL_FLANGER_MAX_DEPTH                     (1.0)
+  AL_FLANGER_DEFAULT_DEPTH                 (1.0)
+
+  AL_FLANGER_MIN_FEEDBACK                  (-1.0)
+  AL_FLANGER_MAX_FEEDBACK                  (1.0)
+  AL_FLANGER_DEFAULT_FEEDBACK              (-0.5f)
+
+  AL_FLANGER_MIN_DELAY                     (0.0)
+  AL_FLANGER_MAX_DELAY                     (0.004f)
+  AL_FLANGER_DEFAULT_DELAY                 (0.002f)
+
+  -- Frequency shifter effect 
+  AL_FREQUENCY_SHIFTER_MIN_FREQUENCY       (0.0)
+  AL_FREQUENCY_SHIFTER_MAX_FREQUENCY       (24000.0)
+  AL_FREQUENCY_SHIFTER_DEFAULT_FREQUENCY   (0.0)
+
+  AL_FREQUENCY_SHIFTER_MIN_LEFT_DIRECTION : constant Int_32_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MAX_LEFT_DIRECTION  : constant Int_32_Unsigned_C :=(2)
+  AL_FREQUENCY_SHIFTER_DEFAULT_LEFT_DIRECTION : constant Int_32_Unsigned_C := (0)
+
+  AL_FREQUENCY_SHIFTER_DIRECTION_DOWN    : constant Int_32_Unsigned_C :=  (0)
+  AL_FREQUENCY_SHIFTER_DIRECTION_UP      : constant Int_32_Unsigned_C :=  (1)
+  AL_FREQUENCY_SHIFTER_DIRECTION_OFF     : constant Int_32_Unsigned_C :=  (2)
+
+  AL_FREQUENCY_SHIFTER_MIN_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MAX_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (2)
+  AL_FREQUENCY_SHIFTER_DEFAULT_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (0)
+
+  -- Vocal morpher effect 
+  AL_VOCAL_MORPHER_MIN_PHONEMEA       : constant Int_32_Unsigned_C :=     (0)
+  AL_VOCAL_MORPHER_MAX_PHONEMEA       : constant Int_32_Unsigned_C :=     (29)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA   : constant Int_32_Unsigned_C :=     (0)
+
+  AL_VOCAL_MORPHER_MIN_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (-24)
+  AL_VOCAL_MORPHER_MAX_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (24)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (0)
+
+  AL_VOCAL_MORPHER_MIN_PHONEMEB          : constant Int_32_Unsigned_C :=  (0)
+  AL_VOCAL_MORPHER_MAX_PHONEMEB          : constant Int_32_Unsigned_C :=  (29)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB      : constant Int_32_Unsigned_C :=  (10)
+
+  AL_VOCAL_MORPHER_MIN_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (-24)
+  AL_VOCAL_MORPHER_MAX_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (24)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (0)
+
+  AL_VOCAL_MORPHER_PHONEME_A            : constant Int_32_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_PHONEME_E            : constant Int_32_Unsigned_C :=   (1)
+  AL_VOCAL_MORPHER_PHONEME_I            : constant Int_32_Unsigned_C :=   (2)
+  AL_VOCAL_MORPHER_PHONEME_O            : constant Int_32_Unsigned_C :=   (3)
+  AL_VOCAL_MORPHER_PHONEME_U            : constant Int_32_Unsigned_C :=   (4)
+  AL_VOCAL_MORPHER_PHONEME_AA           : constant Int_32_Unsigned_C :=   (5)
+  AL_VOCAL_MORPHER_PHONEME_AE           : constant Int_32_Unsigned_C :=   (6)
+  AL_VOCAL_MORPHER_PHONEME_AH           : constant Int_32_Unsigned_C :=   (7)
+  AL_VOCAL_MORPHER_PHONEME_AO           : constant Int_32_Unsigned_C :=   (8)
+  AL_VOCAL_MORPHER_PHONEME_EH           : constant Int_32_Unsigned_C :=   (9)
+  AL_VOCAL_MORPHER_PHONEME_ER           : constant Int_32_Unsigned_C :=   (10)
+  AL_VOCAL_MORPHER_PHONEME_IH           : constant Int_32_Unsigned_C :=   (11)
+  AL_VOCAL_MORPHER_PHONEME_IY           : constant Int_32_Unsigned_C :=   (12)
+  AL_VOCAL_MORPHER_PHONEME_UH           : constant Int_32_Unsigned_C :=   (13)
+  AL_VOCAL_MORPHER_PHONEME_UW           : constant Int_32_Unsigned_C :=   (14)
+  AL_VOCAL_MORPHER_PHONEME_B            : constant Int_32_Unsigned_C :=   (15)
+  AL_VOCAL_MORPHER_PHONEME_D            : constant Int_32_Unsigned_C :=   (16)
+  AL_VOCAL_MORPHER_PHONEME_F            : constant Int_32_Unsigned_C :=   (17)
+  AL_VOCAL_MORPHER_PHONEME_G            : constant Int_32_Unsigned_C :=   (18)
+  AL_VOCAL_MORPHER_PHONEME_J            : constant Int_32_Unsigned_C :=   (19)
+  AL_VOCAL_MORPHER_PHONEME_K            : constant Int_32_Unsigned_C :=   (20)
+  AL_VOCAL_MORPHER_PHONEME_L            : constant Int_32_Unsigned_C :=   (21)
+  AL_VOCAL_MORPHER_PHONEME_M            : constant Int_32_Unsigned_C :=   (22)
+  AL_VOCAL_MORPHER_PHONEME_N            : constant Int_32_Unsigned_C :=   (23)
+  AL_VOCAL_MORPHER_PHONEME_P            : constant Int_32_Unsigned_C :=   (24)
+  AL_VOCAL_MORPHER_PHONEME_R            : constant Int_32_Unsigned_C :=   (25)
+  AL_VOCAL_MORPHER_PHONEME_S            : constant Int_32_Unsigned_C :=   (26)
+  AL_VOCAL_MORPHER_PHONEME_T            : constant Int_32_Unsigned_C :=   (27)
+  AL_VOCAL_MORPHER_PHONEME_V            : constant Int_32_Unsigned_C :=   (28)
+  AL_VOCAL_MORPHER_PHONEME_Z            : constant Int_32_Unsigned_C :=   (29)
+
+  AL_VOCAL_MORPHER_WAVEFORM_SINUSOID    : constant Int_32_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_WAVEFORM_TRIANGLE    : constant Int_32_Unsigned_C :=   (1)
+  AL_VOCAL_MORPHER_WAVEFORM_SAWTOOTH    : constant Int_32_Unsigned_C :=   (2)
+
+  AL_VOCAL_MORPHER_MIN_WAVEFORM         : constant Int_32_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_MAX_WAVEFORM         : constant Int_32_Unsigned_C :=   (2)
+  AL_VOCAL_MORPHER_DEFAULT_WAVEFORM     : constant Int_32_Unsigned_C :=   (0)
+
+  AL_VOCAL_MORPHER_MIN_RATE                (0.0)
+  AL_VOCAL_MORPHER_MAX_RATE                (10.0)
+  AL_VOCAL_MORPHER_DEFAULT_RATE            (1.41f)
+
+  -- Pitch shifter effect 
+  AL_PITCH_SHIFTER_MIN_COARSE_TUNE       : constant Int_32_Unsigned_C :=  (-12)
+  AL_PITCH_SHIFTER_MAX_COARSE_TUNE       : constant Int_32_Unsigned_C :=  (12)
+  AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE   : constant Int_32_Unsigned_C :=  (12)
+
+  AL_PITCH_SHIFTER_MIN_FINE_TUNE         : constant Int_32_Unsigned_C :=  (-50)
+  AL_PITCH_SHIFTER_MAX_FINE_TUNE         : constant Int_32_Unsigned_C :=  (50)
+  AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE     : constant Int_32_Unsigned_C :=  (0)
+
+  -- Ring modulator effect 
+  AL_RING_MODULATOR_MIN_FREQUENCY          (0.0)
+  AL_RING_MODULATOR_MAX_FREQUENCY          (8000.0)
+  AL_RING_MODULATOR_DEFAULT_FREQUENCY      (440.0)
+
+  AL_RING_MODULATOR_MIN_HIGHPASS_CUTOFF    (0.0)
+  AL_RING_MODULATOR_MAX_HIGHPASS_CUTOFF    (24000.0)
+  AL_RING_MODULATOR_DEFAULT_HIGHPASS_CUTOFF (800.0)
+
+  AL_RING_MODULATOR_SINUSOID            : constant Int_32_Unsigned_C :=   (0)
+  AL_RING_MODULATOR_SAWTOOTH            : constant Int_32_Unsigned_C :=   (1)
+  AL_RING_MODULATOR_SQUARE              : constant Int_32_Unsigned_C :=   (2)
+
+  AL_RING_MODULATOR_MIN_WAVEFORM         : constant Int_32_Unsigned_C :=  (0)
+  AL_RING_MODULATOR_MAX_WAVEFORM         : constant Int_32_Unsigned_C :=  (2)
+  AL_RING_MODULATOR_DEFAULT_WAVEFORM     : constant Int_32_Unsigned_C :=  (0)
+
+  -- Autowah effect 
+  AL_AUTOWAH_MIN_ATTACK_TIME               (0.0001f)
+  AL_AUTOWAH_MAX_ATTACK_TIME               (1.0)
+  AL_AUTOWAH_DEFAULT_ATTACK_TIME           (0.06f)
+
+  AL_AUTOWAH_MIN_RELEASE_TIME              (0.0001f)
+  AL_AUTOWAH_MAX_RELEASE_TIME              (1.0)
+  AL_AUTOWAH_DEFAULT_RELEASE_TIME          (0.06f)
+
+  AL_AUTOWAH_MIN_RESONANCE                 (2.0)
+  AL_AUTOWAH_MAX_RESONANCE                 (1000.0)
+  AL_AUTOWAH_DEFAULT_RESONANCE             (1000.0)
+
+  AL_AUTOWAH_MIN_PEAK_GAIN                 (0.00003f)
+  AL_AUTOWAH_MAX_PEAK_GAIN                 (31621.0)
+  AL_AUTOWAH_DEFAULT_PEAK_GAIN             (11.22f)
+
+  -- Compressor effect 
+  AL_COMPRESSOR_MIN_ONOFF                : constant Int_32_Unsigned_C :=  (0)
+  AL_COMPRESSOR_MAX_ONOFF                : constant Int_32_Unsigned_C :=  (1)
+  AL_COMPRESSOR_DEFAULT_ONOFF            : constant Int_32_Unsigned_C :=  (1)
+
+  -- Equalizer effect 
+  AL_EQUALIZER_MIN_LOW_GAIN                (0.126f)
+  AL_EQUALIZER_MAX_LOW_GAIN                (7.943f)
+  AL_EQUALIZER_DEFAULT_LOW_GAIN            (1.0)
+
+  AL_EQUALIZER_MIN_LOW_CUTOFF              (50.0)
+  AL_EQUALIZER_MAX_LOW_CUTOFF              (800.0)
+  AL_EQUALIZER_DEFAULT_LOW_CUTOFF          (200.0)
+
+  AL_EQUALIZER_MIN_MID1_GAIN               (0.126f)
+  AL_EQUALIZER_MAX_MID1_GAIN               (7.943f)
+  AL_EQUALIZER_DEFAULT_MID1_GAIN           (1.0)
+
+  AL_EQUALIZER_MIN_MID1_CENTER             (200.0)
+  AL_EQUALIZER_MAX_MID1_CENTER             (3000.0)
+  AL_EQUALIZER_DEFAULT_MID1_CENTER         (500.0)
+
+  AL_EQUALIZER_MIN_MID1_WIDTH              (0.01f)
+  AL_EQUALIZER_MAX_MID1_WIDTH              (1.0)
+  AL_EQUALIZER_DEFAULT_MID1_WIDTH          (1.0)
+
+  AL_EQUALIZER_MIN_MID2_GAIN               (0.126f)
+  AL_EQUALIZER_MAX_MID2_GAIN               (7.943f)
+  AL_EQUALIZER_DEFAULT_MID2_GAIN           (1.0)
+
+  AL_EQUALIZER_MIN_MID2_CENTER             (1000.0)
+  AL_EQUALIZER_MAX_MID2_CENTER             (8000.0)
+  AL_EQUALIZER_DEFAULT_MID2_CENTER         (3000.0)
+
+  AL_EQUALIZER_MIN_MID2_WIDTH              (0.01f)
+  AL_EQUALIZER_MAX_MID2_WIDTH              (1.0)
+  AL_EQUALIZER_DEFAULT_MID2_WIDTH          (1.0)
+
+  AL_EQUALIZER_MIN_HIGH_GAIN               (0.126f)
+  AL_EQUALIZER_MAX_HIGH_GAIN               (7.943f)
+  AL_EQUALIZER_DEFAULT_HIGH_GAIN           (1.0)
+
+  AL_EQUALIZER_MIN_HIGH_CUTOFF             (4000.0)
+  AL_EQUALIZER_MAX_HIGH_CUTOFF             (16000.0)
+  AL_EQUALIZER_DEFAULT_HIGH_CUTOFF         (6000.0)
+
+
+  -- Source parameter value ranges and defaults
+  AL_MIN_AIR_ABSORPTION_FACTOR             (0.0)
+  AL_MAX_AIR_ABSORPTION_FACTOR             (10.0)
+  AL_DEFAULT_AIR_ABSORPTION_FACTOR         (0.0)
+
+  AL_MIN_ROOM_ROLLOFF_FACTOR               (0.0)
+  AL_MAX_ROOM_ROLLOFF_FACTOR               (10.0)
+  AL_DEFAULT_ROOM_ROLLOFF_FACTOR           (0.0)
+
+  AL_MIN_CONE_OUTER_GAINHF                 (0.0)
+  AL_MAX_CONE_OUTER_GAINHF                 (1.0)
+  AL_DEFAULT_CONE_OUTER_GAINHF             (1.0)
+
+  AL_MIN_DIRECT_FILTER_GAINHF_AUTO       : constant Int_32_Unsigned_C :=  AL_FALSE
+  AL_MAX_DIRECT_FILTER_GAINHF_AUTO        : constant Int_32_Unsigned_C := AL_TRUE
+  AL_DEFAULT_DIRECT_FILTER_GAINHF_AUTO    : constant Int_32_Unsigned_C := AL_TRUE
+
+  AL_MIN_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_32_Unsigned_C :=  AL_FALSE
+  AL_MAX_AUXILIARY_SEND_FILTER_GAIN_AUTO   : constant Int_32_Unsigned_C := AL_TRUE
+  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_32_Unsigned_C := AL_TRUE
+
+  AL_MIN_AUXILIARY_SEND_FILTER_GAINHF_AUTO  : constant Int_32_Unsigned_C :=AL_FALSE
+  AL_MAX_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_32_Unsigned_C := AL_TRUE
+  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_32_Unsigned_C := AL_TRUE
+
+  -- Listener parameter value ranges and defaults
+  AL_MIN_METERS_PER_UNIT                : constant Int_32_Unsigned_C :=   FLT_MIN
+  AL_MAX_METERS_PER_UNIT                 : constant Int_32_Unsigned_C :=  FLT_MAX
+  AL_DEFAULT_METERS_PER_UNIT             : constant Int_32_Unsigned_C :=  (1.0)
 
   -------------
   -- Presets --
   -------------
 
-typedef struct {
-    float flDensity;
-    float flDiffusion;
-    float flGain;
-    float flGainHF;
-    float flGainLF;
-    float flDecayTime;
-    float flDecayHFRatio;
-    float flDecayLFRatio;
-    float flReflectionsGain;
-    float flReflectionsDelay;
-    float flReflectionsPan[3];
-    float flLateReverbGain;
-    float flLateReverbDelay;
-    float flLateReverbPan[3];
-    float flEchoTime;
-    float flEchoDepth;
-    float flModulationTime;
-    float flModulationDepth;
-    float flAirAbsorptionGainHF;
-    float flHFReference;
-    float flLFReference;
-    float flRoomRolloffFactor;
-    int   iDecayHFLimit;
-} EFXEAXREVERBPROPERTIES, *LPEFXEAXREVERBPROPERTIES;
-#define EFX_REVERB_PRESET_GENERIC \
-    { 1.0000f, 1.0000f, 0.3162f, 0.8913f, 1.0000f, 1.4900f, 0.8300f, 1.0000f, 0.0500f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PADDEDCELL \
-    { 0.1715f, 1.0000f, 0.3162f, 0.0010f, 1.0000f, 0.1700f, 0.1000f, 1.0000f, 0.2500f, 0.0010f, { 0.0000f, 0.0000f, 0.0000f }, 1.2691f, 0.0020f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ROOM \
-    { 0.4287f, 1.0000f, 0.3162f, 0.5929f, 1.0000f, 0.4000f, 0.8300f, 1.0000f, 0.1503f, 0.0020f, { 0.0000f, 0.0000f, 0.0000f }, 1.0629f, 0.0030f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_BATHROOM \
-    { 0.1715f, 1.0000f, 0.3162f, 0.2512f, 1.0000f, 1.4900f, 0.5400f, 1.0000f, 0.6531f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 3.2734f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_LIVINGROOM \
-    { 0.9766f, 1.0000f, 0.3162f, 0.0010f, 1.0000f, 0.5000f, 0.1000f, 1.0000f, 0.2051f, 0.0030f, { 0.0000f, 0.0000f, 0.0000f }, 0.2805f, 0.0040f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_STONEROOM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.7079f, 1.0000f, 2.3100f, 0.6400f, 1.0000f, 0.4411f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.1003f, 0.0170f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_AUDITORIUM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.5781f, 1.0000f, 4.3200f, 0.5900f, 1.0000f, 0.4032f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.7170f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CONCERTHALL \
-    { 1.0000f, 1.0000f, 0.3162f, 0.5623f, 1.0000f, 3.9200f, 0.7000f, 1.0000f, 0.2427f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.9977f, 0.0290f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CAVE \
-    { 1.0000f, 1.0000f, 0.3162f, 1.0000f, 1.0000f, 2.9100f, 1.3000f, 1.0000f, 0.5000f, 0.0150f, { 0.0000f, 0.0000f, 0.0000f }, 0.7063f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_ARENA \
-    { 1.0000f, 1.0000f, 0.3162f, 0.4477f, 1.0000f, 7.2400f, 0.3300f, 1.0000f, 0.2612f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.0186f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_HANGAR \
-    { 1.0000f, 1.0000f, 0.3162f, 0.3162f, 1.0000f, 10.0500f, 0.2300f, 1.0000f, 0.5000f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.2560f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CARPETEDHALLWAY \
-    { 0.4287f, 1.0000f, 0.3162f, 0.0100f, 1.0000f, 0.3000f, 0.1000f, 1.0000f, 0.1215f, 0.0020f, { 0.0000f, 0.0000f, 0.0000f }, 0.1531f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_HALLWAY \
-    { 0.3645f, 1.0000f, 0.3162f, 0.7079f, 1.0000f, 1.4900f, 0.5900f, 1.0000f, 0.2458f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.6615f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_STONECORRIDOR \
-    { 1.0000f, 1.0000f, 0.3162f, 0.7612f, 1.0000f, 2.7000f, 0.7900f, 1.0000f, 0.2472f, 0.0130f, { 0.0000f, 0.0000f, 0.0000f }, 1.5758f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ALLEY \
-    { 1.0000f, 0.3000f, 0.3162f, 0.7328f, 1.0000f, 1.4900f, 0.8600f, 1.0000f, 0.2500f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 0.9954f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.1250f, 0.9500f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FOREST \
-    { 1.0000f, 0.3000f, 0.3162f, 0.0224f, 1.0000f, 1.4900f, 0.5400f, 1.0000f, 0.0525f, 0.1620f, { 0.0000f, 0.0000f, 0.0000f }, 0.7682f, 0.0880f, { 0.0000f, 0.0000f, 0.0000f }, 0.1250f, 1.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CITY \
-    { 1.0000f, 0.5000f, 0.3162f, 0.3981f, 1.0000f, 1.4900f, 0.6700f, 1.0000f, 0.0730f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 0.1427f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_MOUNTAINS \
-    { 1.0000f, 0.2700f, 0.3162f, 0.0562f, 1.0000f, 1.4900f, 0.2100f, 1.0000f, 0.0407f, 0.3000f, { 0.0000f, 0.0000f, 0.0000f }, 0.1919f, 0.1000f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_QUARRY \
-    { 1.0000f, 1.0000f, 0.3162f, 0.3162f, 1.0000f, 1.4900f, 0.8300f, 1.0000f, 0.0000f, 0.0610f, { 0.0000f, 0.0000f, 0.0000f }, 1.7783f, 0.0250f, { 0.0000f, 0.0000f, 0.0000f }, 0.1250f, 0.7000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PLAIN \
-    { 1.0000f, 0.2100f, 0.3162f, 0.1000f, 1.0000f, 1.4900f, 0.5000f, 1.0000f, 0.0585f, 0.1790f, { 0.0000f, 0.0000f, 0.0000f }, 0.1089f, 0.1000f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PARKINGLOT \
-    { 1.0000f, 1.0000f, 0.3162f, 1.0000f, 1.0000f, 1.6500f, 1.5000f, 1.0000f, 0.2082f, 0.0080f, { 0.0000f, 0.0000f, 0.0000f }, 0.2652f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_SEWERPIPE \
-    { 0.3071f, 0.8000f, 0.3162f, 0.3162f, 1.0000f, 2.8100f, 0.1400f, 1.0000f, 1.6387f, 0.0140f, { 0.0000f, 0.0000f, 0.0000f }, 3.2471f, 0.0210f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_UNDERWATER \
-    { 0.3645f, 1.0000f, 0.3162f, 0.0100f, 1.0000f, 1.4900f, 0.1000f, 1.0000f, 0.5963f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 7.0795f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 1.1800f, 0.3480f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DRUGGED \
-    { 0.4287f, 0.5000f, 0.3162f, 1.0000f, 1.0000f, 8.3900f, 1.3900f, 1.0000f, 0.8760f, 0.0020f, { 0.0000f, 0.0000f, 0.0000f }, 3.1081f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 1.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_DIZZY \
-    { 0.3645f, 0.6000f, 0.3162f, 0.6310f, 1.0000f, 17.2300f, 0.5600f, 1.0000f, 0.1392f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.4937f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.8100f, 0.3100f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_PSYCHOTIC \
-    { 0.0625f, 0.5000f, 0.3162f, 0.8404f, 1.0000f, 7.5600f, 0.9100f, 1.0000f, 0.4864f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 2.4378f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 4.0000f, 1.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-/* Castle Presets */
-
-#define EFX_REVERB_PRESET_CASTLE_SMALLROOM \
-    { 1.0000f, 0.8900f, 0.3162f, 0.3981f, 0.1000f, 1.2200f, 0.8300f, 0.3100f, 0.8913f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 1.9953f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.1380f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_SHORTPASSAGE \
-    { 1.0000f, 0.8900f, 0.3162f, 0.3162f, 0.1000f, 2.3200f, 0.8300f, 0.3100f, 0.8913f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0230f, { 0.0000f, 0.0000f, 0.0000f }, 0.1380f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_MEDIUMROOM \
-    { 1.0000f, 0.9300f, 0.3162f, 0.2818f, 0.1000f, 2.0400f, 0.8300f, 0.4600f, 0.6310f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 1.5849f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.1550f, 0.0300f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_LARGEROOM \
-    { 1.0000f, 0.8200f, 0.3162f, 0.2818f, 0.1259f, 2.5300f, 0.8300f, 0.5000f, 0.4467f, 0.0340f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0160f, { 0.0000f, 0.0000f, 0.0000f }, 0.1850f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_LONGPASSAGE \
-    { 1.0000f, 0.8900f, 0.3162f, 0.3981f, 0.1000f, 3.4200f, 0.8300f, 0.3100f, 0.8913f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0230f, { 0.0000f, 0.0000f, 0.0000f }, 0.1380f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_HALL \
-    { 1.0000f, 0.8100f, 0.3162f, 0.2818f, 0.1778f, 3.1400f, 0.7900f, 0.6200f, 0.1778f, 0.0560f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0240f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_CUPBOARD \
-    { 1.0000f, 0.8900f, 0.3162f, 0.2818f, 0.1000f, 0.6700f, 0.8700f, 0.3100f, 1.4125f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 3.5481f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 0.1380f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CASTLE_COURTYARD \
-    { 1.0000f, 0.4200f, 0.3162f, 0.4467f, 0.1995f, 2.1300f, 0.6100f, 0.2300f, 0.2239f, 0.1600f, { 0.0000f, 0.0000f, 0.0000f }, 0.7079f, 0.0360f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.3700f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_CASTLE_ALCOVE \
-    { 1.0000f, 0.8900f, 0.3162f, 0.5012f, 0.1000f, 1.6400f, 0.8700f, 0.3100f, 1.0000f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0340f, { 0.0000f, 0.0000f, 0.0000f }, 0.1380f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 5168.6001f, 139.5000f, 0.0000f, 0x1 }
-
-/* Factory Presets */
-
-#define EFX_REVERB_PRESET_FACTORY_SMALLROOM \
-    { 0.3645f, 0.8200f, 0.3162f, 0.7943f, 0.5012f, 1.7200f, 0.6500f, 1.3100f, 0.7079f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.7783f, 0.0240f, { 0.0000f, 0.0000f, 0.0000f }, 0.1190f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_SHORTPASSAGE \
-    { 0.3645f, 0.6400f, 0.2512f, 0.7943f, 0.5012f, 2.5300f, 0.6500f, 1.3100f, 1.0000f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0380f, { 0.0000f, 0.0000f, 0.0000f }, 0.1350f, 0.2300f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_MEDIUMROOM \
-    { 0.4287f, 0.8200f, 0.2512f, 0.7943f, 0.5012f, 2.7600f, 0.6500f, 1.3100f, 0.2818f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0230f, { 0.0000f, 0.0000f, 0.0000f }, 0.1740f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_LARGEROOM \
-    { 0.4287f, 0.7500f, 0.2512f, 0.7079f, 0.6310f, 4.2400f, 0.5100f, 1.3100f, 0.1778f, 0.0390f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0230f, { 0.0000f, 0.0000f, 0.0000f }, 0.2310f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_LONGPASSAGE \
-    { 0.3645f, 0.6400f, 0.2512f, 0.7943f, 0.5012f, 4.0600f, 0.6500f, 1.3100f, 1.0000f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0370f, { 0.0000f, 0.0000f, 0.0000f }, 0.1350f, 0.2300f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_HALL \
-    { 0.4287f, 0.7500f, 0.3162f, 0.7079f, 0.6310f, 7.4300f, 0.5100f, 1.3100f, 0.0631f, 0.0730f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0270f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_CUPBOARD \
-    { 0.3071f, 0.6300f, 0.2512f, 0.7943f, 0.5012f, 0.4900f, 0.6500f, 1.3100f, 1.2589f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.9953f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 0.1070f, 0.0700f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_COURTYARD \
-    { 0.3071f, 0.5700f, 0.3162f, 0.3162f, 0.6310f, 2.3200f, 0.2900f, 0.5600f, 0.2239f, 0.1400f, { 0.0000f, 0.0000f, 0.0000f }, 0.3981f, 0.0390f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2900f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_FACTORY_ALCOVE \
-    { 0.3645f, 0.5900f, 0.2512f, 0.7943f, 0.5012f, 3.1400f, 0.6500f, 1.3100f, 1.4125f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.0000f, 0.0380f, { 0.0000f, 0.0000f, 0.0000f }, 0.1140f, 0.1000f, 0.2500f, 0.0000f, 0.9943f, 3762.6001f, 362.5000f, 0.0000f, 0x1 }
-
-/* Ice Palace Presets */
-
-#define EFX_REVERB_PRESET_ICEPALACE_SMALLROOM \
-    { 1.0000f, 0.8400f, 0.3162f, 0.5623f, 0.2818f, 1.5100f, 1.5300f, 0.2700f, 0.8913f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.1640f, 0.1400f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_SHORTPASSAGE \
-    { 1.0000f, 0.7500f, 0.3162f, 0.5623f, 0.2818f, 1.7900f, 1.4600f, 0.2800f, 0.5012f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0190f, { 0.0000f, 0.0000f, 0.0000f }, 0.1770f, 0.0900f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_MEDIUMROOM \
-    { 1.0000f, 0.8700f, 0.3162f, 0.5623f, 0.4467f, 2.2200f, 1.5300f, 0.3200f, 0.3981f, 0.0390f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0270f, { 0.0000f, 0.0000f, 0.0000f }, 0.1860f, 0.1200f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_LARGEROOM \
-    { 1.0000f, 0.8100f, 0.3162f, 0.5623f, 0.4467f, 3.1400f, 1.5300f, 0.3200f, 0.2512f, 0.0390f, { 0.0000f, 0.0000f, 0.0000f }, 1.0000f, 0.0270f, { 0.0000f, 0.0000f, 0.0000f }, 0.2140f, 0.1100f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_LONGPASSAGE \
-    { 1.0000f, 0.7700f, 0.3162f, 0.5623f, 0.3981f, 3.0100f, 1.4600f, 0.2800f, 0.7943f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0250f, { 0.0000f, 0.0000f, 0.0000f }, 0.1860f, 0.0400f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_HALL \
-    { 1.0000f, 0.7600f, 0.3162f, 0.4467f, 0.5623f, 5.4900f, 1.5300f, 0.3800f, 0.1122f, 0.0540f, { 0.0000f, 0.0000f, 0.0000f }, 0.6310f, 0.0520f, { 0.0000f, 0.0000f, 0.0000f }, 0.2260f, 0.1100f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_CUPBOARD \
-    { 1.0000f, 0.8300f, 0.3162f, 0.5012f, 0.2239f, 0.7600f, 1.5300f, 0.2600f, 1.1220f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.9953f, 0.0160f, { 0.0000f, 0.0000f, 0.0000f }, 0.1430f, 0.0800f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_COURTYARD \
-    { 1.0000f, 0.5900f, 0.3162f, 0.2818f, 0.3162f, 2.0400f, 1.2000f, 0.3800f, 0.3162f, 0.1730f, { 0.0000f, 0.0000f, 0.0000f }, 0.3162f, 0.0430f, { 0.0000f, 0.0000f, 0.0000f }, 0.2350f, 0.4800f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_ICEPALACE_ALCOVE \
-    { 1.0000f, 0.8400f, 0.3162f, 0.5623f, 0.2818f, 2.7600f, 1.4600f, 0.2800f, 1.1220f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.1610f, 0.0900f, 0.2500f, 0.0000f, 0.9943f, 12428.5000f, 99.6000f, 0.0000f, 0x1 }
-
-/* Space Station Presets */
-
-#define EFX_REVERB_PRESET_SPACESTATION_SMALLROOM \
-    { 0.2109f, 0.7000f, 0.3162f, 0.7079f, 0.8913f, 1.7200f, 0.8200f, 0.5500f, 0.7943f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0130f, { 0.0000f, 0.0000f, 0.0000f }, 0.1880f, 0.2600f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_SHORTPASSAGE \
-    { 0.2109f, 0.8700f, 0.3162f, 0.6310f, 0.8913f, 3.5700f, 0.5000f, 0.5500f, 1.0000f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0160f, { 0.0000f, 0.0000f, 0.0000f }, 0.1720f, 0.2000f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_MEDIUMROOM \
-    { 0.2109f, 0.7500f, 0.3162f, 0.6310f, 0.8913f, 3.0100f, 0.5000f, 0.5500f, 0.3981f, 0.0340f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0350f, { 0.0000f, 0.0000f, 0.0000f }, 0.2090f, 0.3100f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_LARGEROOM \
-    { 0.3645f, 0.8100f, 0.3162f, 0.6310f, 0.8913f, 3.8900f, 0.3800f, 0.6100f, 0.3162f, 0.0560f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0350f, { 0.0000f, 0.0000f, 0.0000f }, 0.2330f, 0.2800f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_LONGPASSAGE \
-    { 0.4287f, 0.8200f, 0.3162f, 0.6310f, 0.8913f, 4.6200f, 0.6200f, 0.5500f, 1.0000f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0310f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2300f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_HALL \
-    { 0.4287f, 0.8700f, 0.3162f, 0.6310f, 0.8913f, 7.1100f, 0.3800f, 0.6100f, 0.1778f, 0.1000f, { 0.0000f, 0.0000f, 0.0000f }, 0.6310f, 0.0470f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2500f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_CUPBOARD \
-    { 0.1715f, 0.5600f, 0.3162f, 0.7079f, 0.8913f, 0.7900f, 0.8100f, 0.5500f, 1.4125f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.7783f, 0.0180f, { 0.0000f, 0.0000f, 0.0000f }, 0.1810f, 0.3100f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPACESTATION_ALCOVE \
-    { 0.2109f, 0.7800f, 0.3162f, 0.7079f, 0.8913f, 1.1600f, 0.8100f, 0.5500f, 1.4125f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 1.0000f, 0.0180f, { 0.0000f, 0.0000f, 0.0000f }, 0.1920f, 0.2100f, 0.2500f, 0.0000f, 0.9943f, 3316.1001f, 458.2000f, 0.0000f, 0x1 }
-
-/* Wooden Galleon Presets */
-
-#define EFX_REVERB_PRESET_WOODEN_SMALLROOM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1122f, 0.3162f, 0.7900f, 0.3200f, 0.8700f, 1.0000f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0290f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_SHORTPASSAGE \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1259f, 0.3162f, 1.7500f, 0.5000f, 0.8700f, 0.8913f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 0.6310f, 0.0240f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_MEDIUMROOM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1000f, 0.2818f, 1.4700f, 0.4200f, 0.8200f, 0.8913f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0290f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_LARGEROOM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.0891f, 0.2818f, 2.6500f, 0.3300f, 0.8200f, 0.8913f, 0.0660f, { 0.0000f, 0.0000f, 0.0000f }, 0.7943f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_LONGPASSAGE \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1000f, 0.3162f, 1.9900f, 0.4000f, 0.7900f, 1.0000f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.4467f, 0.0360f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_HALL \
-    { 1.0000f, 1.0000f, 0.3162f, 0.0794f, 0.2818f, 3.4500f, 0.3000f, 0.8200f, 0.8913f, 0.0880f, { 0.0000f, 0.0000f, 0.0000f }, 0.7943f, 0.0630f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_CUPBOARD \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1413f, 0.3162f, 0.5600f, 0.4600f, 0.9100f, 1.1220f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0280f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_COURTYARD \
-    { 1.0000f, 0.6500f, 0.3162f, 0.0794f, 0.3162f, 1.7900f, 0.3500f, 0.7900f, 0.5623f, 0.1230f, { 0.0000f, 0.0000f, 0.0000f }, 0.1000f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_WOODEN_ALCOVE \
-    { 1.0000f, 1.0000f, 0.3162f, 0.1259f, 0.3162f, 1.2200f, 0.6200f, 0.9100f, 1.1220f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 0.7079f, 0.0240f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 4705.0000f, 99.6000f, 0.0000f, 0x1 }
-
-/* Sports Presets */
-
-#define EFX_REVERB_PRESET_SPORT_EMPTYSTADIUM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.4467f, 0.7943f, 6.2600f, 0.5100f, 1.1000f, 0.0631f, 0.1830f, { 0.0000f, 0.0000f, 0.0000f }, 0.3981f, 0.0380f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPORT_SQUASHCOURT \
-    { 1.0000f, 0.7500f, 0.3162f, 0.3162f, 0.7943f, 2.2200f, 0.9100f, 1.1600f, 0.4467f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 0.7943f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.1260f, 0.1900f, 0.2500f, 0.0000f, 0.9943f, 7176.8999f, 211.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPORT_SMALLSWIMMINGPOOL \
-    { 1.0000f, 0.7000f, 0.3162f, 0.7943f, 0.8913f, 2.7600f, 1.2500f, 1.1400f, 0.6310f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.7943f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.1790f, 0.1500f, 0.8950f, 0.1900f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_SPORT_LARGESWIMMINGPOOL \
-    { 1.0000f, 0.8200f, 0.3162f, 0.7943f, 1.0000f, 5.4900f, 1.3100f, 1.1400f, 0.4467f, 0.0390f, { 0.0000f, 0.0000f, 0.0000f }, 0.5012f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.2220f, 0.5500f, 1.1590f, 0.2100f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_SPORT_GYMNASIUM \
-    { 1.0000f, 0.8100f, 0.3162f, 0.4467f, 0.8913f, 3.1400f, 1.0600f, 1.3500f, 0.3981f, 0.0290f, { 0.0000f, 0.0000f, 0.0000f }, 0.5623f, 0.0450f, { 0.0000f, 0.0000f, 0.0000f }, 0.1460f, 0.1400f, 0.2500f, 0.0000f, 0.9943f, 7176.8999f, 211.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPORT_FULLSTADIUM \
-    { 1.0000f, 1.0000f, 0.3162f, 0.0708f, 0.7943f, 5.2500f, 0.1700f, 0.8000f, 0.1000f, 0.1880f, { 0.0000f, 0.0000f, 0.0000f }, 0.2818f, 0.0380f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SPORT_STADIUMTANNOY \
-    { 1.0000f, 0.7800f, 0.3162f, 0.5623f, 0.5012f, 2.5300f, 0.8800f, 0.6800f, 0.2818f, 0.2300f, { 0.0000f, 0.0000f, 0.0000f }, 0.5012f, 0.0630f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-/* Prefab Presets */
-
-#define EFX_REVERB_PRESET_PREFAB_WORKSHOP \
-    { 0.4287f, 1.0000f, 0.3162f, 0.1413f, 0.3981f, 0.7600f, 1.0000f, 1.0000f, 1.0000f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_PREFAB_SCHOOLROOM \
-    { 0.4022f, 0.6900f, 0.3162f, 0.6310f, 0.5012f, 0.9800f, 0.4500f, 0.1800f, 1.4125f, 0.0170f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0150f, { 0.0000f, 0.0000f, 0.0000f }, 0.0950f, 0.1400f, 0.2500f, 0.0000f, 0.9943f, 7176.8999f, 211.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PREFAB_PRACTISEROOM \
-    { 0.4022f, 0.8700f, 0.3162f, 0.3981f, 0.5012f, 1.1200f, 0.5600f, 0.1800f, 1.2589f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0110f, { 0.0000f, 0.0000f, 0.0000f }, 0.0950f, 0.1400f, 0.2500f, 0.0000f, 0.9943f, 7176.8999f, 211.2000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PREFAB_OUTHOUSE \
-    { 1.0000f, 0.8200f, 0.3162f, 0.1122f, 0.1585f, 1.3800f, 0.3800f, 0.3500f, 0.8913f, 0.0240f, { 0.0000f, 0.0000f, -0.0000f }, 0.6310f, 0.0440f, { 0.0000f, 0.0000f, 0.0000f }, 0.1210f, 0.1700f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 107.5000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_PREFAB_CARAVAN \
-    { 1.0000f, 1.0000f, 0.3162f, 0.0891f, 0.1259f, 0.4300f, 1.5000f, 1.0000f, 1.0000f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 1.9953f, 0.0120f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-/* Dome and Pipe Presets */
-
-#define EFX_REVERB_PRESET_DOME_TOMB \
-    { 1.0000f, 0.7900f, 0.3162f, 0.3548f, 0.2239f, 4.1800f, 0.2100f, 0.1000f, 0.3868f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 1.6788f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 0.1770f, 0.1900f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_PIPE_SMALL \
-    { 1.0000f, 1.0000f, 0.3162f, 0.3548f, 0.2239f, 5.0400f, 0.1000f, 0.1000f, 0.5012f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 2.5119f, 0.0150f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DOME_SAINTPAULS \
-    { 1.0000f, 0.8700f, 0.3162f, 0.3548f, 0.2239f, 10.4800f, 0.1900f, 0.1000f, 0.1778f, 0.0900f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0420f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.1200f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PIPE_LONGTHIN \
-    { 0.2560f, 0.9100f, 0.3162f, 0.4467f, 0.2818f, 9.2100f, 0.1800f, 0.1000f, 0.7079f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 0.7079f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_PIPE_LARGE \
-    { 1.0000f, 1.0000f, 0.3162f, 0.3548f, 0.2239f, 8.4500f, 0.1000f, 0.1000f, 0.3981f, 0.0460f, { 0.0000f, 0.0000f, 0.0000f }, 1.5849f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_PIPE_RESONANT \
-    { 0.1373f, 0.9100f, 0.3162f, 0.4467f, 0.2818f, 6.8100f, 0.1800f, 0.1000f, 0.7079f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.0000f, 0.0220f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 20.0000f, 0.0000f, 0x0 }
-
-/* Outdoors Presets */
-
-#define EFX_REVERB_PRESET_OUTDOORS_BACKYARD \
-    { 1.0000f, 0.4500f, 0.3162f, 0.2512f, 0.5012f, 1.1200f, 0.3400f, 0.4600f, 0.4467f, 0.0690f, { 0.0000f, 0.0000f, -0.0000f }, 0.7079f, 0.0230f, { 0.0000f, 0.0000f, 0.0000f }, 0.2180f, 0.3400f, 0.2500f, 0.0000f, 0.9943f, 4399.1001f, 242.9000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_OUTDOORS_ROLLINGPLAINS \
-    { 1.0000f, 0.0000f, 0.3162f, 0.0112f, 0.6310f, 2.1300f, 0.2100f, 0.4600f, 0.1778f, 0.3000f, { 0.0000f, 0.0000f, -0.0000f }, 0.4467f, 0.0190f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.2500f, 0.0000f, 0.9943f, 4399.1001f, 242.9000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_OUTDOORS_DEEPCANYON \
-    { 1.0000f, 0.7400f, 0.3162f, 0.1778f, 0.6310f, 3.8900f, 0.2100f, 0.4600f, 0.3162f, 0.2230f, { 0.0000f, 0.0000f, -0.0000f }, 0.3548f, 0.0190f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.2500f, 0.0000f, 0.9943f, 4399.1001f, 242.9000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_OUTDOORS_CREEK \
-    { 1.0000f, 0.3500f, 0.3162f, 0.1778f, 0.5012f, 2.1300f, 0.2100f, 0.4600f, 0.3981f, 0.1150f, { 0.0000f, 0.0000f, -0.0000f }, 0.1995f, 0.0310f, { 0.0000f, 0.0000f, 0.0000f }, 0.2180f, 0.3400f, 0.2500f, 0.0000f, 0.9943f, 4399.1001f, 242.9000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_OUTDOORS_VALLEY \
-    { 1.0000f, 0.2800f, 0.3162f, 0.0282f, 0.1585f, 2.8800f, 0.2600f, 0.3500f, 0.1413f, 0.2630f, { 0.0000f, 0.0000f, -0.0000f }, 0.3981f, 0.1000f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.3400f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 107.5000f, 0.0000f, 0x0 }
-
-/* Mood Presets */
-
-#define EFX_REVERB_PRESET_MOOD_HEAVEN \
-    { 1.0000f, 0.9400f, 0.3162f, 0.7943f, 0.4467f, 5.0400f, 1.1200f, 0.5600f, 0.2427f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0290f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0800f, 2.7420f, 0.0500f, 0.9977f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_MOOD_HELL \
-    { 1.0000f, 0.5700f, 0.3162f, 0.3548f, 0.4467f, 3.5700f, 0.4900f, 2.0000f, 0.0000f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.1100f, 0.0400f, 2.1090f, 0.5200f, 0.9943f, 5000.0000f, 139.5000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_MOOD_MEMORY \
-    { 1.0000f, 0.8500f, 0.3162f, 0.6310f, 0.3548f, 4.0600f, 0.8200f, 0.5600f, 0.0398f, 0.0000f, { 0.0000f, 0.0000f, 0.0000f }, 1.1220f, 0.0000f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.4740f, 0.4500f, 0.9886f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-/* Driving Presets */
-
-#define EFX_REVERB_PRESET_DRIVING_COMMENTATOR \
-    { 1.0000f, 0.0000f, 3.1623f, 0.5623f, 0.5012f, 2.4200f, 0.8800f, 0.6800f, 0.1995f, 0.0930f, { 0.0000f, 0.0000f, 0.0000f }, 0.2512f, 0.0170f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 1.0000f, 0.2500f, 0.0000f, 0.9886f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DRIVING_PITGARAGE \
-    { 0.4287f, 0.5900f, 0.3162f, 0.7079f, 0.5623f, 1.7200f, 0.9300f, 0.8700f, 0.5623f, 0.0000f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0160f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.1100f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_DRIVING_INCAR_RACER \
-    { 0.0832f, 0.8000f, 0.3162f, 1.0000f, 0.7943f, 0.1700f, 2.0000f, 0.4100f, 1.7783f, 0.0070f, { 0.0000f, 0.0000f, 0.0000f }, 0.7079f, 0.0150f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 10268.2002f, 251.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DRIVING_INCAR_SPORTS \
-    { 0.0832f, 0.8000f, 0.3162f, 0.6310f, 1.0000f, 0.1700f, 0.7500f, 0.4100f, 1.0000f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 0.5623f, 0.0000f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 10268.2002f, 251.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DRIVING_INCAR_LUXURY \
-    { 0.2560f, 1.0000f, 0.3162f, 0.1000f, 0.5012f, 0.1300f, 0.4100f, 0.4600f, 0.7943f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 1.5849f, 0.0100f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 10268.2002f, 251.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_DRIVING_FULLGRANDSTAND \
-    { 1.0000f, 1.0000f, 0.3162f, 0.2818f, 0.6310f, 3.0100f, 1.3700f, 1.2800f, 0.3548f, 0.0900f, { 0.0000f, 0.0000f, 0.0000f }, 0.1778f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 10420.2002f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_DRIVING_EMPTYGRANDSTAND \
-    { 1.0000f, 1.0000f, 0.3162f, 1.0000f, 0.7943f, 4.6200f, 1.7500f, 1.4000f, 0.2082f, 0.0900f, { 0.0000f, 0.0000f, 0.0000f }, 0.2512f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.0000f, 0.9943f, 10420.2002f, 250.0000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_DRIVING_TUNNEL \
-    { 1.0000f, 0.8100f, 0.3162f, 0.3981f, 0.8913f, 3.4200f, 0.9400f, 1.3100f, 0.7079f, 0.0510f, { 0.0000f, 0.0000f, 0.0000f }, 0.7079f, 0.0470f, { 0.0000f, 0.0000f, 0.0000f }, 0.2140f, 0.0500f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 155.3000f, 0.0000f, 0x1 }
-
-/* City Presets */
-
-#define EFX_REVERB_PRESET_CITY_STREETS \
-    { 1.0000f, 0.7800f, 0.3162f, 0.7079f, 0.8913f, 1.7900f, 1.1200f, 0.9100f, 0.2818f, 0.0460f, { 0.0000f, 0.0000f, 0.0000f }, 0.1995f, 0.0280f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2000f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CITY_SUBWAY \
-    { 1.0000f, 0.7400f, 0.3162f, 0.7079f, 0.8913f, 3.0100f, 1.2300f, 0.9100f, 0.7079f, 0.0460f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0280f, { 0.0000f, 0.0000f, 0.0000f }, 0.1250f, 0.2100f, 0.2500f, 0.0000f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CITY_MUSEUM \
-    { 1.0000f, 0.8200f, 0.3162f, 0.1778f, 0.1778f, 3.2800f, 1.4000f, 0.5700f, 0.2512f, 0.0390f, { 0.0000f, 0.0000f, -0.0000f }, 0.8913f, 0.0340f, { 0.0000f, 0.0000f, 0.0000f }, 0.1300f, 0.1700f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 107.5000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_CITY_LIBRARY \
-    { 1.0000f, 0.8200f, 0.3162f, 0.2818f, 0.0891f, 2.7600f, 0.8900f, 0.4100f, 0.3548f, 0.0290f, { 0.0000f, 0.0000f, -0.0000f }, 0.8913f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 0.1300f, 0.1700f, 0.2500f, 0.0000f, 0.9943f, 2854.3999f, 107.5000f, 0.0000f, 0x0 }
-
-#define EFX_REVERB_PRESET_CITY_UNDERPASS \
-    { 1.0000f, 0.8200f, 0.3162f, 0.4467f, 0.8913f, 3.5700f, 1.1200f, 0.9100f, 0.3981f, 0.0590f, { 0.0000f, 0.0000f, 0.0000f }, 0.8913f, 0.0370f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.1400f, 0.2500f, 0.0000f, 0.9920f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CITY_ABANDONED \
-    { 1.0000f, 0.6900f, 0.3162f, 0.7943f, 0.8913f, 3.2800f, 1.1700f, 0.9100f, 0.4467f, 0.0440f, { 0.0000f, 0.0000f, 0.0000f }, 0.2818f, 0.0240f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.2000f, 0.2500f, 0.0000f, 0.9966f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-/* Misc. Presets */
-
-#define EFX_REVERB_PRESET_DUSTYROOM \
-    { 0.3645f, 0.5600f, 0.3162f, 0.7943f, 0.7079f, 1.7900f, 0.3800f, 0.2100f, 0.5012f, 0.0020f, { 0.0000f, 0.0000f, 0.0000f }, 1.2589f, 0.0060f, { 0.0000f, 0.0000f, 0.0000f }, 0.2020f, 0.0500f, 0.2500f, 0.0000f, 0.9886f, 13046.0000f, 163.3000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_CHAPEL \
-    { 1.0000f, 0.8400f, 0.3162f, 0.5623f, 1.0000f, 4.6200f, 0.6400f, 1.2300f, 0.4467f, 0.0320f, { 0.0000f, 0.0000f, 0.0000f }, 0.7943f, 0.0490f, { 0.0000f, 0.0000f, 0.0000f }, 0.2500f, 0.0000f, 0.2500f, 0.1100f, 0.9943f, 5000.0000f, 250.0000f, 0.0000f, 0x1 }
-
-#define EFX_REVERB_PRESET_SMALLWATERROOM \
-    { 1.0000f, 0.7000f, 0.3162f, 0.4477f, 1.0000f, 1.5100f, 1.2500f, 1.1400f, 0.8913f, 0.0200f, { 0.0000f, 0.0000f, 0.0000f }, 1.4125f, 0.0300f, { 0.0000f, 0.0000f, 0.0000f }, 0.1790f, 0.1500f, 0.8950f, 0.1900f, 0.9920f, 5000.0000f, 250.0000f, 0.0000f, 0x0 }
+  type EFXEAXREVERBPROPERTIES is record
+      flDensity             : Real_32_C              := 0.0;
+      flDiffusion           : Real_32_C              := 0.0;
+      flGain                : Real_32_C              := 0.0;
+      flGainHF              : Real_32_C              := 0.0;
+      flGainLF              : Real_32_C              := 0.0;
+      flDecayTime           : Real_32_C              := 0.0;
+      flDecayHFRatio        : Real_32_C              := 0.0;
+      flDecayLFRatio        : Real_32_C              := 0.0;
+      flReflectionsGain     : Real_32_C              := 0.0;
+      flReflectionsDelay    : Real_32_C              := 0.0;
+      flReflectionsPan      : Array_Real_32_C (1..3) := 0.0;
+      flLateReverbGain      : Real_32_C              := 0.0;
+      flLateReverbDelay     : Real_32_C              := 0.0;
+      flLateReverbPan       : Array_Real_32_C (1..3) := 0.0;
+      flEchoTime            : Real_32_C              := 0.0;
+      flEchoDepth           : Real_32_C              := 0.0;
+      flModulationTime      : Real_32_C              := 0.0;
+      flModulationDepth     : Real_32_C              := 0.0;
+      flAirAbsorptionGainHF : Real_32_C              := 0.0;
+      flHFReference         : Real_32_C              := 0.0;
+      flLFReference         : Real_32_C              := 0.0;
+      flRoomRolloffFactor   : Real_32_C              := 0.0;
+      iDecayHFLimit         : Int_C                  := 0;
+    end record with Convention => C;
+
+  -- General
+  EFX_REVERB_PRESET_GENERIC         : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.8913, 1.0000, 1.490, 0.830, 1.0000, 0.050, 0.0070, (0.0, 0.0, 0.0), 1.2589, 0.0110, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_PADDEDCELL      : constant EFXEAXREVERBPROPERTIES := (0.1715, 1.0000, 0.3162, 0.0010, 1.0000, 0.170, 0.100, 1.0000, 0.250, 0.0010, (0.0, 0.0, 0.0), 1.2691, 0.0020, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_ROOM            : constant EFXEAXREVERBPROPERTIES := (0.4287, 1.0000, 0.3162, 0.5929, 1.0000, 0.400, 0.830, 1.0000, 0.1503, 0.0020, (0.0, 0.0, 0.0), 1.0629, 0.0030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_BATHROOM        : constant EFXEAXREVERBPROPERTIES := (0.1715, 1.0000, 0.3162, 0.2512, 1.0000, 1.490, 0.540, 1.0000, 0.6531, 0.0070, (0.0, 0.0, 0.0), 3.2734, 0.0110, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_LIVINGROOM      : constant EFXEAXREVERBPROPERTIES := (0.9766, 1.0000, 0.3162, 0.0010, 1.0000, 0.500, 0.100, 1.0000, 0.2051, 0.0030, (0.0, 0.0, 0.0), 0.2805, 0.0040, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_STONEROOM       : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.7079, 1.0000, 2.310, 0.640, 1.0000, 0.4411, 0.0120, (0.0, 0.0, 0.0), 1.1003, 0.0170, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_AUDITORIUM      : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.5781, 1.0000, 4.320, 0.590, 1.0000, 0.4032, 0.020, (0.0, 0.0, 0.0), 0.7170, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CONCERTHALL     : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.5623, 1.0000, 3.920, 0.700, 1.0000, 0.2427, 0.020, (0.0, 0.0, 0.0), 0.9977, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CAVE            : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 1.0000, 1.0000, 2.910, 1.300, 1.0000, 0.500, 0.0150, (0.0, 0.0, 0.0), 0.7063, 0.0220, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_ARENA           : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.4477, 1.0000, 7.240, 0.330, 1.0000, 0.2612, 0.020, (0.0, 0.0, 0.0), 1.0186, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_HANGAR          : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.3162, 1.0000, 10.050, 0.230, 1.0000, 0.500, 0.020, (0.0, 0.0, 0.0), 1.2560, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CARPETEDHALLWAY : constant EFXEAXREVERBPROPERTIES := (0.4287, 1.0000, 0.3162, 0.010, 1.0000, 0.300, 0.100, 1.0000, 0.1215, 0.0020, (0.0, 0.0, 0.0), 0.1531, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_HALLWAY         : constant EFXEAXREVERBPROPERTIES := (0.3645, 1.0000, 0.3162, 0.7079, 1.0000, 1.490, 0.590, 1.0000, 0.2458, 0.0070, (0.0, 0.0, 0.0), 1.6615, 0.0110, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_STONECORRIDOR   : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.7612, 1.0000, 2.700, 0.790, 1.0000, 0.2472, 0.0130, (0.0, 0.0, 0.0), 1.5758, 0.020, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_ALLEY           : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.3000, 0.3162, 0.7328, 1.0000, 1.490, 0.860, 1.0000, 0.250, 0.0070, (0.0, 0.0, 0.0), 0.9954, 0.0110, (0.0, 0.0, 0.0), 0.1250, 0.950, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_FOREST          : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.3000, 0.3162, 0.0224, 1.0000, 1.490, 0.540, 1.0000, 0.0525, 0.1620, (0.0, 0.0, 0.0), 0.7682, 0.0880, (0.0, 0.0, 0.0), 0.1250, 1.0000, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CITY            : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.5000, 0.3162, 0.3981, 1.0000, 1.490, 0.670, 1.0000, 0.0730, 0.0070, (0.0, 0.0, 0.0), 0.1427, 0.0110, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_MOUNTAINS       : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.2700, 0.3162, 0.0562, 1.0000, 1.490, 0.210, 1.0000, 0.0407, 0.300, (0.0, 0.0, 0.0), 0.1919, 0.100, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_QUARRY          : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.3162, 1.0000, 1.490, 0.830, 1.0000, 0.0, 0.0610, (0.0, 0.0, 0.0), 1.7783, 0.0250, (0.0, 0.0, 0.0), 0.1250, 0.700, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_PLAIN           : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.2100, 0.3162, 0.100, 1.0000, 1.490, 0.500, 1.0000, 0.0585, 0.1790, (0.0, 0.0, 0.0), 0.1089, 0.100, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_PARKINGLOT      : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 1.0000, 1.0000, 1.650, 1.500, 1.0000, 0.2082, 0.0080, (0.0, 0.0, 0.0), 0.2652, 0.0120, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_SEWERPIPE       : constant EFXEAXREVERBPROPERTIES := (0.3071, 0.8000, 0.3162, 0.3162, 1.0000, 2.810, 0.140, 1.0000, 1.6387, 0.0140, (0.0, 0.0, 0.0), 3.2471, 0.0210, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_UNDERWATER      : constant EFXEAXREVERBPROPERTIES := (0.3645, 1.0000, 0.3162, 0.010, 1.0000, 1.490, 0.100, 1.0000, 0.5963, 0.0070, (0.0, 0.0, 0.0), 7.0795, 0.0110, (0.0, 0.0, 0.0), 0.250, 0.0, 1.180, 0.3480, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_DRUGGED         : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.5000, 0.3162, 1.0000, 1.0000, 8.390, 1.390, 1.0000, 0.8760, 0.0020, (0.0, 0.0, 0.0), 3.1081, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 1.0000, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_DIZZY           : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.6000, 0.3162, 0.6310, 1.0000, 17.230, 0.560, 1.0000, 0.1392, 0.020, (0.0, 0.0, 0.0), 0.4937, 0.030, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.810, 0.310, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_PSYCHOTIC       : constant EFXEAXREVERBPROPERTIES := (0.0625, 0.5000, 0.3162, 0.8404, 1.0000, 7.560, 0.910, 1.0000, 0.4864, 0.020, (0.0, 0.0, 0.0), 2.4378, 0.030, (0.0, 0.0, 0.0), 0.250, 0.0, 4.0, 1.0000, 0.9943, 5000.0, 250.0, 0.0, 0)
+
+  -- Castle Presets
+  EFX_REVERB_PRESET_CASTLE_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.3981, 0.100, 1.220, 0.830, 0.310, 0.8913, 0.0220, (0.0, 0.0, 0.0), 1.9953, 0.0110, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.3162, 0.100, 2.320, 0.830, 0.310, 0.8913, 0.0070, (0.0, 0.0, 0.0), 1.2589, 0.0230, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.930, 0.3162, 0.2818, 0.100, 2.040, 0.830, 0.460, 0.6310, 0.0220, (0.0, 0.0, 0.0), 1.5849, 0.0110, (0.0, 0.0, 0.0), 0.1550, 0.030, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_LARGEROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.2818, 0.1259, 2.530, 0.830, 0.500, 0.4467, 0.0340, (0.0, 0.0, 0.0), 1.2589, 0.0160, (0.0, 0.0, 0.0), 0.1850, 0.070, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_LONGPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.3981, 0.100, 3.420, 0.830, 0.310, 0.8913, 0.0070, (0.0, 0.0, 0.0), 1.4125, 0.0230, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_HALL : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.810, 0.3162, 0.2818, 0.1778, 3.140, 0.790, 0.620, 0.1778, 0.0560, (0.0, 0.0, 0.0), 1.1220, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.2818, 0.100, 0.670, 0.870, 0.310, 1.4125, 0.010, (0.0, 0.0, 0.0), 3.5481, 0.0070, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+  EFX_REVERB_PRESET_CASTLE_COURTYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.420, 0.3162, 0.4467, 0.1995, 2.130, 0.610, 0.230, 0.2239, 0.160, (0.0, 0.0, 0.0), 0.7079, 0.0360, (0.0, 0.0, 0.0), 0.250, 0.370, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_CASTLE_ALCOVE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.5012, 0.100, 1.640, 0.870, 0.310, 1.0000, 0.0070, (0.0, 0.0, 0.0), 1.4125, 0.0340, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
+
+  -- Factory Presets 
+  EFX_REVERB_PRESET_FACTORY_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.820, 0.3162, 0.7943, 0.5012, 1.720, 0.650, 1.310, 0.7079, 0.010, (0.0, 0.0, 0.0), 1.7783, 0.0240, (0.0, 0.0, 0.0), 0.1190, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.640, 0.2512, 0.7943, 0.5012, 2.530, 0.650, 1.310, 1.0000, 0.010, (0.0, 0.0, 0.0), 1.2589, 0.0380, (0.0, 0.0, 0.0), 0.1350, 0.230, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.820, 0.2512, 0.7943, 0.5012, 2.760, 0.650, 1.310, 0.2818, 0.0220, (0.0, 0.0, 0.0), 1.4125, 0.0230, (0.0, 0.0, 0.0), 0.1740, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_LARGEROOM : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.750, 0.2512, 0.7079, 0.6310, 4.240, 0.510, 1.310, 0.1778, 0.0390, (0.0, 0.0, 0.0), 1.1220, 0.0230, (0.0, 0.0, 0.0), 0.2310, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_LONGPASSAGE : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.640, 0.2512, 0.7943, 0.5012, 4.060, 0.650, 1.310, 1.0000, 0.020, (0.0, 0.0, 0.0), 1.2589, 0.0370, (0.0, 0.0, 0.0), 0.1350, 0.230, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_HALL : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.750, 0.3162, 0.7079, 0.6310, 7.430, 0.510, 1.310, 0.0631, 0.0730, (0.0, 0.0, 0.0), 0.8913, 0.0270, (0.0, 0.0, 0.0), 0.250, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (0.3071, 0.630, 0.2512, 0.7943, 0.5012, 0.490, 0.650, 1.310, 1.2589, 0.010, (0.0, 0.0, 0.0), 1.9953, 0.0320, (0.0, 0.0, 0.0), 0.1070, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_COURTYARD : constant EFXEAXREVERBPROPERTIES := (0.3071, 0.570, 0.3162, 0.3162, 0.6310, 2.320, 0.290, 0.560, 0.2239, 0.140, (0.0, 0.0, 0.0), 0.3981, 0.0390, (0.0, 0.0, 0.0), 0.250, 0.290, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+  EFX_REVERB_PRESET_FACTORY_ALCOVE : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.590, 0.2512, 0.7943, 0.5012, 3.140, 0.650, 1.310, 1.4125, 0.010, (0.0, 0.0, 0.0), 1.0000, 0.0380, (0.0, 0.0, 0.0), 0.1140, 0.100, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
+
+  -- Ice Palace Presets
+  EFX_REVERB_PRESET_ICEPALACE_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.840, 0.3162, 0.5623, 0.2818, 1.510, 1.530, 0.270, 0.8913, 0.010, (0.0, 0.0, 0.0), 1.4125, 0.0110, (0.0, 0.0, 0.0), 0.1640, 0.140, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.750, 0.3162, 0.5623, 0.2818, 1.790, 1.460, 0.280, 0.5012, 0.010, (0.0, 0.0, 0.0), 1.1220, 0.0190, (0.0, 0.0, 0.0), 0.1770, 0.090, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.870, 0.3162, 0.5623, 0.4467, 2.220, 1.530, 0.320, 0.3981, 0.0390, (0.0, 0.0, 0.0), 1.1220, 0.0270, (0.0, 0.0, 0.0), 0.1860, 0.120, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_LARGEROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.810, 0.3162, 0.5623, 0.4467, 3.140, 1.530, 0.320, 0.2512, 0.0390, (0.0, 0.0, 0.0), 1.0000, 0.0270, (0.0, 0.0, 0.0), 0.2140, 0.110, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_LONGPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.770, 0.3162, 0.5623, 0.3981, 3.010, 1.460, 0.280, 0.7943, 0.0120, (0.0, 0.0, 0.0), 1.2589, 0.0250, (0.0, 0.0, 0.0), 0.1860, 0.040, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_HALL : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.760, 0.3162, 0.4467, 0.5623, 5.490, 1.530, 0.380, 0.1122, 0.0540, (0.0, 0.0, 0.0), 0.6310, 0.0520, (0.0, 0.0, 0.0), 0.2260, 0.110, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.830, 0.3162, 0.5012, 0.2239, 0.760, 1.530, 0.260, 1.1220, 0.0120, (0.0, 0.0, 0.0), 1.9953, 0.0160, (0.0, 0.0, 0.0), 0.1430, 0.080, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_COURTYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.590, 0.3162, 0.2818, 0.3162, 2.040, 1.200, 0.380, 0.3162, 0.1730, (0.0, 0.0, 0.0), 0.3162, 0.0430, (0.0, 0.0, 0.0), 0.2350, 0.480, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_ICEPALACE_ALCOVE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.840, 0.3162, 0.5623, 0.2818, 2.760, 1.460, 0.280, 1.1220, 0.010, (0.0, 0.0, 0.0), 0.8913, 0.030, (0.0, 0.0, 0.0), 0.1610, 0.090, 0.250, 0.0, 0.9943, 12428.500, 99.600, 0.0, 1)
+
+  -- Space Station Presets
+  EFX_REVERB_PRESET_SPACESTATION_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (0.2109, 0.700, 0.3162, 0.7079, 0.8913, 1.720, 0.820, 0.550, 0.7943, 0.0070, (0.0, 0.0, 0.0), 1.4125, 0.0130, (0.0, 0.0, 0.0), 0.1880, 0.260, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (0.2109, 0.870, 0.3162, 0.6310, 0.8913, 3.570, 0.500, 0.550, 1.0000, 0.0120, (0.0, 0.0, 0.0), 1.1220, 0.0160, (0.0, 0.0, 0.0), 0.1720, 0.200, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (0.2109, 0.750, 0.3162, 0.6310, 0.8913, 3.010, 0.500, 0.550, 0.3981, 0.0340, (0.0, 0.0, 0.0), 1.1220, 0.0350, (0.0, 0.0, 0.0), 0.2090, 0.310, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_LARGEROOM : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.810, 0.3162, 0.6310, 0.8913, 3.890, 0.380, 0.610, 0.3162, 0.0560, (0.0, 0.0, 0.0), 0.8913, 0.0350, (0.0, 0.0, 0.0), 0.2330, 0.280, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_LONGPASSAGE : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.820, 0.3162, 0.6310, 0.8913, 4.620, 0.620, 0.550, 1.0000, 0.0120, (0.0, 0.0, 0.0), 1.2589, 0.0310, (0.0, 0.0, 0.0), 0.250, 0.230, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_HALL : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.870, 0.3162, 0.6310, 0.8913, 7.110, 0.380, 0.610, 0.1778, 0.100, (0.0, 0.0, 0.0), 0.6310, 0.0470, (0.0, 0.0, 0.0), 0.250, 0.250, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (0.1715, 0.560, 0.3162, 0.7079, 0.8913, 0.790, 0.810, 0.550, 1.4125, 0.0070, (0.0, 0.0, 0.0), 1.7783, 0.0180, (0.0, 0.0, 0.0), 0.1810, 0.310, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPACESTATION_ALCOVE : constant EFXEAXREVERBPROPERTIES := (0.2109, 0.780, 0.3162, 0.7079, 0.8913, 1.160, 0.810, 0.550, 1.4125, 0.0070, (0.0, 0.0, 0.0), 1.0000, 0.0180, (0.0, 0.0, 0.0), 0.1920, 0.210, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
+
+  -- Wooden Galleon Presets 
+  EFX_REVERB_PRESET_WOODEN_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1122, 0.3162, 0.790, 0.320, 0.870, 1.0000, 0.0320, (0.0, 0.0, 0.0), 0.8913, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1259, 0.3162, 1.750, 0.500, 0.870, 0.8913, 0.0120, (0.0, 0.0, 0.0), 0.6310, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.100, 0.2818, 1.470, 0.420, 0.820, 0.8913, 0.0490, (0.0, 0.0, 0.0), 0.8913, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_LARGEROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.0891, 0.2818, 2.650, 0.330, 0.820, 0.8913, 0.0660, (0.0, 0.0, 0.0), 0.7943, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_LONGPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.100, 0.3162, 1.990, 0.400, 0.790, 1.0000, 0.020, (0.0, 0.0, 0.0), 0.4467, 0.0360, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_HALL : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.0794, 0.2818, 3.450, 0.300, 0.820, 0.8913, 0.0880, (0.0, 0.0, 0.0), 0.7943, 0.0630, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1413, 0.3162, 0.560, 0.460, 0.910, 1.1220, 0.0120, (0.0, 0.0, 0.0), 1.1220, 0.0280, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_COURTYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.650, 0.3162, 0.0794, 0.3162, 1.790, 0.350, 0.790, 0.5623, 0.1230, (0.0, 0.0, 0.0), 0.100, 0.0320, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+  EFX_REVERB_PRESET_WOODEN_ALCOVE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1259, 0.3162, 1.220, 0.620, 0.910, 1.1220, 0.0120, (0.0, 0.0, 0.0), 0.7079, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
+
+  -- Sports Presets
+  EFX_REVERB_PRESET_SPORT_EMPTYSTADIUM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.4467, 0.7943, 6.260, 0.510, 1.100, 0.0631, 0.1830, (0.0, 0.0, 0.0), 0.3981, 0.0380, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_SPORT_SQUASHCOURT : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.750, 0.3162, 0.3162, 0.7943, 2.220, 0.910, 1.160, 0.4467, 0.0070, (0.0, 0.0, 0.0), 0.7943, 0.0110, (0.0, 0.0, 0.0), 0.1260, 0.190, 0.250, 0.0, 0.9943, 7176.8999, 211.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPORT_SMALLSWIMMINGPOOL : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.700, 0.3162, 0.7943, 0.8913, 2.760, 1.250, 1.140, 0.6310, 0.020, (0.0, 0.0, 0.0), 0.7943, 0.030, (0.0, 0.0, 0.0), 0.1790, 0.150, 0.8950, 0.190, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_SPORT_LARGESWIMMINGPOOL : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.7943, 1.0000, 5.490, 1.310, 1.140, 0.4467, 0.0390, (0.0, 0.0, 0.0), 0.5012, 0.0490, (0.0, 0.0, 0.0), 0.2220, 0.550, 1.1590, 0.210, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_SPORT_GYMNASIUM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.810, 0.3162, 0.4467, 0.8913, 3.140, 1.060, 1.350, 0.3981, 0.0290, (0.0, 0.0, 0.0), 0.5623, 0.0450, (0.0, 0.0, 0.0), 0.1460, 0.140, 0.250, 0.0, 0.9943, 7176.8999, 211.200, 0.0, 1)
+  EFX_REVERB_PRESET_SPORT_FULLSTADIUM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.0708, 0.7943, 5.250, 0.170, 0.800, 0.100, 0.1880, (0.0, 0.0, 0.0), 0.2818, 0.0380, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_SPORT_STADIUMTANNOY : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.780, 0.3162, 0.5623, 0.5012, 2.530, 0.880, 0.680, 0.2818, 0.230, (0.0, 0.0, 0.0), 0.5012, 0.0630, (0.0, 0.0, 0.0), 0.250, 0.200, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+
+  -- Prefab Presets
+  EFX_REVERB_PRESET_PREFAB_WORKSHOP : constant EFXEAXREVERBPROPERTIES := (0.4287, 1.0000, 0.3162, 0.1413, 0.3981, 0.760, 1.0000, 1.0000, 1.0000, 0.0120, (0.0, 0.0, 0.0), 1.1220, 0.0120, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_PREFAB_SCHOOLROOM : constant EFXEAXREVERBPROPERTIES := (0.4022, 0.690, 0.3162, 0.6310, 0.5012, 0.980, 0.450, 0.180, 1.4125, 0.0170, (0.0, 0.0, 0.0), 1.4125, 0.0150, (0.0, 0.0, 0.0), 0.0950, 0.140, 0.250, 0.0, 0.9943, 7176.8999, 211.200, 0.0, 1)
+  EFX_REVERB_PRESET_PREFAB_PRACTISEROOM : constant EFXEAXREVERBPROPERTIES := (0.4022, 0.870, 0.3162, 0.3981, 0.5012, 1.120, 0.560, 0.180, 1.2589, 0.010, (0.0, 0.0, 0.0), 1.4125, 0.0110, (0.0, 0.0, 0.0), 0.0950, 0.140, 0.250, 0.0, 0.9943, 7176.8999, 211.200, 0.0, 1)
+  EFX_REVERB_PRESET_PREFAB_OUTHOUSE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.1122, 0.1585, 1.380, 0.380, 0.350, 0.8913, 0.0240, (0.0, 0.0, -0.0), 0.6310, 0.0440, (0.0, 0.0, 0.0), 0.1210, 0.170, 0.250, 0.0, 0.9943, 2854.3999, 107.500, 0.0, 0)
+  EFX_REVERB_PRESET_PREFAB_CARAVAN : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.0891, 0.1259, 0.430, 1.500, 1.0000, 1.0000, 0.0120, (0.0, 0.0, 0.0), 1.9953, 0.0120, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+
+  -- Dome and Pipe Presets
+  EFX_REVERB_PRESET_DOME_TOMB : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.790, 0.3162, 0.3548, 0.2239, 4.180, 0.210, 0.100, 0.3868, 0.030, (0.0, 0.0, 0.0), 1.6788, 0.0220, (0.0, 0.0, 0.0), 0.1770, 0.190, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 0)
+  EFX_REVERB_PRESET_PIPE_SMALL : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.3548, 0.2239, 5.040, 0.100, 0.100, 0.5012, 0.0320, (0.0, 0.0, 0.0), 2.5119, 0.0150, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 1)
+  EFX_REVERB_PRESET_DOME_SAINTPAULS : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.870, 0.3162, 0.3548, 0.2239, 10.480, 0.190, 0.100, 0.1778, 0.090, (0.0, 0.0, 0.0), 1.2589, 0.0420, (0.0, 0.0, 0.0), 0.250, 0.120, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 1)
+  EFX_REVERB_PRESET_PIPE_LONGTHIN : constant EFXEAXREVERBPROPERTIES := (0.2560, 0.910, 0.3162, 0.4467, 0.2818, 9.210, 0.180, 0.100, 0.7079, 0.010, (0.0, 0.0, 0.0), 0.7079, 0.0220, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 0)
+  EFX_REVERB_PRESET_PIPE_LARGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.3548, 0.2239, 8.450, 0.100, 0.100, 0.3981, 0.0460, (0.0, 0.0, 0.0), 1.5849, 0.0320, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 1)
+  EFX_REVERB_PRESET_PIPE_RESONANT : constant EFXEAXREVERBPROPERTIES := (0.1373, 0.910, 0.3162, 0.4467, 0.2818, 6.810, 0.180, 0.100, 0.7079, 0.010, (0.0, 0.0, 0.0), 1.0000, 0.0220, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 0)
+
+  -- Outdoors Presets 
+  EFX_REVERB_PRESET_OUTDOORS_BACKYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.450, 0.3162, 0.2512, 0.5012, 1.120, 0.340, 0.460, 0.4467, 0.0690, (0.0, 0.0, -0.0), 0.7079, 0.0230, (0.0, 0.0, 0.0), 0.2180, 0.340, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
+  EFX_REVERB_PRESET_OUTDOORS_ROLLINGPLAINS : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.0, 0.3162, 0.0112, 0.6310, 2.130, 0.210, 0.460, 0.1778, 0.300, (0.0, 0.0, -0.0), 0.4467, 0.0190, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
+  EFX_REVERB_PRESET_OUTDOORS_DEEPCANYON : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.740, 0.3162, 0.1778, 0.6310, 3.890, 0.210, 0.460, 0.3162, 0.2230, (0.0, 0.0, -0.0), 0.3548, 0.0190, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
+  EFX_REVERB_PRESET_OUTDOORS_CREEK : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.350, 0.3162, 0.1778, 0.5012, 2.130, 0.210, 0.460, 0.3981, 0.1150, (0.0, 0.0, -0.0), 0.1995, 0.0310, (0.0, 0.0, 0.0), 0.2180, 0.340, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
+  EFX_REVERB_PRESET_OUTDOORS_VALLEY : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.280, 0.3162, 0.0282, 0.1585, 2.880, 0.260, 0.350, 0.1413, 0.2630, (0.0, 0.0, -0.0), 0.3981, 0.100, (0.0, 0.0, 0.0), 0.250, 0.340, 0.250, 0.0, 0.9943, 2854.3999, 107.500, 0.0, 0)
+
+  -- Mood Presets
+  EFX_REVERB_PRESET_MOOD_HEAVEN : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.940, 0.3162, 0.7943, 0.4467, 5.040, 1.120, 0.560, 0.2427, 0.020, (0.0, 0.0, 0.0), 1.2589, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.080, 2.7420, 0.050, 0.9977, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_MOOD_HELL : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.570, 0.3162, 0.3548, 0.4467, 3.570, 0.490, 2.0, 0.0, 0.020, (0.0, 0.0, 0.0), 1.4125, 0.030, (0.0, 0.0, 0.0), 0.110, 0.040, 2.1090, 0.520, 0.9943, 5000.0, 139.500, 0.0, 0)
+  EFX_REVERB_PRESET_MOOD_MEMORY : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.850, 0.3162, 0.6310, 0.3548, 4.060, 0.820, 0.560, 0.0398, 0.0, (0.0, 0.0, 0.0), 1.1220, 0.0, (0.0, 0.0, 0.0), 0.250, 0.0, 0.4740, 0.450, 0.9886, 5000.0, 250.0, 0.0, 0)
+
+  -- Driving Presets
+  EFX_REVERB_PRESET_DRIVING_COMMENTATOR     : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.0, 3.1623, 0.5623, 0.5012, 2.420, 0.880, 0.680, 0.1995, 0.0930, (0.0, 0.0, 0.0), 0.2512, 0.0170, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9886, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_DRIVING_PITGARAGE       : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.590, 0.3162, 0.7079, 0.5623, 1.720, 0.930, 0.870, 0.5623, 0.0, (0.0, 0.0, 0.0), 1.2589, 0.0160, (0.0, 0.0, 0.0), 0.250, 0.110, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_DRIVING_INCAR_RACER     : constant EFXEAXREVERBPROPERTIES := (0.0832, 0.800, 0.3162, 1.0000, 0.7943, 0.170, 2.0, 0.410, 1.7783, 0.0070, (0.0, 0.0, 0.0), 0.7079, 0.0150, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10268.2002, 251.0000, 0.0, 1)
+  EFX_REVERB_PRESET_DRIVING_INCAR_SPORTS    : constant EFXEAXREVERBPROPERTIES := (0.0832, 0.800, 0.3162, 0.6310, 1.0000, 0.170, 0.750, 0.410, 1.0000, 0.010, (0.0, 0.0, 0.0), 0.5623, 0.0, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10268.2002, 251.0000, 0.0, 1)
+  EFX_REVERB_PRESET_DRIVING_INCAR_LUXURY    : constant EFXEAXREVERBPROPERTIES := (0.2560, 1.0000, 0.3162, 0.100, 0.5012, 0.130, 0.410, 0.460, 0.7943, 0.010, (0.0, 0.0, 0.0), 1.5849, 0.010, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10268.2002, 251.0000, 0.0, 1)
+  EFX_REVERB_PRESET_DRIVING_FULLGRANDSTAND  : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.2818, 0.6310, 3.010, 1.370, 1.280, 0.3548, 0.090, (0.0, 0.0, 0.0), 0.1778, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10420.2002, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_DRIVING_EMPTYGRANDSTAND : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 1.0000, 0.7943, 4.620, 1.750, 1.400, 0.2082, 0.090, (0.0, 0.0, 0.0), 0.2512, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10420.2002, 250.0, 0.0, 0)
+  EFX_REVERB_PRESET_DRIVING_TUNNEL          : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.810, 0.3162, 0.3981, 0.8913, 3.420, 0.940, 1.310, 0.7079, 0.0510, (0.0, 0.0, 0.0), 0.7079, 0.0470, (0.0, 0.0, 0.0), 0.2140, 0.050, 0.250, 0.0, 0.9943, 5000.0, 155.300, 0.0, 1)
+
+  -- City Presets 
+  EFX_REVERB_PRESET_CITY_STREETS   : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.780, 0.3162, 0.7079, 0.8913, 1.790, 1.120, 0.910, 0.2818, 0.0460, (0.0, 0.0, 0.0), 0.1995, 0.0280, (0.0, 0.0, 0.0), 0.250, 0.200, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CITY_SUBWAY    : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.740, 0.3162, 0.7079, 0.8913, 3.010, 1.230, 0.910, 0.7079, 0.0460, (0.0, 0.0, 0.0), 1.2589, 0.0280, (0.0, 0.0, 0.0), 0.1250, 0.210, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CITY_MUSEUM    : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.1778, 0.1778, 3.280, 1.400, 0.570, 0.2512, 0.0390, (0.0, 0.0, -0.0), 0.8913, 0.0340, (0.0, 0.0, 0.0), 0.130, 0.170, 0.250, 0.0, 0.9943, 2854.3999, 107.500, 0.0, 0)
+  EFX_REVERB_PRESET_CITY_LIBRARY   : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.2818, 0.0891, 2.760, 0.890, 0.410, 0.3548, 0.0290, (0.0, 0.0, -0.0), 0.8913, 0.020, (0.0, 0.0, 0.0), 0.130, 0.170, 0.250, 0.0, 0.9943, 2854.3999, 107.500, 0.0, 0)
+  EFX_REVERB_PRESET_CITY_UNDERPASS : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.4467, 0.8913, 3.570, 1.120, 0.910, 0.3981, 0.0590, (0.0, 0.0, 0.0), 0.8913, 0.0370, (0.0, 0.0, 0.0), 0.250, 0.140, 0.250, 0.0, 0.9920, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_CITY_ABANDONED : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.690, 0.3162, 0.7943, 0.8913, 3.280, 1.170, 0.910, 0.4467, 0.0440, (0.0, 0.0, 0.0), 0.2818, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.200, 0.250, 0.0, 0.9966, 5000.0, 250.0, 0.0, 1)
+
+  -- Misc. Presets 
+  EFX_REVERB_PRESET_DUSTYROOM      : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.560, 0.3162, 0.7943, 0.7079, 1.790, 0.380, 0.210, 0.5012, 0.0020, (0.0, 0.0, 0.0), 1.2589, 0.0060, (0.0, 0.0, 0.0), 0.2020, 0.050, 0.250, 0.0, 0.9886, 13046.0, 163.300, 0.0, 1)
+  EFX_REVERB_PRESET_CHAPEL         : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.840, 0.3162, 0.5623, 1.0000, 4.620, 0.640, 1.230, 0.4467, 0.0320, (0.0, 0.0, 0.0), 0.7943, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.110, 0.9943, 5000.0, 250.0, 0.0, 1)
+  EFX_REVERB_PRESET_SMALLWATERROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.700, 0.3162, 0.4477, 1.0000, 1.510, 1.250, 1.140, 0.8913, 0.0200, (0.0, 0.0, 0.0), 1.4125, 0.0300, (0.0, 0.0, 0.0), 0.1790, 0.150, 0.8950, 0.190, 0.9920, 5000.0, 250.0, 0.0, 0)
 
   -----------------
   -- Subprograms --
@@ -1853,30 +1606,30 @@ typedef struct {
                                with Import => True, Convention => StdCall, External_Name => "alcCaptureSamples"; 
 
 typedef ALvoid (AL_APIENTRY*PFNALBUFFERDATASTATICPROC)(const ALint,ALenum,ALvoid*,ALsizei,ALsizei);
-#ifdef AL_ALEXT_PROTOTYPES
+
 AL_API ALvoid AL_APIENTRY alBufferDataStatic(const ALint buffer, ALenum format, ALvoid *data, ALsizei len, ALsizei freq);
 typedef void (AL_APIENTRY*LPALFOLDBACKCALLBACK)(ALenum,ALsizei);
 typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTART)(ALenum,ALsizei,ALsizei,ALfloat*,LPALFOLDBACKCALLBACK);
 typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTOP)(void);
-#ifdef AL_ALEXT_PROTOTYPES
+
 AL_API void AL_APIENTRY alRequestFoldbackStart(ALenum mode,ALsizei count,ALsizei length,ALfloat *mem,LPALFOLDBACKCALLBACK callback);
 AL_API void AL_APIENTRY alRequestFoldbackStop(void);
 typedef void (AL_APIENTRY*LPALFOLDBACKCALLBACK)(ALenum,ALsizei);
 typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTART)(ALenum,ALsizei,ALsizei,ALfloat*,LPALFOLDBACKCALLBACK);
 typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTOP)(void);
-#ifdef AL_ALEXT_PROTOTYPES
+
 AL_API void AL_APIENTRY alRequestFoldbackStart(ALenum mode,ALsizei count,ALsizei length,ALfloat *mem,LPALFOLDBACKCALLBACK callback);
 AL_API void AL_APIENTRY alRequestFoldbackStop(void);
 typedef void (AL_APIENTRY*LPALBUFFERSAMPLESSOFT)(ALuint,ALuint,ALenum,ALsizei,ALenum,ALenum,const ALvoid*);
 typedef void (AL_APIENTRY*LPALBUFFERSUBSAMPLESSOFT)(ALuint,ALsizei,ALsizei,ALenum,ALenum,const ALvoid*);
 typedef void (AL_APIENTRY*LPALGETBUFFERSAMPLESSOFT)(ALuint,ALsizei,ALsizei,ALenum,ALenum,ALvoid*);
 typedef ALboolean (AL_APIENTRY*LPALISBUFFERFORMATSUPPORTEDSOFT)(ALenum);
-#ifdef AL_ALEXT_PROTOTYPES
+
 AL_API void AL_APIENTRY alBufferSamplesSOFT(ALuint buffer, ALuint samplerate, ALenum internalformat, ALsizei samples, ALenum channels, ALenum type, const ALvoid *data);
 AL_API void AL_APIENTRY alBufferSubSamplesSOFT(ALuint buffer, ALsizei offset, ALsizei samples, ALenum channels, ALenum type, const ALvoid *data);
 AL_API void AL_APIENTRY alGetBufferSamplesSOFT(ALuint buffer, ALsizei offset, ALsizei samples, ALenum channels, ALenum type, ALvoid *data);
 AL_API ALboolean AL_APIENTRY alIsBufferFormatSupportedSOFT(ALenum format);
-#endif
+
 typedef void (AL_APIENTRY*LPALSOURCEDSOFT)(ALuint,ALenum,ALdouble);
 typedef void (AL_APIENTRY*LPALSOURCE3DSOFT)(ALuint,ALenum,ALdouble,ALdouble,ALdouble);
 typedef void (AL_APIENTRY*LPALSOURCEDVSOFT)(ALuint,ALenum,const ALdouble*);
@@ -1889,7 +1642,7 @@ typedef void (AL_APIENTRY*LPALSOURCEI64VSOFT)(ALuint,ALenum,const ALint64SOFT*);
 typedef void (AL_APIENTRY*LPALGETSOURCEI64SOFT)(ALuint,ALenum,ALint64SOFT*);
 typedef void (AL_APIENTRY*LPALGETSOURCE3I64SOFT)(ALuint,ALenum,ALint64SOFT*,ALint64SOFT*,ALint64SOFT*);
 typedef void (AL_APIENTRY*LPALGETSOURCEI64VSOFT)(ALuint,ALenum,ALint64SOFT*);
-#ifdef AL_ALEXT_PROTOTYPES
+
 AL_API void AL_APIENTRY alSourcedSOFT(ALuint source, ALenum param, ALdouble value);
 AL_API void AL_APIENTRY alSource3dSOFT(ALuint source, ALenum param, ALdouble value1, ALdouble value2, ALdouble value3);
 AL_API void AL_APIENTRY alSourcedvSOFT(ALuint source, ALenum param, const ALdouble *values);
@@ -1903,7 +1656,7 @@ AL_API void AL_APIENTRY alGetSourcei64SOFT(ALuint source, ALenum param, ALint64S
 AL_API void AL_APIENTRY alGetSource3i64SOFT(ALuint source, ALenum param, ALint64SOFT *value1, ALint64SOFT *value2, ALint64SOFT *value3);
 AL_API void AL_APIENTRY alGetSourcei64vSOFT(ALuint source, ALenum param, ALint64SOFT *values);
 
-/* Effect object function types. */
+  -- Effect object function types
 typedef void (AL_APIENTRY *LPALGENEFFECTS)(ALsizei, ALuint*);
 typedef void (AL_APIENTRY *LPALDELETEEFFECTS)(ALsizei, const ALuint*);
 typedef ALboolean (AL_APIENTRY *LPALISEFFECT)(ALuint);
@@ -1916,7 +1669,7 @@ typedef void (AL_APIENTRY *LPALGETEFFECTIV)(ALuint, ALenum, ALint*);
 typedef void (AL_APIENTRY *LPALGETEFFECTF)(ALuint, ALenum, ALfloat*);
 typedef void (AL_APIENTRY *LPALGETEFFECTFV)(ALuint, ALenum, ALfloat*);
 
-/* Filter object function types. */
+  -- Filter object function types
 typedef void (AL_APIENTRY *LPALGENFILTERS)(ALsizei, ALuint*);
 typedef void (AL_APIENTRY *LPALDELETEFILTERS)(ALsizei, const ALuint*);
 typedef ALboolean (AL_APIENTRY *LPALISFILTER)(ALuint);
@@ -1929,7 +1682,7 @@ typedef void (AL_APIENTRY *LPALGETFILTERIV)(ALuint, ALenum, ALint*);
 typedef void (AL_APIENTRY *LPALGETFILTERF)(ALuint, ALenum, ALfloat*);
 typedef void (AL_APIENTRY *LPALGETFILTERFV)(ALuint, ALenum, ALfloat*);
 
-/* Auxiliary Effect Slot object function types. */
+  -- Auxiliary Effect Slot object function types
 typedef void (AL_APIENTRY *LPALGENAUXILIARYEFFECTSLOTS)(ALsizei, ALuint*);
 typedef void (AL_APIENTRY *LPALDELETEAUXILIARYEFFECTSLOTS)(ALsizei, const ALuint*);
 typedef ALboolean (AL_APIENTRY *LPALISAUXILIARYEFFECTSLOT)(ALuint);
@@ -1942,7 +1695,6 @@ typedef void (AL_APIENTRY *LPALGETAUXILIARYEFFECTSLOTIV)(ALuint, ALenum, ALint*)
 typedef void (AL_APIENTRY *LPALGETAUXILIARYEFFECTSLOTF)(ALuint, ALenum, ALfloat*);
 typedef void (AL_APIENTRY *LPALGETAUXILIARYEFFECTSLOTFV)(ALuint, ALenum, ALfloat*);
 
-#ifdef AL_ALEXT_PROTOTYPES
 AL_API ALvoid AL_APIENTRY alGenEffects(ALsizei n, ALuint *effects);
 AL_API ALvoid AL_APIENTRY alDeleteEffects(ALsizei n, const ALuint *effects);
 AL_API ALboolean AL_APIENTRY alIsEffect(ALuint effect);
@@ -1978,5 +1730,4 @@ AL_API ALvoid AL_APIENTRY alGetAuxiliaryEffectSloti(ALuint effectslot, ALenum pa
 AL_API ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotiv(ALuint effectslot, ALenum param, ALint *piValues);
 AL_API ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotf(ALuint effectslot, ALenum param, ALfloat *pflValue);
 AL_API ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotfv(ALuint effectslot, ALenum param, ALfloat *pflValues);
-
 end;

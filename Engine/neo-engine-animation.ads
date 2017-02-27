@@ -23,9 +23,6 @@ package Neo.Engine.Animation is
   ----------
   -- Pose --
   ----------
-  --
-  -- ???
-  --
 
   INFINITE_CYCLE : constant Natural := 0;
 

@@ -15,44 +15,113 @@
 
 with Ada.Unchecked_Conversion;
 
--- Custom binding to the infamous Win32 API: http://web.archive.org/web/20150115092801/http://msdn.microsoft.com/en-us/library/windows/apps/dn424765.aspx
+-- Binding to the Win32 API: http://web.archive.org/web/20150115092801/http://msdn.microsoft.com/en-us/library/windows/apps/dn424765.aspx
 package Neo.API.Win32 is
 
   -----------
   -- Types --
   -----------
 
-  -- UINT
-  -- BYTE
-  -- SIZE_T
-  -- HGLOBAL
-  -- LPVOID
-  -- BOOL
-  -- HWND
-  -- HANDLE
-  -- LPMEMORYSTATUSEX
-  -- LPCTSTR
-  -- PULARGE_INTEGER
-  -- DWORD                        Int_32_Unsigned_C
-  -- PFLASHWINFO
-  -- LPTSTR
-  -- LPSECURITY_ATTRIBUTES
-  -- LPSTARTUPINFO
-  -- LPPROCESS_INFORMATION
-  -- HICON
-  -- HINSTANCE
-  -- HHOOK
-  -- HOOKPROC
-  -- LPOSVERSIONINFO
-  -- HMODULE
-  -- LONG 
-  -- SHORT
-  -- WPARAM
-  -- LPARAM
+  -- LPVOID    Ptr
+  -- HGLOBAL   Ptr
+  -- HWND      Ptr
+  -- HANDLE    Ptr
+  -- HICON     Ptr
+  -- HINSTANCE Ptr
+  -- HHOOK     Ptr
+  -- HMODULE   Ptr
+  -- LPTSTR    Ptr_Str_16_C
+  -- LPCTSTR   Ptr_Const_Char_16_C
+  -- WPARAM    Int_Ptr
+  -- LPARAM    Int_Ptr
+  -- BOOL      Int_C
+  -- LONG      Int_C
+  -- UINT      Int_32_Unsigned_C
+  -- DWORD     Int_32_Unsigned_C
+  -- BYTE      Int_8_Unsigned_C
+  -- SHORT     Int_16_Signed_C
+  -- SIZE_T    Int_Size_C
 
   -----------
   -- Flags --
   -----------
+
+  -- https://web.archive.org/web/20150111095828/http://msdn.microsoft.com/en-us/library/930f87yf.aspx
+  MAX_PATH : constant Int_Size_C := 32_768; -- ???
+
+  -- https://web.archive.org/web/20160830082310/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
+  GWL_STYLE : constant Int_C := -16; -- 0
+
+  -- https://web.archive.org/web/20160830082310/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
+  GWL_EXSTYLE : constant Int_C := -20; -- 0
+
+  -- http://web.archive.org/web/20160623235135/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633589(v=vs.85).aspx
+  GCLP_HCURSOR : constant Int_C := -12; -- 0
+  
+  -- https://web.archive.org/web/20150118045535/http://msdn.microsoft.com/en-us/library/windows/desktop/ms633574(v=vs.85).aspx
+  DIALOG_CLASS : constant Str_16_C := "#32770"; -- "#0"
+
+  -- https://web.archive.org/web/20150109072835/http://msdn.microsoft.com/en-us/library/windows/desktop/ms646274(v=vs.85).aspx
+  WA_CLICKACTIVE : constant Int_Ptr := 16#0000_0002#; -- 0
+
+  -- https://web.archive.org/web/20160525074306/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943(v=vs.85).aspx
+  PM_REMOVE : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
+
+  -- https://web.archive.org/web/20161003234148/https://msdn.microsoft.com/en-us/library/windows/desktop/ms648072(v=vs.85).aspx
+  IDI_APPLICATION : constant Int_Ptr := 16#7F00#; -- MAKEINTRESOURCE (0)
+
+  -- https://web.archive.org/web/20150101200053/http://msdn.microsoft.com/en-us/library/windows/desktop/ms648391(v=vs.85).aspx
+  IDC_APPSTARTING : constant Int_Ptr := 16#7F00#; -- MAKEINTRESOURCE (0)
+  
+  -- https://web.archive.org/web/20160828015700/https://msdn.microsoft.com/en-us/library/windows/desktop/dd144909(v=vs.85).aspx
+  CLR_INVALID : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; -- ???
+
+  -- https://web.archive.org/web/20151028210132/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168(v=vs.85).aspx
+  CF_UNICODETEXT : constant Int_32_Unsigned_C := 16#0000_000D#; -- 0
+
+  -- https://web.archive.org/web/20160526201612/https://msdn.microsoft.com/en-us/library/windows/desktop/aa366574(v=vs.85).aspx
+  GMEM_MOVEABLE : constant Int_32_Unsigned_C := 16#0000_0002#; -- 0x0000
+
+  -- https://web.archive.org/web/20160808212528/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729175(v=vs.85).aspx
+  SPI_GETNONCLIENTMETRICS : constant Int_32_Unsigned_C := 16#0000_0029#; -- ???
+
+  -- https://web.archive.org/web/20160902020447/https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx
+  ERROR_INSUFFICIENT_BUFFER : constant Int_32_Unsigned_C := 16#0000_007A#; -- 0
+
+  -- https://web.archive.org/web/20160625030912/https://msdn.microsoft.com/en-us/library/windows/desktop/bb775951(v=vs.85).aspx
+  BS_GROUPBOX : constant Int_32_Unsigned_C := 16#0000_0007#; -- ???
+
+  -- https://web.archive.org/web/20161121002327/https://msdn.microsoft.com/en-us/library/windows/desktop/bb787577(v=vs.85).aspx
+  SB_ENDSCROLL : constant Int_Ptr := 16#0000_0007#; -- ???
+  SB_LINEDOWN  : constant Int_Ptr := 16#0000_0001#; -- ???
+
+  -- https://web.archive.org/web/20131006214136/http://msdn.microsoft.com/en-us/library/windows/desktop/bb775464(v=vs.85).aspx
+  ES_MULTILINE : constant Int_32_Unsigned_C := 16#0000_0004#; -- ???
+  ES_READONLY  : constant Int_32_Unsigned_C := 16#0000_0800#; -- ???
+  
+  -- https://web.archive.org/web/20141228152842/http://msdn.microsoft.com/en-us/library/windows/desktop/ms644977(v=vs.85).aspx
+  WH_CBT        : constant Int_C := 5; -- 0
+  HCBT_ACTIVATE : constant Int_C := 5; -- 0
+  
+  -- https://web.archive.org/web/20160808212320/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724371(v=vs.85).aspx
+  COLOR_WINDOW   : constant Int_Ptr := 16#0005#; -- 0
+  COLOR_GRAYTEXT : constant Int_Ptr := 16#0011#; -- 0
+
+  -- http://web.archive.org/web/20141224060057/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632646(v=vs.85).aspx
+  SIZE_MAXIMIZED : constant Int_Ptr := 16#0000_0002#; -- 0
+  SIZE_MINIMIZED : constant Int_Ptr := 16#0000_0001#; -- 0
+
+  -- http://web.archive.org/web/20160722055429/https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx
+  SC_SCREENSAVE : constant Int_Ptr := 16#0000_F140#; -- 0x0000
+  SC_KEYMENU    : constant Int_Ptr := 16#0000_F100#; -- 0x0000
+
+  -- https://web.archive.org/web/20140321085736/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645571(v=vs.85).aspx
+  RIM_TYPEKEYBOARD : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0
+  RIM_TYPEMOUSE    : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0
+
+  -- https://web.archive.org/web/20120410201544/http://msdn.microsoft.com/en-us/library/windows/desktop/ms679348(v=vs.85).aspx
+  FLASHW_TIMER : constant Int_32_Unsigned_C := 16#0000_0004#; -- 0x00000000
+  FLASHW_STOP  : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0
 
   -- https://blogs.msdn.microsoft.com/openspecification/2010/04/01/about-the-access_mask-structure/
   GENERIC_READ  : constant Int_32_Unsigned_C := 16#8000_0000#; -- 0x00000000
@@ -62,14 +131,74 @@ package Neo.API.Win32 is
   FILE_SHARE_READ  : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x00000000
   FILE_SHARE_WRITE : constant Int_32_Unsigned_C := 16#0000_0002#; -- 0x00000000
   OPEN_EXISTING    : constant Int_32_Unsigned_C := 3;             -- 0
+    
+  -- https://web.archive.org/web/20160821131741/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645597%28v=vs.85%29.aspx
+  RIDI_DEVICENAME    : constant Int_32_Unsigned_C := 16#2000_0007#; -- 0x00000000
+  RIDI_DEVICEINFO    : constant Int_32_Unsigned_C := 16#2000_000b#; -- 0x00000000
+  RIDI_PREPARSEDDATA : constant Int_32_Unsigned_C := 16#2000_0005#; -- 0x00000000
 
-  -- https://web.archive.org/web/20160525074306/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943(v=vs.85).aspx
-  PM_REMOVE : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
+  -- https://web.archive.org/web/20150110160845/http://msdn.microsoft.com/en-us/library/windows/desktop/ff485923(v=vs.85).aspx
+  EM_GETSEL              : constant Int_32_Unsigned_C := 16#0000_00B0#; -- 0x0000
+  EM_SETSEL              : constant Int_32_Unsigned_C := 16#0000_00B1#; -- 0x0000
+  EM_GETFIRSTVISIBLELINE : constant Int_32_Unsigned_C := 16#0000_00CE#; -- 0x0000
 
-  -- https://web.archive.org/web/20141228152842/http://msdn.microsoft.com/en-us/library/windows/desktop/ms644977(v=vs.85).aspx
-  WH_CBT        : constant Int_C := 5; -- 0
-  HCBT_ACTIVATE : constant Int_C := 5; -- 0
+  -- https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
+  SW_SHOWNORMAL    : constant Int_C := 1; -- 0
+  SW_HIDE          : constant Int_C := 0; -- 0
+  SW_SHOWMINIMIZED : constant Int_C := 2; -- 0
+  SW_RESTORE       : constant Int_C := 9; -- 0
+
+  -- http://web.archive.org/web/20160713003824/https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
+  VK_LBUTTON   : constant Int_16_Unsigned_C := 16#0001#; -- 0x00
+  VK_OEM_CLEAR : constant Int_16_Unsigned_C := 16#00FE#; -- 0x00
+  VK_V_KEY     : constant Int_16_Unsigned_C := 16#0056#; -- 0x00
+  VK_CONTROL   : constant Int_16_Unsigned_C := 16#0011#; -- 0x00
+
+  -- https://web.archive.org/web/20150816061650/https://msdn.microsoft.com/en-us/library/windows/desktop/ms648045(v=vs.85).aspx
+  LR_LOADFROMFILE : constant Int_32_Unsigned_C := 16#0000_0010#; -- 0x00000000
+  LR_DEFAULTSIZE  : constant Int_32_Unsigned_C := 16#0000_0040#; -- 0x00000000
+  IMAGE_CURSOR    : constant Int_32_Unsigned_C := 16#0000_0002#; -- 0
+  IMAGE_ICON      : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0
+  
+  -- http://web.archive.org/web/20160808214158/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385(v=vs.85).aspx
+  SM_CYDLGFRAME : constant Int_C := 8;  -- 0 
+  SM_CYVTHUMB   : constant Int_C := 9;  -- 0 
+  SM_CXHTHUMB   : constant Int_C := 10; -- 0
+  SM_CYSIZE     : constant Int_C := 31; -- 0
+  SM_CXFRAME    : constant Int_C := 32; -- 0
+  SM_CYFRAME    : constant Int_C := 33; -- 0
  
+  -- https://web.archive.org/web/20160202112019/https://msdn.microsoft.com/en-us/library/windows/desktop/dd183499(v=vs.85).aspx
+  FW_LIGHT            : constant Int_C             := 300; -- 0
+  DEFAULT_CHARSET     : constant Int_32_Unsigned_C := 16#0000_0001#; -- ???
+  DEFAULT_QUALITY     : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
+  OUT_DEFAULT_PRECIS  : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
+  CLIP_DEFAULT_PRECIS : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
+  FONT_FAMILY_MODERN  : constant Int_32_Unsigned_C := 16#0000_0030#;
+  FONT_FIXED_PITCH    : constant Int_32_Unsigned_C := 16#0000_0001#;
+
+  -- https://web.archive.org/web/20140209214910/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632647(v=vs.85).aspx
+  WMSZ_BOTTOMRIGHT : constant Int_Ptr := 16#0000_0008#; -- 0
+  WMSZ_BOTTOMLEFT  : constant Int_Ptr := 16#0000_0007#; -- 0
+  WMSZ_TOPRIGHT    : constant Int_Ptr := 16#0000_0005#; -- 0
+  WMSZ_TOPLEFT     : constant Int_Ptr := 16#0000_0004#; -- 0
+  WMSZ_BOTTOM      : constant Int_Ptr := 16#0000_0006#; -- 0
+  WMSZ_RIGHT       : constant Int_Ptr := 16#0000_0002#; -- 0
+  WMSZ_LEFT        : constant Int_Ptr := 16#0000_0001#; -- 0
+  WMSZ_TOP         : constant Int_Ptr := 16#0000_0003#; -- 0
+
+  -- https://web.archive.org/web/20150109064332/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
+  RIDEV_INPUTSINK                : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x00000000
+  GENERIC_DESKTOP                : constant Int_16_Unsigned_C := 16#0001#;      -- 0x00 ???
+  USE_RAW_KEYBOARD               : constant Int_16_Unsigned_C := 16#0006#;      -- 0x00 ???
+  USE_RAW_MOUSE                  : constant Int_16_Unsigned_C := 16#0002#;      -- 0x00 ???
+  GET_DEVICE_HEADER              : constant Int_32_Unsigned_C := 16#1000_0005#; -- ???
+  GET_DEVICE_DATA                : constant Int_32_Unsigned_C := 16#1000_0003#; -- ???
+  STOP_READING_TOP_LEVEL_DEVICES : constant Int_32_Unsigned_C := 16#0000_0001#; -- ???
+  KEY_MAKE_CODE_FOR_LEFT         : constant Int_16_Unsigned_C := 16#002A#;      -- ???
+  KEY_IS_RIGHT_SIDED             : constant Int_16_Unsigned_C := 16#0002#;      -- ???
+  MOUSE_WHEEL_DELTA              : constant Int_16_Signed     := 120;           -- ???
+
   -- https://web.archive.org/web/20160605071718/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx
   MB_SYSTEMMODAL     : constant Int_32_Unsigned_C := 16#0000_1000#; -- 0x00000000L
   MB_ICONINFORMATION : constant Int_32_Unsigned_C := 16#0000_0040#; -- 0x00000000L
@@ -83,22 +212,22 @@ package Neo.API.Win32 is
   IDRETRY            : constant Int_C             := 4;             -- 0
   IDYES              : constant Int_C             := 6;             -- 0
 
-  -- https://web.archive.org/web/20140209214910/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632647(v=vs.85).aspx
-  WMSZ_BOTTOMRIGHT : constant Int_Ptr := 16#0000_0008#; -- 0
-  WMSZ_BOTTOMLEFT  : constant Int_Ptr := 16#0000_0007#; -- 0
-  WMSZ_TOPRIGHT    : constant Int_Ptr := 16#0000_0005#; -- 0
-  WMSZ_TOPLEFT     : constant Int_Ptr := 16#0000_0004#; -- 0
-  WMSZ_BOTTOM      : constant Int_Ptr := 16#0000_0006#; -- 0
-  WMSZ_RIGHT       : constant Int_Ptr := 16#0000_0002#; -- 0
-  WMSZ_LEFT        : constant Int_Ptr := 16#0000_0001#; -- 0
-  WMSZ_TOP         : constant Int_Ptr := 16#0000_0003#; -- 0
+  -- https://web.archive.org/web/20150816054622/https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx
+  WS_TOPMOST       : constant Int_32_Unsigned_C := 16#0000_0008#; -- 0x00000000L
+  WS_POPUP         : constant Int_32_Unsigned_C := 16#8000_0000#; -- 0x00000000L
+  WS_CAPTION       : constant Int_32_Unsigned_C := 16#00C0_0000#; -- 0x00000000L
+  WS_VSCROLL       : constant Int_32_Unsigned_C := 16#0020_0000#; -- 0x00000000L
+  WS_EX_COMPOSITED : constant Int_32_Unsigned_C := 16#0200_0000#; -- 0x00000000L
+  WS_MAXIMIZEBOX   : constant Int_32_Unsigned_C := 16#0002_0000#; -- 0x00000000L
+  WS_SYSMENU       : constant Int_32_Unsigned_C := 16#0008_0000#; -- 0x00000000L
+  WS_BORDER        : constant Int_32_Unsigned_C := 16#0080_0000#; -- 0x00000000L
+  WS_MINIMIZEBOX   : constant Int_32_Unsigned_C := 16#0001_0000#; -- 0x00000000L
+  WS_CHILD         : constant Int_32_Unsigned_C := 16#4000_0000#; -- 0x00000000L
+  WS_DISABLED      : constant Int_32_Unsigned_C := 16#0800_0000#; -- 0x00000000L
+  WS_MINIMIZE      : constant Int_32_Unsigned_C := 16#2000_0000#; -- 0x00000000L
+  WS_VISIBLE       : constant Int_32_Unsigned_C := 16#1000_0000#; -- 0x00000000L
+  WS_SIZEBOX       : constant Int_32_Unsigned_C := 16#0004_0000#; -- 0x00000000L
 
-  -- http://web.archive.org/web/20160808214158/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724385(v=vs.85).aspx
-  SM_CYVTHUMB : constant Int_C := 9;  -- 0 
-  SM_CYSIZE   : constant Int_C := 31; -- 0
-  SM_CXFRAME  : constant Int_C := 32; -- 0
-  SM_CYFRAME  : constant Int_C := 33; -- 0
- 
   -- https://web.archive.org/web/20140714222448/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645578(v=vs.85).aspx
   RI_MOUSE_LEFT_BUTTON_DOWN   : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
   RI_MOUSE_LEFT_BUTTON_UP     : constant Int_32_Unsigned_C := 16#0000_0002#; -- 0x0000
@@ -112,21 +241,6 @@ package Neo.API.Win32 is
   RI_MOUSE_BUTTON_4_UP        : constant Int_32_Unsigned_C := 16#0000_0080#; -- 0x0000
   RI_MOUSE_BUTTON_5_DOWN      : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x0000
   RI_MOUSE_BUTTON_5_UP        : constant Int_32_Unsigned_C := 16#0000_0200#; -- 0x0000   
- 
-  -- https://web.archive.org/web/20140321085736/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645571(v=vs.85).aspx
-  RIM_TYPEKEYBOARD : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0
-  RIM_TYPEMOUSE    : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0
-    
-  -- https://web.archive.org/web/20160821131741/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645597%28v=vs.85%29.aspx
-  RIDI_DEVICENAME    : constant Int_32_Unsigned_C := 16#2000_0007#; -- 0x00000000
-  RIDI_DEVICEINFO    : constant Int_32_Unsigned_C := 16#2000_000b#; -- 0x00000000
-  RIDI_PREPARSEDDATA : constant Int_32_Unsigned_C := 16#2000_0005#; -- 0x00000000
-
-  -- https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
-  SW_SHOWNORMAL    : constant Int_C := 1; -- 0
-  SW_HIDE          : constant Int_C := 0; -- 0
-  SW_SHOWMINIMIZED : constant Int_C := 2; -- 0
-  SW_RESTORE       : constant Int_C := 9; -- 0
 
   -- https://web.archive.org/web/20160404075807/https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad(v=vs.85).aspx
   XINPUT_GAMEPAD_DPAD_UP        : constant Int_16_Unsigned_C := 16#0001#; -- 0x0000
@@ -144,132 +258,30 @@ package Neo.API.Win32 is
   XINPUT_GAMEPAD_X              : constant Int_16_Unsigned_C := 16#4000#; -- 0x0000
   XINPUT_GAMEPAD_Y              : constant Int_16_Unsigned_C := 16#8000#; -- 0x0000
 
-  -- https://web.archive.org/web/20150109064332/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
-  RIDEV_INPUTSINK  : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x00000000
-  GENERIC_DESKTOP  : constant Int_16_Unsigned_C := 16#0001#;      -- 0x00 ???
-  USE_RAW_KEYBOARD : constant Int_16_Unsigned_C := 16#0006#;      -- 0x00 ???
-  USE_RAW_MOUSE    : constant Int_16_Unsigned_C := 16#0002#;      -- 0x00 ???
-
-  -- 
-  GET_DEVICE_HEADER              : constant Int_32_Unsigned_C := 16#1000_0005#;
-  GET_DEVICE_DATA                : constant Int_32_Unsigned_C := 16#1000_0003#;
-  STOP_READING_TOP_LEVEL_DEVICES : constant Int_32_Unsigned_C := 16#0000_0001#;
-  KEY_MAKE_CODE_FOR_LEFT         : constant Int_16_Unsigned_C := 16#002A#;
-  MOUSE_WHEEL_DELTA              : constant Int_16_Signed     := 120;
-
-  -- http://web.archive.org/web/20160713003824/https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
-  VK_LBUTTON   : constant Int_16_Unsigned_C := 16#0001#; -- 0x00
-  VK_OEM_CLEAR : constant Int_16_Unsigned_C := 16#00FE#; -- 0x00
-  VK_V_KEY     : constant Int_16_Unsigned_C := 16#0056#; -- 0x00
-  VK_CONTROL   : constant Int_16_Unsigned_C := 16#0011#; -- 0x00
-
   -- https://web.archive.org/web/20150109034335/http://msdn.microsoft.com/en-us/library/windows/desktop/ff468925(v=vs.85).aspx
-  WM_SIZING              : constant Int_32_Unsigned_C := 16#0000_0214#; -- 0x0000
-  WM_CLOSE               : constant Int_32_Unsigned_C := 16#0000_0010#; -- 0x0000
-  WM_CHAR                : constant Int_32_Unsigned_C := 16#0000_0102#; -- 0x0000
-  WM_CREATE              : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
-  WM_CTLCOLORSTATIC      : constant Int_32_Unsigned_C := 16#0000_0138#; -- 0x0000
-  WM_GETMINMAXINFO       : constant Int_32_Unsigned_C := 16#0000_0024#; -- 0x0000
-  WM_INPUT               : constant Int_32_Unsigned_C := 16#0000_00FF#; -- 0x0000
-  WM_QUIT                : constant Int_32_Unsigned_C := 16#0000_0012#; -- 0x0000
-  WM_COMMAND             : constant Int_32_Unsigned_C := 16#0000_0111#; -- 0x0000
-  WM_VSCROLL             : constant Int_32_Unsigned_C := 16#0000_0115#; -- 0x0000
-  WM_SETREDRAW           : constant Int_32_Unsigned_C := 16#0000_000B#; -- 0x0000 
-  WM_MOUSEWHEEL          : constant Int_32_Unsigned_C := 16#0000_020A#; -- 0x0000
-  WM_GETTEXT             : constant Int_32_Unsigned_C := 16#0000_000D#; -- 0x0000
-  WM_KEYDOWN             : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x0000 
-  WM_SYSKEYDOWN          : constant Int_32_Unsigned_C := 16#0000_0104#; -- 0x0000 
-  WM_SETTEXT             : constant Int_32_Unsigned_C := 16#0000_000C#; -- 0x0000
-  WM_SETFONT             : constant Int_32_Unsigned_C := 16#0000_0030#; -- 0x0000 
-  WM_SIZE                : constant Int_32_Unsigned_C := 16#0000_0005#; -- 0x0000
-  WM_ACTIVATE            : constant Int_32_Unsigned_C := 16#0000_0006#; -- 0x0000
-  WM_SYSCOMMAND          : constant Int_32_Unsigned_C := 16#0000_0112#; -- 0x0000
-  WM_CTLCOLOREDIT        : constant Int_32_Unsigned_C := 16#0000_0133#; -- 0x0000
-  EM_GETSEL              : constant Int_32_Unsigned_C := 16#0000_00B0#; -- 0x0000
-  EM_SETSEL              : constant Int_32_Unsigned_C := 16#0000_00B1#; -- 0x0000
-  EM_GETFIRSTVISIBLELINE : constant Int_32_Unsigned_C := 16#0000_00CE#; -- 0x0000
-
-  -- 
-  CLR_INVALID : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; --
-
-  -- 
-  SPI_GETNONCLIENTMETRICS : constant Int_32_Unsigned_C := 16#0000_0029#; -- 
-
-  -- http://web.archive.org/web/20160623235135/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633589(v=vs.85).aspx
-  GCLP_HCURSOR : constant Int_C := -12; -- 00
-
-  -- http://web.archive.org/web/20160722055429/https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx
-  SC_SCREENSAVE : constant Int_Ptr := 16#0000_F140#; -- 0x0000
-  SC_KEYMENU    : constant Int_Ptr := 16#0000_F100#; -- 0x0000
-
-  -- http://web.archive.org/web/20141224060057/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632646(v=vs.85).aspx
-  SIZE_MAXIMIZED : constant Int_Ptr := 16#0000_0002#; -- 0
-  SIZE_MINIMIZED : constant Int_Ptr := 16#0000_0001#; -- 0
-
-  -- TODO Finish the renaming !!!
-  WA_CLICKACTIVE : constant Int_Ptr := 16#0000_0002#; -- 0
-
-  -- 
-  WS_TOPMOST : constant Int_32_Unsigned_C := 16#0000_0008#; -- 0x00000000L
-  WS_POPUP          : constant Int_32_Unsigned_C := 16#8000_0000#; -- WS_POPUP
-  BS_GROUPBOX                            : constant Int_32_Unsigned_C := 16#0000_0007#; -- 
-  WS_CAPTION                             : constant Int_32_Unsigned_C := 16#00C0_0000#; -- 
-  WS_VSCROLL              : constant Int_32_Unsigned_C := 16#0020_0000#; -- 
-  WS_EX_COMPOSITED                     : constant Int_32_Unsigned_C := 16#0200_0000#; -- 
-  WS_MAXIMIZEBOX                          : constant Int_32_Unsigned_C := 16#0002_0000#; -- 
-  WS_SYSMENU                        : constant Int_32_Unsigned_C := 16#0008_0000#; -- WS_SYSMENU
-  WS_BORDER                     : constant Int_32_Unsigned_C := 16#0080_0000#; -- WS_BORDER
-
-  SUBEVENT_SCROLL_BOTTOM                    : constant Int_Ptr := 16#0000_0007#;
-  SUBEVENT_SCROLL_DOWN_LINE              : constant Int_Ptr := 16#0000_0001#;
-  SUBEVENT_KEY_IS_RIGHT_SIDED                 : constant Int_16_Unsigned_C := 16#0002#;
-
-  STYLE_BOX_FULLSCREEN                       : constant Int_32_Unsigned_C := 16#0001_0000#; -- WS_
-  STYLE_CHILD                                : constant Int_32_Unsigned_C := 16#4000_0000#; -- WS_
-  STYLE_ALIGN_TEXT_TO_LEFT                   : constant Int_32_Unsigned_C := 16#0000_0000#; -- WS_
-  STYLE_MULTI_LINE                           : constant Int_32_Unsigned_C := 16#0000_0004#; -- WS_
-  STYLE_NO_USER_EDITING                      : constant Int_32_Unsigned_C := 16#0000_0800#; -- WS_
-  STYLE_PUSH_BUTTON                          : constant Int_32_Unsigned_C := 16#0000_0000#; -- WS_
-  STYLE_ICONIC_INITIALLY                     : constant Int_32_Unsigned_C := 16#2000_0000#; -- WS_ICONIC??
-  STYLE_NO_ACTIVATE                          : constant Int_32_Unsigned_C := 16#0800_0000#; -- WS_
-  STYLE_VISIBLE_INITIALLY                    : constant Int_32_Unsigned_C := 16#1000_0000#; -- WS_
-  STYLE_BORDER_SIZABLE                       : constant Int_32_Unsigned_C := 16#0004_0000#; -- WS_
-
-  DATA_VERTICAL_RESOLUTION                   : constant Int_C   := 10; -- SM_CXHTHUMB
-  DATA_HORIZONTAL_RESOLUTION                 : constant Int_C   := 8; -- SM_CYDLGFRAME
-
-  MEMORY_MOVEABLE                            : constant Int_32_Unsigned_C := 16#0000_0002#;
-  MEMORY_DYNAMIC_DATA_EXCHANGE_SHARE         : constant Int_32_Unsigned_C := 16#0000_16000#;
-  CLIPBOARD_UNICODE_TEXT                     : constant Int_32_Unsigned_C := 16#0000_000D#;
-  MAXIMUM_PATH_LENGTH                        : constant Int_Size_C       := 32_768 - 1; -- Minus one to account for null terminator
-  CLASS_NAME_DIALOG                          : constant Str_16           := "#32770";
-  GENERIC_ICON                               : constant Int_Ptr      := 16#7F00#;
-  ERROR_INSUFFICIENT_BUFFER                  : constant Int_32_Unsigned_C := 16#0000_007A#;
-  GENERIC_CURSOR                             : constant Int_Ptr      := 16#7F00#;
-  NO_ERROR                                   : constant Int_32_Unsigned_C := 16#0000_0000#;
-  SET_WINDOW_STYLE                           : constant Int_C   := -16;
-  FLASH_CONTINUOUSLY                         : constant Int_32_Unsigned_C := 16#0000_0004#;
-  FLASH_END                                  : constant Int_32_Unsigned_C := 16#0000_0000#;
-  LOAD_FROM_FILE                             : constant Int_32_Unsigned_C := 16#0000_0010#;
-  LOAD_ICO                                   : constant Int_32_Unsigned_C := 16#0000_0001#;
-  LOAD_CUR                                   : constant Int_32_Unsigned_C := 16#0000_0002#;
-  DEFAULT_ICON_SIZE                          : constant Int_32_Unsigned_C := 16#0000_0040#;
-  MESSAGE_SET_ICON                           : constant Int_32_Unsigned_C := 16#0000_0080#;
-  WTF                         : constant Int_C := -1;
-  WTF2                       : constant Int_C := -2;
-  INSERT_ON_TOP_OF_EVERYTHING : constant Ptr := To_Ptr(Int_Ptr(To_Int_32_Unsigned_C(WTF)));
-  REMOVE_ON_TOP_OF_EVERYTHING : constant Ptr := To_Ptr(Int_Ptr(To_Int_32_Unsigned_C(WTF2)));
-  BRUSH_GRAY                                 : constant Int_Ptr      := 16#0011#;
-  FONT_WEIGHT_LIGHT                          : constant Int_C   := 300;
-  DEFAULT_CHARACTER_SET                      : constant Int_32_Unsigned_C := 16#0000_0001#;
-  FONT_OUT_DEFAULT_PRECISION                 : constant Int_32_Unsigned_C := 16#0000_0000#;
-  FONT_CLIP_DEFAULT_PRECISION                : constant Int_32_Unsigned_C := 16#0000_0000#;
-  FONT_DEFAULT_QUALITY                       : constant Int_32_Unsigned_C := 16#0000_0000#;
-  FONT_FAMILY_MODERN                         : constant Int_32_Unsigned_C := 16#0000_0030#;
-  FONT_FIXED_PITCH                           : constant Int_32_Unsigned_C := 16#0000_0001#;
-  MESSAGE_GET_FONT                           : constant Int_32_Unsigned_C := 16#0000_0031#;
-  SET_WINDOW_STYLE_EXTRA                     : constant Int_C   := -20;
-  BRUSH_WINDOW                               : constant Int_Ptr      := 16#0005#; -- COLOR_WINDOW
+  WM_SIZING         : constant Int_32_Unsigned_C := 16#0000_0214#; -- 0x0000
+  WM_CLOSE          : constant Int_32_Unsigned_C := 16#0000_0010#; -- 0x0000
+  WM_CHAR           : constant Int_32_Unsigned_C := 16#0000_0102#; -- 0x0000
+  WM_CREATE         : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
+  WM_CTLCOLORSTATIC : constant Int_32_Unsigned_C := 16#0000_0138#; -- 0x0000
+  WM_GETMINMAXINFO  : constant Int_32_Unsigned_C := 16#0000_0024#; -- 0x0000
+  WM_INPUT          : constant Int_32_Unsigned_C := 16#0000_00FF#; -- 0x0000
+  WM_QUIT           : constant Int_32_Unsigned_C := 16#0000_0012#; -- 0x0000
+  WM_COMMAND        : constant Int_32_Unsigned_C := 16#0000_0111#; -- 0x0000
+  WM_VSCROLL        : constant Int_32_Unsigned_C := 16#0000_0115#; -- 0x0000
+  WM_SETREDRAW      : constant Int_32_Unsigned_C := 16#0000_000B#; -- 0x0000 
+  WM_MOUSEWHEEL     : constant Int_32_Unsigned_C := 16#0000_020A#; -- 0x0000
+  WM_GETTEXT        : constant Int_32_Unsigned_C := 16#0000_000D#; -- 0x0000
+  WM_KEYDOWN        : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x0000 
+  WM_SYSKEYDOWN     : constant Int_32_Unsigned_C := 16#0000_0104#; -- 0x0000 
+  WM_SETTEXT        : constant Int_32_Unsigned_C := 16#0000_000C#; -- 0x0000
+  WM_SETFONT        : constant Int_32_Unsigned_C := 16#0000_0030#; -- 0x0000 
+  WM_SIZE           : constant Int_32_Unsigned_C := 16#0000_0005#; -- 0x0000
+  WM_ACTIVATE       : constant Int_32_Unsigned_C := 16#0000_0006#; -- 0x0000
+  WM_SYSCOMMAND     : constant Int_32_Unsigned_C := 16#0000_0112#; -- 0x0000
+  WM_CTLCOLOREDIT   : constant Int_32_Unsigned_C := 16#0000_0133#; -- 0x0000
+  WM_SETICON        : constant Int_32_Unsigned_C := 16#0000_0080#; -- 0x0000
+  WM_GETFONT        : constant Int_32_Unsigned_C := 16#0000_0031#; -- 0x0000
 
   ---------------
   -- Callbacks --
@@ -308,262 +320,269 @@ package Neo.API.Win32 is
   ----------------
   -- Structures --
   ----------------
-    
+
+  -- https://web.archive.org/web/20161012142025/https://msdn.microsoft.com/en-us/library/windows/desktop/aa379561(v=vs.85).aspx
+  type SECURITY_ATTRIBUTES is record
+       nLength              : Int_32_Unsigned_C := 0;        -- DWORD
+       lpSecurityDescriptor : Ptr               := NULL_PTR; -- LPVOID
+       bInheritHandle       : Int_C             := 0;        -- BOOL
+    end record with Convention => C; 
+
   -- https://web.archive.org/web/20120511143301/http://msdn.microsoft.com/en-us/library/windows/desktop/ms679348(v=vs.85).aspx
   type FLASHWINFO is record
-      cbSize    : Int_32_Unsigned_C := FLASHWINFO'Size / Byte'Size; -- UINT  
-      hwnd      : Ptr;               -- HWND  
-      dwFlags   : Int_32_Unsigned_C; -- DWORD 
-      uCount    : Int_32_Unsigned_C; -- UINT  
-      dwTimeout : Int_32_Unsigned_C; -- DWORD 
+      cbSize    : Int_32_Unsigned_C := FLASHWINFO'Object_Size / Byte'Object_Size; -- UINT  
+      hwnd      : Ptr               := NULL_PTR; -- HWND  
+      dwFlags   : Int_32_Unsigned_C := 0;        -- DWORD 
+      uCount    : Int_32_Unsigned_C := 0;        -- UINT  
+      dwTimeout : Int_32_Unsigned_C := 0;        -- DWORD 
     end record with Convention => C;
     
   -- https://web.archive.org/web/20150114021053/http://msdn.microsoft.com/en-us/library/windows/desktop/ms686331(v=vs.85).aspx
   type STARTUPINFO is record
-      cb              : Int_32_Unsigned_C;    -- DWORD  
-      lpReserved      : Ptr_Str_16_C;         -- LPTSTR 
-      lpDesktop       : Ptr_Str_16_C;         -- LPTSTR 
-      lpTitle         : Ptr_Str_16_C;         -- LPTSTR 
-      dwX             : Int_32_Unsigned_C;    -- DWORD
-      dwY             : Int_32_Unsigned_C;    -- DWORD
-      dwXSize         : Int_32_Unsigned_C;    -- DWORD
-      dwYSize         : Int_32_Unsigned_C;    -- DWORD
-      dwXCountChars   : Int_32_Unsigned_C;    -- DWORD
-      dwYCountChars   : Int_32_Unsigned_C;    -- DWORD
-      dwFillAttribute : Int_32_Unsigned_C;    -- DWORD
-      dwFlags         : Int_32_Unsigned_C;    -- DWORD
-      wShowWindow     : Int_16_Unsigned_C;    -- WORD   
-      cbReserved2     : Int_16_Unsigned_C;    -- WORD   
-      lpReserved2     : Ptr_Int_8_Unsigned_C; -- LPBYTE 
-      hStdInput       : Ptr;                  -- HANDLE
-      hStdOutput      : Ptr;                  -- HANDLE
-      hStdError       : Ptr;                  -- HANDLE
+      cb              : Int_32_Unsigned_C    := 0;        -- DWORD  
+      lpReserved      : Ptr_Str_16_C         := null;     -- LPTSTR 
+      lpDesktop       : Ptr_Str_16_C         := null;     -- LPTSTR 
+      lpTitle         : Ptr_Str_16_C         := null;     -- LPTSTR 
+      dwX             : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwY             : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwXSize         : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwYSize         : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwXCountChars   : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwYCountChars   : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwFillAttribute : Int_32_Unsigned_C    := 0;        -- DWORD
+      dwFlags         : Int_32_Unsigned_C    := 0;        -- DWORD
+      wShowWindow     : Int_16_Unsigned_C    := 0;        -- WORD   
+      cbReserved2     : Int_16_Unsigned_C    := 0;        -- WORD   
+      lpReserved2     : Ptr_Int_8_Unsigned_C := 0;        -- LPBYTE 
+      hStdInput       : Ptr                  := NULL_PTR; -- HANDLE
+      hStdOutput      : Ptr                  := NULL_PTR; -- HANDLE
+      hStdError       : Ptr                  := NULL_PTR; -- HANDLE
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160302060800/https://msdn.microsoft.com/en-us/library/windows/desktop/ms684873(v=vs.85).aspx
   type PROCESS_INFORMATION is record
-      hProcess    : Ptr;               -- HANDLE 
-      hThread     : Ptr;               -- HANDLE 
-      dwProcessId : Int_32_Unsigned_C; -- DWORD  
-      dwThreadId  : Int_32_Unsigned_C; -- DWORD  
+      hProcess    : Ptr               := NULL_PTR; -- HANDLE 
+      hThread     : Ptr               := NULL_PTR; -- HANDLE 
+      dwProcessId : Int_32_Unsigned_C := 0;        -- DWORD  
+      dwThreadId  : Int_32_Unsigned_C := 0;        -- DWORD  
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160611121457/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724833(v=vs.85).aspx
-  type OSVERSIONINFOEX is record
-      dwOSVersionInfoSize : Int_32_Unsigned_C; -- DWORD 
-      dwMajorVersion      : Int_32_Unsigned_C; -- DWORD 
-      dwMinorVersion      : Int_32_Unsigned_C; -- DWORD 
-      dwBuildNumber       : Int_32_Unsigned_C; -- DWORD 
-      dwPlatformId        : Int_32_Unsigned_C; -- DWORD 
-      szCSDVersion        : Str_16 (1..128);   -- TCHAR[128]
-      wServicePackMajor   : Int_16_Unsigned_C; -- WORD
-      wServicePackMinor   : Int_16_Unsigned_C; -- WORD
-      wSuiteMask          : Int_16_Unsigned_C; -- WORD
-      wProductType        : Int_8_Unsigned_C;  -- BYTE
-      wReserved           : Int_8_Unsigned_C;  -- BYTE
-    end record with Convention => C;
+  -- type OSVERSIONINFOEX is record
+  --     dwOSVersionInfoSize : Int_32_Unsigned_C := 0; -- DWORD 
+  --     dwMajorVersion      : Int_32_Unsigned_C := 0; -- DWORD 
+  --     dwMinorVersion      : Int_32_Unsigned_C := 0; -- DWORD 
+  --     dwBuildNumber       : Int_32_Unsigned_C := 0; -- DWORD 
+  --     dwPlatformId        : Int_32_Unsigned_C := 0; -- DWORD 
+  --     szCSDVersion        : Str_16_C (1..128) := (others => NULL_CHAR_16_C); -- TCHAR[128]
+  --     wServicePackMajor   : Int_16_Unsigned_C := 0; -- WORD
+  --     wServicePackMinor   : Int_16_Unsigned_C := 0; -- WORD
+  --     wSuiteMask          : Int_16_Unsigned_C := 0; -- WORD
+  --     wProductType        : Int_8_Unsigned_C  := 0; -- BYTE
+  --     wReserved           : Int_8_Unsigned_C  := 0; -- BYTE
+  --   end record with Convention => C;
     
   -- https://web.archive.org/web/20141225053346/http://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx
   type RECT is record
-      left   : Int_C; -- LONG
-      top    : Int_C; -- LONG
-      right  : Int_C; -- LONG
-      bottom : Int_C; -- LONG
+      left   : Int_C := 0; -- LONG
+      top    : Int_C := 0; -- LONG
+      right  : Int_C := 0; -- LONG
+      bottom : Int_C := 0; -- LONG
     end record with Convention => C;
     
   -- https://web.archive.org/web/20150114082405/http://msdn.microsoft.com/en-us/library/windows/desktop/dd145065(v=vs.85).aspx
   type MONITORINFO is record
-      cbSize    : Int_32_Unsigned_C := MONITORINFO'Size / Byte'Size; -- DWORD 
-      rcMonitor : RECT;              -- RECT  
-      rcWork    : RECT;              -- RECT  
-      dwFlags   : Int_32_Unsigned_C; -- DWORD 
+      cbSize    : Int_32_Unsigned_C := MONITORINFO'Object_Size / Byte'Object_Size; -- DWORD 
+      rcMonitor : RECT              := (others => <>); -- RECT  
+      rcWork    : RECT              := (others => <>); -- RECT  
+      dwFlags   : Int_32_Unsigned_C := 0;              -- DWORD 
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160129165906/https://msdn.microsoft.com/en-us/library/windows/desktop/dd162805(v=vs.85).aspx
   type POINT is record
-      x : Int_C; -- LONG 
-      y : Int_C; -- LONG 
+      x : Int_C := 0; -- LONG 
+      y : Int_C := 0; -- LONG 
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160131052119/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644958(v=vs.85).aspx
   type MSG is record
-      hwnd    : Ptr;               -- HWND   
-      message : Int_32_Unsigned_C; -- UINT   
-      wParam  : Int_Ptr;           -- WPARAM 
-      lParam  : Int_Ptr;           -- LPARAM 
-      time    : Int_32_Unsigned_C; -- DWORD  
-      pt      : POINT;             -- POINT  
+      hwnd    : Ptr               := NULL_PTR;       -- HWND   
+      message : Int_32_Unsigned_C := 0;              -- UINT   
+      wParam  : Int_Ptr           := 0;              -- WPARAM 
+      lParam  : Int_Ptr           := 0;              -- LPARAM 
+      time    : Int_32_Unsigned_C := 0;              -- DWORD  
+      pt      : POINT             := (others => <>); -- POINT  
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160527143421/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
   type WNDCLASSEX is record
-      cbSize        : Int_32_Unsigned_C := WNDCLASSEX'Size / Byte'Size;   -- UINT      
-      style         : Int_32_Unsigned_C;   -- UINT      
-      lpfnWndProc   : Ptr;                 -- WNDPROC   
-      cbClsExtra    : Int_C;               -- int       
-      cbWndExtra    : Int_C;               -- int       
-      hInstance     : Ptr;                 -- HINSTANCE 
-      hIcon         : Ptr;                 -- HICON     
-      hCursor       : Ptr;                 -- HCURSOR   
-      hbrBackground : Int_Ptr;             -- HBRUSH    
-      lpszMenuName  : Ptr;--Ptr_Const_Char_16_C; -- LPCTSTR   
-      lpszClassName : Ptr;--Ptr_Const_Char_16_C; -- LPCTSTR   
-      hIconSm       : Ptr;                 -- HICON     
+      cbSize        : Int_32_Unsigned_C := WNDCLASSEX'Object_Size / Byte'Object_Size; -- UINT      
+      style         : Int_32_Unsigned_C := 0;        -- UINT      
+      lpfnWndProc   : Ptr               := NULL_PTR; -- WNDPROC   
+      cbClsExtra    : Int_C             := 0;        -- int       
+      cbWndExtra    : Int_C             := 0;        -- int       
+      hInstance     : Ptr               := NULL_PTR; -- HINSTANCE 
+      hIcon         : Ptr               := NULL_PTR; -- HICON     
+      hCursor       : Ptr               := NULL_PTR; -- HCURSOR   
+      hbrBackground : Int_Ptr           := 0;        -- HBRUSH    
+      lpszMenuName  : Ptr               := NULL_PTR; -- Ptr_Const_Char_16_C := 0; -- LPCTSTR   
+      lpszClassName : Ptr               := NULL_PTR; -- Ptr_Const_Char_16_C := 0; -- LPCTSTR   
+      hIconSm       : Ptr               := NULL_PTR; -- HICON     
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160404075807/https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad(v=vs.85).aspx
   type XINPUT_GAMEPAD is record
-      wButtons      : Int_16_Unsigned_C; -- WORD  
-      bLeftTrigger  : Int_8_Unsigned_C;  -- BYTE  
-      bRightTrigger : Int_8_Unsigned_C;  -- BYTE  
-      sThumbLX      : Int_16_Signed_C;   -- SHORT 
-      sThumbLY      : Int_16_Signed_C;   -- SHORT 
-      sThumbRX      : Int_16_Signed_C;   -- SHORT 
-      sThumbRY      : Int_16_Signed_C;   -- SHORT 
+      wButtons      : Int_16_Unsigned_C := 0; -- WORD  
+      bLeftTrigger  : Int_8_Unsigned_C  := 0; -- BYTE  
+      bRightTrigger : Int_8_Unsigned_C  := 0; -- BYTE  
+      sThumbLX      : Int_16_Signed_C   := 0; -- SHORT 
+      sThumbLY      : Int_16_Signed_C   := 0; -- SHORT 
+      sThumbRX      : Int_16_Signed_C   := 0; -- SHORT 
+      sThumbRY      : Int_16_Signed_C   := 0; -- SHORT 
     end record with Convention => C;
     
   -- https://web.archive.org/web/20150101223349/http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_state(v=vs.85).aspx
   type XINPUT_STATE is record
-      dwPacketNumber : Int_32_Unsigned_C; -- DWORD          
-      Gamepad        : XINPUT_GAMEPAD;    -- XINPUT_GAMEPAD 
+      dwPacketNumber : Int_32_Unsigned_C := 0;              -- DWORD          
+      Gamepad        : XINPUT_GAMEPAD    := (others => <>); -- XINPUT_GAMEPAD 
     end record with Convention => C;
     
   -- https://web.archive.org/web/20160509011549/https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_vibration(v=vs.85).aspx
   type XINPUT_VIBRATION is record
-      wLeftMotorSpeed  : Int_16_Unsigned_C; -- WORD 
-      wRightMotorSpeed : Int_16_Unsigned_C; -- WORD 
+      wLeftMotorSpeed  : Int_16_Unsigned_C := 0; -- WORD 
+      wRightMotorSpeed : Int_16_Unsigned_C := 0; -- WORD 
     end record with Convention => C;
     
  -- https://web.archive.org/web/20150109064332/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
  type RAWINPUTDEVICE is record
-      usUsagePage : Int_16_Unsigned_C; -- USHORT 
-      usUsage     : Int_16_Unsigned_C; -- USHORT 
-      dwFlags     : Int_32_Unsigned_C; -- DWORD  
-      hwndTarget  : Ptr;               -- HWND
+      usUsagePage : Int_16_Unsigned_C := 0;        -- USHORT 
+      usUsage     : Int_16_Unsigned_C := 0;        -- USHORT 
+      dwFlags     : Int_32_Unsigned_C := 0;        -- DWORD  
+      hwndTarget  : Ptr               := NULL_PTR; -- HWND
     end record with Convention => C;
     
   -- https://web.archive.org/web/20140321090313/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645568(v=vs.85).aspx
   type RAWINPUTDEVICELIST is record
-      hDevice : Ptr;               -- HANDLE 
-      dwType  : Int_32_Unsigned_C; -- DWORD  
+      hDevice : Ptr               := NULL_PTR; -- HANDLE 
+      dwType  : Int_32_Unsigned_C := 0;        -- DWORD  
     end record with Convention => C;
  
   -- https://web.archive.org/web/20140321085736/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645571(v=vs.85).aspx
   type RAWINPUTHEADER is record
-      dwType  : Int_32_Unsigned_C; -- DWORD  
-      dwSize  : Int_32_Unsigned_C; -- DWORD  
-      hDevice : Ptr;               -- HANDLE 
-      wParam  : Int_C;             -- WPARAM 
+      dwType  : Int_32_Unsigned_C := 0;        -- DWORD  
+      dwSize  : Int_32_Unsigned_C := 0;        -- DWORD  
+      hDevice : Ptr               := NULL_PTR; -- HANDLE 
+      wParam  : Int_C             := 0;        -- WPARAM 
     end record with Convention => C;
   
   -- https://web.archive.org/web/20150107130951/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645575(v=vs.85).aspx
   type RAWKEYBOARD is record
-      Header           : RAWINPUTHEADER;    -- RAWINPUTHEADER
-      MakeCode         : Int_16_Unsigned_C; -- USHORT
-      Flags            : Int_16_Unsigned_C; -- USHORT
-      Reserved         : Int_16_Unsigned_C; -- USHORT
-      VKey             : Int_16_Unsigned_C; -- USHORT
-      Message          : Int_32_Unsigned_C; -- UINT
-      ExtraInformation : Int_32_Unsigned_C; -- ULONG
+      Header           : RAWINPUTHEADER    := (others => <>); -- RAWINPUTHEADER
+      MakeCode         : Int_16_Unsigned_C := 0;              -- USHORT
+      Flags            : Int_16_Unsigned_C := 0;              -- USHORT
+      Reserved         : Int_16_Unsigned_C := 0;              -- USHORT
+      VKey             : Int_16_Unsigned_C := 0;              -- USHORT
+      Message          : Int_32_Unsigned_C := 0;              -- UINT
+      ExtraInformation : Int_32_Unsigned_C := 0;              -- ULONG
     end record with Convention => C;
   
   -- https://web.archive.org/web/20140714222448/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645578(v=vs.85).aspx
   type RAWMOUSE is record
-      Header             : RAWINPUTHEADER;    -- RAWINPUTHEADER
-      usFlags            : Int_16_Unsigned_C; -- USHORT 
-      usButtons          : Int_32_Unsigned_C; -- ULONG 
-      ulRawButtons       : Int_32_Unsigned_C; -- ULONG  
-      lLastX             : Int_C;             -- LONG   
-      lLastY             : Int_C;             -- LONG   
-      ulExtraInformation : Int_32_Unsigned_C; -- ULONG  
+      Header             : RAWINPUTHEADER    := (others => <>); -- RAWINPUTHEADER
+      usFlags            : Int_16_Unsigned_C := 0;              -- USHORT 
+      usButtons          : Int_32_Unsigned_C := 0;              -- ULONG 
+      ulRawButtons       : Int_32_Unsigned_C := 0;              -- ULONG  
+      lLastX             : Int_C             := 0;              -- LONG   
+      lLastY             : Int_C             := 0;              -- LONG   
+      ulExtraInformation : Int_32_Unsigned_C := 0;              -- ULONG  
     end record with Convention => C;
   
   -- https://web.archive.org/web/20141109015511/http://msdn.microsoft.com/en-us/library/windows/desktop/dd145106(v=vs.85).aspx
   type SIZE is record
-      cx : Int_32_Unsigned_C; -- LONG 
-      cy : Int_32_Unsigned_C; -- LONG 
+      cx : Int_32_Unsigned_C := 0; -- LONG 
+      cy : Int_32_Unsigned_C := 0; -- LONG 
     end record with Convention => C;
   
   -- https://web.archive.org/web/20121031105705/http://msdn.microsoft.com/en-us/library/windows/desktop/bb787537(v=vs.85).aspx
   type SCROLLINFO is record
-      cbSize    : Int_32_Unsigned_C := SCROLLINFO'Size / Byte'Size; -- UINT 
-      fMask     : Int_32_Unsigned_C; -- UINT ??? := 16#001F#
-      nMin      : Int_C;             -- int  
-      nMax      : Int_C;             -- int  
-      nPage     : Int_32_Unsigned_C; -- UINT 
-      nPos      : Int_C;             -- int  
-      nTrackPos : Int_C;             -- int  
+      cbSize    : Int_32_Unsigned_C := SCROLLINFO'Object_Size / Byte'Object_Size; -- UINT 
+      fMask     : Int_32_Unsigned_C := 0; -- UINT ??? := 16#001F#
+      nMin      : Int_C             := 0; -- int  
+      nMax      : Int_C             := 0; -- int  
+      nPage     : Int_32_Unsigned_C := 0; -- UINT 
+      nPos      : Int_C             := 0; -- int  
+      nTrackPos : Int_C             := 0; -- int  
     end record with Convention => C;
   
   -- https://web.archive.org/web/20140902090739/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632605(v=vs.85).aspx
   type MINMAXINFO is record
-      ptReserved     : POINT; -- POINT 
-      ptMaxSize      : POINT; -- POINT 
-      ptMaxPosition  : POINT; -- POINT 
-      ptMinTrackSize : POINT; -- POINT 
-      ptMaxTrackSize : POINT; -- POINT 
+      ptReserved     : POINT := (others => <>); -- POINT 
+      ptMaxSize      : POINT := (others => <>); -- POINT 
+      ptMaxPosition  : POINT := (others => <>); -- POINT 
+      ptMinTrackSize : POINT := (others => <>); -- POINT 
+      ptMaxTrackSize : POINT := (others => <>); -- POINT 
     end record with Convention => C;
   
   -- https://web.archive.org/web/20160901051039/https://msdn.microsoft.com/en-us/library/windows/desktop/dd145037(v=vs.85).aspx
   type LOGFONT is record  
-      lfHeight         : Int_C;            -- LONG  
-      lfWidth          : Int_C;            -- LONG  
-      lfEscapement     : Int_C;            -- LONG  
-      lfOrientation    : Int_C;            -- LONG  
-      lfWeight         : Int_C;            -- LONG  
-      lfItalic         : Int_8_Unsigned_C; -- BYTE  
-      lfUnderline      : Int_8_Unsigned_C; -- BYTE  
-      lfStrikeOut      : Int_8_Unsigned_C; -- BYTE  
-      lfCharSet        : Int_8_Unsigned_C; -- BYTE  
-      lfOutPrecision   : Int_8_Unsigned_C; -- BYTE  
-      lfClipPrecision  : Int_8_Unsigned_C; -- BYTE  
-      lfQuality        : Int_8_Unsigned_C; -- BYTE  
-      lfPitchAndFamily : Int_8_Unsigned_C; -- BYTE  
-      lfFaceName       : Str_16_C (1..32); -- TCHAR[LF_FACESIZE]
+      lfHeight         : Int_C            := 0; -- LONG  
+      lfWidth          : Int_C            := 0; -- LONG  
+      lfEscapement     : Int_C            := 0; -- LONG  
+      lfOrientation    : Int_C            := 0; -- LONG  
+      lfWeight         : Int_C            := 0; -- LONG  
+      lfItalic         : Int_8_Unsigned_C := 0; -- BYTE  
+      lfUnderline      : Int_8_Unsigned_C := 0; -- BYTE  
+      lfStrikeOut      : Int_8_Unsigned_C := 0; -- BYTE  
+      lfCharSet        : Int_8_Unsigned_C := 0; -- BYTE  
+      lfOutPrecision   : Int_8_Unsigned_C := 0; -- BYTE  
+      lfClipPrecision  : Int_8_Unsigned_C := 0; -- BYTE  
+      lfQuality        : Int_8_Unsigned_C := 0; -- BYTE  
+      lfPitchAndFamily : Int_8_Unsigned_C := 0; -- BYTE  
+      lfFaceName       : Str_16_C (1..32) := (others => NULL_CHAR_16_C); -- TCHAR[LF_FACESIZE]
     end record with Convention => C;
   
   -- https://web.archive.org/web/20160808212528/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729175(v=vs.85).aspx
   type NONCLIENTMETRICS is record
-      cbSize             :         Int_32_Unsigned_C := NONCLIENTMETRICS'Size / Byte'Size; -- UINT
-      iBorderWidth       :         Int_C;             -- int     
-      iScrollWidth       :         Int_C;             -- int     
-      iScrollHeight      :         Int_C;             -- int     
-      iCaptionWidth      :         Int_C;             -- int     
-      iCaptionHeight     :         Int_C;             -- int     
-      lfCaptionFont      : aliased LOGFONT;           -- LOGFONT 
-      iSmCaptionWidth    :         Int_C;             -- int     
-      iSmCaptionHeight   :         Int_C;             -- int     
-      lfSmCaptionFont    : aliased LOGFONT;           -- LOGFONT 
-      iMenuWidth         :         Int_C;             -- int     
-      iMenuHeight        :         Int_C;             -- int     
-      lfMenuFont         : aliased LOGFONT;           -- LOGFONT 
-      lfStatusFont       : aliased LOGFONT;           -- LOGFONT 
-      lfMessageFont      : aliased LOGFONT;           -- LOGFONT 
-      iPaddedBorderWidth :         Int_C;             -- int     
+      cbSize             :         Int_32_Unsigned_C := NONCLIENTMETRICS'Object_Size / Byte'Object_Size; -- UINT
+      iBorderWidth       :         Int_C   := 0;              -- int     
+      iScrollWidth       :         Int_C   := 0;              -- int     
+      iScrollHeight      :         Int_C   := 0;              -- int     
+      iCaptionWidth      :         Int_C   := 0;              -- int     
+      iCaptionHeight     :         Int_C   := 0;              -- int     
+      lfCaptionFont      : aliased LOGFONT := (others => <>); -- LOGFONT 
+      iSmCaptionWidth    :         Int_C   := 0;              -- int     
+      iSmCaptionHeight   :         Int_C   := 0;              -- int     
+      lfSmCaptionFont    : aliased LOGFONT := (others => <>); -- LOGFONT 
+      iMenuWidth         :         Int_C   := 0;              -- int     
+      iMenuHeight        :         Int_C   := 0;              -- int     
+      lfMenuFont         : aliased LOGFONT := (others => <>); -- LOGFONT 
+      lfStatusFont       : aliased LOGFONT := (others => <>); -- LOGFONT 
+      lfMessageFont      : aliased LOGFONT := (others => <>); -- LOGFONT 
+      iPaddedBorderWidth :         Int_C   := 0;              -- int     
     end record with Convention => C;
   
   -- https://web.archive.org/web/20150113013334/http://msdn.microsoft.com/en-us/library/windows/desktop/dd145132(v=vs.85).aspx
   type TEXTMETRIC is record
-      tmHeight           : Int_C;          -- LONG  
-      tmAscent           : Int_C;          -- LONG  
-      tmDescent          : Int_C;          -- LONG  
-      tmInternalLeading  : Int_C;          -- LONG  
-      tmExternalLeading  : Int_C;          -- LONG  
-      tmAveCharWidth     : Int_C;          -- LONG  
-      tmMaxCharWidth     : Int_C;          -- LONG  
-      tmWeight           : Int_C;          -- LONG  
-      tmOverhang         : Int_C;          -- LONG  
-      tmDigitizedAspectX : Int_C;          -- LONG  
-      tmDigitizedAspectY : Int_C;          -- LONG  
-      tmFirstChar        : Char_16_C;      -- TCHAR 
-      tmLastChar         : Char_16_C;      -- TCHAR 
-      tmDefaultChar      : Char_16_C;      -- TCHAR 
-      tmBreakChar        : Char_16_C;      -- TCHAR 
-      tmItalic           : Int_8_Unsigned; -- BYTE  
-      tmUnderlined       : Int_8_Unsigned; -- BYTE  
-      tmStruckOut        : Int_8_Unsigned; -- BYTE  
-      tmPitchAndFamily   : Int_8_Unsigned; -- BYTE  
-      tmCharSet          : Int_8_Unsigned; -- BYTE  
+      tmHeight           : Int_C            := 0;              -- LONG  
+      tmAscent           : Int_C            := 0;              -- LONG  
+      tmDescent          : Int_C            := 0;              -- LONG  
+      tmInternalLeading  : Int_C            := 0;              -- LONG  
+      tmExternalLeading  : Int_C            := 0;              -- LONG  
+      tmAveCharWidth     : Int_C            := 0;              -- LONG  
+      tmMaxCharWidth     : Int_C            := 0;              -- LONG  
+      tmWeight           : Int_C            := 0;              -- LONG  
+      tmOverhang         : Int_C            := 0;              -- LONG  
+      tmDigitizedAspectX : Int_C            := 0;              -- LONG  
+      tmDigitizedAspectY : Int_C            := 0;              -- LONG  
+      tmFirstChar        : Char_16_C        := NULL_CHAR_16_C; -- TCHAR 
+      tmLastChar         : Char_16_C        := NULL_CHAR_16_C; -- TCHAR 
+      tmDefaultChar      : Char_16_C        := NULL_CHAR_16_C; -- TCHAR 
+      tmBreakChar        : Char_16_C        := NULL_CHAR_16_C; -- TCHAR 
+      tmItalic           : Int_8_Unsigned_C := 0;              -- BYTE  
+      tmUnderlined       : Int_8_Unsigned_C := 0;              -- BYTE  
+      tmStruckOut        : Int_8_Unsigned_C := 0;              -- BYTE  
+      tmPitchAndFamily   : Int_8_Unsigned_C := 0;              -- BYTE  
+      tmCharSet          : Int_8_Unsigned_C := 0;              -- BYTE  
     end record with Convention => C;
   
   -----------------
@@ -583,14 +602,14 @@ package Neo.API.Win32 is
   -----------------
 
   -- https://web.archive.org/web/20161024170359/https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
-  function CreateFileW (lpFileName            : Ptr;               -- LPCTSTR
-                        dwDesiredAccess       : Int_32_Unsigned_C; -- DWORD
-                        dwShareMode           : Int_32_Unsigned_C; -- DWORD
-                        lpSecurityAttributes  : Ptr;               -- LPSECURITY_ATTRIBUTES
-                        dwCreationDisposition : Int_32_Unsigned_C; -- DWORD
-                        dwFlagsAndAttributes  : Int_32_Unsigned_C; -- DWORD
-                        hTemplateFile         : Ptr)               -- HANDLE
-                        return Ptr                                 -- HANDLE
+  function CreateFileW (lpFileName            :        Ptr;                 -- LPCTSTR
+                        dwDesiredAccess       :        Int_32_Unsigned_C;   -- DWORD
+                        dwShareMode           :        Int_32_Unsigned_C;   -- DWORD
+                        lpSecurityAttributes  : access SECURITY_ATTRIBUTES; -- LPSECURITY_ATTRIBUTES
+                        dwCreationDisposition :        Int_32_Unsigned_C;   -- DWORD
+                        dwFlagsAndAttributes  :        Int_32_Unsigned_C;   -- DWORD
+                        hTemplateFile         :        Ptr)                 -- HANDLE
+                        return Ptr                                          -- HANDLE
                         with Import => True, Convention => StdCall, External_Name => "CreateFileW";
 
   -- https://web.archive.org/web/20140310215229/http://msdn.microsoft.com/en-us/library/windows/hardware/ff539681(v=vs.85).aspx
@@ -635,9 +654,9 @@ package Neo.API.Win32 is
                         with Import => True, Convention => StdCall, External_Name => "GetLastError";
              
   -- https://web.archive.org/web/20160801144224/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724451(v=vs.85).aspx                       
-  function GetVersionExW (lpVersionInfo : access OSVERSIONINFOEX) -- LPOSVERSIONINFOEX
-                          return Int_C                            -- BOOL 
-                          with Import => True, Convention => StdCall, External_Name => "GetVersionExW";
+  -- function GetVersionExW (lpVersionInfo : access OSVERSIONINFOEX) -- LPOSVERSIONINFOEX
+  --                         return Int_C                            -- BOOL 
+  --                         with Import => True, Convention => StdCall, External_Name => "GetVersionExW";
        
   -- https://web.archive.org/web/20141228222857/http://msdn.microsoft.com/en-us/library/windows/desktop/ms724432(v=vs.85).aspx                             
   function GetUserNameW (lpBuffer :        Ptr_Str_16_C; -- LPTSTR  
@@ -717,8 +736,8 @@ package Neo.API.Win32 is
   -- https://web.archive.org/web/20160607101505/https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx               
   function CreateProcessW (lpApplicationName    :        Ptr_Str_16_C;        -- LPCTSTR               
                            lpCommandLine        :        Ptr_Char_16_C;       -- LPTSTR                
-                           lpProcessAttributes  :        Ptr;                 -- LPSECURITY_ATTRIBUTES 
-                           lpThreadAttributes   :        Ptr;                 -- LPSECURITY_ATTRIBUTES 
+                           lpProcessAttributes  : access SECURITY_ATTRIBUTES; -- LPSECURITY_ATTRIBUTES 
+                           lpThreadAttributes   : access SECURITY_ATTRIBUTES; -- LPSECURITY_ATTRIBUTES 
                            bInheritHandles      :        Int_C;               -- BOOL                  
                            dwCreationFlags      :        Int_32_Unsigned_C;   -- DWORD                 
                            lpEnvironment        :        Ptr;                 -- LPVOID                
@@ -834,10 +853,10 @@ package Neo.API.Win32 is
                              with Import => True, Convention => StdCall, External_Name => "GetSystemMetrics";
                                  
   -- https://web.archive.org/web/20160223131327/https://msdn.microsoft.com/en-us/library/windows/desktop/ms682411(v=vs.85).aspx   
-  function CreateMutexW (lpMutexAttributes : Ptr;          -- LPSECURITY_ATTRIBUTES 
-                         bInitialOwner     : Int_C;        -- BOOL                  
-                         lpName            : Ptr_Str_16_C) -- LPCTSTR               
-                         return Ptr                        -- HANDLE 
+  function CreateMutexW (lpMutexAttributes : access SECURITY_ATTRIBUTES; -- LPSECURITY_ATTRIBUTES 
+                         bInitialOwner     :        Int_C;               -- BOOL                  
+                         lpName            :        Ptr_Str_16_C)        -- LPCTSTR               
+                         return Ptr                                      -- HANDLE 
                          with Import => True, Convention => StdCall, External_Name => "CreateMutexW";
                                     
   -- https://web.archive.org/web/20160505131151/https://msdn.microsoft.com/en-us/library/windows/desktop/ms685066(v=vs.85).aspx             

@@ -25,9 +25,9 @@ package body Neo.Engine is
       -- Vulkan
       procedure Initialize_Vulkan_Library;
       procedure Finalize_Vulkan_Library;
-      function Create_Surface        (Instance : Ptr) return Ptr;
+      function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
       function Get_Vulkan_Subprogram (Name : Str)     return Ptr;
-      function Get_Extensions                         return Str_8_C;
+      function Get_Vulkan_Extensions                  return Str_Unbound;
 
       -- Information
       procedure Copy           (Item : Str);
@@ -37,7 +37,7 @@ package body Neo.Engine is
       -- Input
       procedure Initialize_Input;
       procedure Finalize_Input;
-      procedure Vibrate     (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent);
+      procedure Vibrate     (Id : Int_Ptr; Hz_High, Hz_Low : Percent);
       function Update_Input return Bool;
 
       -- Error Handling
@@ -364,7 +364,7 @@ pragma Warnings (On);
   procedure Set_Device     (Id : Int_Ptr; Player  : Int_32_Positive := 1)                  is Device : Device_State := Devices.Get (Id); begin Device.Player             := Player; Devices.Replace (Id, Device); end;
   procedure Inject_Text    (Id : Int_Ptr; Text    : Str_16_Unbound)                        is Device : Device_State := Devices.Get (Id); begin Device.Text               := Text;   Devices.Replace (Id, Device); end;
   procedure Inject_Cursor  (Id : Int_Ptr; Cursor  : Cursor_State)                          is Device : Device_State := Devices.Get (Id); begin Device.Cursor             := Cursor; Devices.Replace (Id, Device); end;
-  procedure Inject_Trigger (Id : Int_Ptr; Trigger : Trigger_Kind; Press : Real_32_Percent) is Device : Device_State := Devices.Get (Id); begin Device.Triggers (Trigger) := Press;  Devices.Replace (Id, Device); end;
+  procedure Inject_Trigger (Id : Int_Ptr; Trigger : Trigger_Kind; Press : Percent) is Device : Device_State := Devices.Get (Id); begin Device.Triggers (Trigger) := Press;  Devices.Replace (Id, Device); end;
   procedure Inject_Stick   (Id : Int_Ptr; Stick   : Stick_Kind;   State : Stick_State)     is Device : Device_State := Devices.Get (Id); begin Device.Sticks   (Stick)   := State;  Devices.Replace (Id, Device); end;
   procedure Inject_Button  (Id : Int_Ptr; Button  : Mouse_Kind;   Down : Bool)             is Device : Device_State := Devices.Get (Id); begin if Device.Mouse   (Button).Down /= Down then Device.Mouse   (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
   procedure Inject_Button  (Id : Int_Ptr; Button  : Gamepad_Kind; Down : Bool)             is Device : Device_State := Devices.Get (Id); begin if Device.Gamepad (Button).Down /= Down then Device.Gamepad (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
@@ -385,7 +385,7 @@ pragma Warnings (On);
     end;
 
   -- Vibrate a specific player's Xbox controllers
-  procedure Vibrate (Hz_High, Hz_Low : Real_32_Percent; Player : Int_32_Positive := 1) is
+  procedure Vibrate (Hz_High, Hz_Low : Percent; Player : Int_32_Positive := 1) is
     begin
       for Device in Devices.Get.Iterate loop
         if Ordered_Device.Unsafe.Element (Device).Player = Player then
@@ -439,8 +439,8 @@ pragma Warnings (On);
     Args           : Vector_Impulse_Arg.Unsafe.Vector;
     Last_Time      : Time := Clock;
     begin
-      System.Initialize_Input;
-      while System.Update_Input loop
+      Initialize_Input;
+      while Update_Input loop
 
         -- Clear all of the players
         Old_Players := Players.Get;
@@ -501,13 +501,13 @@ pragma Warnings (On);
 
               -- Range checks need to be made for sticks and triggers
               for Side in Stick_Kind'Range loop
-                Player.Sticks (Side).X := (if Player.Sticks (Side).X + Device.Sticks (Side).X > Real_32_Range'Last then Real_32_Range'Last
+                Player.Sticks (Side).X := (if Player.Sticks (Side).X + Device.Sticks (Side).X > Real_Range'Last then Real_Range'Last
                                            else Player.Sticks (Side).X + Device.Sticks (Side).X); 
-                Player.Sticks (Side).Y := (if Player.Sticks (Side).Y + Device.Sticks (Side).Y > Real_32_Range'Last then Real_32_Range'Last
+                Player.Sticks (Side).Y := (if Player.Sticks (Side).Y + Device.Sticks (Side).Y > Real_Range'Last then Real_Range'Last
                                            else Player.Sticks (Side).Y + Device.Sticks (Side).Y); 
               end loop;
               for Side in Trigger_Kind'Range loop
-                Player.Triggers (Side) := (if Player.Triggers (Side) + Device.Triggers (Side) > Real_32_Percent'Last then Real_32_Percent'Last
+                Player.Triggers (Side) := (if Player.Triggers (Side) + Device.Triggers (Side) > Real_Percent'Last then Real_Percent'Last
                                            else Player.Triggers (Side) + Device.Triggers (Side));
               end loop;
           end case;
@@ -529,8 +529,8 @@ pragma Warnings (On);
                     if Other_Binding.Combo = Binding.Combo then
                       if not Changed (Binding, Players.Get (Other_Binding.Player), Old_Players.Element (Other_Binding.Player)) then
 
--- Harmless goto
-goto Combo_Fail;
+-- A binding in the combo is not active
+goto Combo_Not_Activated;
                       end if;
                       Args.Append (Build_Impulse_Arg (Other_Binding, Players.Get (Other_Binding.Player)));
                     end if;
@@ -538,9 +538,9 @@ goto Combo_Fail;
                 end if;
                 Impulse.Callback (Vector_Impulse_Arg.To_Unsafe_Array (Args));
               end if;
-<<Combo_Fail>>
--- !!!
 
+-- Skip further tests for combo activation
+<<Combo_Not_Activated>>
             end loop;
           end loop;
 
@@ -551,7 +551,7 @@ goto Combo_Fail;
         -- Delay the main loop if you have some spare time
         delay DURATION_BEFORE_POLLING - (Clock - Last_Time); Last_Time := Clock;
       end loop;
-      System.Finalize_Input;
+      Finalize_Input;
     end;
 
   -- Input task creation
@@ -796,14 +796,14 @@ goto Combo_Fail;
           end if;
 
           -- Render
-          --Renderer.Present;
+          Renderer.Present;
         end loop;
       end;
 
       -- Finalize
       Finalize_Windowing;
       Input_Task.Finalize;
-      --Renderer.Finalize;
+      Renderer.Finalize;
       Game_Task.Finalize;
 
     -- Handle exceptions

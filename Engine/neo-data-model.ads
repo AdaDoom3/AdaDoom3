@@ -13,9 +13,9 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers;  use Ada.Containers;
-with Neo.Core.Math;   use Neo.Core.Math;
-with Neo.Core.Arrays; use Neo.Core.Arrays;
+with Ada.Containers;   use Ada.Containers;
+with Neo.Core.Math;    use Neo.Core.Math;
+with Neo.Core.Arrays;  use Neo.Core.Arrays;
 with Neo.Core.Console; use Neo.Core.Console;
 with Neo.Core.Trees;
 with Neo.Core.Hashed;
@@ -29,17 +29,17 @@ package Neo.Data.Model is
   -- Formats --
   -------------
 
-  type Format_Kind is (Id_Tech_Format,    -- http://web.archive.org/web/20121018035741/http://www.modwiki.net/wiki/Modelling
-                       Wavefront_Format); -- https://web.archive.org/web/20160810123453/https://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
+  type Format_Kind is (Id_Tech_Format,    -- web.archive.org/web/20121018035741/http://www.modwiki.net/wiki/Modelling
+                       Wavefront_Format); -- web.archive.org/web/20160810123453/https://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
 
   ------------
   -- Camera --
   ------------
 
   type Camera_Frame_State is record
-      Point  : Point_3D;
-      Orient : Quaternion_4D;
-      FOV    : Real;
+      FOV         : Real;
+      Point       : Point_3D;
+      Orientation : Quaternion_4D;
     end record;
   package Vector_Camera_Frame is new Vectors (Camera_Frame_State);
 
@@ -55,13 +55,13 @@ package Neo.Data.Model is
   ---------------
 
   type Bounding_State is record
-      A, B : Point_3D;
+      A, B : Point_3D := ZERO_POINT_3D;
     end record;
 
   type Joint_State is record
-      Name   : Str_Unbound;
-      Point  : Point_3D;
-      Orient : Quaternion_4D;
+      Name        : Str_Unbound;
+      Point       : Point_3D;
+      Orientation : Quaternion_4D;
     end record;
   package Treed_Joint is new Trees (Joint_State);
 
@@ -105,7 +105,7 @@ package Neo.Data.Model is
 
   type Mesh_State is record
       Material : Str_Unbound;
-      Vertices : Vector_Vertex.Unsafe.Vector; -- Starts at 0 !!!
+      Vertices : Vector_Vertex.Unsafe.Vector; -- Starts at 0
       Indicies : Vector_Triangle.Unsafe.Vector;
       Bounding : Bounding_State;
     end record;
@@ -125,35 +125,34 @@ package Neo.Data.Model is
   type Partition_Kind is (Normal_Partition, Area_Partition, Opaque_Partition);
 
   type Partition_Node_State (Kind : Partition_Kind := Normal_Partition) is record
-      Is_Positive : Bool;
+      Is_Positive : Bool := True;
       case Kind is
-        when Area_Partition   => Area_Id : Int;
-        when Normal_Partition => Plane   : Plane_4D;
-        when Opaque_Partition => null;
-      end case;
+        when Area_Partition   => Area_Id : Int      := 0;
+        when Normal_Partition => Plane   : Plane_4D := ZERO_PLANE_4D;
+      when others => null; end case;
     end record;
   package Treed_Partition_Node is new Trees (Partition_Node_State);
 
   type Brush_Side_State is record
-      Material : Str_Unbound;
-      Texture  : Transform_3D;
-      Origin   : Point_3D := (0.0, 0.0, 0.0);
-      Plane    : Plane_4D;
+      Material : Str_Unbound  := NULL_STR_UNBOUND;
+      Texture  : Transform_3D := ZERO_TRANSFORM_3D;
+      Origin   : Point_3D     := ZERO_POINT_3D;
+      Plane    : Plane_4D     := ZERO_POINT_4D;
     end record;
   package Vector_Brush_Side  is new Vectors (Brush_Side_State);
   package Vector_Brush       is new Vectors (Vector_Brush_Side.Unsafe.Vector);
   package Hashed_Str_Unbound is new Hashed (Str_Unbound);
 
   type Entity_State is record
-      Origin     : Point_3D;
-      Key_Values : Hashed_Str_Unbound.Unsafe.Map;
-      Brushes    : Vector_Brush.Unsafe.Vector;
-      Patches    : Vector_Mesh.Unsafe.Vector;
+      Origin  : Point_3D := ZERO_POINT_3D;
+      Table   : Hashed_Str_Unbound.Unsafe.Map;
+      Brushes : Vector_Brush.Unsafe.Vector;
+      Patches : Vector_Mesh.Unsafe.Vector;
     end record;
   package Vector_Entity is new Vectors (Entity_State);
 
   type Clip_State is record
-      Bounding      : Bounding_State;
+      Bounding      : Bounding_State := (others => <>);
       Sides         : Vector_Plane.Unsafe.Vector;
       Is_Player     : Bool := False;
       Is_Opaque     : Bool := False;
@@ -173,16 +172,16 @@ package Neo.Data.Model is
   package Vector_Clip is new Vectors (Clip_State);
 
   type Edge_State is record
-      A, B      : Point_3D;
-      Internal  : Natural; -- ???
-      Num_Users : Natural;
+      A, B      : Point_3D := ZERO_POINT_3D;
+      Internal  : Natural  := 0; -- ???
+      Num_Users : Natural  := 0;
     end record;
   package Vector_Edge is new Vectors (Edge_State);
 
   type Polygon_State is record
-      Material : Str_Unbound;
-      Bounding : Bounding_State;
-      Plane    : Plane_4D;
+      Material : Str_Unbound    := NULL_STR_UNBOUND;
+      Bounding : Bounding_State := (others => <>);
+      Plane    : Plane_4D       := ZERO_PLANE_4D;
       Edges    : Vector_Natural.Unsafe.Vector;
     end record;
   package Vector_Polygon is new Vectors (Polygon_State);
@@ -195,7 +194,7 @@ package Neo.Data.Model is
   package Treed_Collision_Node is new Trees (Collision_Node_State);
 
   type Collision_State is record
-      Name     : Str_Unbound;
+      Name     : Str_Unbound := NULL_STR_UNBOUND;
       Polygons : Vector_Polygon.Unsafe.Vector;
       Clipping : Vector_Clip.Unsafe.Vector;
       Edges    : Vector_Edge.Unsafe.Vector;
@@ -246,11 +245,11 @@ package Neo.Data.Model is
   --   end record;
 
   type Level_State is record
-      Geometry_CRC : Int_64_Unsigned;
+      Geometry_CRC : Int_64_Unsigned := 0;
       Collisions   : Vector_Collision.Unsafe.Vector;
       Entities     : Vector_Entity.Unsafe.Vector;
       Partitions   : Treed_Partition_Node.Unsafe.Tree;
-  --    AI           : AI_State;
+      -- AI : AI_State;
     end record;
   package Hashed_Level_State is new Hashed (Level_State);
 
@@ -273,26 +272,26 @@ package Neo.Data.Model is
                         Tile_Surface,  Carpet_Surface);
 
   type Surface_State is record
-      Density               : Real_Percent;
-      Friction              : Real_Percent;
-      Restitution           : Real_Percent;
-      Noise_Reduction       : Real_Percent; -- http://www.archtoolbox.com/representation/architectural-concepts/acoustics.html
-      Physics_Hit_Sounds    : Vector_Str_Unbound.Unsafe.Vector; 
-      Bullet_Hole_Materials : Vector_Str_Unbound.Unsafe.Vector;
-      Bullet_Hole_Sounds    : Vector_Str_Unbound.Unsafe.Vector;
-      Knife_Slash_Materials : Vector_Str_Unbound.Unsafe.Vector;
-      Knife_Slash_Sounds    : Vector_Str_Unbound.Unsafe.Vector;
+      Mass_Per_Cubic_Unit   : Percent     := 0.0;
+      Friction              : Percent     := 0.0;
+      Restitution           : Percent     := 0.0;
+      Noise_Reduction       : Percent     := 0.0; -- www.archtoolbox.com/representation/architectural-concepts/acoustics.html
+      Physics_Hit_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
+      Bullet_Hole_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
+      Knife_Slash_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
+      Walk_Light_Emitter    : Str_Unbound := NULL_STR_UNBOUND;
+      Explosion_Emitter     : Str_Unbound := NULL_STR_UNBOUND;
+      Walk_Hard_Emitter     : Str_Unbound := NULL_STR_UNBOUND;
       Explosion_Materials   : Vector_Str_Unbound.Unsafe.Vector;
-      Explosion_Sounds      : Vector_Str_Unbound.Unsafe.Vector;
+      Bullet_Hole_Materials : Vector_Str_Unbound.Unsafe.Vector;
+      Knife_Slash_Materials : Vector_Str_Unbound.Unsafe.Vector;
       Land_Light_Materials  : Vector_Str_Unbound.Unsafe.Vector;
       Land_Hard_Materials   : Vector_Str_Unbound.Unsafe.Vector;
       Footstep_Materials    : Vector_Str_Unbound.Unsafe.Vector; -- Scale to feet of model ???
-      Walk_Light_Sounds     : Vector_Str_Unbound.Unsafe.Vector;
-      Walk_Hard_Sounds      : Vector_Str_Unbound.Unsafe.Vector;
     end record;
  
   -- Returns constant Surface_State for a given Surface_Kind. All surfaces are defined in the body of this package (neo-model.adb).
-  -- function Get_Surface (Kind : Surface_Kind) return Surface_State;
+  function Get_Surface (Kind : Surface_Kind) return Surface_State;
 
   --------------
   -- Material --
@@ -305,55 +304,43 @@ package Neo.Data.Model is
   -- actual material record.
   --
   -- References.
-  --   https://web.archive.org/web/20150303182930/https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/MaterialProperties/
-  --   https://web.archive.org/web/20160305174701/https://www.iddevnet.com/doom3/materials.php
+  --   web.archive.org/web/20150303182930/https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/MaterialProperties/
+  --   web.archive.org/web/20160305174701/https://www.iddevnet.com/doom3/materials.php
   --
 
-  type Cube_Map_Kind is (No_Cube_Map,    Image_Cube_Map,  Camera_Cube_Map,       Mirror_Cube_Map);
+  type Cube_Map_Kind is (No_Cube_Map,    Image_Cube_Map,  Camera_Cube_Map,       Mirror_Cube_Map, Skybox_Cube_Map);
   type Domain_Kind   is (Surface_Domain, Decal_Domain,    Post_Process_Domain,   Light_Domain,    Menu_Domain);
   type Blend_Kind    is (Opaque_Blend,   Masked_Blend,    Additive_Blend,        Modulate_Blend,  Mirror_Blend,  Remote_Blend);
   type Shading_Kind  is (Unlit_Shading,  Lit_Shading,     Subsurface_Shading,    Profile_Shading, Skin_Shading,  Clear_Coat_Shading);
   type Deform_Kind   is (No_Deform,      Sprite_Deform,   Tube_Deform,           Flare_Deform,    Expand_Deform, Move_Deform,
                          Eye_Deform,     Particle_Deform, Small_Particle_Deform, Turbulent_Deform);
 
-  type Stage_State (Static : Bool := True) is record
-      case Static is
-        when True  => Texture : Str_Unbound;
-        when False =>
-          Fragment_Program  : Str_Unbound;
-          Fragment_Textures : Vector_Str_Unbound.Unsafe.Vector;
-      end case;
-    end record;
-
-  type Material_State (Kind : Domain_Kind := Surface_Domain; Static : Bool := True) is record
-      Shadow_Self    : Bool := True;
-      Cast_Shadow    : Bool := True;
-      Two_Sided      : Bool := False;
-      Smoothed_Tan   : Bool := True;
-      Transform      : Transform_4D;
-      Vertex_Program : Str_Unbound;
-      Surface        : Surface_kind;
-      Deform         : Deform_Kind;
+  type Material_State (Kind : Domain_Kind := Surface_Domain) is record
+      Shadow_Self    : Bool         := True;
+      Cast_Shadow    : Bool         := True;
+      Two_Sided      : Bool         := False;
+      Smoothed_Tan   : Bool         := True;
+      Transform      : Transform_4D := (others => <>);
+      Vertex_Program : Str_Unbound  := NULL_STR_UNBOUND;
+      Surface        : Surface_kind := Thin_Rock_Surface;
+      Deform         : Deform_Kind  := No_Deform;
       case Kind is
-        when Light_Domain => Pattern : Stage_State (Static);
-        when Menu_Domain  => Menu_Id : Str_Unbound;
+        when Light_Domain => Pattern : Str_Unbound := NULL_STR_UNBOUND
+        when Menu_Domain  => Menu_Id : Str_Unbound := NULL_STR_UNBOUND
         when others =>
-          Blend                : Blend_Kind;  
-          Cube_Map             : Cube_Map_Kind; -- When No_Cube_Map or Mirror_Cube_Map the component Cube_Map_Texture is ignored
-          Cube_Map_Texture     : Str_Unbound;   -- Assumes _px, _py, _pz, _nx, _ny, _nz for the positive and negative sides
-          Base_Color           : Stage_State (Static); -- RGB
-          Metallic             : Stage_State (Static); -- Single channel
-          Specular             : Stage_State (Static); -- Single channel
-          Roughness            : Stage_State (Static); -- Single channel
-          Emissive_Color       : Stage_State (Static); -- RGB
-          Opacity              : Stage_State (Static); -- Single channel
-          Normal               : Stage_State (Static); -- Single channel
-          Displacement         : Stage_State (Static); -- Single channel
-          Subsurface_Color     : Stage_State (Static); -- RGB
-          Clear_Coat           : Stage_State (Static); -- Single channel
-          Clear_Coat_Roughness : Stage_State (Static); -- Single channel
-          Ambient_Occlusion    : Stage_State (Static); -- Single channel ???
-          Refraction           : Stage_State (Static); -- Single channel ???
+          -- Blend                : Blend_Kind    := Opaque_Blend;  
+          Cube_Map             : Cube_Map_Kind := No_Cube_Map; -- Cube map textures assume _px, _py, _pz, _nx, _ny, _nz name convention
+          Base_Color           : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
+          Specular             : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          Emissive_Color       : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
+          Normal               : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          Displacement         : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          Metallic             : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          Roughness            : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          -- Subsurface_Color     : Str_Unbound   := NULL_STR_UNBOUND; -- RGB
+          -- Clear_Coat           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          -- Ambient_Occlusion    : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          -- Refraction           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
       end case;
     end record;
   package Hashed_Material is new Hashed (Material_State);
