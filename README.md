@@ -1,6 +1,8 @@
 AdaDoom3
 ========
 
+[![Join the chat at https://gitter.im/AdaDoom3/Lobby](https://badges.gitter.im/AdaDoom3/Lobby.svg)](https://gitter.im/AdaDoom3/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 NOTE: THIS PROJECT IS MOSTLY INCOMPLETE
 
 The aim of Ada Doom3 is to re-engineer the id-tech 4 engine with a clear dependency
