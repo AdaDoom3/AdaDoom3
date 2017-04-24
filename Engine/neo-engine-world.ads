@@ -11,43 +11,32 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
 --                                                                                                                                      --
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--   
 
-with Ada.Containers.Indefinite_Ordered_Maps;
+-- 
+package Neo.Engine.World is
 
-generic
-  type Key_T is (<>);
-  type Map_T is private;
-package Neo.Core.Ordered is
+  -- Global data caches
+  Fonts       : Hashed_Font.Safe.Map;
+  Worlds      : Hashed_World.Safe.Map;
+  Meshes      : Hashed_Mesh.Safe.Map;
+  Levels      : Hashed_Level.Safe_Map;
+  Images      : Hashed_Image.Safe.Map;
+  Shaders     : Hashed_Stream.Safe.Map;
+  Materials   : Hashed_Materials.Safe.Map;
+  UI_Elements : Treed_UI_Element.Safe.Tree;
 
-  ------------------
-  -- Ordered Maps --
-  ------------------
+  -----------
+  -- World --
+  -----------
+  --
+  --
+  --
 
-  -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Ordered_Maps (Key_T, Map_T, "<", "="); use Unsafe;
-  subtype Cursor is Unsafe.Cursor;
-  NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
-
-  -- Wrapped type
-  protected type Safe_Map is
-      procedure Clear;
-      procedure Set     (Val : Unsafe.Map);
-      procedure Next    (Pos : in out Cursor);
-      procedure Delete  (Pos : in out Cursor);
-      procedure Delete  (Key : Key_T);
-      procedure Replace (Pos : Cursor; Item : Map_T);
-      procedure Replace (Key : Key_T;  Item : Map_T);
-      procedure Insert  (Key : Key_T;  Item : Map_T);
-      function Has      (Key : Key_T)  return Bool;
-      function Has      (Pos : Cursor) return Bool;
-      function Key      (Pos : Cursor) return Key_T;
-      function Get      (Pos : Cursor) return Map_T;
-      function Get      (Key : Key_T)  return Map_T;
-      function Get                     return Unsafe.Map;
-      function First                   return Cursor;
-      function Length                  return Natural;
-    private
-      This : Unsafe.Map;
-    end;
+  type World_State is record
+      Start_Time : Time;
+      Elapsed    : Duration;
+      Level      : Level_State := (others => <>);
+    end record;
+  package Hashed_World is new Hashed (World_State);
 end;

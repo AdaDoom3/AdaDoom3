@@ -16,50 +16,65 @@
 -- Custom binding to the ZDelta API: https://web.archive.org/web/20160316211900/http://cis.poly.edu/zdelta/manual.shtml
 package Neo.API.ZDelta is
 
+  -----------
+  -- Types --
+  -----------
+
+typedef char charf;
+typedef int intf;
+typedef void *voidpf;
+  -- uInt    Int_32_Unsigned_C 
+  -- uLong   Int_Ptr
+  -- uLongf  Int_Ptr
+typedef void *voidp;
+typedef unsigned char Byte;
+typedef off_t z_off_t;
+typedef void *const voidpc;
+
   ---------------
   -- Constants --
   ---------------
 
   -- 
-  Z_NO_FLUSH      : constant Int_C := 0;
-  Z_PARTIAL_FLUSH : constant Int_C := 1;
+  Z_NO_FLUSH      : constant Int_C := 0; -- 0
+  Z_PARTIAL_FLUSH : constant Int_C := 1; -- 0
 
   -- 
-  ZD_SYNC_FLUSH : constant Int_C := 2;
-  ZD_FULL_FLUSH : constant Int_C := 3;
-  ZD_FINISH     : constant Int_C := 4;
+  ZD_SYNC_FLUSH : constant Int_C := 2; -- 0
+  ZD_FULL_FLUSH : constant Int_C := 3; -- 0
+  ZD_FINISH     : constant Int_C := 4; -- 0
 
   -- 
-  ZD_HUFFMAN_ONLY     : constant Int_C := 0;
-  ZD_FILTERED         : constant Int_C := 5;
-  ZD_DEFAULT_STRATEGY : constant Int_C := 7;
+  ZD_HUFFMAN_ONLY     : constant Int_C := 0; -- 0
+  ZD_FILTERED         : constant Int_C := 5; -- 0
+  ZD_DEFAULT_STRATEGY : constant Int_C := 7; -- 0
 
   -- 
-  ZD_NO_COMPRESSION      : constant Int_C := 0;
-  ZD_BEST_SPEED          : constant Int_C := 1;
-  ZD_BEST_COMPRESSION    : constant Int_C := 9;
-  ZD_DEFAULT_COMPRESSION : constant Int_C := -1;
+  ZD_NO_COMPRESSION      : constant Int_C :=  0; -- 0
+  ZD_BEST_SPEED          : constant Int_C :=  1; -- 0
+  ZD_BEST_COMPRESSION    : constant Int_C :=  9; -- 0
+  ZD_DEFAULT_COMPRESSION : constant Int_C := -1; -- 0
 
   -- 
-  Z_BINARY  : constant Int_C := 0;
-  Z_ASCII   : constant Int_C := 1;
-  Z_UNKNOWN : constant Int_C := 2;
+  Z_BINARY  : constant Int_C := 0; -- 0
+  Z_ASCII   : constant Int_C := 1; -- 0
+  Z_UNKNOWN : constant Int_C := 2; -- 0
 
   -- 
-  ZD_DEFLATED : constant Int_C := 5; 
+  ZD_DEFLATED : constant Int_C := 5; -- 0
 
   -- 
-  ZD_NULL : constant Int_C := 0;
+  ZD_NULL : constant Int_C := 0; -- 0
 
   -- 
-  ZD_OK            : constant Int_C := 0;
-  ZD_STREAM_END    : constant Int_C := 1;
-  ZD_ERRNO         : constant Int_C := -1;
-  ZD_STREAM_ERROR  : constant Int_C := -2;
-  ZD_DATA_ERROR    : constant Int_C := -3;
-  ZD_MEM_ERROR     : constant Int_C := -4;
-  ZD_BUF_ERROR     : constant Int_C := -5;
-  ZD_VERSION_ERROR : constant Int_C := -6;
+  ZD_OK            : constant Int_C :=  0; -- 0
+  ZD_STREAM_END    : constant Int_C :=  1; -- 0
+  ZD_ERRNO         : constant Int_C := -1; -- 0
+  ZD_STREAM_ERROR  : constant Int_C := -2; -- 0
+  ZD_DATA_ERROR    : constant Int_C := -3; -- 0
+  ZD_MEM_ERROR     : constant Int_C := -4; -- 0
+  ZD_BUF_ERROR     : constant Int_C := -5; -- 0
+  ZD_VERSION_ERROR : constant Int_C := -6; -- 0
 
   -- 
   ZDLIB_VERSION : constant String_C := "2.1";
@@ -92,16 +107,16 @@ package Neo.API.ZDelta is
       next_out   :  := ; -- Bytef* 
       avail_out  :  := ; -- uInt
       total_out  :  := ; -- uLong 
-      base       :  := ; -- Bytef* [REFNUM]      
-      base_out   :  := ; -- uLong [REFNUM] 
-      base_avail :  := ; -- uLong [REFNUM]
-      refnum     :  := ; -- int
+      base       :  := ; -- Bytef*[REFNUM]      
+      base_out   :  := ; -- uLong[REFNUM] 
+      base_avail :  := ; -- uLong[REFNUM]
+      refnum     : Int_C := ; -- int
       msg        :  := ; -- char*      
       state      :  := ; -- struct zd_internal_state FAR* 
       zalloc     :  := ; -- alloc_func 
       zfree      :  := ; -- free_func  
       opaque     :  := ; -- voidpf
-      data_type  :  := ; -- int
+      data_type  : Int_C := ; -- int
       adler      :  := ; -- uLong    
       reserved   :  := ; -- uLong  
     end record with Convention => C;
@@ -134,108 +149,109 @@ package Neo.API.ZDelta is
 
 
   -- 
-  function zd_inflateEnd (strm  : access zd_stream; -- zd_streamp
+  function zd_inflateEnd (strm  : access zd_stream) -- zd_streamp
                           return Int_C              -- int
                           with Import => True, Convention => StdCall, External_Name => "zd_inflateEnd"; 
 
   -- 
-  function zd_deflateReset (zd_streamp strm)
-                            return Int_C -- int
+  function zd_deflateReset (strm : access zd_stream) -- zd_streamp
+                            return Int_C             -- int
                             with Import => True, Convention => StdCall, External_Name => "zd_deflateReset"; 
 
   -- 
-  function zd_deflateParams (zd_streamp strm,
-                             int level,
-                             int strategy)
-                             return Int_C -- int
+  function zd_deflateParams (strm     : access zd_stream; -- zd_streamp
+                             level    : Int_C;            -- int
+                             strategy : Int_C)            -- int
+                             return Int_C                 -- int
                              with Import => True, Convention => StdCall, External_Name => "zd_deflateParams"; 
 
   -- 
-  function zd_inflateSync (zd_streamp strm)
-                           return Int_C; -- int;
+  function zd_inflateSync (strm : access zd_stream) -- zd_streamp
+                           return Int_C;            -- int
                            with Import => True, Convention => StdCall, External_Name => "zd_inflateSync"; 
 
   -- 
-  function zd_inflateReset (zd_streamp strm)
-                            return Int_C -- int
+  function zd_inflateReset (strm : access zd_stream) -- zd_streamp
+                            return Int_C             -- int
                             with Import => True, Convention => StdCall, External_Name => "zd_inflateReset"; 
 
   -- 
-  function zd_compress (const Bytef *ref,
-                        uLong rsize,
-                        const Bytef *tar,
-                        uLong tsize,
-                        Bytef *delta,
-                        uLongf* dsize)
+  function zd_compress (ref   : ; -- const Bytef*
+                        rsize : ; -- uLong 
+                        tar   : ; -- const Bytef*
+                        tsize : ; -- uLong 
+                        delta : ; -- Bytef*
+                        dsize : ) -- uLongf* 
                         return Int_C -- int
                         with Import => True, Convention => StdCall, External_Name => "zd_compress"; 
 
   -- 
-  function zd_compress1 (const Bytef *ref,
-                         uLong rsize,
-                         const Bytef *tar,
-                         uLong tsize,
-                         Bytef **delta,
-                         uLongf *dsize)
+  function zd_compress1 (ref   : ; -- const Bytef*
+                         rsize : ; -- uLong 
+                         tar   : ; -- const Bytef*
+                         tsize : ; -- uLong 
+                         delta : ; -- Bytef**
+                         dsize : ) -- uLongf*
                          return Int_C -- int
                          with Import => True, Convention => StdCall, External_Name => "zd_compress1"; 
 
   -- 
-  function zd_compressN (const Bytef *ref[],
-                         uLong rsize[],int rw,
-                         const Bytef *tar,
-                         uLong tsize,
-                         Bytef *delta,
-                         uLongf *dsize)
+  function zd_compressN (ref   : ; -- const Bytef*[]
+                         rsize : ; -- uLong []
+                         rw    : Int_C; -- int 
+                         tar   : ; -- const Bytef*
+                         tsize : ; -- uLong
+                         delta : ; -- Bytef*
+                         dsize : ) -- uLongf*
                          return Int_C -- int
                          with Import => True, Convention => StdCall, External_Name => "zd_compressN"; 
 
   -- 
-  function zd_uncompress (const Bytef *ref,
-                          uLong rsize,
-                          const Bytef *tar,
-                          uLong tsize,
-                          Bytef *delta,
-                          uLongf* dsize)
+  function zd_uncompress (ref   : ; -- const Bytef*
+                          rsize : ; -- uLong 
+                          tar   : ; -- const Bytef*
+                          tsize : ; -- uLong 
+                          delta : ; -- Bytef*
+                          dsize : ) -- uLongf* 
                           return Int_C -- int
                           with Import => True, Convention => StdCall, External_Name => "zd_uncompress"; 
 
   -- 
-  function zd_uncompress1 (Bytef *ref[],
-                           uLong rsize[],
-                           int rw,
-                           const Bytef *tar,
-                           uLong *tsize,
-                           const Bytef *delta,
-                           uLongf dsize)
+  function zd_uncompress1 (ref   : ; -- Bytef*[]
+                           rsize : ; -- uLong []
+                           rw    : Int_C; -- int 
+                           tar   : ; -- const Bytef*
+                           tsize : ; -- uLong*
+                           delta : ; -- const Bytef*
+                           dsize : ) -- uLongf 
                            return Int_C -- int
                            with Import => True, Convention => StdCall, External_Name => "zd_uncompress1"; 
 
   -- 
-  function zd_uncompressN (Bytef *ref[],
-                           uLong rsize[],
-                           int rw,
-                           const Bytef *ta,
-                           uLong *tsize,
-                           const Bytef *delta,
-                           uLongf dsize)
+  function zd_uncompressN (ref   : ; -- Bytef*[]
+                           rsize : ; -- uLong []
+                           rw    : Int_C; -- int 
+                           tar   : ; -- const Bytef*
+                           tsize : ; -- uLong*
+                           delta : ; -- const Bytef*
+                           dsize : ) -- uLongf
                            return Int_C -- int
                            with Import => True, Convention => StdCall, External_Name => "zd_uncompressN"; 
 
   -- 
-  function zd_uncompressN1 (ref   : ; -- const Bytef **
+  function zd_uncompressN1 (ref   : ; -- const Bytef**
                             rsize : ; -- uLong* 
-                            rw    : ; -- int 
-                            tar   : ; -- Bytef **
-                            tsize : ; -- uLongf *
-                            delta : ; -- const Bytef *
+                            rw    : Int_C; -- int 
+                            tar   : ; -- Bytef**
+                            tsize : ; -- uLongf*
+                            delta : ; -- const Bytef*
                             dsize : ) -- uLong 
                             return Int_C -- int
                             with Import => True, Convention => StdCall, External_Name => "zd_uncompressN1"; 
 
   -- 
-  function zd_adler32 (adler : ; -- uLong
-                       buf   : ; -- const Bytef *
+  function zd_adler32 (adler : Int_Ptr_C; -- uLong
+                       buf   : ; -- const Bytef*
                        len   : ) -- uInt
                        return  -- uLong
                        with Import => True, Convention => StdCall, External_Name => "zd_adler32"; 

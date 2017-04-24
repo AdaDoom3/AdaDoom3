@@ -13,25 +13,24 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Streams;     use Ada.Streams;
-with Neo.ZStandard;   use Neo.ZStandard;
+with Neo.API.ZDelta;    use Neo.API.ZDelta;
+with Neo.API.ZStandard; use Neo.API.ZStandard;
 
-generic
-  Stream  : not null access Root_Stream_Type'Class;
-  Quality : Real_Percent := 100.0;
 package Neo.Core.Compression is
 
-  ------------------------
-  -- Stream Compression --
-  ------------------------
-  -- 
-  -- 
+  -----------------
+  -- Compression --
+  -----------------
 
-  procedure Decompress;
+  procedure Decompress (Data : in out Root_Stream_Type'Class);
 
-  procedure Compress;
+  procedure Compress (Data : in out Root_Stream_Type'Class);
 
-  procedure Finish_Compression_Frame;
+  -----------------------
+  -- Delta compression --
+  -----------------------
 
-  function Next_Data_Size_Recommendation return Positive;
+  procedure Decompress (Data, Δ : in out Root_Stream_Type'Class);
+
+  procedure Compress (Data, Δ : in out Root_Stream_Type'Class);
 end;

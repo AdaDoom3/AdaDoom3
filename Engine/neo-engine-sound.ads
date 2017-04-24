@@ -63,10 +63,7 @@ package Neo.Engine.Sound is
       Current_Volume : Percent        := 75.0;
       Current_Shake  : Percent        := 75.0;
     end record;
-
-  package Vector_Emitter is new Vector (Emitter_State);
-  Emitters : Vector_Emitter.Safe_Vector;
-
+    
   --------------
   -- Listener --
   --------------

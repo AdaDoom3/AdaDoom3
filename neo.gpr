@@ -114,9 +114,9 @@ project Neo is
                                         --"-Wl,--enable-stdcall-fixup",                       -- Suppress dll lookup warnings
                                         External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
                                         External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
-                                        External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
                                         External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
-                                        External ("WinDir") & "\System32\XInput9_1_0.dll"); -- Graphics driver for the Vulkan API
+                                        External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
+                                        External ("WinDir") & "\System32\XInput9_1_0.dll"); -- Xbox 360 controller driver for input
                                         -- A Vulkan driver is also necessary, but is loaded dynamically Ex. "\System32\vulkan-1.dll"
   end case;
 
@@ -129,4 +129,4 @@ project Neo is
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
                       for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
-end Neo;
+end;

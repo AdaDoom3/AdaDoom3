@@ -34,20 +34,26 @@ package body Neo is
   procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
   procedure Assert (Val : Bool)              is begin if not Val then raise Program_Error; end if; end;
 
-  -- Null procedures - should be removed when GNAT 17 is released
-  procedure Ignore (Val : Bool)              is begin null; end;
-  procedure Ignore (Val : Ptr)               is begin null; end;
-  procedure Ignore (Val : Int_Ptr)           is begin null; end;
-  procedure Ignore (Val : Int_C)             is begin null; end;
-  procedure Ignore (Val : Int_16_Unsigned_C) is begin null; end;
-  procedure Ignore (Val : Int_32_Unsigned_C) is begin null; end;
+  -- Called by all tasks (including the main execution) during an error to report exception and trace information
+  procedure Handle (Occurrence : Exception_Occurrence) is
+    Traces : Tracebacks_Array (1..1024);
+    Length : Int_32_Natural;
+    begin
+      Line;
+      Line (To_Str (Exception_Name    (Occurrence)));
+      Line (To_Str (Exception_Message (Occurrence)));
+      Line (Last_Error);   
+      Line;   
+      Call_Chain (Traces, Length);
+      Line (To_Str (Symbolic_Traceback (Traces)));
+    end;
 
   ------------
   -- Timing --
   ------------
 
   -- Fetch the time when the application was started
-  START_TIME  : Time := Clock;
+  START_TIME : Time := Clock;
   function Get_Start_Time return Time is (START_TIME);
 
   -- Get the duration of the current timer

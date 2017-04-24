@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Unchecked_Conversion;
+with Unchecked_Conversion;
 
 -- Binding to the Win32 API: http://web.archive.org/web/20150115092801/http://msdn.microsoft.com/en-us/library/windows/apps/dn424765.aspx
 package Neo.API.Win32 is
@@ -32,8 +32,8 @@ package Neo.API.Win32 is
   -- HMODULE   Ptr
   -- LPTSTR    Ptr_Str_16_C
   -- LPCTSTR   Ptr_Const_Char_16_C
-  -- WPARAM    Int_Ptr
-  -- LPARAM    Int_Ptr
+  -- WPARAM    Int_Ptr_C
+  -- LPARAM    Int_Ptr_C
   -- BOOL      Int_C
   -- LONG      Int_C
   -- UINT      Int_32_Unsigned_C
@@ -62,16 +62,16 @@ package Neo.API.Win32 is
   DIALOG_CLASS : constant Str_16_C := "#32770"; -- "#0"
 
   -- https://web.archive.org/web/20150109072835/http://msdn.microsoft.com/en-us/library/windows/desktop/ms646274(v=vs.85).aspx
-  WA_CLICKACTIVE : constant Int_Ptr := 16#0000_0002#; -- 0
+  WA_CLICKACTIVE : constant Int_Ptr_C := 16#0000_0002#; -- 0
 
   -- https://web.archive.org/web/20160525074306/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644943(v=vs.85).aspx
   PM_REMOVE : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0x0000
 
   -- https://web.archive.org/web/20161003234148/https://msdn.microsoft.com/en-us/library/windows/desktop/ms648072(v=vs.85).aspx
-  IDI_APPLICATION : constant Int_Ptr := 16#7F00#; -- MAKEINTRESOURCE (0)
+  IDI_APPLICATION : constant Int_Ptr_C := 16#7F00#; -- MAKEINTRESOURCE (0)
 
   -- https://web.archive.org/web/20150101200053/http://msdn.microsoft.com/en-us/library/windows/desktop/ms648391(v=vs.85).aspx
-  IDC_APPSTARTING : constant Int_Ptr := 16#7F00#; -- MAKEINTRESOURCE (0)
+  IDC_APPSTARTING : constant Int_Ptr_C := 16#7F00#; -- MAKEINTRESOURCE (0)
   
   -- https://web.archive.org/web/20160828015700/https://msdn.microsoft.com/en-us/library/windows/desktop/dd144909(v=vs.85).aspx
   CLR_INVALID : constant Int_32_Unsigned_C := 16#FFFF_FFFF#; -- ???
@@ -92,8 +92,8 @@ package Neo.API.Win32 is
   BS_GROUPBOX : constant Int_32_Unsigned_C := 16#0000_0007#; -- ???
 
   -- https://web.archive.org/web/20161121002327/https://msdn.microsoft.com/en-us/library/windows/desktop/bb787577(v=vs.85).aspx
-  SB_ENDSCROLL : constant Int_Ptr := 16#0000_0007#; -- ???
-  SB_LINEDOWN  : constant Int_Ptr := 16#0000_0001#; -- ???
+  SB_ENDSCROLL : constant Int_Ptr_C := 16#0000_0007#; -- ???
+  SB_LINEDOWN  : constant Int_Ptr_C := 16#0000_0001#; -- ???
 
   -- https://web.archive.org/web/20131006214136/http://msdn.microsoft.com/en-us/library/windows/desktop/bb775464(v=vs.85).aspx
   ES_MULTILINE : constant Int_32_Unsigned_C := 16#0000_0004#; -- ???
@@ -104,16 +104,16 @@ package Neo.API.Win32 is
   HCBT_ACTIVATE : constant Int_C := 5; -- 0
   
   -- https://web.archive.org/web/20160808212320/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724371(v=vs.85).aspx
-  COLOR_WINDOW   : constant Int_Ptr := 16#0005#; -- 0
-  COLOR_GRAYTEXT : constant Int_Ptr := 16#0011#; -- 0
+  COLOR_WINDOW   : constant Int_Ptr_C := 16#0005#; -- 0
+  COLOR_GRAYTEXT : constant Int_Ptr_C := 16#0011#; -- 0
 
   -- http://web.archive.org/web/20141224060057/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632646(v=vs.85).aspx
-  SIZE_MAXIMIZED : constant Int_Ptr := 16#0000_0002#; -- 0
-  SIZE_MINIMIZED : constant Int_Ptr := 16#0000_0001#; -- 0
+  SIZE_MAXIMIZED : constant Int_Ptr_C := 16#0000_0002#; -- 0
+  SIZE_MINIMIZED : constant Int_Ptr_C := 16#0000_0001#; -- 0
 
   -- http://web.archive.org/web/20160722055429/https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx
-  SC_SCREENSAVE : constant Int_Ptr := 16#0000_F140#; -- 0x0000
-  SC_KEYMENU    : constant Int_Ptr := 16#0000_F100#; -- 0x0000
+  SC_SCREENSAVE : constant Int_Ptr_C := 16#0000_F140#; -- 0x0000
+  SC_KEYMENU    : constant Int_Ptr_C := 16#0000_F100#; -- 0x0000
 
   -- https://web.archive.org/web/20140321085736/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645571(v=vs.85).aspx
   RIM_TYPEKEYBOARD : constant Int_32_Unsigned_C := 16#0000_0001#; -- 0
@@ -169,23 +169,23 @@ package Neo.API.Win32 is
   SM_CYFRAME    : constant Int_C := 33; -- 0
  
   -- https://web.archive.org/web/20160202112019/https://msdn.microsoft.com/en-us/library/windows/desktop/dd183499(v=vs.85).aspx
-  FW_LIGHT            : constant Int_C             := 300; -- 0
+  FW_LIGHT            : constant Int_C             := 300;           -- 0
   DEFAULT_CHARSET     : constant Int_32_Unsigned_C := 16#0000_0001#; -- ???
   DEFAULT_QUALITY     : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
   OUT_DEFAULT_PRECIS  : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
   CLIP_DEFAULT_PRECIS : constant Int_32_Unsigned_C := 16#0000_0000#; -- ???
-  FONT_FAMILY_MODERN  : constant Int_32_Unsigned_C := 16#0000_0030#;
-  FONT_FIXED_PITCH    : constant Int_32_Unsigned_C := 16#0000_0001#;
+  FONT_FAMILY_MODERN  : constant Int_32_Unsigned_C := 16#0000_0030#; -- ???
+  FONT_FIXED_PITCH    : constant Int_32_Unsigned_C := 16#0000_0001#; -- ???
 
   -- https://web.archive.org/web/20140209214910/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632647(v=vs.85).aspx
-  WMSZ_BOTTOMRIGHT : constant Int_Ptr := 16#0000_0008#; -- 0
-  WMSZ_BOTTOMLEFT  : constant Int_Ptr := 16#0000_0007#; -- 0
-  WMSZ_TOPRIGHT    : constant Int_Ptr := 16#0000_0005#; -- 0
-  WMSZ_TOPLEFT     : constant Int_Ptr := 16#0000_0004#; -- 0
-  WMSZ_BOTTOM      : constant Int_Ptr := 16#0000_0006#; -- 0
-  WMSZ_RIGHT       : constant Int_Ptr := 16#0000_0002#; -- 0
-  WMSZ_LEFT        : constant Int_Ptr := 16#0000_0001#; -- 0
-  WMSZ_TOP         : constant Int_Ptr := 16#0000_0003#; -- 0
+  WMSZ_BOTTOMRIGHT : constant Int_Ptr_C := 16#0000_0008#; -- 0
+  WMSZ_BOTTOMLEFT  : constant Int_Ptr_C := 16#0000_0007#; -- 0
+  WMSZ_TOPRIGHT    : constant Int_Ptr_C := 16#0000_0005#; -- 0
+  WMSZ_TOPLEFT     : constant Int_Ptr_C := 16#0000_0004#; -- 0
+  WMSZ_BOTTOM      : constant Int_Ptr_C := 16#0000_0006#; -- 0
+  WMSZ_RIGHT       : constant Int_Ptr_C := 16#0000_0002#; -- 0
+  WMSZ_LEFT        : constant Int_Ptr_C := 16#0000_0001#; -- 0
+  WMSZ_TOP         : constant Int_Ptr_C := 16#0000_0003#; -- 0
 
   -- https://web.archive.org/web/20150109064332/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
   RIDEV_INPUTSINK                : constant Int_32_Unsigned_C := 16#0000_0100#; -- 0x00000000
@@ -288,33 +288,33 @@ package Neo.API.Win32 is
   ---------------
 
   -- https://web.archive.org/web/20141228152842/http://msdn.microsoft.com/en-us/library/windows/desktop/ms644977(v=vs.85).aspx
-  type HOOKPROC is access function (nCode  : Int_C;   -- int    
-                                    wParam : Int_Ptr; -- WPARAM 
-                                    lParam : Int_Ptr) -- LPARAM 
-                                    return Int_Ptr    -- LRESULT 
+  type HOOKPROC is access function (nCode  : Int_C;     -- int    
+                                    wParam : Int_Ptr_C; -- WPARAM 
+                                    lParam : Int_Ptr_C) -- LPARAM 
+                                    return Int_Ptr_C    -- LRESULT 
                                     with Convention => Stdcall;
 
   -- https://web.archive.org/web/20160516212433/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633573(v=vs.85).aspx
   type WNDPROC is access function (hwnd   : Ptr;               -- HWND   
                                    uMsg   : Int_32_Unsigned_C; -- UINT   
-                                   wParam : Int_Ptr;           -- WPARAM 
-                                   lParam : Int_Ptr)           -- LPARAM 
-                                   return Int_Ptr              -- LRESULT 
+                                   wParam : Int_Ptr_C;         -- WPARAM 
+                                   lParam : Int_Ptr_C)         -- LPARAM 
+                                   return Int_Ptr_C            -- LRESULT 
                                    with Convention => Stdcall;
 
   -- https://web.archive.org/web/20140625144949/http://msdn.microsoft.com/en-us/library/windows/desktop/ms633498(v=vs.85).aspx
-  type WNDENUMPROC is access function (hwnd   : Ptr;     -- HWND   
-                                       lParam : Int_Ptr) -- LPARAM 
-                                       return Int_C      -- BOOL 
+  type WNDENUMPROC is access function (hwnd   : Ptr;       -- HWND   
+                                       lParam : Int_Ptr_C) -- LPARAM 
+                                       return Int_C        -- BOOL 
                                        with Convention => Stdcall;
 
   -- https://web.archive.org/web/20150109225815/http://msdn.microsoft.com/en-us/library/windows/desktop/dd145061(v=vs.85).aspx
   type Ptr_RECT;
-  type MONITORENUMPROC is access function (hMonitor    : Ptr;         -- HMONITOR 
-                                           hdcMonitor  : Ptr;         -- HDC      
-                                           lprcMonitor : Ptr_RECT;    -- LPRECT   
-                                           dwData      : Ptr_Int_Ptr) -- LPARAM   
-                                           return Int_C               -- BOOL 
+  type MONITORENUMPROC is access function (hMonitor    : Ptr;           -- HMONITOR 
+                                           hdcMonitor  : Ptr;           -- HDC      
+                                           lprcMonitor : Ptr_RECT;      -- LPRECT   
+                                           dwData      : Ptr_Int_Ptr_C) -- LPARAM   
+                                           return Int_C                 -- BOOL 
                                            with Convention => Stdcall;
 
   ----------------
@@ -367,21 +367,6 @@ package Neo.API.Win32 is
       dwThreadId  : Int_32_Unsigned_C := 0;        -- DWORD  
     end record with Convention => C;
     
-  -- https://web.archive.org/web/20160611121457/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724833(v=vs.85).aspx
-  -- type OSVERSIONINFOEX is record
-  --     dwOSVersionInfoSize : Int_32_Unsigned_C := 0; -- DWORD 
-  --     dwMajorVersion      : Int_32_Unsigned_C := 0; -- DWORD 
-  --     dwMinorVersion      : Int_32_Unsigned_C := 0; -- DWORD 
-  --     dwBuildNumber       : Int_32_Unsigned_C := 0; -- DWORD 
-  --     dwPlatformId        : Int_32_Unsigned_C := 0; -- DWORD 
-  --     szCSDVersion        : Str_16_C (1..128) := (others => NULL_CHAR_16_C); -- TCHAR[128]
-  --     wServicePackMajor   : Int_16_Unsigned_C := 0; -- WORD
-  --     wServicePackMinor   : Int_16_Unsigned_C := 0; -- WORD
-  --     wSuiteMask          : Int_16_Unsigned_C := 0; -- WORD
-  --     wProductType        : Int_8_Unsigned_C  := 0; -- BYTE
-  --     wReserved           : Int_8_Unsigned_C  := 0; -- BYTE
-  --   end record with Convention => C;
-    
   -- https://web.archive.org/web/20141225053346/http://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx
   type RECT is record
       left   : Int_C := 0; -- LONG
@@ -408,8 +393,8 @@ package Neo.API.Win32 is
   type MSG is record
       hwnd    : Ptr               := NULL_PTR;       -- HWND   
       message : Int_32_Unsigned_C := 0;              -- UINT   
-      wParam  : Int_Ptr           := 0;              -- WPARAM 
-      lParam  : Int_Ptr           := 0;              -- LPARAM 
+      wParam  : Int_Ptr_C         := 0;              -- WPARAM 
+      lParam  : Int_Ptr_C         := 0;              -- LPARAM 
       time    : Int_32_Unsigned_C := 0;              -- DWORD  
       pt      : POINT             := (others => <>); -- POINT  
     end record with Convention => C;
@@ -424,7 +409,7 @@ package Neo.API.Win32 is
       hInstance     : Ptr               := NULL_PTR; -- HINSTANCE 
       hIcon         : Ptr               := NULL_PTR; -- HICON     
       hCursor       : Ptr               := NULL_PTR; -- HCURSOR   
-      hbrBackground : Int_Ptr           := 0;        -- HBRUSH    
+      hbrBackground : Int_Ptr_C         := 0;        -- HBRUSH    
       lpszMenuName  : Ptr               := NULL_PTR; -- Ptr_Const_Char_16_C := 0; -- LPCTSTR   
       lpszClassName : Ptr               := NULL_PTR; -- Ptr_Const_Char_16_C := 0; -- LPCTSTR   
       hIconSm       : Ptr               := NULL_PTR; -- HICON     
@@ -591,11 +576,11 @@ package Neo.API.Win32 is
   
   -- https://web.archive.org/web/20141225053346/http://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx
   type Ptr_RECT        is access all RECT;
-  function To_Ptr_RECT is new Ada.Unchecked_Conversion (Int_Ptr, Ptr_RECT);
+  function To_Ptr_RECT is new Unchecked_Conversion (Int_Ptr_C, Ptr_RECT);
 
   -- https://web.archive.org/web/20140902090739/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632605(v=vs.85).aspx
   type Ptr_MINMAXINFO        is access all MINMAXINFO;
-  function To_Ptr_MINMAXINFO is new Ada.Unchecked_Conversion (Int_Ptr, Ptr_MINMAXINFO);
+  function To_Ptr_MINMAXINFO is new Unchecked_Conversion (Int_Ptr_C, Ptr_MINMAXINFO);
 
   -----------------
   -- Subprograms --
@@ -652,11 +637,6 @@ package Neo.API.Win32 is
   -- https://web.archive.org/web/20160413212433/https://msdn.microsoft.com/en-us/library/windows/desktop/ms679360(v=vs.85).aspx
   function GetLastError return Int_32_Unsigned_C -- DWORD 
                         with Import => True, Convention => StdCall, External_Name => "GetLastError";
-             
-  -- https://web.archive.org/web/20160801144224/https://msdn.microsoft.com/en-us/library/windows/desktop/ms724451(v=vs.85).aspx                       
-  -- function GetVersionExW (lpVersionInfo : access OSVERSIONINFOEX) -- LPOSVERSIONINFOEX
-  --                         return Int_C                            -- BOOL 
-  --                         with Import => True, Convention => StdCall, External_Name => "GetVersionExW";
        
   -- https://web.archive.org/web/20141228222857/http://msdn.microsoft.com/en-us/library/windows/desktop/ms724432(v=vs.85).aspx                             
   function GetUserNameW (lpBuffer :        Ptr_Str_16_C; -- LPTSTR  
@@ -775,15 +755,15 @@ package Neo.API.Win32 is
                        with Import => True, Convention => StdCall, External_Name => "LoadImageW";
 
   -- https://web.archive.org/web/20140321051739/http://msdn.microsoft.com/en-us/library/windows/desktop/ms648072(v=vs.85).aspx                    
-  function LoadIconW (hInstance  : Ptr;     -- HINSTANCE 
-                      lpIconName : Int_Ptr) -- LPCTSTR   
-                      return Ptr            -- HICON 
+  function LoadIconW (hInstance  : Ptr;       -- HINSTANCE 
+                      lpIconName : Int_Ptr_C) -- LPCTSTR   
+                      return Ptr              -- HICON 
                       with Import => True, Convention => StdCall, External_Name => "LoadIconW";
                       
   -- https://web.archive.org/web/20150101200053/http://msdn.microsoft.com/en-us/library/windows/desktop/ms648391(v=vs.85).aspx                           
-  function LoadCursorW (hInstance    : Ptr;     -- HINSTANCE 
-                        lpCursorName : Int_Ptr) -- LPCTSTR   
-                        return Ptr              -- HCURSOR 
+  function LoadCursorW (hInstance    : Ptr;       -- HINSTANCE 
+                        lpCursorName : Int_Ptr_C) -- LPCTSTR   
+                        return Ptr                -- HCURSOR 
                         with Import => True, Convention => StdCall, External_Name => "LoadCursorW";
   
   -- https://web.archive.org/web/20150619032402/https://msdn.microsoft.com/en-us/library/windows/desktop/ms646312%28v=vs.85%29.aspx       
@@ -841,7 +821,7 @@ package Neo.API.Win32 is
                             nWidth       : Int_C;             -- int       
                             nHeight      : Int_C;             -- int       
                             hWndParent   : Ptr;               -- HWND      
-                            hMenu        : Int_Ptr;           -- HMENU     
+                            hMenu        : Int_Ptr_C;         -- HMENU     
                             hInstance    : Ptr;               -- HINSTANCE 
                             lpParam      : Ptr)               -- LPVOID    
                             return Ptr                        -- HWND 
@@ -915,9 +895,9 @@ package Neo.API.Win32 is
   -- https://web.archive.org/web/20151125225543/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633572(v=vs.85).aspx    
   function DefWindowProcW (hWnd   : Ptr;               -- HWND   
                            Msg    : Int_32_Unsigned_C; -- UINT   
-                           wParam : Int_Ptr;           -- WPARAM 
-                           lParam : Int_Ptr)           -- LPARAM 
-                           return Int_Ptr              -- LRESULT 
+                           wParam : Int_Ptr_C;           -- WPARAM 
+                           lParam : Int_Ptr_C)           -- LPARAM 
+                           return Int_Ptr_C              -- LRESULT 
                            with Import => True, Convention => StdCall, External_Name => "DefWindowProcW";
                                  
   -- https://web.archive.org/web/20150605201750/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
@@ -1010,8 +990,8 @@ package Neo.API.Win32 is
   -- https://web.archive.org/web/20160610020032/https://msdn.microsoft.com/en-us/library/windows/desktop/ms644950(v=vs.85).aspx            
   function SendMessageW (hWnd   : Ptr;               -- HWND   
                          Msg    : Int_32_Unsigned_C; -- UINT  
-                         wParam : Int_Ptr;           -- WPARAM 
-                         lParam : Int_Ptr)           -- LPARAM 
+                         wParam : Int_Ptr_C;         -- WPARAM 
+                         lParam : Int_Ptr_C)         -- LPARAM 
                          return Int_C                -- LRESULT 
                          with Import => True, Convention => StdCall, External_Name => "SendMessageW";
                        
@@ -1094,9 +1074,9 @@ package Neo.API.Win32 is
   -- https://web.archive.org/web/20150114085321/http://msdn.microsoft.com/en-us/library/windows/desktop/ms644974(v=vs.85).aspx
   function CallNextHookEx (hhk    : Ptr;     -- HHOOK  
                            nCode  : Int_C;   -- nCode
-                           wParam : Int_Ptr; -- WPARAM
-                           lParam : Int_Ptr) -- LPARAM
-                           return Int_Ptr    -- LRESULT 
+                           wParam : Int_Ptr_C; -- WPARAM
+                           lParam : Int_Ptr_C) -- LPARAM
+                           return Int_Ptr_C    -- LRESULT 
                            with Import => True, Convention => StdCall, External_Name => "CallNextHookEx";
 
   -- https://web.archive.org/web/20160501214001/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
@@ -1155,10 +1135,10 @@ package Neo.API.Win32 is
                           with Import => True, Convention => StdCall, External_Name => "SetClassLongW";
 
   -- http://web.archive.org/web/20160623235135/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633589(v=vs.85).aspx
-  function SetClassLongPtrW (hWnd      : Ptr;     -- hWnd
-                             nIndex    : Int_C;   -- nIndex
-                             dwNewLong : Int_Ptr) -- LONG_PTR
-                             return Int_Ptr       -- ULONG_PTR
+  function SetClassLongPtrW (hWnd      : Ptr;       -- hWnd
+                             nIndex    : Int_C;     -- nIndex
+                             dwNewLong : Int_Ptr_C) -- LONG_PTR
+                             return Int_Ptr_C       -- ULONG_PTR
                              with Import => True, Convention => StdCall, External_Name => "SetClassLongPtrW";
 
   -- http://web.archive.org/web/20160610054506/https://msdn.microsoft.com/en-us/library/windows/desktop/ms648394(v=vs.85).aspx

@@ -30,21 +30,21 @@ separate (Neo.Engine) package body System is
     begin
 
       -- Fetch strings
-      Ignore (GetVersionExW (Version'unchecked_access));
-      Line (Int_32_Unsigned_C'Wide_Image (GetLastError));
-      Assert (GetModuleFileNameW (NULL_PTR, Folder'Unrestricted_Access, Folder'length));
+      Ignore (GetVersionExW (Version'Unchecked_Access));
+      Line (GetLastError'Wide_Image);
+      Assert (GetModuleFileNameW (NULL_PTR, Folder'Unrestricted_Access, Folder'Length));
 
       -- Remove the name
       Folder (Int_Size_C (Index (To_Str (Folder), "\", Backward))) := NULL_CHAR_C;          
       
       -- Get buffer size
-      Assert (GetUserNameW (null, Buffer'unchecked_access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER); 
+      Assert (GetUserNameW (null, Buffer'Unchecked_Access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER); 
       declare
-      function Get_Version return Str is (Version.wki100_ver_major'img & Version.wki100_ver_minor'img);
+      function Get_Version return Str is (Version.wki100_ver_major'Img & Version.wki100_ver_minor'Img);
       Username : aliased Ptr_Str_16_C := new Str_C (1..Int_Size_C (Buffer) + 5);
       begin
-        Assert (GetUserNameW (Username, Buffer'unchecked_access));
-        Assert (IsWow64Process (GetCurrentProcess, Buffer'unchecked_access));
+        Assert (GetUserNameW (Username, Buffer'Unchecked_Access));
+        Assert (IsWow64Process (GetCurrentProcess, Buffer'Unchecked_Access));
         return (Name      => Delete (To_Str_Unbound (To_Str (Folder)), 1, Index (To_Str (Folder), "\", Backward)), -- First-level
                 Path      => To_Str_Unbound (To_Str (Folder)),
                 Username  => To_Str_Unbound (To_Str (Username.all)),
@@ -67,7 +67,7 @@ separate (Neo.Engine) package body System is
                                   when 10 => 
                                     (case Version.wki100_ver_minor is
                                        when 0 => "10"
-                                       when others => "10." & Get_Version) -- "The last version of Windows..."
+                                       when others => "10." & Get_Version) -- "The Last version of Windows..."
                                   when others => Get_Version)));
         end;
     end;
@@ -93,7 +93,7 @@ separate (Neo.Engine) package body System is
   WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (Get_Information.Path & PATH_CURSOR_INACTIVE  & ".cur");
 
   -- Main "HWND"s for the invisible input window and game window
-  Game, Input : aliased Ptr;
+  Game, Input : aliased Ptr := NULL_PTR;
 
   -- Window handles for multi-monitor mode
   package Vector_Ptr is new Vectors (Ptr);
@@ -128,7 +128,7 @@ separate (Neo.Engine) package body System is
     Result       : aliased Ptr                         := NULL_PTR;
     Surface_Info : aliased VkWin32SurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleNULL, others => <>);
     begin
-      Assert (vkCreateWin32SurfaceKHR (Instance, Surface_Info'access, NULL_PTR, Result'access));
+      Assert (vkCreateWin32SurfaceKHR (Instance, Surface_Info'Access, NULL_PTR, Result'Access));
       Assert (Result);
       return Result;
     end;
@@ -141,19 +141,19 @@ separate (Neo.Engine) package body System is
   procedure Copy (Item : Str) is
 
     -- Declare a new type to handle an unchecked conversion
-    type Text_Array is array (Item'first..Item'last + 1) of Char_16_C;
-    type Ptr_Text_Array is access all Text_Array;
-    function To_Ptr_Text_Array is new Ada.Unchecked_Conversion (Ptr, Ptr_Text_Array);
+    type Text_Array is array (Item'First..Item'Last + 1) of Char_16_C;
+    type Ptr_Text_Array is Access all Text_Array;
+    function To_Ptr_Text_Array is new Unchecked_Conversion (Ptr, Ptr_Text_Array);
     Text : Ptr_Text_Array := null;
 
     -- Prepare global data
     Data : Ptr := NULL_PTR;
     begin
-      Data := GlobalAlloc (GMEM_MOVEABLE, Text_Array'object_size / Byte'object_size);
+      Data := GlobalAlloc (GMEM_MOVEABLE, Text_Array'Object_Size / Byte'Object_Size);
       Assert (Data);
       Text := To_Ptr_Text_Array (GlobalLock (Data));
       Assert (Text /= null);
-      Text (Text.all'last) := NULL_CHAR_C; 
+      Text (Text.all'Last) := NULL_CHAR_C; 
 
       -- Write the text to data and send it to the clipboard
       for I in Item'Range loop Text (I) := To_Char_16_C (Item (I)); end loop;
@@ -192,7 +192,7 @@ separate (Neo.Engine) package body System is
     Flash_Info : aliased FLASHWINFO := (dwFlags => (if Val then FLASH_CONTINUOUSLY else FLASHW_STOP), others => <>);
     begin
       Assert (Game);
-      Assert (FlashWindowEx (Flash_Info'unchecked_access));
+      Assert (FlashWindowEx (Flash_Info'Unchecked_Access));
     end;
 
   -- Execute a commandline statement
@@ -200,7 +200,7 @@ separate (Neo.Engine) package body System is
     Startup_Info : aliased STARTUPINFO         := (others => <>);
     Process_Info : aliased PROCESS_INFORMATION := (others => <>);
     begin
-      Assert (Path'length <= MAX_PATH - 1); -- Subtract one to account for null terminator
+      Assert (Path'Length <= MAX_PATH - 1); -- Subtract one to account for null terminator
       Assert (CreateProcessW (lpApplicationName    => null,
                               lpCommandLine        => To_Ptr_Char_16_C (Path),
                               lpProcessAttributes  => NULL_PTR,
@@ -209,8 +209,8 @@ separate (Neo.Engine) package body System is
                               dwCreationFlags      => 0,
                               lpEnvironment        => NULL_PTR,
                               lpCurrentDirectory   => null,
-                              lpStartupInfo        => Startup_Info'unchecked_access,
-                              lpProcessInformation => Process_Info'unchecked_access));
+                              lpStartupInfo        => Startup_Info'Unchecked_Access,
+                              lpProcessInformation => Process_Info'Unchecked_Access));
     end;
 
   -- Create a message box 
@@ -231,13 +231,13 @@ separate (Neo.Engine) package body System is
       begin
 
         -- Identify the message box by class and window text
-        Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'length));
-        Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'length) = 0);
+        Assert (GetClassNameW (Window, Class_Name'Unrestricted_Access, Class_Name'Length));
+        Ignore (GetWIndowTextW (Window, Window_Text'Unrestricted_Access, Window_Text'Length) = 0);
         if nCode = HCBT_ACTIVATE and To_Str (Class_Name) = DIALOG_CLASS and To_Str (Window_Text) = Name then
 
           -- Load that icon!
           Icon := LoadImageW (hinst     => NULL_PTR,
-                              lpszName  => WIN32_PATH_ICON'access,
+                              lpszName  => WIN32_PATH_ICON'Access,
                               uType     => IMAGE_ICON,
                               cxDesired => 0,
                               cyDesired => 0,
@@ -253,12 +253,12 @@ separate (Neo.Engine) package body System is
     begin
 
       -- Create a hook to find the message box window which will then be able to set the icon
-      Force_Custom_Icon := SetWindowsHookExW (WH_CBT, CBTProc'unchecked_access, NULL_PTR, GetCurrentThreadId);
+      Force_Custom_Icon := SetWindowsHookExW (WH_CBT, CBTProc'Unchecked_Access, NULL_PTR, GetCurrentThreadId);
 
       -- Do the call
       return (case MessageBoxW (hWnd      => Game,
-                                lpCaption => C_Name'unchecked_access,
-                                lpText    => C_Message'unchecked_access,
+                                lpCaption => C_Name'Unchecked_Access,
+                                lpText    => C_Message'Unchecked_Access,
                                 uType     => (if Game = NULL_PTR then MB_SYSTEMMODAL else 0)
                                               or (case Icon is
                                                     when No_Icon          => 0,
@@ -310,8 +310,8 @@ separate (Neo.Engine) package body System is
     begin
       if Game = NULL_PTR then
         Game := CreateWindowExW (dwExStyle    => 0,
-                                 lpClassName  => GAME_NAME'access,
-                                 lpWindowName => GAME_NAME'access,
+                                 lpClassName  => GAME_NAME'Access,
+                                 lpWindowName => GAME_NAME'Access,
                                  dwStyle      => (if Fullscreen then STYLE_FULLSCREEN else STYLE_WINDOWED) or WS_MINIMIZE,
                                  x            => Int_C (X),
                                  y            => Int_C (Y),
@@ -377,7 +377,7 @@ separate (Neo.Engine) package body System is
   -- Check if another instance of the game is running
   function Only_Instance return Bool is
     Handle : Ptr := NULL_PTR;
-    Window : Ptr := FindWindowW (GAME_NAME'access, null);
+    Window : Ptr := FindWindowW (GAME_NAME'Access, null);
     begin
       if Window /= NULL_PTR then
         Ignore (ShowWindow (Window, SW_SHOWNORMAL) = 0);
@@ -402,20 +402,20 @@ separate (Neo.Engine) package body System is
   procedure Clip_Cursor (Do_Clip : Boolean := True) is
     Rectangle : aliased RECT := (others => <>);
     begin
-      Assert (GetWindowRect (Game, Rectangle'unchecked_access));
+      Assert (GetWindowRect (Game, Rectangle'Unchecked_Access));
 
       -- Unclip cursor
       if not Do_Clip and Original_Clip /= (others => <>) then
-        Assert (ClipCursor (Original_Clip'unchecked_access));
+        Assert (ClipCursor (Original_Clip'Unchecked_Access));
         Original_Clip := (others => <>);
 
       -- Clip it
       elsif Do_Clip then
         if Original_Clip = (others => <>) then
-          Assert (GetClipCursor (Original_Clip'unchecked_access));
+          Assert (GetClipCursor (Original_Clip'Unchecked_Access));
           Assert (Original_Clip /= (others => <>));
         end if;
-        Assert (ClipCursor (Rectangle'unchecked_access));
+        Assert (ClipCursor (Rectangle'Unchecked_Access));
       end if;
     end;
 
@@ -476,7 +476,7 @@ separate (Neo.Engine) package body System is
 
       -- Load the game window icon
       Icon := LoadImageW (hinst     => GetModuleHandleNULL,
-                          lpszName  => WIN32_PATH_ICON'access,
+                          lpszName  => WIN32_PATH_ICON'Access,
                           uType     => IMAGE_ICON,
                           cxDesired => 0,
                           cyDesired => 0,
@@ -485,14 +485,14 @@ separate (Neo.Engine) package body System is
 
       -- Load cursors
       Cursor_Inactive := LoadImageW (hinst     => GetModuleHandleNULL,
-                                     lpszName  => WIN32_PATH_CURSOR_INACTIVE'access,
+                                     lpszName  => WIN32_PATH_CURSOR_INACTIVE'Access,
                                      uType     => IMAGE_CURSOR,
                                      cxDesired => 0,
                                      cyDesired => 0,
                                      fuLoad    => LR_LOADFROMFILE or LR_DEFAULTSIZE);
       if Cursor_Inactive = NULL_PTR then Cursor_Inactive := LoadCursorW (NULL_PTR, GENERIC_CURSOR); end if;
       Cursor_Active := LoadImageW (hinst     => GetModuleHandleNULL,
-                                   lpszName  => WIN32_PATH_CURSOR_ACTIVE'access,
+                                   lpszName  => WIN32_PATH_CURSOR_ACTIVE'Access,
                                    uType     => IMAGE_CURSOR,
                                    cxDesired => 0,
                                    cyDesired => 0,
@@ -500,7 +500,7 @@ separate (Neo.Engine) package body System is
       if Cursor_Active = NULL_PTR then Cursor_Active := LoadCursorW (NULL_PTR, GENERIC_CURSOR); end if;
 
       -- Register the main window class (the actual window creation is done in Adjust_Windowing)
-      Class := (lpfnWndProc   => WindowProc'unchecked_access,
+      Class := (lpfnWndProc   => WindowProc'Unchecked_Access,
                 hInstance     => GetModuleHandleNULL,
                 hIconSm       => Icon,
                 hIcon         => Icon,
@@ -508,17 +508,17 @@ separate (Neo.Engine) package body System is
                 hbrBackground => COLOR_GRAYTEXT,
                 lpszClassName => To_Ptr_Const_Char_16_C (GAME_NAME),
                 others        => <>);
-      Assert (RegisterClassExW (Class'access));
+      Assert (RegisterClassExW (Class'Access));
     end;
 
   -- Pump the OS message loop
   function Update_Windowing return Bool is
     Message : aliased MSG := (others => <>);
     begin
-      while PeekMessageW (Message'access, Game, 0, 0, PM_REMOVE) /= 0 loop
+      while PeekMessageW (Message'Access, Game, 0, 0, PM_REMOVE) /= 0 loop
         if Message.message = WM_QUIT then return False; end if;
-        Ignore (TranslateMessage (Message'access));
-        Ignore (DispatchMessageW (Message'access));
+        Ignore (TranslateMessage (Message'Access));
+        Ignore (DispatchMessageW (Message'Access));
       end loop;
       return True;
     end;
@@ -530,7 +530,7 @@ separate (Neo.Engine) package body System is
         Ignore (ShowWindow (Game, SW_HIDE) = 0);
         Ignore (DestroyWindow (Game));
       end if;
-      Ignore (UnregisterClassW (Game_Name'access, NULL_PTR));
+      Ignore (UnregisterClassW (Game_Name'Access, NULL_PTR));
       Game := NULL_PTR;
     end;
 
@@ -543,14 +543,14 @@ separate (Neo.Engine) package body System is
     function MonitorEnumProc (hMonitor, hdcMonitor : Ptr; lprcMonitor : Ptr_RECT; dwData : Ptr_Int_Ptr) return Int_C is
       Info : aliased MONITORINFO := (others => <>);
       begin
-        Assert (GetMonitorInfoW (hMonitor, Info'unchecked_access));
+        Assert (GetMonitorInfoW (hMonitor, Info'Unchecked_Access));
         Monitors.Append (To_Border (Info.rcMonitor));
         return 1;
       end;
     begin
 
       -- Call hook
-      Assert (EnumDisplayMonitors (NULL_PTR, null, MonitorEnumProc'unchecked_access, 0));
+      Assert (EnumDisplayMonitors (NULL_PTR, null, MonitorEnumProc'Unchecked_Access, 0));
       Assert (Monitors.Length > 0);
       return Vector_Border.To_Unsafe_Array (Monitors);
     end;
@@ -566,7 +566,7 @@ separate (Neo.Engine) package body System is
       declare
       Result : aliased RECT := (others => <>);
       begin
-        Assert (GetWindowRect (Game, Result'unchecked_access));
+        Assert (GetWindowRect (Game, Result'Unchecked_Access));
         return (1 => To_Border (Result));
       end;
     end;
@@ -583,8 +583,8 @@ separate (Neo.Engine) package body System is
       end;
 
     -- Register a new class specifically for multi-monitor windows
-    Class : aliased WNDCLASSEX := (cbSize        => WNDCLASSEX'object_size / Byte'object_size,
-                                   lpfnWndProc   => WindowProc'unchecked_access,
+    Class : aliased WNDCLASSEX := (cbSize        => WNDCLASSEX'Object_Size / Byte'Object_Size,
+                                   lpfnWndProc   => WindowProc'Unchecked_Access,
                                    hInstance     => GetModuleHandleNULL,
                                    hIconSm       => Icon,
                                    hIcon         => Icon,
@@ -595,7 +595,7 @@ separate (Neo.Engine) package body System is
                                                        when Active_Cursor   => Cursor_Active,
                                                        when System_Cursor   => LoadCursorW (NULL_PTR, GENERIC_CURSOR)));
     begin
-      Assert (RegisterClassExW (Class'unchecked_access));
+      Assert (RegisterClassExW (Class'Unchecked_Access));
 
       -- For every monitor border create a window that fits it
       for Monitor of Get_Monitors loop
@@ -610,8 +610,8 @@ separate (Neo.Engine) package body System is
                                                          hMenu        => 0,
                                                          hInstance    => GetModuleHandleNULL,
                                                          lpParam      => NULL_PTR,
-                                                         lpClassName  => MULTI_MONITOR_NAME'access,
-                                                         lpWindowName => MULTI_MONITOR_NAME'access));
+                                                         lpClassName  => MULTI_MONITOR_NAME'Access,
+                                                         lpWindowName => MULTI_MONITOR_NAME'Access));
           Assert (Multi_Monitor_Windows.Last_Element);
           Ignore (ShowWindow (Multi_Monitor_Windows.Last_Element, SW_SHOWNORMAL));
           Assert (UpdateWindow (Multi_Monitor_Windows.Last_Element));
@@ -630,7 +630,7 @@ separate (Neo.Engine) package body System is
         Ignore (ShowWindow (Window, SW_HIDE));
         Assert (DestroyWindow (Window));
       end loop;
-      Assert (UnregisterClassW (MULTI_MONITOR_NAME'access, NULL_PTR));
+      Assert (UnregisterClassW (MULTI_MONITOR_NAME'Access, NULL_PTR));
     end;
 
   -----------
@@ -709,15 +709,15 @@ separate (Neo.Engine) package body System is
 
   -- Vibrate an Xbox controller
   procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent) is
-    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'last)),
-                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'last)));
-    begin if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'unchecked_access) = 0); end if; end;
+    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'Last)),
+                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'Last)));
+    begin if Id in 0..3 then Assert (XInputSetState (Int_32_Unsigned_C (Id), Vibration'Unchecked_Access) = 0); end if; end;
 
   -- Fetch raw cursor coordinates from the system cursor
   function Get_Cursor return Cursor_state is
     Pt : aliased POINT := (others => <>);
     begin
-      Assert (GetCursorPos (Pt'unchecked_access));
+      Assert (GetCursorPos (Pt'Unchecked_Access));
       return (Int_64 (Pt.X), Int_64 (Pt.Y));
     end;
 
@@ -734,26 +734,28 @@ separate (Neo.Engine) package body System is
           when WM_INPUT =>
 
             -- Find if the input message belongs to a mouse or keyboard
-            Bytes := RAWINPUTHEADER'object_size / Byte'object_size;
+            Bytes := RAWINPUTHEADER'Object_Size / Byte'Object_Size;
             Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                      uiCommand    => GET_DEVICE_HEADER,
-                                     pData        => Header'unchecked_access,
-                                     pcbSize      => Bytes'unchecked_access,
-                                     cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWINPUTHEADER'object_size / Byte'object_size);
+                                     pData        => Header'Unchecked_Access,
+                                     pcbSize      => Bytes'Unchecked_Access,
+                                     cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWINPUTHEADER'Object_Size / Byte'Object_Size);
             Id := To_Int_Ptr (Header.hDevice);
             if not Devices.Has (Id) then return DefWindowProcW (hwnd, uMsg, wParam, lParam); end if;
             case Header.dwType is
 
               -- Its a keyboard...
               when RIM_TYPEKEYBOARD =>
-                Bytes := Int_32_Unsigned_C (RAWKEYBOARD'object_size / Byte'object_size);
+                Bytes := Int_32_Unsigned_C (RAWKEYBOARD'Object_Size / Byte'Object_Size);
                 declare Keyboard : aliased RAWKEYBOARD; begin
                   Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                            uiCommand    => GET_DEVICE_DATA,
-                                           pData        => Keyboard'unchecked_access,
-                                           pcbSize      => Bytes'unchecked_access,
-                                           cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWKEYBOARD'object_size / Byte'object_size);
-                  if Keyboard.VKey <= VK_MAP'last and Keyboard.VKey >= VK_MAP'first then
+                                           pData        => Keyboard'Unchecked_Access,
+                                           pcbSize      => Bytes'Unchecked_Access,
+                                           cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWKEYBOARD'Object_Size / Byte'Object_Size);
+
+                  -- Inject the mapped VK code
+                  if Keyboard.VKey <= VK_MAP'Last and Keyboard.VKey >= VK_MAP'First then
                     Inject_Key (Id   => Id,
                                 Down => Keyboard.Message = WM_KEYDOWN or Keyboard.Message = WM_SYSKEYDOWN,
                                 Key  => (case VK_MAP (Keyboard.VKey) is
@@ -766,13 +768,15 @@ separate (Neo.Engine) package body System is
 
               -- Its a mouse...
               when RIM_TYPEMOUSE =>
-                Bytes := Int_32_Unsigned_C (RAWMOUSE'object_size / Byte'object_size);
+                Bytes := Int_32_Unsigned_C (RAWMOUSE'Object_Size / Byte'Object_Size);
                 declare Mouse : aliased RAWMOUSE; begin
                   Assert (GetRawInputData (hRawInput    => To_Ptr (lParam),
                                            uiCommand    => GET_DEVICE_DATA,
-                                           pData        => Mouse'unchecked_access,
-                                           pcbSize      => Bytes'unchecked_access,
-                                           cbSizeHeader => RAWINPUTHEADER'object_size / Byte'object_size) = RAWMOUSE'object_size / Byte'object_size);
+                                           pData        => Mouse'Unchecked_Access,
+                                           pcbSize      => Bytes'Unchecked_Access,
+                                           cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWMOUSE'Object_Size / Byte'Object_Size);
+
+                  -- Handle various buttons
                   if Mouse.lLastX /= 0 or Mouse.lLastY /= 0 then Inject_Cursor (Id, (Int_64 (Mouse.lLastX), Int_64 (Mouse.lLastY))); end if;
                   if    (Mouse.usButtons and RI_MOUSE_LEFT_BUTTON_DOWN)   > 0 then Inject_Button (Id, Left_Button,   True);
                   elsif (Mouse.usButtons and RI_MOUSE_LEFT_BUTTON_UP)     > 0 then Inject_Button (Id, Left_Button,   False);
@@ -784,6 +788,8 @@ separate (Neo.Engine) package body System is
                   elsif (Mouse.usButtons and RI_MOUSE_BUTTON_4_UP)        > 0 then Inject_Button (Id, Aux_1_Button,  False);
                   elsif (Mouse.usButtons and RI_MOUSE_BUTTON_5_DOWN)      > 0 then Inject_Button (Id, Aux_2_Button,  True);
                   elsif (Mouse.usButtons and RI_MOUSE_BUTTON_5_UP)        > 0 then Inject_Button (Id, Aux_2_Button,  False);
+
+                  -- Deal with scrolling
                   elsif (Mouse.usButtons and RI_MOUSE_VERTICAL_WHEEL) > 0 or (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then
                     Inject_Button (Id     => Id,
                                    Down   => True,
@@ -798,7 +804,7 @@ separate (Neo.Engine) package body System is
       end;
 
     -- Register the input class and create the hidden input window 
-    Class : aliased WNDCLASSEX := (lpfnWndProc   => WindowProc'unchecked_access,
+    Class : aliased WNDCLASSEX := (lpfnWndProc   => WindowProc'Unchecked_Access,
                                    hInstance     => GetModuleHandleNULL,
                                    hIconSm       => LoadIconW (GetModuleHandleNULL, IDI_APPLICATION),
                                    hIcon         => LoadIconW (GetModuleHandleNULL, IDI_APPLICATION),
@@ -807,10 +813,10 @@ separate (Neo.Engine) package body System is
                                    lpszClassName => To_Ptr_Const_Char_16_C (INPUT_NAME),
                                    others        => <>);
     begin
-      Assert (RegisterClassExW (Class'unchecked_access));
+      Assert (RegisterClassExW (Class'Unchecked_Access));
       Input := CreateWindowExW (dwExStyle    => 0,
-                                lpClassName  => INPUT_NAME'access,
-                                lpWindowName => INPUT_NAME'access,
+                                lpClassName  => INPUT_NAME'Access,
+                                lpWindowName => INPUT_NAME'Access,
                                 dwStyle      => WS_DISABLED,
                                 x            => 0,
                                 y            => 0,
@@ -828,7 +834,7 @@ separate (Neo.Engine) package body System is
       Setups : aliased Array_RAWINPUTDEVICE := ((GENERIC_DESKTOP, USE_RAW_KEYBOARD, RIDEV_INPUTSINK, Input),
                                                 (GENERIC_DESKTOP, USE_RAW_MOUSE,    RIDEV_INPUTSINK, Input));
       begin
-        Assert (RegisterRawInputDevices (Setups'unchecked_access, Setups'length, RAWINPUTDEVICE'object_size / Byte'object_size));
+        Assert (RegisterRawInputDevices (Setups'Unchecked_Access, Setups'Length, RAWINPUTDEVICE'Object_Size / Byte'Object_Size));
       end;
     end;
 
@@ -836,7 +842,7 @@ separate (Neo.Engine) package body System is
   procedure Finalize_Input is
     Null_Setup : aliased RAWINPUTDEVICE := (GENERIC_DESKTOP, USE_RAW_MOUSE, STOP_READING_TOP_LEVEL_DEVICES, NULL_PTR);
     begin
-      Ignore (RegisterRawInputDevices (Null_Setup'unchecked_access, Null_Setup'object_size / RAWINPUTDEVICE'object_size, RAWINPUTDEVICE'object_size / Byte'object_size));
+      Ignore (RegisterRawInputDevices (Null_Setup'Unchecked_Access, Null_Setup'Object_Size / RAWINPUTDEVICE'Object_Size, RAWINPUTDEVICE'Object_Size / Byte'Object_Size));
       if Input /= NULL_PTR then Ignore (DestroyWindow (Input)); end if;
       Input := NULL_PTR;
     end;
@@ -859,10 +865,10 @@ separate (Neo.Engine) package body System is
       end;
     procedure Unpack_Stick (Player : Int; Stick : Stick_Kind; X, Y : Int_16_Signed_C) is
       begin
-        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real_Range (Real (X) / Real (Int_16_Signed_C'last))
-                                                 else          Real_Range (Real (X) / Real (Int_16_Signed_C'first))),
-                                                (if Y > 0 then Real_Range (Real (Y) / Real (Int_16_Signed_C'last))
-                                                 else          Real_Range (Real (Y) / Real (Int_16_Signed_C'first)))));
+        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real_Range (Real (X) / Real (Int_16_Signed_C'Last))
+                                                 else          Real_Range (Real (X) / Real (Int_16_Signed_C'First))),
+                                                (if Y > 0 then Real_Range (Real (Y) / Real (Int_16_Signed_C'Last))
+                                                 else          Real_Range (Real (Y) / Real (Int_16_Signed_C'First)))));
       end;
 
     -- Perform black magic
@@ -870,12 +876,12 @@ separate (Neo.Engine) package body System is
       Buff : Str_16_c (1..500);
       Buff_S : aliased Int_32_Unsigned_C := 500;
       Buff2 : Str_16_c (1..500);
-      Buff_S2 : aliased Int_32_Unsigned_C := Buff2'length * Char_16_C'object_size;
+      Buff_S2 : aliased Int_32_Unsigned_C := Buff2'Length * Char_16_C'Object_Size;
       File : Ptr;
       Result : Str_Unbound;
       begin
-        Assert (GetRawInputDeviceInfoW (Device, RIDI_DEVICENAME, Buff (1)'unchecked_access, Buff_S'unchecked_access));
-        File := CreateFileW (lpFileName            => Buff'unchecked_access,
+        Assert (GetRawInputDeviceInfoW (Device, RIDI_DEVICENAME, Buff (1)'Unchecked_Access, Buff_S'Unchecked_Access));
+        File := CreateFileW (lpFileName            => Buff'Unchecked_Access,
                              dwDesiredAccess       => GENERIC_READ or GENERIC_WRITE,
                              dwShareMode           => FILE_SHARE_READ or FILE_SHARE_WRITE,
                              lpSecurityAttributes  => NULL_PTR,
@@ -883,19 +889,19 @@ separate (Neo.Engine) package body System is
                              dwFlagsAndAttributes  => 0,
                              hTemplateFile         => NULL_PTR);
         Assert (File);
-        Assert (HidD_GetProductString(Buff (1)'unchecked_access, Buff2 (1)'unchecked_access, Buff_S2));
+        Assert (HidD_GetProductString (Buff (1)'Unchecked_Access, Buff2 (1)'Unchecked_Access, Buff_S2));
         CloseHandle (File);
         return To_Str (Buff);
       end;
     begin
 
       -- Fetch a complete list of RawInput devices for querying purposes
-      Assert (GetRawInputDeviceList (NULL_PTR, Device_Count'unchecked_access, RAWINPUTDEVICELIST'object_size / Byte'object_size) /= -1);
+      Assert (GetRawInputDeviceList (NULL_PTR, Device_Count'Unchecked_Access, RAWINPUTDEVICELIST'Object_Size / Byte'Object_Size) /= -1);
       Assert (Device_Count);
       declare
       List : aliased array (1..Int (Device_Count)) of RAWINPUTDEVICELIST := (others => (others => <>));
       begin
-        Assert (GetRawInputDeviceList (List'unchecked_access, Device_Count'unchecked_access, RAWINPUTDEVICELIST'object_size / Byte'object_size) /= -1);
+        Assert (GetRawInputDeviceList (List'Unchecked_Access, Device_Count'Unchecked_Access, RAWINPUTDEVICELIST'Object_Size / Byte'Object_Size) /= -1);
 
         -- Look for keyboards and mice then add them to the internal list of devices if they are new
         for I in List'Range loop
@@ -914,13 +920,13 @@ separate (Neo.Engine) package body System is
           -- XInput devices
           if Devices.Key (Current_Device) in 0..3 then
             Has_Gamepad (Int (Devices.Key (Current_Device)) + 1) := True;
-            if XInputGetState (Int_32_Unsigned_C (Devices.Key (Current_Device)), State'unchecked_access) /= 0 then Devices.Delete (Current_Device); end if;
+            if XInputGetState (Int_32_Unsigned_C (Devices.Key (Current_Device)), State'Unchecked_Access) /= 0 then Devices.Delete (Current_Device); end if;
 
           -- RawInput devices
           else
             for J in List'Range loop
               exit when Devices.Key (Current_Device) = To_Int_Ptr (List (J).hDevice);
-              if J = List'last then Devices.Delete (Current_Device); end if;
+              if J = List'Last then Devices.Delete (Current_Device); end if;
             end loop;
           end if;
           Devices.Next (Current_Device);
@@ -928,20 +934,20 @@ separate (Neo.Engine) package body System is
 
         -- Query the XInput API for Xbox 360 controllers and add them to our device list
         for I in Gamepads'Range loop
-          if not Has_Gamepad (I + 1) and then XInputGetState (Int_32_Unsigned_C (I), State'unchecked_access) = 0 then Add_Device (Int_Ptr (I), (Gamepad_Device, others => <>)); end if;
+          if not Has_Gamepad (I + 1) and then XInputGetState (Int_32_Unsigned_C (I), State'Unchecked_Access) = 0 then Add_Device (Int_Ptr (I), (Gamepad_Device, others => <>)); end if;
         end loop;
       end;
 
       -- Pump the message loop
-      while PeekMessageW (Message'unchecked_access, Input, 0, 0, PM_REMOVE) /= 0 loop
+      while PeekMessageW (Message'Unchecked_Access, Input, 0, 0, PM_REMOVE) /= 0 loop
         if Message.message = WM_QUIT then return False; end if;
-        Ignore (TranslateMessage (Message'unchecked_access));
-        Ignore (DispatchMessageW (Message'unchecked_access));
+        Ignore (TranslateMessage (Message'Unchecked_Access));
+        Ignore (DispatchMessageW (Message'Unchecked_Access));
       end loop;
 
       -- Inject Xbox 360 controller input
       begin for I in Gamepads'Range loop
-        if XInputGetState (Int_32_Unsigned_C (I), State'unchecked_access) = 0 and then Gamepads (I) /= State.Gamepad then
+        if XInputGetState (Int_32_Unsigned_C (I), State'Unchecked_Access) = 0 and then Gamepads (I) /= State.Gamepad then
           Unpack_Button (I, XINPUT_GAMEPAD_A,              A_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_B,              B_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_X,              X_Button);
@@ -960,8 +966,8 @@ separate (Neo.Engine) package body System is
           -- Convert ranges
           if State.Gamepad.sThumbLX /= Gamepads (I).sThumbLX or State.Gamepad.sThumbLY /= Gamepads (I).sThumbLY then Unpack_Stick (I, Left_Stick,  State.Gamepad.sThumbLX, State.Gamepad.sThumbLY); end if;
           if State.Gamepad.sThumbRX /= Gamepads (I).sThumbRX or State.Gamepad.sThumbRY /= Gamepads (I).sThumbRY then Unpack_Stick (I, Right_Stick, State.Gamepad.sThumbRX, State.Gamepad.sThumbRY); end if;
-          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real (State.Gamepad.bLeftTrigger)  / Real (Int_8_Unsigned_C'last) * 100.0); end if;
-          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real (State.Gamepad.bRightTrigger) / Real (Int_8_Unsigned_C'last) * 100.0); end if;
+          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real (State.Gamepad.bLeftTrigger)  / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
+          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real (State.Gamepad.bRightTrigger) / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
           Gamepads (I) := State.Gamepad;
         end if;
       end loop; exception when others => null; end; -- Random crashes ???

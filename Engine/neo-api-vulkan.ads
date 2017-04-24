@@ -947,7 +947,7 @@ typedef struct VkExtensionProperties {
   --type Ptr_vkGetPhysicalDeviceFeatures is access procedure (VkPhysicalDevice                            physicalDevice,
   --                                                          VkPhysicalDeviceFeatures*                   pFeatures)
   --                                                     with Convention => C;
-  --function To_Ptr_vkGetPhysicalDeviceFeatures is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceFeatures);
+  --function To_Ptr_vkGetPhysicalDeviceFeatures is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceFeatures);
   --vkGetPhysicalDeviceFeatures : Ptr_vkGetPhysicalDeviceFeatures;                                 
 
   -- https://harrylovescode.gitbooks.io/vulkan-api/content/chap05/chap05-windows.html
@@ -957,21 +957,21 @@ typedef struct VkExtensionProperties {
                                                        pSurface    : access Ptr)                         -- VkSurfaceKHR*
                                                        return Int_32_Unsigned_C                          -- VkResult
                                                        with Convention => C;
-  function To_Ptr_vkCreateWin32SurfaceKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateWin32SurfaceKHR);
+  function To_Ptr_vkCreateWin32SurfaceKHR is new Unchecked_Conversion (Ptr, Ptr_vkCreateWin32SurfaceKHR);
   vkCreateWin32SurfaceKHR : Ptr_vkCreateWin32SurfaceKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceProperties.html
   type Ptr_vkGetPhysicalDeviceProperties is access procedure (physicalDevice :        Ptr;           -- VkPhysicalDevice
                                                               pProperties    : access VkPhysicalDeviceProperties) -- VkPhysicalDeviceProperties*
                                                               with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceProperties);
+  function To_Ptr_vkGetPhysicalDeviceProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceProperties);
   vkGetPhysicalDeviceProperties : Ptr_vkGetPhysicalDeviceProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceMemoryProperties.html
   type Ptr_vkGetPhysicalDeviceMemoryProperties is access procedure (physicalDevice    :        Ptr;                 -- VkPhysicalDevice
                                                                     pMemoryProperties : access VkPhysicalDeviceMemoryProperties) -- VkPhysicalDeviceMemoryProperties*
                                                                     with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceMemoryProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceMemoryProperties);
+  function To_Ptr_vkGetPhysicalDeviceMemoryProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceMemoryProperties);
   vkGetPhysicalDeviceMemoryProperties : Ptr_vkGetPhysicalDeviceMemoryProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html
@@ -979,7 +979,7 @@ typedef struct VkExtensionProperties {
                                                                          pQueueFamilyPropertyCount :        Ptr_Int_32_Unsigned_C;   -- uint32_t*
                                                                          pQueueFamilyProperties    : Ptr_Array_VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
                                                                          with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceQueueFamilyProperties);
+  function To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceQueueFamilyProperties);
   vkGetPhysicalDeviceQueueFamilyProperties : Ptr_vkGetPhysicalDeviceQueueFamilyProperties;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetDeviceQueue.html
@@ -988,7 +988,7 @@ typedef struct VkExtensionProperties {
                                                  queueIndex       : Int_32_Unsigned_C; -- uint32_t 
                                                  pQueue           : Ptr)               -- VkQueue*
                                                  with Convention => C;
-  function To_Ptr_vkGetDeviceQueue is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetDeviceQueue);
+  function To_Ptr_vkGetDeviceQueue is new Unchecked_Conversion (Ptr, Ptr_vkGetDeviceQueue);
   vkGetDeviceQueue : Ptr_vkGetDeviceQueue;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateInstance.html
@@ -997,7 +997,7 @@ typedef struct VkExtensionProperties {
                                                 pInstance   :        Ptr)                  -- VkInstance*
                                                 return Int_32_Unsigned_C                   -- VkResult
                                                 with Convention => C;
-  function To_Ptr_vkCreateInstance is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateInstance);
+  function To_Ptr_vkCreateInstance is new Unchecked_Conversion (Ptr, Ptr_vkCreateInstance);
   vkCreateInstance : Ptr_vkCreateInstance; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEnumeratePhysicalDevices.html
@@ -1006,7 +1006,7 @@ typedef struct VkExtensionProperties {
                                                           pPhysicalDevices     : Ptr_Array_Ptr)         -- VkPhysicalDevice*
                                                           return Int_32_Unsigned_C                      -- VkResult
                                                           with Convention => C;
-  function To_Ptr_vkEnumeratePhysicalDevices is new Ada.Unchecked_Conversion (Ptr, Ptr_vkEnumeratePhysicalDevices);
+  function To_Ptr_vkEnumeratePhysicalDevices is new Unchecked_Conversion (Ptr, Ptr_vkEnumeratePhysicalDevices);
   vkEnumeratePhysicalDevices : Ptr_vkEnumeratePhysicalDevices;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateDevice.html
@@ -1016,7 +1016,7 @@ typedef struct VkExtensionProperties {
                                               pDevice        : Ptr)              -- VkDevice*
                                               return Int_32_Unsigned_C           -- VkResult
                                               with Convention => C;
-  function To_Ptr_vkCreateDevice is new Ada.Unchecked_Conversion (Ptr,   Ptr_vkCreateDevice);
+  function To_Ptr_vkCreateDevice is new Unchecked_Conversion (Ptr,   Ptr_vkCreateDevice);
   vkCreateDevice : Ptr_vkCreateDevice;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateCommandPool.html
@@ -1026,7 +1026,7 @@ typedef struct VkExtensionProperties {
                                                    pCommandPool : Ptr)      -- VkCommandPool* 
                                                    return Int_32_Unsigned_C -- VkResult
                                                    with Convention => C;
-  function To_Ptr_vkCreateCommandPool is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateCommandPool);
+  function To_Ptr_vkCreateCommandPool is new Unchecked_Conversion (Ptr, Ptr_vkCreateCommandPool);
   vkCreateCommandPool : Ptr_vkCreateCommandPool;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceSupportKHR.html
@@ -1036,7 +1036,7 @@ typedef struct VkExtensionProperties {
                                                                     pSupported       : Ptr_Int_32_Unsigned_C) -- VkBool32*
                                                                     return Int_32_Unsigned_C                  -- VkResult
                                                                     with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceSurfaceSupportKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceSupportKHR);
+  function To_Ptr_vkGetPhysicalDeviceSurfaceSupportKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceSupportKHR);
   vkGetPhysicalDeviceSurfaceSupportKHR : Ptr_vkGetPhysicalDeviceSurfaceSupportKHR;    
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceFormatsKHR.html
@@ -1046,7 +1046,7 @@ typedef struct VkExtensionProperties {
                                                                     pSurfaceFormats     : Ptr_Array_VkSurfaceFormatKHR)    -- VkSurfaceFormatKHR*
                                                                     return Int_32_Unsigned_C                            -- VkResult 
                                                                     with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR);
+  function To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR);
   vkGetPhysicalDeviceSurfaceFormatsKHR : Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR; 
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html
@@ -1055,7 +1055,7 @@ typedef struct VkExtensionProperties {
                                                                          pSurfaceCapabilities : access VkSurfaceCapabilitiesKHR) -- VkSurfaceCapabilitiesKHR*
                                                                          return Int_32_Unsigned_C                                -- VkResult
                                                                          with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
+  function To_Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR : Ptr_vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfacePresentModesKHR.html
@@ -1065,7 +1065,7 @@ typedef struct VkExtensionProperties {
                                                                          pPresentModes     : Ptr_Int_32_Unsigned_C) -- VkPresentModeKHR*
                                                                          return Int_32_Unsigned_C                   -- VkResult 
                                                                          with Convention => C;
-  function To_Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR);
+  function To_Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR);
   vkGetPhysicalDeviceSurfacePresentModesKHR : Ptr_vkGetPhysicalDeviceSurfacePresentModesKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkCreateSwapchainKHR.html
@@ -1075,7 +1075,7 @@ typedef struct VkExtensionProperties {
                                                     pSwapchain  : Ptr)       -- VkSwapchainKHR*
                                                     return Int_32_Unsigned_C -- VkResult
                                                     with Convention => C;
-  function To_Ptr_vkCreateSwapchainKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateSwapchainKHR);
+  function To_Ptr_vkCreateSwapchainKHR is new Unchecked_Conversion (Ptr, Ptr_vkCreateSwapchainKHR);
   vkCreateSwapchainKHR : Ptr_vkCreateSwapchainKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkGetSwapchainImagesKHR.html 
@@ -1085,7 +1085,7 @@ typedef struct VkExtensionProperties {
                                                        pSwapchainImages     : Ptr_Array_Ptr)                   -- VkImage*
                                                        return Int_32_Unsigned_C                      -- VkResult
                                                        with Convention => C;
-  function To_Ptr_vkGetSwapchainImagesKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetSwapchainImagesKHR);
+  function To_Ptr_vkGetSwapchainImagesKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetSwapchainImagesKHR);
   vkGetSwapchainImagesKHR : Ptr_vkGetSwapchainImagesKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkAllocateCommandBuffers.html
@@ -1094,7 +1094,7 @@ typedef struct VkExtensionProperties {
                                                         pCommandBuffers : Ptr)      -- VkCommandBuffer*
                                                         return Int_32_Unsigned_C    -- VkResult
                                                         with Convention => C;
-  function To_Ptr_vkAllocateCommandBuffers is new Ada.Unchecked_Conversion (Ptr, Ptr_vkAllocateCommandBuffers);
+  function To_Ptr_vkAllocateCommandBuffers is new Unchecked_Conversion (Ptr, Ptr_vkAllocateCommandBuffers);
   vkAllocateCommandBuffers : Ptr_vkAllocateCommandBuffers;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkBeginCommandBuffer.html
@@ -1102,7 +1102,7 @@ typedef struct VkExtensionProperties {
                                                     pBeginInfo    : access VkCommandBufferBeginInfo)             -- const VkCommandBufferBeginInfo*
                                                     return Int_32_Unsigned_C         -- VkResult
                                                     with Convention => C;
-  function To_Ptr_vkBeginCommandBuffer is new Ada.Unchecked_Conversion (Ptr, ptr_vkBeginCommandBuffer);
+  function To_Ptr_vkBeginCommandBuffer is new Unchecked_Conversion (Ptr, ptr_vkBeginCommandBuffer);
   vkBeginCommandBuffer : Ptr_vkBeginCommandBuffer;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEndCommandBuffer.html
@@ -1117,14 +1117,14 @@ typedef struct VkExtensionProperties {
                                                      imageMemoryBarrierCount  : Int_32_Unsigned_C;    -- uint32_t
                                                      pImageMemoryBarriers     : access VkImageMemoryBarrier)                  -- const VkImageMemoryBarrier*
                                                      with Convention => C;
-  function To_Ptr_vkCmdPipelineBarrier is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCmdPipelineBarrier);
+  function To_Ptr_vkCmdPipelineBarrier is new Unchecked_Conversion (Ptr, Ptr_vkCmdPipelineBarrier);
   vkCmdPipelineBarrier : Ptr_vkCmdPipelineBarrier;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEndCommandBuffer.html
   type Ptr_vkEndCommandBuffer is access function (commandBuffer : Ptr) -- VkCommandBuffer                             
                                                   return Int_32_Unsigned_C         -- VkResult 
                                                   with Convention => C;
-  function To_Ptr_vkEndCommandBuffer is new Ada.Unchecked_Conversion (Ptr, Ptr_vkEndCommandBuffer);
+  function To_Ptr_vkEndCommandBuffer is new Unchecked_Conversion (Ptr, Ptr_vkEndCommandBuffer);
   vkEndCommandBuffer : Ptr_vkEndCommandBuffer;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkQueueSubmit.html
@@ -1134,14 +1134,14 @@ typedef struct VkExtensionProperties {
                                              fence       : Ptr)           -- VkFence
                                              return Int_32_Unsigned_C         -- VkResult
                                              with Convention => C;
-  function To_Ptr_vkQueueSubmit is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueueSubmit);
+  function To_Ptr_vkQueueSubmit is new Unchecked_Conversion (Ptr, Ptr_vkQueueSubmit);
   vkQueueSubmit : Ptr_vkQueueSubmit;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkQueueWaitIdle.html
   type Ptr_vkQueueWaitIdle is access function (queue : Ptr)         -- VkQueue
                                                return Int_32_Unsigned_C -- VkResult
                                                with Convention => C;
-  function To_Ptr_vkQueueWaitIdle is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueueWaitIdle);
+  function To_Ptr_vkQueueWaitIdle is new Unchecked_Conversion (Ptr, Ptr_vkQueueWaitIdle);
   vkQueueWaitIdle : Ptr_vkQueueWaitIdle; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSemaphore.html
@@ -1150,7 +1150,7 @@ typedef struct VkExtensionProperties {
                                                      pAllocator  : Int_32_Unsigned_C; -- uint32_t                                    
                                                      pSemaphore  : Ptr)               -- VkCommandBuffer*
                                                      with Convention => C;
-  function To_Ptr_vkFreeCommandBuffers is new Ada.Unchecked_Conversion (Ptr, Ptr_vkFreeCommandBuffers);
+  function To_Ptr_vkFreeCommandBuffers is new Unchecked_Conversion (Ptr, Ptr_vkFreeCommandBuffers);
   vkFreeCommandBuffers : Ptr_vkFreeCommandBuffers;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSemaphore.html
@@ -1160,13 +1160,13 @@ typedef struct VkExtensionProperties {
                                                  pSemaphore  : Ptr)       -- VkSemaphore*
                                                  return Int_32_Unsigned_C -- VkResult
                                                  with Convention => C;
-  function To_Ptr_vkCreateSemaphore is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateSemaphore);
+  function To_Ptr_vkCreateSemaphore is new Unchecked_Conversion (Ptr, Ptr_vkCreateSemaphore);
   vkCreateSemaphore : Ptr_vkCreateSemaphore;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDeviceWaitIdle.html
   type Ptr_vkDeviceWaitIdle is access function (device : Ptr)        -- VkDevice
                                                 return Int_32_Unsigned_C; -- VkResult
-  function To_Ptr_vkDeviceWaitIdle is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDeviceWaitIdle);
+  function To_Ptr_vkDeviceWaitIdle is new Unchecked_Conversion (Ptr, Ptr_vkDeviceWaitIdle);
   vkDeviceWaitIdle : Ptr_vkDeviceWaitIdle;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroySemaphore.html
@@ -1174,7 +1174,7 @@ typedef struct VkExtensionProperties {
                                                    semaphore  : Ptr;      -- VkSemaphore                                 
                                                    pAllocator : Ptr)      -- const VkAllocationCallbacks* 
                                                    with Convention => C;
-  function To_Ptr_vkDestroySemaphore is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroySemaphore);
+  function To_Ptr_vkDestroySemaphore is new Unchecked_Conversion (Ptr, Ptr_vkDestroySemaphore);
   vkDestroySemaphore : Ptr_vkDestroySemaphore;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyCommandPool.html
@@ -1182,7 +1182,7 @@ typedef struct VkExtensionProperties {
                                                      commandPool : Ptr; -- VkCommandPool
                                                      pAllocator  : Ptr)           -- const VkAllocationCallbacks*    
                                                      with Convention => C;
-  function To_Ptr_vkDestroyCommandPool is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyCommandPool);
+  function To_Ptr_vkDestroyCommandPool is new Unchecked_Conversion (Ptr, Ptr_vkDestroyCommandPool);
   vkDestroyCommandPool : Ptr_vkDestroyCommandPool;
 
   -- http://nopper.tv/Vulkan/1.0/vkDestroySwapchainKHR.html
@@ -1190,21 +1190,21 @@ typedef struct VkExtensionProperties {
                                                       swapchain  : Ptr; -- VkSwapchainKHR
                                                       pAllocator : Ptr)            -- const VkAllocationCallbacks*
                                                       with Convention => C;
-  function To_Ptr_vkDestroySwapchainKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroySwapchainKHR);
+  function To_Ptr_vkDestroySwapchainKHR is new Unchecked_Conversion (Ptr, Ptr_vkDestroySwapchainKHR);
   vkDestroySwapchainKHR : Ptr_vkDestroySwapchainKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDevice.html
   type Ptr_vkDestroyDevice is access procedure (device     : Ptr; -- VkDevice                                    
                                                 pAllocator : Ptr)      -- const VkAllocationCallbacks*
                                                 with Convention => C;
-  function To_Ptr_vkDestroyDevice is new Ada.Unchecked_Conversion (Ptr,  Ptr_vkDestroyDevice);
+  function To_Ptr_vkDestroyDevice is new Unchecked_Conversion (Ptr,  Ptr_vkDestroyDevice);
   vkDestroyDevice : Ptr_vkDestroyDevice; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyInstance.html
   type Ptr_vkDestroyInstance is access procedure (instance   : Ptr; -- VkInstance
                                                   pAllocator : Ptr) -- const VkAllocationCallbacks*
                                                   with Convention => C;
-  function To_Ptr_vkDestroyInstance is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyInstance);
+  function To_Ptr_vkDestroyInstance is new Unchecked_Conversion (Ptr, Ptr_vkDestroyInstance);
   vkDestroyInstance : Ptr_vkDestroyInstance;
 
   -- http://web.archive.org/web/20160608223244/https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/xhtml/vkspec.html#vkAcquireNextImageKHR
@@ -1216,7 +1216,7 @@ typedef struct VkExtensionProperties {
                                                      pImageIndex : Ptr_Int_32_Unsigned_C) -- uint32_t*  
                                                      return Int_32_Unsigned_C             -- VkResult
                                                      with Convention => C;
-  function To_Ptr_vkAcquireNextImageKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkAcquireNextImageKHR);
+  function To_Ptr_vkAcquireNextImageKHR is new Unchecked_Conversion (Ptr, Ptr_vkAcquireNextImageKHR);
   vkAcquireNextImageKHR : Ptr_vkAcquireNextImageKHR;
 
   -- http://nopper.tv/Vulkan/1.0/vkQueuePresentKHR.html
@@ -1224,7 +1224,7 @@ typedef struct VkExtensionProperties {
                                                  pPresentInfo : access VkPresentInfoKHR)      -- const VkPresentInfoKHR*
                                                  return Int_32_Unsigned_C -- VkResult
                                                  with Convention => C;
-  function To_Ptr_vkQueuePresentKHR is new Ada.Unchecked_Conversion (Ptr, Ptr_vkQueuePresentKHR);
+  function To_Ptr_vkQueuePresentKHR is new Unchecked_Conversion (Ptr, Ptr_vkQueuePresentKHR);
   vkQueuePresentKHR : Ptr_vkQueuePresentKHR;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkWaitForFences.html
@@ -1235,7 +1235,7 @@ typedef struct VkExtensionProperties {
                                                timeout    : Int_64_Unsigned_C) -- uint64_t
                                                return Int_32_Unsigned_C        -- VkResult
                                                with Convention => C;
-  function To_Ptr_vkWaitForFences is new Ada.Unchecked_Conversion (Ptr, Ptr_vkWaitForFences);
+  function To_Ptr_vkWaitForFences is new Unchecked_Conversion (Ptr, Ptr_vkWaitForFences);
   vkWaitForFences : Ptr_vkWaitForFences; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkResetFences.html
@@ -1244,7 +1244,7 @@ typedef struct VkExtensionProperties {
                                              pFences    : Ptr)               -- const VkFence*  
                                              return Int_32_Unsigned_C        -- VkResul
                                              with Convention => C;
-  function To_Ptr_vkResetFences is new Ada.Unchecked_Conversion (Ptr, Ptr_vkResetFences);
+  function To_Ptr_vkResetFences is new Unchecked_Conversion (Ptr, Ptr_vkResetFences);
   vkResetFences : Ptr_vkResetFences;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetFenceStatus.html
@@ -1252,7 +1252,7 @@ typedef struct VkExtensionProperties {
                                                 fence  : Ptr)        -- VkFence
                                                 return Int_32_Unsigned_C -- VkResult
                                                 with Convention => C; 
-  function To_Ptr_vkGetFenceStatus is new Ada.Unchecked_Conversion (Ptr, Ptr_vkGetFenceStatus);
+  function To_Ptr_vkGetFenceStatus is new Unchecked_Conversion (Ptr, Ptr_vkGetFenceStatus);
   vkGetFenceStatus : Ptr_vkGetFenceStatus; 
 
   -- http://web.archive.org/web/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyFence.html
@@ -1260,7 +1260,7 @@ typedef struct VkExtensionProperties {
                                                fence      : Ptr;  -- VkFence
                                                pAllocator : Ptr)      -- const VkAllocationCallbacks*
                                                with Convention => C;
-  function To_Ptr_vkDestroyFence is new Ada.Unchecked_Conversion (Ptr, Ptr_vkDestroyFence);
+  function To_Ptr_vkDestroyFence is new Unchecked_Conversion (Ptr, Ptr_vkDestroyFence);
   vkDestroyFence : Ptr_vkDestroyFence;
 
   -- http://web.archive.org/web/20160324124456/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateFence.html
@@ -1270,6 +1270,6 @@ typedef struct VkExtensionProperties {
                                              pFence      : Ptr)       -- VkFence*
                                              return Int_32_Unsigned_C -- VkResult 
                                              with Convention => C;
-  function To_Ptr_vkCreateFence is new Ada.Unchecked_Conversion (Ptr, Ptr_vkCreateFence);
+  function To_Ptr_vkCreateFence is new Unchecked_Conversion (Ptr, Ptr_vkCreateFence);
   vkCreateFence : Ptr_vkCreateFence;
 end;

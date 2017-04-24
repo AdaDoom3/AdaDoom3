@@ -13,7 +13,13 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Ada.Unchecked_Deallocation;   
 with Ada.Unchecked_Conversion;
+with Ada.Streams.Stream_IO;
+with Ada.Streams;                  use Ada.Streams;
+with Ada.Exceptions;               use Ada.Exceptions;
+with Ada.Containers;               use Ada.Containers;
+with Ada.Finalization;             use Ada.Finalization;
 with Ada.Wide_Text_IO;             use Ada.Wide_Text_IO;
 with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
 with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
@@ -25,7 +31,8 @@ with Ada.Strings;                  use Ada.Strings;
 with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
 with Ada.Calendar.Time_Zones;      use Ada.Calendar.Time_Zones;
 with Ada.Calendar;                 use Ada.Calendar;
-with Ada.Streams;                  use Ada.Streams;
+with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
+with GNAT.Traceback;               use GNAT.Traceback;
 with Interfaces.C;                 use Interfaces.C;
 with Interfaces;                   use Interfaces;
 with System;                       use System;
@@ -51,6 +58,14 @@ package Neo is
   PATH_ICON            : constant Wide_String := PATH_ASSETS & "icon";
   PATH_CURSOR_ACTIVE   : constant Wide_String := PATH_ASSETS & "cursor_active";
   PATH_CURSOR_INACTIVE : constant Wide_String := PATH_ASSETS & "cursor_inactive";
+
+  -------------
+  -- Renames --
+  -------------
+
+  package Stream_IO              renames Ada.Streams.Stream_IO;
+  package Unchecked_Deallocation renames Ada.Unchecked_Deallocation;
+  package Unchecked_Conversion   renames Ada.Unchecked_Conversion;
 
   -----------
   -- Types --
@@ -161,29 +176,29 @@ package Neo is
   type Ptr_Procedure_Put     is access procedure (Item : Str_16);
 
   -- Unchecked conversions
-  function To_Ptr_Int_16_Unsigned_C is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Int_16_Unsigned_C);
-  function To_Ptr_Int_16_Unsigned_C is new Ada.Unchecked_Conversion (Int_Ptr,               Ptr_Int_16_Unsigned_C);
-  function To_Ptr_Int_32_Unsigned   is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Int_32_Unsigned);
-  function To_Ptr_Char_8_C          is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Char_8_C);
-  function To_Ptr_Char_16_C         is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Char_16_C);
-  function To_Ptr_Const_Char_8_C    is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Const_Char_8_C);
-  function To_Ptr_Const_Char_16_C   is new Ada.Unchecked_Conversion (Ptr,                   Ptr_Const_Char_16_C);
-  function To_Ptr_Const_Char_16_C   is new Ada.Unchecked_Conversion (Int_Ptr,               Ptr_Const_Char_16_C);
-  function To_Ptr                   is new Ada.Unchecked_Conversion (Ptr_Const_Char_16_C,   Ptr);
-  function To_Ptr                   is new Ada.Unchecked_Conversion (Int_Ptr,               Ptr);
-  function To_Int_32_Unsigned_C     is new Ada.Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned_C);
-  function To_Int_32_Unsigned       is new Ada.Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned);
-  function To_Int_32_Unsigned       is new Ada.Unchecked_Conversion (Real_32,               Int_32_Unsigned);
-  function To_Int_32_Signed_C       is new Ada.Unchecked_Conversion (Int_32_Unsigned_C,     Int_32_Signed_C);
-  function To_Int_32_Signed         is new Ada.Unchecked_Conversion (Int_32_Unsigned,       Int_32_Signed);
-  function To_Int_16_Signed         is new Ada.Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed);
-  function To_Int_16_Signed_C       is new Ada.Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed_C);
-  function To_Int_16_Unsigned       is new Ada.Unchecked_Conversion (Char_16_C,             Int_16_Unsigned);
-  function To_Int_Ptr               is new Ada.Unchecked_Conversion (Ptr_Int_16_Unsigned_C, Int_Ptr);
-  function To_Int_Ptr               is new Ada.Unchecked_Conversion (Ptr_Const_Char_16_C,   Int_Ptr);
-  function To_Int_Ptr               is new Ada.Unchecked_Conversion (Ptr_Const_Char_8_C,    Int_Ptr);
-  function To_Int_Ptr               is new Ada.Unchecked_Conversion (Ptr,                   Int_Ptr);
-  function To_Real_32               is new Ada.Unchecked_Conversion (Real_32,               Int_32_Unsigned);
+  function To_Ptr_Int_16_Unsigned_C is new Unchecked_Conversion (Ptr,                   Ptr_Int_16_Unsigned_C);
+  function To_Ptr_Int_16_Unsigned_C is new Unchecked_Conversion (Int_Ptr,               Ptr_Int_16_Unsigned_C);
+  function To_Ptr_Int_32_Unsigned   is new Unchecked_Conversion (Ptr,                   Ptr_Int_32_Unsigned);
+  function To_Ptr_Char_8_C          is new Unchecked_Conversion (Ptr,                   Ptr_Char_8_C);
+  function To_Ptr_Char_16_C         is new Unchecked_Conversion (Ptr,                   Ptr_Char_16_C);
+  function To_Ptr_Const_Char_8_C    is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_8_C);
+  function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_16_C);
+  function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Int_Ptr,               Ptr_Const_Char_16_C);
+  function To_Ptr                   is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Ptr);
+  function To_Ptr                   is new Unchecked_Conversion (Int_Ptr,               Ptr);
+  function To_Int_32_Unsigned_C     is new Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned_C);
+  function To_Int_32_Unsigned       is new Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned);
+  function To_Int_32_Unsigned       is new Unchecked_Conversion (Real_32,               Int_32_Unsigned);
+  function To_Int_32_Signed_C       is new Unchecked_Conversion (Int_32_Unsigned_C,     Int_32_Signed_C);
+  function To_Int_32_Signed         is new Unchecked_Conversion (Int_32_Unsigned,       Int_32_Signed);
+  function To_Int_16_Signed         is new Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed);
+  function To_Int_16_Signed_C       is new Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed_C);
+  function To_Int_16_Unsigned       is new Unchecked_Conversion (Char_16_C,             Int_16_Unsigned);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Int_16_Unsigned_C, Int_Ptr);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Int_Ptr);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_8_C,    Int_Ptr);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr,                   Int_Ptr);
+  function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_32_Unsigned);
   function To_Int_64_Unsigned       (Val : Real_32) return Int_64_Unsigned is (Int_64_Unsigned (To_Int_32_Unsigned (Val)));
 
   -- Prerequisite string constants
@@ -310,62 +325,65 @@ package Neo is
   procedure Assert (Val : Int_32_Unsigned_C);
 
   -- Ignore procedures swallow the result of C functions that return useless results, it can't be "is null" due to GNAT GPL compiler error.
-  procedure Ignore (Val : Bool);              --is null;
-  procedure Ignore (Val : Ptr);               --is null;
-  procedure Ignore (Val : Int_Ptr);           --is null;
-  procedure Ignore (Val : Int_C);             --is null;
-  procedure Ignore (Val : Int_16_Unsigned_C); --is null;
-  procedure Ignore (Val : Int_32_Unsigned_C); --is null;
+  procedure Ignore (Val : Bool)              is null;
+  procedure Ignore (Val : Ptr)               is null;
+  procedure Ignore (Val : Int_Ptr)           is null;
+  procedure Ignore (Val : Int_C)             is null;
+  procedure Ignore (Val : Int_16_Unsigned_C) is null;
+  procedure Ignore (Val : Int_32_Unsigned_C) is null;
+
+  -- Traceback
+  procedure Handle (Occurrence : Exception_Occurrence)
 
   -----------
   -- Color --
   -----------
 
   type Color_State is record
-      Red, Green, Blue : Byte;
+      Red, Green, Blue, Alpha : Byte := 16#FF#;
     end record;
-  COLOR_RED          : constant Color_State := (16#FF#, 16#00#, 16#00#);
-  COLOR_TAN          : constant Color_State := (16#D2#, 16#B4#, 16#8C#);
-  COLOR_BLUE         : constant Color_State := (16#00#, 16#00#, 16#FF#);
-  COLOR_PINK         : constant Color_State := (16#FF#, 16#C0#, 16#CB#);
-  COLOR_AQUA         : constant Color_State := (16#00#, 16#FF#, 16#FF#);
-  COLOR_GRAY         : constant Color_State := (16#80#, 16#80#, 16#80#);
-  COLOR_CYAN         : constant Color_State := (16#00#, 16#FF#, 16#FF#);
-  COLOR_TEAL         : constant Color_State := (16#00#, 16#80#, 16#80#);
-  COLOR_LIME         : constant Color_State := (16#BF#, 16#FF#, 16#00#);
-  COLOR_PUCE         : constant Color_State := (16#CC#, 16#88#, 16#99#);
-  COLOR_PLUM         : constant Color_State := (16#84#, 16#31#, 16#79#);
-  COLOR_MAUVE        : constant Color_State := (16#E0#, 16#B0#, 16#FF#);
-  COLOR_BLACK        : constant Color_State := (16#00#, 16#00#, 16#00#);
-  COLOR_WHITE        : constant Color_State := (16#FF#, 16#FF#, 16#FF#);
-  COLOR_GREEN        : constant Color_State := (16#00#, 16#FF#, 16#00#);
-  COLOR_KHAKI        : constant Color_State := (16#C3#, 16#B0#, 16#91#);
-  COLOR_IVORY        : constant Color_State := (16#FF#, 16#FF#, 16#F0#);
-  COLOR_BEIGE        : constant Color_State := (16#F5#, 16#F5#, 16#DC#);
-  COLOR_WHEAT        : constant Color_State := (16#F5#, 16#DE#, 16#B3#);
-  COLOR_CORAL        : constant Color_State := (16#FF#, 16#7F#, 16#50#);
-  COLOR_OLIVE        : constant Color_State := (16#80#, 16#80#, 16#00#);
-  COLOR_SILVER       : constant Color_State := (16#C0#, 16#C0#, 16#C0#);
-  COLOR_YELLOW       : constant Color_State := (16#FF#, 16#FF#, 16#00#);
-  COLOR_ORANGE       : constant Color_State := (16#FF#, 16#A5#, 16#00#);
-  COLOR_VIOLET       : constant Color_State := (16#EE#, 16#82#, 16#EE#);
-  COLOR_PURPLE       : constant Color_State := (16#80#, 16#00#, 16#80#);
-  COLOR_SALMON       : constant Color_State := (16#FA#, 16#80#, 16#72#);
-  COLOR_INDIGO       : constant Color_State := (16#4B#, 16#00#, 16#82#);
-  COLOR_MAROON       : constant Color_State := (16#80#, 16#00#, 16#00#);
-  COLOR_GOLDEN       : constant Color_State := (16#FF#, 16#D7#, 16#00#);
-  COLOR_MAGENTA      : constant Color_State := (16#FF#, 16#00#, 16#FF#);
-  COLOR_FUCHSIA      : constant Color_State := (16#FF#, 16#77#, 16#FF#);
-  COLOR_CRIMSON      : constant Color_State := (16#DC#, 16#14#, 16#3C#);
-  COLOR_LAVENDER     : constant Color_State := (16#B5#, 16#7E#, 16#DC#);
-  COLOR_SKY_BLUE     : constant Color_State := (16#87#, 16#CE#, 16#EB#);
-  COLOR_CHARCOAL     : constant Color_State := (16#46#, 16#46#, 16#46#);
-  COLOR_HOT_PINK     : constant Color_State := (16#FC#, 16#0F#, 16#C0#);
-  COLOR_NAVY_BLUE    : constant Color_State := (16#00#, 16#00#, 16#80#);
-  COLOR_GOLDEN_ROD   : constant Color_State := (16#DA#, 16#A5#, 16#20#);
-  COLOR_LIGHT_BLUE   : constant Color_State := (16#AD#, 16#D8#, 16#E6#);
-  COLOR_ROYAL_BLUE   : constant Color_State := (16#08#, 16#4C#, 16#9E#);
-  COLOR_AQUAMARINE   : constant Color_State := (16#7F#, 16#FF#, 16#D4#);
-  COLOR_CHARTREUSE   : constant Color_State := (16#7F#, 16#FF#, 16#00#);
-  COLOR_FOREST_GREEN : constant Color_State := (16#22#, 16#8B#, 16#22#);
+  COLOR_RED          : constant Color_State := (16#FF#, 16#00#, 16#00#, 16#FF#);
+  COLOR_TAN          : constant Color_State := (16#D2#, 16#B4#, 16#8C#, 16#FF#);
+  COLOR_BLUE         : constant Color_State := (16#00#, 16#00#, 16#FF#, 16#FF#);
+  COLOR_PINK         : constant Color_State := (16#FF#, 16#C0#, 16#CB#, 16#FF#);
+  COLOR_AQUA         : constant Color_State := (16#00#, 16#FF#, 16#FF#, 16#FF#);
+  COLOR_GRAY         : constant Color_State := (16#80#, 16#80#, 16#80#, 16#FF#);
+  COLOR_CYAN         : constant Color_State := (16#00#, 16#FF#, 16#FF#, 16#FF#);
+  COLOR_TEAL         : constant Color_State := (16#00#, 16#80#, 16#80#, 16#FF#);
+  COLOR_LIME         : constant Color_State := (16#BF#, 16#FF#, 16#00#, 16#FF#);
+  COLOR_PUCE         : constant Color_State := (16#CC#, 16#88#, 16#99#, 16#FF#);
+  COLOR_PLUM         : constant Color_State := (16#84#, 16#31#, 16#79#, 16#FF#);
+  COLOR_MAUVE        : constant Color_State := (16#E0#, 16#B0#, 16#FF#, 16#FF#);
+  COLOR_BLACK        : constant Color_State := (16#00#, 16#00#, 16#00#, 16#FF#);
+  COLOR_WHITE        : constant Color_State := (16#FF#, 16#FF#, 16#FF#, 16#FF#);
+  COLOR_GREEN        : constant Color_State := (16#00#, 16#FF#, 16#00#, 16#FF#);
+  COLOR_KHAKI        : constant Color_State := (16#C3#, 16#B0#, 16#91#, 16#FF#);
+  COLOR_IVORY        : constant Color_State := (16#FF#, 16#FF#, 16#F0#, 16#FF#);
+  COLOR_BEIGE        : constant Color_State := (16#F5#, 16#F5#, 16#DC#, 16#FF#);
+  COLOR_WHEAT        : constant Color_State := (16#F5#, 16#DE#, 16#B3#, 16#FF#);
+  COLOR_CORAL        : constant Color_State := (16#FF#, 16#7F#, 16#50#, 16#FF#);
+  COLOR_OLIVE        : constant Color_State := (16#80#, 16#80#, 16#00#, 16#FF#);
+  COLOR_SILVER       : constant Color_State := (16#C0#, 16#C0#, 16#C0#, 16#FF#);
+  COLOR_YELLOW       : constant Color_State := (16#FF#, 16#FF#, 16#00#, 16#FF#);
+  COLOR_ORANGE       : constant Color_State := (16#FF#, 16#A5#, 16#00#, 16#FF#);
+  COLOR_VIOLET       : constant Color_State := (16#EE#, 16#82#, 16#EE#, 16#FF#);
+  COLOR_PURPLE       : constant Color_State := (16#80#, 16#00#, 16#80#, 16#FF#);
+  COLOR_SALMON       : constant Color_State := (16#FA#, 16#80#, 16#72#, 16#FF#);
+  COLOR_INDIGO       : constant Color_State := (16#4B#, 16#00#, 16#82#, 16#FF#);
+  COLOR_MAROON       : constant Color_State := (16#80#, 16#00#, 16#00#, 16#FF#);
+  COLOR_GOLDEN       : constant Color_State := (16#FF#, 16#D7#, 16#00#, 16#FF#);
+  COLOR_MAGENTA      : constant Color_State := (16#FF#, 16#00#, 16#FF#, 16#FF#);
+  COLOR_FUCHSIA      : constant Color_State := (16#FF#, 16#77#, 16#FF#, 16#FF#);
+  COLOR_CRIMSON      : constant Color_State := (16#DC#, 16#14#, 16#3C#, 16#FF#);
+  COLOR_LAVENDER     : constant Color_State := (16#B5#, 16#7E#, 16#DC#, 16#FF#);
+  COLOR_SKY_BLUE     : constant Color_State := (16#87#, 16#CE#, 16#EB#, 16#FF#);
+  COLOR_CHARCOAL     : constant Color_State := (16#46#, 16#46#, 16#46#, 16#FF#);
+  COLOR_HOT_PINK     : constant Color_State := (16#FC#, 16#0F#, 16#C0#, 16#FF#);
+  COLOR_NAVY_BLUE    : constant Color_State := (16#00#, 16#00#, 16#80#, 16#FF#);
+  COLOR_GOLDEN_ROD   : constant Color_State := (16#DA#, 16#A5#, 16#20#, 16#FF#);
+  COLOR_LIGHT_BLUE   : constant Color_State := (16#AD#, 16#D8#, 16#E6#, 16#FF#);
+  COLOR_ROYAL_BLUE   : constant Color_State := (16#08#, 16#4C#, 16#9E#, 16#FF#);
+  COLOR_AQUAMARINE   : constant Color_State := (16#7F#, 16#FF#, 16#D4#, 16#FF#);
+  COLOR_CHARTREUSE   : constant Color_State := (16#7F#, 16#FF#, 16#00#, 16#FF#);
+  COLOR_FOREST_GREEN : constant Color_State := (16#22#, 16#8B#, 16#22#, 16#FF#);
 end;

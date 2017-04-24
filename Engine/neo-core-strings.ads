@@ -13,46 +13,15 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers.Indefinite_Vectors;
+with Neo.Core.Arrays; use Neo.Core.Arrays;
 
-generic
-  type Vec_T is private;
-package Neo.Core.Vectors is
+-- Miscellaneous string utilities
+package Neo.Core.Strings is
 
-  -------------
-  -- Vectors --
-  -------------
+  -----------
+  -- Split --
+  -----------
 
-  -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Vectors (Positive, Vec_T);
-  subtype Cursor is Unsafe.Cursor;
-  NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
-
-  -- Array conversions
-  type Unsafe_Array is array (Positive range <>) of Vec_T with Convention => C;
-  type Ptr_Unsafe_Array is access all Unsafe_Array;
-  function To_Unsafe_Vector (Item : Unsafe_Array)  return Unsafe.Vector;
-  function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;
-
-  -- Wrapped type
-  protected type Safe_Vector is
-      procedure Clear;
-      procedure Set     (Val : Unsafe.Vector);
-      procedure Set     (Val : Unsafe_Array);
-      procedure Next    (Pos : in out Cursor);
-      procedure Replace (Pos :        Cursor; Item : Vec_T);
-      procedure Append                       (Item : Vec_T; Count : Positive := 1);
-      procedure Prepend                      (Item : Vec_T; Count : Positive := 1);
-      procedure Insert  (Before : Positive;   Item : Vec_T; Count : Positive := 1);
-      procedure Delete  (Index  : Positive;                 Count : Positive := 1);
-      function Has      (Pos    : Cursor)   return Boolean;
-      function Get      (Pos    : Cursor)   return Vec_T;
-      function Get      (Index  : Positive) return Vec_T;
-      function Get                          return Unsafe.Vector;
-      function To_Array                     return Unsafe_Array;
-      function First                        return Cursor;
-      function Length                       return Positive;
-    private
-      This : Unsafe.Vector;
-    end;
+  function Split (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe.Vector;
+  function Split (Item : Str; On : Str := " ") return Array_Str_Unbound is (Vector_Str_16_Unbound.To_Unsafe_Array (Split (Item, On)));
 end;

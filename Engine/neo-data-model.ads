@@ -13,10 +13,6 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers;   use Ada.Containers;
-with Neo.Core.Math;    use Neo.Core.Math;
-with Neo.Core.Arrays;  use Neo.Core.Arrays;
-with Neo.Core.Console; use Neo.Core.Console;
 with Neo.Core.Trees;
 with Neo.Core.Hashed;
 with Neo.Core.Vectors;
@@ -143,13 +139,93 @@ package Neo.Data.Model is
   package Vector_Brush       is new Vectors (Vector_Brush_Side.Unsafe.Vector);
   package Hashed_Str_Unbound is new Hashed (Str_Unbound);
 
-  type Entity_State is record
-      Origin  : Point_3D := ZERO_POINT_3D;
-      Table   : Hashed_Str_Unbound.Unsafe.Map;
-      Brushes : Vector_Brush.Unsafe.Vector;
-      Patches : Vector_Mesh.Unsafe.Vector;
+  type Entity_Kind is (
+    Character_Entity,
+    Camera_Entity,
+    AI_Entity,
+    Moveable_Entity,
+    Information_Entity,
+    Speaker_Entity,
+    Activator_Entity,
+    Animated_Entity,
+    Camera_View_Entity,
+    Clip_Model_Entity,
+    Door_Entity,
+    Earthquake_Entity,
+    Elevator_Entity,
+    Emitter_Entity,
+    Explosion_Entity,
+    Forcefield_Entity,
+    Fracture_Entity,
+    Effects_Entity,
+    Portal_Entity,
+    Remove_Entity);
+
+  type Physics_Kind is (
+    Rigid_Body_Physics,
+    Soft_Body_Physics,
+    No_Physics,
+    Simple_Physics);
+
+  type Damage_State is record
+      "damage" "[Damage Ammount]" 
+      "kickDir" "0 0 0" 
+      "mtr_blob" "genericDamage" 
+      "blob_time" "0" 
+      "blob_size" "0" 
+      "blob_offset_x" "0" 
+      "knockback" "0" 
+      "kick_time" "0" 
+      "kick_amplitude" "0" 
+      "dv_time" "100" 
     end record;
-  package Vector_Entity is new Vectors (Entity_State);
+
+  type Entity_State is record
+      Model       : Str_Unbound   := NULL_STR_UNBOUND;
+      Point       : Point_3D      := (others => <>);
+      Orientation : Quaternion_4D := (others => <>);
+      Visible     : Bool          := False;
+      Physics     : Physics_Kind  := No_Physics;
+      Health      : Int_64        := 0;
+      Targets     : Vector_Str_Unbound.Unsafe.Vector;
+      Brushes     : Vector_Brush.Unsafe.Vector;
+      Patches     : Vector_Mesh.Unsafe.Vector;
+      case Kind is
+        when Light_Entity =>
+          Is_Broken    : Bool          := False;
+          Broken_Model : Str_Unbound   := NULL_STR_UNBOUND;
+          Frustum      : Frustum_State := (others => <>); 
+          Glare_Material : Str_Unbound := NULL_STR_UNBOUND;
+
+        when Character_Entity =>
+          World : Positive      := 1;
+          Area  : Positive      := 1;
+          Pose  : Pose_State    := (others => <>);
+          View  : Frustum_State := (others => <>); 
+          
+        when Speaker_Entity =>
+          Clip           : Str_Unbound    := NULL_STR_UNBOUND;
+          Position       : Position_State := (others => <>);
+          Is_Mute        : Bool           := False;
+          Is_Paused      : Bool           := False;
+          Is_Playing     : Bool           := False;
+          Min_Distance   : Real           := 0.0;
+          Max_Distance   : Real           := 0.0;
+          Current_Volume : Percent        := 75.0;
+          Current_Shake  : Percent        := 75.0;
+        when Door_Entity =>
+          Lip              : Natural       := 0;
+          Locked           : Bool          := False;
+          Speed            : Real          := 10.0;
+          Move_Orientation : Quaternion_4D := (others => <>);
+          Close_Sound      : Str_Unbound   := NULL_STR_UNBOUND;
+          Open_Sound       : Str_Unbound   := NULL_STR_UNBOUND;
+          Locked_Sound     : Str_Unbound   := NULL_STR_UNBOUND;
+        when Hurt_Entity =>
+          Damage : Damage_State := (others => <>);
+      end case;
+    end record;
+  package Hashed_Entity is new Hashed (Entity_State);
 
   type Clip_State is record
       Bounding      : Bounding_State := (others => <>);

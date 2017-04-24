@@ -14,7 +14,6 @@
 --                                                                                                                                      --
 
 with Ada.Containers.Indefinite_Multiway_Trees;
-with Ada.Containers; use Ada.Containers;
 
 generic
   type Tree_T is private;

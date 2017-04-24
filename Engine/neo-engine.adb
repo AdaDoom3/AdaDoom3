@@ -115,30 +115,16 @@ package body Neo.Engine is
   procedure Alert (Val : Bool := True) is
     begin
       Alert_Status.Occupied (Val);
-      Alert (Val);
-    end;
-
-  -- Called by all tasks (including the main execution) during an error to report exception and trace information
-  procedure Handle (Occurrence : Exception_Occurrence) is
-    Traces : Tracebacks_Array (1..1024);
-    Length : Int_32_Natural;
-    begin
-      Line;
-      Line (To_Str (Exception_Name    (Occurrence)));
-      Line (To_Str (Exception_Message (Occurrence)));
-      Line (Last_Error);   
-      Line;   
-      Call_Chain (Traces, Length);
-      Line (To_Str (Symbolic_Traceback (Traces)));
+      System.Alert (Val);
     end;
 
   -----------
   -- Tasks --
   -----------
 
-  package Task_Count is new CVar ("taskcount", "Number of running tasks", Int_32_Positive, 1, Settable => False);
+  package Task_Count is new CVar ("taskcount", "Number of running tasks", Positive, 1, Settable => False);
   package body Tasks is
-      procedure Finalize is new Ada.Unchecked_Deallocation (Task_Unsafe, Task_Unsafe_Ptr);
+      procedure Finalize is new Unchecked_Deallocation (Task_Unsafe, Task_Unsafe_Ptr);
       task body Task_Unsafe is
         begin
           accept Initialize (Id : out Task_Id) do Id := Current_Task; end;
@@ -161,7 +147,6 @@ pragma Warnings (Off);
               if Current_Id = NULL_TASK_ID or else Is_Terminated (Current_id) then return; end if;
               Abort_Task (Current_Id);
 pragma Warnings (On);
--- !!!
 
               Current_Id := NULL_TASK_ID;
               Finalize (Current_Task);
@@ -349,7 +334,7 @@ pragma Warnings (On);
       Mouse    : Mouse_Array;
       Cursor   : Cursor_State;
     end record;
-  package Ordered_Player is new Ordered (Int_32_Positive, Player_State);
+  package Ordered_Player is new Ordered (Positive, Player_State);
   Players : Ordered_Player.Safe_Map;
 
   -- Device operations
@@ -361,14 +346,14 @@ pragma Warnings (On);
   procedure Add_Device    (Id : Int_Ptr; Device  : Device_State)          is begin if not Players.Has (Device.Player) then Players.Insert (Device.Player, (others => <>)); end if; Devices.Insert (Id, Device); end;
 
   -- Convenience functions
-  procedure Set_Device     (Id : Int_Ptr; Player  : Int_32_Positive := 1)                  is Device : Device_State := Devices.Get (Id); begin Device.Player             := Player; Devices.Replace (Id, Device); end;
-  procedure Inject_Text    (Id : Int_Ptr; Text    : Str_16_Unbound)                        is Device : Device_State := Devices.Get (Id); begin Device.Text               := Text;   Devices.Replace (Id, Device); end;
-  procedure Inject_Cursor  (Id : Int_Ptr; Cursor  : Cursor_State)                          is Device : Device_State := Devices.Get (Id); begin Device.Cursor             := Cursor; Devices.Replace (Id, Device); end;
-  procedure Inject_Trigger (Id : Int_Ptr; Trigger : Trigger_Kind; Press : Percent) is Device : Device_State := Devices.Get (Id); begin Device.Triggers (Trigger) := Press;  Devices.Replace (Id, Device); end;
-  procedure Inject_Stick   (Id : Int_Ptr; Stick   : Stick_Kind;   State : Stick_State)     is Device : Device_State := Devices.Get (Id); begin Device.Sticks   (Stick)   := State;  Devices.Replace (Id, Device); end;
-  procedure Inject_Button  (Id : Int_Ptr; Button  : Mouse_Kind;   Down : Bool)             is Device : Device_State := Devices.Get (Id); begin if Device.Mouse   (Button).Down /= Down then Device.Mouse   (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
-  procedure Inject_Button  (Id : Int_Ptr; Button  : Gamepad_Kind; Down : Bool)             is Device : Device_State := Devices.Get (Id); begin if Device.Gamepad (Button).Down /= Down then Device.Gamepad (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
-  procedure Inject_Key     (Id : Int_Ptr; Key     : Key_Kind;     Down : Bool)             is Device : Device_State := Devices.Get (Id); begin if Device.Keys    (Key).Down    /= Down then Device.Keys    (Key)    := (Down, Clock); Devices.Replace (Id, Device); end if; end;
+  procedure Set_Device     (Id : Int_Ptr; Player  : Positive := 1)                     is Device : Device_State := Devices.Get (Id); begin Device.Player             := Player; Devices.Replace (Id, Device); end;
+  procedure Inject_Text    (Id : Int_Ptr; Text    : Str_16_Unbound)                    is Device : Device_State := Devices.Get (Id); begin Device.Text               := Text;   Devices.Replace (Id, Device); end;
+  procedure Inject_Cursor  (Id : Int_Ptr; Cursor  : Cursor_State)                      is Device : Device_State := Devices.Get (Id); begin Device.Cursor             := Cursor; Devices.Replace (Id, Device); end;
+  procedure Inject_Trigger (Id : Int_Ptr; Trigger : Trigger_Kind; Press : Percent)     is Device : Device_State := Devices.Get (Id); begin Device.Triggers (Trigger) := Press;  Devices.Replace (Id, Device); end;
+  procedure Inject_Stick   (Id : Int_Ptr; Stick   : Stick_Kind;   State : Stick_State) is Device : Device_State := Devices.Get (Id); begin Device.Sticks   (Stick)   := State;  Devices.Replace (Id, Device); end;
+  procedure Inject_Button  (Id : Int_Ptr; Button  : Mouse_Kind;   Down : Bool)         is Device : Device_State := Devices.Get (Id); begin if Device.Mouse   (Button).Down /= Down then Device.Mouse   (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
+  procedure Inject_Button  (Id : Int_Ptr; Button  : Gamepad_Kind; Down : Bool)         is Device : Device_State := Devices.Get (Id); begin if Device.Gamepad (Button).Down /= Down then Device.Gamepad (Button) := (Down, Clock); Devices.Replace (Id, Device); end if; end;
+  procedure Inject_Key     (Id : Int_Ptr; Key     : Key_Kind;     Down : Bool)         is Device : Device_State := Devices.Get (Id); begin if Device.Keys    (Key).Down    /= Down then Device.Keys    (Key)    := (Down, Clock); Devices.Replace (Id, Device); end if; end;
 
   -- Hack for cases where the system does not support threaded input, the notion of "devices" is ignored
   procedure Inject_Into_Player_1 (Arg : Impulse_Arg_State) is 
@@ -385,7 +370,7 @@ pragma Warnings (On);
     end;
 
   -- Vibrate a specific player's Xbox controllers
-  procedure Vibrate (Hz_High, Hz_Low : Percent; Player : Int_32_Positive := 1) is
+  procedure Vibrate (Hz_High, Hz_Low : Percent; Player : Positive := 1) is
     begin
       for Device in Devices.Get.Iterate loop
         if Ordered_Device.Unsafe.Element (Device).Player = Player then
@@ -609,11 +594,11 @@ goto Combo_Not_Activated;
   function Save_Binds return Str is (NULL_STR);
 
   -- Command declarations
-  package Bind is new Command ("bind",
-                               "Bind an impulse to an input value",
-                               "bind [player#] [impulse] [value]",
+  package Bind is new Command (Name     => "bind",
+                               Info     => "Bind an impulse to an input value",
+                               Usage    => "bind [player#] [impulse] [value]",
                                Callback => Callback_Bind,
-                               Save => Save_Binds'Access);
+                               Save     => Save_Binds'Access);
 
   -----------
   -- CVars --
@@ -622,6 +607,12 @@ goto Combo_Not_Activated;
   -- Internal cvars
   type Activated_Kind is (Other_Activated, Click_Activated, Other_Deactivated, Minimize_Deactivated);
   package Activated is new CVar ("activated", "Query last activation action for window", Activated_Kind, Other_Activated, False);
+
+  ----------
+  -- Menu --
+  ----------
+
+  
 
   --------------
   -- Separate --
@@ -646,10 +637,11 @@ goto Combo_Not_Activated;
     procedure Set_Windowing_Mode is
       begin
         case Mode.Get is
-          when Multi_Monitor_Mode => Initialize_Multi_Monitor; Clip_Cursor (False); 
-          when Windowed_Mode      => Make_Windowed;            Clip_Cursor (False); 
-          when Fullscreen_Mode    => Maximize;                 Clip_Cursor;                        
+          when Multi_Monitor_Mode => Initialize_Multi_Monitor;
+          when Windowed_Mode      => Make_Windowed;           
+          when Fullscreen_Mode    => Maximize;                              
         end case;
+        Clip_Cursor (Mode.Get = Fullscreen_Mode);
       end;
     begin
       Use_Ada_Put;
@@ -681,11 +673,11 @@ goto Combo_Not_Activated;
 
       -- Main loop
       declare
+      Saved_Pos         : Cursor_State   := Get_Cursor;
       Current_Menu      : Bool           := Menu.Get;
       Current_Mode      : Mode_Kind      := Mode.Get;
       Current_Cursor    : Cursor_Kind    := Cursor.Get;
       Current_Activated : Activated_Kind := Activated.Get;
-      Saved_Pos         : Cursor_State   := Get_Cursor;
       begin
 
         -- Setup
@@ -740,12 +732,11 @@ goto Combo_Not_Activated;
                 case Mode.Get is
                   when Windowed_Mode =>
                     Input_Status.Occupied (True);
-                    if Menu.Get then Set_Cursor_Style (Cursor.Get);
-                    else
+                    if not Menu.Get then
                       Cursor_Status.Occupied (False);
                       Exit_To_Menu.Disable;
                       Enter_Game.Enable;
-                    end if;
+                    else Set_Cursor_Style (Cursor.Get); end if;
                   when Multi_Monitor_Mode | Fullscreen_Mode =>
                     Maximize;
                     if Mode.Get = Multi_Monitor_Mode then Initialize_Multi_Monitor; end if;
@@ -763,7 +754,6 @@ goto Combo_Not_Activated;
                 end case;
               when Click_Activated =>
                 case Mode.Get is
-                  when Multi_Monitor_Mode | Fullscreen_Mode => null; -- Should not happen
                   when Windowed_Mode =>
                     Input_Status.Occupied (True);
                     if Menu.Get then Set_Cursor_Style (Cursor.Get);
@@ -777,7 +767,7 @@ goto Combo_Not_Activated;
                       Exit_To_Menu.Disable;
                       Enter_Game.Enable;
                     end if;
-                end case;
+                when others => null; end case;
               when Other_Deactivated | Minimize_Deactivated =>
                 if not Menu.Get and In_Main_Window then Set_Cursor (Saved_Pos); end if;
                 Input_Status.Occupied (False);
@@ -788,14 +778,13 @@ goto Combo_Not_Activated;
                   case Mode.Get is
                     when Multi_Monitor_Mode => Finalize_Multi_Monitor; Minimize;
                     when Fullscreen_Mode    => Minimize; 
-                    when Windowed_Mode      => null;
-                  end case;
+                  when others => null; end case;
                 elsif Mode.Get = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
             end case;
             Current_Activated := Activated.Get;
           end if;
 
-          -- Render
+          -- Show the frame buffer
           Renderer.Present;
         end loop;
       end;

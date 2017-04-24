@@ -22,7 +22,17 @@ separate (Neo.Engine.System) procedure Run_Console is
       Action  : access procedure;
     end record;
   CONSOLE_BUTTONS : constant array (1..3) of Button_State := (("Save", Save_Log'access), ("Send", Send_Log'access), ("Quit", null));
-  Buttons         : array (CONSOLE_BUTTONS'range) of Ptr;
+  Buttons         : array (CONSOLE_BUTTONS'range) of Ptr  := (others => NULL_PTR);
+
+  -- Text
+  ERROR_REPORTING_URL : constant Str   := "http://www.google.com";
+  LABEL_INPUT_ENTRY   : constant Str   := "Input";
+  LABEL_OUTPUT        : constant Str   := "Output";
+  FONT_CONSOLE        : aliased  Str_C := To_Str_C ("Courier New");
+  FONT_DIALOG         : aliased  Str_C := To_Str_C ("Tahoma");
+  NAME_BUTTON         : aliased  Str_C := To_Str_C ("Button");
+  NAME_GROUP          : aliased  Str_C := To_Str_C ("Group");
+  NAME_EDIT           : aliased  Str_C := To_Str_C ("Edit");
 
   -- Constants
   DO_DISABLE_RESIZE     : constant Bool  := False;
@@ -38,22 +48,12 @@ separate (Neo.Engine.System) procedure Run_Console is
   MARGIN_BUTTON         : constant Int_C := 4;
   MARGIN                : constant Int_C := 7;
 
-  -- Text
-  ERROR_REPORTING_URL : constant Str   := "http://www.google.com";
-  LABEL_INPUT_ENTRY   : constant Str   := "Input";
-  LABEL_OUTPUT        : constant Str   := "Output";
-  FONT_CONSOLE        : aliased  Str_C := To_Str_C ("Courier New");
-  FONT_DIALOG         : aliased  Str_C := To_Str_C ("Tahoma");
-  NAME_BUTTON         : aliased  Str_C := To_Str_C ("Button");
-  NAME_GROUP          : aliased  Str_C := To_Str_C ("Group");
-  NAME_EDIT           : aliased  Str_C := To_Str_C ("Edit");
-
   -- Variables
+  Current_Lines :         Int_64_Natural   := 0;
   Current_Input :         Char_16          := NULL_CHAR_16;
   Current_Log   :         Str_Unbound      := NULL_STR_UNBOUND;
-  Current_Lines :         Int_64_Natural   := 0;
+  Input_Buffer  : aliased Str_C (1..2**9)  := (others => NULL_CHAR_16_C); -- Buffer size is arbitrary !!!
   Message       : aliased MSG              := (others => <>);
-  Buffer        : aliased Str_C (1..2**9)  := (others => NULL_CHAR_16_C); -- Buffer size is arbitrary !!!
   Metrics       : aliased NONCLIENTMETRICS := (others => <>);
   Class         : aliased WNDCLASSEX       := (others => <>);
   Text_Metric   : aliased TEXTMETRIC       := (others => <>);
@@ -581,14 +581,14 @@ begin
 
             -- Capture text input and put it in the entry box
             if not Is_Control (Current_Input) then
-              Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Buffer'length), To_Int_Ptr (Buffer'address)));
-              Input_Entry (To_Str (Buffer) & Current_Input);
+              Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Input_Buffer'length), To_Int_Ptr (Input_Buffer'address)));
+              Input_Entry (To_Str (Input_Buffer) & Current_Input);
               if GetFocus /= Input_Box then Set_Text (Input_Box, Input_Entry); end if;
 
             -- Handle a command submission
             elsif Current_Input = To_Char_16 (ASCII.CR) then
-              Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Buffer'length), To_Int_Ptr (Buffer'address)));
-              Input_Entry (To_Str (Buffer));
+              Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Input_Buffer'length), To_Int_Ptr (Input_Buffer'address)));
+              Input_Entry (To_Str (Input_Buffer));
               if Input_Entry /= NULL_STR then
                 Line (Input_Entry);
                 if Input_Entry /= NULL_STR then

@@ -13,10 +13,11 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Finalization; use Ada.Finalization;
-with Ada.Wide_Text_IO; use Ada.Wide_Text_IO;
+with Neo.Core.Math;    use Neo.Core.Math;
 with Neo.Core.Arrays;  use Neo.Core.Arrays;
-with Neo.Core.Vectors; use Neo.Core;
+with Neo.Core.Strings; use Neo.Core.Strings;
+with Neo.Core.Console; use Neo.Core.Console;
+with Neo.Core.Vectors;
 with Neo.Core.Ordered;
 
 -- Separator for the "Data" layer consisting of packages for loading and understanding common file formats
@@ -75,10 +76,6 @@ package Neo.Data is
   --       end;
   --
 
-  -- String splitting
-  function Split (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe.Vector;
-  function Split (Item : Str; On : Str := " ") return Array_Str_Unbound;
-
   -- Package for catagorizing sets of parsers that load a single data file (e.g. an image format)
   generic
     type Format_T is (<>);
@@ -122,7 +119,7 @@ package Neo.Data is
       function Next return Int_64_Unsigned;
 
       -- Check ahead without advancing
-      function Peek_U return Str_Unbound; -- Wish this could be overloaded...
+      function Peek_U return Str_Unbound; -- Name should be "Peek"
       function Peek return Str     is (To_Str             (Peek_U));
       function Peek return Real    is (Real'Wide_Value    (Peek));
       function Peek return Real_64 is (Real_64'Wide_Value (Peek));
@@ -146,7 +143,7 @@ package Neo.Data is
       procedure Skip     (Amount : Positive := 1);
 
       -- Skip_Until is a mix between peek and skip, it will skip strings until the target gets peeked
-      procedure Skip_Until (T    : Array_Str_Unbound; Fail_On_EOF : Bool := False); -- Wish this could have Text instead of T...
+      procedure Skip_Until (T    : Array_Str_Unbound; Fail_On_EOF : Bool := False); -- Formal should be "Text"
       procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False);

@@ -13,29 +13,15 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
-with Ada.Unchecked_Deallocation;   
-with Ada.Streams.Stream_IO;
-with Ada.Finalization;             use Ada.Finalization;
-with Ada.Containers;               use Ada.Containers;
-with Ada.Exceptions;               use Ada.Exceptions;
-with Ada.Calendar;                 use Ada.Calendar;
-with Ada.Strings;                  use Ada.Strings;
-with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
-with Ada.Task_Identification;      use Ada.Task_Identification;
-with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
-with System;                       use System;
-with Interfaces;                   use Interfaces;
-with Interfaces.C;                 use Interfaces.C;
-with GNAT.Traceback;               use GNAT.Traceback;
-with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
-with Neo.Core.Compression;         use Neo.Core.Compression;
-with Neo.Core.Arrays;              use Neo.Core.Arrays;
-with Neo.Core.Console;             use Neo.Core.Console;
-with Neo.Core.Vectors;             use Neo.Core;
-with Neo.Core.Ordered;
+with Neo.Core.Compression; use Neo.Core.Compression;
+with Neo.Core.Console;     use Neo.Core.Console;
+with Neo.Core.Strings;     use Neo.Core.Strings;
+with Neo.Core.Arrays;      use Neo.Core.Arrays;
 with Neo.Core.Hashed;
+with Neo.Core.Vectors;
+with Neo.Core.Ordered;
 
--- 
+-- Primary interface for the "Game" layer, see /Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
 
   -- Main entry point, this should only be called by main.adb
@@ -55,12 +41,15 @@ package Neo.Engine is
     end record;
   function Get_Information return Information_State;
 
-  -- Clipboard operations
+  ---------------
+  -- Clipboard --
+  ---------------
+
   function Paste return Str;
   procedure Copy (Item : Str);
 
   --------------------
-  -- Error_Handling --
+  -- Error Handling --
   --------------------
 
   type Icon_Kind is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
@@ -113,12 +102,12 @@ package Neo.Engine is
   package Menu            is new CVar ("menu",      "Query cursor capture",             Bool, True);
   package Cursor          is new CVar ("cursor",    "Query cursor style",               Cursor_Kind, Inactive_Cursor);    
   package Mode            is new CVar ("mode",      "Query window mode",                Mode_Kind, Windowed_Mode, True);
-  package Aspect_Narrow_X is new CVar ("narrowx",   "Set windowed min narrow aspect x", Int_64_Positive, 16,  True);
-  package Aspect_Narrow_Y is new CVar ("narrowy",   "Set windowed min narrow aspect y", Int_64_Positive, 9,   True);
-  package Aspect_Wide_X   is new CVar ("widex",     "Set windowed min wide aspect x",   Int_64_Positive, 4,   True);
-  package Aspect_Wide_Y   is new CVar ("widey",     "Set windowed min wide aspect y",   Int_64_Positive, 3,   True);
-  package Windowed_Height is new CVar ("winheight", "Height in windowed mode",          Int_64_Positive, 600, True);
-  package Windowed_Width  is new CVar ("winwidth",  "Width in windowed mode",           Int_64_Positive, 800, True);
+  package Aspect_Narrow_X is new CVar ("narrowx",   "Set windowed min narrow aspect x", Positive, 16,  True);
+  package Aspect_Narrow_Y is new CVar ("narrowy",   "Set windowed min narrow aspect y", Positive, 9,   True);
+  package Aspect_Wide_X   is new CVar ("widex",     "Set windowed min wide aspect x",   Positive, 4,   True);
+  package Aspect_Wide_Y   is new CVar ("widey",     "Set windowed min wide aspect y",   Positive, 3,   True);
+  package Windowed_Height is new CVar ("winheight", "Height in windowed mode",          Positive, 600, True);
+  package Windowed_Width  is new CVar ("winwidth",  "Width in windowed mode",           Positive, 800, True);
 
   -- Window and desktop location and size information
   type Border_State is record
@@ -251,13 +240,13 @@ package Neo.Engine is
   type Device_State (Kind : Device_Kind := Keyboard_Device) is record
       Player : Positive := 1;
       case Kind is
+        when Keyboard_Device =>
+          Text     : Str_Unbound   := NULL_STR_UNBOUND;
+          Keys     : Key_Array     := (others => (others => <>));
         when Gamepad_Device =>
           Triggers : Trigger_Array := (others => (others => <>));
           Gamepad  : Gamepad_Array := (others => (others => <>));
           Sticks   : Stick_Array   := (others => (others => <>));
-        when Keyboard_Device =>
-          Keys     : Key_Array     := (others => (others => <>));
-          Text     : Str_Unbound   := NULL_STR_UNBOUND;
         when Mouse_Device =>
           Mouse    : Mouse_Array   := (others => (others => <>));
           Cursor   : Cursor_State  := (others => <>);
@@ -303,11 +292,11 @@ package Neo.Engine is
       Player : Positive;
       Combo  : Natural := NO_COMBO;
       case Kind is
-        when Mouse_Impulse   => Mouse   : Mouse_Kind;
-        when Key_Impulse     => Key     : Key_Kind;
-        when Stick_Impulse   => Stick   : Stick_Kind;
-        when Gamepad_Impulse => Gamepad : Gamepad_Kind;
-        when Trigger_Impulse => Trigger : Trigger_Kind;
+        when Mouse_Impulse   => Mouse   : Mouse_Kind   := Mouse_Kind'First;
+        when Key_Impulse     => Key     : Key_Kind     := Key_Kind'First;
+        when Stick_Impulse   => Stick   : Stick_Kind   := Stick_Kind'First;
+        when Gamepad_Impulse => Gamepad : Gamepad_Kind := Gamepad_Kind'First;
+        when Trigger_Impulse => Trigger : Trigger_Kind := Trigger_Kind'First;
       when others => null; end case;
     end record;
 
@@ -324,11 +313,11 @@ package Neo.Engine is
   type Impulse_Arg_State (Kind : Impulse_Kind := Key_Impulse) is record 
       Binding : Binding_State (Kind);
       case Kind is
-        when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State;
-        when Stick_Impulse   => Stick   : Stick_State;
-        when Trigger_Impulse => Trigger : Percent;
-        when Cursor_Impulse  => Cursor  : Cursor_State;
-        when Text_Impulse    => Text    : Str_Unbound;
+        when Trigger_Impulse => Trigger : Percent      := 0.0;
+        when Text_Impulse    => Text    : Str_Unbound  := NULL_STR_UNBOUND;
+        when Stick_Impulse   => Stick   : Stick_State  := (others => <>);
+        when Cursor_Impulse  => Cursor  : Cursor_State := (others => <>);
+        when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State := (others => <>);
       end case;
     end record;
   package Vector_Impulse_Arg is new Vectors (Impulse_Arg_State);
@@ -346,34 +335,4 @@ package Neo.Engine is
       procedure Enable;
       procedure Disable;
     end;
-
-  -----------
-  -- World --
-  -----------
-
-  Meshes    : Hashed_Mesh.Safe.Map;
-  Levels    : Hashed_Level.Safe_Map;
-  Images    : Hashed_Image.Safe.Map;
-  Shaders   : Hashed_Stream.Safe.Map;
-  Materials : Hashed_Materials.Safe.Map;
-    
-  type Position_State is record
-      Orientation : ;
-      Position    : ;
-      Area        : ;
-      World       : Positive      := 1;
-    end record;
-
-  type World_State is record
-      Start_Time : Time;
-      Elapsed    : Duration;
-    end record;
-
-  type Player_Primary_State is record
-      Orientation : ;
-      Position    : ;
-      Area        : ;
-      World       : Positive      := 1;
-      View        : Frustum_State := (others => <>);
-    end record;
 end;

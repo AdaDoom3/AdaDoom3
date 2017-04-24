@@ -15,35 +15,11 @@
 
 package body Neo.Data is
 
-  ---------------
-  -- Splitting --
-  ---------------
-
-  -- Split a string into an array of strings based on a separator (e.g. comma) ??? Could this be done without vectors?
-  function Split (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe.Vector is
-    Result    : Vector_Str_16_Unbound.Unsafe.Vector;
-    TRIMMED   : constant Str  := Trim (Item, Both);
-    REMAINDER : constant Natural := Index (TRIMMED, On);
-    begin
-      if REMAINDER = 0 then
-        Result.Append (To_Str_Unbound (TRIMMED));
-        return Result;
-      else Result.Append (To_Str_Unbound (Trim (TRIMMED (TRIMMED'First..REMAINDER - 1), Both))); end if;
-      Result.Append (Split (TRIMMED (REMAINDER..TRIMMED'Last), On));
-      return Result;
-    end;
-  function Split (Item : Str; On : Str := " ") return Array_Str_Unbound is
-    begin
-      return Vector_Str_16_Unbound.To_Unsafe_Array (Split (Item, On));
-    end;
-
   -------------
   -- Handler --
   -------------
 
   package body Handler is
-
-    -- Exceptions for bad formats or incorrect extensions
     Unsupported, Duplicate_Format : Exception;
 
     -- Internal format for relating extensions to callbacks
@@ -71,16 +47,18 @@ package body Neo.Data is
     -- Package for registering format callbacks
     package body Format is
         function Informal_Load (Path : Str) return T renames Format.Load;
-        type Controller_State is new Controlled with null record;
-        procedure Finalize   (Item : in out Controller_State);
-        procedure Initialize (Item : in out Controller_State);
-        procedure Finalize   (Item : in out Controller_State) is begin Formats.Delete (Kind); end;
-        procedure Initialize (Item : in out Controller_State) is
+
+        -- Controller
+        type Control_State is new Controlled with null record;
+        procedure Finalize   (Control : in out Control_State);
+        procedure Initialize (Control : in out Control_State);
+        procedure Finalize   (Control : in out Control_State) is begin Formats.Delete (Kind); end;
+        procedure Initialize (Control : in out Control_State) is
           begin
             if Formats.Has (Kind) then raise Duplicate_Format; end if;
             Formats.Insert (Kind, (Informal_Load'Access, To_Str_Unbound (To_Lower (Extensions))));
           end;
-        Controller : Controller_State;
+        Controller : Control_State;
       end;
   end;
 
@@ -89,49 +67,86 @@ package body Neo.Data is
   ------------
 
   package body Parser is
+    Invalid : Exception;
+
+    ----------
+    -- Load --
+    ----------
 
     -- Load file and pre-process text (possibly remove comments and replace tabs)
     function Load return Array_Str_Unbound is
-      Data                  : File_Type;
-      In_Multiline_Comment  : Bool := False;
-      Trimmed_Comment_Start : Str  := Trim (Comment_Start, Both);
-      Trimmed_Comment_End   : Str  := Trim (Comment_End,   Both);
-      Trimmed_Comment       : Str  := Trim (Comment,       Both);
-      This                  : Vector_Str_16_Unbound.Unsafe.Vector;
+      SINGLELINE_REMOVE    : Bool    := Comment         /= NULL_STR;
+      MULTILINE_REMOVE     : Bool    := Comment_Start   /= NULL_STR;
+      TAB_REPLACEMENT      : Bool    := Tab_Replacement /= NULL_CHAR_16;
+      In_Multiline_Comment : Bool    := False;
+      Comment_Start_Index  : Natural := 0;
+      Comment_End_Index    : Natural := 0;
+      Comment_Index        : Natural := 0;
+      Tab_Index            : Natural := 0;
+      Data                 : File_Type;
+      This                 : Vector_Str_16_Unbound.Unsafe.Vector;
       begin
 
         -- Verify generic package foramls
-        Assert ((if Trimmed_Comment_Start = NULL_STR then Trimmed_Comment_End = NULL_STR else Trimmed_Comment_End /= NULL_STR));
+        Assert (Comment_Start'Length = Trim (Comment_Start, Both)'Length);
+        Assert (Comment_End'Length   = Trim (Comment_End,   Both)'Length);
+        Assert (Comment'Length       = Trim (Comment,       Both)'Length);
+        Assert ((if MULTILINE_REMOVE then Comment_End /= NULL_STR else Comment_End /= NULL_STR));
 
         -- Open the file
-        Open (Data, In_File, To_Str_8 (Path)); -- Str_8 !!!
+        Open (Data, In_File, To_Str_8 (Path)); -- Must be Str_8 ???
+
+        -- Perform first pass
         while not End_Of_File (Data) loop
-          This.Append (To_Str_Unbound (Get_Line (Data)));
+          Current := To_Str_Unbound (Get_Line (Data));
 
-          -- Single-line comment removal
-          if Trimmed_Comment /= NULL_STR and then Index (This.Last_Element, Trimmed_Comment) /= 0 then
-            This.Replace_Element (This.Last_Index, Head (This.Last_Element, Index (This.Last_Element, Trimmed_Comment) - 1));
-          end if;
+          -- Remove comments
+          if SINGLELINE_REMOVE or MULTILINE_REMOVE then
+            if MULTILINE_REMOVE then Comment_Start_Index := 0; end if;
+            loop
 
-          -- Multi-line comment removal
-          -- if Trimmed_Comment_Start /= NULL_STR then
-          --   if In_Multiline_Comment and then
-          --     Index (This.Last_Element, Trimmed_Comment_End) + Trimmed_Comment_End'Length /= This.Last_Index
-          --   then
-          --     In_Multiline_Comment := False;
-          --     This.Replace_Element (This.Last_Index, Head (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
-          --   elsif Index (This.Last_Element, Trimmed_Comment_Start) /= 0 then
-          --     In_Multiline_Comment := True;
-          --     This.Replace_Element (This.Last_Index, Tail (This.Last_Element, Index (This.Last_Element, Trimmed_Comment_End)));
-          --   else This.Replace_Element (This.Last_Index, NULL_STR_UNBOUND); end if;
-          -- end if;
+              -- Multi-line comment removal
+              if In_Multiline_Comment then
+                Comment_End_Index := Index (Current, Comment_End);
 
-          -- Tab replacement
-          if Tab_Replacement /= NULL_CHAR_16 then
-            while Index (This.Last_Element, TAB_16) /= 0 loop
-              This.Replace_Element (This.Last_Index, Overwrite (This.Last_Element, Index (This.Last_Element, TAB_16), " "));
+                -- No end in sight
+                if Comment_End_Index = 0 then
+                  if Comment_Start_Index = 0 then Current := NULL_STR_UNBOUND; end if;
+                  exit;
+                end if;
+
+                -- Delete comment
+                In_Multiline_Comment := False;
+                Delete (Current, Comment_Start_Index, Comment_End_Index + Comment_End'Length);
+
+              -- Single-line comment removal
+              else
+                if SINGLELINE_REMOVE then Comment_Index       := Index (Current, Comment);       end if;
+                if MULTILINE_REMOVE  then Comment_Start_Index := Index (Current, Comment_Start); end if;
+                exit when Comment_Index = 0 and Comment_Start_Index = 0;
+
+                -- Delete comment
+                if SINGLELINE_REMOVE and then Comment_Index > 0 and (Comment_Index < Multi_Index or Multi_Index = 0) then
+                  Head (Current, Index (Current, Comment_Index) - 1);
+                  exit;
+
+                -- Flag multi-line comment
+                else In_Multiline_Comment := True; end if;
+              end if;
             end loop;
           end if;
+
+          -- Remove tabs
+          if TAB_REPLACEMENT then
+            loop
+              Tab_Index := Index (Current, TAB_16);
+              exit when Tab_Index = 0;
+              Overwrite (Current, Tab_Index, " "));
+            end loop;
+          end if;
+
+          -- Add the current line to the internal buffer
+          if Current /= NULL_STR_UNBOUND then This.Append (Current); end if;
         end loop;
 
         -- Close the file
@@ -139,11 +154,17 @@ package body Neo.Data is
         return Vector_Str_16_Unbound.To_Unsafe_Array (This);
       end;
 
-    -- Internal variables
-    This    : Array_Str_Unbound := Load;
+    -------------
+    -- Globals --
+    -------------
+
+    This    : Array_Str_Unbound := Load; -- Cause the loading of data to be performed at package instantiation
     Row     : Positive          := 1;
-    Column  : Positive           := 1;
-    Invalid : Exception;
+    Column  : Positive          := 1;
+
+    -------------
+    -- Parsing --
+    -------------
 
     -- Internal procedure for skipping whitespace
     procedure Seek is
@@ -186,11 +207,11 @@ package body Neo.Data is
       end;
 
     -- Skip until.. this could stand a cleaning
-    procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (1 => U (Text)),                          Fail_On_EOF => Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2)),                         Fail_On_EOF => Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3)),                 Fail_On_EOF => Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4)),         Fail_On_EOF => Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4), U (T5)), Fail_On_EOF => Fail_On_EOF); end;
+    procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((1 => U (Text)),                          Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2)),                         Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3)),                 Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3), U (T4)),         Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3), U (T4), U (T5)), Fail_On_EOF); end;
     procedure Skip_Until (T : Array_Str_Unbound; Fail_On_EOF : Bool := False) is
       Start_Column : Positive := Column;
       Start_Row    : Positive := Row;
@@ -270,7 +291,7 @@ package body Neo.Data is
       end;
     function Next return Str_Unbound is
       Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
-      I      : Natural := Index (Result, "" & Separator);
+      I      : Natural     := Index (Result, "" & Separator);
       begin
         if I /= 0 then Delete (Result, I, Length (Result)); end if;
         Column := Column + Length (Result);

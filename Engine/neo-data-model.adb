@@ -66,6 +66,7 @@ package body Neo.Data.Model is
       function Load (Path : Str) return Vector_Mesh.Unsafe.Vector;
     end;
   package body Wavefront is separate;
+  
   package Id_Tech is
       function Load (Path : Str) return Level_State;
       function Load (Path : Str) return Camera_State;

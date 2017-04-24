@@ -14,7 +14,6 @@
 --                                                                                                                                      --
 
 with Ada.Numerics.Generic_Elementary_Functions;
-with Ada.Numerics; use Ada.Numerics;
 with Neo.Core.Vectors;
 
 -- Based on Foundations of Game Engine Development Vol. 1: http://foundationsofgameenginedev.com/FGED1-code.cpp

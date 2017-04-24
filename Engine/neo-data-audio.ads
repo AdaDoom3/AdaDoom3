@@ -13,46 +13,50 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers.Indefinite_Vectors;
-
-generic
-  type Vec_T is private;
-package Neo.Core.Vectors is
+-- Unified texture type definitions
+package Neo.Data.Audio is
 
   -------------
-  -- Vectors --
+  -- Formats --
   -------------
 
-  -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Vectors (Positive, Vec_T);
-  subtype Cursor is Unsafe.Cursor;
-  NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
+  type Format_Kind is (OPUS_Format); -- http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
 
-  -- Array conversions
-  type Unsafe_Array is array (Positive range <>) of Vec_T with Convention => C;
-  type Ptr_Unsafe_Array is access all Unsafe_Array;
-  function To_Unsafe_Vector (Item : Unsafe_Array)  return Unsafe.Vector;
-  function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;
+  ----------
+  -- Clip --
+  ----------
 
-  -- Wrapped type
-  protected type Safe_Vector is
-      procedure Clear;
-      procedure Set     (Val : Unsafe.Vector);
-      procedure Set     (Val : Unsafe_Array);
-      procedure Next    (Pos : in out Cursor);
-      procedure Replace (Pos :        Cursor; Item : Vec_T);
-      procedure Append                       (Item : Vec_T; Count : Positive := 1);
-      procedure Prepend                      (Item : Vec_T; Count : Positive := 1);
-      procedure Insert  (Before : Positive;   Item : Vec_T; Count : Positive := 1);
-      procedure Delete  (Index  : Positive;                 Count : Positive := 1);
-      function Has      (Pos    : Cursor)   return Boolean;
-      function Get      (Pos    : Cursor)   return Vec_T;
-      function Get      (Index  : Positive) return Vec_T;
-      function Get                          return Unsafe.Vector;
-      function To_Array                     return Unsafe_Array;
-      function First                        return Cursor;
-      function Length                       return Positive;
-    private
-      This : Unsafe.Vector;
-    end;
+  type Clip_Kind (Foreground_Clip, Background_Clip, Music_Clip, Cinematic_Clip, Dialog_Clip);
+
+  type Clip_State (Kind : Clip_Kind := Foreground_Clip; Do_Loop : Bool := False) is record
+      Lead_In_Sample  : Str_Unbound := NULL_STR_UNBOUND;
+      Lead_In_Volume  : Percent     := 100.0;
+      Max_Volume      : Percent     := 100.0;
+      Screen_Shake    : Percent     := 10.0;
+      Fade_Radius_Min : Real        := 1.0;
+      Fade_Radius_Max : Real        := 2.0;
+      Omnidirectional : Bool        := False;
+      No_Occlusion    : Bool        := False;
+      Is_Global       : Bool        := True;
+      Is_Private      : Bool        := True;
+      Use_Center      : Bool        := True;
+      Use_Left        : Bool        := True;
+      Use_Right       : Bool        := True;
+      Use_Back_Left   : Bool        := True;
+      Use_Back_Right  : Bool        := True;
+      Use_Subwoofer   : Bool        := True;
+      case Do_Loop is
+        when False =>
+          Sample : Str_Unbound := NULL_STR_UNBOUND;
+        when True =>
+          Samples       : Vector_Str_Unbound.Unsafe.Vector;
+          Same_Twice_OK : Bool := False; -- Must have more than 2 samples to be relevant
+      end case;
+    end record;
+    
+  --------
+  -- IO --
+  --------
+
+  function Load (Path : Str) return Compressed_Image;
 end;

@@ -20,25 +20,7 @@ package body Neo.Core.Console is
   --------
 
   -- Internal protected structure of task-safe output
-  protected type Safe_IO is
-      function Log          return Str_Unbound;
-      function Log          return Str;
-      function Input_Entry  return Str;
-      function Line_Size    return Positive;
-      function Lines        return Int_64_Natural;
-      procedure Input_Entry (Val  : Str);
-      procedure Line_Size   (Val  : Positive);
-      procedure Put         (Item : Str);
-      procedure Set_Put     (Val  : Ptr_Procedure_Put);
-    private
-      Current_Put         : Ptr_Procedure_Put;
-      Current_Log         : Str_Unbound;
-      Current_Input_Entry : Str_Unbound;
-      Current_Lines       : Int_64_Natural;
-      Current_Tasks       : Positive;
-      Current_Line_Size   : Positive := 80;
-    end;
-  protected body Safe_IO is
+  protected Safe_IO is
       function Log          return Str_Unbound        is (Current_Log);
       function Log          return Str                is (To_Str (Current_Log));
       function Input_Entry  return Str                is (To_Str (Current_Input_Entry));
@@ -57,26 +39,32 @@ package body Neo.Core.Console is
           end loop;
           Current_Lines := Current_Lines + Count;
         end;
+    private
+      Current_Put         : Ptr_Procedure_Put;
+      Current_Log         : Str_Unbound;
+      Current_Input_Entry : Str_Unbound;
+      Current_Lines       : Int_64_Natural;
+      Current_Tasks       : Positive;
+      Current_Line_Size   : Positive := 80;
     end;
-  IO : Safe_IO;
 
-  -- Public IO interface that wraps the protected type
+  -- Public Safe_IO interface that wraps the protected type
   procedure Use_Ada_Put                                    is begin Set_Put (Ada.Wide_Text_IO.Put'Access);    end; 
   procedure Line        (Num  : Positive := 1)             is begin for I in 1..Num loop Put (EOL); end loop; end;
-  procedure Input_Entry (Val  : Str)                       is begin IO.Input_Entry (Val);                     end;
-  procedure Line_Size   (Val  : Positive)                  is begin IO.Line_Size   (Val);                     end;
-  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin IO.Set_Put     (Val);                     end;
-  procedure Put         (Item : Str_Unbound)               is begin Put            (To_Str (Item));           end;
-  procedure Put         (Item : Char_16)                   is begin Put            (Item & "");               end;                  
-  procedure Put         (Item : Str)                       is begin IO.Put         (Item);                    end;
-  procedure Line        (Item : Char_16)                   is begin Line           (Item & "");               end;    
-  procedure Line        (Item : Str_Unbound)               is begin Line           (To_Str (Item));           end;
-  procedure Line        (Item : Str)                       is begin Put            (Item); Line;              end;
+  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (Val);                end;
+  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);                  end;
+  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);                    end;
+  procedure Put         (Item : Str_Unbound)               is begin Put (To_Str (Item));                      end;
+  procedure Put         (Item : Char_16)                   is begin Put (Item & "");                          end;                  
+  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);                       end;
+  procedure Line        (Item : Char_16)                   is begin Line (Item & "");                         end;    
+  procedure Line        (Item : Str_Unbound)               is begin Line (To_Str (Item));                     end;
+  procedure Line        (Item : Str)                       is begin Put (Item); Line;                         end;
   function Extension    (Path : Str) return Str            is (Path (Index (Path, ".") + 1..Path'Last));
-  function Log                       return Str            is (IO.Log);
-  function Input_Entry               return Str            is (IO.Input_Entry); 
-  function Lines                     return Int_64_Natural is (IO.Lines);
-  function Line_Size                 return Positive       is (IO.Line_Size);
+  function Log                       return Str            is (Safe_IO.Log);
+  function Input_Entry               return Str            is (Safe_IO.Input_Entry); 
+  function Lines                     return Int_64_Natural is (Safe_IO.Lines);
+  function Line_Size                 return Positive       is (Safe_IO.Line_Size);
 
   --------------------
   -- Internal State --
@@ -87,8 +75,8 @@ package body Neo.Core.Console is
 
   -- Internal data structures
   type Command_State is record 
-      Callback : access procedure (Args : Array_Str_Unbound);
       Save     : access function return Str;
+      Callback : access procedure (Args : Array_Str_Unbound);
     end record;
   type CVar_State is record 
       Val : Str_Unbound; -- A cvar that goes out of scope is not forgotten
@@ -112,26 +100,44 @@ package body Neo.Core.Console is
   package body CVar is
       Duplicate, Parse : Exception;
 
-      -- Forward declarations to add finalization via a "controller"
+      -- Controller
       type Control_State is new Controlled with null record;
       procedure Initialize (Control : in out Control_State);
       procedure Finalize   (Control : in out Control_State);
+      procedure Initialize (Control : in out Control_State) is
+        begin
+          if Commands.Has (Name) then
+            if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
+            CVars.Replace (Name, (Val => CVars.Get (Name).Val,
+                                  Get => Handle_Get'Unrestricted_Access,
+                                  Set => Handle_Set'Unrestricted_Access));
+            Handle_Set (To_Str (CVars.Get (Name).Val));
+          else
+            CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
+                                 Get => Handle_Get'Unrestricted_Access,
+                                 Set => Handle_Set'Unrestricted_Access));
+            Set (Initial);
+          end if;
+        end;
+      procedure Finalize (Control : in out Control_State) is
+        begin
+          if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Trim (Safe_Var_T.Get'Img, Both)),
+                                                 Get => null,
+                                                 Set => null));
+          else CVars.Delete (Name); end if;
+        end;
+      Controller : Control_State;
 
       -- Internal protected type to maintain task safety
-      protected type Safe_Var_T with Lock_Free is
-          procedure Set (Val : Var_T);
-          function Get  return Var_T;
+      protected Safe_Var_T with Lock_Free is
+          function Get return Var_T is (Current);
+          procedure Set (Val : Var_T) is begin Current := Val; end;
         private
           Current : Var_T;
         end;
-      protected body Safe_Var_T is
-          function Get return Var_T is (Current);
-          procedure Set (Val : Var_T) is begin Current := Val; end;
-        end;
-      This : Safe_Var_T;
 
       -- Get
-      function Get return Var_T is (This.Get);
+      function Get return Var_T is (Safe_Var_T.Get);
       function Handle_Get return Str is
         Vals : Str_Unbound := To_Str_Unbound (Trim (Var_T'First'Img, Both));
         begin
@@ -142,13 +148,11 @@ package body Neo.Core.Console is
               Vals := Vals & ", " & To_Str_Unbound (Trim (I'Img, Both));
             end loop;
           end if;
-          return Help & EOL &
-                 "Current value: " & To_Str (Trim (This.Get'Img, Both)) & EOL &
-                 "Possible values: " & To_Str (Vals);
+          return Help & EOL & "Current value: " & To_Str (Trim (Safe_Var_T.Get'Img, Both)) & EOL & "Possible values: " & To_Str (Vals);
         end;
 
       -- Set
-      procedure Set (Val : Var_T) is begin This.Set (Val); end;
+      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
       procedure Handle_Set (Val : Str) is
         begin
           if not Settable then
@@ -167,31 +171,6 @@ package body Neo.Core.Console is
             end if;
           end loop;
         end;
-
-      -- Initialization and finalization
-      procedure Initialize (Control : in out Control_State) is
-        begin
-          if Commands.Has (Name) then
-            if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
-            CVars.Replace (Name, (Val => CVars.Get (Name).Val,
-                                  Get => Handle_Get'Unrestricted_Access,
-                                  Set => Handle_Set'Unrestricted_Access));
-            Handle_Set (To_Str (CVars.Get (Name).Val));
-          else
-            CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
-                                 Get => Handle_Get'Unrestricted_Access,
-                                 Set => Handle_Set'Unrestricted_Access));
-            Set (Initial);
-          end if;
-        end;
-      procedure Finalize (Control : in out Control_State) is
-        begin
-          if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Trim (This.Get'Img, Both)),
-                                                 Get => null,
-                                                 Set => null));
-          else CVars.Delete (Name); end if;
-        end;
-      Control : Control_State;
     end;
 
   -------------
@@ -201,20 +180,20 @@ package body Neo.Core.Console is
   package body Command is
       Duplicate, Parse : Exception;
 
+      -- Callback is a generic formal so a rename needs to be present to pass out function pointers
+      procedure Informal (Args : Array_Str_Unbound) renames Callback; 
+
       -- Controller
       type Control_State is new Controlled with null record;
       procedure Finalize   (Control : in out Control_State);
       procedure Initialize (Control : in out Control_State);
-
-      -- Initialization and finalization
-      procedure Informal   (Args : Array_Str_Unbound) renames Callback;
       procedure Finalize   (Control : in out Control_State) is begin Commands.Delete (Name); end;
       procedure Initialize (Control : in out Control_State) is
         begin
           if Commands.Has (Name) then raise Duplicate; end if;
           Commands.Insert (Name, (Informal'Unrestricted_Access, Save));
         end;
-      Control : Control_State;
+      Controller : Control_State;
     end;
 
   -- Input entry parsing
@@ -245,10 +224,9 @@ package body Neo.Core.Console is
   ------------------
 
   -- Data types
-  package Hashed_Language is new Hashed (Str_Unbound); -- An english text string acts as a key to other languages
-  package Hashed_Locale   is new Hashed (Hashed_Language.Unsafe.Map);
-  use Hashed_Locale.Unsafe; use Hashed_Language.Unsafe;
-
+  package Hashed_Language is new Hashed (Str_Unbound);                use Hashed_Language.Unsafe;
+  package Hashed_Locale   is new Hashed (Hashed_Language.Unsafe.Map); use Hashed_Locale.Unsafe; 
+  
   -- Initialization
   function Initialize_Localization return Hashed_Locale.Unsafe.Map is
     function Split_Columns (Text : Str) return Vector_Str_Unbound.Unsafe.Vector is
@@ -257,16 +235,16 @@ package body Neo.Core.Console is
         return Result;
       end;
     package Hashed_Indexes is new Hashed (Positive);
-    ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
+    J         : Int  := 1;
     In_Quote  : Bool := False;
     In_Column : Bool := True;
-    J         : Int  := 1;
-    Column    : Str_Unbound;
     Data      : File_Type;
+    Column    : Str_Unbound;
     Indexes   : Hashed_Indexes.Unsafe.Map;
     Locales   : Hashed_Locale.Unsafe.Map;
     Language  : Hashed_Language.Unsafe.Map;
     Entries   : Vector_Str_Unbound.Unsafe.Vector;
+    ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
     begin
       Open (Data, In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
       for I of Split (Get_Line (Data), ",") loop
@@ -277,21 +255,23 @@ package body Neo.Core.Console is
       while not End_Of_File (Data) loop
         for I of Get_Line (Data) loop
           case I is
-            when '"' => if not In_Quote then
-                          Column   := NULL_STR_UNBOUND;
-                          In_Quote := True;
-                        else
-                          Entries.Append (Column);
-                          Column    := NULL_STR_UNBOUND;
-                          In_Quote  := False;
-                          In_Column := False;
-                        end if;
-            when ',' => if In_Quote then Column := Column & I;
-                        elsif not In_Column then In_Column := True;
-                        else
-                          Entries.Append (Trim (Column, Both));
-                          Column := NULL_STR_UNBOUND;
-                        end if;
+            when '"' =>
+              if not In_Quote then
+                Column   := NULL_STR_UNBOUND;
+                In_Quote := True;
+              else
+                Entries.Append (Column);
+                Column    := NULL_STR_UNBOUND;
+                In_Quote  := False;
+                In_Column := False;
+              end if;
+            when ',' =>
+              if In_Quote then Column := Column & I;
+              elsif not In_Column then In_Column := True;
+              else
+                Entries.Append (Trim (Column, Both));
+                Column := NULL_STR_UNBOUND;
+              end if;
             when others => Column := Column & I;
           end case;
         end loop;
@@ -309,7 +289,7 @@ package body Neo.Core.Console is
     exception when others => return Locales; end;
 
   -- Initalized data
-  LOCALE : Hashed_Locale.Unsafe.Map; -- constant Hashed_Locale.Unsafe.Map := Initialize_Localization;
+  LOCALE : constant Hashed_Locale.Unsafe.Map := Initialize_Localization;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
@@ -327,16 +307,14 @@ package body Neo.Core.Console is
   -- Configuration --
   -------------------
 
-  -- Forward declarations to add finalization via a "controller"
+  -- Controller
   type Control_State is new Controlled with null record;
-  procedure Finalize   (Control : in out Control_State);
   procedure Initialize (Control : in out Control_State);
-
-  -- Setup and shutdown
+  procedure Finalize   (Control : in out Control_State);
   procedure Initialize (Control : in out Control_State) is
-    -- package Parse_Config is new Parser (PATH_CONFIG, "--"); use Parse_Config;
+    package Parse_Config is new Parser (PATH_CONFIG, "--"); use Parse_Config;
     begin
-      null; -- while not At_EOF loop Submit (Next_Line); end loop;
+      while not At_EOF loop Submit (Next_Line); end loop;
     exception when others => null; end; -- There is no configuration file.. automatically use defaults
   procedure Finalize (Control : in out Control_State) is
     Data : File_Type;
@@ -364,7 +342,5 @@ package body Neo.Core.Console is
       end loop;
       Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
-
-  -- Instance of the "controller" to trigger controlled actions
   Controller : Control_State;
 end;

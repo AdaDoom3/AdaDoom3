@@ -14,24 +14,26 @@
 --                                                                                                                                      --
 
 with Ada.Locales;      use Ada.Locales;
-with Ada.Wide_Text_IO; use Ada.Wide_Text_IO; 
-with Ada.Finalization; use Ada.Finalization;
 with Neo.Core.Arrays;  use Neo.Core.Arrays;
-with Neo.Core.Hashed;  use Neo.Core;
-with Neo.Data;         use Neo.Data; -- Necessary ??? It violates the layer organization
+with Neo.Core.Strings; use Neo.Core.Strings;
+with Neo.Core.Hashed;
 
+-- Task safe IO and console interfacing types
 package Neo.Core.Console is
+
+  -- Submission and query of commands and cvars
+  procedure Submit      (Text : Str);
+  function Autocomplete (Text : Str) return Array_Str_Unbound;
 
   --------
   -- IO --
   --------
 
-  -- Task safe input and output
   function Lines                     return Int_64_Unsigned;
   function Log                       return Str;
   function Input_Entry               return Str;
   function Line_Size                 return Positive;
-  function Localize     (Item : Str) return Str;
+  function Localize     (Item : Str) return Str; -- An english text string acts as a key to other languages
   procedure Put         (Item : Str_Unbound);
   procedure Put         (Item : Char);                  
   procedure Put         (Item : Str);
@@ -41,11 +43,7 @@ package Neo.Core.Console is
   procedure Line_Size   (Val  : Positive);
   procedure Input_Entry (Val  : Str);
   procedure Set_Put     (Val  : Ptr_Procedure_Put);
-  procedure Use_Ada_Put;
-
-  -- Commandline submission
-  procedure Submit      (Text : Str);
-  function Autocomplete (Text : Str) return Array_Str_Unbound;
+  procedure Use_Ada_Put; -- For debugging purposes, using this may crash if compiled in non-debugging mode
 
   -------------
   -- Command --
@@ -104,8 +102,28 @@ package Neo.Core.Console is
     type Var_T is (<>);
     Initial  : Var_T := Var_T'First;
     Settable : Bool  := True;
-  package CVar is
+  package CVar_Discrete is
       procedure Set (Val : Var_T);
       function Get return Var_T;
-    end; 
+    end;
+
+  generic
+    Name     : Str;
+    Help     : Str;
+    Initial  : Str  := "unknown";
+    Settable : Bool := True;
+  package CVar_String is
+      procedure Set (Val : Str);
+      function Get return Str;
+    end;
+
+  generic
+    Name     : Str;
+    Help     : Str;
+    Initial  : Real_64 := 0.0;
+    Settable : Bool    := True;
+  package CVar_Real is
+      procedure Set (Val : Real_64);
+      function Get return Real_64;
+    end;
 end;

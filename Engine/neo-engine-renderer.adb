@@ -64,6 +64,38 @@ separate (Neo.Engine) package body Renderer is
   Memory_Properties    : aliased VkPhysicalDeviceMemoryProperties := (others => <>);
   Surface_Format       : aliased VkSurfaceFormatKHR               := (others => <>);
 
+  -- Shader uniform globals. These must match up to the data structure in Shaders/globals.glsl
+  type Global_State is record
+      MVP                      : Matrix_4D := (others => <>);
+      Model                    : Matrix_4D := (others => <>);
+      Projection               : Matrix_4D := (others => <>);
+      Model_View               : Matrix_4D := (others => <>);
+      Texture_0                : Matrix_4D := (others => <>); -- S, T, Q, Enabled
+      Texture_1                : Matrix_4D := (others => <>); -- S, T, Q, Enabled
+      Light_Projection         : Matrix_3D := (others => <>); -- S, T, Q
+      Bump                     : Matrix_2D := (others => <>); -- S, T
+      Diffuse                  : Matrix_2D := (others => <>); -- S, T
+      Specular                 : Matrix_2D := (others => <>); -- S, T
+      Texture                  : Matrix_2D := (others => <>); -- S, T
+      Light_Falloff            : Vector_4D := (others => <>); -- S
+      Screen_Correction_Factor : Vector_4D := (others => <>);
+      Window_Coordinate        : Vector_4D := (others => <>);
+      Diffuse_Modifier         : Vector_4D := (others => <>);
+      Specular_Modifier        : Vector_4D := (others => <>);
+      Color                    : Vector_4D := (others => <>);
+      View_Origin              : Vector_4D := (others => <>);
+      Global_Eye_Position      : Vector_4D := (others => <>);
+      Vertex_Color_Modulate    : Vector_4D := (others => <>);
+      Vertex_Color_Add         : Vector_4D := (others => <>);
+      Local_Light_Origin       : Vector_4D := (others => <>);
+      Local_View_Origin        : Vector_4D := (others => <>);
+      Overbright               : Vector_4D := (others => <>);
+      Enable_Skinning          : Vector_4D := (others => <>);
+      Alpha_Test               : Vector_4D := (others => <>);
+    end record with Convention => C;
+
+  Globals : Global_State := (others => <>);
+
   --------------------
   -- Command_Buffer --
   --------------------
@@ -77,8 +109,12 @@ separate (Neo.Engine) package body Renderer is
 
   -- Controlled primatives
   procedure Initialize (Command_Buffer : in out Command_Buffer_State) is
-      Begin_Info    : aliased VkCommandBufferBeginInfo    := (flags              => VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
-                                                              others             => <>);
+
+      -- 
+      Begin_Info : aliased VkCommandBufferBeginInfo := (flags  => VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+                                                        others => <>);
+
+      -- 
       Allocate_Info : aliased VkCommandBufferAllocateInfo := (level              => VK_COMMAND_BUFFER_LEVEL_PRIMARY,
                                                               commandPool        => Command_Pool
                                                               commandBufferCount => 1,
@@ -98,141 +134,141 @@ separate (Neo.Engine) package body Renderer is
       vkFreeCommandBuffers (Device, Command_Pool 1, Command_Buffer'Unchecked_Access);
     end;
 
-  -- -----------
-  -- -- Image --
-  -- -----------
+  -----------
+  -- Image --
+  -----------
 
-  -- -- Controller
-  -- type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
-  --     Properties : Int_32_Unsigned_C;
-  --     Layout     : Int_32_Unsigned_C;
-  --     Data       : Ptr;
-  --   end record;
-  -- procedure Initialize (Image : in out Image_State);
-  -- procedure Finalize   (Image : in out Image_State);
+  -- Controller
+  type Image_State (Width, Height, Tiling, Usage, Properties : Int_32_Unsigned_C) is new Controlled with record
+      Properties : Int_32_Unsigned_C;
+      Layout     : Int_32_Unsigned_C;
+      Data       : Ptr;
+    end record;
+  procedure Initialize (Image : in out Image_State);
+  procedure Finalize   (Image : in out Image_State);
 
-  -- -- Copy used for staging
-  -- function Copy (Image : in out Image_State) return Image_State is
-  --   Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
-  --   Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
-  --                                                         baseArrayLayer => 0,
-  --                                                         mipLevel       => 0,
-  --                                                         layerCount     => 1,
-  --                                                         others         => <>);
-  --   Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
-  --                                                         dstSubresource => Subresource,
-  --                                                         srcOffset      => (0, 0, 0),
-  --                                                         dstOffset      => (0, 0, 0),
-  --                                                         extent         => (Width, Height, depth => 1),
-  --                                                         others         => <>);
-  --   begin
-  --     Begin_Commands (Command_Buffer);
-  --     vkCmdCopyImage (commandBuffer  => Command_Buffer,
-  --                     srcImage       => Image,
-  --                     srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-  --                     dstImage       => Result,
-  --                     dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-  --                     regionCount    => 1,
-  --                     pRegions       => Image_Copy'Unchecked_Access);
-  --     End_Commands (Command_Buffer);
-  --     return Result;
-  --   end;
+  -- Copy used for staging
+  function Copy (Image : in out Image_State) return Image_State is
+    Command_Buffer : aliased VkCommandBuffer          := (others         => <>); 
+    Subresource    : aliased VkImageSubresourceLayers := (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
+                                                          baseArrayLayer => 0,
+                                                          mipLevel       => 0,
+                                                          layerCount     => 1,
+                                                          others         => <>);
+    Image_Copy     : aliased VkImageCopy              := (srcSubresource => Subresource,
+                                                          dstSubresource => Subresource,
+                                                          srcOffset      => (0, 0, 0),
+                                                          dstOffset      => (0, 0, 0),
+                                                          extent         => (Width, Height, depth => 1),
+                                                          others         => <>);
+    begin
+      Begin_Commands (Command_Buffer);
+      vkCmdCopyImage (commandBuffer  => Command_Buffer,
+                      srcImage       => Image,
+                      srcImageLayout => VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                      dstImage       => Result,
+                      dstImageLayout => VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                      regionCount    => 1,
+                      pRegions       => Image_Copy'Unchecked_Access);
+      End_Commands (Command_Buffer);
+      return Result;
+    end;
  
-  -- -- Grab a view 
-  -- function Make_View (Image : in out Image_State) return ___ is
-  --   Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
-  --                                                                            baseMipLevel   => 0,
-  --                                                                            levelCount     => 1,
-  --                                                                            baseArrayLayer => 0,
-  --                                                                            layerCount     => 1,
-  --                                                                            others         => <>),
-  --                                                       image            => image,
-  --                                                       viewType         => VK_IMAGE_VIEW_TYPE_2D,
-  --                                                       format           => format,
-  --                                                       others           => <>);
-  --   begin
-  --     vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
-  --     return Result;
-  --   end;
+  -- Grab a view 
+  function Make_View (Image : in out Image_State) return Ptr is
+    Image_View_Info : aliased VkImageViewCreateInfo := (subresourceRange => (aspectMask     => aspectFlags,
+                                                                             baseMipLevel   => 0,
+                                                                             levelCount     => 1,
+                                                                             baseArrayLayer => 0,
+                                                                             layerCount     => 1,
+                                                                             others         => <>),
+                                                        image            => image,
+                                                        viewType         => VK_IMAGE_VIEW_TYPE_2D,
+                                                        format           => format,
+                                                        others           => <>);
+    begin
+      vkAssert (vkCreateImageView(Device, &viewInfo, null, imageView.replace)))
+      return Result;
+    end;
 
-  -- -- Controlled primatives
-  -- procedure Initialize (Image : in out Image_State) is
-  --   Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
-  --   Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
-  --                                                          extent         => (width, height, depth => 1),
-  --                                                          mipLevels      => 1,
-  --                                                          arrayLayers    => 1,
-  --                                                          format         => format,
-  --                                                          tiling         => tiling,
-  --                                                          initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
-  --                                                          usage          => usage,
-  --                                                          samples        => VK_SAMPLE_COUNT_1_BIT,
-  --                                                          sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
-  --                                                          others         => <>);
-  --   Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
-  --                                                          others         => <>);
-  --   begin
-  --     vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
-  --     vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
-  --     vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
-  --     vkBindImageMemory (Device, image, imageMemory, 0);
-  --   end;
-  -- procedure Finalize (Image : in out Image_State) is
-  --   begin
-  --     null;
-  --   end;
-  -- procedure Adjust (Image : in out Image_State) is
-  --   Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
-  --   Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
-  --                                                     newLayout           => newLayout,
-  --                                                     srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-  --                                                     dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-  --                                                     image               => image);
-  --   begin
+  -- Controlled primatives
+  procedure Initialize (Image : in out Image_State) is
+    Memory_Requirements : aliased VkMemoryRequirements := (others         => <>);
+    Image_Info          : aliased VkImageCreateInfo    := (imageType      => VK_IMAGE_TYPE_2D,
+                                                           extent         => (width, height, depth => 1),
+                                                           mipLevels      => 1,
+                                                           arrayLayers    => 1,
+                                                           format         => format,
+                                                           tiling         => tiling,
+                                                           initialLayout  => VK_IMAGE_LAYOUT_PREINITIALIZED,
+                                                           usage          => usage,
+                                                           samples        => VK_SAMPLE_COUNT_1_BIT,
+                                                           sharingMode    => VK_SHARING_MODE_EXCLUSIVE,
+                                                           others         => <>);
+    Allocate_Info      : aliased VkMemoryAllocateInfo  := (allocationSize => Memory_Requirements.size,
+                                                           others         => <>);
+    begin
+      vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, image.replace));
+      vkGetImageMemoryRequirements (Device, image, Memory_Requirements'Unchecked_Access);
+      vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, imageMemory.replace)
+      vkBindImageMemory (Device, image, imageMemory, 0);
+    end;
+  procedure Finalize (Image : in out Image_State) is
+    begin
+      null;
+    end;
+  procedure Adjust (Image : in out Image_State) is
+    Command_Buffer : aliased VkCommandBuffer      := (others              => <>); 
+    Barrier        : aliased VkImageMemoryBarrier := (oldLayout           => oldLayout,
+                                                      newLayout           => newLayout,
+                                                      srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                      image               => image);
+    begin
 
-  --     -- ???
-  --     if newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-  --       Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
-  --       if format := VK_FORMAT_D32_SFLOAT_S8_UINT or format := VK_FORMAT_D24_UNORM_S8_UINT then
-  --         Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
-  --       end if;
-  --     else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
+      -- ???
+      if newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+        Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
+        if format := VK_FORMAT_D32_SFLOAT_S8_UINT or format := VK_FORMAT_D24_UNORM_S8_UINT then
+          Barrier.subresourceRange.aspectMask := Barrier.subresourceRange.aspectMask or VK_IMAGE_ASPECT_STENCIL_BIT;
+        end if;
+      else Barrier.subresourceRange.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT; end if;
 
-  --     -- ???
-  --     Barrier.subresourceRange.baseMipLevel   := 0;
-  --     Barrier.subresourceRange.levelCount     := 1;
-  --     Barrier.subresourceRange.baseArrayLayer := 0;
-  --     Barrier.subresourceRange.layerCount     := 1;
+      -- ???
+      Barrier.subresourceRange.baseMipLevel   := 0;
+      Barrier.subresourceRange.levelCount     := 1;
+      Barrier.subresourceRange.baseArrayLayer := 0;
+      Barrier.subresourceRange.layerCount     := 1;
 
-  --     -- Set new image layout
-  --     if oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
-  --     elsif oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-  --     elsif oldLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout := VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
-  --       Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
-  --       Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
-  --     elsif oldLayout := VK_IMAGE_LAYOUT_UNDEFINED and newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
-  --       Barrier.srcAccessMask := 0;
-  --       Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-  --     else raise Program_Error with "Unknown image layout transition?!"; end if;
+      -- Set new image layout
+      if oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_READ_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_PREINITIALIZED and newLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_HOST_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and newLayout := VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL then
+        Barrier.srcAccessMask := VK_ACCESS_TRANSFER_WRITE_BIT;
+        Barrier.dstAccessMask := VK_ACCESS_SHADER_READ_BIT;
+      elsif oldLayout := VK_IMAGE_LAYOUT_UNDEFINED and newLayout := VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL then
+        Barrier.srcAccessMask := 0;
+        Barrier.dstAccessMask := VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT or VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+      else raise Program_Error with "Unknown image layout transition?!"; end if;
 
-  --     -- Send transition commands
-  --     Begin_Commands (Command_Buffer);
-  --     vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
-  --                           srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-  --                           dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-  --                           dependencyFlags          => 0,
-  --                           memoryBarrierCount       => 0,
-  --                           pMemoryBarriers          => null,
-  --                           bufferMemoryBarrierCount => 0,
-  --                           pBufferMemoryBarriers    => null,
-  --                           imageMemoryBarrierCount  => 1,
-  --                           pImageMemoryBarriers     => Barrier);
-  --     End_Commands (Command_Buffer);
-  --   end;
+      -- Send transition commands
+      Begin_Commands (Command_Buffer);
+      vkCmdPipelineBarrier (commandBuffer            => Command_Buffer,
+                            srcStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                            dstStageMask             => VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                            dependencyFlags          => 0,
+                            memoryBarrierCount       => 0,
+                            pMemoryBarriers          => null,
+                            bufferMemoryBarrierCount => 0,
+                            pBufferMemoryBarriers    => null,
+                            imageMemoryBarrierCount  => 1,
+                            pImageMemoryBarriers     => Barrier);
+      End_Commands (Command_Buffer);
+    end;
 
   -------------
   -- Texture --
@@ -247,9 +283,9 @@ separate (Neo.Engine) package body Renderer is
   -- Controlled primatives
   procedure Initialize (Texture : in out Texture_State) is
     Subresource : aliased VkImageSubresource := (aspectMask := VK_IMAGE_ASPECT_COLOR_BIT;
-                                                mipLevel := 0;
-                                                arrayLayer := 0;
-                                                others => <>);
+                                                 mipLevel := 0;
+                                                 arrayLayer := 0;
+                                                 others => <>);
     VkSubresourceLayout stagingImageLayout;
     vkGetImageSubresourceLayout(Device, stagingImage, &subresource, &stagingImageLayout);
     void* data;
@@ -572,39 +608,39 @@ separate (Neo.Engine) package body Renderer is
                                                               others       => <>);
 
 
-    -- -- 
-    -- Allocate_Info : aliased VkDescriptorSetAllocateInfo := (descriptorPool     => Pool_Info,
-    --                                                         descriptorSetCount => 1,
-    --                                                         pSetLayouts        => Layout_Info,
-    --                                                         others             => <>);
+    -- 
+    Allocate_Info : aliased VkDescriptorSetAllocateInfo := (descriptorPool     => Pool_Info,
+                                                            descriptorSetCount => 1,
+                                                            pSetLayouts        => Layout_Info,
+                                                            others             => <>);
 
-    -- -- 
-    -- Buffer_Info : aliased VkDescriptorBufferInfo := (buffer    => uniformBuffer,
-    --                                                  offset    => 0,
-    --                                                  rangeSize => sizeof(UniformBufferObject),
-    --                                                  others    => <>);
+    -- 
+    Buffer_Info : aliased VkDescriptorBufferInfo := (buffer    => uniformBuffer,
+                                                     offset    => 0,
+                                                     rangeSize => sizeof(UniformBufferObject),
+                                                     others    => <>);
 
-    -- -- 
-    -- Image_Info : aliased VkDescriptorImageInfo := (imageLayout => VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-    --                                                imageView   =>  ,
-    --                                                sampler     => textureSampler,
-    --                                                others      => <>);
+    -- 
+    Image_Info : aliased VkDescriptorImageInfo := (imageLayout => VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                                                   imageView   =>  ,
+                                                   sampler     => textureSampler,
+                                                   others      => <>);
 
-    -- -- 
-    -- Write_Set : aliased array VkWriteDescriptorSet := ((dstSet          => descriptorSet,
-    --                                                     dstBinding      => 0,
-    --                                                     dstArrayElement => 0,
-    --                                                     descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-    --                                                     descriptorCount => 1,
-    --                                                     pBufferInfo     => &bufferInfo),
-    --                                                     others          => <>),
-    --                                                    (dstSet          => descriptorSet,
-    --                                                     dstBinding      => 1,
-    --                                                     dstArrayElement => 0,
-    --                                                     descriptorType  => VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-    --                                                     descriptorCount => 1,
-    --                                                     pImageInfo      => imageInfo'Unchecked_Access,
-    --                                                     others          => <>));
+    -- 
+    Write_Set : aliased array VkWriteDescriptorSet := ((dstSet          => descriptorSet,
+                                                        dstBinding      => 0,
+                                                        dstArrayElement => 0,
+                                                        descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                        descriptorCount => 1,
+                                                        pBufferInfo     => &bufferInfo),
+                                                        others          => <>),
+                                                       (dstSet          => descriptorSet,
+                                                        dstBinding      => 1,
+                                                        dstArrayElement => 0,
+                                                        descriptorType  => VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                        descriptorCount => 1,
+                                                        pImageInfo      => imageInfo'Unchecked_Access,
+                                                        others          => <>));
     begin
 
       -- Load driver
@@ -784,13 +820,17 @@ separate (Neo.Engine) package body Renderer is
 
   -- Recreate the swapchain among other things
   procedure Update is
-    -- Count                  : aliased Int_32_Unsigned_C                      := 0;
-    -- Pre_Transform          : aliased Int_32_Unsigned_C                      := 0;
-    -- Setup_Buffer           : aliased Ptr                                    := null;
 
-    -- Vertex_Shader_Model    : aliased VkShaderModule                         := Load_Shader ("shaders/vert.spv");
-    -- Fragment_Shader_Model  : aliased VkShaderModule                         := Load_Shader ("shaders/frag.spv");
-    -- Begin_Info             : aliased VkCommandBufferBeginInfo               := (others                  => <>);
+    -- 
+    Count                  : aliased Int_32_Unsigned_C                      := 0;
+    Pre_Transform          : aliased Int_32_Unsigned_C                      := 0;
+    Setup_Buffer           : aliased Ptr                                    := null;
+    Vertex_Shader_Model    : aliased VkShaderModule                         := Load_Shader ("shaders/vert.spv");
+    Fragment_Shader_Model  : aliased VkShaderModule                         := Load_Shader ("shaders/frag.spv");
+    Begin_Info             : aliased VkCommandBufferBeginInfo               := (others                  => <>);
+    Frame_Buffer           : aliased VkFramebufferCreateInfo := (others => <>);
+    Offsets                : aliased array VkDeviceSize                     := (0);
+    Vertex_Buffers         : aliased array VkBuffer                         := (vertexBuffer);
 
     -- 
     Swap_Chain_Info : aliased VkSwapchainCreateInfoKHR := (flags  => VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
@@ -864,104 +904,139 @@ separate (Neo.Engine) package body Renderer is
                                                          others        => <>);
 
     -- 
-    -- Attachments            : aliased Array_VkAttachmentDescription          := (colorAttachment, depthAttachment);
-    -- Render_Pass_Info       : aliased VkRenderPassCreateInfo                 := (attachmentCount         => attachments.size,
-    --                                                                             pAttachments            => attachments.data,
-    --                                                                             subpassCount            => 1,
-    --                                                                             pSubpasses              => &subpass,
-    --                                                                             dependencyCount         => 1,
-    --                                                                             pDependencies           => &dependency,
-    --                                                                             others                  => <>);
-    -- Vertex_Stage_Info      : aliased VkPipelineShaderStageCreateInfo        := (stage                   => VK_SHADER_STAGE_VERTEX_BIT,
-    --                                                                             module                  => Vertex_Shader_Model,
-    --                                                                             pName                   => "main",
-    --                                                                             others                  => <>);
-    -- Fragment_Stage_Info    : aliased VkPipelineShaderStageCreateInfo        := (stage                   => VK_SHADER_STAGE_FRAGMENT_BIT,
-    --                                                                             module                  => fragShaderModule,
-    --                                                                             pName                   => "main",
-    --                                                                             others                  => <>);
-    -- Shader_Stages_Info     : aliased VkPipelineShaderStageCreateInfo        := (vertShaderStageInfo, fragShaderStageInfo);
-    -- Vertex_Input_Info      : aliased VkPipelineVertexInputStateCreateInfo   := (vertexBindingCount      => 1,
-    --                                                                             vertexAttributeCount    => Vertex::getAttributeDescriptions;.size,
-    --                                                                             pVertexBindingDesc      => &Vertex::getBindingDescription;,
-    --                                                                             pVertexAttributeDesc    => Vertex::getAttributeDescriptions;.data,
-    --                                                                             others                  => <>);
-    -- Input_Assembly_Info    : aliased VkPipelineInputAssemblyStateCreateInfo := (topology                => VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-    --                                                                             primitiveRestartEnable  => 0,
-    --                                                                             others                  => <>);
-    -- Viewport               : aliased VkViewport                             := (x                       => 0.0,
-    --                                                                             y                       => 0.0,
-    --                                                                             width                   => Real_C (swapChainExtent.width),
-    --                                                                             height                  => Real_C (swapChainExtent.height),
-    --                                                                             minDepth                => 0.0,
-    --                                                                             maxDepth                => 1.0,
-    --                                                                             others                  => <>);
-    -- Scissor                : aliased VkRect2D                               := (offset                  => (0, 0),
-    --                                                                             extent                  => swapChainExtent,
-    --                                                                             others                  => <>);
-    -- Viewport_State_Info    : aliased VkPipelineViewportStateCreateInfo      := (viewportCount           => 1,
-    --                                                                             pViewports              => &viewport,
-    --                                                                             scissorCount            => 1,
-    --                                                                             pScissors               => &scissor,
-    --                                                                             others                  => <>);
-    -- Rasterizer_Info        : aliased VkPipelineRasterizationStateCreateInfo := (depthClampEnable        => 0,
-    --                                                                             rasterizerDiscardEnable => 0,
-    --                                                                             polygonMode             => VK_POLYGON_MODE_FILL,
-    --                                                                             lineWidth               => 1.0,
-    --                                                                             cullMode                => VK_CULL_MODE_BACK_BIT,
-    --                                                                             frontFace               => VK_FRONT_FACE_COUNTER_CLOCKWISE,
-    --                                                                             depthBiasEnable         => 0,
-    --                                                                             others                  => <>);
-    -- Multisample_Info       : aliased VkPipelineMultisampleStateCreateInfo   := (sampleShadingEnable     => 0,
-    --                                                                             rasterizationSamples    => VK_SAMPLE_COUNT_1_BIT,
-    --                                                                             others                  => <>);
-    -- Depth_Stencil_Info     : aliased VkPipelineDepthStencilStateCreateInfo  := (depthTestEnable         => 1,
-    --                                                                             depthWriteEnable        => 1,
-    --                                                                             depthCompareOp          => VK_COMPARE_OP_LESS,
-    --                                                                             depthBoundsTestEnable   => 0,
-    --                                                                             stencilTestEnable       => 0,
-    --                                                                             others                  => <>);
-    -- Color_Blend_Attachment : aliased VkPipelineColorBlendAttachmentState    := (blendEnable             => 0
-    --                                                                             colorWriteMask          => VK_COLOR_COMPONENT_R_BIT or VK_COLOR_COMPONENT_G_BIT or
-    --                                                                                                        VK_COLOR_COMPONENT_B_BIT or VK_COLOR_COMPONENT_A_BIT,
-    --                                                                             others                  => <>);
-    -- Color_Blend_Info       : aliased VkPipelineColorBlendStateCreateInfo    := (logicOpEnable           => 0,
-    --                                                                             logicOp                 => VK_LOGIC_OP_COPY,
-    --                                                                             attachmentCount         => 1,
-    --                                                                             pAttachments            => &colorBlendAttachment,
-    --                                                                             blendConstants          => (others => 0.0),
-    --                                                                             others                  => <>);
-    -- Descriptor_Set_Layout  : aliased VkDescriptorSetLayout                  := (descriptorSetLayout); -- ???
-    -- Pipeline_Layout_Info   : aliased VkPipelineLayoutCreateInfo             := (setLayoutCount          => 1,
-    --                                                                             pSetLayouts             => setLayouts,
-    --                                                                             others                  => <>);
-    -- Pipeline_Info          : aliased VkGraphicsPipelineCreateInfo           := (stageCount              => 2,
-    --                                                                             pStages                 => shaderStages,
-    --                                                                             pVertexInputState       => &vertexInputInfo,
-    --                                                                             pInputAssemblyState     => &inputAssembly,
-    --                                                                             pViewportState          => &viewportState,
-    --                                                                             pRasterizationState     => &rasterizer,    2
-    --                                                                             pMultisampleState       => &multisampling,
-    --                                                                             pDepthStencilState      => &depthStencil,
-    --                                                                             pColorBlendState        => &colorBlending,
-    --                                                                             layout                  => pipelineLayout,
-    --                                                                             renderPass              => renderPass,
-    --                                                                             subpass                 => 0,
-    --                                                                             basePipelineHandle      => VK_NULL_HANDLE,
-    --                                                                             others                  => <>);
-    -- Frame_Buffer           : aliased VkFramebufferCreateInfo                := (others                  => <>);
-    -- Render_Pass_Begin_Info : aliased VkRenderPassBeginInfo                  := (renderArea              => (offset => (0, 0), extent => swapChainExtent),
-    --                                                                             others                  => <>);
-    -- Allocate_Info          : aliased VkCommandBufferAllocateInfo            := (commandPool             => commandPool;
-    --                                                                             level                   => VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    --                                                                             commandBufferCount      => (uint32_t) commandBuffers.size; 
-    --                                                                             others                  => <>);
-    -- Clear_Values           : aliased Array_VkClearValue                     := ((color                  => (0.0, 0.0, 0.0, 1.0),
-    --                                                                              others                 => <>),
-    --                                                                             (depthStencil           => (1.0, 0.0),
-    --                                                                              others                 => <>));
-    -- Vertex_Buffers         : aliased array VkBuffer                         := (vertexBuffer);
-    -- Offsets                : aliased array VkDeviceSize                     := (0);
+    Attachments : aliased Array_VkAttachmentDescription := (colorAttachment, depthAttachment);
+
+    -- 
+    Render_Pass_Info : aliased VkRenderPassCreateInfo := (attachmentCount => attachments.size,
+                                                          pAttachments    => attachments.data,
+                                                          subpassCount    => 1,
+                                                          pSubpasses      => &subpass,
+                                                          dependencyCount => 1,
+                                                          pDependencies   => &dependency,
+                                                          others          => <>);
+
+    -- 
+    Vertex_Stage_Info : aliased VkPipelineShaderStageCreateInfo := (stage  => VK_SHADER_STAGE_VERTEX_BIT,
+                                                                    module => Vertex_Shader_Model,
+                                                                    pName  => "main",
+                                                                    others => <>);
+
+    -- 
+    Fragment_Stage_Info : aliased VkPipelineShaderStageCreateInfo := (stage  => VK_SHADER_STAGE_FRAGMENT_BIT,
+                                                                      module => fragShaderModule,
+                                                                      pName  => "main",
+                                                                      others => <>);
+
+    -- 
+    Shader_Stages_Info : aliased VkPipelineShaderStageCreateInfo := (vertShaderStageInfo, fragShaderStageInfo);
+
+    -- 
+    Vertex_Input_Info : aliased VkPipelineVertexInputStateCreateInfo := (vertexBindingCount   => 1,
+                                                                         vertexAttributeCount => Vertex::getAttributeDescriptions;.size,
+                                                                         pVertexBindingDesc   => &Vertex::getBindingDescription;,
+                                                                         pVertexAttributeDesc => Vertex::getAttributeDescriptions;.data,
+                                                                         others               => <>);
+
+    --
+    Input_Assembly_Info : aliased VkPipelineInputAssemblyStateCreateInfo := (topology               => VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+                                                                             primitiveRestartEnable => 0,
+                                                                             others                 => <>);
+
+    -- 
+    Viewport : aliased VkViewport := (x        => 0.0,
+                                      y        => 0.0,
+                                      width    => Real_C (swapChainExtent.width),
+                                      height   => Real_C (swapChainExtent.height),
+                                      minDepth => 0.0,
+                                      maxDepth => 1.0,
+                                      others   => <>);
+
+    -- 
+    Scissor : aliased VkRect2D := (offset => (0, 0),
+                                   extent => swapChainExtent,
+                                   others => <>);
+
+    -- 
+    Viewport_State_Info : aliased VkPipelineViewportStateCreateInfo := (viewportCount => 1,
+                                                                        pViewports    => &viewport,
+                                                                        scissorCount  => 1,
+                                                                        pScissors     => &scissor,
+                                                                        others        => <>);
+
+    -- 
+    Rasterizer_Info : aliased VkPipelineRasterizationStateCreateInfo := (depthClampEnable        => 0,
+                                                                         rasterizerDiscardEnable => 0,
+                                                                         polygonMode             => VK_POLYGON_MODE_FILL,
+                                                                         lineWidth               => 1.0,
+                                                                         cullMode                => VK_CULL_MODE_BACK_BIT,
+                                                                         frontFace               => VK_FRONT_FACE_COUNTER_CLOCKWISE,
+                                                                         depthBiasEnable         => 0,
+                                                                         others                  => <>);
+
+    -- 
+    Multisample_Info : aliased VkPipelineMultisampleStateCreateInfo := (sampleShadingEnable  => 0,
+                                                                        rasterizationSamples => VK_SAMPLE_COUNT_1_BIT,
+                                                                        others               => <>);
+
+    -- 
+    Depth_Stencil_Info : aliased VkPipelineDepthStencilStateCreateInfo := (depthTestEnable       => 1,
+                                                                           depthWriteEnable      => 1,
+                                                                           depthCompareOp        => VK_COMPARE_OP_LESS,
+                                                                           depthBoundsTestEnable => 0,
+                                                                           stencilTestEnable     => 0,
+                                                                           others                => <>);
+
+    -- 
+    Color_Blend_Attachment : aliased VkPipelineColorBlendAttachmentState := (blendEnable    => 0
+                                                                             colorWriteMask => VK_COLOR_COMPONENT_R_BIT or VK_COLOR_COMPONENT_G_BIT or
+                                                                                               VK_COLOR_COMPONENT_B_BIT or VK_COLOR_COMPONENT_A_BIT,
+                                                                             others         => <>);
+
+    -- 
+    Color_Blend_Info : aliased VkPipelineColorBlendStateCreateInfo := (logicOpEnable   => 0,
+                                                                       logicOp         => VK_LOGIC_OP_COPY,
+                                                                       attachmentCount => 1,
+                                                                       pAttachments    => &colorBlendAttachment,
+                                                                       blendConstants  => (others => 0.0),
+                                                                       others          => <>);
+
+    --  
+    Descriptor_Set_Layout  : aliased VkDescriptorSetLayout := (descriptorSetLayout); -- ???
+
+    -- 
+    Pipeline_Layout_Info : aliased VkPipelineLayoutCreateInfo := (setLayoutCount => 1,
+                                                                  pSetLayouts    => setLayouts,
+                                                                  others         => <>);
+
+    -- 
+    Pipeline_Info : aliased VkGraphicsPipelineCreateInfo := (stageCount          => 2,
+                                                             pStages             => shaderStages,
+                                                             pVertexInputState   => &vertexInputInfo,
+                                                             pInputAssemblyState => &inputAssembly,
+                                                             pViewportState      => &viewportState,
+                                                             pRasterizationState => &rasterizer,    2
+                                                             pMultisampleState   => &multisampling,
+                                                             pDepthStencilState  => &depthStencil,
+                                                             pColorBlendState    => &colorBlending,
+                                                             layout              => pipelineLayout,
+                                                             renderPass          => renderPass,
+                                                             subpass             => 0,
+                                                             basePipelineHandle  => VK_NULL_HANDLE,
+                                                             others              => <>);
+
+    -- 
+    Render_Pass_Begin_Info : aliased VkRenderPassBeginInfo := (renderArea => (Offset => (0, 0), Extent => swapChainExtent),
+                                                               others     => <>);
+
+    -- 
+    Allocate_Info : aliased VkCommandBufferAllocateInfo := (commandPool        => commandPool;
+                                                            level              => VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+                                                            commandBufferCount => (uint32_t) commandBuffers.size; 
+                                                            others             => <>);
+
+    -- 
+    Clear_Values : aliased Array_VkClearValue := ((color        => (0.0, 0.0, 0.0, 1.0), others => <>),
+                                                  (depthStencil => (1.0, 0.0),           others => <>));
     begin
 
       -- Find the resolution of the swap chain images - some window managers force us to pick the resolution that best matches the window
