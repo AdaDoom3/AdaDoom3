@@ -13,6 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Ada.Direct_IO;
+with Ada.Directories;  use Ada.Directories;
 with Neo.Core.Math;    use Neo.Core.Math;
 with Neo.Core.Arrays;  use Neo.Core.Arrays;
 with Neo.Core.Strings; use Neo.Core.Strings;
@@ -22,6 +24,13 @@ with Neo.Core.Ordered;
 
 -- Separator for the "Data" layer consisting of packages for loading and understanding common file formats
 package Neo.Data is
+
+  ------------
+  -- Binary --
+  ------------
+
+  -- Load a file into a binary buffer
+  function Load (Path : Str) return Array_Byte;
 
   -------------
   -- Parsing --
@@ -109,18 +118,18 @@ package Neo.Data is
 
       -- Fetch the next item in the file
       function Next return Str_Unbound;
-      function Next return Str is (To_Str (Next));
+      function Next return Str is (S (Next));
       function Next return Real;
       function Next return Real_64;
       function Next return Byte;
       function Next return Int;
-      function Next return Int_32_Unsigned;
+      function Next return Int_Unsigned;
       function Next return Int_64;
       function Next return Int_64_Unsigned;
 
       -- Check ahead without advancing
       function Peek_U return Str_Unbound; -- Name should be "Peek"
-      function Peek return Str     is (To_Str             (Peek_U));
+      function Peek return Str     is (S             (Peek_U));
       function Peek return Real    is (Real'Wide_Value    (Peek));
       function Peek return Real_64 is (Real_64'Wide_Value (Peek));
       function Peek return Int     is (Int'Wide_Value     (Peek));
@@ -128,13 +137,13 @@ package Neo.Data is
 
       -- Parse the entire next line 
       function Next_Line return Str_Unbound;
-      function Next_Line return Str is (To_Str (Next_Line));
+      function Next_Line return Str is (S (Next_Line));
 
       -- A "set" is a bounded item like a string surrounded by quotes
       function Next_Set           (Ending : Str) return Str_Unbound;
-      function Next_Set           (Ending : Str) return Str is (To_Str (Next_Set (Ending)));
+      function Next_Set           (Ending : Str) return Str is (S (Next_Set (Ending)));
       function Next_Set (Starting, Ending : Str) return Str_Unbound;
-      function Next_Set (Starting, Ending : Str) return Str is (To_Str (Next_Set (Starting, Ending)));
+      function Next_Set (Starting, Ending : Str) return Str is (S (Next_Set (Starting, Ending)));
 
       -- Procedures for ignoring data or skiping useless information
       procedure Skip_Line;
@@ -143,7 +152,6 @@ package Neo.Data is
       procedure Skip     (Amount : Positive := 1);
 
       -- Skip_Until is a mix between peek and skip, it will skip strings until the target gets peeked
-      procedure Skip_Until (T    : Array_Str_Unbound; Fail_On_EOF : Bool := False); -- Formal should be "Text"
       procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False);
       procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False);

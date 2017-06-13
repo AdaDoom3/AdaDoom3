@@ -44,7 +44,7 @@ package Neo.Engine.Network is
   type Frame_Header_Kind (Kind : Frame_Kind := Client_Kind; Multi_Frame : Bool := False) is record
       Frame_Id : 
       case Kind is
-        when Client_Kind => Client_Id : Int_32_Unsigned := 0;
+        when Client_Kind => Client_Id : Int_Unsigned := 0;
         when Server_Kind => null;
       end case;
     end record with Pack;
@@ -106,7 +106,7 @@ package Neo.Engine.Network is
 
     end record;
 
-  type Server_Info_State is record
+  type Server_OS_Info_State is record
       IP           : Str_IP;
       Map          : Str_Unbound;
       Game         : Str_Unbound;

@@ -27,9 +27,9 @@ package Neo.Core.Math is
   -----------
 
   -- Definitions
-  type Point_2D is record X, Y       : Real; end record;
-  type Point_3D is record X, Y, Z    : Real; end record; -- Listing 2.8
-  type Point_4D is record X, Y, Z, W : Real; end record;
+  type Point_2D is record X, Y       : Real := 0.0; end record;
+  type Point_3D is record X, Y, Z    : Real := 0.0; end record; -- Listing 2.8
+  type Point_4D is record X, Y, Z, W : Real := 0.0; end record;
   package Vector_Point_2D is new Vectors (Point_2D);
   package Vector_Point_3D is new Vectors (Point_3D);
 
@@ -42,8 +42,9 @@ package Neo.Core.Math is
   ------------
 
   -- Definitions
-  type Vector_3D is record X, Y, Z    : Real; end record; -- Listing 1.1
-  type Vector_4D is record X, Y, Z, W : Real; end record;
+  type Vector_2D is record X, Y       : Real := 0.0; end record; -- Listing 1.1
+  type Vector_3D is record X, Y, Z    : Real := 0.0; end record; -- Listing 1.1
+  type Vector_4D is record X, Y, Z, W : Real := 0.0; end record;
 
   -- Conversions
   function To_Vector_3D (P : Point_3D)            return Vector_3D is ((P.X, P.Y, P.Z));
@@ -82,16 +83,20 @@ package Neo.Core.Math is
   ------------
 
   -- Definitions
+  type Matrix_2D is record
+      XX, YX,
+      XY, YY : Real := 0.0;
+    end record;
   type Matrix_3D is record -- Listing 1.3
       XX, YX, ZX,
       XY, YY, ZY,
-      XZ, YZ, ZZ : Real;
+      XZ, YZ, ZZ : Real := 0.0;
     end record;
   type Matrix_4D is record
       XX, YX, ZX, WX,
       XY, YY, ZY, WY,
       XZ, YZ, ZZ, WZ,
-      XW, YW, ZW, WW : Real;
+      XW, YW, ZW, WW : Real := 0.0;
     end record;
 
   -- 3D Conversions
@@ -169,16 +174,16 @@ package Neo.Core.Math is
   ---------------
 
   -- Definition
+  type Transform_3D is record
+      XX, YX, ZX,
+      XY, YY, ZY : Real := 0.0;
+      -- Last row is constant: 0.0, 0.0, 1.0
+    end record;
   type Transform_4D is record -- Listing 2.9
       XX, YX, ZX, WX,
       XY, YY, ZY, WY,
-      XZ, YZ, ZZ, WZ : Real;
+      XZ, YZ, ZZ, WZ : Real := 0.0;
       -- Last row is constant: 0.0, 0.0, 0.0, 1.0
-    end record;
-  type Transform_3D is record
-      XX, YX, ZX,
-      XY, YY, ZY : Real;
-      -- Last row is constant: 0.0, 0.0, 1.0
     end record;
 
   -- Conversions
@@ -204,7 +209,7 @@ package Neo.Core.Math is
                                                                                         A.Z, B.Z, C.Z, P.Z));
 
   -- Operations
-  function Transpose  () return Matrix_3D;
+  -- function Transpose  () return Matrix_3D;
   function Rotate     (Angle : Real; Kind : Dimension_Kind) return Matrix_3D;    -- Listing 2.1
   function Rotate     (Angle : Real; Axis : Vector_3D)      return Matrix_3D;    -- Listing 2.2
   function Reflect    (A : Vector_3D)                       return Matrix_3D;    -- Listing 2.3
@@ -280,8 +285,8 @@ package Neo.Core.Math is
 
   -- Definition
   type Line_3D is record -- Listing 3.10
-      Direction : Vector_3D;
-      Moment    : Vector_3D;
+      Direction : Vector_3D := (others => <>);
+      Moment    : Vector_3D := (others => <>);
     end record;
 
   -- Operations
@@ -292,7 +297,7 @@ package Neo.Core.Math is
   -------------
 
   type Frustum_State is record
-      Target, Right, Up, Beginning, Ending : Vector_3D := ZERO_VECTOR_3D;
+      Target, Right, Up, Beginning, Ending : Vector_3D := (others => <>);
     end record;
 
   -------------

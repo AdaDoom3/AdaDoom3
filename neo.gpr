@@ -57,30 +57,35 @@ project Neo is
   -- Types --
   -----------
 
-  type Word_Size_Option is ("32",     "64");
-  type Boolean_Option   is ("No",     "Yes");
-  type System_Option    is ("Win32",  "SDL");
-  type Game_Option      is ("Neotek", "DOOM");
+  type Word_Size_Option is ("32",      "64");
+  type Boolean_Option   is ("No",      "Yes");
+  type Game_Option      is ("Neotek",  "DOOM");
+  type System_Option    is ("Windows", "Linux", "Mac");
 
   --------------
   -- Scenario --
   --------------
 
-  SYSTEM   : System_Option    := External ("System",  "Win32");
+  SYSTEM   : System_Option    := External ("System",  "Windows");
   DEBUG    : Boolean_Option   := External ("Debug",   "Yes");
   BIT_SIZE : Word_Size_Option := External ("Bitsize", "64");
   GAME     : Game_Option      := External ("Game",    "DOOM");
-
+ 
   --------------
   -- Settings --
   --------------
 
-  Path_Game := "Games/" & GAME;
+
+  System_API := SYSTEM;
+  case SYSTEM is
+    when "Windows" => null;
+    when "Linux" | "Mac" => System_API := "SDL";
+  end case;
+  for Source_Dirs use ("Engine/", "Engine/" & System_API, "Games/" & GAME & "/Base/**");
   for Object_Dir  use "Object";
-  for Source_Dirs use ("Engine/", ".", "Engine/" & SYSTEM & "/", Path_Game & "/Base/**");
-  for Languages   use ("Ada", "Project File");
+  for Exec_Dir    use "Games/" & GAME;
+  for Languages   use ("Ada");
   for Main        use ("main.adb");
-  for Exec_Dir    use Path_Game;
 
   --------------
   -- Switches --
@@ -88,34 +93,33 @@ project Neo is
 
   Switch_Binder   := ("-E");                 -- Store traceback in exceptions
   Switch_Linker   := ("-fprofile-generate"); -- Generate code coverage                                                                         
-  Switch_Compiler := ("-gnateE",             -- Put extra info in exception messages
-                      "-gnatW8");            -- Enable wide-character unicode identifiers
+  Switch_Compiler := ("-gnatW8");            -- Enable wide-character unicode identifiers
   Switch_Builder  := ("-j0",                 -- Use all available threads for compilation
                       "-k",                  -- Keep building as far as possible
-                      "-C",                  -- Use mapping file
-                      "-O1",                 -- Optimize as much as possible. MUST BE ENABLED !!!
                       "-s");                 -- Recompile if switches are changed
   case DEBUG is
-    when "No"  => Switch_Compiler := Switch_Compiler & ("-gnatp");       -- Surpress all checks
-    when "Yes" => Switch_Compiler := Switch_Compiler & ("-fstack-check", -- Generate checks for exceeding the stack
-                                                        "-gnato",        -- Enable overflow checking for numerics
-                                                        "-gnatE",        -- Enable dynamic generic elaboration checks
-                                                        "-gnata",        -- Enable pre and post conditions
-                                                        "-g");           -- Create extended info in stack traces
+    when "No"  => Switch_Compiler := Switch_Compiler & ("-gnatp", -- Surpress all checks
+                                                        "-O3");   -- Optimize as much as possible
+    when "Yes" => Switch_Compiler := Switch_Compiler & ("-gnato", -- Enable overflow checking for numerics
+                                                        "-gnatE", -- Enable dynamic generic elaboration checks
+                                                        "-gnata", -- Enable pre and post conditions
+                                                        "-gnatf", -- 
+                                                        "-O0",    -- Avoid any optimization
+                                                        "-g");    -- Create extended info in stack traces
   end case;
   case SYSTEM is
-    when "SDL" => null;
-    when "Win32" =>
+    when "Mac"     => null;
+    when "Linux"   => null;
+    when "Windows" =>
       case BIT_SIZE is
         when "32" => null;
         when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
       end case;
-      Switch_Linker := Switch_Linker & (--"-mwindows",                                        -- Remove the command console
-                                        --"-Wl,--enable-stdcall-fixup",                       -- Suppress dll lookup warnings
-                                        External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
+      Switch_Linker := Switch_Linker & ("-mwindows",                                        -- Remove the command console
                                         External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
                                         External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
                                         External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
+                                        External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
                                         External ("WinDir") & "\System32\XInput9_1_0.dll"); -- Xbox 360 controller driver for input
                                         -- A Vulkan driver is also necessary, but is loaded dynamically Ex. "\System32\vulkan-1.dll"
   end case;
@@ -129,4 +133,4 @@ project Neo is
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
                       for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
-end;
+end Neo;

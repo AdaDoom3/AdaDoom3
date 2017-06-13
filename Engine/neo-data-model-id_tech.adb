@@ -22,10 +22,10 @@ separate (Neo.Data.Model) package body Id_Tech is
 
   -- Internal structure that reflects how joints are layed-out by the md5mesh and md5anim data files
   type Internal_Joint_State is record
-      External : Joint_State;
-      Parent   : Int := -2;
+      External : Joint_State := (others => <>);
+      Parent   : Int         := -2;
     end record;
-  package Vector_Internal_Joint is new Vectors (Internal_Joint_State);
+  package Vector_Internal_Joint is new Neo.Core.Vectors (Internal_Joint_State);
 
   -- Bulding a skeleton from a vector of internal joint structures
   function Build_Skeleton (Joints : Vector_Internal_Joint.Unsafe.Vector) return Treed_Joint.Unsafe.Tree is
@@ -54,12 +54,12 @@ separate (Neo.Data.Model) package body Id_Tech is
     -- Load a material file: https://www.iddevnet.com/doom3/materials.php
     package Parse_Materials is new Parser (Path); use Parse_Materials;
 
-    -- Id Tech MTR files are very complex and the example below is a basic example
+    -- Id Tech MTR files are loaded with "features" so the example below is basic...
 
     -- textures/alphalabs/a_lfwall12b2
     -- {
     --   qer_editorimage textures/alphalabs/a_lfwall12b2
-    --   {
+    --   {Old_Player
     --     blend bumpmap     
     --     map   textures/base_wall/lfwall12b_local
     --     
@@ -81,10 +81,10 @@ separate (Neo.Data.Model) package body Id_Tech is
             elsif Token = "noSelfShadow"       then Material.Shadow_Self  := False;
             elsif Token = "unsmoothedTangents" then Material.Smoothed_Tan := False;
             elsif Token = "twoSided"           then Material.Two_Sided    := True;
-            elsif Token = "specularmap"        then Material.Specular     := (True, Next);
-            elsif Token = "bumpmap"            then Material.Normal       := (True, Next);
-            elsif Token = "diffusemap"         then Material.Base_Color   := (True, Next);
-                                                    Material.Opacity      := Material.Base_Color;end if;
+            elsif Token = "specularmap"        then Material.Specular     := Next;
+            elsif Token = "bumpmap"            then Material.Normal       := Next;
+            elsif Token = "diffusemap"         then Material.Base_Color   := Next;
+                                               end if; --     Material.Opacity      := Material.Base_Color; end if;
         end; end loop; Skip;
         Result.Insert (Name, Material);
       end loop;
@@ -137,9 +137,9 @@ separate (Neo.Data.Model) package body Id_Tech is
       -- Parse frames
       Assert ("camera", "{");
       while Peek /= "}" loop Assert ("(");
-        Frame.Point  := (Next, Next, Next); Assert (")", "(");
-        Frame.Orient := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
-        Frame.FOV    := Next;
+        Frame.Point       := (Next, Next, Next); Assert (")", "(");
+        Frame.Orientation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
+        Frame.FOV         := Next;
         Camera.Frames.Append (Frame);
       end loop; Skip;
 
@@ -192,21 +192,21 @@ separate (Neo.Data.Model) package body Id_Tech is
         External    : Weight_State;
         Joint_Index : Natural;
       end record;
-    package Vector_Internal_Weight is new Vectors (Internal_Weight_State);
+    package Vector_Internal_Weight is new Neo.Core.Vectors (Internal_Weight_State);
     type Internal_Vertex_State is record 
         External     : Vertex_State (Has_Weights => True);
         Index        : Natural;
         Weight_Start : Natural;
         Weight_Count : Natural;
       end record;
-    package Vector_Internal_Vertex is new Vectors (Internal_Vertex_State);
+    package Vector_Internal_Vertex is new Neo.Core.Vectors (Internal_Vertex_State);
     type Internal_Surface_State is record
         Material  : Str_Unbound;
         Weights   : Vector_Internal_Weight.Unsafe.Vector;
         Vertices  : Vector_Internal_Vertex.Unsafe.Vector;
         Triangles : Vector_Triangle.Unsafe.Vector;
       end record;
-    package Vector_Internal_Surface is new Vectors (Internal_Surface_State);
+    package Vector_Internal_Surface is new Neo.Core.Vectors (Internal_Surface_State);
 
     -- Local variables
     Surfaces : Vector_Internal_Surface.Unsafe.Vector;
@@ -229,10 +229,10 @@ separate (Neo.Data.Model) package body Id_Tech is
       -- Load joints
       Assert ("joints", "{");
       while Peek /= "}" loop
-        Joint.External.Name   := Next_Set ("""", """");
-        Joint.Parent          := Next; Assert ("(");
-        Joint.External.Point  := (Next, Next, Next); Assert (")", "(");
-        Joint.External.Orient := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
+        Joint.External.Name        := Next_Set ("""", """");
+        Joint.Parent               := Next; Assert ("(");
+        Joint.External.Point       := (Next, Next, Next); Assert (")", "(");
+        Joint.External.Orientation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
         Joints.Append (Joint);
       end loop; Skip;
 
@@ -340,10 +340,10 @@ separate (Neo.Data.Model) package body Id_Tech is
     -- Internal structure
     type Internal_Joint_Base_State is record
         Data  : Internal_Joint_State := (others => <>);
-        Flags : Byte := 0;
-        Start : Natural := 0;
+        Flags : Byte                 := 0;
+        Start : Int_Unsigned      := 0;
       end record;
-    package Vector_Internal_Joint_Base is new Vectors (Internal_Joint_Base_State);
+    package Vector_Internal_Joint_Base is new Neo.Core.Vectors (Internal_Joint_Base_State);
 
     -- Local variables
     Joint      : Internal_Joint_State;
@@ -378,24 +378,24 @@ separate (Neo.Data.Model) package body Id_Tech is
       -- Load the "base frame" or starting position of the animation
       Assert ("baseframe", "{");
       for Joint of Frame_Base loop
-        exit when Peek /= "}"; Assert ("(");
-        Joint.Data.External.Point  := (Next, Next, Next); Assert (")", "(");
-        Joint.Data.External.Orient := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
+        exit when Peek = "}"; Assert ("(");
+        Joint.Data.External.Point       := (Next, Next, Next); Assert (")", "(");
+        Joint.Data.External.Orientation := To_Quaternion_4D ((Next, Next, Next)); Assert (")");
       end loop; Skip;
 
       -- Load animation delta data
       while not At_EOF loop
-        Assert ("frame"); Skip; Assert ("{");
+        Assert ("frame"); Skip; Assert ("{"); 
         while Peek /= "}" loop Frame_Data.Append (Next); end loop; Skip;
         for Base of Frame_Base loop
           Joint := Base.Data;
-          if (Base.Flags and 16#01#) > 0 then Joint.External.Point.X  := Frame_Data.Element (I); I := I + 1; end if;
-          if (Base.Flags and 16#02#) > 0 then Joint.External.Point.Y  := Frame_Data.Element (I); I := I + 1; end if;
-          if (Base.Flags and 16#04#) > 0 then Joint.External.Point.Z  := Frame_Data.Element (I); I := I + 1; end if;
-          if (Base.Flags and 16#08#) > 0 then Joint.External.Orient.X := Frame_Data.Element (I); I := I + 1; end if;
-          if (Base.Flags and 16#0F#) > 0 then Joint.External.Orient.Y := Frame_Data.Element (I); I := I + 1; end if;
-          if (Base.Flags and 16#10#) > 0 then Joint.External.Orient.Z := Frame_Data.Element (I); I := I + 1; end if;
-          Joint.External.Orient := To_Quaternion_4D (To_Vector_3D (Joint.External.Orient));
+          if (Base.Flags and 16#01#) > 0 then Joint.External.Point.X       := Frame_Data.Element (I); I := I + 1; end if;
+          if (Base.Flags and 16#02#) > 0 then Joint.External.Point.Y       := Frame_Data.Element (I); I := I + 1; end if;
+          if (Base.Flags and 16#04#) > 0 then Joint.External.Point.Z       := Frame_Data.Element (I); I := I + 1; end if;
+          if (Base.Flags and 16#08#) > 0 then Joint.External.Orientation.X := Frame_Data.Element (I); I := I + 1; end if;
+          if (Base.Flags and 16#0F#) > 0 then Joint.External.Orientation.Y := Frame_Data.Element (I); I := I + 1; end if;
+          if (Base.Flags and 16#10#) > 0 then Joint.External.Orientation.Z := Frame_Data.Element (I); I := I + 1; end if;
+          Joint.External.Orientation := To_Quaternion_4D (To_Vector_3D (Joint.External.Orientation));
           Joints.Append (Joint);
         end loop;
         Animation.Frames.Append ((Build_Bounding (Joints), Build_Skeleton (Joints)));
@@ -632,7 +632,7 @@ separate (Neo.Data.Model) package body Id_Tech is
             -- Parse key-value pair
             if Peek /= "{" then
               Token := Next_Set ("""", """");
-              if Token = "origin" then Assert (""""); Entity.Origin := (Next, Next, Next); Assert (""""); 
+              if Token = "origin" then Assert (""""); Entity.Point := (Next, Next, Next); Assert (""""); 
               elsif Token /= "classname" then Entity.Key_Values.Insert (Token, Next_Set ("""", """")); 
               else Entity.Key_Values.Insert (U ("classname"), Next_Set ("""", """")); end if;
 
@@ -669,7 +669,7 @@ separate (Neo.Data.Model) package body Id_Tech is
                 -- Parse vertices
                 while Peek /= ")" loop Assert ("(");
                   while Peek /= ")" loop Assert ("(");
-                    Patch.Vertices.Append ((False, (Next, Next), (Next, Next, Next) - Entity.Origin, others => <>)); Assert (")"); 
+                    Patch.Vertices.Append ((False, (Next, Next), (Next, Next, Next) - Entity.Point, others => <>)); Assert (")"); 
                   end loop; Assert (")");
                 end loop; Skip;
 
@@ -687,7 +687,7 @@ separate (Neo.Data.Model) package body Id_Tech is
           end loop; Skip;
 
           -- Append entity
-          Level.Entities.Append (Entity);
+          Level.Entities.Insert (Entity.Key_Values.Element (U ("classname")), Entity);
           Entity.Key_Values.Clear;
           Entity.Brushes.Clear;
           Entity.Patches.Clear;
@@ -788,7 +788,7 @@ separate (Neo.Data.Model) package body Id_Tech is
 
           -- Load nodes
           declare use Treed_Collision_Node.Unsafe;
-          Node_Kind : Int;
+          Node_Kind : Int    := 0;
           Is_Back   : Bool   := False;
           I         : Cursor := Collision.Nodes.Root;
           begin
@@ -915,10 +915,10 @@ separate (Neo.Data.Model) package body Id_Tech is
 
       -- Internal node structure and vector for convience
       type Internal_Partition_Node_State is record
-          Plane    : Plane_4D;
-          Children : Array_Positive (1..2);
+          Plane    : Plane_4D              := (others => <>);
+          Children : Array_Positive (1..2) := (others => 1);
         end record;
-      package Vector_Internal_Partition_Node is new Vectors (Internal_Partition_Node_State);
+      package Vector_Internal_Partition_Node is new Neo.Core.Vectors (Internal_Partition_Node_State);
       use Treed_Partition_Node.Unsafe;
       Nodes : Vector_Internal_Partition_Node.Unsafe.Vector;
 

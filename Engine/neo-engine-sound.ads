@@ -25,9 +25,9 @@ package Neo.Engine.Sound is
 
   type Clip_State (Kind : Clip_Kind := Foreground_Clip; Do_Loop : Bool := False) is record
       Lead_In_Sample   : Str_Unbound := NULL_STR_UNBOUND;
-      Lead_In_Volume   : Percent     := 100.0;
-      Max_Volume       : Percent     := 100.0;
-      Screen_Shake     : Percent     := 10.0;
+      Lead_In_Volume   : Real_Percent     := 100.0;
+      Max_Volume       : Real_Percent     := 100.0;
+      Screen_Shake     : Real_Percent     := 10.0;
       Fade_Radius_Min  : Real        := 1.0;
       Fade_Radius_Max  : Real        := 2.0;
       Omnidirectional  : Bool        := False;
@@ -60,8 +60,8 @@ package Neo.Engine.Sound is
       Is_Playing     : Bool           := False;
       Min_Distance   : Real           := 0.0;
       Max_Distance   : Real           := 0.0;
-      Current_Volume : Percent        := 75.0;
-      Current_Shake  : Percent        := 75.0;
+      Current_Volume : Real_Percent        := 75.0;
+      Current_Shake  : Real_Percent        := 75.0;
     end record;
     
   --------------

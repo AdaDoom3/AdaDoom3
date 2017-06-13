@@ -25,7 +25,7 @@ package body Neo.Core.Hashed is
       procedure Insert  (Key : Str; Item : Map_T)               is begin This.Insert          (To_Str_Unbound (Key), Item); end;
       function Has      (Key : Str)    return Bool              is (This.Contains             (To_Str_Unbound (Key)));
       function Has      (Pos : Cursor) return Bool              is (Unsafe.Has_Element        (Pos));
-      function Key      (Pos : Cursor) return Str               is (To_Str (Unsafe.Key        (Pos)));
+      function Key      (Pos : Cursor) return Str               is (S (Unsafe.Key        (Pos)));
       function Get      (Key : Str)    return Map_T             is (This                      (To_Str_Unbound (Key)));
       function Get      (Pos : Cursor) return Map_T             is (Unsafe.Element            (Pos));
       function Get                     return Unsafe.Map        is (This);

@@ -39,7 +39,7 @@ package Neo.Engine.UI is
       Is_Visible       : Bool           := True;
       Material         : Str_Unbound    := NULL_STR_UNBOUND;
       Text_Font        : Str_Unbound    := NULL_STR_UNBOUND;
-      Text_Scale       : Percent        := 15.0;
+      Text_Scale       : Real_Percent   := 15.0;
       Text_Color       : Color_State    := BLACK_COLOR;
       Text_Hover_Color : Color_State    := GREY_COLOR;
       Border_Color     : Color_State    := COLOR_LIGHT_BLUE;
@@ -92,12 +92,8 @@ package Neo.Engine.UI is
   procedure On_Activate       (Element : in out Element_State) is abstract;
 
   -- 
-  procedure Rotate (Element : in out Element_State; To, From : Degrees;        Acceleration, Deceleration : Percent := 0.0);
-  procedure Rotate (Element : in out Element_State; To       : Degrees;        Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To, From : Point_2D;       Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To       : Point_2D;       Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To, From : Border_State;   Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To       : Border_State;   Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To, From : Orientation_4D; Acceleration, Deceleration : Percent := 0.0);
-  procedure Move   (Element : in out Element_State; To       : Orientation_4D; Acceleration, Deceleration : Percent := 0.0);
+  procedure Rotate (Element : in out Element_State; To : Degrees;        Acceleration, Deceleration : Real_Percent := 0.0);
+  procedure Move   (Element : in out Element_State; To : Point_2D;       Acceleration, Deceleration : Real_Percent := 0.0);
+  procedure Move   (Element : in out Element_State; To : Border_State;   Acceleration, Deceleration : Real_Percent := 0.0);
+  procedure Move   (Element : in out Element_State; To : Orientation_4D; Acceleration, Deceleration : Real_Percent := 0.0);
 end;

@@ -47,5 +47,5 @@ package Neo.Engine.Animation is
       Bones  : Hashed_Bone.Unsafe.Map;
     end record;
 
-  function Render (Mesh : Skeletal_Mesh_State; Pose : in out Pose_State) return Vector_Mesh.Unsafe.Vector;
+  function Render (Mesh : Skeletal_Mesh_State; Pose : Pose_State) return Vector_Mesh.Unsafe.Vector;
 end;

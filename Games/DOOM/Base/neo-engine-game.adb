@@ -15,8 +15,8 @@
 
 with Neo.Data.Model; use Neo.Data.Model;
 separate (Neo.Engine) procedure Game is
-  Mesh      : Skeletal_Mesh_State := Load ("C:\AdaDoom3\Games\DOOM\Assets\Models\Bob\bob_lamp_update.md5mesh");
-  --Animation : Animation_State     := Load ("C:\AdaDoom3\Games\DOOM\Assets\Models\Bob\bob_lamp_update.md5anim");
+  Mesh      : Skeletal_Mesh_State := Load ("/Assets/Models/Bob/bob_lamp_update.md5mesh");
+  Animation : Animation_State     := Load ("/Assets/Models/Bob/bob_lamp_update.md5anim");
   begin
     loop
       delay 0.2; -- Insert code here.

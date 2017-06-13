@@ -37,21 +37,21 @@ package Neo.Data.Model is
       Point       : Point_3D;
       Orientation : Quaternion_4D;
     end record;
-  package Vector_Camera_Frame is new Vectors (Camera_Frame_State);
+  package Vector_Camera_Frame is new Neo.Core.Vectors (Camera_Frame_State);
 
   type Camera_State is record
       Frame_Rate : Positive;
       Frames     : Vector_Camera_Frame.Unsafe.Vector;
       Cuts       : Vector_Positive.Unsafe.Vector;
     end record;
-  package Hashed_Camera is new Hashed (Camera_State);
+  package Hashed_Camera is new Neo.Core.Hashed (Camera_State);
 
   ---------------
   -- Animation --
   ---------------
 
   type Bounding_State is record
-      A, B : Point_3D := ZERO_POINT_3D;
+      A, B : Point_3D := (others => <>);
     end record;
 
   type Joint_State is record
@@ -59,19 +59,19 @@ package Neo.Data.Model is
       Point       : Point_3D;
       Orientation : Quaternion_4D;
     end record;
-  package Treed_Joint is new Trees (Joint_State);
+  package Treed_Joint is new Neo.Core.Trees (Joint_State);
 
   type Animation_Frame_State is record
       Bounding : Bounding_State;
       Skeleton : Treed_Joint.Unsafe.Tree;
     end record;
-  package Vector_Animation_Frame is new Vectors (Animation_Frame_State);
+  package Vector_Animation_Frame is new Neo.Core.Vectors (Animation_Frame_State);
  
   type Animation_State is record
       Frame_Rate : Positive;
       Frames     : Vector_Animation_Frame.Unsafe.Vector;
     end record;
-  package Hashed_Animation is new Hashed (Animation_State);
+  package Hashed_Animation is new Neo.Core.Hashed (Animation_State);
 
   ----------
   -- Mesh --
@@ -82,7 +82,7 @@ package Neo.Data.Model is
       Point  : Point_3D; 
       Amount : Real_Percent;
     end record;
-  package Vector_Weight is new Vectors (Weight_State);
+  package Vector_Weight is new Neo.Core.Vectors (Weight_State);
 
   type Vertex_State (Has_Weights : Bool := False) is record
       Texture : Point_2D;
@@ -94,10 +94,10 @@ package Neo.Data.Model is
           Normal : Point_3D;
       end case;
     end record;
-  package Vector_Vertex is new Vectors (Vertex_State); 
+  package Vector_Vertex is new Neo.Core.Vectors (Vertex_State); 
 
   type Triangle_Array is array (1..3) of Natural;
-  package Vector_Triangle is new Vectors (Triangle_Array);
+  package Vector_Triangle is new Neo.Core.Vectors (Triangle_Array);
 
   type Mesh_State is record
       Material : Str_Unbound;
@@ -105,14 +105,14 @@ package Neo.Data.Model is
       Indicies : Vector_Triangle.Unsafe.Vector;
       Bounding : Bounding_State;
     end record;
-  package Vector_Mesh is new Vectors (Mesh_State);
+  package Vector_Mesh is new Neo.Core.Vectors (Mesh_State);
 
   type Skeletal_Mesh_State is record
       Groups     : Vector_Mesh.Unsafe.Vector;
       Skeleton   : Treed_Joint.Unsafe.Tree;
       Animations : Vector_Str_Unbound.Unsafe.Vector;
     end record;
-  package Hashed_Mesh is new Hashed (Skeletal_Mesh_State);
+  package Hashed_Mesh is new Neo.Core.Hashed (Skeletal_Mesh_State);
 
   -----------
   -- Level --
@@ -124,20 +124,20 @@ package Neo.Data.Model is
       Is_Positive : Bool := True;
       case Kind is
         when Area_Partition   => Area_Id : Int      := 0;
-        when Normal_Partition => Plane   : Plane_4D := ZERO_PLANE_4D;
+        when Normal_Partition => Plane   : Plane_4D := (others => <>);
       when others => null; end case;
     end record;
-  package Treed_Partition_Node is new Trees (Partition_Node_State);
+  package Treed_Partition_Node is new Neo.Core.Trees (Partition_Node_State);
 
   type Brush_Side_State is record
       Material : Str_Unbound  := NULL_STR_UNBOUND;
-      Texture  : Transform_3D := ZERO_TRANSFORM_3D;
-      Origin   : Point_3D     := ZERO_POINT_3D;
-      Plane    : Plane_4D     := ZERO_POINT_4D;
+      Texture  : Transform_3D := (others => <>);
+      Origin   : Point_3D     := (others => <>);
+      Plane    : Plane_4D     := (others => <>);
     end record;
-  package Vector_Brush_Side  is new Vectors (Brush_Side_State);
-  package Vector_Brush       is new Vectors (Vector_Brush_Side.Unsafe.Vector);
-  package Hashed_Str_Unbound is new Hashed (Str_Unbound);
+  package Vector_Brush_Side  is new Neo.Core.Vectors (Brush_Side_State);
+  package Vector_Brush       is new Neo.Core.Vectors (Vector_Brush_Side.Unsafe.Vector);
+  package Hashed_Str_Unbound is new Neo.Core.Hashed (Str_Unbound);
 
   type Entity_Kind is (
     Character_Entity,
@@ -148,6 +148,7 @@ package Neo.Data.Model is
     Speaker_Entity,
     Activator_Entity,
     Animated_Entity,
+    Light_Entity,
     Camera_View_Entity,
     Clip_Model_Entity,
     Door_Entity,
@@ -167,20 +168,22 @@ package Neo.Data.Model is
     No_Physics,
     Simple_Physics);
 
-  type Damage_State is record
-      "damage" "[Damage Ammount]" 
-      "kickDir" "0 0 0" 
-      "mtr_blob" "genericDamage" 
-      "blob_time" "0" 
-      "blob_size" "0" 
-      "blob_offset_x" "0" 
-      "knockback" "0" 
-      "kick_time" "0" 
-      "kick_amplitude" "0" 
-      "dv_time" "100" 
+   type Damage_State is record
+      Nothing : Boolean;
+      --"damage" "[Damage Ammount]" 
+      --"kickDir" "0 0 0" 
+      --"mtr_blob" "genericDamage" 
+      --"blob_time" "0" 
+      --"blob_size" "0" 
+      --"blob_offset_x" "0" 
+      --"knockback" "0" 
+      --"kick_time" "0" 
+      --"kick_amplitude" "0" 
+      --"dv_time" "100" 
     end record;
 
-  type Entity_State is record
+  type Entity_State (Kind : Entity_Kind := Entity_Kind'First) is record
+      Key_Values  : Hashed_Str_Unbound.Unsafe.Map;
       Model       : Str_Unbound   := NULL_STR_UNBOUND;
       Point       : Point_3D      := (others => <>);
       Orientation : Quaternion_4D := (others => <>);
@@ -200,19 +203,19 @@ package Neo.Data.Model is
         when Character_Entity =>
           World : Positive      := 1;
           Area  : Positive      := 1;
-          Pose  : Pose_State    := (others => <>);
+          --Pose  : Pose_State    := (others => <>);
           View  : Frustum_State := (others => <>); 
           
         when Speaker_Entity =>
           Clip           : Str_Unbound    := NULL_STR_UNBOUND;
-          Position       : Position_State := (others => <>);
+          --Position       : Position_State := (others => <>);
           Is_Mute        : Bool           := False;
           Is_Paused      : Bool           := False;
           Is_Playing     : Bool           := False;
           Min_Distance   : Real           := 0.0;
           Max_Distance   : Real           := 0.0;
-          Current_Volume : Percent        := 75.0;
-          Current_Shake  : Percent        := 75.0;
+          Current_Volume : Real_Percent        := 75.0;
+          Current_Shake  : Real_Percent        := 75.0;
         when Door_Entity =>
           Lip              : Natural       := 0;
           Locked           : Bool          := False;
@@ -221,11 +224,12 @@ package Neo.Data.Model is
           Close_Sound      : Str_Unbound   := NULL_STR_UNBOUND;
           Open_Sound       : Str_Unbound   := NULL_STR_UNBOUND;
           Locked_Sound     : Str_Unbound   := NULL_STR_UNBOUND;
-        when Hurt_Entity =>
-          Damage : Damage_State := (others => <>);
+        --when Hurt_Entity =>
+        --  Damage : Damage_State := (others => <>);
+        when others => null;
       end case;
     end record;
-  package Hashed_Entity is new Hashed (Entity_State);
+  package Hashed_Entity is new Neo.Core.Hashed (Entity_State);
 
   type Clip_State is record
       Bounding      : Bounding_State := (others => <>);
@@ -245,29 +249,29 @@ package Neo.Data.Model is
       Is_Animation  : Bool := False;
       Is_Obstacle   : Bool := False;
     end record;
-  package Vector_Clip is new Vectors (Clip_State);
+  package Vector_Clip is new Neo.Core.Vectors (Clip_State);
 
   type Edge_State is record
-      A, B      : Point_3D := ZERO_POINT_3D;
+      A, B      : Point_3D := (others => <>);
       Internal  : Natural  := 0; -- ???
       Num_Users : Natural  := 0;
     end record;
-  package Vector_Edge is new Vectors (Edge_State);
+  package Vector_Edge is new Neo.Core.Vectors (Edge_State);
 
   type Polygon_State is record
       Material : Str_Unbound    := NULL_STR_UNBOUND;
       Bounding : Bounding_State := (others => <>);
-      Plane    : Plane_4D       := ZERO_PLANE_4D;
+      Plane    : Plane_4D       := (others => <>);
       Edges    : Vector_Natural.Unsafe.Vector;
     end record;
-  package Vector_Polygon is new Vectors (Polygon_State);
+  package Vector_Polygon is new Neo.Core.Vectors (Polygon_State);
 
   type Collision_Node_State is record
       Is_Back   : Bool;
       Distance  : Real;
       Dimension : Dimension_Kind;
     end record;
-  package Treed_Collision_Node is new Trees (Collision_Node_State);
+  package Treed_Collision_Node is new Neo.Core.Trees (Collision_Node_State);
 
   type Collision_State is record
       Name     : Str_Unbound := NULL_STR_UNBOUND;
@@ -276,7 +280,7 @@ package Neo.Data.Model is
       Edges    : Vector_Edge.Unsafe.Vector;
       Nodes    : Treed_Collision_Node.Unsafe.Tree;
     end record;
-  package Vector_Collision is new Vectors (Collision_State);
+  package Vector_Collision is new Neo.Core.Vectors (Collision_State);
 
   -- type Area_Kind is (Ladder_Area, Floor_Area, Liquid_Area);
   --
@@ -323,11 +327,11 @@ package Neo.Data.Model is
   type Level_State is record
       Geometry_CRC : Int_64_Unsigned := 0;
       Collisions   : Vector_Collision.Unsafe.Vector;
-      Entities     : Vector_Entity.Unsafe.Vector;
+      Entities     : Hashed_Entity.Unsafe.Map;
       Partitions   : Treed_Partition_Node.Unsafe.Tree;
       -- AI : AI_State;
     end record;
-  package Hashed_Level_State is new Hashed (Level_State);
+  package Hashed_Level_State is new Neo.Core.Hashed (Level_State);
 
   -------------
   -- Surface --
@@ -348,16 +352,16 @@ package Neo.Data.Model is
                         Tile_Surface,  Carpet_Surface);
 
   type Surface_State is record
-      Mass_Per_Cubic_Unit   : Percent     := 0.0;
-      Friction              : Percent     := 0.0;
-      Restitution           : Percent     := 0.0;
-      Noise_Reduction       : Percent     := 0.0; -- www.archtoolbox.com/representation/architectural-concepts/acoustics.html
-      Physics_Hit_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
-      Bullet_Hole_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
-      Knife_Slash_Emitter   : Str_Unbound := NULL_STR_UNBOUND;
-      Walk_Light_Emitter    : Str_Unbound := NULL_STR_UNBOUND;
-      Explosion_Emitter     : Str_Unbound := NULL_STR_UNBOUND;
-      Walk_Hard_Emitter     : Str_Unbound := NULL_STR_UNBOUND;
+      Mass_Per_Cubic_Unit   : Real_Percent := 0.0;
+      Friction              : Real_Percent := 0.0;
+      Restitution           : Real_Percent := 0.0;
+      Noise_Reduction       : Real_Percent := 0.0; -- www.archtoolbox.com/representation/architectural-concepts/acoustics.html
+      Physics_Hit_Emitter   : Str_Unbound  := NULL_STR_UNBOUND;
+      Bullet_Hole_Emitter   : Str_Unbound  := NULL_STR_UNBOUND;
+      Knife_Slash_Emitter   : Str_Unbound  := NULL_STR_UNBOUND;
+      Walk_Light_Emitter    : Str_Unbound  := NULL_STR_UNBOUND;
+      Explosion_Emitter     : Str_Unbound  := NULL_STR_UNBOUND;
+      Walk_Hard_Emitter     : Str_Unbound  := NULL_STR_UNBOUND;
       Explosion_Materials   : Vector_Str_Unbound.Unsafe.Vector;
       Bullet_Hole_Materials : Vector_Str_Unbound.Unsafe.Vector;
       Knife_Slash_Materials : Vector_Str_Unbound.Unsafe.Vector;
@@ -367,7 +371,7 @@ package Neo.Data.Model is
     end record;
  
   -- Returns constant Surface_State for a given Surface_Kind. All surfaces are defined in the body of this package (neo-model.adb).
-  function Get_Surface (Kind : Surface_Kind) return Surface_State;
+  -- function Get_Surface (Kind : Surface_Kind) return Surface_State;
 
   --------------
   -- Material --
@@ -401,8 +405,8 @@ package Neo.Data.Model is
       Surface        : Surface_kind := Thin_Rock_Surface;
       Deform         : Deform_Kind  := No_Deform;
       case Kind is
-        when Light_Domain => Pattern : Str_Unbound := NULL_STR_UNBOUND
-        when Menu_Domain  => Menu_Id : Str_Unbound := NULL_STR_UNBOUND
+        when Light_Domain => Pattern : Str_Unbound := NULL_STR_UNBOUND;
+        when Menu_Domain  => Menu_Id : Str_Unbound := NULL_STR_UNBOUND;
         when others =>
           -- Blend                : Blend_Kind    := Opaque_Blend;  
           Cube_Map             : Cube_Map_Kind := No_Cube_Map; -- Cube map textures assume _px, _py, _pz, _nx, _ny, _nz name convention
@@ -419,7 +423,7 @@ package Neo.Data.Model is
           -- Refraction           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
       end case;
     end record;
-  package Hashed_Material is new Hashed (Material_State);
+  package Hashed_Material is new Neo.Core.Hashed (Material_State);
 
   --------
   -- IO --

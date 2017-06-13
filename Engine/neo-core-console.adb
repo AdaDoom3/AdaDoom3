@@ -21,48 +21,56 @@ package body Neo.Core.Console is
 
   -- Internal protected structure of task-safe output
   protected Safe_IO is
+      function Log          return Str_Unbound;
+      function Input_Entry  return Str_Unbound;
+      function Line_Size    return Positive;
+      function Lines        return Int_64_Natural;
+      procedure Set_Put     (Val  : Ptr_Procedure_Put);
+      procedure Line_Size   (Val  : Positive);
+      procedure Input_Entry (Val  : Str_Unbound);
+      procedure Put         (Item : Str);
+    private
+      Current_Put         : Ptr_Procedure_Put := null;
+      Current_Log         : Str_Unbound       := NULL_STR_UNBOUND;
+      Current_Input_Entry : Str_Unbound       := NULL_STR_UNBOUND;
+      Current_Lines       : Int_64_Natural    := 0;
+      Current_Tasks       : Positive          := 1;
+      Current_Line_Size   : Positive          := 80;
+    end;
+  protected body Safe_IO is
       function Log          return Str_Unbound        is (Current_Log);
-      function Log          return Str                is (To_Str (Current_Log));
-      function Input_Entry  return Str                is (To_Str (Current_Input_Entry));
+      function Input_Entry  return Str_Unbound        is (Current_Input_Entry);
       function Line_Size    return Positive           is (Current_Line_Size);
       function Lines        return Int_64_Natural     is (Current_Lines);
-      procedure Set_Put     (Val : Ptr_Procedure_Put) is begin Current_Put         := Val;                  end;
-      procedure Line_Size   (Val : Positive)          is begin Current_Line_Size   := Val;                  end;
-      procedure Input_Entry (Val : Str)               is begin Current_Input_Entry := To_Str_Unbound (Val); end;
+      procedure Set_Put     (Val : Ptr_Procedure_Put) is begin Current_Put         := Val; end;
+      procedure Line_Size   (Val : Positive)          is begin Current_Line_Size   := Val; end;
+      procedure Input_Entry (Val : Str_Unbound)       is begin Current_Input_Entry := Val; end;
       procedure Put (Item : Str) is
-        Count : Int_64_Natural := 0;
         begin
-          Current_Log := Current_Log & To_Str_Unbound (Item);
+          Current_Log := Current_Log & Item;
           if Current_Put /= null then Current_Put.All (Item); end if;
-          for Get of Item loop
-            if Get = Char_16'Val (Char_8'Pos (ASCII.CR)) then Count := Count + 1; end if;
+          
+          -- Count new lines
+          for I of Item loop
+            if I = To_Char_16 (ASCII.CR) then Current_Lines := Current_Lines + 1; end if;
           end loop;
-          Current_Lines := Current_Lines + Count;
         end;
-    private
-      Current_Put         : Ptr_Procedure_Put;
-      Current_Log         : Str_Unbound;
-      Current_Input_Entry : Str_Unbound;
-      Current_Lines       : Int_64_Natural;
-      Current_Tasks       : Positive;
-      Current_Line_Size   : Positive := 80;
     end;
 
-  -- Public Safe_IO interface that wraps the protected type
-  procedure Use_Ada_Put                                    is begin Set_Put (Ada.Wide_Text_IO.Put'Access);    end; 
-  procedure Line        (Num  : Positive := 1)             is begin for I in 1..Num loop Put (EOL); end loop; end;
-  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (Val);                end;
-  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);                  end;
-  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);                    end;
-  procedure Put         (Item : Str_Unbound)               is begin Put (To_Str (Item));                      end;
-  procedure Put         (Item : Char_16)                   is begin Put (Item & "");                          end;                  
-  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);                       end;
-  procedure Line        (Item : Char_16)                   is begin Line (Item & "");                         end;    
-  procedure Line        (Item : Str_Unbound)               is begin Line (To_Str (Item));                     end;
-  procedure Line        (Item : Str)                       is begin Put (Item); Line;                         end;
+  -- Public Safe_IO interface to wrap the protected type
+  procedure Use_Ada_Put                                    is begin Set_Put (Ada_IO.Put'Access);   end; 
+  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (U (Val)); end;
+  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);       end;
+  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);         end;
+  procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                end;
+  procedure Put         (Item : Char)                      is begin Put (Item & "");               end;                  
+  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);            end;
+  procedure Line        (Item : Char)                      is begin Line (Item & "");              end;    
+  procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));               end;
+  procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);              end;
   function Extension    (Path : Str) return Str            is (Path (Index (Path, ".") + 1..Path'Last));
-  function Log                       return Str            is (Safe_IO.Log);
-  function Input_Entry               return Str            is (Safe_IO.Input_Entry); 
+  function Log                       return Str_Unbound    is (Safe_IO.Log);
+  function Input_Entry               return Str            is (S (Safe_IO.Input_Entry)); 
   function Lines                     return Int_64_Natural is (Safe_IO.Lines);
   function Line_Size                 return Positive       is (Safe_IO.Line_Size);
 
@@ -70,19 +78,18 @@ package body Neo.Core.Console is
   -- Internal State --
   --------------------
 
-  -- Maximum cvar values displayable after query
-  MAX_VALUES_DISPLAYABLE : constant Positive := 5; 
-
+   FEEDBACK_PREFIX : constant Str := ">>> ";
+   
   -- Internal data structures
   type Command_State is record 
-      Save     : access function return Str;
-      Callback : access procedure (Args : Array_Str_Unbound);
+      Save     : access function return Str := null;
+      Callback : access procedure (Args : Array_Str_Unbound) := null;
     end record;
   type CVar_State is record 
-      Val : Str_Unbound; -- A cvar that goes out of scope is not forgotten
-      Get : access function return Str;
-      Set : access procedure (Val : Str);
-    end record;
+      Val : Str_Unbound := NULL_STR_UNBOUND; -- A cvar that goes out of scope is not forgotten
+      Get : access function return Str := null;
+      Set : access procedure (Val : Str) := null;
+   end record;
 
   -- Data types
   package Hashed_CVar    is new Hashed (CVar_State);
@@ -93,15 +100,33 @@ package body Neo.Core.Console is
   Commands : Hashed_Command.Safe_Map;
   CVars    : Hashed_CVar.Safe_Map;
 
-  ----------
-  -- CVar --
-  ----------
+  -------------------
+  -- Internal CVar --
+  -------------------
+  --
+  -- Common functionality shared between different CVar kinds - registration and deletion from the global CVars
+  --
 
-  package body CVar is
+  generic
+    Name     : Str;
+    type Var_T is private;
+    Initial  : Var_T;
+    Settable : Bool := True;
+    with procedure Handle_Set (Val : Str);
+    with function Handle_Get return Str;
+    with procedure Set (Val : Var_T);
+    with function Get return Var_T;
+    with function To_Str_Unbound (Val : Var_T) return Str_Unbound; -- Because 'Image only works on scalar things...
+  package CVar_Internal is end;
+
+  package body CVar_Internal is
       Duplicate, Parse : Exception;
 
+      procedure Informal_Handle_Set (Val : Str) renames Handle_Set;
+      function Informal_Handle_Get return Str renames Handle_Get;
+
       -- Controller
-      type Control_State is new Controlled with null record;
+      type Control_State is new Limited_Controlled with null record;
       procedure Initialize (Control : in out Control_State);
       procedure Finalize   (Control : in out Control_State);
       procedure Initialize (Control : in out Control_State) is
@@ -109,50 +134,70 @@ package body Neo.Core.Console is
           if Commands.Has (Name) then
             if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
             CVars.Replace (Name, (Val => CVars.Get (Name).Val,
-                                  Get => Handle_Get'Unrestricted_Access,
-                                  Set => Handle_Set'Unrestricted_Access));
-            Handle_Set (To_Str (CVars.Get (Name).Val));
+                                  Get => Informal_Handle_Get'Unrestricted_Access,
+                                  Set => Informal_Handle_Set'Unrestricted_Access));
+            Handle_Set (S (CVars.Get (Name).Val));
           else
             CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
-                                 Get => Handle_Get'Unrestricted_Access,
-                                 Set => Handle_Set'Unrestricted_Access));
+                                 Get => Informal_Handle_Get'Unrestricted_Access,
+                                 Set => Informal_Handle_Set'Unrestricted_Access));
             Set (Initial);
           end if;
         end;
       procedure Finalize (Control : in out Control_State) is
         begin
-          if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Trim (Safe_Var_T.Get'Img, Both)),
+          Line ("There is a finalization bug here, because this is never called!"); -- !!!
+          Line (S (To_Str_Unbound (Get)));
+          if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Get),
                                                  Get => null,
                                                  Set => null));
           else CVars.Delete (Name); end if;
         end;
       Controller : Control_State;
+    end;
 
-      -- Internal protected type to maintain task safety
+  ----------
+  -- CVar --
+  ----------
+
+  -- Maximum cvar values displayable after query
+  MAX_VALUES_DISPLAYABLE : constant Positive := 5; 
+
+  package body CVar is
+      
+      -- Internal data
       protected Safe_Var_T with Lock_Free is
-          function Get return Var_T is (Current);
-          procedure Set (Val : Var_T) is begin Current := Val; end;
+          function Get return Var_T;
+          procedure Set (Val : Var_T);
         private
           Current : Var_T;
         end;
-
-      -- Get
-      function Get return Var_T is (Safe_Var_T.Get);
-      function Handle_Get return Str is
-        Vals : Str_Unbound := To_Str_Unbound (Trim (Var_T'First'Img, Both));
-        begin
-          if Var_T'Pos (Var_T'Last) - Var_T'Pos (Var_T'First) > MAX_VALUES_DISPLAYABLE then
-            Vals := Vals & ".." & To_Str (Trim (Var_T'Last'Img, Both));
-          else
-            for I in Var_T'Val (Var_T'Pos (Var_T'first) + 1)..Var_T'Last loop
-              Vals := Vals & ", " & To_Str_Unbound (Trim (I'Img, Both));
-            end loop;
-          end if;
-          return Help & EOL & "Current value: " & To_Str (Trim (Safe_Var_T.Get'Img, Both)) & EOL & "Possible values: " & To_Str (Vals);
+      protected body Safe_Var_T is
+          function Get return Var_T is (Current);
+          procedure Set (Val : Var_T) is begin Current := Val; end;
         end;
 
-      -- Set
+      -- Accessors
+      function Get return Var_T is (Safe_Var_T.Get);
       procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
+      function S (Val : Var_T) return Str is (To_Str (Trim (Get'Img, Both)));
+      function To_Str_Unbound (Val : Var_T) return Str_Unbound is (To_Str_Unbound (Trim (Get'Img, Both)));
+
+      -- Commandline interaction
+      function Handle_Get return Str is
+        Vals : Str_Unbound := NULL_STR_UNBOUND;
+        begin
+          if Var_T'Pos (Var_T'Last) - Var_T'Pos (Var_T'First) > MAX_VALUES_DISPLAYABLE then
+            Vals := U (Var_T'First'Wide_Image & " .." & Var_T'Last'Wide_Image);
+          else
+            for I in Var_T'Range loop
+              Vals := Vals & ", " & To_Str_Unbound (I);
+            end loop;
+          end if;
+          return FEEDBACK_PREFIX & Help & EOL &
+                 FEEDBACK_PREFIX & "Current value: " & S (Get) & EOL &
+                 FEEDBACK_PREFIX & (if Settable then "Possible values: " & S (Vals) else NULL_STR);
+        end;
       procedure Handle_Set (Val : Str) is
         begin
           if not Settable then
@@ -162,15 +207,104 @@ package body Neo.Core.Console is
           Set (Var_T'Wide_Value (Val));
         exception when Constraint_Error =>
           for I in Var_T'Range loop
-            if Val = To_Str (I'Img) then
+            if Val = S (I) then
               Set (I);
               exit;
             elsif I = Var_T'Last then
-              Line ("Incorrect parameter for cvar """ & Name & """: " & Val);
+              Line (FEEDBACK_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
               Line (Handle_Get);
             end if;
           end loop;
         end;
+
+      -- Global registration
+      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
+    end;
+
+  ---------------
+  -- CVar_Real --
+  ---------------
+
+  package body CVar_Real is
+
+      -- Internal data
+      protected Safe_Var_T with Lock_Free is
+          function Get return Var_T;
+          procedure Set (Val : Var_T);
+        private
+          Current : Var_T;
+        end;
+      protected body Safe_Var_T is
+          function Get return Var_T is (Current);
+          procedure Set (Val : Var_T) is begin Current := Val; end;
+        end;
+
+      -- Accessors
+      function Get return Var_T is (Safe_Var_T.Get);
+      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
+      function S (Val : Var_T) return Str is (To_Str (Trim (Get'Img, Both)));
+      function To_Str_Unbound (Val : Var_T) return Str_Unbound is (To_Str_Unbound (Trim (Get'Img, Both)));
+
+      -- Commandline interaction
+      function Handle_Get return Str is
+        (FEEDBACK_PREFIX & Help & EOL &
+         FEEDBACK_PREFIX & "Current value: " & S (Get) & EOL &
+         FEEDBACK_PREFIX & "Possible values: " & S (Var_T'First) & ".." & S (Var_T'Last));
+      procedure Handle_Set (Val : Str) is
+        begin
+          if not Settable then
+            Line (FEEDBACK_PREFIX & Name & " is not settable!");
+            return;
+          end if;
+          Set (Var_T'Wide_Value (Val));
+        exception when Constraint_Error =>
+          Line (FEEDBACK_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
+          Line (Handle_Get);
+        end;
+
+      -- Global registration
+      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
+    end;
+
+  --------------
+  -- CVar_Str --
+  --------------
+
+  package body CVar_Str is
+
+      -- Internal data
+      protected Safe_Var_T is
+          function Get return Str_Unbound;
+          procedure Set (Val : Str_Unbound);
+        private
+          Current : Str_Unbound;
+        end;
+      protected body Safe_Var_T is
+          function Get return Str_Unbound is (Current);
+          procedure Set (Val : Str_Unbound) is begin Current := Val; end;
+        end;
+
+      -- Accessors
+      function Get return Str is (S (Safe_Var_T.Get));
+      function Get return Str_Unbound is (Safe_Var_T.Get);
+      procedure Set (Val : Str) is begin Safe_Var_T.Set (To_Str_Unbound (Val)); end;
+      procedure Set (Val : Str_Unbound) is begin Safe_Var_T.Set (Val); end;
+      function To_Str_Unbound (Val : Str_Unbound) return Str_Unbound is (Val);
+
+      -- Commandline interaction
+      function Handle_Get return Str is (FEEDBACK_PREFIX & Help & EOL & FEEDBACK_PREFIX & "cCurrent value: " & Get);
+      procedure Handle_Set (Val : Str) is
+        begin
+          if not Settable then
+            Line (FEEDBACK_PREFIX & Name & " is not settable!");
+            return;
+          end if;
+          Set (Val);
+        end;
+
+      -- Global registration
+      package Internal is new
+        CVar_Internal (Name, Str_Unbound, To_Str_Unbound (Initial), Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
     end;
 
   -------------
@@ -181,7 +315,7 @@ package body Neo.Core.Console is
       Duplicate, Parse : Exception;
 
       -- Callback is a generic formal so a rename needs to be present to pass out function pointers
-      procedure Informal (Args : Array_Str_Unbound) renames Callback; 
+      procedure Informal_Callback (Args : Array_Str_Unbound) renames Callback; 
 
       -- Controller
       type Control_State is new Controlled with null record;
@@ -191,7 +325,7 @@ package body Neo.Core.Console is
       procedure Initialize (Control : in out Control_State) is
         begin
           if Commands.Has (Name) then raise Duplicate; end if;
-          Commands.Insert (Name, (Informal'Unrestricted_Access, Save));
+          Commands.Insert (Name, (Save, Informal_Callback'Unrestricted_Access));
         end;
       Controller : Control_State;
     end;
@@ -199,22 +333,22 @@ package body Neo.Core.Console is
   -- Input entry parsing
   procedure Submit (Text : Str) is
     Tokens : Array_Str_Unbound := Split (Text);
-    CMD    : constant Str := To_Str (Tokens (1));
+    CMD    : constant Str := S (Tokens (1));
     begin
       if Commands.Has (CMD) then Commands.Get (CMD).Callback.All (Tokens (2..Tokens'Length));
       elsif CVars.Has (CMD) then
         if Tokens'Length = 1 then
           if CVars.Get (CMD).Get /= null then Line (CVars.Get (CMD).Get.All); end if;
-        elsif CVars.Get (CMD).Set /= null then CVars.Get (CMD).Set.All (To_Str (Tokens (2))); end if;
+        elsif CVars.Get (CMD).Set /= null then CVars.Get (CMD).Set.All (S (Tokens (2))); end if;
       else raise Constraint_Error; end if;
-    exception when others => Line ("No such cvar or command!"); end;
+    exception when others => Line (FEEDBACK_PREFIX & "No such cvar or command!"); end;
 
   -- Autocomplete aid
   function Autocomplete (Text : Str) return Array_Str_Unbound is
     Result : Vector_Str_Unbound.Unsafe.Vector;
     begin
       for CVar of CVars.Keys loop
-        if To_Str (CVar)(1..Text'Length) = Text then Result.Append (CVar); end if;
+        if S (CVar) (1..Text'Length) = Text then Result.Append (CVar); end if;
       end loop;
       return Vector_Str_Unbound.To_Unsafe_Array (Result);
     end;
@@ -236,24 +370,24 @@ package body Neo.Core.Console is
       end;
     package Hashed_Indexes is new Hashed (Positive);
     J         : Int  := 1;
-    In_Quote  : Bool := False;
     In_Column : Bool := True;
-    Data      : File_Type;
+    In_Quote  : Bool := False;
     Column    : Str_Unbound;
+    Data      : Ada_IO.File_Type;
     Indexes   : Hashed_Indexes.Unsafe.Map;
     Locales   : Hashed_Locale.Unsafe.Map;
     Language  : Hashed_Language.Unsafe.Map;
     Entries   : Vector_Str_Unbound.Unsafe.Vector;
     ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
     begin
-      Open (Data, In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
-      for I of Split (Get_Line (Data), ",") loop
-        Indexes.Insert (I, J);
-        Locales.Insert (I, Language);
-        J := J + 1;
-      end loop;
-      while not End_Of_File (Data) loop
-        for I of Get_Line (Data) loop
+      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & S & PATH_LOCALE)); -- Str_8 !!!
+      --for I of Split (Ada_IO.Get_Line (Data), ",") loop
+      --  Indexes.Insert (I, J);
+      --  Locales.Insert (I, Language);
+      --  J := J + 1;
+      --end loop;
+      while not Ada_IO.End_Of_File (Data) loop
+        for I of Ada_IO.Get_Line (Data) loop
           case I is
             when '"' =>
               if not In_Quote then
@@ -284,63 +418,68 @@ package body Neo.Core.Console is
           Locales.Replace (Key (I), Language);
         end loop;
       end loop;
-      Close (Data);
+      Ada_IO.Close (Data);
       return Locales;
     exception when others => return Locales; end;
 
   -- Initalized data
-  LOCALE : constant Hashed_Locale.Unsafe.Map := Initialize_Localization;
+  LOCALE : Hashed_Locale.Unsafe.Map; -- := Initialize_Localization;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
     CODE : constant Language_Code := Language;
     LANG : constant Str_Unbound   := To_Str_Unbound (CODE (1) & CODE (2) & CODE (3)); -- This is stupid...
     begin
-      return (if To_Str (LANG) /= "eng"
+      return (if S (LANG) /= "eng"
                 and then LOCALE.Contains (LANG)
                 and then LOCALE.Element (LANG).Contains (To_Str_Unbound (Item))
-              then To_Str (LOCALE.Element (LANG).Element (To_Str_Unbound (Item)))
+              then S (LOCALE.Element (LANG).Element (To_Str_Unbound (Item)))
               else Item);
     end;
 
   -------------------
   -- Configuration --
   -------------------
-
-  -- Controller
+  
   type Control_State is new Controlled with null record;
   procedure Initialize (Control : in out Control_State);
   procedure Finalize   (Control : in out Control_State);
   procedure Initialize (Control : in out Control_State) is
-    package Parse_Config is new Parser (PATH_CONFIG, "--"); use Parse_Config;
+    Data : Ada_IO.File_Type;
+    I    : Natural     := 0;
+    Text : Str_Unbound := NULL_STR_UNBOUND;
     begin
-      while not At_EOF loop Submit (Next_Line); end loop;
-    exception when others => null; end; -- There is no configuration file.. automatically use defaults
+      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & S & PATH_CONFIG)); -- Str_8 !!!
+      while not Ada_IO.End_Of_File (Data) loop
+        Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
+        I    := Index (Text, "--");
+        if I = 0 then Submit (S (Text));
+        elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+      end loop;
+    exception when others => null; end; -- No configuration file.. use defaults
   procedure Finalize (Control : in out Control_State) is
-    Data : File_Type;
+    Data : Ada_IO.File_Type;
     begin
-      Open (Data, Out_File, To_Str_8 (PATH_CONFIG)); -- Str_8 !!!
+      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (App_Path.Get & S & PATH_CONFIG)); -- Str_8 !!!
 
       -- Header
-      Put_Line (Data, "-- " & NAME_ID & " " & VERSION & " config: " & Date_Str);
-      Put_Line (Data, "-- Note: To restore default values simply delete this file.");
-      New_Line (Data);
-      Put_Line (Data, "-- CVars");
+      Ada_IO.Put_Line (Data, "-- " & NAME_ID & " " & VERSION & " config: " & To_Str (Image (Get_Start_Time)));
+      Ada_IO.Put_Line (Data, "-- To restore default values simply delete this file.");
+      Ada_IO.New_Line (Data);
+      Ada_IO.Put_Line (Data, "-- CVars");
 
-      -- CVars
-      for I in CVars.Get.Iterate loop
-        Put_Line (Data, To_Str (Key (I) & " " & Element (I).Val));
-      end loop;
+      -- CVars NOTE: This fails due to finalization bug !!!
+      for I in CVars.Get.Iterate loop Ada_IO.Put_Line (Data, S (Key (I) & " " & Element (I).Val)); end loop;
 
       -- Commands
       for I in Commands.Get.Iterate loop
         if Element (I).Save /= null then 
-          New_Line (Data);
-          Put_Line (Data, "-- " & To_Str (Key (I)));
-          Put_Line (Data, Element (I).Save.All);
+          Ada_IO.New_Line (Data);
+          Ada_IO.Put_Line (Data, "-- " & S (Key (I)));
+          Ada_IO.Put_Line (Data, Element (I).Save.All);
         end if;
       end loop;
-      Close (Data);
+      Ada_IO.Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
-  Controller : Control_State;
+    Controller : Control_State;
 end;

@@ -25,19 +25,19 @@ separate (Neo.Data.Texture) package body Khronos is
     -- KTX texture format: http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
     type KTX_Header_State is record
         Id              : Str_8 (1..12)   := (others => NULL_CHAR_8);
-        Endianness      : Int_32_Unsigned := 0;
-        Kind            : Int_32_Unsigned := 0;
-        Image_Size      : Int_32_Unsigned := 0;
-        GL_Format       : Int_32_Unsigned := 0;
-        Internal_Format : Int_32_Unsigned := 0;
-        Base_Format     : Int_32_Unsigned := 0;
-        Width           : Int_32_Unsigned := 0;
-        Height          : Int_32_Unsigned := 0;
-        Depth           : Int_32_Unsigned := 0;
-        Array_Length    : Int_32_Unsigned := 0;
-        Faces           : Int_32_Unsigned := 0;
-        Mipmap_Levels   : Int_32_Unsigned := 0;
-        Key_Value_Bytes : Int_32_Unsigned := 0;
+        Endianness      : Int_Unsigned := 0;
+        Kind            : Int_Unsigned := 0;
+        Image_Size      : Int_Unsigned := 0;
+        GL_Format       : Int_Unsigned := 0;
+        Internal_Format : Int_Unsigned := 0;
+        Base_Format     : Int_Unsigned := 0;
+        Width           : Int_Unsigned := 0;
+        Height          : Int_Unsigned := 0;
+        Depth           : Int_Unsigned := 0;
+        Array_Length    : Int_Unsigned := 0;
+        Faces           : Int_Unsigned := 0;
+        Mipmap_Levels   : Int_Unsigned := 0;
+        Key_Value_Bytes : Int_Unsigned := 0;
       end record with Pack;
 
     -- Open the file and load the header

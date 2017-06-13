@@ -21,7 +21,7 @@ package Neo.API.ZStandard is
   -----------
 
   -- size_t
-  -- unsigned
+  -- Int_Unsigned
   -- int
   -- void*
   -- const char*
@@ -46,11 +46,11 @@ package Neo.API.ZStandard is
   -- Subprograms --
   -----------------
 
-  function ZSTD_versionNumber return Int_32_Unsigned_C -- 
+  function ZSTD_versionNumber return Int_Unsigned_C -- 
                               with Import => True, Convention => C, External_Name => "ZSTD_versionNumber";
 
   function ZSTD_isError (code : size_t) -- size_t
-                         return Int_32_Unsigned_C -- Int_32_Unsigned_C
+                         return Int_Unsigned_C -- Int_Unsigned_C
                          with Import => True, Convention => C, External_Name => "ZSTD_isError";
 
   function ZSTD_getErrorName (code : size_t) -- size_t

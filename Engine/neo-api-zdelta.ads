@@ -23,11 +23,11 @@ package Neo.API.ZDelta is
 typedef char charf;
 typedef int intf;
 typedef void *voidpf;
-  -- uInt    Int_32_Unsigned_C 
+  -- uInt    Int_Unsigned_C 
   -- uLong   Int_Ptr
   -- uLongf  Int_Ptr
 typedef void *voidp;
-typedef unsigned char Byte;
+typedef Int_Unsigned char Byte;
 typedef off_t z_off_t;
 typedef void *const voidpc;
 
@@ -250,7 +250,7 @@ typedef void *const voidpc;
                             with Import => True, Convention => StdCall, External_Name => "zd_uncompressN1"; 
 
   -- 
-  function zd_adler32 (adler : Int_Ptr_C; -- uLong
+  function zd_adler32 (adler : Int_Ptr; -- uLong
                        buf   : ; -- const Bytef*
                        len   : ) -- uInt
                        return  -- uLong

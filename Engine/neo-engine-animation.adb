@@ -19,8 +19,8 @@ package body Neo.Engine.Animation is
   -- Render --
   ------------
 
-  function Render (Mesh : Skeletal_Mesh_State; Pose : in out Pose_State) return Vector_Mesh.Unsafe.Vector is
-    Results  : Vector_Mesh.Unsafe.Vector;
+  function Render (Mesh : Skeletal_Mesh_State; Pose : Pose_State) return Vector_Mesh.Unsafe.Vector is
+    Result   : Vector_Mesh.Unsafe.Vector;
     Skeleton : Treed_Joint.Unsafe.Tree;
     begin
       for Blend of Pose.Blends loop

@@ -23,13 +23,13 @@ package Neo.API.OpenAL is
   -- ALvoid     Ptr
   -- ALint      Int_C
   -- ALsizei    Int_Size_C
-  -- ALenum     Int_32_Unsigned_C
+  -- ALenum     Int_Unsigned_C
   -- ALboolean  Int_8_Unsigned_C
   -- ALbyte     Int_8_Signed_C
   -- ALubyte    Int_8_Unsigned_C
   -- ALshort    Int_16_Signed_C
   -- ALushort   Int_16_Unsigned_C
-  -- ALuint     Int_32_Unsigned_C
+  -- ALuint     Int_Unsigned_C
   -- ALfloat    Real_32_C
   -- ALdouble   Real_64_C
   -- ALint*     Ptr_Int_C,             Ptr_Array_Int_C
@@ -48,271 +48,271 @@ package Neo.API.OpenAL is
   ---------------
 
   -- "no distance model" or "no buffer"
-  AL_NONE  : constant Int_32_Unsigned_C := 0; -- 0
+  AL_NONE  : constant Int_Unsigned_C := 0; -- 0
 
   -- AL Boolean
   AL_FALSE : constant Int_8_Unsigned_C := 0; -- 0
   AL_TRUE  : constant Int_8_Unsigned_C := 1; -- 0
 
   -- 2.7. AL Errors
-  AL_NO_ERROR          : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0000
-  AL_INVALID_NAME      : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0000
-  AL_INVALID_ENUM      : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0000
-  AL_INVALID_VALUE     : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0000
-  AL_INVALID_OPERATION : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0000
-  AL_OUT_OF_MEMORY     : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0000
+  AL_NO_ERROR          : constant Int_Unsigned_C := 16#0000_0000#; -- 0000
+  AL_INVALID_NAME      : constant Int_Unsigned_C := 16#0000_A001#; -- 0000
+  AL_INVALID_ENUM      : constant Int_Unsigned_C := 16#0000_A002#; -- 0000
+  AL_INVALID_VALUE     : constant Int_Unsigned_C := 16#0000_A003#; -- 0000
+  AL_INVALID_OPERATION : constant Int_Unsigned_C := 16#0000_A004#; -- 0000
+  AL_OUT_OF_MEMORY     : constant Int_Unsigned_C := 16#0000_A005#; -- 0000
 
   -- 3.1.1. Simple Queries
-  AL_DOPPLER_FACTOR : constant Int_32_Unsigned_C := 16#0000_C000#; -- 0000
-  AL_SPEED_OF_SOUND : constant Int_32_Unsigned_C := 16#0000_C003#; -- 0000
-  AL_DISTANCE_MODEL : constant Int_32_Unsigned_C := 16#0000_D000#; -- 0000
+  AL_DOPPLER_FACTOR : constant Int_Unsigned_C := 16#0000_C000#; -- 0000
+  AL_SPEED_OF_SOUND : constant Int_Unsigned_C := 16#0000_C003#; -- 0000
+  AL_DISTANCE_MODEL : constant Int_Unsigned_C := 16#0000_D000#; -- 0000
 
   -- 3.1.2. String Queries
-  AL_VENDOR     : constant Int_32_Unsigned_C := 16#0000_B001#; -- 0000
-  AL_VERSION    : constant Int_32_Unsigned_C := 16#0000_B002#; -- 0000
-  AL_RENDERER   : constant Int_32_Unsigned_C := 16#0000_B003#; -- 0000
-  AL_EXTENSIONS : constant Int_32_Unsigned_C := 16#0000_B004#; -- 0000
+  AL_VENDOR     : constant Int_Unsigned_C := 16#0000_B001#; -- 0000
+  AL_VERSION    : constant Int_Unsigned_C := 16#0000_B002#; -- 0000
+  AL_RENDERER   : constant Int_Unsigned_C := 16#0000_B003#; -- 0000
+  AL_EXTENSIONS : constant Int_Unsigned_C := 16#0000_B004#; -- 0000
 
   -- 3.4. Attenuation By Distance
-  AL_INVERSE_DISTANCE          : constant Int_32_Unsigned_C := 16#0000_D001#; -- 0000
-  AL_INVERSE_DISTANCE_CLAMPED  : constant Int_32_Unsigned_C := 16#0000_D002#; -- 0000
-  AL_LINEAR_DISTANCE           : constant Int_32_Unsigned_C := 16#0000_D003#; -- 0000
-  AL_LINEAR_DISTANCE_CLAMPED   : constant Int_32_Unsigned_C := 16#0000_D004#; -- 0000
-  AL_EXPONENT_DISTANCE         : constant Int_32_Unsigned_C := 16#0000_D005#; -- 0000
-  AL_EXPONENT_DISTANCE_CLAMPED : constant Int_32_Unsigned_C := 16#0000_D006#; -- 0000
+  AL_INVERSE_DISTANCE          : constant Int_Unsigned_C := 16#0000_D001#; -- 0000
+  AL_INVERSE_DISTANCE_CLAMPED  : constant Int_Unsigned_C := 16#0000_D002#; -- 0000
+  AL_LINEAR_DISTANCE           : constant Int_Unsigned_C := 16#0000_D003#; -- 0000
+  AL_LINEAR_DISTANCE_CLAMPED   : constant Int_Unsigned_C := 16#0000_D004#; -- 0000
+  AL_EXPONENT_DISTANCE         : constant Int_Unsigned_C := 16#0000_D005#; -- 0000
+  AL_EXPONENT_DISTANCE_CLAMPED : constant Int_Unsigned_C := 16#0000_D006#; -- 0000
 
   -- 4.1. Basic Listener and Source Attributes
-  AL_POSITION : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0000
-  AL_VELOCITY : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0000
-  AL_GAIN     : constant Int_32_Unsigned_C := 16#0000_100A#; -- 0000
+  AL_POSITION : constant Int_Unsigned_C := 16#0000_1004#; -- 0000
+  AL_VELOCITY : constant Int_Unsigned_C := 16#0000_1006#; -- 0000
+  AL_GAIN     : constant Int_Unsigned_C := 16#0000_100A#; -- 0000
 
   -- 4.2.1. Listener Attributes
-  AL_ORIENTATION : constant Int_32_Unsigned_C := 16#0000_10#; -- 0000
+  AL_ORIENTATION : constant Int_Unsigned_C := 16#0000_10#; -- 0000
 
   -- 4.3.2. Source Attributes
-  AL_SOURCE_RELATIVE    : constant Int_32_Unsigned_C := 16#0000_0202#; -- 000
-  AL_SOURCE_TYPE        : constant Int_32_Unsigned_C := 16#0000_1027#; -- 0000
-  AL_UNDETERMINED       : constant Int_32_Unsigned_C := 16#0000_1030#; -- 0000
-  AL_STATIC             : constant Int_32_Unsigned_C := 16#0000_1028#; -- 0000
-  AL_STREAMING          : constant Int_32_Unsigned_C := 16#0000_1029#; -- 0000
-  AL_LOOPING            : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0000
-  AL_BUFFER             : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0000
-  AL_BUFFERS_QUEUED     : constant Int_32_Unsigned_C := 16#0000_1015#; -- 0000
-  AL_BUFFERS_PROCESSED  : constant Int_32_Unsigned_C := 16#0000_1016#; -- 0000
-  AL_MIN_GAIN           : constant Int_32_Unsigned_C := 16#0000_100D#; -- 0000
-  AL_MAX_GAIN           : constant Int_32_Unsigned_C := 16#0000_100E#; -- 0000
-  AL_REFERENCE_DISTANCE : constant Int_32_Unsigned_C := 16#0000_1020#; -- 0000
-  AL_ROLLOFF_FACTOR     : constant Int_32_Unsigned_C := 16#0000_1021#; -- 0000
-  AL_MAX_DISTANCE       : constant Int_32_Unsigned_C := 16#0000_1023#; -- 0000
-  AL_PITCH              : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0000
-  AL_DIRECTION          : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0000
-  AL_CONE_INNER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0000
-  AL_CONE_OUTER_ANGLE   : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0000
-  AL_CONE_OUTER_GAIN    : constant Int_32_Unsigned_C := 16#0000_1022#; -- 0000
-  AL_SEC_OFFSET         : constant Int_32_Unsigned_C := 16#0000_1024#; -- 0000
-  AL_SAMPLE_OFFSET      : constant Int_32_Unsigned_C := 16#0000_1025#; -- 0000
-  AL_BYTE_OFFSET        : constant Int_32_Unsigned_C := 16#0000_1026#; -- 0000
+  AL_SOURCE_RELATIVE    : constant Int_Unsigned_C := 16#0000_0202#; -- 000
+  AL_SOURCE_TYPE        : constant Int_Unsigned_C := 16#0000_1027#; -- 0000
+  AL_UNDETERMINED       : constant Int_Unsigned_C := 16#0000_1030#; -- 0000
+  AL_STATIC             : constant Int_Unsigned_C := 16#0000_1028#; -- 0000
+  AL_STREAMING          : constant Int_Unsigned_C := 16#0000_1029#; -- 0000
+  AL_LOOPING            : constant Int_Unsigned_C := 16#0000_1007#; -- 0000
+  AL_BUFFER             : constant Int_Unsigned_C := 16#0000_1009#; -- 0000
+  AL_BUFFERS_QUEUED     : constant Int_Unsigned_C := 16#0000_1015#; -- 0000
+  AL_BUFFERS_PROCESSED  : constant Int_Unsigned_C := 16#0000_1016#; -- 0000
+  AL_MIN_GAIN           : constant Int_Unsigned_C := 16#0000_100D#; -- 0000
+  AL_MAX_GAIN           : constant Int_Unsigned_C := 16#0000_100E#; -- 0000
+  AL_REFERENCE_DISTANCE : constant Int_Unsigned_C := 16#0000_1020#; -- 0000
+  AL_ROLLOFF_FACTOR     : constant Int_Unsigned_C := 16#0000_1021#; -- 0000
+  AL_MAX_DISTANCE       : constant Int_Unsigned_C := 16#0000_1023#; -- 0000
+  AL_PITCH              : constant Int_Unsigned_C := 16#0000_1003#; -- 0000
+  AL_DIRECTION          : constant Int_Unsigned_C := 16#0000_1005#; -- 0000
+  AL_CONE_INNER_ANGLE   : constant Int_Unsigned_C := 16#0000_1001#; -- 0000
+  AL_CONE_OUTER_ANGLE   : constant Int_Unsigned_C := 16#0000_1002#; -- 0000
+  AL_CONE_OUTER_GAIN    : constant Int_Unsigned_C := 16#0000_1022#; -- 0000
+  AL_SEC_OFFSET         : constant Int_Unsigned_C := 16#0000_1024#; -- 0000
+  AL_SAMPLE_OFFSET      : constant Int_Unsigned_C := 16#0000_1025#; -- 0000
+  AL_BYTE_OFFSET        : constant Int_Unsigned_C := 16#0000_1026#; -- 0000
 
   -- 4.3.6. Managing Source Execution
-  AL_SOURCE_STATE : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0000
-  AL_INITIAL      : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0000
-  AL_PLAYING      : constant Int_32_Unsigned_C := 16#0000_1012#; -- 0000
-  AL_PAUSED       : constant Int_32_Unsigned_C := 16#0000_1013#; -- 0000
-  AL_STOPPED      : constant Int_32_Unsigned_C := 16#0000_1014#; -- 0000
+  AL_SOURCE_STATE : constant Int_Unsigned_C := 16#0000_1010#; -- 0000
+  AL_INITIAL      : constant Int_Unsigned_C := 16#0000_1011#; -- 0000
+  AL_PLAYING      : constant Int_Unsigned_C := 16#0000_1012#; -- 0000
+  AL_PAUSED       : constant Int_Unsigned_C := 16#0000_1013#; -- 0000
+  AL_STOPPED      : constant Int_Unsigned_C := 16#0000_1014#; -- 0000
 
   -- 5.3.1. Buffer Attributes
-  AL_FREQUENCY : constant Int_32_Unsigned_C := 16#0000_2001#; -- 0000
-  AL_BITS      : constant Int_32_Unsigned_C := 16#0000_2002#; -- 0000
-  AL_CHANNELS  : constant Int_32_Unsigned_C := 16#0000_2003#; -- 0000
-  AL_SIZE      : constant Int_32_Unsigned_C := 16#0000_2004#; -- 0000
+  AL_FREQUENCY : constant Int_Unsigned_C := 16#0000_2001#; -- 0000
+  AL_BITS      : constant Int_Unsigned_C := 16#0000_2002#; -- 0000
+  AL_CHANNELS  : constant Int_Unsigned_C := 16#0000_2003#; -- 0000
+  AL_SIZE      : constant Int_Unsigned_C := 16#0000_2004#; -- 0000
 
   -- 5.3.4. Specifying Buffer Content
-  AL_FORMAT_MONO8    : constant Int_32_Unsigned_C := 16#0000_1100#; -- 0000
-  AL_FORMAT_MONO16   : constant Int_32_Unsigned_C := 16#0000_1101#; -- 0000
-  AL_FORMAT_STEREO8  : constant Int_32_Unsigned_C := 16#0000_1102#; -- 0000
-  AL_FORMAT_STEREO16 : constant Int_32_Unsigned_C := 16#0000_1103#; -- 0000
+  AL_FORMAT_MONO8    : constant Int_Unsigned_C := 16#0000_1100#; -- 0000
+  AL_FORMAT_MONO16   : constant Int_Unsigned_C := 16#0000_1101#; -- 0000
+  AL_FORMAT_STEREO8  : constant Int_Unsigned_C := 16#0000_1102#; -- 0000
+  AL_FORMAT_STEREO16 : constant Int_Unsigned_C := 16#0000_1103#; -- 0000
 
   -- ALC Boolean
   ALC_FALSE : constant Int_8_Unsigned_C := 0; -- 0
   ALC_TRUE  : constant Int_8_Unsigned_C := 1; -- 0
 
   -- 6.2.1. Context Attributes
-  ALC_FREQUENCY      : constant Int_32_Unsigned_C := 16#0000_1007#; -- 0000
-  ALC_REFRESH        : constant Int_32_Unsigned_C := 16#0000_1008#; -- 0000
-  ALC_SYNC           : constant Int_32_Unsigned_C := 16#0000_1009#; -- 0000
-  ALC_MONO_SOURCES   : constant Int_32_Unsigned_C := 16#0000_1010#; -- 0000
-  ALC_STEREO_SOURCES : constant Int_32_Unsigned_C := 16#0000_1011#; -- 0000
+  ALC_FREQUENCY      : constant Int_Unsigned_C := 16#0000_1007#; -- 0000
+  ALC_REFRESH        : constant Int_Unsigned_C := 16#0000_1008#; -- 0000
+  ALC_SYNC           : constant Int_Unsigned_C := 16#0000_1009#; -- 0000
+  ALC_MONO_SOURCES   : constant Int_Unsigned_C := 16#0000_1010#; -- 0000
+  ALC_STEREO_SOURCES : constant Int_Unsigned_C := 16#0000_1011#; -- 0000
 
   -- 6.3.6. Query for Error Conditions
-  ALC_NO_ERROR        : constant Int_32_Unsigned_C := 16#0000_0000#; -- 0000
-  ALC_INVALID_DEVICE  : constant Int_32_Unsigned_C := 16#0000_A001#; -- 0000
-  ALC_INVALID_CONTEXT : constant Int_32_Unsigned_C := 16#0000_A002#; -- 0000
-  ALC_INVALID_ENUM    : constant Int_32_Unsigned_C := 16#0000_A003#; -- 0000
-  ALC_INVALID_VALUE   : constant Int_32_Unsigned_C := 16#0000_A004#; -- 0000
-  ALC_OUT_OF_MEMORY   : constant Int_32_Unsigned_C := 16#0000_A005#; -- 0000
+  ALC_NO_ERROR        : constant Int_Unsigned_C := 16#0000_0000#; -- 0000
+  ALC_INVALID_DEVICE  : constant Int_Unsigned_C := 16#0000_A001#; -- 0000
+  ALC_INVALID_CONTEXT : constant Int_Unsigned_C := 16#0000_A002#; -- 0000
+  ALC_INVALID_ENUM    : constant Int_Unsigned_C := 16#0000_A003#; -- 0000
+  ALC_INVALID_VALUE   : constant Int_Unsigned_C := 16#0000_A004#; -- 0000
+  ALC_OUT_OF_MEMORY   : constant Int_Unsigned_C := 16#0000_A005#; -- 0000
 
   -- 6.3.7. String Query
-  ALC_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_1004#; -- 0000
-  ALC_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_1005#; -- 0000
-  ALC_EXTENSIONS               : constant Int_32_Unsigned_C := 16#0000_1006#; -- 0000
+  ALC_DEFAULT_DEVICE_SPECIFIER : constant Int_Unsigned_C := 16#0000_1004#; -- 0000
+  ALC_DEVICE_SPECIFIER         : constant Int_Unsigned_C := 16#0000_1005#; -- 0000
+  ALC_EXTENSIONS               : constant Int_Unsigned_C := 16#0000_1006#; -- 0000
 
   -- 6.3.8. Integer Query
-  ALC_ATTRIBUTES_SIZE : constant Int_32_Unsigned_C := 16#0000_1002#; -- 0000
-  ALC_ALL_ATTRIBUTES  : constant Int_32_Unsigned_C := 16#0000_1003#; -- 0000
-  ALC_MAJOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1000#; -- 0000
-  ALC_MINOR_VERSION   : constant Int_32_Unsigned_C := 16#0000_1001#; -- 0000
+  ALC_ATTRIBUTES_SIZE : constant Int_Unsigned_C := 16#0000_1002#; -- 0000
+  ALC_ALL_ATTRIBUTES  : constant Int_Unsigned_C := 16#0000_1003#; -- 0000
+  ALC_MAJOR_VERSION   : constant Int_Unsigned_C := 16#0000_1000#; -- 0000
+  ALC_MINOR_VERSION   : constant Int_Unsigned_C := 16#0000_1001#; -- 0000
 
   -- 6.4.2. Capture
-  ALC_CAPTURE_DEVICE_SPECIFIER         : constant Int_32_Unsigned_C := 16#0000_310#; -- 0000
-  ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER : constant Int_32_Unsigned_C := 16#0000_311#; -- 0000
-  ALC_CAPTURE_SAMPLES                  : constant Int_32_Unsigned_C := 16#0000_312#; -- 0000
+  ALC_CAPTURE_DEVICE_SPECIFIER         : constant Int_Unsigned_C := 16#0000_310#; -- 0000
+  ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER : constant Int_Unsigned_C := 16#0000_311#; -- 0000
+  ALC_CAPTURE_SAMPLES                  : constant Int_Unsigned_C := 16#0000_312#; -- 0000
 
   -- 
-  AL_LOKI_IMA_ADPCM_format     : constant Int_32_Unsigned_C := 1
-  AL_FORMAT_IMA_ADPCM_MONO16_EXT      : constant Int_32_Unsigned_C :=      10000
-  AL_FORMAT_IMA_ADPCM_STEREO16_EXT    : constant Int_32_Unsigned_C :=      10001
+  AL_LOKI_IMA_ADPCM_format     : constant Int_Unsigned_C := 1
+  AL_FORMAT_IMA_ADPCM_MONO16_EXT      : constant Int_Unsigned_C :=      10000
+  AL_FORMAT_IMA_ADPCM_STEREO16_EXT    : constant Int_Unsigned_C :=      10001
 
   --
-  AL_LOKI_WAVE_format: constant Int_32_Unsigned_C :=  1
-  AL_FORMAT_WAVE_EXT                 : constant Int_32_Unsigned_C :=       10002
+  AL_LOKI_WAVE_format: constant Int_Unsigned_C :=  1
+  AL_FORMAT_WAVE_EXT                 : constant Int_Unsigned_C :=       10002
 
   --
   AL_EXT_vorbis 1
-  AL_FORMAT_VORBIS_EXT                 : constant Int_32_Unsigned_C :=     10003
+  AL_FORMAT_VORBIS_EXT                 : constant Int_Unsigned_C :=     10003
 
   --
   AL_LOKI_quadriphonic 1
-  AL_FORMAT_QUAD8_LOKI                  : constant Int_32_Unsigned_C :=    10004
-  AL_FORMAT_QUAD16_LOKI             : constant Int_32_Unsigned_C :=        10005
+  AL_FORMAT_QUAD8_LOKI                  : constant Int_Unsigned_C :=    10004
+  AL_FORMAT_QUAD16_LOKI             : constant Int_Unsigned_C :=        10005
 
   --
   AL_EXT_float32 1
-  AL_FORMAT_MONO_FLOAT32          : constant Int_32_Unsigned_C :=          10010
-  AL_FORMAT_STEREO_FLOAT32        : constant Int_32_Unsigned_C :=          10011
+  AL_FORMAT_MONO_FLOAT32          : constant Int_Unsigned_C :=          10010
+  AL_FORMAT_STEREO_FLOAT32        : constant Int_Unsigned_C :=          10011
 
   --
   AL_EXT_double 1
-  AL_FORMAT_MONO_DOUBLE_EXT       : constant Int_32_Unsigned_C :=          10012
-  AL_FORMAT_STEREO_DOUBLE_EXT     : constant Int_32_Unsigned_C :=          10013
+  AL_FORMAT_MONO_DOUBLE_EXT       : constant Int_Unsigned_C :=          10012
+  AL_FORMAT_STEREO_DOUBLE_EXT     : constant Int_Unsigned_C :=          10013
 
   --
   AL_EXT_MULAW 1
-  AL_FORMAT_MONO_MULAW_EXT   : constant Int_32_Unsigned_C :=               10014
-  AL_FORMAT_STEREO_MULAW_EXT : constant Int_32_Unsigned_C :=               10015
+  AL_FORMAT_MONO_MULAW_EXT   : constant Int_Unsigned_C :=               10014
+  AL_FORMAT_STEREO_MULAW_EXT : constant Int_Unsigned_C :=               10015
 
   --
-  AL_EXT_ALAW : constant Int_32_Unsigned_C :=  1
-  AL_FORMAT_MONO_ALAW_EXT    : constant Int_32_Unsigned_C :=               10016
-  AL_FORMAT_STEREO_ALAW_EXT : constant Int_32_Unsigned_C :=                10017
+  AL_EXT_ALAW : constant Int_Unsigned_C :=  1
+  AL_FORMAT_MONO_ALAW_EXT    : constant Int_Unsigned_C :=               10016
+  AL_FORMAT_STEREO_ALAW_EXT : constant Int_Unsigned_C :=                10017
 
   --
-  ALC_LOKI_audio_channel: constant Int_32_Unsigned_C :=  1
-  ALC_CHAN_MAIN_LOKI     : constant Int_32_Unsigned_C :=                   0x500001
-  ALC_CHAN_PCM_LOKI      : constant Int_32_Unsigned_C :=                   0x500002
-  ALC_CHAN_CD_LOKI       : constant Int_32_Unsigned_C :=                   0x500003
+  ALC_LOKI_audio_channel: constant Int_Unsigned_C :=  1
+  ALC_CHAN_MAIN_LOKI     : constant Int_Unsigned_C :=                   0x500001
+  ALC_CHAN_PCM_LOKI      : constant Int_Unsigned_C :=                   0x500002
+  ALC_CHAN_CD_LOKI       : constant Int_Unsigned_C :=                   0x500003
 
   --
-  AL_EXT_MCFORMATS : constant Int_32_Unsigned_C := 1
-  AL_FORMAT_QUAD8   : constant Int_32_Unsigned_C :=                        1204
-  AL_FORMAT_QUAD16   : constant Int_32_Unsigned_C :=                       1205
-  AL_FORMAT_QUAD32  : constant Int_32_Unsigned_C :=                        1206
-  AL_FORMAT_REAR8    : constant Int_32_Unsigned_C :=                       1207
-  AL_FORMAT_REAR16   : constant Int_32_Unsigned_C :=                       1208
-  AL_FORMAT_REAR32    : constant Int_32_Unsigned_C :=                      1209
-  AL_FORMAT_51CHN8    : constant Int_32_Unsigned_C :=                      120A
-  AL_FORMAT_51CHN16   : constant Int_32_Unsigned_C :=                      120B
-  AL_FORMAT_51CHN32   : constant Int_32_Unsigned_C :=                      120C
-  AL_FORMAT_61CHN8    : constant Int_32_Unsigned_C :=                      120D
-  AL_FORMAT_61CHN16   : constant Int_32_Unsigned_C :=                      120E
-  AL_FORMAT_61CHN32   : constant Int_32_Unsigned_C :=                      120
-  AL_FORMAT_71CHN8    : constant Int_32_Unsigned_C :=                      1210
-  AL_FORMAT_71CHN16    : constant Int_32_Unsigned_C :=                     1211
-  AL_FORMAT_71CHN32    : constant Int_32_Unsigned_C :=                     1212
+  AL_EXT_MCFORMATS : constant Int_Unsigned_C := 1
+  AL_FORMAT_QUAD8   : constant Int_Unsigned_C :=                        1204
+  AL_FORMAT_QUAD16   : constant Int_Unsigned_C :=                       1205
+  AL_FORMAT_QUAD32  : constant Int_Unsigned_C :=                        1206
+  AL_FORMAT_REAR8    : constant Int_Unsigned_C :=                       1207
+  AL_FORMAT_REAR16   : constant Int_Unsigned_C :=                       1208
+  AL_FORMAT_REAR32    : constant Int_Unsigned_C :=                      1209
+  AL_FORMAT_51CHN8    : constant Int_Unsigned_C :=                      120A
+  AL_FORMAT_51CHN16   : constant Int_Unsigned_C :=                      120B
+  AL_FORMAT_51CHN32   : constant Int_Unsigned_C :=                      120C
+  AL_FORMAT_61CHN8    : constant Int_Unsigned_C :=                      120D
+  AL_FORMAT_61CHN16   : constant Int_Unsigned_C :=                      120E
+  AL_FORMAT_61CHN32   : constant Int_Unsigned_C :=                      120
+  AL_FORMAT_71CHN8    : constant Int_Unsigned_C :=                      1210
+  AL_FORMAT_71CHN16    : constant Int_Unsigned_C :=                     1211
+  AL_FORMAT_71CHN32    : constant Int_Unsigned_C :=                     1212
 
   --
-  AL_EXT_MULAW_MCFORMATS : constant Int_32_Unsigned_C := 1
-  AL_FORMAT_MONO_MULAW    : constant Int_32_Unsigned_C :=                  10014
-  AL_FORMAT_STEREO_MULAW  : constant Int_32_Unsigned_C :=                  10015
-  AL_FORMAT_QUAD_MULAW    : constant Int_32_Unsigned_C :=                  10021
-  AL_FORMAT_REAR_MULAW    : constant Int_32_Unsigned_C :=                  10022
-  AL_FORMAT_51CHN_MULAW   : constant Int_32_Unsigned_C :=                  10023
-  AL_FORMAT_61CHN_MULAW   : constant Int_32_Unsigned_C :=                  10024
-  AL_FORMAT_71CHN_MULAW    : constant Int_32_Unsigned_C :=                 10025
+  AL_EXT_MULAW_MCFORMATS : constant Int_Unsigned_C := 1
+  AL_FORMAT_MONO_MULAW    : constant Int_Unsigned_C :=                  10014
+  AL_FORMAT_STEREO_MULAW  : constant Int_Unsigned_C :=                  10015
+  AL_FORMAT_QUAD_MULAW    : constant Int_Unsigned_C :=                  10021
+  AL_FORMAT_REAR_MULAW    : constant Int_Unsigned_C :=                  10022
+  AL_FORMAT_51CHN_MULAW   : constant Int_Unsigned_C :=                  10023
+  AL_FORMAT_61CHN_MULAW   : constant Int_Unsigned_C :=                  10024
+  AL_FORMAT_71CHN_MULAW    : constant Int_Unsigned_C :=                 10025
 
   --
-  AL_EXT_IMA4  : constant Int_32_Unsigned_C := 1
-  AL_FORMAT_MONO_IMA4   : constant Int_32_Unsigned_C :=                    1300
-  AL_FORMAT_STEREO_IMA4 : constant Int_32_Unsigned_C :=                    1301
+  AL_EXT_IMA4  : constant Int_Unsigned_C := 1
+  AL_FORMAT_MONO_IMA4   : constant Int_Unsigned_C :=                    1300
+  AL_FORMAT_STEREO_IMA4 : constant Int_Unsigned_C :=                    1301
 
   --
-  AL_EXT_STATIC_BUFFER : constant Int_32_Unsigned_C :=  1
+  AL_EXT_STATIC_BUFFER : constant Int_Unsigned_C :=  1
 
   --
-  AL_EXT_source_distance_model  : constant Int_32_Unsigned_C := 1
-  AL_SOURCE_DISTANCE_MODEL     : constant Int_32_Unsigned_C :=              0x200
+  AL_EXT_source_distance_model  : constant Int_Unsigned_C := 1
+  AL_SOURCE_DISTANCE_MODEL     : constant Int_Unsigned_C :=              0x200
 
   --
-  AL_SOFT_buffer_sub_data  : constant Int_32_Unsigned_C := 1
-  AL_BYTE_RW_OFFSETS_SOFT  : constant Int_32_Unsigned_C :=                 1031
-  AL_SAMPLE_RW_OFFSETS_SOFT : constant Int_32_Unsigned_C :=                 1032
+  AL_SOFT_buffer_sub_data  : constant Int_Unsigned_C := 1
+  AL_BYTE_RW_OFFSETS_SOFT  : constant Int_Unsigned_C :=                 1031
+  AL_SAMPLE_RW_OFFSETS_SOFT : constant Int_Unsigned_C :=                 1032
 
   --
-  ALC_EXT_EFX : constant Int_32_Unsigned_C :=  1
+  ALC_EXT_EFX : constant Int_Unsigned_C :=  1
 
   --
-  ALC_EXT_disconnect : constant Int_32_Unsigned_C :=  1
-  ALC_CONNECTED   : constant Int_32_Unsigned_C :=                          0x313
+  ALC_EXT_disconnect : constant Int_Unsigned_C :=  1
+  ALC_CONNECTED   : constant Int_Unsigned_C :=                          0x313
 
   --
-  ALC_EXT_thread_local_context: constant Int_32_Unsigned_C :=  1
+  ALC_EXT_thread_local_context: constant Int_Unsigned_C :=  1
 
   --
-  ALC_EFX_MAJOR_VERSION    : constant Int_32_Unsigned_C :=                 0x20001
-  ALC_EFX_MINOR_VERSION    : constant Int_32_Unsigned_C :=                 0x20002
-  ALC_MAX_AUXILIARY_SENDS  : constant Int_32_Unsigned_C :=                 0x20003
+  ALC_EFX_MAJOR_VERSION    : constant Int_Unsigned_C :=                 0x20001
+  ALC_EFX_MINOR_VERSION    : constant Int_Unsigned_C :=                 0x20002
+  ALC_MAX_AUXILIARY_SENDS  : constant Int_Unsigned_C :=                 0x20003
 
   --
-  AL_SOFT_direct_channels  : constant Int_32_Unsigned_C :=  1
-  AL_DIRECT_CHANNELS_SOFT : constant Int_32_Unsigned_C :=                  1033
+  AL_SOFT_direct_channels  : constant Int_Unsigned_C :=  1
+  AL_DIRECT_CHANNELS_SOFT : constant Int_Unsigned_C :=                  1033
 #endif
 
 #ifndef ALC_SOFT_loopback
-  ALC_SOFT_loopback : constant Int_32_Unsigned_C :=  1
-  ALC_FORMAT_CHANNELS_SOFT : constant Int_32_Unsigned_C :=                 1990
-  ALC_FORMAT_TYPE_SOFT     : constant Int_32_Unsigned_C :=                 1991
+  ALC_SOFT_loopback : constant Int_Unsigned_C :=  1
+  ALC_FORMAT_CHANNELS_SOFT : constant Int_Unsigned_C :=                 1990
+  ALC_FORMAT_TYPE_SOFT     : constant Int_Unsigned_C :=                 1991
 
   -- Sample types 
-  ALC_BYTE_SOFT           : constant Int_32_Unsigned_C :=                  1400
-  ALC_UNSIGNED_BYTE_SOFT : constant Int_32_Unsigned_C :=                   1401
-  ALC_SHORT_SOFT         : constant Int_32_Unsigned_C :=                   1402
-  ALC_UNSIGNED_SHORT_SOFT: constant Int_32_Unsigned_C :=                   1403
-  ALC_INT_SOFT           : constant Int_32_Unsigned_C :=                   1404
-  ALC_UNSIGNED_INT_SOFT  : constant Int_32_Unsigned_C :=                   1405
-  ALC_FLOAT_SOFT         : constant Int_32_Unsigned_C :=                   1406
+  ALC_BYTE_SOFT           : constant Int_Unsigned_C :=                  1400
+  ALC_UNSIGNED_BYTE_SOFT : constant Int_Unsigned_C :=                   1401
+  ALC_SHORT_SOFT         : constant Int_Unsigned_C :=                   1402
+  ALC_UNSIGNED_SHORT_SOFT: constant Int_Unsigned_C :=                   1403
+  ALC_INT_SOFT           : constant Int_Unsigned_C :=                   1404
+  ALC_UNSIGNED_INT_SOFT  : constant Int_Unsigned_C :=                   1405
+  ALC_FLOAT_SOFT         : constant Int_Unsigned_C :=                   1406
 
   -- Channel configurations 
-  ALC_MONO_SOFT         : constant Int_32_Unsigned_C :=                    1500
-  ALC_STEREO_SOFT       : constant Int_32_Unsigned_C :=                    1501
-  ALC_QUAD_SOFT        : constant Int_32_Unsigned_C :=                     1503
-  ALC_5POINT1_SOFT     : constant Int_32_Unsigned_C :=                     1504
-  ALC_6POINT1_SOFT    : constant Int_32_Unsigned_C :=                      1505
-  ALC_7POINT1_SOFT     : constant Int_32_Unsigned_C :=                     1506
+  ALC_MONO_SOFT         : constant Int_Unsigned_C :=                    1500
+  ALC_STEREO_SOFT       : constant Int_Unsigned_C :=                    1501
+  ALC_QUAD_SOFT        : constant Int_Unsigned_C :=                     1503
+  ALC_5POINT1_SOFT     : constant Int_Unsigned_C :=                     1504
+  ALC_6POINT1_SOFT    : constant Int_Unsigned_C :=                      1505
+  ALC_7POINT1_SOFT     : constant Int_Unsigned_C :=                     1506
 
 
 #ifndef AL_EXT_STEREO_ANGLES
-  AL_EXT_STEREO_ANGLES : constant Int_32_Unsigned_C := 1
-  AL_STEREO_ANGLES     : constant Int_32_Unsigned_C :=                     1030
+  AL_EXT_STEREO_ANGLES : constant Int_Unsigned_C := 1
+  AL_STEREO_ANGLES     : constant Int_Unsigned_C :=                     1030
 #endif
 
 #ifndef AL_EXT_SOURCE_RADIUS
-  AL_EXT_SOURCE_RADIUS : constant Int_32_Unsigned_C := 1
-  AL_SOURCE_RADIUS    : constant Int_32_Unsigned_C :=                      1031
+  AL_EXT_SOURCE_RADIUS : constant Int_Unsigned_C := 1
+  AL_SOURCE_RADIUS    : constant Int_Unsigned_C :=                      1031
 #endif
 
 #ifndef AL_SOFT_source_latency
   AL_SOFT_source_latency 1
-  AL_SAMPLE_OFFSET_LATENCY_SOFT : constant Int_32_Unsigned_C :=            1200
-  AL_SEC_OFFSET_LATENCY_SOFT    : constant Int_32_Unsigned_C :=            1201
+  AL_SAMPLE_OFFSET_LATENCY_SOFT : constant Int_Unsigned_C :=            1200
+  AL_SEC_OFFSET_LATENCY_SOFT    : constant Int_Unsigned_C :=            1201
 typedef int64_t ALint64SOFT;
 typedef uint64_t ALuint64SOFT;
 
@@ -408,98 +408,98 @@ typedef uint64_t ALuint64SOFT;
   AL_FREQUENCY_SHIFTER_RIGHT_DIRECTION     0003
 
   -- Vocal morpher effect parameters 
-  AL_VOCAL_MORPHER_PHONEMEA               : constant Int_32_Unsigned_C := 0001
-  AL_VOCAL_MORPHER_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := 0002
-  AL_VOCAL_MORPHER_PHONEMEB              : constant Int_32_Unsigned_C :=  0003
-  AL_VOCAL_MORPHER_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := 0004
-  AL_VOCAL_MORPHER_WAVEFORM               : constant Int_32_Unsigned_C := 0005
-  AL_VOCAL_MORPHER_RATE                   : constant Int_32_Unsigned_C := 0006
+  AL_VOCAL_MORPHER_PHONEMEA               : constant Int_Unsigned_C := 0001
+  AL_VOCAL_MORPHER_PHONEMEA_COARSE_TUNING : constant Int_Unsigned_C := 0002
+  AL_VOCAL_MORPHER_PHONEMEB              : constant Int_Unsigned_C :=  0003
+  AL_VOCAL_MORPHER_PHONEMEB_COARSE_TUNING : constant Int_Unsigned_C := 0004
+  AL_VOCAL_MORPHER_WAVEFORM               : constant Int_Unsigned_C := 0005
+  AL_VOCAL_MORPHER_RATE                   : constant Int_Unsigned_C := 0006
 
   -- Pitchshifter effect parameters 
-  AL_PITCH_SHIFTER_COARSE_TUNE          : constant Int_32_Unsigned_C :=   0001
-  AL_PITCH_SHIFTER_FINE_TUNE           : constant Int_32_Unsigned_C :=    0002
+  AL_PITCH_SHIFTER_COARSE_TUNE          : constant Int_Unsigned_C :=   0001
+  AL_PITCH_SHIFTER_FINE_TUNE           : constant Int_Unsigned_C :=    0002
 
   -- Ringmodulator effect parameters 
-  AL_RING_MODULATOR_FREQUENCY          : constant Int_32_Unsigned_C :=    0001
-  AL_RING_MODULATOR_HIGHPASS_CUTOFF    : constant Int_32_Unsigned_C :=    0002
-  AL_RING_MODULATOR_WAVEFORM           : constant Int_32_Unsigned_C :=    0003
+  AL_RING_MODULATOR_FREQUENCY          : constant Int_Unsigned_C :=    0001
+  AL_RING_MODULATOR_HIGHPASS_CUTOFF    : constant Int_Unsigned_C :=    0002
+  AL_RING_MODULATOR_WAVEFORM           : constant Int_Unsigned_C :=    0003
 
   -- Autowah effect parameters 
-  AL_AUTOWAH_ATTACK_TIME              : constant Int_32_Unsigned_C :=     0001
-  AL_AUTOWAH_RELEASE_TIME            : constant Int_32_Unsigned_C :=      0002
-  AL_AUTOWAH_RESONANCE               : constant Int_32_Unsigned_C :=      0003
-  AL_AUTOWAH_PEAK_GAIN              : constant Int_32_Unsigned_C :=       0004
+  AL_AUTOWAH_ATTACK_TIME              : constant Int_Unsigned_C :=     0001
+  AL_AUTOWAH_RELEASE_TIME            : constant Int_Unsigned_C :=      0002
+  AL_AUTOWAH_RESONANCE               : constant Int_Unsigned_C :=      0003
+  AL_AUTOWAH_PEAK_GAIN              : constant Int_Unsigned_C :=       0004
 
   -- Compressor effect parameters 
-  AL_COMPRESSOR_ONOFF               : constant Int_32_Unsigned_C :=       0001
+  AL_COMPRESSOR_ONOFF               : constant Int_Unsigned_C :=       0001
 
   -- Equalizer effect parameters 
-  AL_EQUALIZER_LOW_GAIN            : constant Int_32_Unsigned_C :=        0001
-  AL_EQUALIZER_LOW_CUTOFF          : constant Int_32_Unsigned_C :=        0002
-  AL_EQUALIZER_MID1_GAIN           : constant Int_32_Unsigned_C :=        0003
-  AL_EQUALIZER_MID1_CENTER         : constant Int_32_Unsigned_C :=        0004
-  AL_EQUALIZER_MID1_WIDTH          : constant Int_32_Unsigned_C :=        0005
-  AL_EQUALIZER_MID2_GAIN           : constant Int_32_Unsigned_C :=        0006
-  AL_EQUALIZER_MID2_CENTER         : constant Int_32_Unsigned_C :=        0007
-  AL_EQUALIZER_MID2_WIDTH          : constant Int_32_Unsigned_C :=        0008
-  AL_EQUALIZER_HIGH_GAIN           : constant Int_32_Unsigned_C :=        0009
-  AL_EQUALIZER_HIGH_CUTOFF         : constant Int_32_Unsigned_C :=        000A
+  AL_EQUALIZER_LOW_GAIN            : constant Int_Unsigned_C :=        0001
+  AL_EQUALIZER_LOW_CUTOFF          : constant Int_Unsigned_C :=        0002
+  AL_EQUALIZER_MID1_GAIN           : constant Int_Unsigned_C :=        0003
+  AL_EQUALIZER_MID1_CENTER         : constant Int_Unsigned_C :=        0004
+  AL_EQUALIZER_MID1_WIDTH          : constant Int_Unsigned_C :=        0005
+  AL_EQUALIZER_MID2_GAIN           : constant Int_Unsigned_C :=        0006
+  AL_EQUALIZER_MID2_CENTER         : constant Int_Unsigned_C :=        0007
+  AL_EQUALIZER_MID2_WIDTH          : constant Int_Unsigned_C :=        0008
+  AL_EQUALIZER_HIGH_GAIN           : constant Int_Unsigned_C :=        0009
+  AL_EQUALIZER_HIGH_CUTOFF         : constant Int_Unsigned_C :=        000A
 
   -- Effect type 
-  AL_EFFECT_FIRST_PARAMETER        : constant Int_32_Unsigned_C :=        0000
-  AL_EFFECT_LAST_PARAMETER         : constant Int_32_Unsigned_C :=        0x8000
-  AL_EFFECT_TYPE                   : constant Int_32_Unsigned_C :=        0x8001
+  AL_EFFECT_FIRST_PARAMETER        : constant Int_Unsigned_C :=        0000
+  AL_EFFECT_LAST_PARAMETER         : constant Int_Unsigned_C :=        0x8000
+  AL_EFFECT_TYPE                   : constant Int_Unsigned_C :=        0x8001
 
   -- Effect types, used with the AL_EFFECT_TYPE property 
-  AL_EFFECT_NULL                     : constant Int_32_Unsigned_C :=      0000
-  AL_EFFECT_REVERB                   : constant Int_32_Unsigned_C :=      0001
-  AL_EFFECT_CHORUS                   : constant Int_32_Unsigned_C :=      0002
-  AL_EFFECT_DISTORTION               : constant Int_32_Unsigned_C :=      0003
-  AL_EFFECT_ECHO                     : constant Int_32_Unsigned_C :=      0004
-  AL_EFFECT_FLANGER                  : constant Int_32_Unsigned_C :=      0005
-  AL_EFFECT_FREQUENCY_SHIFTER        : constant Int_32_Unsigned_C :=      0006
-  AL_EFFECT_VOCAL_MORPHER            : constant Int_32_Unsigned_C :=      0007
-  AL_EFFECT_PITCH_SHIFTER            : constant Int_32_Unsigned_C :=      0008
-  AL_EFFECT_RING_MODULATOR           : constant Int_32_Unsigned_C :=      0009
-  AL_EFFECT_AUTOWAH                  : constant Int_32_Unsigned_C :=      000A
-  AL_EFFECT_COMPRESSOR               : constant Int_32_Unsigned_C :=      000B
-  AL_EFFECT_EQUALIZER                 : constant Int_32_Unsigned_C :=     000C
-  AL_EFFECT_EAXREVERB                  : constant Int_32_Unsigned_C :=    0x8000
+  AL_EFFECT_NULL                     : constant Int_Unsigned_C :=      0000
+  AL_EFFECT_REVERB                   : constant Int_Unsigned_C :=      0001
+  AL_EFFECT_CHORUS                   : constant Int_Unsigned_C :=      0002
+  AL_EFFECT_DISTORTION               : constant Int_Unsigned_C :=      0003
+  AL_EFFECT_ECHO                     : constant Int_Unsigned_C :=      0004
+  AL_EFFECT_FLANGER                  : constant Int_Unsigned_C :=      0005
+  AL_EFFECT_FREQUENCY_SHIFTER        : constant Int_Unsigned_C :=      0006
+  AL_EFFECT_VOCAL_MORPHER            : constant Int_Unsigned_C :=      0007
+  AL_EFFECT_PITCH_SHIFTER            : constant Int_Unsigned_C :=      0008
+  AL_EFFECT_RING_MODULATOR           : constant Int_Unsigned_C :=      0009
+  AL_EFFECT_AUTOWAH                  : constant Int_Unsigned_C :=      000A
+  AL_EFFECT_COMPRESSOR               : constant Int_Unsigned_C :=      000B
+  AL_EFFECT_EQUALIZER                 : constant Int_Unsigned_C :=     000C
+  AL_EFFECT_EAXREVERB                  : constant Int_Unsigned_C :=    0x8000
 
   -- Auxiliary Effect Slot properties
-  AL_EFFECTSLOT_EFFECT                   : constant Int_32_Unsigned_C :=  0001
-  AL_EFFECTSLOT_GAIN                     : constant Int_32_Unsigned_C :=  0002
-  AL_EFFECTSLOT_AUXILIARY_SEND_AUTO      : constant Int_32_Unsigned_C :=  0003
+  AL_EFFECTSLOT_EFFECT                   : constant Int_Unsigned_C :=  0001
+  AL_EFFECTSLOT_GAIN                     : constant Int_Unsigned_C :=  0002
+  AL_EFFECTSLOT_AUXILIARY_SEND_AUTO      : constant Int_Unsigned_C :=  0003
 
   -- NULL Auxiliary Slot ID to disable a source send
-  AL_EFFECTSLOT_NULL                     : constant Int_32_Unsigned_C :=  0000
+  AL_EFFECTSLOT_NULL                     : constant Int_Unsigned_C :=  0000
 
 
   -- Filter properties
 
   -- Lowpass filter parameters 
-  AL_LOWPASS_GAIN                        : constant Int_32_Unsigned_C :=  0001
-  AL_LOWPASS_GAINHF                      : constant Int_32_Unsigned_C :=  0002
+  AL_LOWPASS_GAIN                        : constant Int_Unsigned_C :=  0001
+  AL_LOWPASS_GAINHF                      : constant Int_Unsigned_C :=  0002
 
   -- Highpass filter parameters 
-  AL_HIGHPASS_GAIN                      : constant Int_32_Unsigned_C :=   0001
-  AL_HIGHPASS_GAINLF                    : constant Int_32_Unsigned_C :=   0002
+  AL_HIGHPASS_GAIN                      : constant Int_Unsigned_C :=   0001
+  AL_HIGHPASS_GAINLF                    : constant Int_Unsigned_C :=   0002
 
   -- Bandpass filter parameters 
-  AL_BANDPASS_GAIN                      : constant Int_32_Unsigned_C :=   0001
-  AL_BANDPASS_GAINLF                    : constant Int_32_Unsigned_C :=   0002
-  AL_BANDPASS_GAINHF                    : constant Int_32_Unsigned_C :=   0003
+  AL_BANDPASS_GAIN                      : constant Int_Unsigned_C :=   0001
+  AL_BANDPASS_GAINLF                    : constant Int_Unsigned_C :=   0002
+  AL_BANDPASS_GAINHF                    : constant Int_Unsigned_C :=   0003
 
   -- Filter type 
-  AL_FILTER_FIRST_PARAMETER             : constant Int_32_Unsigned_C :=   0000
-  AL_FILTER_LAST_PARAMETER              : constant Int_32_Unsigned_C :=   0x8000
-  AL_FILTER_TYPE                        : constant Int_32_Unsigned_C :=   0x8001
+  AL_FILTER_FIRST_PARAMETER             : constant Int_Unsigned_C :=   0000
+  AL_FILTER_LAST_PARAMETER              : constant Int_Unsigned_C :=   0x8000
+  AL_FILTER_TYPE                        : constant Int_Unsigned_C :=   0x8001
 
   -- Filter types, used with the AL_FILTER_TYPE property 
-  AL_FILTER_NULL                       : constant Int_32_Unsigned_C :=    0000
-  AL_FILTER_LOWPASS                    : constant Int_32_Unsigned_C :=    0001
-  AL_FILTER_HIGHPASS                   : constant Int_32_Unsigned_C :=    0002
-  AL_FILTER_BANDPASS                   : constant Int_32_Unsigned_C :=    0003
+  AL_FILTER_NULL                       : constant Int_Unsigned_C :=    0000
+  AL_FILTER_LOWPASS                    : constant Int_Unsigned_C :=    0001
+  AL_FILTER_HIGHPASS                   : constant Int_Unsigned_C :=    0002
+  AL_FILTER_BANDPASS                   : constant Int_Unsigned_C :=    0003
 
   -- Filter ranges and defaults
 
@@ -675,21 +675,21 @@ typedef uint64_t ALuint64SOFT;
   AL_EAXREVERB_MAX_ROOM_ROLLOFF_FACTOR     (10.0)
   AL_EAXREVERB_DEFAULT_ROOM_ROLLOFF_FACTOR (0.0)
 
-  AL_EAXREVERB_MIN_DECAY_HFLIMIT         : constant Int_32_Unsigned_C :=  AL_FALSE
-  AL_EAXREVERB_MAX_DECAY_HFLIMIT          : constant Int_32_Unsigned_C := AL_TRUE
-  AL_EAXREVERB_DEFAULT_DECAY_HFLIMIT     : constant Int_32_Unsigned_C :=  AL_TRUE
+  AL_EAXREVERB_MIN_DECAY_HFLIMIT         : constant Int_Unsigned_C :=  AL_FALSE
+  AL_EAXREVERB_MAX_DECAY_HFLIMIT          : constant Int_Unsigned_C := AL_TRUE
+  AL_EAXREVERB_DEFAULT_DECAY_HFLIMIT     : constant Int_Unsigned_C :=  AL_TRUE
 
   -- Chorus effect 
-  AL_CHORUS_WAVEFORM_SINUSOID           : constant Int_32_Unsigned_C :=   (0)
-  AL_CHORUS_WAVEFORM_TRIANGLE           : constant Int_32_Unsigned_C :=   (1)
+  AL_CHORUS_WAVEFORM_SINUSOID           : constant Int_Unsigned_C :=   (0)
+  AL_CHORUS_WAVEFORM_TRIANGLE           : constant Int_Unsigned_C :=   (1)
 
-  AL_CHORUS_MIN_WAVEFORM                : constant Int_32_Unsigned_C :=   (0)
-  AL_CHORUS_MAX_WAVEFORM                : constant Int_32_Unsigned_C :=   (1)
-  AL_CHORUS_DEFAULT_WAVEFORM            : constant Int_32_Unsigned_C :=   (1)
+  AL_CHORUS_MIN_WAVEFORM                : constant Int_Unsigned_C :=   (0)
+  AL_CHORUS_MAX_WAVEFORM                : constant Int_Unsigned_C :=   (1)
+  AL_CHORUS_DEFAULT_WAVEFORM            : constant Int_Unsigned_C :=   (1)
 
-  AL_CHORUS_MIN_PHASE                    : constant Int_32_Unsigned_C :=  (-180)
-  AL_CHORUS_MAX_PHASE                   : constant Int_32_Unsigned_C :=   (180)
-  AL_CHORUS_DEFAULT_PHASE                : constant Int_32_Unsigned_C :=  (90)
+  AL_CHORUS_MIN_PHASE                    : constant Int_Unsigned_C :=  (-180)
+  AL_CHORUS_MAX_PHASE                   : constant Int_Unsigned_C :=   (180)
+  AL_CHORUS_DEFAULT_PHASE                : constant Int_Unsigned_C :=  (90)
 
   AL_CHORUS_MIN_RATE                       (0.0)
   AL_CHORUS_MAX_RATE                       (10.0)
@@ -782,86 +782,86 @@ typedef uint64_t ALuint64SOFT;
   AL_FREQUENCY_SHIFTER_MAX_FREQUENCY       (24000.0)
   AL_FREQUENCY_SHIFTER_DEFAULT_FREQUENCY   (0.0)
 
-  AL_FREQUENCY_SHIFTER_MIN_LEFT_DIRECTION : constant Int_32_Unsigned_C := (0)
-  AL_FREQUENCY_SHIFTER_MAX_LEFT_DIRECTION  : constant Int_32_Unsigned_C :=(2)
-  AL_FREQUENCY_SHIFTER_DEFAULT_LEFT_DIRECTION : constant Int_32_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MIN_LEFT_DIRECTION : constant Int_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MAX_LEFT_DIRECTION  : constant Int_Unsigned_C :=(2)
+  AL_FREQUENCY_SHIFTER_DEFAULT_LEFT_DIRECTION : constant Int_Unsigned_C := (0)
 
-  AL_FREQUENCY_SHIFTER_DIRECTION_DOWN    : constant Int_32_Unsigned_C :=  (0)
-  AL_FREQUENCY_SHIFTER_DIRECTION_UP      : constant Int_32_Unsigned_C :=  (1)
-  AL_FREQUENCY_SHIFTER_DIRECTION_OFF     : constant Int_32_Unsigned_C :=  (2)
+  AL_FREQUENCY_SHIFTER_DIRECTION_DOWN    : constant Int_Unsigned_C :=  (0)
+  AL_FREQUENCY_SHIFTER_DIRECTION_UP      : constant Int_Unsigned_C :=  (1)
+  AL_FREQUENCY_SHIFTER_DIRECTION_OFF     : constant Int_Unsigned_C :=  (2)
 
-  AL_FREQUENCY_SHIFTER_MIN_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (0)
-  AL_FREQUENCY_SHIFTER_MAX_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (2)
-  AL_FREQUENCY_SHIFTER_DEFAULT_RIGHT_DIRECTION : constant Int_32_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MIN_RIGHT_DIRECTION : constant Int_Unsigned_C := (0)
+  AL_FREQUENCY_SHIFTER_MAX_RIGHT_DIRECTION : constant Int_Unsigned_C := (2)
+  AL_FREQUENCY_SHIFTER_DEFAULT_RIGHT_DIRECTION : constant Int_Unsigned_C := (0)
 
   -- Vocal morpher effect 
-  AL_VOCAL_MORPHER_MIN_PHONEMEA       : constant Int_32_Unsigned_C :=     (0)
-  AL_VOCAL_MORPHER_MAX_PHONEMEA       : constant Int_32_Unsigned_C :=     (29)
-  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA   : constant Int_32_Unsigned_C :=     (0)
+  AL_VOCAL_MORPHER_MIN_PHONEMEA       : constant Int_Unsigned_C :=     (0)
+  AL_VOCAL_MORPHER_MAX_PHONEMEA       : constant Int_Unsigned_C :=     (29)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA   : constant Int_Unsigned_C :=     (0)
 
-  AL_VOCAL_MORPHER_MIN_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (-24)
-  AL_VOCAL_MORPHER_MAX_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (24)
-  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA_COARSE_TUNING : constant Int_32_Unsigned_C := (0)
+  AL_VOCAL_MORPHER_MIN_PHONEMEA_COARSE_TUNING : constant Int_Unsigned_C := (-24)
+  AL_VOCAL_MORPHER_MAX_PHONEMEA_COARSE_TUNING : constant Int_Unsigned_C := (24)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEA_COARSE_TUNING : constant Int_Unsigned_C := (0)
 
-  AL_VOCAL_MORPHER_MIN_PHONEMEB          : constant Int_32_Unsigned_C :=  (0)
-  AL_VOCAL_MORPHER_MAX_PHONEMEB          : constant Int_32_Unsigned_C :=  (29)
-  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB      : constant Int_32_Unsigned_C :=  (10)
+  AL_VOCAL_MORPHER_MIN_PHONEMEB          : constant Int_Unsigned_C :=  (0)
+  AL_VOCAL_MORPHER_MAX_PHONEMEB          : constant Int_Unsigned_C :=  (29)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB      : constant Int_Unsigned_C :=  (10)
 
-  AL_VOCAL_MORPHER_MIN_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (-24)
-  AL_VOCAL_MORPHER_MAX_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (24)
-  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB_COARSE_TUNING : constant Int_32_Unsigned_C := (0)
+  AL_VOCAL_MORPHER_MIN_PHONEMEB_COARSE_TUNING : constant Int_Unsigned_C := (-24)
+  AL_VOCAL_MORPHER_MAX_PHONEMEB_COARSE_TUNING : constant Int_Unsigned_C := (24)
+  AL_VOCAL_MORPHER_DEFAULT_PHONEMEB_COARSE_TUNING : constant Int_Unsigned_C := (0)
 
-  AL_VOCAL_MORPHER_PHONEME_A            : constant Int_32_Unsigned_C :=   (0)
-  AL_VOCAL_MORPHER_PHONEME_E            : constant Int_32_Unsigned_C :=   (1)
-  AL_VOCAL_MORPHER_PHONEME_I            : constant Int_32_Unsigned_C :=   (2)
-  AL_VOCAL_MORPHER_PHONEME_O            : constant Int_32_Unsigned_C :=   (3)
-  AL_VOCAL_MORPHER_PHONEME_U            : constant Int_32_Unsigned_C :=   (4)
-  AL_VOCAL_MORPHER_PHONEME_AA           : constant Int_32_Unsigned_C :=   (5)
-  AL_VOCAL_MORPHER_PHONEME_AE           : constant Int_32_Unsigned_C :=   (6)
-  AL_VOCAL_MORPHER_PHONEME_AH           : constant Int_32_Unsigned_C :=   (7)
-  AL_VOCAL_MORPHER_PHONEME_AO           : constant Int_32_Unsigned_C :=   (8)
-  AL_VOCAL_MORPHER_PHONEME_EH           : constant Int_32_Unsigned_C :=   (9)
-  AL_VOCAL_MORPHER_PHONEME_ER           : constant Int_32_Unsigned_C :=   (10)
-  AL_VOCAL_MORPHER_PHONEME_IH           : constant Int_32_Unsigned_C :=   (11)
-  AL_VOCAL_MORPHER_PHONEME_IY           : constant Int_32_Unsigned_C :=   (12)
-  AL_VOCAL_MORPHER_PHONEME_UH           : constant Int_32_Unsigned_C :=   (13)
-  AL_VOCAL_MORPHER_PHONEME_UW           : constant Int_32_Unsigned_C :=   (14)
-  AL_VOCAL_MORPHER_PHONEME_B            : constant Int_32_Unsigned_C :=   (15)
-  AL_VOCAL_MORPHER_PHONEME_D            : constant Int_32_Unsigned_C :=   (16)
-  AL_VOCAL_MORPHER_PHONEME_F            : constant Int_32_Unsigned_C :=   (17)
-  AL_VOCAL_MORPHER_PHONEME_G            : constant Int_32_Unsigned_C :=   (18)
-  AL_VOCAL_MORPHER_PHONEME_J            : constant Int_32_Unsigned_C :=   (19)
-  AL_VOCAL_MORPHER_PHONEME_K            : constant Int_32_Unsigned_C :=   (20)
-  AL_VOCAL_MORPHER_PHONEME_L            : constant Int_32_Unsigned_C :=   (21)
-  AL_VOCAL_MORPHER_PHONEME_M            : constant Int_32_Unsigned_C :=   (22)
-  AL_VOCAL_MORPHER_PHONEME_N            : constant Int_32_Unsigned_C :=   (23)
-  AL_VOCAL_MORPHER_PHONEME_P            : constant Int_32_Unsigned_C :=   (24)
-  AL_VOCAL_MORPHER_PHONEME_R            : constant Int_32_Unsigned_C :=   (25)
-  AL_VOCAL_MORPHER_PHONEME_S            : constant Int_32_Unsigned_C :=   (26)
-  AL_VOCAL_MORPHER_PHONEME_T            : constant Int_32_Unsigned_C :=   (27)
-  AL_VOCAL_MORPHER_PHONEME_V            : constant Int_32_Unsigned_C :=   (28)
-  AL_VOCAL_MORPHER_PHONEME_Z            : constant Int_32_Unsigned_C :=   (29)
+  AL_VOCAL_MORPHER_PHONEME_A            : constant Int_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_PHONEME_E            : constant Int_Unsigned_C :=   (1)
+  AL_VOCAL_MORPHER_PHONEME_I            : constant Int_Unsigned_C :=   (2)
+  AL_VOCAL_MORPHER_PHONEME_O            : constant Int_Unsigned_C :=   (3)
+  AL_VOCAL_MORPHER_PHONEME_U            : constant Int_Unsigned_C :=   (4)
+  AL_VOCAL_MORPHER_PHONEME_AA           : constant Int_Unsigned_C :=   (5)
+  AL_VOCAL_MORPHER_PHONEME_AE           : constant Int_Unsigned_C :=   (6)
+  AL_VOCAL_MORPHER_PHONEME_AH           : constant Int_Unsigned_C :=   (7)
+  AL_VOCAL_MORPHER_PHONEME_AO           : constant Int_Unsigned_C :=   (8)
+  AL_VOCAL_MORPHER_PHONEME_EH           : constant Int_Unsigned_C :=   (9)
+  AL_VOCAL_MORPHER_PHONEME_ER           : constant Int_Unsigned_C :=   (10)
+  AL_VOCAL_MORPHER_PHONEME_IH           : constant Int_Unsigned_C :=   (11)
+  AL_VOCAL_MORPHER_PHONEME_IY           : constant Int_Unsigned_C :=   (12)
+  AL_VOCAL_MORPHER_PHONEME_UH           : constant Int_Unsigned_C :=   (13)
+  AL_VOCAL_MORPHER_PHONEME_UW           : constant Int_Unsigned_C :=   (14)
+  AL_VOCAL_MORPHER_PHONEME_B            : constant Int_Unsigned_C :=   (15)
+  AL_VOCAL_MORPHER_PHONEME_D            : constant Int_Unsigned_C :=   (16)
+  AL_VOCAL_MORPHER_PHONEME_F            : constant Int_Unsigned_C :=   (17)
+  AL_VOCAL_MORPHER_PHONEME_G            : constant Int_Unsigned_C :=   (18)
+  AL_VOCAL_MORPHER_PHONEME_J            : constant Int_Unsigned_C :=   (19)
+  AL_VOCAL_MORPHER_PHONEME_K            : constant Int_Unsigned_C :=   (20)
+  AL_VOCAL_MORPHER_PHONEME_L            : constant Int_Unsigned_C :=   (21)
+  AL_VOCAL_MORPHER_PHONEME_M            : constant Int_Unsigned_C :=   (22)
+  AL_VOCAL_MORPHER_PHONEME_N            : constant Int_Unsigned_C :=   (23)
+  AL_VOCAL_MORPHER_PHONEME_P            : constant Int_Unsigned_C :=   (24)
+  AL_VOCAL_MORPHER_PHONEME_R            : constant Int_Unsigned_C :=   (25)
+  AL_VOCAL_MORPHER_PHONEME_S            : constant Int_Unsigned_C :=   (26)
+  AL_VOCAL_MORPHER_PHONEME_T            : constant Int_Unsigned_C :=   (27)
+  AL_VOCAL_MORPHER_PHONEME_V            : constant Int_Unsigned_C :=   (28)
+  AL_VOCAL_MORPHER_PHONEME_Z            : constant Int_Unsigned_C :=   (29)
 
-  AL_VOCAL_MORPHER_WAVEFORM_SINUSOID    : constant Int_32_Unsigned_C :=   (0)
-  AL_VOCAL_MORPHER_WAVEFORM_TRIANGLE    : constant Int_32_Unsigned_C :=   (1)
-  AL_VOCAL_MORPHER_WAVEFORM_SAWTOOTH    : constant Int_32_Unsigned_C :=   (2)
+  AL_VOCAL_MORPHER_WAVEFORM_SINUSOID    : constant Int_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_WAVEFORM_TRIANGLE    : constant Int_Unsigned_C :=   (1)
+  AL_VOCAL_MORPHER_WAVEFORM_SAWTOOTH    : constant Int_Unsigned_C :=   (2)
 
-  AL_VOCAL_MORPHER_MIN_WAVEFORM         : constant Int_32_Unsigned_C :=   (0)
-  AL_VOCAL_MORPHER_MAX_WAVEFORM         : constant Int_32_Unsigned_C :=   (2)
-  AL_VOCAL_MORPHER_DEFAULT_WAVEFORM     : constant Int_32_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_MIN_WAVEFORM         : constant Int_Unsigned_C :=   (0)
+  AL_VOCAL_MORPHER_MAX_WAVEFORM         : constant Int_Unsigned_C :=   (2)
+  AL_VOCAL_MORPHER_DEFAULT_WAVEFORM     : constant Int_Unsigned_C :=   (0)
 
   AL_VOCAL_MORPHER_MIN_RATE                (0.0)
   AL_VOCAL_MORPHER_MAX_RATE                (10.0)
   AL_VOCAL_MORPHER_DEFAULT_RATE            (1.41f)
 
   -- Pitch shifter effect 
-  AL_PITCH_SHIFTER_MIN_COARSE_TUNE       : constant Int_32_Unsigned_C :=  (-12)
-  AL_PITCH_SHIFTER_MAX_COARSE_TUNE       : constant Int_32_Unsigned_C :=  (12)
-  AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE   : constant Int_32_Unsigned_C :=  (12)
+  AL_PITCH_SHIFTER_MIN_COARSE_TUNE       : constant Int_Unsigned_C :=  (-12)
+  AL_PITCH_SHIFTER_MAX_COARSE_TUNE       : constant Int_Unsigned_C :=  (12)
+  AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE   : constant Int_Unsigned_C :=  (12)
 
-  AL_PITCH_SHIFTER_MIN_FINE_TUNE         : constant Int_32_Unsigned_C :=  (-50)
-  AL_PITCH_SHIFTER_MAX_FINE_TUNE         : constant Int_32_Unsigned_C :=  (50)
-  AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE     : constant Int_32_Unsigned_C :=  (0)
+  AL_PITCH_SHIFTER_MIN_FINE_TUNE         : constant Int_Unsigned_C :=  (-50)
+  AL_PITCH_SHIFTER_MAX_FINE_TUNE         : constant Int_Unsigned_C :=  (50)
+  AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE     : constant Int_Unsigned_C :=  (0)
 
   -- Ring modulator effect 
   AL_RING_MODULATOR_MIN_FREQUENCY          (0.0)
@@ -872,13 +872,13 @@ typedef uint64_t ALuint64SOFT;
   AL_RING_MODULATOR_MAX_HIGHPASS_CUTOFF    (24000.0)
   AL_RING_MODULATOR_DEFAULT_HIGHPASS_CUTOFF (800.0)
 
-  AL_RING_MODULATOR_SINUSOID            : constant Int_32_Unsigned_C :=   (0)
-  AL_RING_MODULATOR_SAWTOOTH            : constant Int_32_Unsigned_C :=   (1)
-  AL_RING_MODULATOR_SQUARE              : constant Int_32_Unsigned_C :=   (2)
+  AL_RING_MODULATOR_SINUSOID            : constant Int_Unsigned_C :=   (0)
+  AL_RING_MODULATOR_SAWTOOTH            : constant Int_Unsigned_C :=   (1)
+  AL_RING_MODULATOR_SQUARE              : constant Int_Unsigned_C :=   (2)
 
-  AL_RING_MODULATOR_MIN_WAVEFORM         : constant Int_32_Unsigned_C :=  (0)
-  AL_RING_MODULATOR_MAX_WAVEFORM         : constant Int_32_Unsigned_C :=  (2)
-  AL_RING_MODULATOR_DEFAULT_WAVEFORM     : constant Int_32_Unsigned_C :=  (0)
+  AL_RING_MODULATOR_MIN_WAVEFORM         : constant Int_Unsigned_C :=  (0)
+  AL_RING_MODULATOR_MAX_WAVEFORM         : constant Int_Unsigned_C :=  (2)
+  AL_RING_MODULATOR_DEFAULT_WAVEFORM     : constant Int_Unsigned_C :=  (0)
 
   -- Autowah effect 
   AL_AUTOWAH_MIN_ATTACK_TIME               (0.0001f)
@@ -898,9 +898,9 @@ typedef uint64_t ALuint64SOFT;
   AL_AUTOWAH_DEFAULT_PEAK_GAIN             (11.22f)
 
   -- Compressor effect 
-  AL_COMPRESSOR_MIN_ONOFF                : constant Int_32_Unsigned_C :=  (0)
-  AL_COMPRESSOR_MAX_ONOFF                : constant Int_32_Unsigned_C :=  (1)
-  AL_COMPRESSOR_DEFAULT_ONOFF            : constant Int_32_Unsigned_C :=  (1)
+  AL_COMPRESSOR_MIN_ONOFF                : constant Int_Unsigned_C :=  (0)
+  AL_COMPRESSOR_MAX_ONOFF                : constant Int_Unsigned_C :=  (1)
+  AL_COMPRESSOR_DEFAULT_ONOFF            : constant Int_Unsigned_C :=  (1)
 
   -- Equalizer effect 
   AL_EQUALIZER_MIN_LOW_GAIN                (0.126f)
@@ -957,22 +957,22 @@ typedef uint64_t ALuint64SOFT;
   AL_MAX_CONE_OUTER_GAINHF                 (1.0)
   AL_DEFAULT_CONE_OUTER_GAINHF             (1.0)
 
-  AL_MIN_DIRECT_FILTER_GAINHF_AUTO       : constant Int_32_Unsigned_C :=  AL_FALSE
-  AL_MAX_DIRECT_FILTER_GAINHF_AUTO        : constant Int_32_Unsigned_C := AL_TRUE
-  AL_DEFAULT_DIRECT_FILTER_GAINHF_AUTO    : constant Int_32_Unsigned_C := AL_TRUE
+  AL_MIN_DIRECT_FILTER_GAINHF_AUTO       : constant Int_Unsigned_C :=  AL_FALSE
+  AL_MAX_DIRECT_FILTER_GAINHF_AUTO        : constant Int_Unsigned_C := AL_TRUE
+  AL_DEFAULT_DIRECT_FILTER_GAINHF_AUTO    : constant Int_Unsigned_C := AL_TRUE
 
-  AL_MIN_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_32_Unsigned_C :=  AL_FALSE
-  AL_MAX_AUXILIARY_SEND_FILTER_GAIN_AUTO   : constant Int_32_Unsigned_C := AL_TRUE
-  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_32_Unsigned_C := AL_TRUE
+  AL_MIN_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_Unsigned_C :=  AL_FALSE
+  AL_MAX_AUXILIARY_SEND_FILTER_GAIN_AUTO   : constant Int_Unsigned_C := AL_TRUE
+  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAIN_AUTO : constant Int_Unsigned_C := AL_TRUE
 
-  AL_MIN_AUXILIARY_SEND_FILTER_GAINHF_AUTO  : constant Int_32_Unsigned_C :=AL_FALSE
-  AL_MAX_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_32_Unsigned_C := AL_TRUE
-  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_32_Unsigned_C := AL_TRUE
+  AL_MIN_AUXILIARY_SEND_FILTER_GAINHF_AUTO  : constant Int_Unsigned_C :=AL_FALSE
+  AL_MAX_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_Unsigned_C := AL_TRUE
+  AL_DEFAULT_AUXILIARY_SEND_FILTER_GAINHF_AUTO : constant Int_Unsigned_C := AL_TRUE
 
   -- Listener parameter value ranges and defaults
-  AL_MIN_METERS_PER_UNIT                : constant Int_32_Unsigned_C :=   FLT_MIN
-  AL_MAX_METERS_PER_UNIT                 : constant Int_32_Unsigned_C :=  FLT_MAX
-  AL_DEFAULT_METERS_PER_UNIT             : constant Int_32_Unsigned_C :=  (1.0)
+  AL_MIN_METERS_PER_UNIT                : constant Int_Unsigned_C :=   FLT_MIN
+  AL_MAX_METERS_PER_UNIT                 : constant Int_Unsigned_C :=  FLT_MAX
+  AL_DEFAULT_METERS_PER_UNIT             : constant Int_Unsigned_C :=  (1.0)
 
   -------------
   -- Presets --
@@ -1150,19 +1150,19 @@ typedef uint64_t ALuint64SOFT;
   -----------------
 
   -- 2.7. AL Errors
-  function alGetError return Int_32_Unsigned_C -- ALenum
+  function alGetError return Int_Unsigned_C -- ALenum
                       with Import => True, Convention => StdCall, External_Name => "alGetError"; 
 
   -- 2.8. Controlling AL Execution
-  procedure alEnable (target : Int_32_Unsigned_C) -- ALenum
+  procedure alEnable (target : Int_Unsigned_C) -- ALenum
                       with Import => True, Convention => StdCall, External_Name => "alEnable"; 
 
   -- 2.8. Controlling AL Execution
-  procedure alDisable (target : Int_32_Unsigned_C) -- ALenum
+  procedure alDisable (target : Int_Unsigned_C) -- ALenum
                        with Import => True, Convention => StdCall, External_Name => "alDisable"; 
 
   -- 2.8. Controlling AL Execution
-  function alIsEnabled (target : Int_32_Unsigned_C) -- ALenum
+  function alIsEnabled (target : Int_Unsigned_C) -- ALenum
                         return Int_8_Unsigned_C     -- ALboolean
                         with Import => True, Convention => StdCall, External_Name => "alIsEnabled"; 
 
@@ -1177,57 +1177,57 @@ typedef uint64_t ALuint64SOFT;
                              with Import => True, Convention => StdCall, External_Name => "alDeleteBuffers"; 
 
   -- 2.14. Validating an Object Name
-  function alIsBuffer (bid : Int_32_Unsigned_C) -- ALuint 
+  function alIsBuffer (bid : Int_Unsigned_C) -- ALuint 
                        return Int_8_Unsigned_C  -- ALboolean
                        with Import => True, Convention => StdCall, External_Name => "alIsBuffer"; 
 
   -- 2.14. Validating an Object Name
-  function alIsSource (sid : Int_32_Unsigned_C) -- ALuint
+  function alIsSource (sid : Int_Unsigned_C) -- ALuint
                        return Int_8_Unsigned_C  -- ALboolean
                        with Import => True, Convention => StdCall, External_Name => "alIsSource"; 
 
   -- 3.1.1. Simple Queries
-  procedure alGetBooleanv (paramName : Int_32_Unsigned_C;           -- ALenum
+  procedure alGetBooleanv (paramName : Int_Unsigned_C;           -- ALenum
                            dest      : Ptr_Array_Int_8_Unsigned_C)  -- ALboolean*
                            with Import => True, Convention => StdCall, External_Name => "alGetBooleanv"; 
 
   -- 3.1.1. Simple Queries
-  function alGetBoolean (paramName : Int_32_Unsigned_C) -- ALenum
+  function alGetBoolean (paramName : Int_Unsigned_C) -- ALenum
                          return Int_8_Unsigned_C        -- ALboolean
                          with Import => True, Convention => StdCall, External_Name => "alGetBoolean"; 
 
   -- 3.1.1. Simple Queries
-  procedure alGetIntegerv (paramName : Int_32_Unsigned_C;         -- ALenum
+  procedure alGetIntegerv (paramName : Int_Unsigned_C;         -- ALenum
                            dest      : Ptr_Array_Int_32_Signed_C) -- ALint*
                            with Import => True, Convention => StdCall, External_Name => "alGetIntegerv"; 
 
   -- 3.1.1. Simple Queries
-  function alGetInteger (paramName : Int_32_Unsigned_C) -- ALenum
+  function alGetInteger (paramName : Int_Unsigned_C) -- ALenum
                          return Int_C                   -- ALint
                          with Import => True, Convention => StdCall, External_Name => "alGetInteger"; 
 
   -- 3.1.1. Simple Queries
-  procedure alGetFloatv (paramName : Int_32_Unsigned_C;   -- ALenum
+  procedure alGetFloatv (paramName : Int_Unsigned_C;   -- ALenum
                          dest      : Ptr_Array_Real_32_C) -- ALfloat*
                          with Import => True, Convention => StdCall, External_Name => "alGetFloatv"; 
 
   -- 3.1.1. Simple Queries
-  function alGetFloat (paramName : Int_32_Unsigned_C) -- ALenum
+  function alGetFloat (paramName : Int_Unsigned_C) -- ALenum
                        return Real_32_C               -- ALfloat
                        with Import => True, Convention => StdCall, External_Name => "alGetFloat"; 
 
   -- 3.1.1. Simple Queries
-  procedure alGetDoublev (paramName : Int_32_Unsigned_C;   -- ALenum
+  procedure alGetDoublev (paramName : Int_Unsigned_C;   -- ALenum
                           dest      : Ptr_Array_Real_64_C) -- ALdouble*
                           with Import => True, Convention => StdCall, External_Name => "alGetDoublev"; 
 
   -- 3.1.1. Simple Queries
-  function alGetDouble (paramName : Int_32_Unsigned_C) -- ALenum
+  function alGetDouble (paramName : Int_Unsigned_C) -- ALenum
                         return Real_64_C               -- ALdouble
                         with Import => True, Convention => StdCall, External_Name => "alGetDouble"; 
 
   -- 3.4. Attenuation By Distance
-  procedure alDistanceModel (distanceModel : Int_32_Unsigned_C) -- ALenum 
+  procedure alDistanceModel (distanceModel : Int_Unsigned_C) -- ALenum 
                              with Import => True, Convention => StdCall, External_Name => "alDistanceModel"; 
 
   -- 3.5.2. Velocity Dependent Doppler Effect
@@ -1239,70 +1239,70 @@ typedef uint64_t ALuint64SOFT;
                             with Import => True, Convention => StdCall, External_Name => "alSpeedOfSound"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListenerf (param : Int_32_Unsigned_C; -- ALenum
+  procedure alListenerf (param : Int_Unsigned_C; -- ALenum
                          Value : Real_32_C)         -- ALfloat
                          with Import => True, Convention => StdCall, External_Name => "alListenerf"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListener3f (param  : Int_32_Unsigned_C; -- ALenum
+  procedure alListener3f (param  : Int_Unsigned_C; -- ALenum
                           value1 : Real_32_C;         -- ALfloat
                           value2 : Real_32_C;         -- ALfloat
                           value3 : Real_32_C)         -- ALfloat
                           with Import => True, Convention => StdCall, External_Name => "alListener3f"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListeneri (param : Int_32_Unsigned_C; -- ALenum
+  procedure alListeneri (param : Int_Unsigned_C; -- ALenum
                          Value : Int_C)             -- ALint 
                          with Import => True, Convention => StdCall, External_Name => "alListeneri"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListenerfv (param  : Int_32_Unsigned_C; -- ALenum
+  procedure alListenerfv (param  : Int_Unsigned_C; -- ALenum
                           value1 : Int_C;             -- ALint
                           value2 : Int_C;             -- ALint
                           value3 : Int_C)             -- ALint 
                           with Import => True, Convention => StdCall, External_Name => "alListener3i"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListenerfv (param  : Int_32_Unsigned_C;   -- ALenum
+  procedure alListenerfv (param  : Int_Unsigned_C;   -- ALenum
                           values : Ptr_Array_Real_32_C) -- ALfloat*
                           with Import => True, Convention => StdCall, External_Name => "alListenerfv"; 
 
   -- 4.2.2. Changing Listener Attributes
-  procedure alListeneriv (param  : Int_32_Unsigned_C;         -- ALenum
+  procedure alListeneriv (param  : Int_Unsigned_C;         -- ALenum
                           values : Ptr_Array_Int_32_Signed_C) -- ALint*
                           with Import => True, Convention => StdCall, External_Name => "alListeneriv"; 
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListenerf (param : Int_32_Unsigned_C; -- ALenum 
+  procedure alGetListenerf (param : Int_Unsigned_C; -- ALenum 
                             Value : Pointer) -- 
                             with Import => True, Convention => StdCall, External_Name => "alGetListenerf"; 
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListener3f (param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetListener3f (param : Int_Unsigned_C; -- ALenum
                              value1 : Pointer; -- 
                              value2 : Pointer; -- 
                              value3 : Pointer) -- 
                              with Import => True, Convention => StdCall, External_Name => "alGetListener3f"; 
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListenerfv (param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetListenerfv (param : Int_Unsigned_C; -- ALenum
                              values : Pointer) -- 
                              with Import => True, Convention => StdCall, External_Name => "alGetListenerfv"; 
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListeneri (param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetListeneri (param : Int_Unsigned_C; -- ALenum
                             Value : Pointer) -- 
                             with Import => True, Convention => StdCall, External_Name => "alGetListeneri"; 
  
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListener3i (param  : Int_32_Unsigned_C; -- ALenum
+  procedure alGetListener3i (param  : Int_Unsigned_C; -- ALenum
                              value1 : Pointer; -- 
                              value2 : Pointer; -- 
                              value3 : Pointer) -- 
                              with Import => True, Convention => StdCall, External_Name => "alGetListener3i"; 
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListeneriv (param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetListeneriv (param : Int_Unsigned_C; -- ALenum
                              values : Pointer) -- 
                              with Import => True, Convention => StdCall, External_Name => "alGetListeneriv"; 
 
@@ -1317,93 +1317,93 @@ typedef uint64_t ALuint64SOFT;
                              with Import => True, Convention => StdCall, External_Name => "alDeleteSources"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcef (sid   : Int_32_Unsigned_C; -- ALuint 
-                       param : Int_32_Unsigned_C; -- ALenum
+  procedure alSourcef (sid   : Int_Unsigned_C; -- ALuint 
+                       param : Int_Unsigned_C; -- ALenum
                        Value : Real_32_C)         -- ALfloat
                        with Import => True, Convention => StdCall, External_Name => "alSourcef"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSource3f (sid    : Int_32_Unsigned_C; -- ALuint 
-                        param  : Int_32_Unsigned_C; -- ALenum
+  procedure alSource3f (sid    : Int_Unsigned_C; -- ALuint 
+                        param  : Int_Unsigned_C; -- ALenum
                         value1 : Real_32_C;         -- ALfloat
                         value2 : Real_32_C;         -- ALfloat
                         value3 : Real_32_C)         -- ALfloat
                         with Import => True, Convention => StdCall, External_Name => "alSource3f"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcei (sid   : Int_32_Unsigned_C; -- ALuint 
-                       param : Int_32_Unsigned_C; -- ALenum
+  procedure alSourcei (sid   : Int_Unsigned_C; -- ALuint 
+                       param : Int_Unsigned_C; -- ALenum
                        Value : Int_C)             -- ALint 
                        with Import => True, Convention => StdCall, External_Name => "alSourcei"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSource3i (sid    : Int_32_Unsigned_C; -- ALuint 
-                        param  : Int_32_Unsigned_C; -- ALenum
+  procedure alSource3i (sid    : Int_Unsigned_C; -- ALuint 
+                        param  : Int_Unsigned_C; -- ALenum
                         value1 : Int_C; -- ALint
                         value2 : Int_C; -- ALint
                         value3 : Int_C) -- ALint 
                         with Import => True, Convention => StdCall, External_Name => "alSource3i"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcefv (sid    : Int_32_Unsigned_C; -- ALuint 
-                        param  : Int_32_Unsigned_C; -- ALenum
+  procedure alSourcefv (sid    : Int_Unsigned_C; -- ALuint 
+                        param  : Int_Unsigned_C; -- ALenum
                         values : Pointer) -- 
                         with Import => True, Convention => StdCall, External_Name => "alSourcefv"; 
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourceiv (sid : Int_32_Unsigned_C; -- ALuint 
-                        param : Int_32_Unsigned_C; -- ALenum
+  procedure alSourceiv (sid : Int_Unsigned_C; -- ALuint 
+                        param : Int_Unsigned_C; -- ALenum
                         values : Pointer) -- 
                         with Import => True, Convention => StdCall, External_Name => "alSourceiv"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcef (sid   : Int_32_Unsigned_C; -- ALuint 
-                          param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSourcef (sid   : Int_Unsigned_C; -- ALuint 
+                          param : Int_Unsigned_C; -- ALenum
                           value : Poin) -- 
                           with Import => True, Convention => StdCall, External_Name => "alGetSourcef"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSource3f (sid    : Int_32_Unsigned_C; -- ALuint 
-                           param  : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSource3f (sid    : Int_Unsigned_C; -- ALuint 
+                           param  : Int_Unsigned_C; -- ALenum
                            value1 : Pointer; -- 
                            value2 : Pointer; -- 
                            value3 : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetSource3f"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcefv (sid    : Int_32_Unsigned_C; -- ALuint 
-                           param  : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSourcefv (sid    : Int_Unsigned_C; -- ALuint 
+                           param  : Int_Unsigned_C; -- ALenum
                            values : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetSourcefv"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcei (sid   : Int_32_Unsigned_C; -- ALuint 
-                          param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSourcei (sid   : Int_Unsigned_C; -- ALuint 
+                          param : Int_Unsigned_C; -- ALenum
                           Value : Pointer) -- 
                           with Import => True, Convention => StdCall, External_Name => "alGetSourcei"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSource3i (sid    : Int_32_Unsigned_C; -- ALuint 
-                           param  : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSource3i (sid    : Int_Unsigned_C; -- ALuint 
+                           param  : Int_Unsigned_C; -- ALenum
                            value1 : Pointer; -- 
                            value2 : Pointer; -- 
                            value3 : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetSource3i"; 
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourceiv (sid    : Int_32_Unsigned_C; -- ALuint 
-                           param  : Int_32_Unsigned_C; -- ALenum
+  procedure alGetSourceiv (sid    : Int_Unsigned_C; -- ALuint 
+                           param  : Int_Unsigned_C; -- ALenum
                            values : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetSourceiv"; 
 
   -- 4.3.5. Queuing Buffers with a Source
-  procedure alSourceQueueBuffers (sid        : Int_32_Unsigned_C; -- ALuint 
+  procedure alSourceQueueBuffers (sid        : Int_Unsigned_C; -- ALuint 
                                   numEntries : Int_Size_C; -- ALsizei
                                   bids       : Pointer) -- 
                                   with Import => True, Convention => StdCall, External_Name => "alSourceQueueBuffers"; 
   
   -- 4.3.5. Queuing Buffers with a Source
-  procedure alSourceUnqueueBuffers (sid        : Int_32_Unsigned_C; -- ALuint 
+  procedure alSourceUnqueueBuffers (sid        : Int_Unsigned_C; -- ALuint 
                                     numEntries : Int_Size_C; -- ALsizei
                                     bids       : Pointer) -- 
                                     with Import => True, Convention => StdCall, External_Name => "alSourceUnqueueBuffers"; 
@@ -1445,90 +1445,90 @@ typedef uint64_t ALuint64SOFT;
                            with Import => True, Convention => StdCall, External_Name => "alSourcePause"; 
 
   -- 5.1. Buffer States
-  procedure alBufferData (bid    : Int_32_Unsigned_C; -- ALuint 
-                          format : Int_32_Unsigned_C; -- ALenum
+  procedure alBufferData (bid    : Int_Unsigned_C; -- ALuint 
+                          format : Int_Unsigned_C; -- ALenum
                           data   : Ptr;               -- const ALvoid*
                           size   : Int_Size_C;        -- ALsizei
                           freq   : Int_Size_C)        -- ALsizei
                           with Import => True, Convention => StdCall, External_Name => "alBufferData"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferf (bid   : Int_32_Unsigned_C; -- ALuint 
-                       param : Int_32_Unsigned_C; -- ALenum
+  procedure alBufferf (bid   : Int_Unsigned_C; -- ALuint 
+                       param : Int_Unsigned_C; -- ALenum
                        Value : Real_32_C)         -- ALfloat
                        with Import => True, Convention => StdCall, External_Name => "alBufferf"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBuffer3f (bid    : Int_32_Unsigned_C; -- ALuint 
-                        param  : Int_32_Unsigned_C; -- ALenum
+  procedure alBuffer3f (bid    : Int_Unsigned_C; -- ALuint 
+                        param  : Int_Unsigned_C; -- ALenum
                         value1 : Real_32_C;         -- ALfloat
                         value2 : Real_32_C;         -- ALfloat
                         value3 : Real_32_C)         -- ALfloat
                         with Import => True, Convention => StdCall, External_Name => "alBuffer3f"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferi (bid : Int_32_Unsigned_C; -- ALuint 
-                       param : Int_32_Unsigned_C; -- ALenum
+  procedure alBufferi (bid : Int_Unsigned_C; -- ALuint 
+                       param : Int_Unsigned_C; -- ALenum
                        Value : Int_C) -- ALint 
                        with Import => True, Convention => StdCall, External_Name => "alBufferi"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBuffer3i (bid : Int_32_Unsigned_C; -- ALuint 
-                        param : Int_32_Unsigned_C; -- ALenum
+  procedure alBuffer3i (bid : Int_Unsigned_C; -- ALuint 
+                        param : Int_Unsigned_C; -- ALenum
                         value1 : Int_C; -- ALint
                         value2 : Int_C; -- ALint
                         value3 : Int_C) -- ALint 
                         with Import => True, Convention => StdCall, External_Name => "alBuffer3i"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferfv (bid : Int_32_Unsigned_C; -- ALuint 
-                        param : Int_32_Unsigned_C; -- ALenum
+  procedure alBufferfv (bid : Int_Unsigned_C; -- ALuint 
+                        param : Int_Unsigned_C; -- ALenum
                         values : Pointer) -- 
                         with Import => True, Convention => StdCall, External_Name => "alBufferfv"; 
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferiv (bid : Int_32_Unsigned_C; -- ALuint 
-                        param : Int_32_Unsigned_C; -- ALenum
+  procedure alBufferiv (bid : Int_Unsigned_C; -- ALuint 
+                        param : Int_Unsigned_C; -- ALenum
                         values : Pointer) -- 
                         with Import => True, Convention => StdCall, External_Name => "alBufferiv"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferf (bid : Int_32_Unsigned_C; -- ALuint 
-                          param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetBufferf (bid : Int_Unsigned_C; -- ALuint 
+                          param : Int_Unsigned_C; -- ALenum
                           Value : Pointer) -- 
                           with Import => True, Convention => StdCall, External_Name => "alGetBufferf"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBuffer3f (bid : Int_32_Unsigned_C; -- ALuint 
-                           param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetBuffer3f (bid : Int_Unsigned_C; -- ALuint 
+                           param : Int_Unsigned_C; -- ALenum
                            value1 : Pointer; -- 
                            value2 : Pointer; -- 
                            value3 : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetBuffer3f"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferfv (bid : Int_32_Unsigned_C; -- ALuint 
-                           param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetBufferfv (bid : Int_Unsigned_C; -- ALuint 
+                           param : Int_Unsigned_C; -- ALenum
                            values : Real_32_C) -- ALfloat
                            with Import => True, Convention => StdCall, External_Name => "alGetBufferfv"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferi (bid : Int_32_Unsigned_C; -- ALuint 
-                          param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetBufferi (bid : Int_Unsigned_C; -- ALuint 
+                          param : Int_Unsigned_C; -- ALenum
                           Value : Pointer) -- 
                           with Import => True, Convention => StdCall, External_Name => "alGetBufferi"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBuffer3i (bid : Int_32_Unsigned_C; -- ALuint 
-                           param : Int_32_Unsigned_C; -- ALenum
+  procedure alGetBuffer3i (bid : Int_Unsigned_C; -- ALuint 
+                           param : Int_Unsigned_C; -- ALenum
                            value1 : Pointer; -- 
                            value2 : Pointer; -- 
                            value3 : Pointer) -- 
                            with Import => True, Convention => StdCall, External_Name => "alGetBuffer3i"; 
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferiv (bid    : Int_32_Unsigned_C; -- ALuint 
-                           param  : Int_32_Unsigned_C; -- ALCenum
+  procedure alGetBufferiv (bid    : Int_Unsigned_C; -- ALuint 
+                           param  : Int_Unsigned_C; -- ALCenum
                            values : Pointer) -- ALint*
                            with Import => True, Convention => StdCall, External_Name => "alGetBufferiv"; 
 
@@ -1576,12 +1576,12 @@ typedef uint64_t ALuint64SOFT;
 
   -- 6.3.6. Query for Error Conditions
   function alcGetError (device : Ptr)            -- ALCdevice*
-                        return Int_32_Unsigned_C -- ALCenum
+                        return Int_Unsigned_C -- ALCenum
                         with Import => True, Convention => StdCall, External_Name => "alcGetError"; 
 
   -- 6.3.8. Integer Query
   procedure alcGetIntegerv (device : Ptr;                       -- ALCdevice*
-                            param  : Int_32_Unsigned_C;         -- ALCenum
+                            param  : Int_Unsigned_C;         -- ALCenum
                             size   : Int_Size_C;                -- ALCsizei
                             data   : Ptr_Array_Int_32_Signed_C) -- ALCint*
                             with Import => True, Convention => StdCall, External_Name => "alcGetIntegerv"; 

@@ -15,6 +15,23 @@
 
 package body Neo.Data is
 
+  ------------
+  -- Binary --
+  ------------
+
+  -- Load a file into a binary buffer
+  function Load (Path : Str) return Array_Byte is
+    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (App_Path.Get & Path)))); -- Str_8 !!!
+    package Blob_IO is new Ada.Direct_IO (Blob);
+    File   : Blob_IO.File_Type;
+    Result : Blob := (others => 0);
+    begin
+      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (App_Path.Get & Path)); -- Str_8 !!!
+      Blob_IO.Read (File, Result);
+      Blob_IO.Close (File);
+      return Result;    
+    end;
+  
   -------------
   -- Handler --
   -------------
@@ -27,17 +44,15 @@ package body Neo.Data is
         Load       : not null access function (Path : Str) return T;
         Extensions : Str_Unbound;
       end record;
-    package Ordered_Format is new Ordered (Format_T, Format_State);
+    package Ordered_Format is new Neo.Core.Ordered (Format_T, Format_State);
     Formats : Ordered_Format.Safe_Map;
 
     -- Dispatch to a stored callback based on the extension of the path
     function Load (Path : Str) return T is 
       Ext_Val : Str := Path (Index (Path, ".", Backward) + 1..Path'Last);
       begin
-        Put_Line (Ext_Val);
         for Format of Formats.Get loop
-          for Extension of Split (To_Str (Format.Extensions), ",") loop
-            Put_Line (S (Extension));
+          for Extension of Split (S (Format.Extensions), ",") loop
             if Extension = Ext_Val then return Format.Load (Path); end if;
           end loop;
         end loop;
@@ -75,30 +90,32 @@ package body Neo.Data is
 
     -- Load file and pre-process text (possibly remove comments and replace tabs)
     function Load return Array_Str_Unbound is
-      SINGLELINE_REMOVE    : Bool    := Comment         /= NULL_STR;
-      MULTILINE_REMOVE     : Bool    := Comment_Start   /= NULL_STR;
-      TAB_REPLACEMENT      : Bool    := Tab_Replacement /= NULL_CHAR_16;
-      In_Multiline_Comment : Bool    := False;
-      Comment_Start_Index  : Natural := 0;
-      Comment_End_Index    : Natural := 0;
-      Comment_Index        : Natural := 0;
-      Tab_Index            : Natural := 0;
-      Data                 : File_Type;
+      SINGLELINE_REMOVE : constant Bool := Comment         /= NULL_STR;
+      MULTILINE_REMOVE  : constant Bool := Comment_Start   /= NULL_STR;
+      TAB_REPLACE       : constant Bool := Tab_Replacement /= NULL_CHAR_16;
+
+      In_Multiline_Comment : Bool        := False;
+      Comment_Start_Index  : Natural     := 0;
+      Comment_End_Index    : Natural     := 0;
+      Comment_Index        : Natural     := 0;
+      Current              : Str_Unbound := NULL_STR_UNBOUND;
+      Data                 : Ada_IO.File_Type;
       This                 : Vector_Str_16_Unbound.Unsafe.Vector;
       begin
 
-        -- Verify generic package foramls
+        -- Verify generic foramls
+        Assert (Comment_Start /= Comment);
         Assert (Comment_Start'Length = Trim (Comment_Start, Both)'Length);
         Assert (Comment_End'Length   = Trim (Comment_End,   Both)'Length);
         Assert (Comment'Length       = Trim (Comment,       Both)'Length);
         Assert ((if MULTILINE_REMOVE then Comment_End /= NULL_STR else Comment_End /= NULL_STR));
 
         -- Open the file
-        Open (Data, In_File, To_Str_8 (Path)); -- Must be Str_8 ???
+        Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & Path)); -- Must be Str_8 ???
 
         -- Perform first pass
-        while not End_Of_File (Data) loop
-          Current := To_Str_Unbound (Get_Line (Data));
+        while not Ada_IO.End_Of_File (Data) loop
+          Current := To_Str_Unbound (Ada_IO.Get_Line (Data));
 
           -- Remove comments
           if SINGLELINE_REMOVE or MULTILINE_REMOVE then
@@ -111,13 +128,14 @@ package body Neo.Data is
 
                 -- No end in sight
                 if Comment_End_Index = 0 then
-                  if Comment_Start_Index = 0 then Current := NULL_STR_UNBOUND; end if;
+                  if Comment_Start_Index = 0 then Current := NULL_STR_UNBOUND;
+                  else Head (Current, Comment_Start_Index - 1); end if;
                   exit;
                 end if;
 
                 -- Delete comment
                 In_Multiline_Comment := False;
-                Delete (Current, Comment_Start_Index, Comment_End_Index + Comment_End'Length);
+                Delete (Current, (if Comment_Start_Index = 0 then 1 else Comment_Start_Index), Comment_End_Index + Comment_End'Length - 1);
 
               -- Single-line comment removal
               else
@@ -126,8 +144,8 @@ package body Neo.Data is
                 exit when Comment_Index = 0 and Comment_Start_Index = 0;
 
                 -- Delete comment
-                if SINGLELINE_REMOVE and then Comment_Index > 0 and (Comment_Index < Multi_Index or Multi_Index = 0) then
-                  Head (Current, Index (Current, Comment_Index) - 1);
+                if SINGLELINE_REMOVE and then (Comment_Index > 0 and (Comment_Index < Comment_Start_Index or Comment_Start_Index = 0)) then
+                  Head (Current, Comment_Index - 1);
                   exit;
 
                 -- Flag multi-line comment
@@ -137,20 +155,14 @@ package body Neo.Data is
           end if;
 
           -- Remove tabs
-          if TAB_REPLACEMENT then
-            loop
-              Tab_Index := Index (Current, TAB_16);
-              exit when Tab_Index = 0;
-              Overwrite (Current, Tab_Index, " "));
-            end loop;
-          end if;
+          if TAB_REPLACE then Replace (Current, TAB, " "); end if;
 
           -- Add the current line to the internal buffer
           if Current /= NULL_STR_UNBOUND then This.Append (Current); end if;
         end loop;
 
         -- Close the file
-        Close (Data);
+        Ada_IO.Close (Data);
         return Vector_Str_16_Unbound.To_Unsafe_Array (This);
       end;
 
@@ -206,13 +218,8 @@ package body Neo.Data is
         for I in 1..Amount loop Junk := Next; end loop;
       end;
 
-    -- Skip until.. this could stand a cleaning
-    procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((1 => U (Text)),                          Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2)),                         Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3)),                 Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3), U (T4)),         Fail_On_EOF); end;
-    procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False) is begin Skip_Until ((U (T1), U (T2), U (T3), U (T4), U (T5)), Fail_On_EOF); end;
-    procedure Skip_Until (T : Array_Str_Unbound; Fail_On_EOF : Bool := False) is
+    -- Skip until
+    procedure Skip_Until (T : Array_Str_Unbound; Fail : Bool := False) is
       Start_Column : Positive := Column;
       Start_Row    : Positive := Row;
       begin
@@ -221,10 +228,15 @@ package body Neo.Data is
             if S (I) = Peek then return; end if;
           end loop;
         end loop;
-        if Fail_On_EOF then raise Invalid; end if;
+        if Fail then raise Invalid; end if;
         Column := Start_Column;
         Row    := Start_Row;
       end;
+    procedure Skip_Until (Text               : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (1 => U (Text)),                          Fail => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2             : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2)),                         Fail => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3         : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3)),                 Fail => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4     : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4)),         Fail => Fail_On_EOF); end;
+    procedure Skip_Until (T1, T2, T3, T4, T5 : Str; Fail_On_EOF : Bool := False) is begin Skip_Until (T => (U (T1), U (T2), U (T3), U (T4), U (T5)), Fail => Fail_On_EOF); end;
 
     -- Assert
     procedure Assert (T1, T2             : Str) is begin Assert (T1);             Assert (T2); end;
@@ -272,13 +284,13 @@ package body Neo.Data is
         end loop;
         if Result = NULL_STR_UNBOUND then raise Invalid; end if;
         Seek;
-        return Real_64'Wide_Value (To_Str (Result));
+        return Real_64'Wide_Value (S (Result));
       end;
     function Next return Real_64         renames Next_Internal;
     function Next return Real            is (Real            (Next_Internal));
     function Next return Byte            is (Byte            (Next_Internal));
     function Next return Int             is (Int             (Next_Internal));
-    function Next return Int_32_Unsigned is (Int_32_Unsigned (Next_Internal));
+    function Next return Int_Unsigned is (Int_Unsigned (Next_Internal));
     function Next return Int_64          is (Int_64          (Next_Internal));
     function Next return Int_64_Unsigned is (Int_64_Unsigned (Next_Internal));
 

@@ -11,22 +11,27 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
 --                                                                                                                                      --
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --    
+--                                                                                                                                      --
 
--- Handle global space-time state synconization (e.g. dead-reckoning, local-perception filters, etc.)
-generic
-  Speed_Limit : Real_64;
-package Neo.Engine.Prediction is
+-- Unified texture type definitions
+package Neo.Data.Texture is
 
-  ----------------------
-  -- Local Perception --
-  ----------------------
-  --
-  -- Our network prediction model uses set of replecation models where instant or very fast actions use a separate form than player
-  -- movement.
-  --
+  -------------
+  -- Formats --
+  -------------
 
-  
+  type Format_Kind is (Khronos_Format); -- http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
 
-  
+  -----------
+  -- Image --
+  -----------
+
+  type Compressed_Image (Kind : Format_Kind; Mipmaps, Length, Faces, Face_Size : Int)
+    is array (1..Mipmaps, 1..Length, 1..Faces, 1..Face_Size) of Byte with Convention => C;
+
+  --------
+  -- IO --
+  --------
+
+  function Load (Path : Str) return Compressed_Image;
 end;

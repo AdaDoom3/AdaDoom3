@@ -23,14 +23,12 @@ package Neo.Core.Compression is
   -----------------
 
   procedure Decompress (Data : in out Root_Stream_Type'Class);
-
-  procedure Compress (Data : in out Root_Stream_Type'Class);
+  procedure Compress   (Data : in out Root_Stream_Type'Class);
 
   -----------------------
   -- Delta compression --
   -----------------------
 
   procedure Decompress (Data, Δ : in out Root_Stream_Type'Class);
-
-  procedure Compress (Data, Δ : in out Root_Stream_Type'Class);
+  procedure Compress   (Data, Δ : in out Root_Stream_Type'Class);
 end;

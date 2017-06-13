@@ -30,6 +30,8 @@ package Neo.Core.Arrays is
   package Vector_Str_16_Unbound       is new Vectors (Unbounded_Wide_String);
   package Vector_Str_Unbound          renames Vector_Str_16_Unbound;
   package Vector_Ptr_Str_16           is new Vectors (Ptr_Str_16);
+  package Vector_Ptr_Str_8_C          is new Vectors (Ptr_Str_8_C);
+  package Vector_Ptr_Char_8_C         is new Vectors (Ptr_Char_8_C);
   package Vector_Char_8_C             is new Vectors (Char_8_C);
   package Vector_Char_8               is new Vectors (Char_8);
   package Vector_Char_16_C            is new Vectors (Char_16_C);
@@ -47,8 +49,8 @@ package Neo.Core.Arrays is
   package Vector_Int_16_Signed        is new Vectors (Int_16_Signed);
   package Vector_Int_16_Natural       is new Vectors (Int_16_Natural);
   package Vector_Int_16_Positive      is new Vectors (Int_16_Positive);
-  package Vector_Int_32_Unsigned_C    is new Vectors (Int_32_Unsigned_C);
-  package Vector_Int_32_Unsigned      is new Vectors (Int_32_Unsigned);
+  package Vector_Int_32_Unsigned_C    is new Vectors (Int_Unsigned_C);
+  package Vector_Int_32_Unsigned      is new Vectors (Int_Unsigned);
   package Vector_Int_32_Signed_C      is new Vectors (Int_32_Signed_C);
   package Vector_Int_32_Signed        is new Vectors (Int_32_Signed);
   package Vector_Int_32_Natural       is new Vectors (Int_32_Natural);
@@ -79,6 +81,8 @@ package Neo.Core.Arrays is
   subtype Array_Duration              is Vector_Duration.Unsafe_Array;
   subtype Array_Ptr                   is Vector_Ptr.Unsafe_Array;
   subtype Array_Ptr_Str_16            is Vector_Ptr_Str_16.Unsafe_Array;
+  subtype Array_Ptr_Str_8_C           is Vector_Ptr_Str_8_C.Unsafe_Array;
+  subtype Array_Ptr_Char_8_C          is Vector_Ptr_Char_8_C.Unsafe_Array;
   subtype Array_Str_16_Unbound        is Vector_Str_16_Unbound.Unsafe_Array;
   subtype Array_Str_Unbound           is Array_Str_16_Unbound;
   subtype Array_Str_8_Unbound         is Vector_Str_8_Unbound.Unsafe_Array;
@@ -89,6 +93,8 @@ package Neo.Core.Arrays is
   subtype Array_Int_Ptr               is Vector_Int_Ptr.Unsafe_Array;
   subtype Array_Int_8_Unsigned_C      is Vector_Int_8_Unsigned_C.Unsafe_Array;
   subtype Array_Int_8_Unsigned        is Vector_Int_8_Unsigned.Unsafe_Array;
+  subtype Array_Byte_C                is Array_Int_8_Unsigned_C;
+  subtype Array_Byte                  is Array_Int_8_Unsigned;
   subtype Array_Int_8_Signed_C        is Vector_Int_8_Signed_C.Unsafe_Array;
   subtype Array_Int_8_Signed          is Vector_Int_8_Signed.Unsafe_Array;
   subtype Array_Int_8_Natural         is Vector_Int_8_Natural.Unsafe_Array;
@@ -100,6 +106,7 @@ package Neo.Core.Arrays is
   subtype Array_Int_16_Natural        is Vector_Int_16_Natural.Unsafe_Array;
   subtype Array_Int_16_Positive       is Vector_Int_16_Positive.Unsafe_Array;
   subtype Array_Int_32_Unsigned_C     is Vector_Int_32_Unsigned_C.Unsafe_Array;
+  subtype Array_Int_Unsigned_C        is Array_Int_32_Unsigned_C;
   subtype Array_Int_32_Unsigned       is Vector_Int_32_Unsigned.Unsafe_Array;
   subtype Array_Int_32_Signed_C       is Vector_Int_32_Signed_C.Unsafe_Array;
   subtype Array_Int_32_Signed         is Vector_Int_32_Signed.Unsafe_Array;
@@ -122,6 +129,7 @@ package Neo.Core.Arrays is
   subtype Array_Real_64_Percent       is Vector_Real_64_Percent.Unsafe_Array;
   subtype Array_Real_64_Degree        is Vector_Real_64_Degree.Unsafe_Array;
   subtype Array_Real_32_C             is Vector_Real_32_C.Unsafe_Array;
+  subtype Array_Real_C                is Array_Real_32_C;
   subtype Array_Real_32               is Vector_Real_32.Unsafe_Array;
   subtype Array_Real                  is Array_Real_32;
   subtype Array_Real_32_Natural       is Vector_Real_32_Natural.Unsafe_Array;
@@ -130,6 +138,7 @@ package Neo.Core.Arrays is
   subtype Array_Real_32_Degree        is Vector_Real_32_Degree.Unsafe_Array;
   subtype Ptr_Array_Ptr               is Vector_Ptr.Ptr_Unsafe_Array;
   subtype Ptr_Array_Ptr_Str_16        is Vector_Ptr_Str_16.Ptr_Unsafe_Array;
+  subtype Ptr_Array_Ptr_Str_8_C       is Vector_Ptr_Str_8_C.Ptr_Unsafe_Array;
   subtype Ptr_Array_Str_16_Unbound    is Vector_Str_16_Unbound.Ptr_Unsafe_Array;
   subtype Ptr_Array_Char_8_C          is Vector_Char_8_C.Ptr_Unsafe_Array;
   subtype Ptr_Array_Char_8            is Vector_Char_8.Ptr_Unsafe_Array;
@@ -148,6 +157,7 @@ package Neo.Core.Arrays is
   subtype Ptr_Array_Int_16_Natural    is Vector_Int_16_Natural.Ptr_Unsafe_Array;
   subtype Ptr_Array_Int_16_Positive   is Vector_Int_16_Positive.Ptr_Unsafe_Array;
   subtype Ptr_Array_Int_32_Unsigned_C is Vector_Int_32_Unsigned_C.Ptr_Unsafe_Array;
+  subtype Ptr_Array_Int_Unsigned_C    is Ptr_Array_Int_32_Unsigned_C;
   subtype Ptr_Array_Int_32_Unsigned   is Vector_Int_32_Unsigned.Ptr_Unsafe_Array;
   subtype Ptr_Array_Int_32_Signed_C   is Vector_Int_32_Signed_C.Ptr_Unsafe_Array;
   subtype Ptr_Array_Int_32_Signed     is Vector_Int_32_Signed.Ptr_Unsafe_Array;
@@ -167,6 +177,7 @@ package Neo.Core.Arrays is
   subtype Ptr_Array_Real_64_Percent   is Vector_Real_64_Percent.Ptr_Unsafe_Array;
   subtype Ptr_Array_Real_64_Degree    is Vector_Real_64_Degree.Ptr_Unsafe_Array;
   subtype Ptr_Array_Real_32_C         is Vector_Real_32_C.Ptr_Unsafe_Array;
+  subtype Ptr_Array_Real_C            is Ptr_Array_Real_32_C;
   subtype Ptr_Array_Real_32           is Vector_Real_32.Ptr_Unsafe_Array;
   subtype Ptr_Array_Real_32_Natural   is Vector_Real_32_Natural.Ptr_Unsafe_Array;
   subtype Ptr_Array_Real_32_Positive  is Vector_Real_32_Positive.Ptr_Unsafe_Array;

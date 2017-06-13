@@ -32,7 +32,8 @@
 
       /* Body */
       body {
-        width: 100%;
+        //zoom: 80%;
+        min-width: 450px;
         margin: 0px;
         background: #383838;
         font-family: arial;
@@ -69,7 +70,6 @@
       /* Header */
       .header {
         position: relative;
-        min-width: 500px;
         height: 80px;
         width: calc(100% - 16px);
         display: block;
@@ -100,7 +100,6 @@
       .gameActions {
         position: relative;
         display: table !important;
-        min-width: 516px;
         width: 100%;
         border-spacing: 8px;
       }
@@ -132,7 +131,6 @@
       .devActions {
         position: relative;
         display: block;
-        min-width: 500px;
         width: calc(100% - 16px);
         padding-right: 8px;
         padding-left: 8px;
@@ -141,7 +139,6 @@
       .devActions button {
         position: relative;
         display: block;
-        min-width: 500px;
         width: 100%;
         margin-bottom: 8px
       }
@@ -152,8 +149,59 @@
     <!--        -->
 
       <script>
-      (function() {
+      (function(globals) {
         'use strict';
+
+        // Objects
+        var fileSystem = new ActiveXObject('Scripting.FileSystemObject');
+        var shell      = new ActiveXObject('WScript.Shell');
+
+        // Constants
+        var MAX_PATH       = 30;
+        var APPDATA_FOLDER = '%APPDATA%\\roaming\\neo';
+        var CONFIG_FILE    = 'sdk-config.json';
+        var SESSION_FILE   = 'sdk-session.json';
+        var GAME_FOLDER    = '.\\Games';
+        var NO_GAMES_TEXT  = 'No Games Detected.';
+        
+        // 
+        var ARCHITECTURE_REG_KEY = 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PROCESSOR_ARCHITECTURE';
+        var BIT_SIZE             = shell.regRead(ARCHITECTURE_REG_KEY) === 'x86' ? 32 : 64;
+
+        // 
+        var SCENARIO_OPTION_PREFIX   = '-X';
+        var SCENARIO_OPTION_GAME     = SCENARIO_OPTION_PREFIX + 'Game=';
+        var SCENARIO_OPTION_DEBUG    = SCENARIO_OPTION_PREFIX + 'Debug=';
+        var SCENARIO_OPTION_BIT_SIZE = SCENARIO_OPTION_PREFIX + 'Bitsize=' + BIT_SIZE;
+        var SCENARIO_OPTION_SYSTEM   = SCENARIO_OPTION_PREFIX + 'System=Windows';
+        
+        // 
+        var CMD_PROMPT   = 'cmd.exe /c';
+        var CMD_GDB      = 'gdb --args';
+        var CMD_PAUSE    = 'pause';
+        var CMD_GNATMAKE = 'gnatmake -P .\\neo.gpr';
+
+        window.resizeTo (516, 748);
+
+        var download = function(resourceUrl, localFilePath) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', resourceUrl);
+          xhr.responseType = 'arraybuffer';
+
+          if (fileSystem.fileExists(localFilePath)) { fileSystem.deleteFile(localFilePath); }
+          fileSystem.createTextFile(localFilePath, true);
+          var file = fileSystem.getFile(localFilePath);
+          var stream = file.openAsTextStream(2, -2);
+
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              stream.write(xhr.response);
+              stream.close();
+            }
+          };
+
+          xhr.send();
+        };
 
         var replaceIconTagsWithSVGs = function() {
           var iconDefs = document.getElementById('icon-definitions');
@@ -173,50 +221,97 @@
             parent.replaceChild(newIcon, icon);
           });
         }
+
+        var enumerateGames = function(gamesFolder) {
+          if (fileSystem.getFolder(GAME_FOLDER).subFolders.count === 0) {
+            var selectOption  = document.createElement('OPTION');
+            selectOption.text = NO_GAMES_TEXT;
+            gameSelect.appendChild(selectOption);
+          } else {
+            var folders = fileSystem.getFolder(GAME_FOLDER).subFolders;
+            var enumerator = new Enumerator(folders);
+            for (;!enumerator.atEnd(); enumerator.moveNext()) {
+              var selectOption = document.createElement('OPTION');
+              var game = enumerator.item();
+              if (game.path.length > MAX_PATH) {
+                selectOption.text = '...' + game.path.substring(game.path.indexOf('\\', game.path.length - MAX_PATH - 3));
+              } else {
+                selectOption.text = game.path;
+              }
+              selectOption.setAttribute('name', game.name);
+              selectOption.setAttribute('path', game.path);
+              gameSelect.appendChild(selectOption);
+            }
+          }
+        };
+
+        //////////
+        // Main //
+        //////////
+
         document.addEventListener('DOMContentLoaded', function() {
           replaceIconTagsWithSVGs();
+          enumerateGames();
+          download('http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d', '.\\Tools\\gnat-gpl-win32-x86.exe');
         });
-      })();
-        (function() {
-          'use strict';
 
-          // Constants
-          var MAX_PATH       = 40;
-          var APPDATA_FOLDER = "%APPDATA%\\roaming\\neo";
-          var CONFIG_FILE    = "sdk-config.json";
-          var SESSION_FILE   = "sdk-session.json";
-          var GAME_FOLDER    = ".\\Games";
-          var NO_GAMES_TEXT  = "No Games Detected.";
+        ///////////////
+        // debugGame //
+        ///////////////
 
-          // Objects
-          var fileSystem  = new ActiveXObject("Scripting.FileSystemObject");
-          var application = new ActiveXObject("Shell.Application");
+        globals.button_debugGame = function() {
+          var gameSelect = document.getElementById('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var gameName = selectedGame.getAttribute('name');
+          var gamePath = selectedGame.getAttribute('path');
 
-          window.resizeTo (550, 760);
+          var buildCommand = CMD_GNATMAKE + ' ' +
+            SCENARIO_OPTION_GAME     + gameName + ' ' +
+            SCENARIO_OPTION_BIT_SIZE + ' ' +
+            SCENARIO_OPTION_DEBUG    + 'Yes ' +
+            SCENARIO_OPTION_SYSTEM;
+          var debugCommand = CMD_GDB + ' ' + gamePath + '\\' + gameName + BIT_SIZE;
+          var echoBuildCommand = 'echo "' + buildCommand + '"';
+          var echoDebugCommand = 'echo "' + debugCommand + '"';
 
-          var enumerateGames = function(gamesFolder) {
-            if (fileSystem.getFolder(GAME_FOLDER).subFolders.count === 0) {
-              var selectOption  = document.createElement("OPTION");
-              selectOption.text = NO_GAMES_TEXT;
-              gameSelect.appendChild(selectOption);
-            } else {
-              fileSystem.getFolder(GAME_FOLDER).subFolders.forEach(function(game) {
-                var selectOption = document.createElement("OPTION");
-                if (game.path.length > MAX_PATH) {
-                  selectOption.text="..." + right (game.path, (len (game.path) + 1) - inStr (game.path, GAMES));
-                } else {
-                  selectOption.text=game.path;
-                }
-                gameSelect.appendChild(selectOption);
-              });
-            }
-          };
+          shell.run(CMD_PROMPT + ' ' +
+            echoBuildCommand + ' & ' + buildCommand + ' & ' + 
+            echoDebugCommand + ' & ' + debugCommand, 1, false);
+        };
 
-          document.addEventListener('DOMContentLoaded', function() {
-            //replaceIconTagsWithSVGs();
-          });
+        //////////////
+        // makeGame //
+        //////////////
 
-        })();
+        globals.button_makeGame = function() {
+          var gameSelect = document.getElementById('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var gameName = selectedGame.getAttribute('name');
+
+          var buildCommand = CMD_GNATMAKE + ' ' +
+            SCENARIO_OPTION_GAME     + gameName + ' ' +
+            SCENARIO_OPTION_BIT_SIZE + ' ' +
+            SCENARIO_OPTION_DEBUG    + 'No ' +
+            SCENARIO_OPTION_SYSTEM;
+          var echoBuildCommand = 'echo "' + buildCommand + '"';
+
+          shell.run(CMD_PROMPT + ' ' + echoBuildCommand + ' & ' + buildCommand + ' & ' + CMD_PAUSE, 1, false);
+        };
+
+        //////////////
+        // playGame //
+        //////////////
+
+        globals.button_playGame = function() {
+          var gameSelect = document.getElementById('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var fullPath = selectedGame.getAttribute('path') + '\\' + selectedGame.getAttribute('name') + BIT_SIZE + '.exe';
+
+          shell.run(fullPath, 1, false);
+        };
+
+      })(this);
+
     </script>
   </head>
 
@@ -259,7 +354,7 @@
 
     <!-- Game actions -->
     <div class="gameActions">
-      <select name="gameSelect"></select>
+      <select id="gameSelect" name="gameSelect"></select>
       <button onClick="button_debugGame()"> <icon kind="debug"></icon> </button>
       <button onClick="button_makeGame()" > <icon kind="build"></icon> </button>
       <button onClick="button_playGame()" > <icon kind="run"  ></icon> </button>
@@ -279,6 +374,5 @@
       <button onClick="button_decompileMDL()" > <icon kind="destroy"></icon> Decompile Valve MDLs                </button>
       <button onClick="button_decompileVTF()" > <icon kind="destroy"></icon> Decompile Valve VTFs                </button>
     </div>
-    
   </body>
 </html>

@@ -29,10 +29,15 @@ package Neo.Core.Vectors is
   NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
 
   -- Array conversions
-  type Unsafe_Array is array (Positive range <>) of Vec_T with Convention => C;
+  type Unsafe_Array is array (Positive range <>) of aliased Vec_T with Convention => C;
   type Ptr_Unsafe_Array is access all Unsafe_Array;
   function To_Unsafe_Vector (Item : Unsafe_Array)  return Unsafe.Vector;
   function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;
+
+-- warning: incompatible types in conversion
+pragma Warnings (Off);
+  function To_Ptr is new Unchecked_Conversion (Ptr_Unsafe_Array, Ptr); -- Just hack it
+Pragma Warnings (On);
 
   -- Wrapped type
   protected type Safe_Vector is

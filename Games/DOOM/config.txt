@@ -1,5 +1,5 @@
--- Neo 0.1a config: 1-8-2017-4h52m45s
--- Note: To restore default values simply delete this file.
+-- Neo 0.1a config: 2017-06-13 13:04:40
+-- To restore default values simply delete this file.
 
 -- CVars
 widey 

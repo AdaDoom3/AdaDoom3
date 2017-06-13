@@ -13,15 +13,20 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
-with Neo.Core.Compression; use Neo.Core.Compression;
-with Neo.Core.Console;     use Neo.Core.Console;
-with Neo.Core.Strings;     use Neo.Core.Strings;
-with Neo.Core.Arrays;      use Neo.Core.Arrays;
+with GNAT.Traceback.Symbolic; use GNAT.Traceback.Symbolic;
+with GNAT.Traceback;          use GNAT.Traceback;
+with Ada.Task_Identification; use Ada.Task_Identification;
+with Neo.API.Vulkan;          use Neo.API.Vulkan;
+with Neo.Core.Math;           use Neo.Core.Math;
+with Neo.Core.Console;        use Neo.Core.Console;
+--with Neo.Core.Compression;    use Neo.Core.Compression;
+with Neo.Core.Strings;        use Neo.Core.Strings;
+with Neo.Core.Arrays;         use Neo.Core.Arrays;
 with Neo.Core.Hashed;
 with Neo.Core.Vectors;
 with Neo.Core.Ordered;
 
--- Primary interface for the "Game" layer, see /Games/.../Base/neo-engine-game.adb for more information
+-- Primary interface for the "Game" layer, see Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
 
   -- Main entry point, this should only be called by main.adb
@@ -31,15 +36,15 @@ package Neo.Engine is
   -- Information --
   -----------------
 
-  -- OS and user information 
-  type Information_State is record
-      Bit_Size : Positive;
-      OS       : Str_Unbound;
-      Username : Str_Unbound;
-      Name     : Str_Unbound;
-      Path     : Str_Unbound;
+  type OS_Info_State is record
+      Bit_Size : Positive    := 1;
+      Version  : Str_Unbound := NULL_STR_UNBOUND;
+      Username : Str_Unbound := NULL_STR_UNBOUND;
+      App_Name : Str_Unbound := NULL_STR_UNBOUND;
+      Path     : Str_Unbound := NULL_STR_UNBOUND;
+      Path_Sep : Char        := NULL_CHAR;
     end record;
-  function Get_Information return Information_State;
+  function OS_Info return OS_Info_State;
 
   ---------------
   -- Clipboard --
@@ -70,6 +75,9 @@ package Neo.Engine is
   procedure Finalize_Console;  
   function Running_Console return Bool;
 
+  -- Generate debugging info for a given exception
+  procedure Handle (Occurrence : Exception_Occurrence);
+
   -------------
   -- Tasking --
   -------------
@@ -78,7 +86,8 @@ package Neo.Engine is
   generic
     with procedure Run;
   package Tasks is
-      task type Task_Unsafe is entry Initialize (Id : out Task_ID); end;
+      task type Task_Unsafe is
+          entry Initialize (Id : out Task_ID); end;
       type Task_Unsafe_Ptr is access all Task_Unsafe;
       protected type Safe_Task is
           procedure Initialize;
@@ -99,24 +108,21 @@ package Neo.Engine is
   type Mode_Kind   is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
 
   -- CVars for controlling window and game properties                    
-  package Menu            is new CVar ("menu",      "Query cursor capture",             Bool, True);
-  package Cursor          is new CVar ("cursor",    "Query cursor style",               Cursor_Kind, Inactive_Cursor);    
-  package Mode            is new CVar ("mode",      "Query window mode",                Mode_Kind, Windowed_Mode, True);
-  package Aspect_Narrow_X is new CVar ("narrowx",   "Set windowed min narrow aspect x", Positive, 16,  True);
-  package Aspect_Narrow_Y is new CVar ("narrowy",   "Set windowed min narrow aspect y", Positive, 9,   True);
-  package Aspect_Wide_X   is new CVar ("widex",     "Set windowed min wide aspect x",   Positive, 4,   True);
-  package Aspect_Wide_Y   is new CVar ("widey",     "Set windowed min wide aspect y",   Positive, 3,   True);
-  package Windowed_Height is new CVar ("winheight", "Height in windowed mode",          Positive, 600, True);
-  package Windowed_Width  is new CVar ("winwidth",  "Width in windowed mode",           Positive, 800, True);
+  package Menu            is new CVar ("menu",      "Cursor capture",               Bool, True, False);
+  package Cursor          is new CVar ("cursor",    "Cursor style",                 Cursor_Kind, Inactive_Cursor, False);    
+  package Mode            is new CVar ("mode",      "Window mode",                  Mode_Kind, Windowed_Mode);
+  package Aspect_Narrow_X is new CVar ("narrowx",   "Windowed min narrow aspect x", Int_64_Positive, 16);
+  package Aspect_Narrow_Y is new CVar ("narrowy",   "Windowed min narrow aspect y", Int_64_Positive, 9);
+  package Aspect_Wide_X   is new CVar ("widex",     "Windowed min wide aspect x",   Int_64_Positive, 4);
+  package Aspect_Wide_Y   is new CVar ("widey",     "Windowed min wide aspect y",   Int_64_Positive, 3);
+  package Windowed_Height is new CVar ("winheight", "Height in windowed mode",      Int_64_Positive, 600);
+  package Windowed_Width  is new CVar ("winwidth",  "Width in windowed mode",       Int_64_Positive, 800);
 
   -- Window and desktop location and size information
   type Border_State is record
-      Top    : Int_64 := 0;
-      Bottom : Int_64 := 0;
-      Left   : Int_64 := 0;
-      Right  : Int_64 := 0;
+      Top, Bottom, Left, Right : Int_64 := 0;
     end record;
-  package Vector_Border is new Vectors (Border_State);
+  package Vector_Border is new Neo.Core.Vectors (Border_State);
   function Get_Windows return Vector_Border.Unsafe_Array;
 
   ----------------
@@ -127,9 +133,9 @@ package Neo.Engine is
   type Connection_State is record
       IP : Str_Unbound;
     end record;
-  type Connection_Info_State is record
-      Last_Sent       : ;
-      Last_Reply      : ;
+  type Connection_OS_Info_State is record
+      --Last_Sent       : ;
+      --Last_Reply      : ;
       Packets_Read    : Int_64_Unsigned := 0;
       Packets_Written : Int_64_Unsigned := 0;
       Bytes_Read      : Int_64_Unsigned := 0;
@@ -139,7 +145,7 @@ package Neo.Engine is
   procedure Vocalize (Connection : in out Connection_State);
   procedure Connect  (Connection : in out Connection_State; Address   : Str);
   procedure Send     (Connection :        Connection_State; Recipient : Str; Data : Stream_Element_Array);
-  function Get_Stats (Connection :        Connection_State) return Connection_Info_State;
+  function Get_Stats (Connection :        Connection_State) return Connection_OS_Info_State;
   function Recieve   (Connection :        Connection_State;
                       Sender     :    out Str_Unbound;
                       Timeout    :        Duration := 0.0) return Array_Stream;
@@ -216,14 +222,9 @@ package Neo.Engine is
                         Clear_selection_Key);
 
   -- Binding states
-  type Cursor_State is record
-      X : Int_64 := 0;
-      Y : Int_64 := 0;
-    end record;
-  type Stick_State is record
-      X : Real_Range := 0.0;
-      Y : Real_Range := 0.0;
-    end record;
+  subtype Real_Interval is Real_32 range -100.0..100.0;
+  type Stick_State  is record X, Y : Real_Interval := 0.0; end record;
+  type Cursor_State is record X, Y : Int_64        := 0;   end record;
   type Press_State is record
       Down : Bool := False;
       Last : Time := Get_Start_Time;
@@ -233,7 +234,7 @@ package Neo.Engine is
   type Mouse_Array   is array (Mouse_Kind)   of Press_State;
   type Key_Array     is array (Key_Kind)     of Press_State;
   type Gamepad_Array is array (Gamepad_Kind) of Press_State;
-  type Trigger_Array is array (Trigger_Kind) of Real_32_Percent;
+  type Trigger_Array is array (Trigger_Kind) of Real_Percent;
   type Stick_Array   is array (Stick_Kind)   of Stick_State;
 
   -- Device to test for currently activated bindings
@@ -244,7 +245,7 @@ package Neo.Engine is
           Text     : Str_Unbound   := NULL_STR_UNBOUND;
           Keys     : Key_Array     := (others => (others => <>));
         when Gamepad_Device =>
-          Triggers : Trigger_Array := (others => (others => <>));
+          Triggers : Trigger_Array := (others => <>);
           Gamepad  : Gamepad_Array := (others => (others => <>));
           Sticks   : Stick_Array   := (others => (others => <>));
         when Mouse_Device =>
@@ -254,7 +255,7 @@ package Neo.Engine is
     end record;
 
   -- Virbrate a player's set of gamepad devices
-  procedure Vibrate (Hz_High, Hz_Low : Real_32_Percent; Player : Positive := 1);
+  procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1);
 
   -- Various cursor operations
   procedure Set_Cursor           (Pos : Cursor_State);
@@ -262,7 +263,7 @@ package Neo.Engine is
   function Get_Cursor_Normalized return Cursor_State;
 
   -- Operations to assign devices to different players or query each device's state
-  package Ordered_Device is new Ordered (Int_Ptr, Device_State);
+  package Ordered_Device is new Neo.Core.Ordered (Int_Ptr, Device_State);
   procedure Set_Device (Id : Int_Ptr; Player : Positive := 1);
   function Get_Device  (Id : Int_Ptr) return Device_State;
   function Get_Devices                return Ordered_Device.Unsafe.Map;
@@ -313,17 +314,17 @@ package Neo.Engine is
   type Impulse_Arg_State (Kind : Impulse_Kind := Key_Impulse) is record 
       Binding : Binding_State (Kind);
       case Kind is
-        when Trigger_Impulse => Trigger : Percent      := 0.0;
+        when Trigger_Impulse => Trigger : Real_Percent := 0.0;
         when Text_Impulse    => Text    : Str_Unbound  := NULL_STR_UNBOUND;
         when Stick_Impulse   => Stick   : Stick_State  := (others => <>);
         when Cursor_Impulse  => Cursor  : Cursor_State := (others => <>);
         when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State := (others => <>);
       end case;
     end record;
-  package Vector_Impulse_Arg is new Vectors (Impulse_Arg_State);
+  package Vector_Impulse_Arg is new Neo.Core.Vectors (Impulse_Arg_State);
 
   -- Needed for the task-safe manipulation of bindings for each impulse
-  package Vector_Binding is new Vectors (Binding_State);
+  package Vector_Binding is new Neo.Core.Vectors (Binding_State);
 
   -- Actual impulse package used to dispatch input callbacks
   generic 

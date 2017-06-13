@@ -15,27 +15,26 @@
 
 with Ada.Unchecked_Deallocation;   
 with Ada.Unchecked_Conversion;
+with Ada.Wide_Text_IO;
 with Ada.Streams.Stream_IO;
 with Ada.Streams;                  use Ada.Streams;
 with Ada.Exceptions;               use Ada.Exceptions;
 with Ada.Containers;               use Ada.Containers;
 with Ada.Finalization;             use Ada.Finalization;
-with Ada.Wide_Text_IO;             use Ada.Wide_Text_IO;
 with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
 with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
+with Ada.Calendar;                 use Ada.Calendar;
+with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
 with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
 with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Unbounded;        use Ada.Strings.Unbounded;
 with Ada.Strings.Fixed;            use Ada.Strings.Fixed;
 with Ada.Strings;                  use Ada.Strings;
-with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
-with Ada.Calendar.Time_Zones;      use Ada.Calendar.Time_Zones;
-with Ada.Calendar;                 use Ada.Calendar;
-with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
-with GNAT.Traceback;               use GNAT.Traceback;
 with Interfaces.C;                 use Interfaces.C;
 with Interfaces;                   use Interfaces;
 with System;                       use System;
+with GNAT.Sockets;                 use GNAT.Sockets;
+with GNAT.Compiler_Version;
 
 -- String constants and base data-types
 package Neo is
@@ -46,26 +45,32 @@ package Neo is
 
   NAME_ID : constant Wide_String := "Neo";
   VERSION : constant Wide_String := "0.1a";
+  
+  package GNAT_Info is new GNAT.Compiler_Version;
 
   -----------
   -- Paths --
   -----------
 
-  PATH_LOGS            : constant Wide_String := "/Logs/";
-  PATH_ASSETS          : constant Wide_String := "/Assets/";
+  PATH_LOGS            : constant Wide_String := "Logs";
+  PATH_ASSETS          : constant Wide_String := "Assets";
   PATH_LOCALE          : constant Wide_String := "locale.csv";
   PATH_CONFIG          : constant Wide_String := "config.txt";
-  PATH_ICON            : constant Wide_String := PATH_ASSETS & "icon";
-  PATH_CURSOR_ACTIVE   : constant Wide_String := PATH_ASSETS & "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Wide_String := PATH_ASSETS & "cursor_inactive";
+  PATH_ICON            : constant Wide_String := "icon";
+  PATH_CURSOR_ACTIVE   : constant Wide_String := "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Wide_String := "cursor_inactive";
 
   -------------
   -- Renames --
   -------------
 
-  package Stream_IO              renames Ada.Streams.Stream_IO;
-  package Unchecked_Deallocation renames Ada.Unchecked_Deallocation;
-  package Unchecked_Conversion   renames Ada.Unchecked_Conversion;
+  -- IO
+  package Ada_IO    renames Ada.Wide_Text_IO;
+  package Stream_IO renames Ada.Streams.Stream_IO;
+
+  -- Unchecked operations
+  generic procedure Unchecked_Deallocation renames Ada.Unchecked_Deallocation;
+  generic function  Unchecked_Conversion   renames Ada.Unchecked_Conversion;
 
   -----------
   -- Types --
@@ -88,19 +93,19 @@ package Neo is
 
   -- Integers
   type Int_Ptr              is mod MEMORY_SIZE;
-  type Int_8_Percent        is range 1..100; for Int_8_Percent'size use 64;
+  type Int_8_Percent        is range 1..100; for Int_8_Percent'Size use 8;
   subtype Int_8_Unsigned    is Unsigned_8;
   subtype Int_8_Unsigned_C  is Interfaces.C.Unsigned_Char;
   subtype Int_8_Signed      is Short_Short_Integer;
   subtype Int_8_Signed_C    is Interfaces.C.Char;
   subtype Int_8_Natural     is Int_8_Unsigned;
-  subtype Int_8_Positive    is Int_8_Unsigned range 1..Int_8_Unsigned'last;
+  subtype Int_8_Positive    is Int_8_Unsigned range 1..Int_8_Unsigned'Last;
   subtype Int_16_Unsigned   is Unsigned_16;
   subtype Int_16_Unsigned_C is Interfaces.C.Unsigned_Short;
   subtype Int_16_Signed     is Short_Integer;
   subtype Int_16_Signed_C   is Interfaces.C.Short;
   subtype Int_16_Natural    is Int_16_Unsigned;
-  subtype Int_16_Positive   is Int_8_Unsigned range 1..Int_8_Unsigned'last;
+  subtype Int_16_Positive   is Int_8_Unsigned range 1..Int_8_Unsigned'Last;
   subtype Int_32_Unsigned   is Unsigned_32;
   subtype Int_32_Unsigned_C is Interfaces.C.Unsigned;
   subtype Int_32_Signed     is Integer;
@@ -112,49 +117,30 @@ package Neo is
   subtype Int_64_Signed     is Long_Long_Integer;
   subtype Int_64_Signed_C   is Int_64_Signed;
   subtype Int_64_Natural    is Int_64_Unsigned;
-  subtype Int_64_Positive   is Int_64_Signed range 1..Int_64_Signed'last;
+  subtype Int_64_Positive   is Int_64_Signed range 1..Int_64_Signed'Last;
   subtype Int_Size_C        is Interfaces.C.Size_T;
 
   -- Floating point reals
   subtype Real_64          is Long_Float;
   subtype Real_64_C        is Interfaces.C.Double;
-  subtype Real_64_Natural  is Real_64 range 0.0..Real_64'last;
-  subtype Real_64_Positive is Real_64 range 1.0..Real_64'last;
+  subtype Real_64_Natural  is Real_64 range 0.0..Real_64'Last;
+  subtype Real_64_Positive is Real_64 range 1.0..Real_64'Last;
   subtype Real_64_Range    is Real_64 range -100.0..100.0;
   subtype Real_64_Percent  is Real_64 range 0.0..100.0;
   subtype Real_64_Degree   is Real_64 range 1.0..360.0;
   subtype Real_32          is Float;
   subtype Real_32_C        is Interfaces.C.C_Float;
-  subtype Real_32_Natural  is Real_32 range 0.0..Real_32'last;
-  subtype Real_32_Positive is Real_32 range 1.0..Real_32'last;
-  subtype Real_32_Range    is Real_32 range -100.0..100.0;
+  subtype Real_32_Natural  is Real_32 range 0.0..Real_32'Last;
+  subtype Real_32_Positive is Real_32 range 1.0..Real_32'Last;
   subtype Real_32_Percent  is Real_32 range 0.0..100.0;
   subtype Real_32_Degree   is Real_32 range 1.0..360.0;
-
-  -- Abbreviations for convience
-  subtype Bool         is Boolean;
-  subtype Char         is Char_16;
-  subtype Ptr          is Address;
-  subtype Stream       is Ada.Streams.Stream_Element;
-  subtype Byte         is Int_8_Unsigned;
-  subtype Int          is Int_32_Signed;
-  subtype Int_C        is Int_32_Signed_C;
-  subtype Real         is Real_32;
-  subtype Real_Range   is Real_32_Range;
-  subtype Real_Percent is Real_32_Percent;
-  subtype Int_64       is Int_64_Signed;
-  subtype Int_64_C     is Int_64_Signed_C;
-  subtype Int_16       is Int_16_Signed;
-  subtype Int_16_C     is Int_16_Signed_C;
-  subtype Int_8        is Int_8_Signed;
-  subtype Int_8_C      is Int_8_Signed_C;
-  subtype Str          is Wide_String;
-  subtype Str_Unbound  is Str_16_Unbound;
 
   -- Stream types
   subtype Array_Stream is Stream_Element_Array;
 
   -- Access types
+  subtype Ptr                is Address;
+  type Ptr_Ptr               is access all Address;
   type Ptr_Str_16            is access all Str_16;
   type Ptr_Str_8_C           is access all Str_8_C;
   type Ptr_Str_8             is access all Str_8;
@@ -175,22 +161,46 @@ package Neo is
   type Ptr_Procedure         is access procedure;
   type Ptr_Procedure_Put     is access procedure (Item : Str_16);
 
+  -- Abbreviations for convience
+  subtype Bool               is Boolean;
+  subtype Char               is Char_16;
+  subtype Stream             is Stream_Element;
+  subtype Byte               is Int_8_Unsigned;
+  subtype Int                is Int_32_Signed;
+  subtype Int_C              is Int_32_Signed_C;
+  subtype Real               is Real_32;
+  subtype Real_C             is Real_32_C;
+  subtype Real_Percent       is Real_32_Percent;
+  subtype Real_Degree        is Real_32_Degree;
+  subtype Int_64             is Int_64_Signed;
+  subtype Int_64_C           is Int_64_Signed_C;
+  subtype Int_16             is Int_16_Signed;
+  subtype Int_16_C           is Int_16_Signed_C;
+  subtype Int_8              is Int_8_Signed;
+  subtype Int_8_C            is Int_8_Signed_C;
+  subtype Int_Unsigned       is Int_32_Unsigned;
+  subtype Int_Unsigned_C     is Int_32_Unsigned_C;
+  subtype Str                is Str_16;
+  subtype Str_Unbound        is Str_16_Unbound;
+  subtype Ptr_Int_Unsigned_C is Ptr_Int_32_Unsigned_C;
+  subtype Ptr_Real_C         is Ptr_Real_32_C;
+
   -- Unchecked conversions
   function To_Ptr_Int_16_Unsigned_C is new Unchecked_Conversion (Ptr,                   Ptr_Int_16_Unsigned_C);
   function To_Ptr_Int_16_Unsigned_C is new Unchecked_Conversion (Int_Ptr,               Ptr_Int_16_Unsigned_C);
   function To_Ptr_Int_32_Unsigned   is new Unchecked_Conversion (Ptr,                   Ptr_Int_32_Unsigned);
+  function To_Ptr                   is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Ptr);
+  function To_Ptr                   is new Unchecked_Conversion (Int_Ptr,               Ptr);
   function To_Ptr_Char_8_C          is new Unchecked_Conversion (Ptr,                   Ptr_Char_8_C);
   function To_Ptr_Char_16_C         is new Unchecked_Conversion (Ptr,                   Ptr_Char_16_C);
   function To_Ptr_Const_Char_8_C    is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_8_C);
   function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_16_C);
   function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Int_Ptr,               Ptr_Const_Char_16_C);
-  function To_Ptr                   is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Ptr);
-  function To_Ptr                   is new Unchecked_Conversion (Int_Ptr,               Ptr);
-  function To_Int_32_Unsigned_C     is new Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned_C);
-  function To_Int_32_Unsigned       is new Unchecked_Conversion (Int_32_Signed_C,       Int_32_Unsigned);
-  function To_Int_32_Unsigned       is new Unchecked_Conversion (Real_32,               Int_32_Unsigned);
-  function To_Int_32_Signed_C       is new Unchecked_Conversion (Int_32_Unsigned_C,     Int_32_Signed_C);
-  function To_Int_32_Signed         is new Unchecked_Conversion (Int_32_Unsigned,       Int_32_Signed);
+  function To_Int_32_Unsigned_C     is new Unchecked_Conversion (Int_32_Signed_C,       Int_Unsigned_C);
+  function To_Int_32_Unsigned       is new Unchecked_Conversion (Int_32_Signed_C,       Int_Unsigned);
+  function To_Int_32_Unsigned       is new Unchecked_Conversion (Real_32,               Int_Unsigned);
+  function To_Int_32_Signed_C       is new Unchecked_Conversion (Int_Unsigned_C,        Int_32_Signed_C);
+  function To_Int_32_Signed         is new Unchecked_Conversion (Int_Unsigned,          Int_32_Signed);
   function To_Int_16_Signed         is new Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed);
   function To_Int_16_Signed_C       is new Unchecked_Conversion (Int_16_Unsigned,       Int_16_Signed_C);
   function To_Int_16_Unsigned       is new Unchecked_Conversion (Char_16_C,             Int_16_Unsigned);
@@ -198,7 +208,7 @@ package Neo is
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_8_C,    Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr,                   Int_Ptr);
-  function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_32_Unsigned);
+  function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_Unsigned);
   function To_Int_64_Unsigned       (Val : Real_32) return Int_64_Unsigned is (Int_64_Unsigned (To_Int_32_Unsigned (Val)));
 
   -- Prerequisite string constants
@@ -207,6 +217,8 @@ package Neo is
   NULL_CHAR_8_C       : constant Char_8_C       := Interfaces.C.NUL;
   NULL_CHAR_16        : constant Char_16        := Char_16'Val   (Char_8'Pos   (NULL_CHAR_8));
   NULL_CHAR_16_C      : constant Char_16_C      := Char_16_C'Val (Char_8_C'Pos (NULL_CHAR_8_C));
+  NULL_CHAR           : constant Char_16        := NULL_CHAR_16;
+  NULL_CHAR_C         : constant Char_16_C      := NULL_CHAR_16_C;
   NULL_STR_16         : constant Str_16         := "";
   NULL_STR            : constant Str_16         := NULL_STR_16;
   NULL_STR_16_UNBOUND : constant Str_16_Unbound := NULL_UNBOUNDED_WIDE_STRING;
@@ -223,58 +235,55 @@ package Neo is
   function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary integer images
   function To_Str_8               (Item : Str_16)              return Str_8;
   function To_Str_8               (Item : Ptr_Const_Char_8_C)  return Str_8;
-  function To_Str_8               (Item : Str_8_Unbound)       return Str_8               renames To_String;
-  function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound       renames To_Unbounded_String;
-  function To_Str_16              (Item : Str_16_Unbound)      return Str_16              renames To_Wide_String;
-  function S                      (Item : Str_16_Unbound)      return Str_16              renames To_Str_16;
-  function To_Str_16_Unbound      (Item : Str_16)              return Str_16_Unbound      renames To_Unbounded_Wide_String;
-  function To_Str_Unbound         (Item : Str_16)              return Str_16_Unbound      renames To_Str_16_Unbound;
-  function U                      (Item : Str_16)              return Str_16_Unbound      renames To_Str_16_Unbound;
+  function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
+  function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound  renames To_Unbounded_String;
+  function To_Str_16              (Item : Str_16_Unbound)      return Str_16         renames To_Wide_String;
+  function To_Str_16_Unbound      (Item : Str_16)              return Str_16_Unbound renames To_Unbounded_Wide_String;
+  function To_Str_Unbound         (Item : Str_16)              return Str_16_Unbound renames To_Str_16_Unbound;
+  function U                      (Item : Str_16)              return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_16              (Item : Str_8)               return Str_16;
   function To_Str_16              (Item : Str_16_C)            return Str_16;
   function To_Str_16              (Item : Ptr_Const_Char_16_C) return Str_16;
-  function To_Str_8               (Item : Str_8_C)             return Str_8               is (To_Ada                       (Item, True));
-  function To_Str_8_C             (Item : Str_8)               return Str_8_C             is (To_C                         (Item, True));
-  function To_Str_8_C             (Item : Str_16)              return Str_8_C             is (To_Str_8_C                   (To_Str_8 (Item)));
-  function To_Str_16              (Item : Char_16)             return Str_16              is                               ("" & Item);
-  function To_Str_16              (Item : Str_8_C)             return Str_16              is (To_Str_16                    (To_Str_8 (Item)));
-  function To_Str_16              (Item : Ptr_Const_Char_8_C)  return Str_16              is (To_Str_16                    (To_Str_8 (Item)));
-  function To_Str_16              (Item : Char_8)              return Str_16              is (To_Str_16                    ("" & Item));
-  function To_Str_16_Unbound      (Item : Str_8)               return Str_16_Unbound      is (To_Str_16_Unbound            (To_Str_16 (Item)));
-  function To_Str_16_Unbound      (Item : Char_16)             return Str_16_Unbound      is (To_Str_16_Unbound            ("" & Item));
-  function To_Str_Unbound         (Item : Str_8)               return Str_16_Unbound      renames To_Str_16_Unbound;
-  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound      renames To_Str_16_Unbound;
-  function To_Str_16_C            (Item : Str_16)              return Str_16_C            is (To_C                         (Item & NULL_CHAR_16));
-  function To_Str_16_C            (Item : Str_16_Unbound)      return Str_16_C            is (To_Str_16_C                  (To_Str_16 (Item)));
-  function To_Str_C               (Item : Str_16)              return Str_16_C            renames To_Str_16_C;
-  function To_Str_C               (Item : Str_16_Unbound)      return Str_16_C            renames To_Str_16_C;
-  function To_Str                 (Item : Str_8)               return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Str_16_C)            return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Ptr_Const_Char_16_C) return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Char_16)             return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Str_8_C)             return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Ptr_Const_Char_8_C)  return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Char_8)              return Str_16              renames To_Str_16;
-  function To_Str                 (Item : Str_16_Unbound)      return Str_16              renames To_Str_16;
-  function To_Ptr_Char_8_C        (Item : Str_8_C)             return Ptr_Char_8_C        is (To_Ptr_Char_8_C              (Item (Item'First)'Address));
-  function To_Ptr_Char_8_C        (Item : Str_16)              return Ptr_Char_8_C        is (To_Ptr_Char_8_C              (To_Str_8_C (Item)));
-  function To_Ptr_Char_16_C       (Item : Str_16)              return Ptr_Char_16_C       is (To_Ptr_Char_16_C             (To_Str_16_C (Item)'Address));
-  function To_Ptr_Const_Char_16_C (Item : Str_16_C)            return Ptr_Const_Char_16_C is (To_Ptr_Const_Char_16_C       (Item (Item'First)'Address));
-  function To_Ptr_Const_Char_16_C (Item : Str_16)              return Ptr_Const_Char_16_C is (To_Ptr_Const_Char_16_C       (To_Str_16_C (Item)));
-  function To_Ptr_Const_Char_8_C2 (Item : Str_8_C)             return Ptr_Const_Char_8_C  is (To_Ptr_Const_Char_8_C        (Item (Item'First)'Address));
-  function To_Ptr_Const_Char_8_C  (Item : Str_8)               return Ptr_Const_Char_8_C  is (To_Ptr_Const_Char_8_C2       (To_C (Item)));
+  function To_Str_8               (Item : Str_8_C)             return Str_8          is (To_Ada (Item, True));
+  function To_Str_8_C             (Item : Str_8)               return Str_8_C        is (To_C   (Item, True));
+  function To_Str_8_C             (Item : Str_16)              return Str_8_C        is (To_Str_8_C (To_Str_8 (Item)));
+  function To_Str_16              (Item : Char_16)             return Str_16         is ("" & Item);
+  function To_Str_16              (Item : Str_8_C)             return Str_16         is (To_Str_16 (To_Str_8 (Item)));
+  function To_Str_16              (Item : Ptr_Const_Char_8_C)  return Str_16         is (To_Str_16 (To_Str_8 (Item)));
+  function To_Str_16              (Item : Char_8)              return Str_16         is (To_Str_16 ("" & Item));
+  function To_Str_16_Unbound      (Item : Str_8)               return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
+  function To_Str_16_Unbound      (Item : Char_16)             return Str_16_Unbound is (To_Str_16_Unbound ("" & Item));
+  function To_Str_Unbound         (Item : Str_8)               return Str_16_Unbound renames To_Str_16_Unbound;
+  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;
+  function To_Str_16_C            (Item : Str_16)              return Str_16_C       is (To_C        (Item & NULL_CHAR_16));
+  function To_Str_16_C            (Item : Str_16_Unbound)      return Str_16_C       is (To_Str_16_C (To_Str_16 (Item)));
+  function To_Str_C               (Item : Str_16)              return Str_16_C       renames To_Str_16_C;
+  function To_Str_C               (Item : Str_16_Unbound)      return Str_16_C       renames To_Str_16_C;
+  function To_Str                 (Item : Str_8)               return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Str_16_C)            return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Ptr_Const_Char_16_C) return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Char_16)             return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Str_8_C)             return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Ptr_Const_Char_8_C)  return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Char_8)              return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Str_16_Unbound)      return Str_16         renames To_Str_16;
+  function S                      (Item : Str_16_C)            return Str_16         renames To_Str_16;
+  function S                      (Item : Str_16_Unbound)      return Str_16         renames To_Str_16;
+  function To_Ptr_Char_8_C        (Item : in out Str_8_C)      return Ptr_Char_8_C   is (Item (Item'First)'Unchecked_Access);
+  function To_Ptr_Char_16_C       (Item : in out Str_16_C)     return Ptr_Char_16_C  is (Item (Item'First)'Unchecked_Access);
+  function C                      (Item : in out Str_16_C)     return Ptr_Char_16_C  renames To_Ptr_Char_16_C;
   function To_Char_8              (Item : Char_16)             return Char_8;
-  function To_Char_8_C            (Item : Char_8)              return Char_8_C            is (Char_8_C'Val  (Char_8'Pos    (Item)));
-  function To_Char_8              (Item : Char_8_C)            return Char_8              is (Char_8'Val    (Char_8_C'Pos  (Item)));
-  function To_Char_16_C           (Item : Char_8_C)            return Char_16_C           is (Char_16_C'Val (Char_8_C'Pos  (item)));
-  function To_Char_16_C           (Item : Char_8)              return Char_16_C           is (Char_16_C'Val (Char_8'Pos    (item)));
-  function To_Char_16             (Item : Char_16_C)           return Char_16             is (Char_16'Val   (Char_16_C'Pos (Item)));
-  function To_Char_16             (Item : Char_8_C)            return Char_16             is (Char_16'Val   (Char_8_C'Pos  (Item)));
-  function To_Char_16             (Item : Char_8)              return Char_16             is (Char_16'Val   (Char_8'Pos    (Item)));
-  function To_Char_8_C            (Item : Char_16_C)           return Char_8_C            is (To_Char_8_C   (To_Char_8     (To_Char_16 (Item))));
-  function To_Char_8_C            (Item : Char_16)             return Char_8_C            is (To_Char_8_C   (To_Char_8     (Item)));
-  function To_Char_16_C           (Item : Char_16)             return Char_16_C           is (Char_16_C'Val (Char_16'Pos   (item)));
-  function To_Char_8              (Item : Char_16_C)           return Char_8              is (To_Char_8     (To_Char_16    (Item)));
+  function To_Char_8_C            (Item : Char_8)              return Char_8_C       is (Char_8_C'Val  (Char_8'Pos    (Item)));
+  function To_Char_8              (Item : Char_8_C)            return Char_8         is (Char_8'Val    (Char_8_C'Pos  (Item)));
+  function To_Char_16_C           (Item : Char_8_C)            return Char_16_C      is (Char_16_C'Val (Char_8_C'Pos  (item)));
+  function To_Char_16_C           (Item : Char_8)              return Char_16_C      is (Char_16_C'Val (Char_8'Pos    (item)));
+  function To_Char_16             (Item : Char_16_C)           return Char_16        is (Char_16'Val   (Char_16_C'Pos (Item)));
+  function To_Char_16             (Item : Char_8_C)            return Char_16        is (Char_16'Val   (Char_8_C'Pos  (Item)));
+  function To_Char_16             (Item : Char_8)              return Char_16        is (Char_16'Val   (Char_8'Pos    (Item)));
+  function To_Char_8_C            (Item : Char_16_C)           return Char_8_C       is (To_Char_8_C   (To_Char_8     (To_Char_16 (Item))));
+  function To_Char_8_C            (Item : Char_16)             return Char_8_C       is (To_Char_8_C   (To_Char_8     (Item)));
+  function To_Char_16_C           (Item : Char_16)             return Char_16_C      is (Char_16_C'Val (Char_16'Pos   (item)));
+  function To_Char_8              (Item : Char_16_C)           return Char_8         is (To_Char_8     (To_Char_16    (Item)));
 
   -- String constants requiring conversions
   EOL_16        : constant Str     := To_Char_16 (CR) & To_Char_16 (LF);
@@ -307,11 +316,33 @@ package Neo is
       Last       : Duration := 0.0;
       Is_Stopped : Bool     := False;
     end record;
-  function Date_Str       return Str;
   function Get_Start_Time return Time;
   function Get_Duration   (Timer :        Timer_State) return Duration;
   procedure Start         (Timer : in out Timer_State);
   procedure Stop          (Timer : in out Timer_State);
+  
+  ----------
+  -- Path --
+  ----------
+  
+  protected App_Path is
+  
+      -- Path separator for OS
+      function Sep return Char;
+      procedure Set_Sep (Sep : Char);
+      
+      -- Executable path
+      procedure Set (Path : Str_Unbound);
+      procedure Set (Path : Str);
+      function Get return Str_Unbound;
+      function Get return Str;
+    private
+      Current_Sep  : Char        := NULL_CHAR;
+      Current_Path : Str_Unbound := NULL_STR_UNBOUND;
+    end;
+    
+  -- Renaming for convience
+  function S return Char is (App_Path.Sep);
 
   ---------------
   -- Debugging --
@@ -322,26 +353,21 @@ package Neo is
   procedure Assert (Val : Bool);
   procedure Assert (Val : Int_C);
   procedure Assert (Val : Int_16_Unsigned_C);
-  procedure Assert (Val : Int_32_Unsigned_C);
+  procedure Assert (Val : Int_Unsigned_C);
 
-  -- Ignore procedures swallow the result of C functions that return useless results, it can't be "is null" due to GNAT GPL compiler error.
+  -- Ignore procedures swallow the result of C functions that return useless results
   procedure Ignore (Val : Bool)              is null;
   procedure Ignore (Val : Ptr)               is null;
   procedure Ignore (Val : Int_Ptr)           is null;
   procedure Ignore (Val : Int_C)             is null;
   procedure Ignore (Val : Int_16_Unsigned_C) is null;
-  procedure Ignore (Val : Int_32_Unsigned_C) is null;
-
-  -- Traceback
-  procedure Handle (Occurrence : Exception_Occurrence)
+  procedure Ignore (Val : Int_Unsigned_C)    is null;
 
   -----------
   -- Color --
   -----------
 
-  type Color_State is record
-      Red, Green, Blue, Alpha : Byte := 16#FF#;
-    end record;
+  type Color_State is record Red, Green, Blue, Alpha : Byte := 16#FF#; end record;
   COLOR_RED          : constant Color_State := (16#FF#, 16#00#, 16#00#, 16#FF#);
   COLOR_TAN          : constant Color_State := (16#D2#, 16#B4#, 16#8C#, 16#FF#);
   COLOR_BLUE         : constant Color_State := (16#00#, 16#00#, 16#FF#, 16#FF#);

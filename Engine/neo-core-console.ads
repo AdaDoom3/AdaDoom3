@@ -30,7 +30,8 @@ package Neo.Core.Console is
   --------
 
   function Lines                     return Int_64_Unsigned;
-  function Log                       return Str;
+  function Log                       return Str_Unbound;
+  function Log                       return Str is (S (Log));
   function Input_Entry               return Str;
   function Line_Size                 return Positive;
   function Localize     (Item : Str) return Str; -- An english text string acts as a key to other languages
@@ -38,8 +39,8 @@ package Neo.Core.Console is
   procedure Put         (Item : Char);                  
   procedure Put         (Item : Str);
   procedure Line        (Item : Char);
-  procedure Line        (Item : Str);
-  procedure Line        (Num  : Positive := 1);
+  procedure Line        (Item : Str := "");
+  procedure Line        (Item : Str_Unbound);
   procedure Line_Size   (Val  : Positive);
   procedure Input_Entry (Val  : Str);
   procedure Set_Put     (Val  : Ptr_Procedure_Put);
@@ -55,7 +56,7 @@ package Neo.Core.Console is
   -- configuration file.
   --
   -- Ex.
-  --   procedure Callback_Bind (Args : Array_Str_16_Unbound);
+  --   procedure Callback_Bind (Args : Array_Str_Unbound);
   --   function Save_Binds return Str;
   --   package Bind is new Command ("bind", Callback_Bind, Save_Binds'Access);
   --   ...
@@ -83,11 +84,11 @@ package Neo.Core.Console is
   --
   -- Ex.
   --   type Graphics_Kind is (Low_Quality, Medium_Quanlity, High_Quality, Ultra_Quality);
-  --   package Graphics_Settings (Name     => "vidquality",
-  --                              Help     => "Quality of graphics",
-  --                              Var_T    => Graphics_Kind,
-  --                              Initial  => Medium_Quanlity,
-  --                              Settable => True);
+  --   package Graphics_Settings is new CVar (Name     => "vidquality",
+  --                                          Help     => "Quality of graphics",
+  --                                          Var_T    => Graphics_Kind,
+  --                                          Initial  => Medium_Quanlity,
+  --                                          Settable => True);
   --   ...
   --   Graphics_Settings.Set (Ultra_Quality);
   --   ...
@@ -102,28 +103,29 @@ package Neo.Core.Console is
     type Var_T is (<>);
     Initial  : Var_T := Var_T'First;
     Settable : Bool  := True;
-  package CVar_Discrete is
-      procedure Set (Val : Var_T);
+  package CVar is
       function Get return Var_T;
+      procedure Set (Val : Var_T);
     end;
 
   generic
     Name     : Str;
     Help     : Str;
-    Initial  : Str  := "unknown";
+    Initial  : Str  := "?";
     Settable : Bool := True;
-  package CVar_String is
-      procedure Set (Val : Str);
+  package CVar_Str is
       function Get return Str;
+      procedure Set (Val : Str);
     end;
 
   generic
     Name     : Str;
     Help     : Str;
-    Initial  : Real_64 := 0.0;
-    Settable : Bool    := True;
+    type Var_T is digits <>;
+    Initial  : Var_T := 0.0;
+    Settable : Bool  := True;
   package CVar_Real is
-      procedure Set (Val : Real_64);
-      function Get return Real_64;
+      function Get return Var_T;
+      procedure Set (Val : Var_T);
     end;
 end;

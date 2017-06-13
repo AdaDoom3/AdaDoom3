@@ -22,7 +22,7 @@ package Neo.API.Opus is
 
   -- opus_uint16       Int_16_Unsigned_C
   -- opus_int16        Int_16_Signed_C
-  -- opus_uint32       Int_32_Unsigned_C
+  -- opus_uint32       Int_Unsigned_C
   -- opus_int32        Int_C
   -- OpusEncoder*      Ptr
   -- OpusDecoder*      Ptr
@@ -34,8 +34,8 @@ package Neo.API.Opus is
   -- Constants --
   ---------------
 
-  OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST : constant Int_32_Unsigned_C := 5120; -- 0
-  OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST : constant Int_32_Unsigned_C := 5122; -- 0
+  OPUS_MULTISTREAM_GET_ENCODER_STATE_REQUEST : constant Int_Unsigned_C := 5120; -- 0
+  OPUS_MULTISTREAM_GET_DECODER_STATE_REQUEST : constant Int_Unsigned_C := 5122; -- 0
 
   ------------
   -- Macros --
@@ -72,7 +72,7 @@ package Neo.API.Opus is
                                             channels        : Int_C; -- int
                                             streams         : Int_C; -- int
                                             coupled_streams : Int_C; -- int
-                                            mapping         : Ptr;   -- const unsigned char*
+                                            mapping         : Ptr;   -- const Int_Unsigned char*
                                             application     : Int_C; -- int 
                                             error           : Int_C) -- int*
                                             return Ptr               -- OpusMSEncoder*
@@ -84,7 +84,7 @@ package Neo.API.Opus is
                                                      mapping_family  : Int_C;     -- int
                                                      streams         : Ptr_Int_C; -- int*
                                                      coupled_streams : Ptr_Int_C; -- int*
-                                                     mapping         : Ptr;       -- unsigned char*
+                                                     mapping         : Ptr;       -- Int_Unsigned char*
                                                      application     : Int_C;     -- int 
                                                      error           : Ptr_Int_C) -- int*
                                                      return Ptr                   -- OpusMSEncoder*
@@ -96,7 +96,7 @@ package Neo.API.Opus is
                                           channels        : Int_C; -- int 
                                           streams         : Int_C; -- int 
                                           coupled_streams : Int_C; -- int 
-                                          mapping         : Ptr;   -- const unsigned char*
+                                          mapping         : Ptr;   -- const Int_Unsigned char*
                                           application     : Int_C) -- int 
                                           return Int_C             -- int
                                           with Import => True, Convention => StdCall, External_Name => "opus_multistream_encoder_init"; 
@@ -108,7 +108,7 @@ package Neo.API.Opus is
                                                    mapping_family  : Int_C;     -- int 
                                                    streams         : Ptr_Int_C; -- int*
                                                    coupled_streams : Ptr_Int_C; -- int*
-                                                   mapping         : Ptr;       -- unsigned char*
+                                                   mapping         : Ptr;       -- Int_Unsigned char*
                                                    application     : Int_C)     -- int
                                                    return Int_C                 -- int 
                                                    with Import => True, Convention => StdCall, External_Name => "opus_multistream_surround_encoder_init"; 
@@ -117,7 +117,7 @@ package Neo.API.Opus is
   function opus_multistream_encode (st             : Ptr;                 -- OpusMSEncoder*
                                     pcm            : Ptr_Int_16_Signed_C; -- const opus_int16*
                                     frame_size     : Int_C;               -- int
-                                    data           : Ptr;                 -- unsigned char*
+                                    data           : Ptr;                 -- Int_Unsigned char*
                                     max_data_bytes : Int_C)               -- opus_int32
                                     return Int_C                          -- int
                                     with Import => True, Convention => StdCall, External_Name => "opus_multistream_encode"; 
@@ -126,7 +126,7 @@ package Neo.API.Opus is
   function opus_multistream_encode_float (st             : Ptr;           -- OpusMSEncoder*
                                           pcm            : Ptr_Real_32_C; -- const float*
                                           frame_size     : Int_C;         -- int
-                                          data           : Ptr;           -- unsigned char*
+                                          data           : Ptr;           -- Int_Unsigned char*
                                           max_data_bytes : Int_C)         -- opus_int32
                                           return Int_C                    -- int 
                                           with Import => True, Convention => StdCall, External_Name => "opus_multistream_encode_float"; 
@@ -152,7 +152,7 @@ package Neo.API.Opus is
                                             channels        : Int_C;     -- int
                                             streams         : Int_C;     -- int 
                                             coupled_streams : Int_C;     -- int 
-                                            mapping         : Ptr;       -- const unsigned char*
+                                            mapping         : Ptr;       -- const Int_Unsigned char*
                                             error           : Ptr_Int_C) -- int*
                                             return Ptr                   -- OpusMSDecoder*
                                             with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_create"; 
@@ -163,13 +163,13 @@ package Neo.API.Opus is
                                           channels        : Int_C; -- int 
                                           streams         : Int_C; -- int 
                                           coupled_streams : Int_C; -- int 
-                                          mapping         : Ptr;   -- const unsigned char*
+                                          mapping         : Ptr;   -- const Int_Unsigned char*
                                           return Int_C             -- int
                                           with Import => True, Convention => StdCall, External_Name => "opus_multistream_decoder_init"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#gaa4b89541efe01970cf52e4a336db3ad0
   function opus_multistream_decode (st         : Ptr;                 -- OpusMSDecoder*
-                                    data       : Ptr;                 -- const unsigned char*
+                                    data       : Ptr;                 -- const Int_Unsigned char*
                                     len        : Int_C;               -- opus_int32
                                     pcm        : Ptr_Int_16_Signed_C; -- opus_int16*
                                     frame_size : Int_C;               -- int
@@ -179,7 +179,7 @@ package Neo.API.Opus is
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__multistream.html#ga620e67c67872f8ea0b67a200c729630a
   function opus_multistream_decode_float (st         : Ptr;         -- OpusMSDecoder*
-                                          data       : Ptr;         -- const unsigned char*
+                                          data       : Ptr;         -- const Int_Unsigned char*
                                           len        : Int_C;       -- opus_int32
                                           pcm        : Ptr_Real_32; -- float*
                                           frame_size : Int_C;       -- int
@@ -223,7 +223,7 @@ package Neo.API.Opus is
   function opus_encode (st             : Ptr;                 -- OpusEncoder*
                         pcm            : Ptr_Int_16_Signed_C; -- const opus_int16*
                         frame_size     : Int_C;               -- int 
-                        data           : Ptr;                 -- unsigned char*
+                        data           : Ptr;                 -- Int_Unsigned char*
                         max_data_bytes : Int_C)               -- opus_int32
                         return Int_C                          -- opus_int32
                         with Import => True, Convention => StdCall, External_Name => "opus_encode"; 
@@ -232,7 +232,7 @@ package Neo.API.Opus is
   function opus_encode_float (st             : Ptr;           -- OpusEncoder*
                               pcm            : Ptr_Real_32_C; -- const float*
                               frame_size     : Int_C;         -- int 
-                              data           : Ptr;           -- unsigned char*
+                              data           : Ptr;           -- Int_Unsigned char*
                               max_data_bytes : Int_C)         -- opus_int32
                               return Int_C                    -- opus_int32
                               with Import => True, Convention => StdCall, External_Name => "opus_encode_float"; 
@@ -269,7 +269,7 @@ package Neo.API.Opus is
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga7d1111f64c36027ddcb81799df9b3fc9
   function opus_decode (st         : Ptr;                 -- OpusDecoder*
-                        data       : Ptr;                 -- const unsigned char*
+                        data       : Ptr;                 -- const Int_Unsigned char*
                         len        : Int_C;               -- opus_int32 
                         pcm        : Ptr_Int_16_Signed_C; -- opus_int16*
                         frame_size : Int_C;               -- int 
@@ -279,7 +279,7 @@ package Neo.API.Opus is
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga9c554b8c0214e24733a299fe53bb3bd2
   function opus_decode_float (st         : Ptr;           -- OpusDecoder*
-                              data       : Ptr;           -- const unsigned char*
+                              data       : Ptr;           -- const Int_Unsigned char*
                               len        : Int_C;         -- opus_int32 
                               pcm        : Ptr_Real_32_C; -- float*
                               frame_size : Int_C;         -- int 
@@ -299,39 +299,39 @@ package Neo.API.Opus is
                                   with Import => True, Convention => StdCall, External_Name => "opus_decoder_destroy"; 
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga9d0054936a3345865632b04729cd368c
-  function opus_packet_parse (data           : Ptr;                           -- const unsigned char*
+  function opus_packet_parse (data           : Ptr;                           -- const Int_Unsigned char*
                               len            : Int_C;                         -- opus_int32 
-                              out_toc        : Ptr;                           -- unsigned char*
-                              frames         : Ptr;                           -- const unsigned char* [48]
+                              out_toc        : Ptr;                           -- Int_Unsigned char*
+                              frames         : Ptr;                           -- const Int_Unsigned char* [48]
                               size           : Array_Int_16_Signed_C (1..48); -- opus_int16 [48]
                               payload_offset : Ptr_Int_C)                     -- int*
                               return Int_C                                    -- int
                               with Import => True, Convention => StdCall, External_Name => "opus_packet_parse"; 
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga89b9375b6ff5e15f07fdc5d0cf4f0053
-  function opus_packet_get_bandwidth (data : Ptr)  -- const unsigned char*
+  function opus_packet_get_bandwidth (data : Ptr)  -- const Int_Unsigned char*
                                       return Int_C -- int
                                       with Import => True, Convention => StdCall, External_Name => "opus_packet_get_bandwidth"; 
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#gab2a955acced631c6cb7876bbdc7953d4
-  function opus_packet_get_samples_per_frame (data : Ptr;   -- const unsigned char*
+  function opus_packet_get_samples_per_frame (data : Ptr;   -- const Int_Unsigned char*
                                               Fs   : Int_C) -- opus_int32
                                               return Int_C  -- int
                                               with Import => True, Convention => StdCall, External_Name => "opus_packet_get_samples_per_frame";
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga4209376ddf8cc3379767e1749e1ef26d
-  function opus_packet_get_nb_channels (data : Ptr)  -- const unsigned char*
+  function opus_packet_get_nb_channels (data : Ptr)  -- const Int_Unsigned char*
                                         return Int_C -- int
                                         with Import => True, Convention => StdCall, External_Name => "opus_packet_get_nb_channels"; 
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga064cb2ed9e77a934cd7db6c13b02c584
-  function opus_packet_get_nb_frames (packet : Ptr;   -- const unsigned char[]
+  function opus_packet_get_nb_frames (packet : Ptr;   -- const Int_Unsigned char[]
                                       len    : Int_C) -- opus_int32
                                       return Int_C    -- int
                                       with Import => True, Convention => StdCall, External_Name => "opus_packet_get_nb_frames"; 
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga3cfec8b0bed7789ebd88c3b3370d337b
-  function opus_packet_get_nb_samples (packet : Ptr;   -- const unsigned char[]
+  function opus_packet_get_nb_samples (packet : Ptr;   -- const Int_Unsigned char[]
                                        len    : Int_C; -- opus_int32 
                                        Fs     : Int_C) -- opus_int32
                                        return Int_C    -- int
@@ -339,7 +339,7 @@ package Neo.API.Opus is
 
   -- https://web.archive.org/web/20160426200936/https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__decoder.html#ga659135a16060f85908f63443a2325118
   function opus_decoder_get_nb_samples (dec    : Ptr;   -- const OpusDecoder*
-                                        packet : Ptr;   -- const unsigned char[]
+                                        packet : Ptr;   -- const Int_Unsigned char[]
                                         len    : Int_C) -- opus_int32
                                         return Int_C    -- int
                                         with Import => True, Convention => StdCall, External_Name => "opus_decoder_get_nb_samples"; 
@@ -370,7 +370,7 @@ package Neo.API.Opus is
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#ga2840dd56bfa37f8c6874355b9ce8fb46
   function opus_repacketizer_cat (rp   : Ptr;   -- OpusRepacketizer*
-                                  data : Ptr;   -- const unsigned char*
+                                  data : Ptr;   -- const Int_Unsigned char*
                                   len  : Int_C) -- opus_int32
                                   return Int_C  -- int
                                   with Import => True, Convention => StdCall, External_Name => "opus_repacketizer_cat"; 
@@ -379,7 +379,7 @@ package Neo.API.Opus is
   function opus_repacketizer_out_range (rp        : Ptr;   -- OpusRepacketizer*
                                         beginning : Int_C; -- int 
                                         ending    : Int_C; -- int 
-                                        data      : Ptr;   -- unsigned char*
+                                        data      : Ptr;   -- Int_Unsigned char*
                                         maxlen    : Int_C) -- opus_int32
                                         return Int_C       -- opus_int32
                                         with Import => True, Convention => StdCall, External_Name => "opus_repacketizer_out_range"; 
@@ -391,26 +391,26 @@ package Neo.API.Opus is
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#ga19ff1e91a8fa652380f972a224a26481
   function opus_repacketizer_out (rp     : Ptr;   -- OpusRepacketizer*
-                                  data   : Ptr;   -- unsigned char*
+                                  data   : Ptr;   -- Int_Unsigned char*
                                   maxlen : Int_C) -- opus_int32
                                   return Int_C    -- opus_int32
                                   with Import => True, Convention => StdCall, External_Name => "opus_repacketizer_out"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#ga62eb1a9b887de0ce50f52eacb3609f13
-  function opus_packet_pad (data    : Ptr;   -- unsigned char*
+  function opus_packet_pad (data    : Ptr;   -- Int_Unsigned char*
                             len     : Int_C; -- opus_int32 
                             new_len : Int_C) -- opus_int32
                             return Int_C     -- int
                             with Import => True, Convention => StdCall, External_Name => "opus_packet_pad"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#ga0f0d860cce598033814071327b626ecf
-  function opus_packet_unpad (data : Ptr;   -- unsigned char*
+  function opus_packet_unpad (data : Ptr;   -- Int_Unsigned char*
                               len  : Int_C) -- opus_int32
                               return Int_C  -- opus_int32
                               with Import => True, Convention => StdCall, External_Name => "opus_packet_unpad"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#gad3559b66569ca4561fe4ba8f3b1cb336
-  function opus_multistream_packet_pad (data       : Ptr;   -- unsigned char*
+  function opus_multistream_packet_pad (data       : Ptr;   -- Int_Unsigned char*
                                         len        : Int_C; -- opus_int32 
                                         new_len    : Int_C; -- opus_int32  
                                         nb_streams : Int_C) -- int  
@@ -418,7 +418,7 @@ package Neo.API.Opus is
                                         with Import => True, Convention => StdCall, External_Name => "opus_multistream_packet_pad"; 
 
   -- https://mf4.xiph.org/jenkins/view/opus/job/opus/ws/doc/html/group__opus__repacketizer.html#gaa0f0e05884b48b2f901977478e74e067
-  function opus_multistream_packet_unpad (data       : Ptr;   -- unsigned char*
+  function opus_multistream_packet_unpad (data       : Ptr;   -- Int_Unsigned char*
                                           len        : Int_C; -- opus_int32 
                                           nb_streams : Int_C) -- int 
                                           return Int_C        -- opus_int32
