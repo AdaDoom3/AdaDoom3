@@ -13,27 +13,473 @@
 <!-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                    -->
 <!--                                                                                                                                   -->
 
-<!-- GUI application for using tools or performing scriptable actions necessary for game development - use HTML syntax highlighting -->
+<!doctype html>
 <html>
-
-  <!--      -->
-  <!-- Head -->
-  <!--      -->
-
   <head>
     <title> Neo SDK </title>
-    <meta http-equiv="X-UA-Compatible" content="IE=11"/> <!-- Force IE compliance level -->
+    <meta http-equiv="X-UA-Compatible" content="IE=11"/>
+    
+    <script>
+      (function (globals){
+        'use strict';
 
-    <!--       -->
-    <!-- Style -->
-    <!--       -->
+        // Objects
+        var fileSystem = new ActiveXObject ('Scripting.FileSystemObject');
+        var shell      = new ActiveXObject ('WScript.Shell');
 
+        // Constants
+        var MAX_PATH                 = 30;
+        var MESSAGE_DURATION         = 3000;
+        var APPDATA_FOLDER           = '%APPDATA%\\roaming\\neo';
+        var CONFIG_FILE              = 'sdk-config.json';
+        var SESSION_FILE             = 'sdk-session.json';
+        var GAME_FOLDER              = shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop\\Games';
+        var TOOL_FOLDER              = shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop\\Tools';
+        var NO_GAMES_TEXT            = 'No Games Detected';
+        var REG_KEY_ARCHITECTURE     = 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PROCESSOR_ARCHITECTURE';
+        var BIT_SIZE                 = shell.regRead (REG_KEY_ARCHITECTURE) === 'x86' ? 32 : 64;
+        var CMD_PROMPT               = 'cmd.exe /c';
+        var CMD_GDB                  = 'gdb --args';
+        var CMD_PAUSE                = 'pause';
+        var CMD_GNATMAKE             = 'gnatmake -P .\\neo.gpr';
+        var CMD_DECODE_BASE_64       = 'certutil -decode';
+        var SCENARIO_OPTION_PREFIX   = '-X';
+        var SCENARIO_OPTION_GAME     = SCENARIO_OPTION_PREFIX + 'Game=';
+        var SCENARIO_OPTION_DEBUG    = SCENARIO_OPTION_PREFIX + 'Debug=';
+        var SCENARIO_OPTION_BIT_SIZE = SCENARIO_OPTION_PREFIX + 'Bitsize=' + BIT_SIZE;
+        var SCENARIO_OPTION_SYSTEM   = SCENARIO_OPTION_PREFIX + 'System=Windows';
+
+        var games;
+        var tools = {
+          GPS: {
+            path: '',
+            options: {P: 'neo.gpr'},
+            installer: {
+              name: 'gps-installer',
+              type: 'exe',
+              url32: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d',
+              url64: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d'
+            }
+          },
+          Blender: {
+            path: '',
+            options: {},
+            installer: {
+              name: 'blender-installer',
+              type: 'zip',
+              url32: 'http://mirror.cs.umn.edu/blender.org/release/Blender2.78/blender-2.78c-windows32.zip',
+              url64: 'http://mirror.cs.umn.edu/blender.org/release/Blender2.78/blender-2.78c-windows64.zip'
+            }
+          },
+          DarkRadiant: {
+            path: '',
+            options: {},
+            installer: {
+              name: 'darkRadiant-installer',
+              type: 'exe',
+              url32: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x86.exe',
+              url64: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x64.exe'
+            }
+          },
+          Krita: {
+            path: '',
+            options: {},
+            installer: {
+              name: 'krita-installer',
+              type: 'zip',
+              url32: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x86.zip',
+              url64: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x64.zip'
+            }
+          },
+          Audacity: {
+            path: '',
+            options: {},
+            installer: {
+              name: 'audacity-installer',
+              type: 'zip',
+              url32: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip',
+              url64: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip'
+            }
+          },
+          LunarG: {
+            path: '',
+            options: {},
+            installer: {
+              name: 'lunar-g-sdk-installer',
+              type: 'exe',
+              url32: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe',
+              url64: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe'
+            }
+          },
+          WAVtoOpus: { 
+            path: TOOL_FOLDER + '\\Opus\\opusenc.exe',
+            options: {}
+          }
+        };
+
+        window.resizeTo (550, 760);
+
+        var showMessage = function (message){
+          var messageBox = document.getElementById ('message');
+          messageBox.classList.remove ('show');
+          messageBox.hidden    = true;
+          messageBox.innerText = message;
+          messageBox.classList.add ('show');
+          if (messageBox.timeoutId){ clearTimeout (messageBox.timeoutId); }
+          messageBox.timeoutId = setTimeout (function (){
+            messageBox.classList.remove ('show');
+            clearTimeout (messageBox.timeoutId);
+          }, MESSAGE_DURATION);
+        };
+
+        var toBase64 = function (bytes){
+          var base64        = '';
+          var encodings     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+          var byteLength    = bytes.byteLength;
+          var byteRemainder = byteLength % 3;
+          var mainLength    = byteLength - byteRemainder;
+          var a, b, c, d;
+          var chunk;
+          for (var i = 0; i < mainLength; i = i + 3){
+            chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
+            a = (chunk & 16515072) >> 18;
+            b = (chunk & 258048)   >> 12;
+            c = (chunk & 4032)     >>  6;
+            d = (chunk & 63);
+            base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
+          }
+          if (byteRemainder == 1){
+            chunk = bytes[mainLength];
+            a = (chunk & 252) >> 2;
+            b = (chunk & 3)   << 4;
+            base64 += encodings[a] + encodings[b] + '==';
+          } else if (byteRemainder == 2){
+            chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
+            a = (chunk & 64512) >> 10;
+            b = (chunk & 1008)  >>  4;
+            c = (chunk & 15)    <<  2;
+            base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+          }
+          return base64;
+        };
+
+        var toBinaryFile = function (b64File, binaryFile){ 
+          shell.run(CMD_DECODE_BASE_64 + ' ' + b64File + ' ' + binaryFile, 0, true);
+        };
+
+        var downloadBinaryFile = function (url, folderPath, name, extension){
+          if (!fileSystem.folderExists (folderPath)){ showMessage('Invalid folder: ' + folderPath); return; }
+          var b64File = fileSystem.buildPath (folderPath, name + '.b64');
+          var binaryFile = fileSystem.buildPath (folderPath, name + '.' + extension);
+
+          if (!fileSystem.fileExists (b64File)){ fileSystem.createTextFile (b64File, true, false); }
+          var file = fileSystem.getFile (b64File);
+          var fileStream = file.openAsTextStream (2, -1);
+
+          var xhr = new XMLHttpRequest ();
+          xhr.open ('GET', url, true);
+          xhr.responseType = "blob";
+
+          xhr.onprogress = function (event){
+            var percentComplete = Math.round ((event.loaded / event.total) * 100.0);
+            console.log ('loaded: ' + event.loaded + ' of ' + event.total + ' ' + percentComplete + '%');
+          };
+          xhr.onerror = function (error){ showMessage ('Unable to download: ' + url); };
+          xhr.onload = function (event){
+            var reader = new FileReader ();
+            reader.addEventListener ('loadend', function (){
+              fileStream.write (toBase64 (new Uint8Array (reader.result)));
+              fileStream.close ();
+              toBinaryFile (b64File, binaryFile);
+              fileSystem.deleteFile (b64File);
+            });
+            reader.readAsArrayBuffer (xhr.response);
+          };
+          xhr.send ();
+        };
+
+        var downloadTextFile = function (url, path){
+          var xhr = new XMLHttpRequest ();
+          xhr.open ('GET', url, true);
+
+          if (!fileSystem.fileExists (path)){ fileSystem.createTextFile (path, true, false); }
+          var file = fileSystem.getFile (path);
+          var fileStream = file.openAsTextStream (2, -1);
+
+          xhr.onprogress = function (event){
+            var percentComplete = Math.round ((event.loaded / event.total) * 100.0);
+            console.log ('loaded: ' + event.loaded + ' of ' + event.total + ' ' + percentComplete + '%');
+          };
+          xhr.onerror = function (error) { showMessage ('Unable to download: ' + url); };
+          xhr.onload = function (event) {
+            fileStream.write (xhr.responseText);
+            fileStream.close ();
+          };
+          xhr.send ();
+        };
+
+        var replaceToolTagsWithDefinitions = function (){
+          var toolDef = document.getElementsByTagName ('tool-definition')[0].innerHTML;
+          [].slice.call (document.getElementsByTagName ('tool')).forEach (function(tool) {
+            var name = tool.getAttribute ('name');
+            var description = tool.getAttribute ('description');
+            var placeholder = tool.getAttribute ('placeholder');
+            var newHtml = toolDef.replace (new RegExp ('\{\{name\}\}', 'g'), name)
+              .replace (new RegExp ('\{\{description\}\}', 'g'), description)
+              .replace (new RegExp ('\{\{placeholder\}\}', 'g'), placeholder);
+            tool.innerHTML = newHtml;
+          });
+        };
+
+        var replaceIconTagsWithSVGs = function (){
+          var iconDefs = document.getElementsByTagName ('icon-definitions')[0];
+          var icons    = {};
+          [].slice.call (iconDefs.getElementsByTagName ('svg')).forEach (function (icon){
+            icons[icon.getAttribute ('kind')] = icon;
+          });
+          [].slice.call (document.getElementsByTagName ('icon')).forEach (function (icon){
+            if (!icons[icon.getAttribute ('kind')]){ return; }
+            var parent = icon.parentNode;
+            var parentStyle = window.getComputedStyle (parent);
+            var newIcon = icons[icon.getAttribute ('kind')].cloneNode (true);
+            newIcon.setAttribute ('class', icon.className + ' icon');
+            newIcon.setAttribute ('fill', parentStyle.color);
+            parent.onmouseover = function (){ newIcon.setAttribute ('fill', window.getComputedStyle (parent).color); }.bind (this);
+            parent.onmouseout  = function (){ newIcon.setAttribute ('fill', window.getComputedStyle (parent).color); }.bind (this);
+            parent.replaceChild (newIcon, icon);
+          });
+        };
+
+        var createMissingFolders = function (folderPaths){
+          folderPaths.forEach (function (folder){ 
+            if (!fileSystem.folderExists (folder)){ fileSystem.createFolder (folder); }
+          });
+        };
+
+        var createOptionForDropdown = function (dropdown, optionText){
+          var selectOption  = document.createElement ("OPTION");
+          selectOption.text = optionText;
+          dropdown.appendChild (selectOption);
+        };
+
+        var createDropdownEntriesForGames = function (games){
+          var gamesDropdown = document.getElementById ('gameSelect');
+          if (!games.length){ return createOptionForDropdown (gamesDropdown, NO_GAMES_TEXT); }
+          games.forEach (function (game){ 
+            createOptionForDropdown (gamesDropdown, truncateStringAtLength (MAX_PATH, game.name, true));
+          });
+        };
+
+        var enumerateGames = function (gamesFolderPath){
+          return toArray (fileSystem.getFolder (gamesFolderPath).subFolders).map (function (gameFolder) {
+            return new Game (gameFolder);
+          });
+        };
+
+        var toArray = function (item){
+          if (Array.isArray (item)){ return item; }
+          if (item instanceof HTMLCollection){ return [].slice.call (item); }
+          var output = [];
+          var enumerator = new Enumerator (item);
+          for(;!enumerator.atEnd (); enumerator.moveNext()) { output.push (enumerator.item ()); }
+          return output;
+        };
+
+        var select = function (selectorElement, name){
+          var toSelect = selectorElement.querySelector(selectorElement.tagName + ' > *[name=' + name + ']');
+          var children = selectorElement.children;
+          for(var i = 0; i < children.length; i++) { children[i].classList.remove('active'); }
+          toSelect.classList.add('active');
+        }
+
+        var getActive = function (selectorElement) {
+          if (!selectorElement){ return null; }
+          return selectorElement.querySelector (selectorElement.tagName + ' > .active');
+        }
+
+        globals.installTool = function (element){
+          var tool = element.getAttribute ('for');
+          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
+          var selector = document.querySelector ('#' + tool);
+          var configure = selector.querySelector (selector.tagName + ' > [name=configure]');
+          tools[tool].path = 'C:\\toolsdir\\gps.exe';
+          if (configure){ configure.pathInput.value = tools[tool].path };
+          select (selector, 'run');
+        };
+
+        globals.runTool = function (element){
+          var tool = element.getAttribute ('for');
+          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
+          if (!tools[tool].path){ alert ('No path for tool: ' + tool); modifyToolSelector (element); }
+
+          alert ('Tool launched: ' + tools[tool].path);
+        };
+
+        globals.configureToolPath = function (element){
+          var tool = element.getAttribute ('for');
+          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
+          tools[tool].path = element.value;
+          modifyToolSelector (element);
+        };
+
+        globals.modifyToolSelector = function (element){
+          var tool = element.getAttribute ('for');
+          if (!tool || !tools[tool]) { alert ('Invalid tool selected.'); }
+          var selector = document.querySelector ('#' + tool);
+          var active = getActive (selector);
+          var configure = selector.querySelector (selector.tagName + ' > [name=configure]');
+
+          if (!active) { return; }
+          if (active.name !== 'configure' && configure) { return select (selector, 'configure'); }
+          tools[tool].path = active.pathInput.value;
+          select (selector, tools[tool].path ? 'run' : 'install');
+        };
+
+        globals.debugGame = function (){
+          var gameSelect = document.getElementById ('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var gameName = selectedGame.getAttribute ('name');
+          var gamePath = selectedGame.getAttribute ('path');
+
+          if (!gameName || !gamePath) { showMessage ('No game selected'); return; }
+
+          var buildCommand = CMD_GNATMAKE + ' ' +
+            SCENARIO_OPTION_GAME     + gameName + ' ' +
+            SCENARIO_OPTION_BIT_SIZE + ' ' +
+            SCENARIO_OPTION_DEBUG    + 'Yes ' +
+            SCENARIO_OPTION_SYSTEM;
+          var debugCommand = CMD_GDB + ' ' + gamePath + '\\' + gameName + BIT_SIZE;
+          var echoBuildCommand = 'echo "' + buildCommand + '"';
+          var echoDebugCommand = 'echo "' + debugCommand + '"';
+
+          shell.run (CMD_PROMPT + ' ' +
+            echoBuildCommand + ' & ' + buildCommand + ' & ' +
+            echoDebugCommand + ' & ' + debugCommand, 1, false);
+        };
+
+        globals.buildGame = function (){
+          var gameSelect = document.getElementById ('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+
+          if (!selectedGame.name){ showMessage ('No game selected'); return; }
+
+          var buildCommand = CMD_GNATMAKE + ' ' +
+            SCENARIO_OPTION_GAME     + selectedGame.name + ' ' +
+            SCENARIO_OPTION_BIT_SIZE + ' ' +
+            SCENARIO_OPTION_DEBUG    + 'No ' +
+            SCENARIO_OPTION_SYSTEM;
+          var echoBuildCommand = 'echo "' + buildCommand + '"';
+
+          shell.run (CMD_PROMPT + ' ' + echoBuildCommand + ' & ' + buildCommand + ' & ' + CMD_PAUSE, 1, false);
+        };
+
+        globals.runGame = function (){
+          var gameSelect = document.getElementById ('gameSelect');
+          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var fullPath = selectedGame.path + '\\' + selectedGame.name + BIT_SIZE + '.exe';
+
+          if (!selectedGame.path){ showMessage ('No game selected'); return; }
+
+          shell.run (fullPath, 1, false);
+        };
+
+        globals.launchGPS = function(){
+          downloadBinaryFile (
+            'http://download.microsoft.com/download/c/f/4/cf454ae0-a4bb-4123-8333-a1b6737712f7/windows-kb841290-x86-enu.exe',
+            shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop',
+            'win-sig-util',
+            'exe'
+          );
+        };
+
+        document.addEventListener ('DOMContentLoaded', function (){
+          replaceToolTagsWithDefinitions ();
+          replaceIconTagsWithSVGs ();
+          createMissingFolders ([GAME_FOLDER, TOOL_FOLDER]);
+          games = enumerateGames (GAME_FOLDER);
+          createDropdownEntriesForGames (games);
+        });
+      })(this);
+    </script>
+  </head>
+
+  <body>
+    <div class="header"><icon kind="neo-logo"></icon><div class="info"> NEO ENGINE SDK v1.0 </div></div>
+
+    <div id="message"></div>
+
+    <div class="gameActions">
+      <select id="gameSelect" name="gameSelect"></select>
+      <button onClick="debugGame()"><icon kind="debug"></icon></button>
+      <button onClick="buildGame()"><icon kind="build"></icon></button>
+      <button onClick="runGame()"  ><icon kind="run"  ></icon></button>
+    </div>
+
+    <div class="devActions">
+      <tool name="GPS"      description="GNAT Programming Studio" placeholder="Enter path to gps.exe"     ></tool>
+      <tool name="Blender"  description="Blender 3D Studio"       placeholder="Enter path to blender.exe" ></tool>
+      <tool name="Krita"    description="Krita Image Editor"      placeholder="Enter path to krita.exe"   ></tool>
+      <tool name="Audacity" description="Audacity Sound Editor"   placeholder="Enter path to audacity.exe"></tool>
+      <tool name="LunarG"   description="LunarG SDK"              placeholder="Enter path to lunarG.exe"  ></tool>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert WAV to OPUS Sounds   </button>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert TGA to KTX Textures  </button>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert GLSL to SPIR Shaders </button>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve BSPs         </button>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve MDLs         </button>
+      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve VTFs         </button>
+    </div>
+
+    <tool-definition style="display:none;">
+      <selector id="{{name}}">
+        <button class="active action-button" name="install" onclick="installTool(this)" for="{{name}}">
+          <icon kind="install"></icon> Install {{description}}
+        </button>
+        <button class="action-button" name="run" onclick="runTool(this)" for="{{name}}">
+          <icon kind="run"></icon> Run {{description}}
+        </button>
+        <form name="configure">
+          <input hidden="true" type="file"
+            name="pathBrowse" accept="application/octet-stream" onchange="this.form.pathInput.value = this.value"/>
+          <input type="text" name="pathInput" for="{{name}}" placeholder="{{placeholder}}"/>
+          <button class="browse-button" type="button" onclick="this.form.pathBrowse.click()">
+            <icon kind="folder"></icon>
+          </button>
+        </form>
+      </selector>
+      <button class="configure-button" name="configure" onclick="modifyToolSelector(this)" for="{{name}}">
+        <icon kind="configure"></icon>
+      </button>
+    </tool-definition>
+
+    <icon-definitions style="display:none;">
+      <svg kind="debug" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"></path></g></svg>
+      <svg kind="build" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path width="60px" height="60px" d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>
+      <svg kind="run" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"></path></g></svg>
+      <svg kind="install" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M12 16.5l4-4h-3v-9h-2v9H8l4 4zm9-13h-6v1.99h6v14.03H3V5.49h6V3.5H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2z"></path></g></svg>
+      <svg kind="convert" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path></g></svg>
+      <svg kind="videogame" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>
+      <svg kind="configure" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g></svg>
+      <svg kind="destroy" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M7 11H1v2h6v-2zm2.17-3.24L7.05 5.64 5.64 7.05l2.12 2.12 1.41-1.41zM13 1h-2v6h2V1zm5.36 6.05l-1.41-1.41-2.12 2.12 1.41 1.41 2.12-2.12zM17 11v2h6v-2h-6zm-5-2c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm2.83 7.24l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zm-9.19.71l1.41 1.41 2.12-2.12-1.41-1.41-2.12 2.12zM11 23h2v-6h-2v6z"></path></g></svg>
+      <svg kind="folder" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path></g></svg>
+      <svg kind="neo-logo">
+        <path
+          d="M0,0h130.25c0.29,8.05,0.12,16.1,0.15,24.16c-9.101-0.01-18.2,0-27.3-0.01c0,0.54,0,1.63-0.01,2.17
+          c9.11-0.01,18.21,0.02,27.311-0.02c-0.01,7.17,0,14.341,0,21.511c-9.041-0.051-18.08,0.01-27.121-0.041
+          c-0.04,0.631-0.12,1.891-0.15,2.521c9.091-0.01,18.19-0.01,27.29,0c-0.02,7.47,0,14.94-0.02,22.41c-13.15-0.04-26.291-0.021-39.43,0
+          c-3.38,0-7.25-0.31-9.62-3.03c-2.43-2.58-2.46-6.37-2.55-9.689c0.01-8.021,0.07-16.051,0.06-24.07c0.19-5.22-2.98-9.79-6.42-13.41
+          c-7.72-7.72-20.03-10.78-30.21-6.43c-8.53,3.52-16.55,11.2-16.74,20.96c-0.13,10.42-0.01,20.84-0.02,31.26c7.01,0,14.01,0,21.01,0
+          c0.07-8.42,0.02-16.84,0-25.26c0.11-1.89,0.02-4.458,0.02-6.28c0-5.5,11.75-5.563,11.75,0.313c0.006,2.505-0.031,3.875-0.06,5.938
+          c-0.1,12.34-0.02,24.67-0.06,37H0V0z"></path>
+        <path
+          d="M195.109,10.85C188.9,4.42,180.23,0.73,171.37,0h-4.5c-18.601,0.79-34.82,17.35-34.841,36.03
+          c-0.93,18.229,13.73,35.45,31.82,37.61c15.521,2.459,31.74-6.351,38.45-20.48c2.12-4.29,3.21-9.03,3.7-13.77v-4.5
+          C205.359,25.92,201.62,17.13,195.109,10.85z M165.9,47.77c-6.11-0.989-10.33-7.779-8.49-13.729c0.92-3.42,3.67-6.26,6.99-7.45
+          c6.81-2.59,14.91,3.15,14.56,10.44C179.23,43.67,172.391,49.3,165.9,47.77z"></path>
+      </svg>
+    </icon-definitions>
     <style>
-
-      /* Body */
       body {
-        //zoom: 80%;
-        min-width: 450px;
+        width: 100%;
         margin: 0px;
         background: #383838;
         font-family: arial;
@@ -41,9 +487,8 @@
         position: relative;
         cursor: default;
       }
-
-      /* Inputs */
-      button, select {
+      button, select, input {
+        box-sizing: border-box;
         background: #383838;
         color: #f7941d;
         height: 44px;
@@ -59,17 +504,14 @@
         border: 2px solid rgb(247,148,29);
         color: #383838;
       }
-    
-      /* Icons */
       .icon {
         position: relative;
         margin: auto;
         vertical-align: middle;
       }
-      
-      /* Header */
       .header {
         position: relative;
+        min-width: 500px;
         height: 80px;
         width: calc(100% - 16px);
         display: block;
@@ -95,11 +537,10 @@
         height: 80px;
         fill: #f7941d;
       }
-
-      /* Game Actions */
       .gameActions {
         position: relative;
         display: table !important;
+        min-width: 516px;
         width: 100%;
         border-spacing: 8px;
       }
@@ -120,259 +561,102 @@
         vertical-align: middle;
         text-align: center;
         width: 60px;
-        height: 44px;
         font-size: 22px;
         background: #f7941d;
         border: 2px solid rgb(247,148,29);
         color: #383838;
       }
-
-      /* Development Actions */
       .devActions {
         position: relative;
         display: block;
-        width: calc(100% - 16px);
-        padding-right: 8px;
-        padding-left: 8px;
+        min-width: 516px;
       }
-
-      .devActions button {
+      .devActions > button {
         position: relative;
         display: block;
+        margin-right: 8px;
+        margin-left: 8px;
+        width: calc(100% - 16px);
+        min-width: 500px;
+      }
+      selector > *:not(.active) { display: none; }
+      selector .active { display: inline-block; }
+      tool { 
+        position: relative;
+        display: table !important;
         width: 100%;
-        margin-bottom: 8px
+        border-spacing: 8px;
+        margin-top: -8px;
+      }
+      tool selector {
+        position: relative;
+        display: table-cell;
+        width: 100%;
+        margin-right: 8px;
+      }
+      tool .action-button {
+        vertical-align: middle;
+        width: 100%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      tool form {
+        position: relative;
+        width: 100%;
+      }
+      tool input[type=text] {
+        vertical-align: middle;
+        display: inline-block;
+        width: calc(100% - 68px);
+        margin-right: 3px;
+      }
+      tool .browse-button {
+        vertical-align: middle;
+        display: inline-block;
+        width: 60px;
+        font-size: 22px;
+        background: #f7941d;
+        border: 2px solid rgb(247,148,29);
+        color: #383838;
+        text-align: center;
+      }
+      tool .configure-button {
+        vertical-align: middle;
+        display: table-cell;
+        min-width: 60px;
+        font-size: 22px;
+        background: #f7941d;
+        border: 2px solid rgb(247,148,29);
+        color: #383838;
+        text-align: center;
+      }
+      #message {
+        visibility: hidden;
+        min-width: 128px;
+        margin-left: -50%;
+        background-color: #f7941d;
+        color: #383838;
+        text-align: center;
+        border-radius: 8px;
+        padding: 8px;
+        position: fixed;
+        display: block;
+        z-index: 1;
+        right: 8px;
+        top: 8px;
+      }
+      #message.show {
+        visibility: visible;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+      @keyframes fadein {
+        from {top: 0; opacity: 0;}
+        to {top: 8px; opacity: 1;}
+      }
+      @keyframes fadeout {
+        from {top: 8px; opacity: 1;}
+        to {top: 0; opacity: 0;}
       }
     </style>
-
-    <!--        -->
-    <!-- Script -->
-    <!--        -->
-
-      <script>
-      (function(globals) {
-        'use strict';
-
-        // Objects
-        var fileSystem = new ActiveXObject('Scripting.FileSystemObject');
-        var shell      = new ActiveXObject('WScript.Shell');
-
-        // Constants
-        var MAX_PATH       = 30;
-        var APPDATA_FOLDER = '%APPDATA%\\roaming\\neo';
-        var CONFIG_FILE    = 'sdk-config.json';
-        var SESSION_FILE   = 'sdk-session.json';
-        var GAME_FOLDER    = '.\\Games';
-        var NO_GAMES_TEXT  = 'No Games Detected.';
-        
-        // 
-        var ARCHITECTURE_REG_KEY = 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PROCESSOR_ARCHITECTURE';
-        var BIT_SIZE             = shell.regRead(ARCHITECTURE_REG_KEY) === 'x86' ? 32 : 64;
-
-        // 
-        var SCENARIO_OPTION_PREFIX   = '-X';
-        var SCENARIO_OPTION_GAME     = SCENARIO_OPTION_PREFIX + 'Game=';
-        var SCENARIO_OPTION_DEBUG    = SCENARIO_OPTION_PREFIX + 'Debug=';
-        var SCENARIO_OPTION_BIT_SIZE = SCENARIO_OPTION_PREFIX + 'Bitsize=' + BIT_SIZE;
-        var SCENARIO_OPTION_SYSTEM   = SCENARIO_OPTION_PREFIX + 'System=Windows';
-        
-        // 
-        var CMD_PROMPT   = 'cmd.exe /c';
-        var CMD_GDB      = 'gdb --args';
-        var CMD_PAUSE    = 'pause';
-        var CMD_GNATMAKE = 'gnatmake -P .\\neo.gpr';
-
-        window.resizeTo (516, 748);
-
-        var download = function(resourceUrl, localFilePath) {
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', resourceUrl);
-          xhr.responseType = 'arraybuffer';
-
-          if (fileSystem.fileExists(localFilePath)) { fileSystem.deleteFile(localFilePath); }
-          fileSystem.createTextFile(localFilePath, true);
-          var file = fileSystem.getFile(localFilePath);
-          var stream = file.openAsTextStream(2, -2);
-
-          xhr.onload = function () {
-            if (xhr.status === 200) {
-              stream.write(xhr.response);
-              stream.close();
-            }
-          };
-
-          xhr.send();
-        };
-
-        var replaceIconTagsWithSVGs = function() {
-          var iconDefs = document.getElementById('icon-definitions');
-          var icons    = {};
-          [].slice.call(iconDefs.getElementsByTagName('svg')).forEach(function(icon) {
-            icons[icon.getAttribute('kind')] = icon;
-          });
-          [].slice.call(document.getElementsByTagName('icon')).forEach(function(icon) {
-            if (!icons[icon.getAttribute('kind')]) { return; }
-            var parent = icon.parentNode;
-            var parentStyle = window.getComputedStyle(parent);
-            var newIcon = icons[icon.getAttribute('kind')].cloneNode(true);
-            newIcon.setAttribute('class', icon.className + ' icon');
-            newIcon.setAttribute('fill', parentStyle.color);
-            parent.onmouseover = function() { newIcon.setAttribute('fill', window.getComputedStyle(parent).color); }.bind(this);
-            parent.onmouseout  = function() { newIcon.setAttribute('fill', window.getComputedStyle(parent).color); }.bind(this);
-            parent.replaceChild(newIcon, icon);
-          });
-        }
-
-        var enumerateGames = function(gamesFolder) {
-          if (fileSystem.getFolder(GAME_FOLDER).subFolders.count === 0) {
-            var selectOption  = document.createElement('OPTION');
-            selectOption.text = NO_GAMES_TEXT;
-            gameSelect.appendChild(selectOption);
-          } else {
-            var folders = fileSystem.getFolder(GAME_FOLDER).subFolders;
-            var enumerator = new Enumerator(folders);
-            for (;!enumerator.atEnd(); enumerator.moveNext()) {
-              var selectOption = document.createElement('OPTION');
-              var game = enumerator.item();
-              if (game.path.length > MAX_PATH) {
-                selectOption.text = '...' + game.path.substring(game.path.indexOf('\\', game.path.length - MAX_PATH - 3));
-              } else {
-                selectOption.text = game.path;
-              }
-              selectOption.setAttribute('name', game.name);
-              selectOption.setAttribute('path', game.path);
-              gameSelect.appendChild(selectOption);
-            }
-          }
-        };
-
-        //////////
-        // Main //
-        //////////
-
-        document.addEventListener('DOMContentLoaded', function() {
-          replaceIconTagsWithSVGs();
-          enumerateGames();
-          download('http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d', '.\\Tools\\gnat-gpl-win32-x86.exe');
-        });
-
-        ///////////////
-        // debugGame //
-        ///////////////
-
-        globals.button_debugGame = function() {
-          var gameSelect = document.getElementById('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
-          var gameName = selectedGame.getAttribute('name');
-          var gamePath = selectedGame.getAttribute('path');
-
-          var buildCommand = CMD_GNATMAKE + ' ' +
-            SCENARIO_OPTION_GAME     + gameName + ' ' +
-            SCENARIO_OPTION_BIT_SIZE + ' ' +
-            SCENARIO_OPTION_DEBUG    + 'Yes ' +
-            SCENARIO_OPTION_SYSTEM;
-          var debugCommand = CMD_GDB + ' ' + gamePath + '\\' + gameName + BIT_SIZE;
-          var echoBuildCommand = 'echo "' + buildCommand + '"';
-          var echoDebugCommand = 'echo "' + debugCommand + '"';
-
-          shell.run(CMD_PROMPT + ' ' +
-            echoBuildCommand + ' & ' + buildCommand + ' & ' + 
-            echoDebugCommand + ' & ' + debugCommand, 1, false);
-        };
-
-        //////////////
-        // makeGame //
-        //////////////
-
-        globals.button_makeGame = function() {
-          var gameSelect = document.getElementById('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
-          var gameName = selectedGame.getAttribute('name');
-
-          var buildCommand = CMD_GNATMAKE + ' ' +
-            SCENARIO_OPTION_GAME     + gameName + ' ' +
-            SCENARIO_OPTION_BIT_SIZE + ' ' +
-            SCENARIO_OPTION_DEBUG    + 'No ' +
-            SCENARIO_OPTION_SYSTEM;
-          var echoBuildCommand = 'echo "' + buildCommand + '"';
-
-          shell.run(CMD_PROMPT + ' ' + echoBuildCommand + ' & ' + buildCommand + ' & ' + CMD_PAUSE, 1, false);
-        };
-
-        //////////////
-        // playGame //
-        //////////////
-
-        globals.button_playGame = function() {
-          var gameSelect = document.getElementById('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
-          var fullPath = selectedGame.getAttribute('path') + '\\' + selectedGame.getAttribute('name') + BIT_SIZE + '.exe';
-
-          shell.run(fullPath, 1, false);
-        };
-
-      })(this);
-
-    </script>
-  </head>
-
-  <!--      -->
-  <!-- Body -->
-  <!--      -->
-  <body>
-    <icon-definitions id="icon-definitions" style="display:none;">
-      <svg kind="debug" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/></g></svg>
-      <svg kind="build" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path width="60px" height="60px" d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>
-      <svg kind="run" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></g></svg>
-      <svg kind="install" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M12 16.5l4-4h-3v-9h-2v9H8l4 4zm9-13h-6v1.99h6v14.03H3V5.49h6V3.5H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2z"/></g></svg>
-      <svg kind="convert" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></g></svg>
-      <svg kind="videogame" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></g></svg>
-      <svg kind="configure" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></g></svg>
-      <svg kind="destroy" class="icon" x="0px" y="0px" width="24px" height="24px"><g><path d="M7 11H1v2h6v-2zm2.17-3.24L7.05 5.64 5.64 7.05l2.12 2.12 1.41-1.41zM13 1h-2v6h2V1zm5.36 6.05l-1.41-1.41-2.12 2.12 1.41 1.41 2.12-2.12zM17 11v2h6v-2h-6zm-5-2c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm2.83 7.24l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zm-9.19.71l1.41 1.41 2.12-2.12-1.41-1.41-2.12 2.12zM11 23h2v-6h-2v6z"/></g></svg>
-    </icon-definitions>
-
-    <div class="header">
-      <!-- Logo -->
-      <svg>
-        <path
-          d="M0,0h130.25c0.29,8.05,0.12,16.1,0.15,24.16c-9.101-0.01-18.2,0-27.3-0.01c0,0.54,0,1.63-0.01,2.17
-          c9.11-0.01,18.21,0.02,27.311-0.02c-0.01,7.17,0,14.341,0,21.511c-9.041-0.051-18.08,0.01-27.121-0.041
-          c-0.04,0.631-0.12,1.891-0.15,2.521c9.091-0.01,18.19-0.01,27.29,0c-0.02,7.47,0,14.94-0.02,22.41c-13.15-0.04-26.291-0.021-39.43,0
-          c-3.38,0-7.25-0.31-9.62-3.03c-2.43-2.58-2.46-6.37-2.55-9.689c0.01-8.021,0.07-16.051,0.06-24.07c0.19-5.22-2.98-9.79-6.42-13.41
-          c-7.72-7.72-20.03-10.78-30.21-6.43c-8.53,3.52-16.55,11.2-16.74,20.96c-0.13,10.42-0.01,20.84-0.02,31.26c7.01,0,14.01,0,21.01,0
-          c0.07-8.42,0.02-16.84,0-25.26c0.11-1.89,0.02-4.458,0.02-6.28c0-5.5,11.75-5.563,11.75,0.313c0.006,2.505-0.031,3.875-0.06,5.938
-          c-0.1,12.34-0.02,24.67-0.06,37H0V0z"/>
-        <path
-          d="M195.109,10.85C188.9,4.42,180.23,0.73,171.37,0h-4.5c-18.601,0.79-34.82,17.35-34.841,36.03
-          c-0.93,18.229,13.73,35.45,31.82,37.61c15.521,2.459,31.74-6.351,38.45-20.48c2.12-4.29,3.21-9.03,3.7-13.77v-4.5
-          C205.359,25.92,201.62,17.13,195.109,10.85z M165.9,47.77c-6.11-0.989-10.33-7.779-8.49-13.729c0.92-3.42,3.67-6.26,6.99-7.45
-          c6.81-2.59,14.91,3.15,14.56,10.44C179.23,43.67,172.391,49.3,165.9,47.77z"/>
-      </svg>
-
-      <!-- Information -->
-      <div class="info"> NEO ENGINE SDK v1.0 </div>
-    </div>
-
-    <!-- Game actions -->
-    <div class="gameActions">
-      <select id="gameSelect" name="gameSelect"></select>
-      <button onClick="button_debugGame()"> <icon kind="debug"></icon> </button>
-      <button onClick="button_makeGame()" > <icon kind="build"></icon> </button>
-      <button onClick="button_playGame()" > <icon kind="run"  ></icon> </button>
-    </div>
-
-    <!-- Development actions -->
-    <div class="devActions">
-      <button onClick="button_launchGPS()"    > <icon kind="install"></icon> Install GNAT Programming Studio IDE </button>
-      <button onClick="button_launchBlender()"> <icon kind="install"></icon> Install Blender 3D Studio           </button>
-      <button onClick="button_launchRadiant()"> <icon kind="install"></icon> Install Dark Radiant Mapper         </button>
-      <button onClick="button_launchRadiant()"> <icon kind="install"></icon> Install Krita Image Editor          </button>
-      <button onClick="button_launchRadiant()"> <icon kind="install"></icon> Install Audacity Sound Editor       </button>
-      <button onClick="button_convertWAV()"   > <icon kind="convert"></icon> Convert WAV to OPUS Sounds          </button>
-      <button onClick="button_convertTGA()"   > <icon kind="convert"></icon> Convert TGA to KTX Textures         </button>
-      <button onClick="button_compileGLSL()"  > <icon kind="build"  ></icon> Compile GLSL to SPIR Shaders        </button>
-      <button onClick="button_decompileBSP()" > <icon kind="destroy"></icon> Decompile Valve BSPs                </button>
-      <button onClick="button_decompileMDL()" > <icon kind="destroy"></icon> Decompile Valve MDLs                </button>
-      <button onClick="button_decompileVTF()" > <icon kind="destroy"></icon> Decompile Valve VTFs                </button>
-    </div>
   </body>
 </html>
