@@ -18,7 +18,7 @@
   <head>
     <title> Neo SDK </title>
     <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-    
+
     <script>
       (function (globals){
         'use strict';
@@ -28,20 +28,22 @@
         var shell      = new ActiveXObject ('WScript.Shell');
 
         // Constants
+        var BIT_SIZE                 = shell.expandEnvironmentStrings ('%PROCESSOR_ARCHITECTURE%') === 'x86' ? 32 : 64;
         var MAX_PATH                 = 30;
         var MESSAGE_DURATION         = 3000;
-        var APPDATA_FOLDER           = '%APPDATA%\\roaming\\neo';
-        var CONFIG_FILE              = 'sdk-config.json';
-        var SESSION_FILE             = 'sdk-session.json';
-        var GAME_FOLDER              = shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop\\Games';
-        var TOOL_FOLDER              = shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop\\Tools';
+        var CONFIG_FILE              = 'runsdk-config.json';
+        var SESSION_FILE             = 'runsdk-session.json';
         var NO_GAMES_TEXT            = 'No Games Detected';
-        var REG_KEY_ARCHITECTURE     = 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PROCESSOR_ARCHITECTURE';
-        var BIT_SIZE                 = shell.regRead (REG_KEY_ARCHITECTURE) === 'x86' ? 32 : 64;
+        var CD                       = shell.currentDirectory;
+        var APPDATA_FOLDER           = fileSystem.buildPath (shell.expandEnvironmentStrings ('%APPDATA%'), 'neo');
+        var TEMP_FOLDER              = shell.expandEnvironmentStrings ('%TEMP%');
+        var GAME_FOLDER              = fileSystem.buildPath (CD, 'Games');
+        var TOOL_FOLDER              = fileSystem.buildPath (CD, 'Tools');
+        var NEO_PROJECT_FILE         = fileSystem.buildPath (CD, 'neo.gpr');
         var CMD_PROMPT               = 'cmd.exe /c';
         var CMD_GDB                  = 'gdb --args';
         var CMD_PAUSE                = 'pause';
-        var CMD_GNATMAKE             = 'gnatmake -P .\\neo.gpr';
+        var CMD_GNATMAKE             = 'gnatmake -P ' + NEO_PROJECT_FILE;
         var CMD_DECODE_BASE_64       = 'certutil -decode';
         var SCENARIO_OPTION_PREFIX   = '-X';
         var SCENARIO_OPTION_GAME     = SCENARIO_OPTION_PREFIX + 'Game=';
@@ -49,75 +51,63 @@
         var SCENARIO_OPTION_BIT_SIZE = SCENARIO_OPTION_PREFIX + 'Bitsize=' + BIT_SIZE;
         var SCENARIO_OPTION_SYSTEM   = SCENARIO_OPTION_PREFIX + 'System=Windows';
 
-        var games;
-        var tools = {
+        var DEFAULT_CONFIG = {
           GPS: {
             path: '',
-            options: {P: 'neo.gpr'},
             installer: {
-              name: 'gps-installer',
-              type: 'exe',
-              url32: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d',
-              url64: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d'
+              32: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d',
+              64: 'http://mirrors.cdn.adacore.com/art/591c97f0a3f5d779ee51082d'
             }
           },
           Blender: {
             path: '',
-            options: {},
             installer: {
-              name: 'blender-installer',
-              type: 'zip',
               url32: 'http://mirror.cs.umn.edu/blender.org/release/Blender2.78/blender-2.78c-windows32.zip',
               url64: 'http://mirror.cs.umn.edu/blender.org/release/Blender2.78/blender-2.78c-windows64.zip'
             }
           },
           DarkRadiant: {
             path: '',
-            options: {},
             installer: {
-              name: 'darkRadiant-installer',
-              type: 'exe',
-              url32: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x86.exe',
-              url64: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x64.exe'
+              32: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x86.exe',
+              64: 'https://github.com/codereader/DarkRadiant/releases/download/2.2.1/darkradiant-2.2.1-x64.exe'
             }
           },
           Krita: {
             path: '',
-            options: {},
             installer: {
-              name: 'krita-installer',
-              type: 'zip',
-              url32: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x86.zip',
-              url64: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x64.zip'
+              32: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x86.zip',
+              64: 'https://download.kde.org/stable/krita/3.1.4/krita-3.1.4-x64.zip'
             }
           },
           Audacity: {
             path: '',
-            options: {},
             installer: {
-              name: 'audacity-installer',
-              type: 'zip',
-              url32: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip',
-              url64: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip'
+              32: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip',
+              64: 'https://www.fosshub.com/Audacity.html/audacity-win-2.1.3.zip'
             }
           },
           LunarG: {
             path: '',
-            options: {},
             installer: {
-              name: 'lunar-g-sdk-installer',
-              type: 'exe',
-              url32: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe',
-              url64: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe'
+              32: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe',
+              64: 'https://vulkan.lunarg.com/sdk/home#sdk/downloadConfirm/1.0.51.0/windows/VulkanSDK-1.0.51.0-Installer.exe'
             }
-          },
-          WAVtoOpus: { 
-            path: TOOL_FOLDER + '\\Opus\\opusenc.exe',
-            options: {}
           }
         };
+        var DEFAULT_SESSION = {
+          games: [],
+          tools: [],
+          selectedGame: null
+        };
 
-        window.resizeTo (550, 760);
+        if (!Array.prototype.find) { 
+          Array.prototype.find = function (callback){ 
+            for (var i=0; i < this.length; i++){ 
+              if (callback (this[i])){ return this[i]; }
+            }
+          }
+        }
 
         var showMessage = function (message){
           var messageBox = document.getElementById ('message');
@@ -131,6 +121,56 @@
             clearTimeout (messageBox.timeoutId);
           }, MESSAGE_DURATION);
         };
+
+        var readTextFile = function (path) {
+          var output = '';
+          if (openFileStreams[path]){ return output; }
+          if (!fileSystem.fileExists (path)){ return output; }
+          var file = fileSystem.openTextFile (path, 1);
+          output = file.readAll();
+          file.close();
+          return output;
+        };
+
+        var writeTextFile = function (path, contents) {
+          if (openFileStreams[path]){ showMessage('File already in use.'); return; }
+          if (!fileSystem.fileExists (path)){ fileSystem.createTextFile (path, true, false); }
+          var file = fileSystem.getFile (path);
+          openFileStreams[path] = file.openAsTextStream (2, -1);
+          openFileStreams[path].write(contents);
+          openFileStreams[path].close();
+          delete openFileStreams[path];
+        };
+
+        var loadConfigFile = function (path, defaults){
+          var output = JSON.parse (JSON.stringify (defaults));
+          if (!fileSystem.fileExists(path)) { writeTextFile (path, JSON.stringify (output, null, 2)); return output; }
+          var fileText = readTextFile (path);
+          try{ Object.assign (output, JSON.parse (fileText)); }
+          catch (error) {
+            if (!confirm('Error parsing ' + CONFIG_FILE + '. Load Defaults?\n\n' + error.message)) { window.close(); }
+            fileSystem.deleteFile(path);
+            writeTextFile (path, JSON.stringify (output, null, 2));
+          }
+          return output;
+        };
+        var loadSessionFile = function (path, defaults) {
+          var output = JSON.parse(JSON.stringify(defaults));
+          if (!fileSystem.fileExists(path)) { writeTextFile (path, JSON.stringify (output, null, 2)); return output; }
+          var fileText = readTextFile (path);
+          try{ Object.assign (output, JSON.parse (fileText)); }
+          catch (error) {
+            fileSystem.deleteFile(path);
+            writeTextFile (path, JSON.stringify (output, null, 2));
+          }
+          return output;
+        };
+
+        // var openFileStreams = {};
+        // var config = loadConfigFile(fileSystem.buildPath(CD, CONFIG_FILE), DEFAULT_CONFIG);
+        // var session = loadSessionFile(fileSystem.buildPath(APPDATA_FOLDER, SESSION_FILE), DEFAULT_SESSION);
+        var config = JSON.parse (JSON.stringify (DEFAULT_CONFIG));
+        var session = {};
 
         var toBase64 = function (bytes){
           var base64        = '';
@@ -163,7 +203,7 @@
           return base64;
         };
 
-        var toBinaryFile = function (b64File, binaryFile){ 
+        var toBinaryFile = function (b64File, binaryFile){
           shell.run(CMD_DECODE_BASE_64 + ' ' + b64File + ' ' + binaryFile, 0, true);
         };
 
@@ -202,25 +242,18 @@
           var xhr = new XMLHttpRequest ();
           xhr.open ('GET', url, true);
 
-          if (!fileSystem.fileExists (path)){ fileSystem.createTextFile (path, true, false); }
-          var file = fileSystem.getFile (path);
-          var fileStream = file.openAsTextStream (2, -1);
-
           xhr.onprogress = function (event){
             var percentComplete = Math.round ((event.loaded / event.total) * 100.0);
             console.log ('loaded: ' + event.loaded + ' of ' + event.total + ' ' + percentComplete + '%');
           };
           xhr.onerror = function (error) { showMessage ('Unable to download: ' + url); };
-          xhr.onload = function (event) {
-            fileStream.write (xhr.responseText);
-            fileStream.close ();
-          };
+          xhr.onload = function (event) { writeTextFile (path, xhr.responseText); };
           xhr.send ();
         };
 
         var replaceToolTagsWithDefinitions = function (){
           var toolDef = document.getElementsByTagName ('tool-definition')[0].innerHTML;
-          [].slice.call (document.getElementsByTagName ('tool')).forEach (function(tool) {
+          toArray (document.getElementsByTagName ('tool')).forEach (function(tool) {
             var name = tool.getAttribute ('name');
             var description = tool.getAttribute ('description');
             var placeholder = tool.getAttribute ('placeholder');
@@ -234,10 +267,10 @@
         var replaceIconTagsWithSVGs = function (){
           var iconDefs = document.getElementsByTagName ('icon-definitions')[0];
           var icons    = {};
-          [].slice.call (iconDefs.getElementsByTagName ('svg')).forEach (function (icon){
+          toArray (iconDefs.getElementsByTagName ('svg')).forEach (function (icon){
             icons[icon.getAttribute ('kind')] = icon;
           });
-          [].slice.call (document.getElementsByTagName ('icon')).forEach (function (icon){
+          toArray (document.getElementsByTagName ('icon')).forEach (function (icon){
             if (!icons[icon.getAttribute ('kind')]){ return; }
             var parent = icon.parentNode;
             var parentStyle = window.getComputedStyle (parent);
@@ -251,28 +284,35 @@
         };
 
         var createMissingFolders = function (folderPaths){
-          folderPaths.forEach (function (folder){ 
+          folderPaths.forEach (function (folder){
             if (!fileSystem.folderExists (folder)){ fileSystem.createFolder (folder); }
           });
         };
 
-        var createOptionForDropdown = function (dropdown, optionText){
-          var selectOption  = document.createElement ("OPTION");
-          selectOption.text = optionText;
-          dropdown.appendChild (selectOption);
-        };
-
-        var createDropdownEntriesForGames = function (games){
-          var gamesDropdown = document.getElementById ('gameSelect');
-          if (!games.length){ return createOptionForDropdown (gamesDropdown, NO_GAMES_TEXT); }
-          games.forEach (function (game){ 
-            createOptionForDropdown (gamesDropdown, truncateStringAtLength (MAX_PATH, game.name, true));
+        var enumerateGames = function(gameFolder) {
+          return toArray (fileSystem.getFolder (GAME_FOLDER).subFolders).map (function(gameFolder) {
+            return { name: gameFolder.name, path: gameFolder.path };
           });
         };
 
-        var enumerateGames = function (gamesFolderPath){
-          return toArray (fileSystem.getFolder (gamesFolderPath).subFolders).map (function (gameFolder) {
-            return new Game (gameFolder);
+        var createOptionForDropdown = function (dropdown, optionText, name){
+          var selectOption  = document.createElement ("OPTION");
+          selectOption.text = optionText;
+          selectOption.name = name;
+          dropdown.appendChild (selectOption);
+        };
+
+        var truncateStringAtLength = function(length, item, keepRight) {
+          if (item.length <= length) { return item; }
+          if (keepRight) { return '...' + item.substr(item.length - length); }
+          return item.substr(0, length) + '...';
+        };
+
+        var createDropdownEntriesForGames = function (games){
+          var gamesDropdown = document.getElementById ('game-dropdown');
+          if (!games.length){ return createOptionForDropdown (gamesDropdown, NO_GAMES_TEXT, 'none'); }
+          games.forEach (function (game){
+            createOptionForDropdown (gamesDropdown, truncateStringAtLength (MAX_PATH, game.path, true), game.name);
           });
         };
 
@@ -287,68 +327,58 @@
 
         var select = function (selectorElement, name){
           var toSelect = selectorElement.querySelector(selectorElement.tagName + ' > *[name=' + name + ']');
+          if (!toSelect) { return; }
           var children = selectorElement.children;
           for(var i = 0; i < children.length; i++) { children[i].classList.remove('active'); }
+          selectorElement.setAttribute('active', name);
           toSelect.classList.add('active');
-        }
-
-        var getActive = function (selectorElement) {
-          if (!selectorElement){ return null; }
-          return selectorElement.querySelector (selectorElement.tagName + ' > .active');
         }
 
         globals.installTool = function (element){
           var tool = element.getAttribute ('for');
-          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
-          var selector = document.querySelector ('#' + tool);
-          var configure = selector.querySelector (selector.tagName + ' > [name=configure]');
-          tools[tool].path = 'C:\\toolsdir\\gps.exe';
-          if (configure){ configure.pathInput.value = tools[tool].path };
-          select (selector, 'run');
+          var selectorElement = document.querySelector ('#' + tool);
+          var activeName = selectorElement.getAttribute('active');
+          var activeItem = selectorElement.querySelector(selectorElement.tagName + '>[name=' + activeName + ']');
+          var configureSection = selectorElement.querySelector(selectorElement.tagName + '>[name=configure]');
+
+          config[tool].path = fileSystem.buildPath(TOOL_FOLDER, tool + '\\' + tool + '.exe');
+          if (configureSection){ configureSection.pathInput.value = config[tool].path };
+          select (selectorElement, 'run');
         };
 
         globals.runTool = function (element){
           var tool = element.getAttribute ('for');
-          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
-          if (!tools[tool].path){ alert ('No path for tool: ' + tool); modifyToolSelector (element); }
+          if (!config[tool].path){ showMessage ('No path for tool: ' + tool); modifyToolSelector (element); }
 
-          alert ('Tool launched: ' + tools[tool].path);
-        };
-
-        globals.configureToolPath = function (element){
-          var tool = element.getAttribute ('for');
-          if (!tool || !tools[tool]){ alert ('Invalid tool selected.'); }
-          tools[tool].path = element.value;
-          modifyToolSelector (element);
+          alert ('Tool launched: ' + config[tool].path);
         };
 
         globals.modifyToolSelector = function (element){
           var tool = element.getAttribute ('for');
-          if (!tool || !tools[tool]) { alert ('Invalid tool selected.'); }
-          var selector = document.querySelector ('#' + tool);
-          var active = getActive (selector);
-          var configure = selector.querySelector (selector.tagName + ' > [name=configure]');
+          var selectorElement = document.querySelector ('#' + tool);
+          var activeName = selectorElement.getAttribute('active');
+          var activeItem = selectorElement.querySelector(selectorElement.tagName + '>[name=' + activeName + ']');
 
-          if (!active) { return; }
-          if (active.name !== 'configure' && configure) { return select (selector, 'configure'); }
-          tools[tool].path = active.pathInput.value;
-          select (selector, tools[tool].path ? 'run' : 'install');
+          if (activeName !== 'configure') { return select (selectorElement, 'configure'); }
+          config[tool].path = activeItem.pathInput.value;
+          select (selectorElement, config[tool].path ? 'run' : 'install');
         };
 
         globals.debugGame = function (){
-          var gameSelect = document.getElementById ('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
-          var gameName = selectedGame.getAttribute ('name');
-          var gamePath = selectedGame.getAttribute ('path');
+          var gameDropdown = document.getElementById ('game-dropdown');
+          var selectedOption = gameDropdown.children[gameDropdown.selectedIndex];
+          var selectedGame = session.games.find (function(game) {
+            return game.name === selectedOption.name;
+          });
 
-          if (!gameName || !gamePath) { showMessage ('No game selected'); return; }
+          if (!selectedGame) { showMessage ('No game selected'); return; }
 
           var buildCommand = CMD_GNATMAKE + ' ' +
-            SCENARIO_OPTION_GAME     + gameName + ' ' +
+            SCENARIO_OPTION_GAME     + selectedGame.name + ' ' +
             SCENARIO_OPTION_BIT_SIZE + ' ' +
             SCENARIO_OPTION_DEBUG    + 'Yes ' +
             SCENARIO_OPTION_SYSTEM;
-          var debugCommand = CMD_GDB + ' ' + gamePath + '\\' + gameName + BIT_SIZE;
+          var debugCommand = CMD_GDB + ' ' + selectedGame.path + '\\' + selectedGame.name + BIT_SIZE;
           var echoBuildCommand = 'echo "' + buildCommand + '"';
           var echoDebugCommand = 'echo "' + debugCommand + '"';
 
@@ -358,10 +388,13 @@
         };
 
         globals.buildGame = function (){
-          var gameSelect = document.getElementById ('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
+          var gameDropdown = document.getElementById ('game-dropdown');
+          var selectedOption = gameDropdown.children[gameDropdown.selectedIndex];
+          var selectedGame = session.games.find (function(game) {
+            return game.name === selectedOption.name;
+          });
 
-          if (!selectedGame.name){ showMessage ('No game selected'); return; }
+          if (!selectedGame){ showMessage ('No game selected'); return; }
 
           var buildCommand = CMD_GNATMAKE + ' ' +
             SCENARIO_OPTION_GAME     + selectedGame.name + ' ' +
@@ -374,81 +407,89 @@
         };
 
         globals.runGame = function (){
-          var gameSelect = document.getElementById ('gameSelect');
-          var selectedGame = gameSelect.children[gameSelect.selectedIndex];
-          var fullPath = selectedGame.path + '\\' + selectedGame.name + BIT_SIZE + '.exe';
-
-          if (!selectedGame.path){ showMessage ('No game selected'); return; }
-
-          shell.run (fullPath, 1, false);
+          var gameDropdown = document.getElementById ('game-dropdown');
+          var selectedOption = gameDropdown.children[gameDropdown.selectedIndex];
+          var selectedGame = session.games.find (function(game) {
+            return game.name === selectedOption.name;
+          });
+          if (!selectedGame){ return showMessage ('No game selected'); }
+          var gameExe = selectedGame.name + BIT_SIZE + '.exe';
+          var finalPath = fileSystem.buildPath(selectedGame.path, gameExe);
+          if (!fileSystem.fileExists (finalPath)){ return showMessage (gameExe + ' not found.'); return; }
+          shell.run (finalPath, 1, false);
         };
 
-        globals.launchGPS = function(){
-          downloadBinaryFile (
-            'http://download.microsoft.com/download/c/f/4/cf454ae0-a4bb-4123-8333-a1b6737712f7/windows-kb841290-x86-enu.exe',
-            shell.ExpandEnvironmentStrings ('%USERPROFILE%') + '\\Desktop',
-            'win-sig-util',
-            'exe'
-          );
-        };
-
+        window.resizeTo (530, 760);
         document.addEventListener ('DOMContentLoaded', function (){
           replaceToolTagsWithDefinitions ();
           replaceIconTagsWithSVGs ();
-          createMissingFolders ([GAME_FOLDER, TOOL_FOLDER]);
-          games = enumerateGames (GAME_FOLDER);
-          createDropdownEntriesForGames (games);
+          createMissingFolders ([APPDATA_FOLDER, GAME_FOLDER, TOOL_FOLDER]);
+          session.games = enumerateGames(GAME_FOLDER);
+          session.tools = toArray (fileSystem.getFolder (TOOL_FOLDER).subFolders);
+          createDropdownEntriesForGames (session.games);
         });
       })(this);
     </script>
   </head>
 
-  <body>
-    <div class="header"><icon kind="neo-logo"></icon><div class="info"> NEO ENGINE SDK v1.0 </div></div>
-
-    <div id="message"></div>
-
-    <div class="gameActions">
-      <select id="gameSelect" name="gameSelect"></select>
-      <button onClick="debugGame()"><icon kind="debug"></icon></button>
-      <button onClick="buildGame()"><icon kind="build"></icon></button>
-      <button onClick="runGame()"  ><icon kind="run"  ></icon></button>
+  <body class="primary">
+    <div id="header">
+      <icon kind="neo-logo" class="left"></icon>
+      <span id="version" class="right align-right">NEO ENGINE SDK v1.0</span>
     </div>
 
-    <div class="devActions">
+    <span id="message" class="secondary align-center"></span>
+
+    <div id="games">
+      <button class="secondary small right align-center" onClick="runGame()"  ><icon kind="run"  ></icon></button>
+      <button class="secondary small right align-center" onClick="debugGame()"><icon kind="debug"></icon></button>
+      <button class="secondary small right align-center" onClick="buildGame()"><icon kind="build"></icon></button>
+      <select class="secondary dynamic align-left" id="game-dropdown"></select>
+    </div>
+
+    <div id="tools">
       <tool name="GPS"      description="GNAT Programming Studio" placeholder="Enter path to gps.exe"     ></tool>
       <tool name="Blender"  description="Blender 3D Studio"       placeholder="Enter path to blender.exe" ></tool>
       <tool name="Krita"    description="Krita Image Editor"      placeholder="Enter path to krita.exe"   ></tool>
       <tool name="Audacity" description="Audacity Sound Editor"   placeholder="Enter path to audacity.exe"></tool>
       <tool name="LunarG"   description="LunarG SDK"              placeholder="Enter path to lunarG.exe"  ></tool>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert WAV to OPUS Sounds   </button>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert TGA to KTX Textures  </button>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="convert"></icon> Convert GLSL to SPIR Shaders </button>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve BSPs         </button>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve MDLs         </button>
-      <button onclick="runToolExe('soon.exe')"> <icon kind="destroy"></icon> Decompile Valve VTFs         </button>
+      <button class="primary hoverable large align-left"> <icon kind="convert"></icon> Convert WAV to OPUS Sounds   </button>
+      <button class="primary hoverable large align-left"> <icon kind="convert"></icon> Convert TGA to KTX Textures  </button>
+      <button class="primary hoverable large align-left"> <icon kind="convert"></icon> Convert GLSL to SPIR Shaders </button>
+      <button class="primary hoverable large align-left"> <icon kind="destroy"></icon> Decompile Valve BSPs         </button>
+      <button class="primary hoverable large align-left"> <icon kind="destroy"></icon> Decompile Valve MDLs         </button>
+      <button class="primary hoverable large align-left"> <icon kind="destroy"></icon> Decompile Valve VTFs         </button>
     </div>
 
     <tool-definition style="display:none;">
-      <selector id="{{name}}">
-        <button class="active action-button" name="install" onclick="installTool(this)" for="{{name}}">
-          <icon kind="install"></icon> Install {{description}}
-        </button>
-        <button class="action-button" name="run" onclick="runTool(this)" for="{{name}}">
-          <icon kind="run"></icon> Run {{description}}
-        </button>
+      <selector id="{{name}}" active="install">
+        <div name="install" class="active">
+          <button class="secondary small right align-center" onclick="modifyToolSelector(this)" for="{{name}}">
+            <icon kind="configure"></icon>
+          </button>
+          <button class="primary hoverable dynamic align-left" onclick="installTool(this)" for="{{name}}">
+            <icon kind="install"></icon> Install {{description}}
+          </button>
+        </div>
+        <div name="run">
+          <button class="secondary small right align-center" onclick="modifyToolSelector(this)" for="{{name}}">
+            <icon kind="configure"></icon>
+          </button>
+          <button class="primary hoverable dynamic align-left" name="run" onclick="runTool(this)" for="{{name}}">
+            <icon kind="run"></icon> Run {{description}}
+          </button>
+        </div>
         <form name="configure">
-          <input style="display:none;" type="file"
-            name="pathBrowse" accept="application/octet-stream" onchange="this.form.pathInput.value = this.value"/>
-          <input type="text" name="pathInput" for="{{name}}" placeholder="{{placeholder}}"/>
-          <button class="browse-button" type="button" onclick="this.form.pathBrowse.click()">
+          <button class="secondary small right align-center" type="button" onclick="modifyToolSelector(this)" for="{{name}}">
+            <icon kind="configure"></icon>
+          </button>
+          <button class="secondary small right align-center" type="button" onclick="this.form.pathBrowse.click()">
             <icon kind="folder"></icon>
           </button>
+          <input type="text" class="primary dynamic align-left" name="pathInput" for="{{name}}" placeholder="{{placeholder}}"/>
+          <input style="display:none;" type="file" name="pathBrowse" onchange="this.form.pathInput.value = this.value"/>
         </form>
       </selector>
-      <button class="configure-button" name="configure" onclick="modifyToolSelector(this)" for="{{name}}">
-        <icon kind="configure"></icon>
-      </button>
     </tool-definition>
 
     <icon-definitions style="display:none;">
@@ -478,186 +519,76 @@
       </svg>
     </icon-definitions>
     <style>
-      body {
-        width: 100%;
-        margin: 0px;
-        background: #383838;
-        font-family: arial;
-        display: block;
-        position: relative;
-        cursor: default;
-      }
-      button, select, input {
-        box-sizing: border-box;
+      .primary {
         background: #383838;
         color: #f7941d;
-        height: 44px;
-        padding-left: 8px;
-        padding-right: 8px;
-        border-radius: 10px;
-        border: 2px solid rgb(247,148,29);
-        font-size: 14px;
-        text-align: left;
       }
-      button:hover, select {
+      .primary.hoverable:hover {
         background: #f7941d;
-        border: 2px solid rgb(247,148,29);
         color: #383838;
       }
+      .secondary {
+        background: #f7941d;
+        color: #383838;
+      }
+      .secondary.hoverable:hover {
+        background: #383838;
+        color: #f7941d;
+      }
+      .large { width: 100%; display: inline-block; }
+      .small { width: 60px; display: inline-block; margin-left: 8px; }
+      .dynamic:nth-child(1) { width: 100%; }
+      .dynamic:nth-child(2) { width: calc(100% - 68px); }
+      .dynamic:nth-child(3) { width: calc(100% - 136px); }
+      .dynamic:nth-child(4) { width: calc(100% - 204px); }
+      .left { float: left; }
+      .right { float: right; }
+      .align-left { text-align: left; }
+      .align-center { text-align: center; }
+      .align-right { text-align: right; }
+      * {
+        position: relative;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        font-family: arial;
+        font-size: 14px;
+      }
+      body { margin: 0; padding: 8px; }
+      div { min-width: 500px; width: 100%; }
+      button, input, select {
+        height: 44px;
+        border: 2px solid #f7941d;
+        border-radius: 8px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      select::-ms-expand { display: none; }
+      selector > *:not(.active) { display: none; }
       .icon {
         position: relative;
         margin: auto;
         vertical-align: middle;
       }
-      .header {
-        position: relative;
-        min-width: 500px;
-        height: 80px;
-        width: calc(100% - 16px);
-        display: block;
-        padding-top: 8px;
-        padding-right: 8px;
-        padding-left: 8px;
-      }
-      .header .info {
-        position: relative;
-        display: inline-block;
-        font-size: 10px;
-        color: #f7941d;
-        float: right;
-        text-align: right;
-        cursor: default;
-      }
-      .header svg {
-        position: relative;
-        display: inline-block;
-        x: 0px;
-        y: 0px;
-        width: 206px;
-        height: 80px;
-        fill: #f7941d;
-      }
-      .gameActions {
-        position: relative;
-        display: table !important;
-        min-width: 516px;
-        width: 100%;
-        border-spacing: 8px;
-      }
-      .gameActions select {
-        position: relative;
-        display: table-cell;
-        vertical-align: middle;
-        width: 100%;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-      .gameActions select::-ms-expand {
-        display: none;
-      }
-      .gameActions button {
-        position: relative;
-        display: table-cell;
-        vertical-align: middle;
-        text-align: center;
-        width: 60px;
-        font-size: 22px;
-        background: #f7941d;
-        border: 2px solid rgb(247,148,29);
-        color: #383838;
-      }
-      .devActions {
-        position: relative;
-        display: block;
-        min-width: 516px;
-      }
-      .devActions > button {
-        position: relative;
-        display: block;
-        margin-right: 8px;
-        margin-left: 8px;
-        margin-bottom: 8px;
-        width: calc(100% - 16px);
-        min-width: 500px;
-      }
-      selector > *:not(.active) { display: none; }
-      selector .active { display: inline-block; }
-      tool { 
-        position: relative;
-        display: table !important;
-        width: 100%;
-        border-spacing: 8px;
-        margin-top: -8px;
-      }
-      tool selector {
-        position: relative;
-        display: table-cell;
-        width: 100%;
-        margin-right: 8px;
-      }
-      tool .action-button {
-        vertical-align: middle;
-        width: 100%;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-      tool form {
-        position: relative;
-        width: 100%;
-      }
-      tool input[type=text] {
-        vertical-align: middle;
-        display: inline-block;
-        width: calc(100% - 68px);
-        margin-right: 3px;
-      }
-      tool .browse-button {
-        vertical-align: middle;
-        display: inline-block;
-        width: 60px;
-        font-size: 22px;
-        background: #f7941d;
-        border: 2px solid rgb(247,148,29);
-        color: #383838;
-        text-align: center;
-      }
-      tool .configure-button {
-        vertical-align: middle;
-        display: table-cell;
-        min-width: 60px;
-        font-size: 22px;
-        background: #f7941d;
-        border: 2px solid rgb(247,148,29);
-        color: #383838;
-        text-align: center;
-      }
+      #header { height: 80px; margin-bottom: 8px; }
+      #header > svg { width: 206px; height: 80px; }
+      #version { display: inline-block; font-size: 10px }
+      #games { display: block; margin-bottom: 8px; }
+      #tools > * { display: block; margin-bottom: 8px; }
       #message {
+        position: fixed !important;
+        display: block !important;
         visibility: hidden;
         min-width: 128px;
-        margin-left: -50%;
-        background-color: #f7941d;
-        color: #383838;
-        text-align: center;
         border-radius: 8px;
         padding: 8px;
-        position: fixed;
-        display: block;
         z-index: 1;
         right: 8px;
         top: 8px;
       }
-      #message.show {
-        visibility: visible;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-      }
-      @keyframes fadein {
-        from {top: 0; opacity: 0;}
-        to {top: 8px; opacity: 1;}
-      }
-      @keyframes fadeout {
-        from {top: 8px; opacity: 1;}
-        to {top: 0; opacity: 0;}
-      }
+      #message.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+      @keyframes fadein  { from {top: 0;   opacity: 0;} to {top: 8px; opacity: 1;} }
+      @keyframes fadeout { from {top: 8px; opacity: 1;} to {top: 0;   opacity: 0;} }
     </style>
   </body>
 </html>
