@@ -438,7 +438,7 @@
           <icon kind="run"></icon> Run {{description}}
         </button>
         <form name="configure">
-          <input hidden="true" type="file"
+          <input style="display:none;" type="file"
             name="pathBrowse" accept="application/octet-stream" onchange="this.form.pathInput.value = this.value"/>
           <input type="text" name="pathInput" for="{{name}}" placeholder="{{placeholder}}"/>
           <button class="browse-button" type="button" onclick="this.form.pathBrowse.click()">
