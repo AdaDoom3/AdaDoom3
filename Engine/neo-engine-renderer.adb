@@ -683,7 +683,7 @@ separate (Neo.Engine) package body Renderer is
     -- 
     Rasterizer_Info : aliased VkPipelineRasterizationStateCreateInfo := (polygonMode => VK_POLYGON_MODE_FILL,
                                                                          lineWidth   => 1.0,
-                                                                         cullMode    => VK_CULL_MODE_BACK_BIT,
+                                                                         cullMode    => VK_CULL_MODE_NONE,
                                                                          frontFace   => VK_FRONT_FACE_COUNTER_CLOCKWISE,
                                                                          others      => <>);
 
