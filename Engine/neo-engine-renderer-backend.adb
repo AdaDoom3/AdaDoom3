@@ -13,1062 +13,651 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
--- Soft stencil shadow shading using prenumbra: https://web.archive.org/web/20160417154820/http://www.terathon.com/gdc05_lengyel.pdf
-separate (Neo.Engine.Renderer) procedure Backend is  
+-- The "backend" procedure exists to separate all Vulkan command generation so it may execute in an auxiliary task.
+separate (Neo.Engine.Renderer) procedure Backend is
 
-  -- Shader global 
-  Global : Global_State := (others => <>);
+  ----------------------------
+  -- Prepare_Texture_Matrix --
+  ----------------------------
 
-  -- 
-  float parm(4);
+  function Prepare_Texture_Matrix (Transform : Transform_4D) return Matrix_4D is
+    Result : Matrix_4D := ZERO_MATRIX_4D;
+    begin
 
-  -- 
-  float color(4);
+      -- ???
+      Set_Matrix_4D_X (Result, (Transform.XX, Transform.XY, 0.0, Transform.XZ));
+      Set_Matrix_4D_Y (Result, (Transform.YX, Transform.YY, 0.0, Transform.YZ));
 
-  -- 
-  Fog_Plane : Plane_4D := (others => <>);
+      -- Keep scrolls from making large values, but handle center rotations and scales which make offsets > 1
+      if Result.XW < -40.0 or Result.XW > 40.0 then Result.XW := Result.XW - Real_64 (Int (Result.XW)); end if;
+      if Result.YW < -40.0 or Result.YW > 40.0 then Result.YW := Result.YW - Real_64 (Int (Result.YW)); end if;
 
-  -- 
-  backEnd.currentSpace
-  backEnd.viewDef.projectionMatrix
-  idIndexBuffer * indexBuffer;
-  begin
-    loop
+      return Result;
+    end;
 
-      -- Wait for the frontend to give us something new
-      while Last_View_Update.Get < Last_View_Render.Get loop delay FRONTEND_WAIT_DURATION; end loop;
-      View := Common_View.Get;
+  --------------------
+  -- Update_Scissor --
+  --------------------
 
-      -----------
-      -- Setup --
-      -----------
-      --
-      --
-      --
+  procedure Update_Scissor (Scissor : Rectangle) is
+    begin
+      if Current_Scissor /= Light.Scissor then
+        vkCmdSetScissor (Commands, 0, 1, (Extent => (Width  => View.Port.X1 + View.Scissor.X1,
+                                                     Height => View.Port.Y1 + View.Scissor.Y1),
+                                          Offset => (X => View.scissor.X2 + 1 - View.Scissor.X1,
+                                                     Y => View.scissor.Y2 + 1 - View.Scissor.Y1)));
+        Current_Scissor := Light.Scissor;
+      end if;
+    end;
 
-      -- Update dynamic viewport state and window clipping
-      vkCmdSetViewport (Commands, 0, 1, (Height    => View.Port.y2 + 1 - View.Port.y1,
-                                         Width     => View.Port.x2 + 1 - View.Port.x1,
-                                         Min_Depth => 0.0,
-                                         Max_Depth => 1.0));
+  --------------
+  -- Draw_Fog --
+  --------------
 
-      -- Update dynamic scissor which may be smaller than the viewport for subviews
-      vkCmdSetScissor (Commands, 0, 1, (Extent => (Width  => backEnd.View.Port.x1 + viewDef.scissor.x1,
-                                                   Height => backEnd.View.Port.y1 + viewDef.scissor.y1),
-                                        Offset => (X => viewDef.scissor.x2 + 1 - viewDef.scissor.x1,
-                                                   Y => viewDef.scissor.y2 + 1 - viewDef.scissor.y1)));
+  procedure Draw_Fog (Surfaces : Vector_Surface.Unsafe.Vector, fogPlanes, &Light.inverseBaseLightProject) is
+    idPlane localFogPlanes[4];
+    begin
+      Current_Space := (others => <>);
+      for Surface of Surfaces loop
+        Update_Scissor (Surface.Scissor);
+        if Surface.Space /= Current_Space then
 
-      -- Ensure depth writes are enabled for the depth clear
-      GL_State (GLS_DEFAULT);
+          -- ???
+          if inverseBaseLightProject = NULL_PTR then
+            MVP.Set (Surface.space.mvp);
+            Global_Plane_To_Local (Surface.space.Model, fogPlanes, localFogPlanes);
 
-      -- Clear the depth buffer and set the stencil to 128 for shadowing
-      GL_Clear (false, true, true, STENCIL_SHADOW_TEST_VALUE, 0.0, 0.0, 0.0, 0.0);
-
-      -- Normal face culling Force face culling to set next time
-      GL_Cull (CT_FRONT_SIDED);
-      backEnd.glState.faceCulling := -1;  
-
-      -- Bind one global Vertex Array Object (VAO)
-      qglBindVertexArray (glConfig.global_vao);
-
-      -- Set eye position shader parameter
-      Uniform := (Overbright   => (others => r_lightScale.GetFloat * 0.5);
-                  Global_Eye   => (View.Origin.X, View.Origin.Y, View.Origin.Z, 1.0));
-                  Projection_X => R_MatrixTranspose(backEnd.viewDef.projectionMatrix), 4);
-
-      ----------------
-      -- Fill Depth --
-      ----------------
-      --
-      -- 
-      --
-
-      -- Start with subview surfaces, then opaque surfaces, and finally perforated surfaces
-      for Group in Surface_Group_Kind'Range loop
-        for Surfaces of View.Surface_Groups.Element (Group) loop
-          for Surface of Surfaces loop
-
-            -- Translucent fail the mirror clip plane operation
-            if Surface.Material.Blend /= Translucent_Blend then
-
-              -- Change the MVP matrix if needed
-              if Surface.Space /= Current_Space then
-                Global.RENDERPARM_MVPMATRIX_X := Surface.space.mvp;
-                Current_Space := Surface.Space;
-              end if;
-
-              -- Set the polygon offset
-              surfGLState = 0;
-              if Surface.Material.TestMaterialFlag (MF_POLYGONOFFSET) then
-                surfGLState := surfGLState or GLS_POLYGON_OFFSET;
-                GL_PolygonOffset (r_offsetFactor.GetFloat, r_offsetUnits.GetFloat * Surface.Material.GetPolygonOffset);
-              end if;
-
-              -- Subviews may down-modulate the color buffer, otherwise black is drawn
-              if Group = Subview_Group then
-                surfGLState := surfGLState or GLS_SRCBLEND_DST_COLOR or GLS_DSTBLEND_ZERO or GLS_DEPTHFUNC_LESS;
-                color := (others => 1.0);
-              else color := (0.0, 0.0, 0.0, 1.0); end if;
-
-              -- Draw the surface based on material blending kind
-              case Group is
-
-                -- Solid geometry fast path
-                when Opaque_Group => 
-                  if Surface.Material.Domain = Surface_Domain then
-                    GLSL.BindShader_Color;
-                    GL_Color (color);
-                  else
-                    GLSL.BindShader_Depth;
-                    surfGLState := (surfGLState or GLS_ALPHAMASK);
-                  end if;
-                  GL_State (surfGLState);
-                  Draw (Surface);
-
-                -- Other perforated or subview surfaces
-                when others =>
-
-                  -- Set privatePolygonOffset if necessary and set the alpha modulate
-                  if not pStage.privatePolygonOffset then
-                    GL_PolygonOffset (r_offsetFactor.GetFloat, r_offsetUnits.GetFloat * pStage.privatePolygonOffset);
-                    GL_Color (Surface.shaderRegisters (pStage.color.registers(3)));
-                    surfGLState := surfGLState or GLS_POLYGON_OFFSET;
-                  else GL_Color (Surface.shaderRegisters (pStage.color.registers(3))); end if;
-                  GL_State (surfGLState);
-                  Globals.RENDERPARM_ALPHA_TEST := alphaTestValue( Surface.shaderRegisters( pStage.alphaTestRegister));
-                  GLSL.BindShader_TextureVertexColor;
-                  RB_SetVertexColorParms( SVC_IGNORE);
-
-                  -- Bind the texture
-                  GL_SelectTexture (0);
-                  pStage.texture.image.Bind;
-
-                  -- Set texture matrix and texGens
-                  RB_LoadShaderTextureMatrix (surf.shaderRegisters, &pStage.texture);
-                  case Stage.Material.Cube_Map is
-
-                    -- Per-pixel reflection
-                    when Mirror_Cube_Map =>
-                      GL_SelectTexture (1);
-                      Bind_Image (Surface.Material.Normal);
-                      GL_SelectTexture (0);
-                      Bind_Shader (Bumpy_Environment);
-                      Globals.TEXGEN_0_ENABLED := (others => 0.0));  
-
-                    -- 
-                    when TG_SKYBOX_CUBE =>
-                      GLSL.BindShader_SkyBox;
-                      Globals.TEXGEN_0_ENABLED := (others => 0.0));  
-
-                    -- 
-                    when pStage.texture.texgen = TG_SCREEN or pStage.texture.texgen = TG_SCREEN2 =>
-                      Globals.TEXGEN_0_S, RENDERPARM_TEXGEN_0_T, RENDERPARM_TEXGEN_0_Q, Surface.Space.Model_View * View.Projection);
-                      Globals.TEXGEN_0_ENABLED := (others => 1.0));  
-                  end case;
-
-                  -- Push the surface
-                  Draw (Surface);
-
-                  -- Unbind the extra bink textures
-                  if pStage.texture.cinematic
-                    GL_SelectTexture (1);
-                    globalImages.BindNull;
-                    GL_SelectTexture (2);
-                    globalImages.BindNull;
-                    GL_SelectTexture (0);
-                  end if;
-
-                  -- see if there is also a bump map specified
-                  if pStage.texture.texgen == TG_REFLECT_CUBE
-                    const shaderStage_t *bumpStage = surf.material.GetBumpStage;
-                    GL_SelectTexture (1);
-                    globalImages.BindNull;
-                    GL_SelectTexture (0);
-                    GLSL.Unbind;
-                  end
-
-                  -- unset privatePolygonOffset if necessary
-                  if pStage.privatePolygonOffset
-                    GL_PolygonOffset( r_offsetFactor.GetFloat, r_offsetUnits.GetFloat * shader.GetPolygonOffset);
-                  end if;
-                end case;
-              end case;
-            end if;
-          end loop;
-
-          -- 
-          SetFragmentParm (RENDERPARM_ALPHA_TEST, vec4_zero.ToFloatPtr);
-        end loop;
+          -- ???
+          else
+            idRenderMatrix invProjectMVPMatrix;
+            MVP.Set (inverseBaseLightProject * View.worldSpace.mvp);
+            inverseBaseLightProject.InverseTransformPlane( fogPlanes, localFogPlanes, false );;
+          end if;
+          TEXGEN_0_S.Set (localFogPlanes[0].ToFloatPtr() );
+          TEXGEN_0_T.Set (localFogPlanes[1].ToFloatPtr() );
+          TEXGEN_1_T.Set (localFogPlanes[2].ToFloatPtr() );
+          TEXGEN_1_S.Set (localFogPlanes[3].ToFloatPtr() );
+          Current_Space := (if inverseBaseLightProject = NULL then Surface.space else NULL);
+        end if;
+        Draw (Surface);
       end loop;
+    end;
 
-      -----------------
-      -- Light Scene --
-      -----------------
-      --
-      --
-      --
+  -----------
+  -- Clear --
+  -----------
 
-      -- 
-      GL_SelectTexture (0);
-      for Light of View.Lights loop
+  Attachment : aliased VkClearAttachment := (colorAttachment => 0,
+                                             clearValue      => (depthStencil => (depth   => 1.0,
+                                                                                  stencil => 128,
+                                                                                  others  => <>), others => <>), others => <>);
+  Clear_Rectange : aliased VkClearRect := (baseArrayLayer => 0,
+                                           layerCount     => 1,
+                                           rect           => (extent => Swapchain, others => <>),
+                                           others         => <>);
+  procedure Clear_Color (Value : Color_State) is
+    begin
+      Attachment.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT;
+      Attachment.clearValue.color := (Value.Red   / Byte'Last,
+                                      Value.Green / Byte'Last,
+                                      Value.Blue  / Byte'Last,
+                                      Value.Alpha / Byte'Last);
+      vkCmdClearAttachments (Commands, 1, Attachment'Unchecked_Access, 1, Clear_Rectange'Unchecked_Access);
+    end;
+  procedure Clear_Stencil is
+    begin
+      Attachment.aspectMask := VK_IMAGE_ASPECT_STENCIL_BIT;
+      vkCmdClearAttachments (Commands, 1, Attachment'Unchecked_Access, 1, Clear_Rectange'Unchecked_Access);
+    end;
+  procedure Clear_Depth is
+    begin
+      Attachment.aspectMask := VK_IMAGE_ASPECT_DEPTH_BIT;
+      vkCmdClearAttachments (Commands, 1, Attachment'Unchecked_Access, 1, Clear_Rectange'Unchecked_Access);
+    end;
 
-        -- Skip fog and lights, check interactions exist?
-        if Light.Shader.Kind /= Fog_Kind and Light.Shader.Kind /= Blend_Kind then
+  -- Local variables
+  Processed         : Int         := 0;
+  GUI_Screen_Offset :  := ;
+  Light_Depth_Test  : Bool        := False;
+  Current_Space     : Space_State := (others => <>);
+  Fog_Plane         : Plane_4D    := (others => <>);
+  Parameter         : Vector_4D   := ZERO_VECTOR_4D;
+  Color             : Vector_4D   := ZERO_VECTOR_4D;
+  Current_Space     : Matrix_4D   := ZERO_MATRIX_4D;
+  Projection        : Matrix_4D   := ZERO_MATRIX_4D;
+  Light_To_Textur   : Matrix_4D   := ZERO_MATRIX_4D;
+  Joint_Buffer      : Vector_Mesh.Unsafe.Vector;
+begin
+
+  ---------------------
+  -- Global Textures --
+  ---------------------
+
+  Default_Image.Set   ("default");
+  White_Image.Set     ("white");
+  Black_Image.Set     ("black");
+  Fog_Image.Set       ("fog");
+  Fog_Enter_Image.Set ("fog_enter");
+
+  -- Main loop
+  loop
+
+    -----------------
+    -- Frame Setup --
+    -----------------
+
+    -- Prepare globals and empty garbage
+    Free_Images;
+    Free_Memory;
+    Flush_Staging;
+    Current_Frame          := (Current_Frame + 1) mod NUM_FRAME_DATA;
+    Current_Descriptor_Set := 0;
+    vkResetDescriptorPool (Device, Framebuffer.Element (Current_Frame).Descriptor_Pool, 0);
+
+    -- Wait for the frontend to give us something new
+    - (Clock - Last_Time); Last_Time := Clock;
+    while Last_View_Update.Get < Last_View_Render.Get loop delay FRONTEND_WAIT_DURATION; end loop;
+    View := Common_View.Get;
+
+    -- Update dynamic viewport state and window clipping
+    vkCmdSetViewport (Commands, 0, 1, (Height    => View.Port.y2 + 1 - View.Port.y1,
+                                       Width     => View.Port.x2 + 1 - View.Port.x1,
+                                       Min_Depth => 0.0,
+                                       Max_Depth => 1.0));
+
+    -- Update dynamic scissor which may be smaller than the viewport for subviews
+    Update_Scissor (View.Scissor);
+
+    -- Uniforms
+    Overbright.Set      (lightScale.GetFloat * 0.5);
+    Projection.Set      (Transpose (View.Projection), 4); -- X ???
+    Local_To_Global.Set (View.Origin.X, View.Origin.Y, View.Origin.Z, 1.0));
+
+    ----------------
+    -- Depth Pass --
+    ----------------
+    --
+    -- ???
+    --
+
+    -- Setup pass
+    Clear_Depth;
+    Clear_Stencil;
+    Depth_Pass.Commit;
+    Pipeline := (others => <>);
+
+    -- Fill the depth buffer
+    for Visibility in Subview_Visibility..Perforated_Visibility loop
+      for Light of View.Lights (Point_Light) then
+
+        -- Translucent interactions fail the mirror clip plane operation - shadow surfaces are ignored for obvious reasons...
+        for Surface of Light.Interactions (Direct_Interaction) loop
+
+            -- Change the MVP matrix if needed
+            if Surface.Space /= Current_Space then
+              MVP.Set (Surface.Space.MVP);
+              Current_Space := Surface.Space;
+            end if;
+
+            -- Draw the surface based on material blending kind
+            case Visibility is
+
+              -- Solid geometry fast path
+              when Opaque_Visibility => 
+                if Surface.Material.Domain = Surface_Domain then Clear_Color (COLOR_WHITE);
+                else
+                  Pipeline.Depth_Pass_Kind := ;
+                  Pipeline.Alpha_Mask      := VK_COLOR_COMPONENT_A_BIT;
+                end if;
+                Draw (Surface);
+
+              -- Other perforated or subview surfaces
+              when others =>
+
+                -- Subviews may down-modulate the color buffer, otherwise black is drawn
+                if Visibility = Subview_Visibility then
+                  Pipeline.Source_Blend_Factor      := VK_BLEND_FACTOR_DST_COLOR;
+                  Pipeline.Destination_Blend_Factor := VK_BLEND_FACTOR_ZERO;
+                  Pipeline.Depth_Compare            := VK_COMPARE_OP_LESS_OR_EQUAL;
+                  --Color                             := To_Vulkan (COLOR_BLACK);
+                end if;
+
+                -- Set privatePolygonOffset if necessary and set the alpha modulate
+                Pipeline.Test_Alpha := Has_Alpha_Channel (Surface.Material.Base_Color);
+                Color_Mod.Set (zero);
+                Color_Add.Set (one);
+                Clear_Color (Surface.Material.Color_Mod);
+
+                -- Set texture matrix and texture generators
+                shaderRegisters; RB_LoadShaderTextureMatrix (Surface.shaderRegisters, &pStage.texture);
+                case Stage.Material.Cube_Map is
+                  when Mirror_Cube_Map => Normal_Image.Set (Surface.Material.Normal);
+                  when Skybox_Cube_Map => SkyBox_Pass.Commit;
+                when others => null; end case;
+
+                -- Push the surface
+                Draw (Surface);
+
+                -- Cleanup
+                if Surface.Material.Polygon_Offset /= 0.0 then
+                  vkCmdSetDepthBias (Commands, r_offsetUnits.GetFloat * shader.GetPolygonOffset, 0.0, r_offsetFactor.GetFloat);
+                end if;
+              end case;
+            end case;
+          end if;
+        end loop;
+
+        -- ???
+        Test_Alpha.Set (ZERO_VECTOR_4D);
+      end loop;
+    end loop;
+
+    --------------------------
+    -- Stencil Shadows Pass --
+    --------------------------
+    --
+    -- ???
+    --
+
+    -- Setup pass
+    Pipeline := (others => <>);
+
+    -- Light the world
+    for Light of View.Lights loop
+
+      -- Skip fog and blend lights
+      if Light.Shader.Kind /= Fog_Kind and Light.Shader.Kind /= Blend_Kind then
+
+
+        -- Only need to clear the stencil buffer and perform stencil testing if there are shadows
+        if Light.Global_Shadows.Length /= 0 and Light.Local_Shadows.Length /= 0 and not View.Is_Mirror then
+
+          -- Clear to zero for stencil select and set the depth bounds for the whole light
+          Clear_Stencil;
+          Update_Scissor (Light.Scissor);
+          vkCmdSetDepthBounds (Commands, Light.Scissor.Z_Min, Light.Scissor.Z_Max);
+
+          -- Setup shader
+          .Set (View.World_Space.MVP * Light.Inverse_Projection);
+          Shadow_Pass.Commit;
+
+          -- Setup pipeline
+          Pipeline.Stencil_Test_Enable    := False;
+          Pipeline.Alpha_Blend            := VK_COLOR_COMPONENT_A_BIT;
+          Pipeline.Depth_Write_Enable     := True;
+          Pipeline.Depth_Compare          := VK_COMPARE_OP_LESS_OR_EQUAL;
+          Pipeline.Stencil_Compare        := VK_COMPARE_OP_ALWAYS;
+          Pipeline. := GLS_STENCIL_MAKE_REF( STENCIL_SHADOW_TEST_VALUE;
+          Pipeline. := GLS_STENCIL_MAKE_MASK( STENCIL_SHADOW_MASK_VALUE;
+          Pipeline. := qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_REPLACE, GL_ZERO;
+          Pipeline.Cull                   := VK_CULL_MODE_NONE;
+          Pipeline.Back_Stencil_Operation := qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_ZERO, GL_REPLACE;     
+
+          -- Draw the deformed Zero_One_Cube_Model into the frustum to exactly cover the light volume
+          Draw (ZERO_ONE_CUBE_MESH);
+
+          -- Cleanup     
+          vkCmdSetDepthBounds (Commands, 0.0, 0.0); 
+
+        -- ???
+        else
 
           -- Set the depth bounds for the whole light
-         GL_DepthBoundsTest (vLight.scissorRect.zmin, vLight.scissorRect.zmax);
-
-          -- Only need to clear the stencil buffer and perform stencil testing if there are shadows performStencilTest
-          if vLight.globalShadows /= NULL or vLight.localShadows /= NULL then
-
-            -- mirror flips the sense of the stencil select, so disable the stencil select in the mirror case useLightStencilSelect
-            if r_useLightStencilSelect.GetBool && backEnd.viewDef.isMirror = false then
-
-              -- Write a stencil mask for the visible light bounds to hi-stencil
-
-              -- enable the light scissor
-              if !backEnd.currentScissor.Equals( vLight.scissorRect ) && r_useScissor.GetBool
-                GL_Scissor( backEnd.viewDef.viewport.x1 + vLight.scissorRect.x1, 
-                      backEnd.viewDef.viewport.y1 + vLight.scissorRect.y1,
-                      vLight.scissorRect.x2 + 1 - vLight.scissorRect.x1,
-                      vLight.scissorRect.y2 + 1 - vLight.scissorRect.y1);
-                backEnd.currentScissor = vLight.scissorRect;
-              end
-
-              -- clear stencil buffer to 0 (not drawable)
-              uint64 glStateMinusStencil = GL_GetCurrentStateMinusStencil;
-              GL_State( glStateMinusStencil | GLS_STENCIL_FUNC_ALWAYS | GLS_STENCIL_MAKE_REF( STENCIL_SHADOW_TEST_VALUE ) | GLS_STENCIL_MAKE_MASK( STENCIL_SHADOW_MASK_VALUE )); -- make sure stencil mask passes for the clear
-              GL_Clear( false, false, true, 0, 0.0, 0.0, 0.0, 0.0);  -- clear to 0 for stencil select
-
-              -- set the depthbounds
-              GL_DepthBoundsTest( vLight.scissorRect.zmin, vLight.scissorRect.zmax);
-              GL_State( GLS_COLORMASK | GLS_ALPHAMASK | GLS_DEPTHMASK | GLS_DEPTHFUNC_LESS | GLS_STENCIL_FUNC_ALWAYS | GLS_STENCIL_MAKE_REF( STENCIL_SHADOW_TEST_VALUE ) | GLS_STENCIL_MAKE_MASK( STENCIL_SHADOW_MASK_VALUE ));
-              GL_Cull( CT_TWO_SIDED);
-              GLSL.BindShader_Depth;
-
-              -- set the matrix for deforming the 'zeroOneCubeModel' into the frustum to exactly cover the light volume
-              RB_SetMVP( backEnd.viewDef.worldSpace.mvp * vLight.inverseBaseLightProject);
-
-              -- two-sided stencil test
-              qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_REPLACE, GL_ZERO);
-              qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_ZERO, GL_REPLACE);
-              Draw (&backEnd.zeroOneCubeSurface);
-
-              -- Reset stencil state
-              GL_Cull (CT_FRONT_SIDED);
-              GLSL.Unbind;
-
-              -- Unset the depth bounds test
-              GL_DepthBoundsTest (0.0, 0.0);
-            else
-
-              -- Always clear whole S-Cull tiles
-              rect := (x1 => (vLight.scissorRect.x1 +  0) and not 15, y1 => (vLight.scissorRect.y1 +  0) and not 15,
-                       x2 => (vLight.scissorRect.x2 + 15) and not 15, y2 => (vLight.scissorRect.y2 + 15) and not 15);
-              if not backEnd.currentScissor = rect then
-                GL_Scissor (backEnd.viewDef.viewport.x1 + rect.x1,
-                            backEnd.viewDef.viewport.y1 + rect.y1,
-                            rect.x2 + 1 - rect.x1,
-                            rect.y2 + 1 - rect.y1);
-                backEnd.currentScissor := rect;
-              end if;
-
-              -- Make sure stencil mask passes for the clear
-              GL_State (GLS_DEFAULT);  
-              GL_Clear (false, false, true, STENCIL_SHADOW_TEST_VALUE, 0.0, 0.0, 0.0, 0.0);
-            end if;
+          Clear_Stencil (STENCIL_SHADOW_TEST_VALUE);
+          if Light.Scissor.Z_Min /= 0.0 and Light.Scissor.Z_Max /= 0.0 then
+             vkCmdSetDepthBounds (Commands, Light.Scissor.Z_Min, Light.Scissor.Z_Max);
           end if;
 
-          for Pass_Sort in Pass_Sort_Kind'Range loop -- Global_Shadow_Sort Local_Light_Sort Local_Shadow_Sort Global_Light_Sort Translucent_Light_Sort
-            case Pass_Sort is
-
-              -----------------
-              -- Shadow Pass --
-              -----------------
-              --
-              --
-              --
-
-              when Shadow_Sort'Range =>
-                GLSL.BindShader_Shadow;
-                GL_SelectTexture( 0);
-                globalImages.BindNull;
-                backEnd.currentSpace := NULL;
-
-                -- don't write to the color or depth buffer, just the stencil buffer
-                glState := GLS_DEPTHMASK | GLS_COLORMASK | GLS_ALPHAMASK | GLS_DEPTHFUNC_LESS;
-                GL_PolygonOffset( r_shadowPolygonFactor.GetFloat, -r_shadowPolygonOffset.GetFloat);
-
-                -- the actual stencil func will be set in the draw code, but we need to make sure it isn't
-                -- disabled here, and that the value will get reset for the interactions without looking like a no-change-required
-                GL_State( glState | GLS_STENCIL_OP_FAIL_KEEP | GLS_STENCIL_OP_ZFAIL_KEEP | GLS_STENCIL_OP_PASS_INCR | 
-                  GLS_STENCIL_MAKE_REF( STENCIL_SHADOW_TEST_VALUE ) | GLS_STENCIL_MAKE_MASK( STENCIL_SHADOW_MASK_VALUE ) | GLS_POLYGON_OFFSET);
-
-                -- Two Sided Stencil reduces two draw calls to one for slightly faster shadows
-                GL_Cull( CT_TWO_SIDED);
-
-                -- process the chain of shadows with the current rendering state
-                for Surface of View.Surfaces loop
-
-                  if not backEnd.currentScissor.Equals( drawSurf.scissorRect ) and r_useScissor.GetBool then
-
-                    -- change the scissor
-                    GL_Scissor( backEnd.viewDef.viewport.x1 + drawSurf.scissorRect.x1,
-                          backEnd.viewDef.viewport.y1 + drawSurf.scissorRect.y1,
-                          drawSurf.scissorRect.x2 + 1 - drawSurf.scissorRect.x1,
-                          drawSurf.scissorRect.y2 + 1 - drawSurf.scissorRect.y1);
-                    backEnd.currentScissor := drawSurf.scissorRect;
-                  end if;
-                  if drawSurf.space /= backEnd.currentSpace then
-
-                    -- change the matrix
-                    RB_SetMVP( drawSurf.space.mvp);
-
-                    -- set the local light position to allow the vertex program to project the shadow volume end cap to infinity
-                    idVec4 localLight( 0.0);
-                    R_GlobalPointToLocal( drawSurf.space.modelMatrix, vLight.globalLightOrigin, localLight.ToVec3);
-                    Globals.LOCALLIGHTORIGIN, localLight.ToFloatPtr);
-                    backEnd.currentSpace := drawSurf.space;
-                  end if;
-                  GLSL.BindShader_Shadow;
-
-                  -- set depth bounds per shadow
-                  if r_useShadowDepthBounds.GetBool ) GL_DepthBoundsTest( drawSurf.scissorRect.zmin, drawSurf.scissorRect.zmax); end
-
-                  -- Determine whether or not the shadow volume needs to be rendered with Z-pass or
-                  -- Z-fail. It is worthwhile to spend significant resources to reduce the number of
-                  -- cases where shadow volumes need to be rendered with Z-fail because Z-fail
-                  -- rendering can be significantly slower even on today's hardware. For instance,
-                  -- on NVIDIA hardware Z-fail rendering causes the Z-Cull to be used in reverse:
-                  -- Z-near becomes Z-far (trivial accept becomes trivial reject). Using the Z-Cull
-                  -- in reverse is far less efficient because the Z-Cull only stores Z-near per 16x16
-                  -- pixels while the Z-far is stored per 4x2 pixels. (The Z-near coallesce buffer
-                  -- which has 4x4 granularity is only used when updating the depth which is not the
-                  -- case for shadow volumes.) Note that it is also important to NOT use a Z-Cull
-                  -- reconstruct because that would clear the Z-near of the Z-Cull which results in
-                  -- no trivial rejection for Z-fail stencil shadow rendering.
-
-                  -- Z-pass
-                  if drawSurf.renderZFail = 0 ) or r_forceZPassStencilShadows.GetBool ) 
-                    qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
-                    qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
-
-                  -- preload + Z-pass
-                  elsif r_useStencilShadowPreload.GetBool ) 
-                    qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_DECR, GL_DECR);
-                    qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_INCR, GL_INCR);
-                  end if;
-
-                  -- get vertex buffer
-                  const vertCacheHandle_t vbHandle := drawSurf.shadowCache;
-                  idVertexBuffer * vertexBuffer;
-                  if vertexCache.CacheIsStatic( vbHandle ) ) 
-                    vertexBuffer := &vertexCache.staticData.vertexBuffer;
-                  else 
-                    const uint64 frameNum := (int)( vbHandle >> VERTCACHE_FRAME_SHIFT ) & VERTCACHE_FRAME_MASK;
-                    if frameNum /= ( ( vertexCache.currentFrame - 1 ) & VERTCACHE_FRAME_MASK ) ) 
-                      continue;
-                    end if;
-                    vertexBuffer := &vertexCache.frameData(vertexCache.drawListNum).vertexBuffer;
-                  end if;
-
-                  -- get index buffer
-                  if vertexCache.CacheIsStatic( drawSurf.indexCache ) ) 
-                    indexBuffer := &vertexCache.staticData.indexBuffer;
-                  else 
-                    const uint64 frameNum := (int)( drawSurf.indexCache >> VERTCACHE_FRAME_SHIFT ) & VERTCACHE_FRAME_MASK;
-                    if frameNum /= ( ( vertexCache.currentFrame - 1 ) & VERTCACHE_FRAME_MASK ) ) 
-                      continue;
-                    end if;
-                    indexBuffer := &vertexCache.frameData(vertexCache.drawListNum).indexBuffer;
-                  end if;
-
-                  if backEnd.glState.currentIndexBuffer /= (GLuint)indexBuffer.GetAPIObject or !r_useStateCaching.GetBool ) 
-                    qglBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, (GLuint)indexBuffer.GetAPIObject);
-                    backEnd.glState.currentIndexBuffer := (GLuint)indexBuffer.GetAPIObject;
-                  end if;
-
-                  if drawSurf.jointCache then
-                    assert( GLSL.ShaderUsesJoints);
-                    idJointBuffer jointBuffer;
-                    if vertexCache.GetJointBuffer w(drawSurf.jointCache, &jointBuffer ) )  then
-                    assert( ( jointBuffer.GetOffset & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) = 0);
-                    const GLuint ubo := reinterpret_cast< GLuint >( jointBuffer.GetAPIObject);
-                    qglBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset, jointBuffer.GetNumJoints * sizeof( idJointMat ));
-                    if backEnd.glState.vertexLayout /= LAYOUT_DRAW_SHADOW_VERT_SKINNED or backEnd.glState.currentVertexBuffer /= (GLuint)vertexBuffer.GetAPIObject or not r_useStateCaching then
-                      qglBindBufferARB( GL_ARRAY_BUFFER_ARB, (GLuint)vertexBuffer.GetAPIObject);
-                      backEnd.glState.currentVertexBuffer := (GLuint)vertexBuffer.GetAPIObject;
-                      qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_VERTEX)
-                      qglDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_NORMAL);
-                      qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR);
-                      qglEnableVertexAttribArrayARB( PC_ATTRIB_INDEX_COLOR2);
-                      qglDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_ST);
-                      qglDisableVertexAttribArrayARB( PC_ATTRIB_INDEX_TANGENT);
-                      qglVertexAttribPointerARB( PC_ATTRIB_INDEX_VERTEX, 4, GL_FLOAT, GL_FALSE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_XYZW_OFFSET ));
-                      qglVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_COLOR_OFFSET ));
-                      qglVertexAttribPointerARB( PC_ATTRIB_INDEX_COLOR2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idShadowVertSkinned ), (void *)( SHADOWVERTSKINNED_COLOR2_OFFSET ));
-                      backEnd.glState.vertexLayout := LAYOUT_DRAW_SHADOW_VERT_SKINNED;
-                    end if;
-                  end loop;
-                  const uint64 indexOffset := (int)( ibHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
-                  GLSL.CommitUniforms;
-                  qglDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf.numIndexes, GL_INDEX_TYPE,
-                    (triIndex_t *)indexOffset, (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK / sizeof( idShadowVertSkinned ));
-
-                  -- render again with Z-pass
-                  if not renderZPass and r_useStencilShadowPreload.GetBool then
-                    qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
-                    qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
-                    qglDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : drawSurf.numIndexes, GL_INDEX_TYPE,
-                      (triIndex_t *)indexOffset, (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK / sizeof ( idShadowVert ));
-                  end if;
-                end case;
-
-                -- cleanup the shadow specific rendering state and reset depth bounds
-                GL_Cull( CT_FRONT_SIDED);
-                GL_DepthBoundsTest( vLight.scissorRect.zmin, vLight.scissorRect.zmax);
-
-              ----------------
-              -- Light Pass --
-              ----------------
-              --
-              --
-              --
-
-              when Light_Sort'Range =>
-                if vLight.translucentInteractions /= NULL and not r_skipTranslucent.GetBool then
-
-                  -- Disable the depth bounds test because translucent surfaces don't work with
-                  -- the depth bounds tests since they did not write depth during the depth pass.
-                  if r_useLightDepthBounds.Get then GL_DepthBoundsTest (0.0, 0.0); end if;
-
-                  -- The depth buffer wasn't filled in for translucent surfaces, so they
-                  -- can never be constrained to perforated surfaces with the depthfunc equal.
-                  -- Translucent surfaces do not receive shadows. This is a case where a
-                  -- shadow buffer solution would work but stencil shadows do not because
-                  -- stencil shadows only affect surfaces that contribute to the view depth
-                  -- buffer and translucent surfaces do not contribute to the view depth buffer.
-                  RB_RenderInteractions (vLight.translucentInteractions, vLight, GLS_DEPTHFUNC_LESS, false, false);
-                end if;
-                RB_RenderInteractions (vLight.localInteractions, vLight, GLS_DEPTHFUNC_EQUAL, performStencilTest, r_useLightDepthBounds.Get);
-
-                -- change the scissor if needed, it will be constant across all the surfaces lit by the light
-                if not backEnd.currentScissor = vLight.scissorRect then
-                  GL_Scissor (backEnd.viewDef.viewport.x1 + vLight.scissorRect.x1, 
-                              backEnd.viewDef.viewport.y1 + vLight.scissorRect.y1,
-                              vLight.scissorRect.x2 + 1 - vLight.scissorRect.x1,
-                              vLight.scissorRect.y2 + 1 - vLight.scissorRect.y1);
-                  backEnd.currentScissor := vLight.scissorRect;
-                end
-
-                -- perform setup here that will be constant for all interactions
-                GL_State( GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHMASK | depthFunc | GLS_STENCIL_FUNC_EQUAL | GLS_STENCIL_MAKE_REF( STENCIL_SHADOW_TEST_VALUE ) | GLS_STENCIL_MAKE_MASK( STENCIL_SHADOW_MASK_VALUE ));
-
-                -- some rare lights have multiple animating stages, loop over them outside the surface list
-                drawInteraction_t inter := end;
-                inter.ambientLight := vLight.lightShader.IsAmbientLight;
-                bool lightDepthBoundsDisabled := false;
-                for Light_Stage of Light_Stages loop
-
-                  -- ignore stages that fail the condition
-                  if not vLight.shaderRegisters( vLight.lightShader.GetStage( lightStageNum).conditionRegister then 
-
-                    -- apply the world-global overbright and the 2x factor for specular
-                    const idVec4 diffuseColor := lightColor(
-                      r_lightScale.GetFloat * vLight.shaderRegisters( vLight.lightShader.GetStage( lightStageNum).color.registers(0) ),
-                      r_lightScale.GetFloat * vLight.shaderRegisters( vLight.lightShader.GetStage( lightStageNum).color.registers(1) ),
-                      r_lightScale.GetFloat * vLight.shaderRegisters( vLight.lightShader.GetStage( lightStageNum).color.registers(2) ),
-                      vLight.shaderRegisters( vLight.lightShader.GetStage( lightStageNum).color.registers(3) ));;
-                    const idVec4 specularColor := diffuseColor * 2.0f;
-
-                    float lightTextureMatrix(16);
-                    if vLight.lightShader.GetStage( lightStageNum).texture.hasMatrix ) 
-                      RB_GetShaderTextureMatrix( vLight.shaderRegisters, &vLight.lightShader.GetStage( lightStageNum).texture, lightTextureMatrix);
-                    end
-
-                    -- texture 1 will be the light falloff texture
-                    GL_SelectTexture( INTERACTION_TEXUNIT_FALLOFF);
-                    vLight.falloffImage.Bind;
-
-                    -- texture 2 will be the light projection texture
-                    GL_SelectTexture( INTERACTION_TEXUNIT_PROJECTION);
-                    vLight.lightShader.GetStage( lightStageNum).texture.image.Bind;
-
-                    -- force the light textures to not use anisotropic filtering, which is wasted on them
-                    -- all of the texture sampler parms should be constant for all interactions, only the actual texture image bindings will change
-
-                    -- For all surfaces on this light list, generate an interaction for this light stage setup renderparms assuming we will be drawing trivial surfaces first
-                    RB_SetupForFastPathInteractions( diffuseColor, specularColor);
-
-                    -- even if the space does not change between light stages, each light stage may need a different lightTextureMatrix baked in
-                    backEnd.currentSpace := NULL;
-
-                    for Surface of Sorted_Surfaces loop
-
-                      -- select the render prog
-                      if vLight.lightShader.IsAmbientLight then GLSL.BindShader_InteractionAmbient;
-                      else GLSL.BindShader_Interaction; end if;
-
-                      inter.surf := surf;
-
-                      -- change the MVP matrix, view/light origin and light projection vectors if needed
-                      if surf.space /= backEnd.currentSpace ) 
-                        backEnd.currentSpace := surf.space;
-
-                        -- turn off the light depth bounds test if this model is rendered with a depth hack
-                        if useLightDepthBounds ) 
-                          if !surf.space.weaponDepthHack && surf.space.modelDepthHack = 0.0 ) 
-                            if lightDepthBoundsDisabled ) 
-                              GL_DepthBoundsTest( vLight.scissorRect.zmin, vLight.scissorRect.zmax);
-                              lightDepthBoundsDisabled := false;
-                            end
-                          end else 
-                            if !lightDepthBoundsDisabled ) 
-                              GL_DepthBoundsTest( 0.0, 0.0);
-                              lightDepthBoundsDisabled := true;
-                            end
-                          end
-                        end
-
-                        -- model-view-projection
-                        RB_SetMVP( surf.space.mvp);
-
-                        -- tranform the light/view origin into model local space
-                        idVec4 localLightOrigin( 0.0);
-                        idVec4 localViewOrigin( 1.0f);
-                        R_GlobalPointToLocal( surf.space.modelMatrix, vLight.globalLightOrigin, localLightOrigin.ToVec3);
-                        R_GlobalPointToLocal( surf.space.modelMatrix, backEnd.viewDef.renderView.vieworg, localViewOrigin.ToVec3);
-
-                        -- set the local light/view origin
-                        Globals.LOCALLIGHTORIGIN, localLightOrigin.ToFloatPtr);
-                        Globals.LOCALVIEWORIGIN, localViewOrigin.ToFloatPtr);
-
-                        -- transform the light project into model local space
-                        idPlane lightProjection(4);
-                        for ( int i := 0; i < 4; i++ ) 
-                          R_GlobalPlaneToLocal( surf.space.modelMatrix, vLight.lightProject(i), lightProjection(i));
-                        end
-
-                        -- optionally multiply the local light projection by the light texture matrix
-                        if lightStage.texture.hasMatrix then
-                          RB_BakeTextureMatrixIntoTexgen( lightProjection, lightTextureMatrix);
-                          float genMatrix(16);
-                          float final(16);
-                          genMatrix(0*4+0) = lightProject(0)(0); genMatrix(1*4+0) = lightProject(0)(1); genMatrix(2*4+0) = lightProject(0)(2); genMatrix(3*4+0) = lightProject(0)(3);
-                          genMatrix(0*4+1) = lightProject(1)(0); genMatrix(1*4+1) = lightProject(1)(1); genMatrix(2*4+1) = lightProject(1)(2); genMatrix(3*4+1) = lightProject(1)(3);
-                          genMatrix(0*4+2) = 0.0; genMatrix(1*4+2) = 0.0; genMatrix(2*4+2) = 0.0; genMatrix(3*4+2) = 0.0;
-                          genMatrix(0*4+3) = lightProject(2)(0); genMatrix(1*4+3) = lightProject(2)(1); genMatrix(2*4+3) = lightProject(2)(2); genMatrix(3*4+3) = lightProject(2)(3);
-                          R_MatrixMultiply( genMatrix, textureMatrix, final);
-                          lightProject(0)(0) = final(0*4+0); lightProject(0)(1) = final(1*4+0); lightProject(0)(2) = final(2*4+0); lightProject(0)(3) = final(3*4+0);
-                          lightProject(1)(0) = final(0*4+1); lightProject(1)(1) = final(1*4+1); lightProject(1)(2) = final(2*4+1); lightProject(1)(3) = final(3*4+1);
-                        end
-
-                        -- set the light projection
-                        Globals.LIGHTPROJECTION_S, lightProjection(0).ToFloatPtr);
-                        Globals.LIGHTPROJECTION_T, lightProjection(1).ToFloatPtr);
-                        Globals.LIGHTPROJECTION_Q, lightProjection(2).ToFloatPtr);
-                        Globals.LIGHTFALLOFF_S, lightProjection(3).ToFloatPtr);
-                      end
-
-                      -- check for the fast path
-                      if surf.material.GetFastPathBumpImage && !r_skipInteractionFastPath.GetBool ) 
-
-                        -- texture 0 will be the per-surface bump map
-                        GL_SelectTexture( INTERACTION_TEXUNIT_BUMP);
-                        surf.material.GetFastPathBumpImage.Bind;
-
-                        -- texture 3 is the per-surface diffuse map
-                        GL_SelectTexture( INTERACTION_TEXUNIT_DIFFUSE);
-                        surf.material.GetFastPathDiffuseImage.Bind;
-
-                        -- texture 4 is the per-surface specular map
-                        GL_SelectTexture( INTERACTION_TEXUNIT_SPECULAR);
-                        surf.material.GetFastPathSpecularImage.Bind;
-
-                        Draw (surf);
-                      else
-                        inter.diffuseColor := 0;
-                        inter.specularColor := 0;
-
-                        -- go through the individual surface stages
-                        -- This is somewhat arcane because of the old support for video cards that had to render interactions in multiple passes.
-                        -- We also have the very rare case of some materials that have conditional interactions for the "hell writing" that can be shined on them.
-                        case surfaceStage.lighting is
-                          when SL_BUMP =>
-                            if inter.bumpImage /= NULL ) 
-                              RB_DrawSingleInteraction( &inter);
-                            end
-                            inter.bumpImage := surfaceStage.texture.image;
-                            inter.diffuseImage := NULL;
-                            inter.specularImage := NULL;
-                            --RB_SetupInteractionStage( surfaceStage, surf.shaderRegisters, NULL,
-                            --            inter.bumpMatrix, NULL);
-                          when SL_DIFFUSE => 
-                            if inter.diffuseImage /= NULL ) 
-                              RB_DrawSingleInteraction( &inter);
-                            end
-                            inter.diffuseImage := surfaceStage.texture.image;
-                            inter.vertexColor := surfaceStage.vertexColor;
-                            --RB_SetupInteractionStage( surfaceStage, surf.shaderRegisters, diffuseColor.ToFloatPtr,
-                            --                         inter.diffuseMatrix, inter.diffuseColor.ToFloatPtr);
-                          when SL_SPECULAR: 
-                            if inter.specularImage /= NULL ) 
-                              RB_DrawSingleInteraction( &inter);
-                            end
-                            inter.specularImage := surfaceStage.texture.image;
-                            inter.vertexColor := surfaceStage.vertexColor;
-                            --RB_SetupInteractionStage( surfaceStage, surf.shaderRegisters, specularColor.ToFloatPtr,
-                            --            inter.specularMatrix, inter.specularColor.ToFloatPtr);
-                          end case;
-                          if ( surfaceStage->texture.hasMatrix ) {
-                            matrix[0][0] = surfaceRegs[surfaceStage->texture.matrix[0][0]];
-                            matrix[0][1] = surfaceRegs[surfaceStage->texture.matrix[0][1]];
-                            matrix[0][2] = 0.0f;
-                            matrix[0][3] = surfaceRegs[surfaceStage->texture.matrix[0][2]];
-                            matrix[1][0] = surfaceRegs[surfaceStage->texture.matrix[1][0]];
-                            matrix[1][1] = surfaceRegs[surfaceStage->texture.matrix[1][1]];
-                            matrix[1][2] = 0.0f;
-                            matrix[1][3] = surfaceRegs[surfaceStage->texture.matrix[1][2]];
-
-                            -- we attempt to keep scrolls from generating incredibly large texture values, but
-                            -- center rotations and center scales can still generate offsets that need to be > 1
-                            if ( matrix[0][3] < -40.0f || matrix[0][3] > 40.0f ) {
-                              matrix[0][3] -= idMath::Ftoi( matrix[0][3] );
-                            }
-                            if ( matrix[1][3] < -40.0f || matrix[1][3] > 40.0f ) {
-                              matrix[1][3] -= idMath::Ftoi( matrix[1][3] );
-                            }
-                          } else {
-                            matrix[0][0] = 1.0f;[0][1] = 0.0f;[0][2] = 0.0f;0][3] = 0.0f;
-                            matrix[1][0] = 0.0f;[1][1] = 1.0f;[1][2] = 0.0f;[1][3] = 0.0f;
-                          }
-
-                          if ( color != NULL ) {
-                            for ( int i = 0; i < 4; i++ ) {
-                              -- clamp here, so cards with a greater range don't look different.
-                              -- we could perform overbrighting like we do for lights, but
-                              -- it doesn't currently look worth it.
-                              color[i] = idMath::ClampFloat( 0.0f, 1.0f, surfaceRegs[surfaceStage->color.registers[i]] ) * lightColor[i];
-                            }
-                          }
-                      end if;
-
-                      -- draw the final interaction
-                      -- RB_DrawSingleInteraction( &inter);
-                      if ( din->bumpImage == NULL ) {
-                        -- stage wasn't actually an interaction
-                        return;
-                      }
-
-                      if ( din->diffuseImage == NULL || r_skipDiffuse.GetBool() ) {
-                        -- this isn't a YCoCg black, but it doesn't matter, because
-                        -- the diffuseColor will also be 0
-                        din->diffuseImage = globalImages->blackImage;
-                      }
-                      if ( din->specularImage == NULL || r_skipSpecular.GetBool() || din->ambientLight ) {
-                        din->specularImage = globalImages->blackImage;
-                      }
-                      if ( r_skipBump.GetBool() ) {
-                        din->bumpImage = globalImages->flatNormalMap;
-                      }
-
-                      -- if we wouldn't draw anything, don't call the Draw function
-                      const bool diffuseIsBlack = ( din->diffuseImage == globalImages->blackImage )
-                                      || ( ( din->diffuseColor[0] <= 0 ) && ( din->diffuseColor[1] <= 0 ) && ( din->diffuseColor[2] <= 0 ) );
-                      const bool specularIsBlack = ( din->specularImage == globalImages->blackImage )
-                                      || ( ( din->specularColor[0] <= 0 ) && ( din->specularColor[1] <= 0 ) && ( din->specularColor[2] <= 0 ) );
-                      if ( diffuseIsBlack && specularIsBlack ) {
-                        return;
-                      }
-
-                      -- bump matrix
-                      SetVertexParm( RENDERPARM_BUMPMATRIX_S, din->bumpMatrix[0].ToFloatPtr() );
-                      SetVertexParm( RENDERPARM_BUMPMATRIX_T, din->bumpMatrix[1].ToFloatPtr() );
-
-                      -- diffuse matrix
-                      SetVertexParm( RENDERPARM_DIFFUSEMATRIX_S, din->diffuseMatrix[0].ToFloatPtr() );
-                      SetVertexParm( RENDERPARM_DIFFUSEMATRIX_T, din->diffuseMatrix[1].ToFloatPtr() );
-
-                      -- specular matrix
-                      SetVertexParm( RENDERPARM_SPECULARMATRIX_S, din->specularMatrix[0].ToFloatPtr() );
-                      SetVertexParm( RENDERPARM_SPECULARMATRIX_T, din->specularMatrix[1].ToFloatPtr() );
-
-                      RB_SetVertexColorParms( din->vertexColor );
-
-                      SetFragmentParm( RENDERPARM_DIFFUSEMODIFIER, din->diffuseColor.ToFloatPtr() );
-                      SetFragmentParm( RENDERPARM_SPECULARMODIFIER, din->specularColor.ToFloatPtr() );
-
-                      -- texture 0 will be the per-surface bump map
-                      GL_SelectTexture( INTERACTION_TEXUNIT_BUMP );
-                      din->bumpImage->Bind();
-
-                      -- texture 3 is the per-surface diffuse map
-                      GL_SelectTexture( INTERACTION_TEXUNIT_DIFFUSE );
-                      din->diffuseImage->Bind();
-
-                      -- texture 4 is the per-surface specular map
-                      GL_SelectTexture( INTERACTION_TEXUNIT_SPECULAR );
-                      din->specularImage->Bind();
-
-                      RB_DrawElementsWithCounters( din->surf );
-                    end
-                  end if;
-                end loop;
-                if useLightDepthBounds && lightDepthBoundsDisabled ) 
-                  GL_DepthBoundsTest( vLight.scissorRect.zmin, vLight.scissorRect.zmax);
-                end
-                GLSL.Unbind;
-            end case;
-          end loop;
-      end loop;
-
-      -- Disable stencil shadow test
-      GL_State (GLS_DEFAULT);
-
-      -- Unbind texture units
-      for I in 1..5 loop
-        GL_SelectTexture (i);
-        globalImages.BindNull;
-      end loop;
-      GL_SelectTexture (0);
-
-      -- Reset depth bounds
-      if r_useLightDepthBounds.Get then GL_DepthBoundsTest (0.0, 0.0); end if;
-
-      -----------------
-      -- Add Ambient --
-      -----------------
-      --
-      --
-      --
-
-      int processed = 0;
-      float guiScreenOffset;
-      if viewDef.viewEntitys /= NULL then
-        -- guiScreenOffset will be 0 in non-gui views
-        guiScreenOffset = 0.0;
-      else
-        guiScreenOffset = stereoEye * viewDef.renderView.stereoScreenSeparation;
-      end if;
-      --processed = RB_DrawShaderPasses( drawSurfs, numDrawSurfs, guiScreenOffset, stereoEye);
-      -- only obey skipAmbient if we are rendering a view
-      if backEnd.viewDef.viewEntitys && r_skipAmbient.GetBool
-        return numDrawSurfs;
-      end
-
-      GL_SelectTexture( 1);
-      globalImages.BindNull;
-      GL_SelectTexture( 0);
-      backEnd.currentSpace = (const viewEntity_t *)1; -- using NULL makes /analyze think surf.space needs to be checked...
-      float currentGuiStereoOffset = 0.0;
-
-      for Surface of Surfaces loop
-
-        -- some deforms may disable themselves by setting numIndexes = 0
-        if surf.material.HasAmbient and not surf.material.IsPortalSky and surf.numIndexes /= 0 and not surf.material.SuppressInSubview then
-
-          if backEnd.viewDef.isXraySubview && surf.space.entityDef
-            if surf.space.entityDef.parms.xrayIndex != 2
-              continue;
-            end
-          end
-
-          -- we need to draw the post process shaders after we have drawn the fog lights
-          exit when surf.material.GetSort >= SS_POST_PROCESS && !backEnd.currentRenderCopied
-
-          -- if we are rendering a 3D view and the surface's eye index doesn't match 
-          -- the current view's eye index then we skip the surface
-          -- if the stereoEye value of a surface is 0 then we need to draw it for both eyes.
-          if not >>> ( stereoEye != 0 ) && ( surf.material.GetStereoEye != 0 ) && ( stereoRender_swapEyes.GetBool ? ( surf.material.GetStereoEye == stereoEye ) : ( surf.material.GetStereoEye != stereoEye); )
-
-            -- determine the stereoDepth offset guiStereoScreenOffset will always be zero for 3D views, so the != check will never force an update due to the current sort value.
-            const float thisGuiStereoOffset = guiStereoScreenOffset * surf.sort;
-
-            -- change the matrix and other space related vars if needed
-            if surf.space != backEnd.currentSpace || thisGuiStereoOffset != currentGuiStereoOffset
-              backEnd.currentSpace = surf.space;
-              RB_SetMVPWithStereoOffset( backEnd.currentSpace.mvp, guiStereoScreenOffset != 0.0 (thisGuiStereoOffset));
-
-              -- set eye position in local space
-              idVec4 localViewOrigin( 1.0f);
-              R_GlobalPointToLocal( backEnd.currentSpace.modelMatrix, backEnd.viewDef.renderView.vieworg, localViewOrigin.ToVec3);
-              Globals.LOCALVIEWORIGIN, localViewOrigin.ToFloatPtr);
-
-              -- set model Matrix
-              float modelMatrixTranspose(16);
-              R_MatrixTranspose( backEnd.currentSpace.modelMatrix, modelMatrixTranspose);
-              Set_Vertex_Parameters( RENDERPARM_MODELMATRIX_X, modelMatrixTranspose, 4);
-
-              -- Set ModelView Matrix
-              float modelViewMatrixTranspose(16);
-              R_MatrixTranspose( backEnd.currentSpace.modelViewMatrix, modelViewMatrixTranspose);
-              Set_Vertex_Parameters( RENDERPARM_MODELVIEWMATRIX_X, modelViewMatrixTranspose, 4);
-            end if;
-
-            -- change the scissor if needed
-            if !backEnd.currentScissor.Equals( surf.scissorRect ) && r_useScissor.GetBool
-              GL_Scissor( backEnd.viewDef.viewport.x1 + surf.scissorRect.x1, 
-                    backEnd.viewDef.viewport.y1 + surf.scissorRect.y1,
-                    surf.scissorRect.x2 + 1 - surf.scissorRect.x1,
-                    surf.scissorRect.y2 + 1 - surf.scissorRect.y1);
-              backEnd.currentScissor = surf.scissorRect;
-            end if;
-
-            -- set face culling appropriately
-            GL_Cull ((if surf.backEnd.currentSpace.isGuiSurface then CT_TWO_SIDED else shader.GetCullType));
-            uint64 surfGLState = surf.extraGLState;
-
-            -- set polygon offset if necessary
-            if shader.TestMaterialFlag(MF_POLYGONOFFSET)
-              GL_PolygonOffset( r_offsetFactor.GetFloat, r_offsetUnits.GetFloat * shader.GetPolygonOffset);
-              surfGLState = GLS_POLYGON_OFFSET;
-            end
-
-            -- Ambient lighting
-            for ( int stage = 0; stage < shader.GetNumStages; stage++    
-
-              -- check the enable condition and skip the stages involved in lighting
-              if surf.shaderRegisters( shader.GetStage(stage).conditionRegister ) /= 0 and shader.GetStage(stage).lighting = SL_AMBIENT then
-
-                uint64 stageGLState = surfGLState;
-                if ( surfGLState & GLS_OVERRIDE ) == 0
-                  stageGLState |= shader.GetStage(stage).drawStateBits;
-                end if;
-
-                -- skip if the stage is ( GL_ZERO, GL_ONE ), which is used for some alpha masks
-                if not >>> ( stageGLState & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) == ( GLS_SRCBLEND_ZERO | GLS_DSTBLEND_ONE )
-
-                  -- stages
-                  newShaderStage_t *newStage = pStage.newStage;
-                  GL_State( stageGLState);
-                
-                  GLSL.BindShader( newStage.glslProgram, newStage.glslProgram);
-
-                  for ( int j = 0; j < newStage.numVertexParms; j++ -- get the expressions for conditionals / color / texcoords
-                    Set_Vertex_Parameter( (renderParm_t)( RENDERPARM_USER + j ), surf.shaderRegisters( newStage.vertexParms(j));
-                  end
-
-                  -- set rpEnableSkinning if the shader has optional support for skinning
-                  if surf.jointCache and GLSL.ShaderHasOptionalSkinning then
-                    Globals.ENABLE_SKINNING,  skinningParm( 1.0f);
-                  end if;
-
-                  -- bind texture units
-                  for Image of newStage.numFragmentProgramImages loop
-                    GL_SelectTexture( j);
-                    image.Bind;
-                  end loop;
-
-                  -- draw it
-                  Draw (surf);
-
-                  -- unbind texture units
-                  for Image of newStage.numFragmentProgramImages loop
-                    GL_SelectTexture( j);
-                    globalImages.BindNull;
-                  end loop;
-
-                  -- clear rpEnableSkinning if it was set
-                  if surf.jointCache and GLSL.ShaderHasOptionalSkinning then
-                    Globals.ENABLE_SKINNING := skinningParm( 0.0);
-                  end if;
-
-                  GL_SelectTexture( 0);
-                  GLSL.Unbind;
-                end if;
-              end if;
-            end if;
-          end loop;
+          -- Always clear whole Cull tiles
+          Update_Scissor ((x1 => (Light.Scissor.X1 +  0) and not 15, y1 => (Light.Scissor.Y1 +  0) and not 15,
+                           x2 => (Light.Scissor.X2 + 15) and not 15, y2 => (Light.Scissor.Y2 + 15) and not 15););
+
+          -- Make sure stencil mask passes for the clear
+          Pipeline := (others => <>);
         end if;
-      end loop;
 
-      -- 
-      GL_Cull( CT_FRONT_SIDED);
-      GL_Color( 1.0, 1.0, 1.0);
+        -- Begin moving through the Light's entities in sorted order
+        for Interaction of Light.Interactions loop
+          case Pass_Sort is
 
-      -- force fog plane to recalculate
-      backEnd.currentSpace = NULL;
-      for Light of backEnd.viewDef.viewLights loop
-        case Light.Kind is
+            -----------------
+            -- Shadow Pass --
+            -----------------
+            --
+            -- ???
+            --
 
-          ---------------
-          -- Fog Light --
-          ---------------
-          --
-          -- Fog and blend lights, drawn after emissive surfaces so they are properly dimmed down
-          --
+            when Shadow_Sort'Range => 
 
-          when Fog_Light =>
+              -- Setup pipeline
+              Clear_Texture (0);
+              Shadow_Pass.Commit;            
+              vkCmdSetDepthBias (Commands, -shadowPolygonOffset, 0.0, shadowPolygonFactor);
+              Pipeline.Depth_Write_Enable := True; -- Only write to the stencil buffer ignoring the color or depth buffer
+              Pipeline.Alpha_Mask         := VK_COLOR_COMPONENT_A_BIT 
+              Pipeline.Depth_Compare      := VK_COMPARE_OP_LESS_OR_EQUAL;
+              Pipeline.Cull               := VK_CULL_MODE_NONE; -- Two Sided Stencil reduces two draw calls to only one
+              Pipeline.Stencil_Fail       := VK_STENCIL_OP_KEEP;
+              Pipeline.Stencil_Z_Fail     := VK_STENCIL_OP_KEEP;
+              Pipeline.Stencil_Pass       := VK_STENCIL_OP_INCREMENT_AND_CLAMP; 
+              Pipeline. := GLS_STENCIL_MAKE_REF STENCIL_SHADOW_TEST_VALUE;
+              Pipeline. := GLS_STENCIL_MAKE_MASK STENCIL_SHADOW_MASK_VALUE;          
 
-            -- find the current color and density of the fog
-            GL_Color( vLight.shaderRegisters( vLight.lightShader.GetStage( 0).color.registers));
+              -- Process the chain of shadows with the current rendering state
+              Current_Space := (others => <>);
+              for Surface of View.Surfaces loop
 
-            -- calculate the falloff planes -- if they left the default value on, set a fog distance of 500 otherwise, distance = alpha color
-            a := (if vLight.shaderRegisters( vLight.lightShader.GetStage( 0).color.registers)(3) <= 1.0 then -0.5 / DEFAULT_FOG_DISTANCE
-                  else -0.5 / vLight.shaderRegisters( vLight.lightShader.GetStage( 0).color.registers)(3));
+                -- Update the scissor
+                Update_Scissor (Surface.Scissor);
 
-            -- texture 0 is the falloff image
-            GL_SelectTexture( 0);
-            globalImages.fogImage.Bind;
+                -- change the matrix and set the local light position to allow the vertex program to project the shadow volume end cap to infinity
+                if Current_Space /= Surface.Space then
+                  MVP.Set (Surface.space.mvp);
+                  Local_Light_Origin.Set (Global_To_Local (Surface.space.Model, Light.Origin));
+                  Current_Space := Surface.space;
+                end if;
 
-            -- texture 1 is the entering plane fade correction
-            GL_SelectTexture( 1);
-            globalImages.fogEnterImage.Bind;
+                -- Preload plus Z-pass
+                GL_SeparateStencil( STENCIL_FACE_FRONT, GLS_STENCIL_OP_FAIL_KEEP | GLS_STENCIL_OP_ZFAIL_DECR | GLS_STENCIL_OP_PASS_DECR );
+                GL_SeparateStencil( STENCIL_FACE_BACK, GLS_STENCIL_OP_FAIL_KEEP | GLS_STENCIL_OP_ZFAIL_INCR | GLS_STENCIL_OP_PASS_INCR );
+                qglDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : Surface.numIndexes, GL_INDEX_TYPE,
+                  (triIndex_t *)indexOffset, (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK / sizeof( idShadowVertSkinned ));
 
-            -- Set the fog plane
-            fogPlanes(0)(0) = a * backEnd.viewDef.worldSpace.modelViewMatrix(0*4+2); fogPlanes(0)(1) = a * backEnd.viewDef.worldSpace.modelViewMatrix(1*4+2); fogPlanes(0)(2) = a * backEnd.viewDef.worldSpace.modelViewMatrix(2*4+2); fogPlanes(0)(3) = a * backEnd.viewDef.worldSpace.modelViewMatrix(3*4+2) + 0.5f;-- S-0
-            fogPlanes(1)(0) = 0.0;--a * backEnd.viewDef.worldSpace.modelViewMatrix(0*4+0); fogPlanes(1)(1) = 0.0;--a * backEnd.viewDef.worldSpace.modelViewMatrix(1*4+0);  fogPlanes(1)(2) = 0.0;--a * backEnd.viewDef.worldSpace.modelViewMatrix(2*4+0);
-            fogPlanes(1)(3) = 0.5f;--a * backEnd.viewDef.worldSpace.modelViewMatrix(3*4+0) + 0.5f; -- T-0 fogPlanes(2)(0) = FOG_SCALE * vLight.fogPlane(0); fogPlanes(2)(1) = FOG_SCALE * vLight.fogPlane(1); fogPlanes(2)(2) = FOG_SCALE * vLight.fogPlane(2); fogPlanes(2)(3) = FOG_SCALE * vLight.fogPlane(3) + FOG_ENTER;-- T-1 will get a texgen for the fade plane, which is always the "top" plane on unrotated lights
-            fogPlanes(3)(0) = 0.0; fogPlanes(3)(1) = 0.0; fogPlanes(3)(2) = 0.0; fogPlanes(3)(3) = FOG_SCALE * vLight.fogPlane.Distance( backEnd.viewDef.renderView.vieworg) + FOG_ENTER; -- S-1
-
-            -- Draw it
-            GL_State( GLS_DEPTHMASK | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA | GLS_DEPTHFUNC_EQUAL);
-
-            for Fog of Fog_Kind loop
-              case Fog is
-                when Surfaces_1 =>-- RB_T_BasicFog( drawSurfs, fogPlanes, NULL)
-                when Surfaces_2 => -- ;RB_T_BasicFog( drawSurfs2, fogPlanes, NULL);
-                when Zero_One_Cube_Surface =>
-                  -- Light frustum bounding planes aren't in the depth buffer, so use depthfunc_less instead of depthfunc_equal
-                  GL_State( GLS_DEPTHMASK | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA | GLS_DEPTHFUNC_LESS);
-                  GL_Cull( CT_BACK_SIDED);
-
-                  backEnd.zeroOneCubeSurface.space = &backEnd.viewDef.worldSpace;
-                  backEnd.zeroOneCubeSurface.scissorRect = backEnd.viewDef.scissor;
-
-                  -- S is based on the view origin
-                  RB_T_BasicFog( &backEnd.zeroOneCubeSurface, fogPlanes, &vLight.inverseBaseLightProject);
+                -- Render again with Z-pass
+                qglStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
+                qglStencilOpSeparate( GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
+                qglDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool ? 3 : Surface.numIndexes, GL_INDEX_TYPE,
+                  (triIndex_t *)indexOffset, (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK / sizeof ( idShadowVert ));
               end case;
 
-              backEnd.currentSpace = NULL;
-              for ( const drawSurf_t * drawSurf = drawSurfs; drawSurf != NULL; drawSurf = drawSurf->nextOnLight ) {
+              -- Cleanup the shadow specific rendering state and reset depth bounds
+              Pipeline. := CT_FRONT_SIDED; -- Two Sided Stencil reduces two draw calls to only one
+              GL_DepthBoundsTest( Light.Scissor.zmin, Light.Scissor.zmax);
 
-                if ( !backEnd.currentScissor.Equals( drawSurf->scissorRect ) && r_useScissor.GetBool() ) {
-                  -- change the scissor
-                  GL_Scissor( backEnd.viewDef->viewport.x1 + drawSurf->scissorRect.x1,
-                        backEnd.viewDef->viewport.y1 + drawSurf->scissorRect.y1,
-                        drawSurf->scissorRect.x2 + 1 - drawSurf->scissorRect.x1,
-                        drawSurf->scissorRect.y2 + 1 - drawSurf->scissorRect.y1 );
-                  backEnd.currentScissor = drawSurf->scissorRect;
-                }
+            ----------------
+            -- Light Pass --
+            ----------------
+            --
+            --
+            --
 
-                if ( drawSurf->space != backEnd.currentSpace ) {
-                  idPlane localFogPlanes[4];
-                  if ( inverseBaseLightProject == NULL ) {
-                    RB_SetMVP( drawSurf->space->mvp );
-                    for ( int i = 0; i < 4; i++ ) {
-                      R_GlobalPlaneToLocal( drawSurf->space->modelMatrix, fogPlanes[i], localFogPlanes[i] );
-                    }
-                  } else {
-                    idRenderMatrix invProjectMVPMatrix;
-                    idRenderMatrix::Multiply( backEnd.viewDef->worldSpace.mvp, *inverseBaseLightProject, invProjectMVPMatrix );
-                    RB_SetMVP( invProjectMVPMatrix );
-                    for ( int i = 0; i < 4; i++ ) {
-                      inverseBaseLightProject->InverseTransformPlane( fogPlanes[i], localFogPlanes[i], false );
-                    }
-                  }
+            when Light_Sort'Range =>
+              for Interaction of Light.Interactions loop if Light.Interactions (Kind).Length > 0 then
 
-                  Globals.T
-                  SetVertexParm( RENDERPARM_TEXGEN_0_S, localFogPlanes[0].ToFloatPtr() );
-                  SetVertexParm( RENDERPARM_TEXGEN_0_T, localFogPlanes[1].ToFloatPtr() );
-                  SetVertexParm( RENDERPARM_TEXGEN_1_T, localFogPlanes[2].ToFloatPtr() );
-                  SetVertexParm( RENDERPARM_TEXGEN_1_S, localFogPlanes[3].ToFloatPtr() );
+                -- Load the pipeline state
+                if Interaction.Kind = Translucent_Interaction then
+                  Pipeline.Depth_Compare := VK_COMPARE_OP_LESS_OR_EQUAL;
+                  Pipeline.Test_Depth    := False; -- Disable the depth bounds test on translucent surfaces as they don't write depth
+                  Pipeline. := false;
+                  Pipeline. := false;                  
+                else
+                  Pipeline.Depth_Compare := VK_COMPARE_OP_EQUAL;
+                  Pipeline.Test_Stencil  := performStencilTest;
+                  Pipeline. := r_useLightDepthBounds.Get;
+                end if;
+                Pipeline.Source_Blend      := VK_BLEND_FACTOR_ONE;
+                Pipeline.Destination_Blend := VK_BLEND_FACTOR_ONE;
+                Pipeline.Test_Depth        := False;
+                Pipeline.Stencil_Compare   := VK_COMPARE_OP_EQUAL;
+                Pipeline. := GLS_STENCIL_MAKE_REFSTENCIL_SHADOW_TEST_VALUE;
+                Pipeline. := GLS_STENCIL_MAKE_MASKSTENCIL_SHADOW_MASK_VALUE;
+                Update_Scissor (Light.Scissor);
 
-                  backEnd.currentSpace = ( inverseBaseLightProject == NULL ) ? drawSurf->space : NULL;
-                }
-                renderProgManager.BindShader_Fog();
-                RB_DrawElementsWithCounters( drawSurf );
-              }
-            end loop;
+                -- Load the light material transform
+                Light_Texture := Prepare_Map_Transform (Light.Material.Transform);
+                Set_Matrix_4D_Z      (Light_Texture, (0.0, 0.0, 1.0, 0.0));
+                Set_Matrix_4D_W      (Light_Texture, (0.0, 0.0, 1.0, 0.0));
+                Fall_Off_Image.Set   (INTERACTION_TEXUNIT_FALLOFF);
+                Projection_Image.Set (Light.Material.texture); -- light projection texture
+                Vertex_Color_Mod.Set (zero);
+                Vertex_Color_Add.Set (one);
 
-            -- 
-            GL_Cull( CT_FRONT_SIDED);
-            GL_SelectTexture( 1);
-            globalImages.BindNull;
-            GL_SelectTexture( 0);
-            GLSL.Unbind;
+                -- Even if the space does not change between light stages, each light stage may need a different lightTextureMatrix baked in
+                Current_Space := NULL;
 
-          -----------------
-          -- Blend Light --
-          -----------------
-          --
-          --
-          --
+                -- For all surfaces on this light list, generate an interaction for this light stage
+                for Surface of Sorted_Surfaces loop
 
-          when Blend_Light =>
+                  -- Select the render program
+                  Light_Pass.Commit;
 
-            -- texture 1 will get the falloff texture
-            GL_SelectTexture( 1);
-            vLight.falloffImage.Bind;
+                  -- Change the MVP matrix, view/light origin and light projection vectors if needed
+                  if Surface.Space /= Current_Space then
+                    Current_Space := Surface.Space;
 
-            -- texture 0 will get the projected texture
-            GL_SelectTexture( 0);
-            GLSL.BindShader_BlendLight;
-            for ( int i = 0; i < vLight.lightShader.GetNumStages; i++
-              if vLight.shaderRegisters( vLight.lightShader.GetStage(i).conditionRegister )
+                    -- turn off the light depth bounds test if this model is rendered with a depth hack
+                    if Do_Bound_Light_Depth then
+                      if not Surface.Space.weaponDepthHack and Surface.Space.modelDepthHack = 0.0 and lightDepthBoundsDisabled then
+                        vkCmdSetDepthBounds (Commands, Light.Scissor.zmin, Light.Scissor.zmax);
+                        Pipeline.Test_Depth      := False;
+                        lightDepthBoundsDisabled := false;
+                      elsif not lightDepthBoundsDisabled then
+                        Pipeline.Test_Depth      := False;
+                        lightDepthBoundsDisabled := true;
+                      end if;
+                    end if;
 
-                -- ...
-                GL_State( GLS_DEPTHMASK | vLight.lightShader.GetStage(i).drawStateBits | GLS_DEPTHFUNC_EQUAL);
-                GL_SelectTexture( 0);
-                vLight.lightShader.GetStage(i).texture.image.Bind;
-                if vLight.lightShader.GetStage(i).texture.hasMatrix
-                  RB_LoadShaderTextureMatrix( vLight.shaderRegisters, &vLight.lightShader.GetStage(i).texture);
-                end
+                    -- tranform the light/view origin into model local space set the local light/view origin
+                    Local_Light_Origin := (others => 0.0);
+                    Local_View_Origin  := (others => 1.0);
+                    Global_Point_To_Local (Surface.Space.Model, Light.Global_Light_Origin, Local_Light_Origin);
+                    Global_Point_To_Local (Surface.Space.Model, View.Render.Origin,        Local_View_Origin);
 
-                -- get the modulate values from the light, including alpha, unlike normal lights
-                GL_Color( vLight.shaderRegisters( vLight.lightShader.GetStage(i).color.registers();
-                --  RB_T_BlendLight( drawSurfs, vLight); RB_T_BlendLight( drawSurfs2, vLight);
-                backEnd.currentSpace = NULL;
+                    -- Multiply the local light projection by the light texture matrix
+                    Set_Matrix_4D_X (Final, Get_Matrix_4D_X (Light_Projection));
+                    Set_Matrix_4D_Y (Final, Get_Matrix_4D_Y (Light_Projection));
+                    Set_Matrix_4D_Z (Final, (others => 0.0));
+                    Set_Matrix_4D_W (Final, Get_Matrix_4D_Z (Light_Projection));
+                    Final := Light_Texture * Final;
 
-                for ( const drawSurf_t * drawSurf = drawSurfs; drawSurf != NULL; drawSurf = drawSurf->nextOnLight ) {
-                  if ( !backEnd.currentScissor.Equals( drawSurf->scissorRect ) && r_useScissor.GetBool() ) {
-                    -- change the scissor
-                    GL_Scissor( backEnd.viewDef->viewport.x1 + drawSurf->scissorRect.x1,
-                          backEnd.viewDef->viewport.y1 + drawSurf->scissorRect.y1,
-                          drawSurf->scissorRect.x2 + 1 - drawSurf->scissorRect.x1,
-                          drawSurf->scissorRect.y2 + 1 - drawSurf->scissorRect.y1 );
-                    backEnd.currentScissor = drawSurf->scissorRect;
-                  }
+                    -- Transform the light project into model local space
+                    Projection := Global_To_Local (Surface.Space.Model, Light.Projection);
 
-                  if ( drawSurf->space != backEnd.currentSpace ) {
-                    -- change the matrix
-                    RB_SetMVP( drawSurf->space->mvp );
+                    Light_Projection(0)(0) := final(0*4+0); Light_Projection(0)(1) = final(1*4+0); Light_Projection(0)(2) = final(2*4+0); Light_Projection(0)(3) = final(3*4+0);
+                    Light_Projection(1)(0) := final(0*4+1); Light_Projection(1)(1) = final(1*4+1); Light_Projection(1)(2) = final(2*4+1); Light_Projection(1)(3) = final(3*4+1);
 
-                    -- change the light projection matrix
-                    idPlane lightProjectInCurrentSpace[4];
-                    for ( int i = 0; i < 4; i++ ) {
-                      R_GlobalPlaneToLocal( drawSurf->space->modelMatrix, vLight->lightProject[i], lightProjectInCurrentSpace[i] );
-                    }
+                    -- Load uniforms Set the light projection
+                    Light_Projection.Set   (To_Matrix_3D (Light_Projection)); -- Light_Projection
+                    Light_Falloff.Set      (Light_Projection); -- LIGHTFALLOFF_S
+                    Light_Scale.Set        (Light_Scale.Get);
+                    Vertex_Color.Set       (Surface.Material.Vertex_Color);
+                    Image_Transform.Set    (Prepare_Map_Transform (Surface.Material.Transform));
+                    MVP.Set                (Surface.Space.MVP);
+                    Projection_Image.Set   (Surface.Material.);
+                    Base_Color_Image.Set   (Surface.Material.Base_Color);
+                    Irradiance_Image.Set   (Surface.Material.Irradiance);
+                    Prefilter_Image.Set    (Surface.Material.Prefilter);
+                    Specular_Image.Set     (Surface.Material.Specular);
+                    Normal_Image.Set       (Surface.Material.Normal);
+                    Metallic_Image.Set     (Surface.Material.Metallic);
+                    Roughness_Image.Set    (Surface.Material.Roughness);
+                    Displacement_Image.Set (Surface.Material.Displacement);
+                    case vertexColor is
+                      when SVC_IGNORE =>
+                        RENDERPARM_VERTEXCOLOR_MODULATE, zero );
+                        RENDERPARM_VERTEXCOLOR_ADD, one );
+                      when SVC_MODULATE =>
+                        RENDERPARM_VERTEXCOLOR_MODULATE, one );
+                        RENDERPARM_VERTEXCOLOR_ADD, zero );
+                      when SVC_INVERSE_MODULATE =>
+                        RENDERPARM_VERTEXCOLOR_MODULATE, negOne );
+                        RENDERPARM_VERTEXCOLOR_ADD, one );
+                    end case;
 
-                    SetVertexParm( RENDERPARM_TEXGEN_0_S, lightProjectInCurrentSpace[0].ToFloatPtr() );
-                    SetVertexParm( RENDERPARM_TEXGEN_0_T, lightProjectInCurrentSpace[1].ToFloatPtr() );
-                    SetVertexParm( RENDERPARM_TEXGEN_0_Q, lightProjectInCurrentSpace[2].ToFloatPtr() );
-                    SetVertexParm( RENDERPARM_TEXGEN_1_S, lightProjectInCurrentSpace[3].ToFloatPtr() ); -- falloff
+                    -- Draw the interaction
+                    Draw (Surface);
+                  end if;
 
-                    backEnd.currentSpace = drawSurf->space;
-                  }
-
-                  RB_DrawElementsWithCounters( drawSurf );
-                }
-              end if;
-            end loop;
-
-            -- 
-            GL_SelectTexture( 1);
-            globalImages.BindNull;
-            GL_SelectTexture( 0);
-            GLSL.Unbind;
-        end case;
-      end loop;
-
-      ------------------
-      -- Post Process --
-      ------------------
-      --
-      -- capture the depth for the motion blur before rendering any post process surfaces that may contribute to the depth
-      --
-
-      const idScreenRect & viewport = backEnd.viewDef.viewport;
-      globalImages.currentDepthImage.CopyDepthbuffer( viewport.x1, viewport.y1, viewport.GetWidth, viewport.GetHeight);
+                  -- ???
+                  vkCmdSetDepthBounds (Commands, Light.Scissor.zmin, Light.Scissor.zmax);
+                end loop;
+          end case;
+        end loop;
     end loop;
-  end;
+
+    -- Reset depth bounds
+    Pipeline := (others => <>);
+
+    ------------------
+    -- Ambient Pass --
+    ------------------
+    --
+    -- ???
+    --
+
+    -- Setup pass
+    Pipeline := (others => <>);
+    GUI_Screen_Offset := (if View.Entities /= NULL then 0.0 else stereoEye * View.renderView.stereoScreenSeparation);
+    Ambient_Pass.Commit;
+
+    -- Add light glare and GUIs
+    for Surface of Surfaces loop
+
+      -- Some deforms may disable themselves by setting numIndexes = 0
+      if Surface.Material.Is_Ambient then
+
+        -- We need to draw the post process shaders after we have drawn the fog lights
+        exit when Surface.Material.Kind = Post_Process_Domain and not Current_Render_Copied;
+
+        -- if we are rendering a 3D view and the surface's eye index doesn't match the current view's eye index then we skip the surface
+        -- if the stereoEye value of a surface is 0 then we need to draw it for both eyes.
+        if not >> stereoEye /= 0 and Surface.material.GetStereoEye /= 0 and (stereoRender_swapEyes.GetBool ? ( Surface.material.GetStereoEye == stereoEye ) : ( Surface.material.GetStereoEye != stereoEye)) then
+
+          -- Determine the stereoDepth offset guiStereoScreenOffset will always be zero for 3D views, so the != check will never force an update due to the current sort value.
+          Current_GUI_Stereo_Offset := GUI_Stereo_Offset * Surface.Sort;
+
+          -- Change the matrix and other space related vars if needed
+          if Surface.space /= Current_Space or Current_GUI_Stereo_Offset /= currentGuiStereoOffset then
+            Current_Space := Surface.space; 
+            Offset        := MVP;
+            Offset (0, 3) := Offset (0, 3) + Stereo_Offset;
+
+            -- Set eye position in local space
+            MVP.Set             (Offset[0], 4); -- X???
+            MVP.Set             (Current_Space.mvp, guiStereoScreenOffset != 0.0 (Current_GUI_Stereo_Offset));
+            LOCALVIEWORIGIN.Set (GlobalPointToLocal (Current_Space.Model, View.renderView.viewor)(1.0);
+            Local_To_Global.Set (Transpose (Current_Space.Local_To_Global), 4);
+            Local_To_Eye.Set    (Transpose (Current_Space.Local_To_Eye), 4);
+          end if;
+
+          -- Update pipeline
+          Pipeline.Cull := (if Surface.Current_Space.isGuiSurface then VK_CULL_MODE_NONE else shader.GetCullType);
+          Update_Scissor (Surface.Scissor);
+          if shader.TestMaterialFlag (MF_POLYGONOFFSET) then
+            vkCmdSetDepthBias (Commands, r_offsetUnits.GetFloat * shader.GetPolygonOffset, 0.0, r_offsetFactor);
+            Pipeline.Offset_Polygon := True;
+          end if;
+
+          -- Draw when the stage is not zero or one which are used for some alpha masks
+          if Pipeline.Source_Blend_Factor = GLS_SRCBLEND_ZERO or Pipeline.Destination_Blend_Factor = GLS_DSTBLEND_ONE then
+            enableSkinning.Set (Surface.Is_Animated);
+            Draw (Surface);
+          end if;
+        end if;
+      end if;
+    end loop;
+
+    -- ???
+
+    ---------------------
+    -- Distortion Pass --
+    ---------------------
+    --
+    -- ??? 
+    --
+
+    -- force fog plane to recalculate
+    Clear_Color (WHITE_COLOR);
+    Current_Space := NULL_PTR;
+    Pipeline      := (others => <>);
+
+    -- Handle special lights
+    for Light of View.Lights loop
+      case Light.Kind is
+
+        --------------
+        -- Fog Pass --
+        --------------
+        --
+        -- Fog and blend lights, drawn after emissive surfaces so they are properly dimmed down
+        --
+
+        when Fog_Light =>
+          Fog_Pass.Commit;
+
+          -- Find the current color and density of the fog
+          Clear_Color (Light.Material.Color_Modifer);
+
+          -- Calculate the falloff planes 
+          Fog_Planes := (1 => Get_Matrix_4D_Y (View.World_Space.Local_To_Eye) -- Set a fog distance of 500 otherwise, distance = alpha color
+                                 * (if Light.color <= 1.0 then -0.5 / FOG_DISTANCE else -0.5 / Light.color),
+                         2 => (0.0, 0.0, 0.0, 0.5),
+                         3 => FOG_SCALE * Light.Fog_Plane, -- Texture generation for the fade plane, which is always "top" on unrotated lights
+                         4 => (0.0, 0.0, 0.0, FOG_SCALE * Light.Fog_Plane.Distance (View.Render.Origin) + FOG_ENTER));
+          Fog_Planes (3).W := Fog_Planes (3).W + FOG_ENTER;
+
+          -- Draw direct light interactions
+          Pipeline.Source_Blend      := VK_BLEND_FACTOR_SRC_ALPHA;
+          Pipeline.Destination_Blend := VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+          Pipeline.Depth_Compare     := VK_COMPARE_OP_EQUAL;
+          Draw_Fog (Light.Interactions (Direct_Interaction), Fog_Planes);
+
+          -- Draw light frustum bounding planes aren't in the depth buffer, so use depthfunc_less instead of depthfunc_equal
+          Pipeline.Depth_Compare        := VK_COMPARE_OP_LESS_OR_EQUAL;
+          Pipeline.Cull                 := VK_CULL_MODE_BACK_BIT;
+          Zero_One_Cube_Surface.Space   := View.World_Space;
+          Zero_One_Cube_Surface.Scissor := View.Scissor;          
+          Draw_Fog (Zero_One_Cube_Surface, Fog_Plane, Light.Inverse_Projection); -- S is based on the view origin
+
+        ----------------
+        -- Blend Pass --
+        ----------------
+        --
+        -- ???
+        --
+
+        when Blend_Light =>
+
+          -- Set the the falloff and the projected texture
+          Set_Matrix_4D_Z         (Light_Texture, (0.0, 0.0, 1.0, 0.0));
+          Set_Matrix_4D_W         (Light_Texture, (0.0, 0.0, 0.0, 1.0)));
+          Base_Color_Image.Set    (Light.Material.Base_Color);
+          Light_Falloff_Image.Set (Light.Falloff);
+          Pipeline.Depth_Compare  := VK_COMPARE_OP_EQUAL;
+          Light_Texture           := Prepare_Map_Transform (Light.Material.Transform);
+
+          -- Get the modulate values from the light, including alpha, unlike normal lights
+          Clear_Color (Light.Material.Color_Mod);
+
+          -- ???
+          Current_Space := (others => <>);
+          for Surface of Surfaces loop
+
+            -- Set shader parameters
+            Update_Scissor (Surface.Scissor);
+            if Surface.Space /= Current_Space then
+              MVP.Set (Surface.Space.MVP);
+              lightProjectInCurrentSpace.Set (GlobalPlaneToLocal (Surfaces.Space.Local_To_Eye, Light.Projection))
+              Current_Space := Surface.Space;
+            end if;
+
+            -- Draw it
+            Draw (Surface);
+          end loop;
+      end case;
+
+      -- Reset the pipeline
+      Pipeline := (others => <>);
+    end loop;
+
+    ---------------
+    -- Post Pass --
+    ---------------
+    --
+    -- Capture the depth for the motion blur before rendering any post process surfaces that may contribute to the depth
+    --
+
+    const idScreenRect & viewport = View.viewport;
+    globalImages.currentDepthImage.CopyDepthbuffer( viewport.x1, viewport.y1, viewport.GetWidth, viewport.GetHeight);
+  end loop;
+end;
