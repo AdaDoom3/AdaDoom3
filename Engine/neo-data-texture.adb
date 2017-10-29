@@ -15,6 +15,8 @@
 
 package body Neo.Data.Texture is
 
+  Unsupported_Color_Format : Exception;
+
   -------------
   -- Loading --
   -------------
@@ -23,10 +25,7 @@ package body Neo.Data.Texture is
       function Load (Path : Str) return Compressed_Image_Array;
     end;
   package body Khronos is separate;
-
   package Image is new Handler (Format_Kind, Vector_Mesh.Unsafe.Vector);
-
   package Kronos_Image is new Image.Format (Khronos_Format, Khronos.Load, "ktx");
-
   function Load (Path : Str) return Compressed_Image_Array;
 end;

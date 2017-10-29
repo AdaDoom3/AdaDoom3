@@ -13,65 +13,44 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Interfaces;                   use Interfaces;
+with Interfaces.C;                 use Interfaces.C;
+with System;                       use System;
+with Ada.Containers;               use Ada.Containers;
+with Ada.Directories;              use Ada.Directories;
+with Ada.Exceptions;               use Ada.Exceptions;
+with Ada.Finalization;             use Ada.Finalization;
+with Ada.Calendar;                 use Ada.Calendar;
+with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
+with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
+with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
+with Ada.Task_Identification;      use Ada.Task_Identification;
+with Ada.Strings;                  use Ada.Strings;
+with Ada.Strings.Fixed;            use Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;        use Ada.Strings.Unbounded;
+with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
+with Ada.Streams;                  use Ada.Streams;
+with Ada.Streams.Stream_IO;
 with Ada.Unchecked_Deallocation;   
 with Ada.Unchecked_Conversion;
 with Ada.Wide_Text_IO;
-with Ada.Streams.Stream_IO;
-with Ada.Streams;                  use Ada.Streams;
-with Ada.Exceptions;               use Ada.Exceptions;
-with Ada.Containers;               use Ada.Containers;
-with Ada.Finalization;             use Ada.Finalization;
-with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
-with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
-with Ada.Calendar;                 use Ada.Calendar;
-with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
-with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
-with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
-with Ada.Strings.Unbounded;        use Ada.Strings.Unbounded;
-with Ada.Strings.Fixed;            use Ada.Strings.Fixed;
-with Ada.Strings;                  use Ada.Strings;
-with Interfaces.C;                 use Interfaces.C;
-with Interfaces;                   use Interfaces;
-with System;                       use System;
-with GNAT.Sockets;                 use GNAT.Sockets;
 with GNAT.Compiler_Version;
 
 -- String constants and base data-types
-package Neo is
-
-  ----------------
-  -- Versioning --
-  ----------------
-
-  NAME_ID : constant Wide_String := "Neo";
-  VERSION : constant Wide_String := "0.1a";
+package Neo is pragma Suppress (Elaboration_Check);
   
-  package GNAT_Info is new GNAT.Compiler_Version;
-
-  -----------
-  -- Paths --
-  -----------
-
-  PATH_LOGS            : constant Wide_String := "Logs";
-  PATH_ASSETS          : constant Wide_String := "Assets";
-  PATH_LOCALE          : constant Wide_String := "locale.csv";
-  PATH_CONFIG          : constant Wide_String := "config.txt";
-  PATH_ICON            : constant Wide_String := "icon";
-  PATH_CURSOR_ACTIVE   : constant Wide_String := "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Wide_String := "cursor_inactive";
 
   -------------
   -- Renames --
   -------------
 
-  -- IO
   package Ada_IO    renames Ada.Wide_Text_IO;
   package Stream_IO renames Ada.Streams.Stream_IO;
 
-  -- Unchecked operations
   generic procedure Unchecked_Deallocation renames Ada.Unchecked_Deallocation;
   generic function  Unchecked_Conversion   renames Ada.Unchecked_Conversion;
-
+  
   -----------
   -- Types --
   -----------
@@ -232,7 +211,7 @@ package Neo is
   -- String conversions
   generic
     type Num_T is mod <>;
-  function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary integer images
+  function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary strings
   function To_Str_8               (Item : Str_16)              return Str_8;
   function To_Str_8               (Item : Ptr_Const_Char_8_C)  return Str_8;
   function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
@@ -295,6 +274,38 @@ package Neo is
   NULL_STR_C    : constant Str_C   := NULL_STR_16_C;
   NULL_PTR      : constant Ptr     := NULL_ADDRESS;
 
+  -----------------
+  -- Information --
+  -----------------
+
+  NAME_ID : constant Str := "Neo";
+  VERSION : constant Str := "0.1.0";
+  
+  package GNAT_Info is new GNAT.Compiler_Version;
+  
+  type Game_Info_State is record
+      Name_ID : Str_Unbound := NULL_STR_UNBOUND;
+      Version : Str_Unbound := NULL_STR_UNBOUND;
+    end record;
+  function Game_Info return Game_Info_State;
+  
+  -----------
+  -- Paths --
+  -----------
+  
+  -- We need to get the path separator explicitly because Windows uses backslashes
+  function Path_Separator return Char is ((if Index (Current_Directory, "\") = 0 then '/' else '\'));
+  function S return Char renames Path_Separator; -- For convience
+  
+  PATH_GAME            : constant Str := To_Str (Current_Directory) & S & "Games" & S & S (Game_Info.Name_ID);
+  PATH_LOGS            : constant Str := PATH_GAME   & S & "Logs";
+  PATH_ASSETS          : constant Str := PATH_GAME   & S & "Assets";
+  PATH_LOCALE          : constant Str := PATH_ASSETS & S & "locale.csv";
+  PATH_CONFIG          : constant Str := PATH_ASSETS & S & "config.txt";
+  PATH_ICON            : constant Str := PATH_ASSETS & S & "icon";
+  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & S & "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & S & "cursor_inactive";
+  
   ------------
   -- Status --
   ------------
@@ -320,49 +331,13 @@ package Neo is
   function Get_Duration   (Timer :        Timer_State) return Duration;
   procedure Start         (Timer : in out Timer_State);
   procedure Stop          (Timer : in out Timer_State);
+
+  --------------------
+  -- Build Settings --
+  --------------------
   
-  ----------
-  -- Path --
-  ----------
+  function Is_Debugging return Bool;
   
-  protected App_Path is
-  
-      -- Path separator for OS
-      function Sep return Char;
-      procedure Set_Sep (Sep : Char);
-      
-      -- Executable path
-      procedure Set (Path : Str_Unbound);
-      procedure Set (Path : Str);
-      function Get return Str_Unbound;
-      function Get return Str;
-    private
-      Current_Sep  : Char        := NULL_CHAR;
-      Current_Path : Str_Unbound := NULL_STR_UNBOUND;
-    end;
-    
-  -- Renaming for convience
-  function S return Char is (App_Path.Sep);
-
-  ---------------
-  -- Debugging --
-  ---------------
-
-  -- Assertion to check imported C function calls. They raise a Program_Error if the value is null or 0
-  procedure Assert (Val : Ptr);
-  procedure Assert (Val : Bool);
-  procedure Assert (Val : Int_C);
-  procedure Assert (Val : Int_16_Unsigned_C);
-  procedure Assert (Val : Int_Unsigned_C);
-
-  -- Ignore procedures swallow the result of C functions that return useless results
-  procedure Ignore (Val : Bool)              is null;
-  procedure Ignore (Val : Ptr)               is null;
-  procedure Ignore (Val : Int_Ptr)           is null;
-  procedure Ignore (Val : Int_C)             is null;
-  procedure Ignore (Val : Int_16_Unsigned_C) is null;
-  procedure Ignore (Val : Int_Unsigned_C)    is null;
-
   -----------
   -- Color --
   -----------

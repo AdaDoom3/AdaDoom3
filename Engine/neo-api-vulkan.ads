@@ -13,7 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Core.Arrays; use Neo.Core.Arrays;
+with Neo.Core.Debugging; use Neo.Core.Debugging;
+with Neo.Core.Arrays;    use Neo.Core.Arrays;
 
 -- Custom binding to the Vulkan API: http://web.archive.org/save/_embed/https://www.khronos.org/files/vulkan10-reference-guide.pdf
 package Neo.API.Vulkan is
@@ -130,6 +131,9 @@ package Neo.API.Vulkan is
   ---------------
   -- Constants --
   ---------------
+
+  -- http://vulkan-spec-chunked.ahcox.com/ch10s02.html
+  VK_MAX_MEMORY_TYPES : constant Int_Unsigned_C := 32;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkColorComponentFlagBits.html
   VK_COLOR_COMPONENT_R_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkColorComponentFlagBits
@@ -170,6 +174,7 @@ package Neo.API.Vulkan is
 
   -- http://vulkan-spec-chunked.ahcox.com/apes09.html
   VK_WIN32_DLL_NAME                       : aliased Str_16_C := To_Str_16_C ("vulkan-1.dll");                -- ???
+  VK_KHR_MAINTENANCE2_NAME                : constant Str_8_C := To_Str_8_C (S ("VK_KHR_maintenance2"));      -- ???
   VK_KHR_SWAPCHAIN_EXTENSION_NAME         : constant Str_8_C := To_Str_8_C (S ("VK_KHR_swapchain"));         -- ???
   VK_KHR_SURFACE_EXTENSION_NAME           : constant Str_8_C := To_Str_8_C (S ("VK_KHR_surface"));           -- ???
   VK_KHR_WIN32_SURFACE_EXTENSION_NAME     : constant Str_8_C := To_Str_8_C (S ("VK_KHR_win32_surface"));     -- ???
@@ -198,6 +203,9 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkInternalAllocationType.html
   VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE : constant Int_Unsigned_C := 0; -- VkInternalAllocationType
   
+  -- http://nopper.tv/Vulkan/1.0/VkColorSpaceKHR.html
+  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR : constant Int_Unsigned_C := 0; -- VkColorSpaceKHR\
+  
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBool32.html
   VK_TRUE  : constant Int_Unsigned_C := 1; -- VkBool32
   VK_FALSE : constant Int_Unsigned_C := 0; -- VkBool32
@@ -213,10 +221,6 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkIndexType.html
   VK_INDEX_TYPE_UINT16 : constant Int_Unsigned_C := 0; -- VkIndexType
   VK_INDEX_TYPE_UINT32 : constant Int_Unsigned_C := 1; -- VkIndexType
-
-  -- http://nopper.tv/Vulkan/1.0/VkColorSpaceKHR.html
-  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR : constant Int_Unsigned_C := 0; -- VkColorSpaceKHR
-  VK_COLORSPACE_SRGB_NONLINEAR_KHR  : constant Int_Unsigned_C := 0; -- VkColorSpaceKHR
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferLevel.html
   VK_COMMAND_BUFFER_LEVEL_PRIMARY   : constant Int_Unsigned_C := 0; -- VkCommandBufferLevel
@@ -798,6 +802,10 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VK_MAKE_VERSION.html
   function VK_MAKE_VERSION (Major, Minor, Patch : Int_Unsigned) return Int_Unsigned_C is
     (Int_Unsigned_C (Shift_Left (Major, 22) or Shift_Left (Minor,12) or Patch));
+  function VK_VERSION_STR (Version : Int_Unsigned_C) return Str is
+    (NULL_STR);
+    
+  VK_API_VERSION_1_0 : constant Int_Unsigned_C := VK_MAKE_VERSION(1, 0, 0);
 
   ----------------
   -- Allocation --
@@ -853,7 +861,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtent2D.html
   type VkExtent2D;
-  type Ptr_VkExtent2D is access all VkExtent2D;
+  type Ptr_VkExtent2D is access all VkExtent2D with Convention => C;
   type VkExtent2D is record
       width  : Int_Unsigned_C := 0; -- uint32_t
       height : Int_Unsigned_C := 0; -- uint32_t
@@ -863,7 +871,7 @@ package Neo.API.Vulkan is
  
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtent3D.
   type VkExtent3D;
-  type Ptr_VkExtent3D is access all VkExtent3D;
+  type Ptr_VkExtent3D is access all VkExtent3D with Convention => C;
   type VkExtent3D is record
       width  : Int_Unsigned_C := 0; -- uint32_t
       height : Int_Unsigned_C := 0; -- uint32_t
@@ -874,7 +882,7 @@ package Neo.API.Vulkan is
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferMemoryBarrier.html
   type VkBufferMemoryBarrier;
-  type Ptr_VkBufferMemoryBarrier is access all VkBufferMemoryBarrier;
+  type Ptr_VkBufferMemoryBarrier is access all VkBufferMemoryBarrier with Convention => C;
   type VkBufferMemoryBarrier is record
       sType               : Int_Unsigned_C := VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER; -- VkStructureType
       pNext               : Ptr_VkBufferMemoryBarrier := null;     -- const void*
@@ -891,7 +899,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryBarrier.html
   type VkMemoryBarrier;
-  type Ptr_VkMemoryBarrier is access all VkMemoryBarrier;
+  type Ptr_VkMemoryBarrier is access all VkMemoryBarrier with Convention => C;
   type VkMemoryBarrier is record
       sType         : Int_Unsigned_C := VK_STRUCTURE_TYPE_MEMORY_BARRIER; -- VkStructureType
       pNext         : Ptr_VkMemoryBarrier := null; -- const void*
@@ -903,7 +911,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageSubresourceLayers.html
   type VkImageSubresourceLayers;
-  type Ptr_VkImageSubresourceLayers is access all VkImageSubresourceLayers;
+  type Ptr_VkImageSubresourceLayers is access all VkImageSubresourceLayers with Convention => C;
   type VkImageSubresourceLayers is record
       aspectMask     : Int_Unsigned_C := 0; -- VkImageAspectFlags
       mipLevel       : Int_Unsigned_C := 0; -- uint32_t
@@ -915,7 +923,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkOffset3D.html
   type VkOffset3D;
-  type Ptr_VkOffset3D is access all VkOffset3D;
+  type Ptr_VkOffset3D is access all VkOffset3D with Convention => C;
   type VkOffset3D is record
       x : Int_C := 0; -- int32_t
       y : Int_C := 0; -- int32_t
@@ -926,7 +934,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageCopy.html
   type VkImageCopy;
-  type Ptr_VkImageCopy is access all VkImageCopy;
+  type Ptr_VkImageCopy is access all VkImageCopy with Convention => C;
   type VkImageCopy is record
       srcSubresource : VkImageSubresourceLayers := (others => <>); -- VkImageSubresourceLayers
       srcOffset      : VkOffset3D               := (others => <>); -- VkOffset3D
@@ -939,7 +947,7 @@ package Neo.API.Vulkan is
  
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferCreateInfo.html
   type VkBufferCreateInfo;
-  type Ptr_VkBufferCreateInfo is access all VkBufferCreateInfo;
+  type Ptr_VkBufferCreateInfo is access all VkBufferCreateInfo with Convention => C;
   type VkBufferCreateInfo is record
       sType                 : Int_Unsigned_C := VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkBufferCreateInfo := null; -- const void*
@@ -955,7 +963,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferCopy.html
   type VkBufferCopy;
-  type Ptr_VkBufferCopy is access all VkBufferCopy;
+  type Ptr_VkBufferCopy is access all VkBufferCopy with Convention => C;
   type VkBufferCopy is record
      srcOffset : Int_64_Unsigned_C := 0; -- VkDeviceSize
      dstOffset : Int_64_Unsigned_C := 0; -- VkDeviceSize
@@ -966,7 +974,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkShaderModuleCreateInfo.html
   type VkShaderModuleCreateInfo;
-  type Ptr_VkShaderModuleCreateInfo is access all VkShaderModuleCreateInfo;
+  type Ptr_VkShaderModuleCreateInfo is access all VkShaderModuleCreateInfo with Convention => C;
   type VkShaderModuleCreateInfo is record
       sType    : Int_Unsigned_C := VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO; -- VkStructureType
       pNext    : Ptr_VkShaderModuleCreateInfo := null; -- const void*
@@ -979,7 +987,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
   type VkBufferImageCopy;
-  type Ptr_VkBufferImageCopy is access all VkBufferImageCopy;
+  type Ptr_VkBufferImageCopy is access all VkBufferImageCopy with Convention => C;
   type VkBufferImageCopy is record
       bufferOffset      : Int_64_Unsigned_C        := 0;              -- VkDeviceSize                
       bufferRowLength   : Int_Unsigned_C           := 0;              -- uint32_t                    
@@ -993,7 +1001,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageCreateInfo.html
   type VkImageCreateInfo;
-  type Ptr_VkImageCreateInfo is access all VkImageCreateInfo;
+  type Ptr_VkImageCreateInfo is access all VkImageCreateInfo with Convention => C;
   type VkImageCreateInfo is record
       sType                 : Int_Unsigned_C  := VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkImageCreateInfo := null;           -- const void*
@@ -1016,7 +1024,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/PFN_vkAllocationFunction.html
   type VkAllocationCallbacks;
-  type Ptr_VkAllocationCallbacks is access all VkAllocationCallbacks;
+  type Ptr_VkAllocationCallbacks is access all VkAllocationCallbacks with Convention => C;
   type VkAllocationCallbacks is record
       pUserData             : Ptr                                  := NULL_PTR; -- void*
       pfnAllocation         : Ptr_vkAllocationFunction             := null;     -- PFN_vkAllocationFunction
@@ -1030,7 +1038,7 @@ package Neo.API.Vulkan is
 
   -- http://nopper.tv/Vulkan/1.0/VkWin32SurfaceCreateInfoKHR.html
   type VkWin32SurfaceCreateInfoKHR;
-  type Ptr_VkWin32SurfaceCreateInfoKHR is access all VkWin32SurfaceCreateInfoKHR;
+  type Ptr_VkWin32SurfaceCreateInfoKHR is access all VkWin32SurfaceCreateInfoKHR with Convention => C;
   type VkWin32SurfaceCreateInfoKHR is record
       sType     : Int_Unsigned_C := VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR; -- VkStructureType
       pNext     : Ptr_VkWin32SurfaceCreateInfoKHR := null;     -- const void*
@@ -1043,7 +1051,7 @@ package Neo.API.Vulkan is
 
   -- http://nopper.tv/Vulkan/1.0/VkSwapchainCreateInfoKHR.html
   type VkSwapchainCreateInfoKHR;
-  type Ptr_VkSwapchainCreateInfoKHR is access all VkSwapchainCreateInfoKHR;
+  type Ptr_VkSwapchainCreateInfoKHR is access all VkSwapchainCreateInfoKHR with Convention => C;
   type VkSwapchainCreateInfoKHR is record
       sType                 : Int_Unsigned_C := VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR; -- VkStructureType
       pNext                 : Ptr_VkSwapchainCreateInfoKHR := null; -- const void*
@@ -1069,7 +1077,7 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceFeatures.html
   type VkPhysicalDeviceFeatures;
-  type Ptr_VkPhysicalDeviceFeatures is access all VkPhysicalDeviceFeatures;
+  type Ptr_VkPhysicalDeviceFeatures is access all VkPhysicalDeviceFeatures with Convention => C;
   type VkPhysicalDeviceFeatures is record
       robustBufferAccess                      : Int_Unsigned_C := 0; -- VkBool32
       fullDrawIndexUint32                     : Int_Unsigned_C := 0; -- VkBool32
@@ -1132,7 +1140,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceLimits.html
   type VkPhysicalDeviceLimits;
-  type Ptr_VkPhysicalDeviceLimits is access all VkPhysicalDeviceLimits;
+  type Ptr_VkPhysicalDeviceLimits is access all VkPhysicalDeviceLimits with Convention => C;
   type VkPhysicalDeviceLimits is record
       maxImageDimension1D                             : Int_Unsigned_C              := 0;          -- uint32_t        
       maxImageDimension2D                             : Int_Unsigned_C              := 0;          -- uint32_t        
@@ -1246,7 +1254,7 @@ package Neo.API.Vulkan is
       
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceSparseProperties.html
   type VkPhysicalDeviceSparseProperties;
-  type Ptr_VkPhysicalDeviceSparseProperties is access all VkPhysicalDeviceSparseProperties;
+  type Ptr_VkPhysicalDeviceSparseProperties is access all VkPhysicalDeviceSparseProperties with Convention => C;
   type VkPhysicalDeviceSparseProperties is record
       residencyStandard2DBlockShape            : Int_Unsigned_C := 0; -- VkBool32
       residencyStandard2DMultisampleBlockShape : Int_Unsigned_C := 0; -- VkBool32
@@ -1259,7 +1267,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceProperties.html
   type VkPhysicalDeviceProperties;
-  type Ptr_VkPhysicalDeviceProperties is access all VkPhysicalDeviceProperties;
+  type Ptr_VkPhysicalDeviceProperties is access all VkPhysicalDeviceProperties with Convention => C;
   type VkPhysicalDeviceProperties is record
       apiVersion        : Int_Unsigned_C                   := 0;                         -- uint32_t
       driverVersion     : Int_Unsigned_C                   := 0;                         -- uint32_t
@@ -1276,7 +1284,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryType.html
   type VkMemoryType;
-  type Ptr_VkMemoryType is access all VkMemoryType;
+  type Ptr_VkMemoryType is access all VkMemoryType with Convention => C;
   type VkMemoryType is record
       propertyFlags : Int_Unsigned_C := 0; -- VkMemoryPropertyFlags    
       heapIndex     : Int_Unsigned_C := 0; -- uint32_t
@@ -1296,7 +1304,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
   type VkPhysicalDeviceMemoryProperties;
-  type Ptr_VkPhysicalDeviceMemoryProperties is access all VkPhysicalDeviceMemoryProperties;
+  type Ptr_VkPhysicalDeviceMemoryProperties is access all VkPhysicalDeviceMemoryProperties with Convention => C;
   type VkPhysicalDeviceMemoryProperties is record
       memoryTypeCount : Int_Unsigned_C     := 0;                           -- uint32_t
       memoryTypes     : Array_VkMemoryType := (others => (others => <>));  -- VkMemoryType [VK_MAX_MEMORY_TYPES]
@@ -1338,7 +1346,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageSubresourceRange.html
   type VkImageSubresourceRange;
-  type Ptr_VkImageSubresourceRange is access all VkImageSubresourceRange;
+  type Ptr_VkImageSubresourceRange is access all VkImageSubresourceRange with Convention => C;
   type VkImageSubresourceRange is record
       aspectMask     : Int_Unsigned_C := 0; -- VkImageAspectFlags    
       baseMipLevel   : Int_Unsigned_C := 0; -- uint32_t
@@ -1351,7 +1359,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageMemoryBarrier.html
   type VkImageMemoryBarrier;
-  type Ptr_VkImageMemoryBarrier is access all VkImageMemoryBarrier;
+  type Ptr_VkImageMemoryBarrier is access all VkImageMemoryBarrier with Convention => C;
   type VkImageMemoryBarrier is record
       sType               : Int_Unsigned_C := VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER; -- VkStructureType
       pNext               : Ptr_VkImageMemoryBarrier := null;           -- const void*
@@ -1369,7 +1377,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtensionProperties.html
   type VkExtensionProperties;
-  type Ptr_VkExtensionProperties is access all VkExtensionProperties;
+  type Ptr_VkExtensionProperties is access all VkExtensionProperties with Convention => C;
   type VkExtensionProperties is record
       extensionName : Str_8_C (1..VK_MAX_EXTENSION_NAME_SIZE) := (others => NULL_CHAR_8_C); -- char [VK_MAX_EXTENSION_NAME_SIZE];
       specVersion   : Int_Unsigned_C                          := 0;                         -- uint32_t
@@ -1379,7 +1387,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferAllocateInfo.html
   type VkCommandBufferAllocateInfo;
-  type Ptr_VkCommandBufferAllocateInfo is access all VkCommandBufferAllocateInfo;
+  type Ptr_VkCommandBufferAllocateInfo is access all VkCommandBufferAllocateInfo with Convention => C;
   type VkCommandBufferAllocateInfo is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO; -- VkStructureType
       pNext              : Ptr            := NULL_PTR; -- const void*
@@ -1392,7 +1400,7 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSubmitInfo.html
   type VkSubmitInfo;
-  type Ptr_VkSubmitInfo is access all VkSubmitInfo;
+  type Ptr_VkSubmitInfo is access all VkSubmitInfo with Convention => C;
   type VkSubmitInfo is record
       sType                : Int_Unsigned_C := VK_STRUCTURE_TYPE_SUBMIT_INFO; -- VkStructureType
       pNext                : Ptr_VkSubmitInfo   := null; -- const void*
@@ -1409,31 +1417,31 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageSubresource.html
   type VkImageSubresource;
-  type Ptr_VkImageSubresource is access all VkImageSubresource;
+  type Ptr_VkImageSubresource is access all VkImageSubresource with Convention => C;
   type VkImageSubresource is record
       aspectMask : Int_Unsigned_C := 0; -- VkImageAspectFlags
       mipLevel   : Int_Unsigned_C := 0; -- uint32_t
       arrayLayer : Int_Unsigned_C := 0; -- uint32_t
-    end record;
+    end record with Convention => C;
   type Array_VkImageSubresource is array (Positive range <>) of aliased VkImageSubresource;
   type Ptr_Array_VkImageSubresource is access all Array_VkImageSubresource;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSubresourceLayout.html
   type VkSubresourceLayout;
-  type Ptr_VkSubresourceLayout is access all VkSubresourceLayout;
+  type Ptr_VkSubresourceLayout is access all VkSubresourceLayout with Convention => C;
   type VkSubresourceLayout is record
       offset     : Int_64_Unsigned_C := 0; -- VkDeviceSize
       size       : Int_64_Unsigned_C := 0; -- VkDeviceSize
       rowPitch   : Int_64_Unsigned_C := 0; -- VkDeviceSize
       arrayPitch : Int_64_Unsigned_C := 0; -- VkDeviceSize
       depthPitch : Int_64_Unsigned_C := 0; -- VkDeviceSize
-    end record;
+    end record with Convention => C;
   type Array_VkSubresourceLayout is array (Positive range <>) of aliased VkSubresourceLayout;
   type Ptr_Array_VkSubresourceLayout is access all Array_VkSubresourceLayout;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkApplicationInfo.html
   type VkApplicationInfo;
-  type Ptr_VkApplicationInfo is access all VkApplicationInfo;
+  type Ptr_VkApplicationInfo is access all VkApplicationInfo with Convention => C;
   type VkApplicationInfo is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_APPLICATION_INFO; -- VkStructureType
       pNext              : Ptr_VkApplicationInfo := null; -- const void*
@@ -1449,7 +1457,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkInstanceCreateInfo.html
   type Ptr_Ptr_Str_8_C is access all Ptr_Str_8_C with Convention => C;
   type VkInstanceCreateInfo;
-  type Ptr_VkInstanceCreateInfo is access all VkInstanceCreateInfo;
+  type Ptr_VkInstanceCreateInfo is access all VkInstanceCreateInfo with Convention => C;
   type VkInstanceCreateInfo is record
       sType                   : Int_Unsigned_C := VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO; -- VkStructureType
       pNext                   : Ptr_VkInstanceCreateInfo := null;     -- const void* 
@@ -1465,7 +1473,7 @@ package Neo.API.Vulkan is
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryAllocateInfo.html
   type VkMemoryAllocateInfo;
-  type Ptr_VkMemoryAllocateInfo is access all VkMemoryAllocateInfo;
+  type Ptr_VkMemoryAllocateInfo is access all VkMemoryAllocateInfo with Convention => C;
   type VkMemoryAllocateInfo  is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO; -- VkStructureType
       pNext           : Ptr_VkMemoryAllocateInfo := null; -- const void*
@@ -1491,7 +1499,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkQueueFamilyProperties.html
   type VkQueueFamilyProperties;
-  type Ptr_VkQueueFamilyProperties is access all VkQueueFamilyProperties;
+  type Ptr_VkQueueFamilyProperties is access all VkQueueFamilyProperties with Convention => C;
   type VkQueueFamilyProperties is record
       queueFlags                  : Int_Unsigned_C := 0;              -- VkQueueFlags    
       queueCount                  : Int_Unsigned_C := 0;              -- uint32_t        
@@ -1503,7 +1511,7 @@ package Neo.API.Vulkan is
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryRequirements.html
   type VkMemoryRequirements;
-  type Ptr_VkMemoryRequirements is access all VkMemoryRequirements;
+  type Ptr_VkMemoryRequirements is access all VkMemoryRequirements with Convention => C;
   type VkMemoryRequirements is record
       size           : Int_64_Unsigned_C := 0; -- VkDeviceSize
       alignment      : Int_64_Unsigned_C := 0; -- VkDeviceSize
@@ -1532,7 +1540,7 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandPoolCreateInfo.html
   type VkCommandPoolCreateInfo;
-  type Ptr_VkCommandPoolCreateInfo is access all VkCommandPoolCreateInfo;
+  type Ptr_VkCommandPoolCreateInfo is access all VkCommandPoolCreateInfo with Convention => C;
   type VkCommandPoolCreateInfo is record
       sType            : Int_Unsigned_C := VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO; -- VkStructureType
       pNext            : Ptr            := NULL_PTR; -- const void*
@@ -1544,7 +1552,7 @@ package Neo.API.Vulkan is
         
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSemaphoreCreateInfo.html
   type VkSemaphoreCreateInfo;
-  type Ptr_VkSemaphoreCreateInfo is access all VkSemaphoreCreateInfo;
+  type Ptr_VkSemaphoreCreateInfo is access all VkSemaphoreCreateInfo with Convention => C;
   type VkSemaphoreCreateInfo is record
       sType : Int_Unsigned_C := VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO; -- VkStructureType
       pNext : Ptr_VkSemaphoreCreateInfo := null; -- const void* 
@@ -1555,7 +1563,7 @@ package Neo.API.Vulkan is
         
   -- http://nopper.tv/Vulkan/1.0/vkQueuePresentKHR.html
   type VkPresentInfoKHR;
-  type Ptr_VkPresentInfoKHR is access all VkPresentInfoKHR;
+  type Ptr_VkPresentInfoKHR is access all VkPresentInfoKHR with Convention => C;
   type VkPresentInfoKHR is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_PRESENT_INFO_KHR; -- VkStructureType
       pNext              : Ptr_VkPresentInfoKHR := null; -- const void*
@@ -1571,7 +1579,7 @@ package Neo.API.Vulkan is
 
   -- https://vulkan.lunarg.com/doc/view/1.0.26.0/windows/vkspec.chunked/ch29s05.html#VkSurfaceFormatKHR
   type VkSurfaceFormatKHR;
-  type Ptr_VkSurfaceFormatKHR is access all VkSurfaceFormatKHR;
+  type Ptr_VkSurfaceFormatKHR is access all VkSurfaceFormatKHR with Convention => C;
   type VkSurfaceFormatKHR is record
       format     : Int_Unsigned_C := 0; -- VkFormat
       colorSpace : Int_Unsigned_C := 0; -- VkColorSpaceKHR
@@ -1581,7 +1589,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkOffset2D.html
   type VkOffset2D;
-  type Ptr_VkOffset2D is access all VkOffset2D;
+  type Ptr_VkOffset2D is access all VkOffset2D with Convention => C;
   type VkOffset2D is record
       x : Int_C := 0; -- int32_t
       y : Int_C := 0; -- int32_t
@@ -1591,7 +1599,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkRect2D.html
   type VkRect2D;
-  type Ptr_VkRect2D is access all VkRect2D;
+  type Ptr_VkRect2D is access all VkRect2D with Convention => C;
   type VkRect2D is record
       offset : VkOffset2D := (others => <>); -- VkOffset2D
       extent : VkExtent2D := (others => <>); -- VkExtent2D
@@ -1601,19 +1609,22 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkClearColorValue.html
   type VkClearColorValue;
-  type Ptr_VkClearColorValue is access all VkClearColorValue;
+  type Ptr_VkClearColorValue is access all VkClearColorValue with Convention => C;
   type VkClearColorValue is record
       -- float32 float [4]
       -- int32 int32_t [4]
       -- uint32 uint32_t [4]
-      float32 : Array_Real_C (1..4) := (others => 0.0); -- uint32_t[4]
+      float32_1 : Real_C := 0.0; -- uint32_t[4]
+      float32_2 : Real_C := 0.0; -- uint32_t[4]
+      float32_3 : Real_C := 0.0; -- uint32_t[4]
+      float32_4 : Real_C := 0.0; -- uint32_t[4]
     end record with Convention => C;
   type Array_VkClearColorValue is array (Positive range <>) of aliased VkClearColorValue;
   type Ptr_Array_VkClearColorValue is access all Array_VkClearColorValue;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkClearDepthStencilValue.html
   type VkClearDepthStencilValue;
-  type Ptr_VkClearDepthStencilValue is access all VkClearDepthStencilValue;
+  type Ptr_VkClearDepthStencilValue is access all VkClearDepthStencilValue with Convention => C;
   type VkClearDepthStencilValue is record
       depth   : Real_C         := 0.0; -- float
       stencil : Int_Unsigned_C := 0;   -- uint32_t
@@ -1623,7 +1634,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkClearValue.html
   type VkClearValue;
-  type Ptr_VkClearValue is access all VkClearValue;
+  type Ptr_VkClearValue is access all VkClearValue with Convention => C;
   type VkClearValue is record
       color        : VkClearColorValue        := (others => <>); -- VkClearColorValue
       depthStencil : VkClearDepthStencilValue := (others => <>); -- VkClearDepthStencilValue
@@ -1633,7 +1644,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkRenderPassBeginInfo.html
   type VkRenderPassBeginInfo;
-  type Ptr_VkRenderPassBeginInfo is access all VkRenderPassBeginInfo;
+  type Ptr_VkRenderPassBeginInfo is access all VkRenderPassBeginInfo with Convention => C;
   type VkRenderPassBeginInfo is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO; -- VkStructureType
       pNext           : Ptr_VkRenderPassBeginInfo := null;           -- const void*
@@ -1646,7 +1657,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSpecializationMapEntry.html
   type VkSpecializationMapEntry;
-  type Ptr_VkSpecializationMapEntry is access all VkSpecializationMapEntry;
+  type Ptr_VkSpecializationMapEntry is access all VkSpecializationMapEntry with Convention => C;
   type VkSpecializationMapEntry is record
       constantID : Int_Unsigned_C := 0; -- uint32_t
       offset     : Int_Unsigned_C := 0; -- uint32_t
@@ -1655,7 +1666,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSpecializationInfo.html
   type VkSpecializationInfo;
-  type Ptr_VkSpecializationInfo is access all VkSpecializationInfo;
+  type Ptr_VkSpecializationInfo is access all VkSpecializationInfo with Convention => C;
   type VkSpecializationInfo is record
       mapEntryCount : Int_Unsigned_C               := 0;        -- uint32_t
       pMapEntries   : Ptr_VkSpecializationMapEntry := null;     -- const VkSpecializationMapEntry*
@@ -1665,7 +1676,7 @@ package Neo.API.Vulkan is
 
   -- VkPipelineShaderStageCreateInfo
   type VkPipelineShaderStageCreateInfo;
-  type Ptr_VkPipelineShaderStageCreateInfo is access all VkPipelineShaderStageCreateInfo;
+  type Ptr_VkPipelineShaderStageCreateInfo is access all VkPipelineShaderStageCreateInfo with Convention => C;
   type VkPipelineShaderStageCreateInfo is record
       sType               : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO; -- VkStructureType
       pNext               : Ptr_VkPipelineShaderStageCreateInfo := null; -- const void*
@@ -1680,7 +1691,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkVertexInputBindingDescription.html
   type VkVertexInputBindingDescription;
-  type Ptr_VkVertexInputBindingDescription is access all VkVertexInputBindingDescription;
+  type Ptr_VkVertexInputBindingDescription is access all VkVertexInputBindingDescription with Convention => C;
   type VkVertexInputBindingDescription is record
       binding   : Int_Unsigned_C := 0; -- uint32_t
       stride    : Int_Unsigned_C := 0; -- uint32_t
@@ -1690,7 +1701,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkVertexInputAttributeDescription.html
   type VkVertexInputAttributeDescription;
-  type Ptr_VkVertexInputAttributeDescription is access all VkVertexInputAttributeDescription;
+  type Ptr_VkVertexInputAttributeDescription is access all VkVertexInputAttributeDescription with Convention => C;
   type VkVertexInputAttributeDescription is record
       location : Int_Unsigned_C := 0; -- uint32_t
       binding  : Int_Unsigned_C := 0; -- uint32_t
@@ -1701,7 +1712,7 @@ package Neo.API.Vulkan is
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineVertexInputStateCreateInfo.html
   type VkPipelineVertexInputStateCreateInfo;
-  type Ptr_VkPipelineVertexInputStateCreateInfo is access all VkPipelineVertexInputStateCreateInfo;
+  type Ptr_VkPipelineVertexInputStateCreateInfo is access all VkPipelineVertexInputStateCreateInfo with Convention => C;
   type VkPipelineVertexInputStateCreateInfo is record
       sType                           : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO; -- VkStructureType
       pNext                           : Ptr_VkPipelineVertexInputStateCreateInfo := null; -- const void*
@@ -1714,7 +1725,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineInputAssemblyStateCreateInfo.html
   type VkPipelineInputAssemblyStateCreateInfo;
-  type Ptr_VkPipelineInputAssemblyStateCreateInfo is access all VkPipelineInputAssemblyStateCreateInfo;
+  type Ptr_VkPipelineInputAssemblyStateCreateInfo is access all VkPipelineInputAssemblyStateCreateInfo with Convention => C;
   type VkPipelineInputAssemblyStateCreateInfo is record
       sType                  : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO; -- VkStructureType
       pNext                  : Ptr_VkPipelineInputAssemblyStateCreateInfo := null; -- const void*
@@ -1725,7 +1736,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineTessellationStateCreateFlags.html
   type VkPipelineTessellationStateCreateInfo;
-  type Ptr_VkPipelineTessellationStateCreateInfo is access all VkPipelineTessellationStateCreateInfo;
+  type Ptr_VkPipelineTessellationStateCreateInfo is access all VkPipelineTessellationStateCreateInfo with Convention => C;
   type VkPipelineTessellationStateCreateInfo is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO; -- VkStructureType
       pNext              : Ptr_VkPipelineTessellationStateCreateInfo := null; -- const void*
@@ -1735,7 +1746,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkViewport.html
   type VkViewport;
-  type Ptr_VkViewport is access all VkViewport;
+  type Ptr_VkViewport is access all VkViewport with Convention => C;
   type VkViewport is record
       x        : Real_C := 0.0; -- float
       y        : Real_C := 0.0; -- float
@@ -1747,7 +1758,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineViewportStateCreateInfo.html
   type VkPipelineViewportStateCreateInfo;
-  type Ptr_VkPipelineViewportStateCreateInfo is access all VkPipelineViewportStateCreateInfo;
+  type Ptr_VkPipelineViewportStateCreateInfo is access all VkPipelineViewportStateCreateInfo with Convention => C;
   type VkPipelineViewportStateCreateInfo is record
       sType         : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO; -- VkStructureType
       pNext         : Ptr_VkPipelineViewportStateCreateInfo := null; -- const void*
@@ -1760,7 +1771,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineRasterizationStateCreateInfo.html
   type VkPipelineRasterizationStateCreateInfo;
-  type Ptr_VkPipelineRasterizationStateCreateInfo is access all VkPipelineRasterizationStateCreateInfo;
+  type Ptr_VkPipelineRasterizationStateCreateInfo is access all VkPipelineRasterizationStateCreateInfo with Convention => C;
   type VkPipelineRasterizationStateCreateInfo is record
       sType                   : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO; -- VkStructureType
       pNext                   : Ptr_VkPipelineRasterizationStateCreateInfo := null; -- const void*
@@ -1779,7 +1790,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineMultisampleStateCreateInfo.html
   type VkPipelineMultisampleStateCreateInfo;
-  type Ptr_VkPipelineMultisampleStateCreateInfo is access all VkPipelineMultisampleStateCreateInfo;
+  type Ptr_VkPipelineMultisampleStateCreateInfo is access all VkPipelineMultisampleStateCreateInfo with Convention => C;
   type VkPipelineMultisampleStateCreateInfo is record
       sType                 : Int_Unsigned_C :=  VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkPipelineRasterizationStateCreateInfo := null; -- const void*
@@ -1794,7 +1805,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkStencilOpState.html
   type VkStencilOpState;
-  type Ptr_VkStencilOpState is access all VkStencilOpState;
+  type Ptr_VkStencilOpState is access all VkStencilOpState with Convention => C;
   type VkStencilOpState is record
       failOp      : Int_Unsigned_C := 0; -- VkStencilOp
       passOp      : Int_Unsigned_C := 0; -- VkStencilOp
@@ -1807,7 +1818,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineDepthStencilStateCreateInfo.html
   type VkPipelineDepthStencilStateCreateInfo;
-  type Ptr_VkPipelineDepthStencilStateCreateInfo is access all VkPipelineDepthStencilStateCreateInfo;
+  type Ptr_VkPipelineDepthStencilStateCreateInfo is access all VkPipelineDepthStencilStateCreateInfo with Convention => C;
   type VkPipelineDepthStencilStateCreateInfo is record
       sType                 : Int_Unsigned_C :=  VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkPipelineDepthStencilStateCreateInfo := null;  -- const void*
@@ -1825,7 +1836,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineColorBlendAttachmentState.html
   type VkPipelineColorBlendAttachmentState;
-  type Ptr_VkPipelineColorBlendAttachmentState is access all VkPipelineColorBlendAttachmentState;
+  type Ptr_VkPipelineColorBlendAttachmentState is access all VkPipelineColorBlendAttachmentState with Convention => C;
   type VkPipelineColorBlendAttachmentState is record
       blendEnable         : Int_Unsigned_C := 0; -- VkBool32
       srcColorBlendFactor : Int_Unsigned_C := 0; -- VkBlendFactor
@@ -1839,7 +1850,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineColorBlendStateCreateInfo.html
   type VkPipelineColorBlendStateCreateInfo;
-  type Ptr_VkPipelineColorBlendStateCreateInfo is access all VkPipelineColorBlendStateCreateInfo;
+  type Ptr_VkPipelineColorBlendStateCreateInfo is access all VkPipelineColorBlendStateCreateInfo with Convention => C;
   type VkPipelineColorBlendStateCreateInfo is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO; -- VkStructureType
       pNext           : Ptr_VkPipelineColorBlendStateCreateInfo := null;            -- const void*
@@ -1853,7 +1864,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineDynamicStateCreateInfo.html
   type VkPipelineDynamicStateCreateInfo;
-  type Ptr_VkPipelineDynamicStateCreateInfo is access all VkPipelineDynamicStateCreateInfo;
+  type Ptr_VkPipelineDynamicStateCreateInfo is access all VkPipelineDynamicStateCreateInfo with Convention => C;
   type VkPipelineDynamicStateCreateInfo is record
       sType             : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO; -- VkStructureType
       pNext             : Ptr_VkPipelineDynamicStateCreateInfo := null; -- const void*
@@ -1864,7 +1875,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkGraphicsPipelineCreateInfo.html
   type VkGraphicsPipelineCreateInfo;
-  type Ptr_VkGraphicsPipelineCreateInfo is access all VkGraphicsPipelineCreateInfo;
+  type Ptr_VkGraphicsPipelineCreateInfo is access all VkGraphicsPipelineCreateInfo with Convention => C;
   type VkGraphicsPipelineCreateInfo is record
       sType               : Int_Unsigned_C := VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO; -- VkStructureType
       pNext               : Ptr_VkGraphicsPipelineCreateInfo           := null;     -- const void*
@@ -1889,7 +1900,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentDescription.html
   type VkAttachmentDescription;
-  type Ptr_VkAttachmentDescription is access all VkAttachmentDescription;
+  type Ptr_VkAttachmentDescription is access all VkAttachmentDescription with Convention => C;
   type VkAttachmentDescription is record
       flags          : Int_Unsigned_C := 0; -- VkAttachmentDescriptionFlags
       format         : Int_Unsigned_C := 0; -- VkFormat
@@ -1906,7 +1917,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentReference.html
   type VkAttachmentReference;
-  type Ptr_VkAttachmentReference is access all VkAttachmentReference;
+  type Ptr_VkAttachmentReference is access all VkAttachmentReference with Convention => C;
   type VkAttachmentReference is record
       attachment : Int_Unsigned_C := 0; -- uint32_t         
       layout     : Int_Unsigned_C := 0; -- VkImageLayout    
@@ -1916,7 +1927,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSubpassDescription.html
   type VkSubpassDescription;
-  type Ptr_VkSubpassDescription is access all VkSubpassDescription;
+  type Ptr_VkSubpassDescription is access all VkSubpassDescription with Convention => C;
   type VkSubpassDescription is record
       flags                   : Int_Unsigned_C            := 0;    -- VkSubpassDescriptionFlags       
       pipelineBindPoint       : Int_Unsigned_C            := 0;    -- VkPipelineBindPoint             
@@ -1934,7 +1945,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSubpassDependency.html
   type VkSubpassDependency;
-  type Ptr_VkSubpassDependency is access all VkSubpassDependency;
+  type Ptr_VkSubpassDependency is access all VkSubpassDependency with Convention => C;
   type VkSubpassDependency is record
       srcSubpass      : Int_Unsigned_C := 0; -- uint32_t
       dstSubpass      : Int_Unsigned_C := 0; -- uint32_t
@@ -1949,7 +1960,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFramebufferCreateInfo.html
   type VkFramebufferCreateInfo;
-  type Ptr_VkFramebufferCreateInfo is access all VkFramebufferCreateInfo;
+  type Ptr_VkFramebufferCreateInfo is access all VkFramebufferCreateInfo with Convention => C;
   type VkFramebufferCreateInfo is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO; -- VkStructureType
       pNext           : Ptr_VkFramebufferCreateInfo := null;     -- const void*
@@ -1964,7 +1975,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkRenderPassCreateInfo.html
   type VkRenderPassCreateInfo;
-  type Ptr_VkRenderPassCreateInfo is access all VkRenderPassCreateInfo;
+  type Ptr_VkRenderPassCreateInfo is access all VkRenderPassCreateInfo with Convention => C;
   type VkRenderPassCreateInfo is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO; -- VkStructureType
       pNext           : Ptr_VkRenderPassCreateInfo  := null; -- const void*
@@ -1981,7 +1992,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFormatProperties.html
   type VkFormatProperties;
-  type Ptr_VkFormatProperties is access all VkFormatProperties;
+  type Ptr_VkFormatProperties is access all VkFormatProperties with Convention => C;
   type VkFormatProperties is record
       linearTilingFeatures  : Int_Unsigned_C := 0; -- VkFormatFeatureFlags    
       optimalTilingFeatures : Int_Unsigned_C := 0; -- VkFormatFeatureFlags    
@@ -1992,7 +2003,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorPoolSize.html
   type VkDescriptorPoolSize;
-  type Ptr_VkDescriptorPoolSize is access all VkDescriptorPoolSize;
+  type Ptr_VkDescriptorPoolSize is access all VkDescriptorPoolSize with Convention => C;
   type VkDescriptorPoolSize is record
       typ             : Int_Unsigned_C := 0; -- VkDescriptorType !!!
       descriptorCount : Int_Unsigned_C := 0; -- uint32_t            
@@ -2002,7 +2013,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorPoolCreateInfo.html
   type VkDescriptorPoolCreateInfo;
-  type Ptr_VkDescriptorPoolCreateInfo is access all VkDescriptorPoolCreateInfo;
+  type Ptr_VkDescriptorPoolCreateInfo is access all VkDescriptorPoolCreateInfo with Convention => C;
   type VkDescriptorPoolCreateInfo is record
       sType         : Int_Unsigned_C := VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO; -- VkStructureType                
       pNext         : Ptr_VkDescriptorPoolCreateInfo := null; -- const void*
@@ -2016,7 +2027,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorSetLayoutBinding.html
   type VkDescriptorSetLayoutBinding;
-  type Ptr_VkDescriptorSetLayoutBinding is access all VkDescriptorSetLayoutBinding;
+  type Ptr_VkDescriptorSetLayoutBinding is access all VkDescriptorSetLayoutBinding with Convention => C;
   type VkDescriptorSetLayoutBinding is record
       binding            : Int_Unsigned_C := 0;    -- uint32_t              
       descriptorType     : Int_Unsigned_C := 0;    -- VkDescriptorType      
@@ -2029,7 +2040,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorSetLayoutCreateInfo.html
   type VkDescriptorSetLayoutCreateInfo;
-  type Ptr_VkDescriptorSetLayoutCreateInfo is access all VkDescriptorSetLayoutCreateInfo;
+  type Ptr_VkDescriptorSetLayoutCreateInfo is access all VkDescriptorSetLayoutCreateInfo with Convention => C;
   type VkDescriptorSetLayoutCreateInfo is record
       sType        : Int_Unsigned_C := VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO; -- VkStructureType                        
       pNext        : Ptr_VkDescriptorSetLayoutCreateInfo := null; -- const void*
@@ -2042,7 +2053,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorBufferInfo.html
   type VkDescriptorBufferInfo;
-  type Ptr_VkDescriptorBufferInfo is access all VkDescriptorBufferInfo;
+  type Ptr_VkDescriptorBufferInfo is access all VkDescriptorBufferInfo with Convention => C;
   type VkDescriptorBufferInfo is record
       buffer : Ptr               := NULL_PTR; -- VkBuffer
       offset : Int_64_Unsigned_C := 0;        -- VkDeviceSize
@@ -2053,7 +2064,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorImageInfo.html
   type VkDescriptorImageInfo;
-  type Ptr_VkDescriptorImageInfo is access all VkDescriptorImageInfo;
+  type Ptr_VkDescriptorImageInfo is access all VkDescriptorImageInfo with Convention => C;
   type VkDescriptorImageInfo is record
       sampler     : Ptr            := NULL_PTR; -- VkSampler
       imageView   : Ptr            := NULL_PTR; -- VkImageView
@@ -2064,7 +2075,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorSetAllocateInfo.html
   type VkDescriptorSetAllocateInfo;
-  type Ptr_VkDescriptorSetAllocateInfo is access all VkDescriptorSetAllocateInfo;
+  type Ptr_VkDescriptorSetAllocateInfo is access all VkDescriptorSetAllocateInfo with Convention => C;
   type VkDescriptorSetAllocateInfo is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO; -- VkStructureType                 
       pNext              : Ptr_VkDescriptorSetAllocateInfo := null;     -- const void*
@@ -2077,7 +2088,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkWriteDescriptorSet.html
   type VkWriteDescriptorSet;
-  type Ptr_VkWriteDescriptorSet is access all VkWriteDescriptorSet;
+  type Ptr_VkWriteDescriptorSet is access all VkWriteDescriptorSet with Convention => C;
   type VkWriteDescriptorSet is record
       sType            : Int_Unsigned_C := VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET; -- VkStructureType                  
       pNext            : Ptr_VkWriteDescriptorSet   := null;     -- const void*
@@ -2095,7 +2106,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCopyDescriptorSet.html
   type VkCopyDescriptorSet;
-  type Ptr_VkCopyDescriptorSet is access all VkCopyDescriptorSet;
+  type Ptr_VkCopyDescriptorSet is access all VkCopyDescriptorSet with Convention => C;
   type VkCopyDescriptorSet is record
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET; -- VkStructureType    
       pNext           : Ptr_VkCopyDescriptorSet := null;     -- const void*
@@ -2112,7 +2123,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPushConstantRange.html
   type VkPushConstantRange;
-  type Ptr_VkPushConstantRange is access all VkPushConstantRange;
+  type Ptr_VkPushConstantRange is access all VkPushConstantRange with Convention => C;
   type VkPushConstantRange is record
       stageFlags : Int_Unsigned_C := 0; -- VkShaderStageFlags
       offset     : Int_Unsigned_C := 0; -- uint32_t
@@ -2123,7 +2134,7 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineLayoutCreateInfo.html
   type VkPipelineLayoutCreateInfo;
-  type Ptr_VkPipelineLayoutCreateInfo is access all VkPipelineLayoutCreateInfo;
+  type Ptr_VkPipelineLayoutCreateInfo is access all VkPipelineLayoutCreateInfo with Convention => C;
   type VkPipelineLayoutCreateInfo is record
       sType                  : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO; -- VkStructureType
       pNext                  : Ptr_VkPipelineLayoutCreateInfo := null; -- const void*
@@ -2138,7 +2149,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkComponentMapping.html
   type VkComponentMapping;
-  type Ptr_VkComponentMapping is access all VkComponentMapping;
+  type Ptr_VkComponentMapping is access all VkComponentMapping with Convention => C;
   type VkComponentMapping is record
       r : Int_Unsigned_C := 0; -- VkComponentSwizzle
       g : Int_Unsigned_C := 0; -- VkComponentSwizzle
@@ -2150,7 +2161,7 @@ package Neo.API.Vulkan is
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageViewCreateInfo.html
   type VkImageViewCreateInfo;
-  type Ptr_VkImageViewCreateInfo is access all VkImageViewCreateInfo;
+  type Ptr_VkImageViewCreateInfo is access all VkImageViewCreateInfo with Convention => C;
   type VkImageViewCreateInfo is record
       sType            : Int_Unsigned_C := VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO; -- VkStructureType
       pNext            : Ptr_VkImageViewCreateInfo := null;           -- const void*

@@ -30,21 +30,21 @@ package Neo.Data.Audio is
 
   type Clip_State (Kind : Clip_Kind := Foreground_Clip; Do_Loop : Bool := False) is record
       Lead_In_Sample  : Str_Unbound := NULL_STR_UNBOUND;
-      Lead_In_Volume  : Real_Percent     := 100.0;
-      Max_Volume      : Real_Percent     := 100.0;
-      Screen_Shake    : Real_Percent     := 10.0;
-      Fade_Radius_Min : Real        := 1.0;
-      Fade_Radius_Max : Real        := 2.0;
-      Omnidirectional : Bool        := False;
-      No_Occlusion    : Bool        := False;
-      Is_Global       : Bool        := True;
-      Is_Private      : Bool        := True;
-      Use_Center      : Bool        := True;
-      Use_Left        : Bool        := True;
-      Use_Right       : Bool        := True;
-      Use_Back_Left   : Bool        := True;
-      Use_Back_Right  : Bool        := True;
-      Use_Subwoofer   : Bool        := True;
+      Lead_In_Volume,
+      Max_Volume      : Real_Percent := 100.0;
+      Screen_Shake    : Real_Percent := 10.0;
+      Fade_Radius_Min : Real         := 1.0;
+      Fade_Radius_Max : Real         := 2.0;
+      Omnidirectional,
+      No_Occlusion : Bool := False;
+      Is_Global,
+      Is_Private,
+      Use_Center,
+      Use_Left,
+      Use_Right,
+      Use_Back_Left,
+      Use_Back_Right,
+      Use_Subwoofer : Bool := True;
       case Do_Loop is
         when False =>
           Sample : Str_Unbound := NULL_STR_UNBOUND;

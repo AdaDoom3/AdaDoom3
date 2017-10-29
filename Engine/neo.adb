@@ -15,6 +15,18 @@
 
 package body Neo is
 
+  -----------------
+  -- Information --
+  -----------------
+
+  function Game_Info return Game_Info_State is separate;
+  
+  --------------------
+  -- Build Settings --
+  --------------------
+  
+  function Is_Debugging return Bool is separate;
+  
   ------------
   -- Status --
   ------------
@@ -23,33 +35,6 @@ package body Neo is
       function Occupied return Bool is (Status);
       procedure Occupied (Val : Bool) is begin Status := Val; end;
     end;
-    
-  ----------
-  -- Path --
-  ----------
-  
-  protected body App_Path is
-  
-      -- Path separator for OS
-      function Sep return Char is (Current_Sep);
-      procedure Set_Sep (Sep : Char) is begin Current_Sep := Sep; end;
-      
-      -- Executable path
-      procedure Set (Path : Str_Unbound) is begin Current_Path := Path;     end;
-      procedure Set (Path : Str)         is begin Current_Path := U (Path); end;
-      function Get return Str_Unbound    is (Current_Path);
-      function Get return Str            is (S (Current_Path));
-    end;
-
-  ---------------
-  -- Debugging --
-  ---------------
-
-  procedure Assert (Val : Int_16_Unsigned_C) is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Int_Unsigned_C)    is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Int_C)             is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
-  procedure Assert (Val : Bool)              is begin if not Val then raise Program_Error; end if; end;--  pragma Assert (Val);      end;
 
   ------------
   -- Timing --
@@ -63,8 +48,14 @@ package body Neo is
   function Get_Duration (Timer : Timer_State) return Duration is ((if Timer.Is_Stopped then Timer.Last else Clock - Timer.Start));
 
   -- Start and start the timer and raise an error if it not being used properly
-  procedure Start (Timer : in out Timer_State) is begin Assert (not Timer.Is_Stopped); Timer := (Is_Stopped => False, Start => Clock,               others => <>); end;
-  procedure Stop  (Timer : in out Timer_State) is begin Assert (Timer.Is_Stopped);     Timer := (Is_Stopped => True,  Last  => Timer.Start - Clock, others => <>); end;
+  procedure Start (Timer : in out Timer_State) is
+    begin
+      pragma Assert (not Timer.Is_Stopped); Timer := (Is_Stopped => False, Start => Clock, others => <>);
+    end;
+  procedure Stop (Timer : in out Timer_State) is
+    begin
+      pragma Assert (Timer.Is_Stopped); Timer := (Is_Stopped => True,  Last  => Timer.Start - Clock, others => <>);
+    end;
   
   -----------------
   -- Conversions --
@@ -94,8 +85,8 @@ package body Neo is
       return Result;
     end;
   function To_Str_16 (Item : Str_16_C) return Str is
-    Last   : Int_Size_C := Item'First;
-    Buffer : Str_Unbound;
+    Last   : Int_Size_C  := Item'First;
+    Buffer : Str_Unbound := NULL_STR_UNBOUND;
     begin
       for I in Item'Range loop
         exit when Item (I) = NULL_CHAR_16_C;
@@ -104,8 +95,8 @@ package body Neo is
       return S (Buffer);
     end;
   function To_Str_16 (Item : Ptr_Const_Char_16_C) return Str is
-    Length : Int := 0;
-    Buffer : Str_Unbound;
+    Length : Int                 := 0;
+    Buffer : Str_Unbound         := NULL_STR_UNBOUND;
     Temp   : Ptr_Const_Char_16_C := Item;
     begin
       while Temp.all /= NULL_CHAR_16_C loop
@@ -116,8 +107,8 @@ package body Neo is
       return S (Buffer);
     end;          
   function To_Str_8 (Item : Ptr_Const_Char_8_C) return Str_8 is 
-    Length : Int := 0;
-    Buffer : Str_8_Unbound;
+    Length : Int                := 0;
+    Buffer : Str_8_Unbound      := NULL_STR_8_UNBOUND;
     Temp   : Ptr_Const_Char_8_C := Item;
     begin
       while Temp.all /= NULL_CHAR_8_C loop
@@ -131,8 +122,8 @@ package body Neo is
   -- Integer to string with a changable base (e.g. decimal to binary or hex)
   function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str is
     package Num_T_Text_IO is new Ada_IO.Modular_IO (Num_T);
-    Buffer : Str_Unbound;
-    Input  : Str (1..4096);
+    Buffer : Str_Unbound   := NULL_STR_UNBOUND;
+    Input  : Str (1..4096) := (others => NULL_CHAR);
     begin
       Num_T_Text_IO.Put (Input, Item, Ada_IO.Number_Base (Base));
       if Base = 10 then return Trim (Input, Both); end if;

@@ -13,6 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Neo.Engine.Interactions; use Neo.Engine.Interactions;
+
 package body Neo.Engine is
 
   --------------
@@ -26,8 +28,8 @@ package body Neo.Engine is
       procedure Initialize_Vulkan_Library;
       procedure Finalize_Vulkan_Library;
       function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
-      function Get_Vulkan_Subprogram (Name : Str)     return Ptr;
-      --function Get_Vulkan_Extensions                  return Array_Str_Unbound;
+      function Get_Vulkan_Subprogram (Name     : Str) return Ptr;
+      function Get_Vulkan_Extension  return Str_8_C;
 
       -- Information
       procedure Copy   (Item : Str);
@@ -47,7 +49,7 @@ package body Neo.Engine is
       procedure Open_Webpage (Path : Str);
       procedure Execute      (Path : Str);
       function Last_Error    return Int_Unsigned;
-      function Ok            (Name, Message : Str; Buttons : Buttons_Kind; Icon : Icon_Kind)
+      function Ok            (Message : Str; Buttons : Buttons_Kind; Icon : Icon_Kind)
                              return Bool;
 
       -- Windowing
@@ -68,14 +70,16 @@ package body Neo.Engine is
       function Fullscreen_Only   return Bool;
       function Only_Instance     return Bool;
       function Update_Windowing  return Bool; -- Set Activated and Mode cvars
-    end; use System;
+    end;
+  use System;
 
-  -- Rendering is reactive to global data types, the visible subprograms here are for the main window (e.g. backend)
+  -- Rendering is reactive to global world data, the visible subprograms here are for the main window (e.g. backend)
   package Renderer is
+      procedure Adjust (Create_New_Surface : Bool := True);
+      procedure Resize;
       procedure Initialize;
-      procedure Finalize;
       procedure Present;
-      procedure Adjust;
+      procedure Finalize;
     end;
 
   -----------------
@@ -105,7 +109,7 @@ package body Neo.Engine is
   -------------------
 
   -- Display a message-box prompt, if this fails we have serious problems
-  function Ok (Name, Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames System.Ok;
+  function Ok (Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames System.Ok;
 
   -- Fetch imported system error codes
   function Last_Error return Str is ("System error:" & System.Last_Error'Wide_Image);
@@ -121,26 +125,12 @@ package body Neo.Engine is
 
   -- Called by all tasks (including the main execution) during an error to report exception and trace information
   procedure Handle (Occurrence : Exception_Occurrence) is
-    Traces : Tracebacks_Array (1..128);
-    Result : Str_Unbound := NULL_STR_UNBOUND;
-    Skip   : Bool        := False;
-    Length : Natural     := 0;
     begin
       Line;
       Line (To_Str (Exception_Name    (Occurrence)));
       Line (To_Str (Exception_Message (Occurrence)));
       Line (Last_Error);   
-      Call_Chain (Traces, Length);
-      
-      -- Change line endings
-      for Item of Symbolic_Traceback (Traces) loop
-        if not Skip and Item = '0' then Skip := True;
-        elsif Item = ASCII.LF then
-          if Skip then Skip := False;
-          else Result := Result & EOL; end if;
-        elsif not Skip then Result := Result & To_Str (Item); end if;
-      end loop;
-      Line (Result);
+      Put_Stack;
     end;
     
   -----------
@@ -212,11 +202,11 @@ pragma Warnings (On);
     File        : Ada.Streams.Stream_IO.File_Type;
     File_Stream : Ada.Streams.Stream_IO.Stream_Access;
     begin
-      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.Path) & S & PATH_LOGS & S) & Path);
+      --Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.Bin_Path) & S & PATH_LOGS & S) & Path);
       File_Stream := Ada.Streams.Stream_IO.Stream (File);
       for Element of Log loop Char'Write (File_Stream, Element); end loop;
       Ada.Streams.Stream_IO.Close (File);
-      Open_Text (To_Str (OS_Info.Path) & S & PATH_LOGS & S & To_Str (Path));
+      --Open_Text (To_Str (OS_Info.Bin_Path) & S & PATH_LOGS & S & To_Str (Path));
     end;
 
   ---------------
@@ -227,25 +217,25 @@ pragma Warnings (On);
   function Get_Windows return Vector_Border.Unsafe_Array renames System.Get_Windows;
 
   -- Resize window respecting minimum narrow and wide aspect ratios
-  MINIMUM_FACTOR : constant Int_64_Positive := 256;
+  MINIMUM_FACTOR : constant Int := 256;
   type Resize_Kind is (Left_Resize,         Right_Resize,       Top_Right_Resize, Top_Left_Resize, Top_Resize, 
                        Bottom_Right_Resize, Bottom_Left_Resize, Bottom_Resize,    Other_Resize);
   function Resize (Kind : Resize_Kind; Border : Border_State) return Border_State is
     Result         : Border_State := Border;
     Decoration     : Border_State := Get_Decoration;
-    Extra_Width    : Int_64 := Decoration.Right  + Decoration.Left;
-    Extra_Height   : Int_64 := Decoration.Bottom + Decoration.Top;
-    Current_Width  : Int_64 := (if Border.Right  - Border.Left - Extra_Width  < MINIMUM_FACTOR then MINIMUM_FACTOR else Border.Right - Border.Left - Extra_Width);
-    Current_Height : Int_64 := (if Border.Bottom - Border.Top  - Extra_Height < MINIMUM_FACTOR * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get then
-                               MINIMUM_FACTOR * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get else Border.Bottom - Border.Top - Extra_Height);
-    Maximum_Width  : Int_64 := Current_Height * Aspect_Narrow_X.Get / Aspect_Narrow_Y.Get;
-    Maximum_Height : Int_64 := Current_Width  * Aspect_Wide_Y.Get   / Aspect_Wide_X.Get;
-    Minimum_Width  : Int_64 := Current_Height * Aspect_Wide_X.Get   / Aspect_Wide_Y.Get;
-    Minimum_Height : Int_64 := Current_Width  * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get;
-    Fit_Width      : Int_64 := (if Current_Width  > Maximum_Width  then Maximum_Width  elsif Current_Width  < Minimum_Width  then Minimum_Width  else Current_Width);
-    Fit_Height     : Int_64 := (if Current_Height > Maximum_Height then Maximum_Height elsif Current_Height < Minimum_Height then Minimum_Height else Current_Height);
-    Resize_Factor  : Int_64 := (Fit_Width + Extra_Width - (Border.Right - Border.Left)) / 2;
-    Resize_Extra   : Int_64 := (Fit_Width + Extra_Width - (Border.Right - Border.Left)) rem 2;
+    Extra_Width    : Int := Decoration.Right  + Decoration.Left;
+    Extra_Height   : Int := Decoration.Bottom + Decoration.Top;
+    Current_Width  : Int := (if Border.Right  - Border.Left - Extra_Width  < MINIMUM_FACTOR then MINIMUM_FACTOR else Border.Right - Border.Left - Extra_Width);
+    Current_Height : Int := (if Border.Bottom - Border.Top  - Extra_Height < MINIMUM_FACTOR * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get then
+                            MINIMUM_FACTOR * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get else Border.Bottom - Border.Top - Extra_Height);
+    Maximum_Width  : Int := Current_Height * Aspect_Narrow_X.Get / Aspect_Narrow_Y.Get;
+    Maximum_Height : Int := Current_Width  * Aspect_Wide_Y.Get   / Aspect_Wide_X.Get;
+    Minimum_Width  : Int := Current_Height * Aspect_Wide_X.Get   / Aspect_Wide_Y.Get;
+    Minimum_Height : Int := Current_Width  * Aspect_Narrow_Y.Get / Aspect_Narrow_X.Get;
+    Fit_Width      : Int := (if Current_Width  > Maximum_Width  then Maximum_Width  elsif Current_Width  < Minimum_Width  then Minimum_Width  else Current_Width);
+    Fit_Height     : Int := (if Current_Height > Maximum_Height then Maximum_Height elsif Current_Height < Minimum_Height then Minimum_Height else Current_Height);
+    Resize_Factor  : Int := (Fit_Width + Extra_Width - (Border.Right - Border.Left)) / 2;
+    Resize_Extra   : Int := (Fit_Width + Extra_Width - (Border.Right - Border.Left)) rem 2;
     begin
       case Kind is
         when Left_Resize =>
@@ -288,9 +278,6 @@ pragma Warnings (On);
   Input_Status  : Safe_Status;
   Cursor_Status : Safe_Status;
 
-  -- Delay constant for input polling
-  INPUT_POLLING_DURATION : constant Duration := 1.0 / 200.0; -- Suitable input response range is 0.05 (poor) to 0.005 (excellent)
-
   -- Global mouse cursor operations
   procedure Set_Cursor (Pos : Cursor_State) renames System.Set_Cursor;
   function Get_Cursor return Cursor_state renames System.Get_Cursor;
@@ -303,8 +290,8 @@ pragma Warnings (On);
 
   -- Main game window operations
   function In_Main_Window (Cursor : Cursor_State := Get_Cursor) return Bool is
-    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then Get_Decoration else (others => 0));
     Main_Window : Border_State := Get_Windows (1);
+    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then Get_Decoration else (others => 0));
     begin
       return Cursor.X >= Main_Window.Left + Decoration.Left and Cursor.X <= Main_Window.Right  - Decoration.Right and
              Cursor.Y >= Main_Window.Top  + Decoration.Top  and Cursor.Y <= Main_Window.Bottom - Decoration.Bottom; 
@@ -399,9 +386,7 @@ pragma Warnings (On);
   procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1) is
     begin
       for Device in Devices.Get.Iterate loop
-        if Ordered_Device.Unsafe.Element (Device).Player = Player then
-          Vibrate (Ordered_Device.Unsafe.Key (Device), Hz_High, Hz_Low);
-        end if;
+        if Ordered_Device.Unsafe.Element (Device).Player = Player then Vibrate (Ordered_Device.Unsafe.Key (Device), Hz_High, Hz_Low); end if;
       end loop;
     end;
 
@@ -439,12 +424,17 @@ pragma Warnings (On);
         when others => null; end case;
       end;
 
-    -- Declare locals and initialize
+    -- Indexes and temporaries
     Current_Devices : Ordered_Device.Unsafe.Map;
     Old_Players     : Ordered_Player.Unsafe.Map;
     Args            : Vector_Impulse_Arg.Unsafe.Vector;
     Player          : Player_State := (others => <>);
-    Last_Time       : Time         := Clock;
+    
+    -- Timing
+    INPUT_POLLING_DURATION : constant Duration := 1.0 / 200.0; -- Suitable input response range is 0.05 (poor) to 0.005 (excellent)
+    Last_Time : Time := Clock;
+    
+    -- Start of Run_Input
     begin
       Initialize_Input;
       while Update_Input loop
@@ -513,7 +503,7 @@ pragma Warnings (On);
 
         -- Trigger the impulses based on each player's state
         if Input_Status.Occupied then
-          for Impulse of Impulses.Get loop
+          for Impulse of Impulses.Gt loop
             for Binding of Impulse.Bindings.Get loop
               if Changed (Binding, Players.Get (Binding.Player), Old_Players.Element (Binding.Player)) then
                 Args.Clear; -- Dont register clicks or cursor movement if the cursor is not In_Main_Window when in Windowed_Mode !!!
@@ -532,6 +522,9 @@ goto Combo_Not_Activated;
                     end if;
                   end loop;
                 end if;
+
+                -- 
+                Message_Server (Impulse.Name & " " & To_Str (Args));
                 Impulse.Callback (Vector_Impulse_Arg.To_Unsafe_Array (Args));
               end if;
 
@@ -554,73 +547,13 @@ goto Combo_Not_Activated;
   package Input_Tasks is new Tasks (Run_Input);
   Input_Task : Input_Tasks.Safe_Task;
 
+  ------------
+  -- Client --
+  ------------
+
+  
   --------------
-  -- Impulses --
-  --------------
-
-  -- There has to be a better way.. but it's OK for now
-  Game_Entry_Check_Status : Safe_Status;
-
-  -- Enter or exit menu mode 
-  procedure Callback_Enter_Game (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down and then In_Main_Window then
-        if Menu.Get then Menu.Set (False);
-        else Game_Entry_Check_Status.Occupied (True); end if;
-      end if;
-    end;
-  procedure Callback_Exit_To_Menu (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down then Menu.Set (True); end if;
-    end;
-
-  -- Toggle fullscreen mode
-  procedure Callback_Fullscreen (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down then
-        Mode.Set ((case Mode.Get is
-                     when Multi_Monitor_Mode | Fullscreen_Mode => Windowed_Mode,
-                     when Windowed_Mode => Fullscreen_Mode));
-      end if;
-    end;
-
-  -- Impulse declarions
-  package Fullscreen   is new Impulse ("togglemode", Callback_Fullscreen);
-  package Enter_Game   is new Impulse ("entergame",  Callback_Enter_Game);
-  package Exit_To_Menu is new Impulse ("exittomenu", Callback_Exit_To_Menu);
-
-  --------------
-  -- Commands --
-  --------------
-
-  -- Add or remove impule bindings
-  procedure Callback_Unbind (Args : Array_Str_Unbound) is
-    begin
-      null;
-    end;
-  procedure Callback_Bind (Args : Array_Str_Unbound) is
-    begin
-      null;
-    end;
-  function Save_Binds return Str is (NULL_STR);
-
-  -- Command declarations
-  package Bind is new Command (Name     => "bind",
-                               Info     => "Bind an impulse to an input value",
-                               Usage    => "bind [player#] [impulse] [value]",
-                               Callback => Callback_Bind,
-                               Save     => Save_Binds'Access);
-
-  -----------
-  -- CVars --
-  -----------
-
-  -- Internal cvars
-  type Activated_Kind is (Other_Activated, Click_Activated, Other_Deactivated, Minimize_Deactivated);
-  package Activated is new CVar ("activated", "Query last activation action for window", Activated_Kind, Other_Activated, False);
-
-  --------------
-  -- Separate --
+  -- Subunits --
   --------------
 
   -- Game task creation
@@ -641,46 +574,48 @@ goto Combo_Not_Activated;
     -- Set the windowing mode based on the cvar Mode
     procedure Set_Windowing_Mode is
       begin
-        --Renderer.Finalize;
         case Mode.Get is
-          when Multi_Monitor_Mode => Initialize_Multi_Monitor;
-          when Windowed_Mode      => Make_Windowed;           
-          when Fullscreen_Mode    => Maximize;                              
+          when Multi_Monitor_Mode => Initialize_Multi_Monitor; -- Renderer.Adjust_Multi_Monitor;
+          when Windowed_Mode      => Make_Windowed;       
+          when Fullscreen_Mode    => Maximize;                        
         end case;
         Clip_Cursor (Mode.Get = Fullscreen_Mode);
-        Renderer.Adjust;  
+        Renderer.Adjust_Resolution;      
       end;
 
     -- Timing
     WINDOW_POLLING_DURATION : constant Duration := 1.0 / 300.0; -- Seconds per duration / Highest FPS rate possible
     Last_Time : Time := Clock;
-     
+
+    -- Main
     begin
+
+      -- Block to catch runtime exceptions
       begin
 
         -- Make sure this is the only game instance running
         if not Only_Instance then return; end if;
 
         -- Log system information
-        Line (S (OS_Info.App_Name) & WORD_SIZE'Wide_Image & " via " & S (OS_Info.Path));
+        Line (S (Game_Info.Name_ID) & WORD_SIZE'Wide_Image & " " & Game_Info.Version & " via " & PATH_GAME);
         Line ("Started "   & To_Str (Image (Get_Start_Time)));
         Line ("OS: "       & S (OS_Info.Version) & OS_Info.Bit_Size'Wide_Image);
         Line ("Build: "    & NAME_ID & " " & VERSION & " w/ " & To_Str (GNAT_Info.Version));
         Line ("Username: " & S (OS_Info.Username));
         
-        -- Set global path variables
-        App_Path.Set     (OS_Info.Path);
-        App_Path.Set_Sep (OS_Info.Path_Sep);
-        
-        -- Always show the separate console... for now
-        Initialize_Console;
+        -- Always show the separate consoles when debugging
+        if Is_Debugging then
+          Use_Ada_Put;
+          Initialize_Console;
+        end if;
         
         -- Initialize
         Renderer.Initialize;
         Initialize_Windowing;
+        Renderer.Adjust_Mode;
         Set_Windowing_Mode;
         Input_Task.Initialize;
-        Game_Task.Initialize;
+        Client_Task.Initialize;
         
         -- Set window interaction bindings
         Enter_Game.Bindings.Append   (Mouse (Left_Button));
@@ -689,17 +624,19 @@ goto Combo_Not_Activated;
        
         -- Main loop
         declare
-        Saved_Pos         : Cursor_State   := Get_Cursor;
-        Current_Menu      : Bool           := Menu.Get;
-        Current_Mode      : Mode_Kind      := Mode.Get;
-        Current_Cursor    : Cursor_Kind    := Cursor.Get;
-        Current_Activated : Activated_Kind := Activated.Get;
+          Current_Width     : Positive       := Windowed_Width.Get;
+          Current_Height    : Positive       := Windowed_Height.Get;
+          Saved_Pos         : Cursor_State   := Get_Cursor;
+          Current_Menu      : Bool           := Menu.Get;
+          Current_Mode      : Mode_Kind      := Mode.Get;
+          Current_Cursor    : Cursor_Kind    := Cursor.Get;
+          Current_Activated : Activated_Kind := Activated.Get;
         begin
 
           -- Setup
           Enter_Game.Enable;
           Input_Status.Occupied (True);
-          while Update_Windowing and Game_Task.Running loop
+          while Update_Windowing and Client.Running loop
 
             -- Set cursor
             if Current_Cursor /= Cursor.Get then
@@ -783,7 +720,7 @@ goto Combo_Not_Activated;
                         Exit_To_Menu.Disable;
                         Enter_Game.Enable;
                       end if;
-                  when others => null; end case;
+                    when others => null; end case;
                 when Other_Deactivated | Minimize_Deactivated =>
                   if not Menu.Get and In_Main_Window then Set_Cursor (Saved_Pos); end if;
                   Input_Status.Occupied (False);
@@ -794,7 +731,7 @@ goto Combo_Not_Activated;
                     case Mode.Get is
                       when Multi_Monitor_Mode => Finalize_Multi_Monitor; Minimize;
                       when Fullscreen_Mode    => Minimize; 
-                    when others => null; end case;
+                      when others => null; end case;
                   elsif Mode.Get = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
               end case;
               Current_Activated := Activated.Get;
@@ -802,6 +739,11 @@ goto Combo_Not_Activated;
 
             -- Show the frame buffer
             Renderer.Present;
+                
+            -- Recreate the swapchain and pipeline of the resolution changes
+            if Current_Width /= Windowed_Width.Get or Current_Height /= Windowed_Height.Get then
+              Renderer.Adjust_Resolution;
+            end if;
             
             -- Save some cycles
             delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
@@ -810,11 +752,10 @@ goto Combo_Not_Activated;
 
       -- Handle exceptions
       exception when Occurrence: others => Handle (Occurrence);
-        if not Running_Console and then Ok (Icon    => Error_Icon,
-                                            Name    => S (OS_Info.App_Name),
-                                            Message => Localize ("An error has occurred, would you like to view more information?"),
-                                            Buttons => Yes_No_Buttons) then Initialize_Console; end if;
-      end;
+          if not Running_Console and then Ok (Icon    => Error_Icon,
+                                              Message => Localize ("An error has occurred, would you like to view more information?"),
+                                              Buttons => Yes_No_Buttons) then Initialize_Console; end if;                         
+      end;     
       
       -- Finalize
       Finalize_Windowing;

@@ -13,5 +13,11 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Engine;
-procedure Main is begin Neo.Engine.Run; end;
+with Neo;              use Neo;
+with Neo.Engine;       use Neo.Engine;
+with Neo.Core;         use Neo.Core;
+with Neo.Core.Console; use Neo.Core.Console;
+with Ada.Command_Line; use Ada.Command_Line;
+
+procedure Main is begin for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop; Run;
+                  exception when others => Set_Exit_Status (Failure); end;

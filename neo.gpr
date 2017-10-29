@@ -57,35 +57,38 @@ project Neo is
   -- Types --
   -----------
 
-  type Word_Size_Option is ("32",      "64");
-  type Boolean_Option   is ("No",      "Yes");
-  type Game_Option      is ("Neotek",  "DOOM");
-  type System_Option    is ("Windows", "Linux", "Mac");
+  type Bit_Size_Option is ("32", "64");
+  type Boolean_Option  is ("No", "Yes");
+  type Game_Option     is ("Neotek", "DOOM");
+  type System_Option   is ("Windows", "Linux", "Mac");
 
   --------------
   -- Scenario --
   --------------
 
-  SYSTEM   : System_Option    := External ("System",  "Windows");
-  DEBUG    : Boolean_Option   := External ("Debug",   "Yes");
-  BIT_SIZE : Word_Size_Option := External ("Bitsize", "64");
-  GAME     : Game_Option      := External ("Game",    "DOOM");
+  SYSTEM   : System_Option   := External ("System", "Windows");
+  DEBUG    : Boolean_Option  := External ("Debug", "Yes");
+  GAME     : Game_Option     := External ("Game", "DOOM");
+  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "64");
  
   --------------
   -- Settings --
   --------------
 
-
   System_API := SYSTEM;
   case SYSTEM is
-    when "Windows" => null;
-    when "Linux" | "Mac" => System_API := "SDL";
+    when "Windows"       => null;
+    when "Linux" | "Mac" => System_API := "SDL"; -- Linux and Mac get SDL support only
   end case;
-  for Source_Dirs use ("Engine/", "Engine/" & System_API, "Games/" & GAME & "/Base/**");
-  for Object_Dir  use "Object";
-  for Exec_Dir    use "Games/" & GAME;
-  for Languages   use ("Ada");
-  for Main        use ("main.adb");
+  for Languages   use ("Ada");--, "C");    -- Support both Ada and OpenGL Shader Language
+  for Main        use ("main.adb");    -- Main entry point
+  for Object_Dir  use "Object";        -- Trash folder
+  for Exec_Dir    use "Games/" & GAME; -- Game distributable 
+  for Source_Dirs use (".",                                         -- 
+                       "Shaders/",                                  -- GLSL shaders
+                       "Engine/", "Engine/" & System_API,           -- Engine and system specific source
+                       "Games/" & GAME & "/Base/**",                -- Game specific source
+                       "Engine/Settings/Debugging_" & DEBUG & "/"); -- Give the source access to senario variable DEBUG
 
   --------------
   -- Switches --
@@ -93,30 +96,33 @@ project Neo is
 
   Switch_Binder   := ("-E");                 -- Store traceback in exceptions
   Switch_Linker   := ("-fprofile-generate"); -- Generate code coverage                                                                         
-  Switch_Compiler := ("-gnatW8");            -- Enable wide-character unicode identifiers
+  Switch_Compiler := ("-gnatE",              -- Enable dynamic generic elaboration checks
+                      "-gnatW8");            -- Enable wide-character unicode identifiers
   Switch_Builder  := ("-j0",                 -- Use all available threads for compilation
                       "-k",                  -- Keep building as far as possible
                       "-s");                 -- Recompile if switches are changed
   case DEBUG is
-    when "No"  => Switch_Compiler := Switch_Compiler & ("-gnatp", -- Surpress all checks
-                                                        "-O3");   -- Optimize as much as possible
-    when "Yes" => Switch_Compiler := Switch_Compiler & ("-gnato", -- Enable overflow checking for numerics
-                                                        "-gnatE", -- Enable dynamic generic elaboration checks
-                                                        "-gnata", -- Enable pre and post conditions
-                                                        "-gnatf", -- 
-                                                        "-O0",    -- Avoid any optimization
-                                                        "-g");    -- Create extended info in stack traces
+    when "Yes" => Switch_Compiler := Switch_Compiler & ("-O0",          -- Avoid any optimization
+                                                        "-gnato",       -- Check overflow for numerics
+                                                        "-gnatf",       -- Show extra info in errors
+                                                        "-g");          -- Extend info in stack traces
+    when "No"  => Switch_Compiler := Switch_Compiler & ("-O3",          -- Optimize as much as possible
+                                                        "-gnatp",       -- Surpress all checks 
+                                                        "-ffast-math"); -- Force SIMD optmization
   end case;
   case SYSTEM is
     when "Mac"     => null;
     when "Linux"   => null;
     when "Windows" =>
+      case DEBUG is
+        when "Yes" => null;
+        when "No"  => Switch_Linker := Switch_Linker & ("-mwindows"); -- Remove the command console
+      end case;
       case BIT_SIZE is
         when "32" => null;
         when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
       end case;
-      Switch_Linker := Switch_Linker & ("-mwindows",                                        -- Remove the command console
-                                        External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
+      Switch_Linker := Switch_Linker & (External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
                                         External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
                                         External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
                                         External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
@@ -127,10 +133,15 @@ project Neo is
   --------------
   -- Packages --
   --------------
-
-  package Compiler is for Default_Switches ("Ada") use Switch_Compiler; end Compiler;
+  
   package Linker   is for Default_Switches ("Ada") use Switch_Linker;   end Linker;
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
                       for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
+  package Naming   is for Body_Suffix ("C++")      use (".glv", ".glf", ".glt");      -- GLSL code
+                          Body_Suffix ("C")        use ".hta";          end Naming;   -- Javascript ActiveX HTA module
+
+  package Compiler is for Default_Switches ("Ada") use Switch_Compiler;
+                      for Driver ("C++") use "Tools\GLSLang\glslangValidator.exe";    -- Trick GPS into verifiying shader code
+                      for Driver ("C")   use "";                        end Compiler; -- C is only used for syntax highlighting
 end Neo;

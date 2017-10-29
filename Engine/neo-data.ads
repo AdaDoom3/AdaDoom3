@@ -14,23 +14,25 @@
 --                                                                                                                                      --
 
 with Ada.Direct_IO;
-with Ada.Directories;  use Ada.Directories;
-with Neo.Core.Math;    use Neo.Core.Math;
-with Neo.Core.Arrays;  use Neo.Core.Arrays;
-with Neo.Core.Strings; use Neo.Core.Strings;
-with Neo.Core.Console; use Neo.Core.Console;
+with Ada.Directories;    use Ada.Directories;
+with Neo.Core;           use Neo.Core;
+with Neo.Core.Math;      use Neo.Core.Math;
+with Neo.Core.Arrays;    use Neo.Core.Arrays;
+with Neo.Core.Strings;   use Neo.Core.Strings;
+with Neo.Core.Console;   use Neo.Core.Console;
+with Neo.Core.Debugging; use Neo.Core.Debugging;
 with Neo.Core.Vectors;
 with Neo.Core.Ordered;
 
--- Separator for the "Data" layer consisting of packages for loading and understanding common file formats
+-- Separator for the "Data" layer consisting of packages for loading and understanding file formats
 package Neo.Data is
 
   ------------
   -- Binary --
   ------------
 
-  -- Load a file into a binary buffer
   function Load (Path : Str) return Array_Byte;
+  --procedure Skip (File : in out File_Type; Bytes : Positive);
 
   -------------
   -- Parsing --
@@ -129,7 +131,7 @@ package Neo.Data is
 
       -- Check ahead without advancing
       function Peek_U return Str_Unbound; -- Name should be "Peek"
-      function Peek return Str     is (S             (Peek_U));
+      function Peek return Str     is (S                  (Peek_U));
       function Peek return Real    is (Real'Wide_Value    (Peek));
       function Peek return Real_64 is (Real_64'Wide_Value (Peek));
       function Peek return Int     is (Int'Wide_Value     (Peek));

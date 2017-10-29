@@ -16,13 +16,13 @@
 -- Shadow stencil shading with prenumbra: https://web.archive.org/web/20160417154820/http://www.terathon.com/gdc05_lengyel.pdf
 separate (Neo.Engine.Renderer) procedure Frontend is
 
-  -- 
+  -- Amount of idle frontend light job tasks that are allowed to sit idle until tasks start being destroyed
+  MAX_IDLE_LIGHT_JOBS : constant Positive := 10;
+  FOG_SCALE           : constant Float    := 0.001;
+
+  -- ???
   Area : ;
-
-  -- 
   BSP  : ;
-
-  -- 
   Pos  : ;
 
   -----------------------

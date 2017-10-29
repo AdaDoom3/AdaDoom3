@@ -15,23 +15,22 @@
 
 package body Neo.Core.Compress is
 
-  type Compressor is tagged private;
-  type Decompressor is tagged private;
-   type Decompressor is tagged
-      record
+   type Compressor is tagged private;
+   type Decompressor is tagged private;
+   type Decompressor is tagged record
          source_stream    : access STR.Root_Stream_Type'Class;
          zstd_stream      : Thin.ZSTD_DStream_ptr := Thin.Null_DStream_pointer;
       end record;
-   type Compressor is tagged
-      record
+   type Compressor is tagged record
          target_stream  : access STR.Root_Stream_Type'Class;
          zstd_stream    : Thin.ZSTD_CStream_ptr := Thin.Null_CStream_pointer;
          data_size_hint : Thin.IC.size_t := Buffer_Output_Size;
       end record;
 
-   ------------------
-   --  Initialize  --
-   ------------------
+   ----------------
+   -- Initialize --
+   ----------------
+
    procedure Initialize
      (mechanism       : out Decompressor;
       input_stream    : not null access STR.Root_Stream_Type'Class)
@@ -52,10 +51,10 @@ package body Neo.Core.Compress is
       end if;
    end Initialize;
 
-
    -----------------------
    --  Decompress_Data  --
    -----------------------
+
    procedure Decompress_Data
      (mechanism    :     Decompressor;
       complete     : out Boolean;
@@ -254,6 +253,4 @@ package body Neo.Core.Compress is
       end loop;
       return product;
    end convert_to_stream_array;
-
-
-end Zstandard.Functions.Streaming_Compression;
+end;

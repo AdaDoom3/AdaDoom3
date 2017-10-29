@@ -74,11 +74,29 @@ package body Neo.Core.Console is
   function Lines                     return Int_64_Natural is (Safe_IO.Lines);
   function Line_Size                 return Positive       is (Safe_IO.Line_Size);
 
+  ---------------
+  -- Debugging --
+  ---------------
+
+  procedure Assert (Val : Int_16_Unsigned_C) is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Int_Unsigned_C)    is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Int_C)             is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
+  procedure Assert (Val : Bool) is
+    begin
+      if not Val then
+        Line ("PANIC!");
+        Put_Stack;
+        if Is_Debugging then raise Program_Error; end if;
+      end if;
+    end;
+    
   --------------------
   -- Internal State --
   --------------------
 
-   FEEDBACK_PREFIX : constant Str := ">>> ";
+  -- Prompt output prefix
+  FEEDBACK_PREFIX : constant Str := ">>> ";
    
   -- Internal data structures
   type Command_State is record 
@@ -127,26 +145,10 @@ package body Neo.Core.Console is
 
       -- Controller
       type Control_State is new Limited_Controlled with null record;
-      procedure Initialize (Control : in out Control_State);
-      procedure Finalize   (Control : in out Control_State);
-      procedure Initialize (Control : in out Control_State) is
-        begin
-          if Commands.Has (Name) then
-            if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
-            CVars.Replace (Name, (Val => CVars.Get (Name).Val,
-                                  Get => Informal_Handle_Get'Unrestricted_Access,
-                                  Set => Informal_Handle_Set'Unrestricted_Access));
-            Handle_Set (S (CVars.Get (Name).Val));
-          else
-            CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
-                                 Get => Informal_Handle_Get'Unrestricted_Access,
-                                 Set => Informal_Handle_Set'Unrestricted_Access));
-            Set (Initial);
-          end if;
-        end;
+      procedure Finalize (Control : in out Control_State);
       procedure Finalize (Control : in out Control_State) is
         begin
-          Line ("There is a finalization bug here, because this is never called!"); -- !!!
+          Line ("There is a finalization bug here, because this is never called!"); -- !!! ???
           Line (S (To_Str_Unbound (Get)));
           if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Get),
                                                  Get => null,
@@ -154,6 +156,19 @@ package body Neo.Core.Console is
           else CVars.Delete (Name); end if;
         end;
       Controller : Control_State;
+    begin
+      if Commands.Has (Name) then
+        if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
+        CVars.Replace (Name, (Val => CVars.Get (Name).Val,
+                              Get => Informal_Handle_Get'Unrestricted_Access,
+                              Set => Informal_Handle_Set'Unrestricted_Access));
+        Handle_Set (S (CVars.Get (Name).Val));
+      else
+        CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
+                             Get => Informal_Handle_Get'Unrestricted_Access,
+                             Set => Informal_Handle_Set'Unrestricted_Access));
+        Set (Initial);
+      end if;
     end;
 
   ----------
@@ -166,7 +181,7 @@ package body Neo.Core.Console is
   package body CVar is
       
       -- Internal data
-      protected Safe_Var_T with Lock_Free is
+      protected Safe_Var_T with Lock_Free is -- Lock free!
           function Get return Var_T;
           procedure Set (Val : Var_T);
         private
@@ -196,7 +211,7 @@ package body Neo.Core.Console is
           end if;
           return FEEDBACK_PREFIX & Help & EOL &
                  FEEDBACK_PREFIX & "Current value: " & S (Get) & EOL &
-                 FEEDBACK_PREFIX & (if Settable then "Possible values: " & S (Vals) else NULL_STR);
+                 FEEDBACK_PREFIX & (if Settable then "Possible values:" & S (Vals) else NULL_STR);
         end;
       procedure Handle_Set (Val : Str) is
         begin
@@ -228,7 +243,7 @@ package body Neo.Core.Console is
   package body CVar_Real is
 
       -- Internal data
-      protected Safe_Var_T with Lock_Free is
+      protected Safe_Var_T with Lock_Free is -- Lock free!
           function Get return Var_T;
           procedure Set (Val : Var_T);
         private
@@ -319,15 +334,12 @@ package body Neo.Core.Console is
 
       -- Controller
       type Control_State is new Controlled with null record;
-      procedure Finalize   (Control : in out Control_State);
-      procedure Initialize (Control : in out Control_State);
-      procedure Finalize   (Control : in out Control_State) is begin Commands.Delete (Name); end;
-      procedure Initialize (Control : in out Control_State) is
-        begin
-          if Commands.Has (Name) then raise Duplicate; end if;
-          Commands.Insert (Name, (Save, Informal_Callback'Unrestricted_Access));
-        end;
+      procedure Finalize (Control : in out Control_State);
+      procedure Finalize (Control : in out Control_State) is begin Commands.Delete (Name); end;
       Controller : Control_State;
+    begin
+      if Commands.Has (Name) then raise Duplicate; end if;
+      Commands.Insert (Name, (Save, Informal_Callback'Unrestricted_Access));
     end;
 
   -- Input entry parsing
@@ -380,12 +392,12 @@ package body Neo.Core.Console is
     Entries   : Vector_Str_Unbound.Unsafe.Vector;
     ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
     begin
-      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & S & PATH_LOCALE)); -- Str_8 !!!
-      --for I of Split (Ada_IO.Get_Line (Data), ",") loop
-      --  Indexes.Insert (I, J);
-      --  Locales.Insert (I, Language);
-      --  J := J + 1;
-      --end loop;
+      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
+      for I of Split (Ada_IO.Get_Line (Data), ",") loop
+        Indexes.Insert (I, J);
+        Locales.Insert (I, Language);
+        J := J + 1;
+      end loop;
       while not Ada_IO.End_Of_File (Data) loop
         for I of Ada_IO.Get_Line (Data) loop
           case I is
@@ -423,7 +435,7 @@ package body Neo.Core.Console is
     exception when others => return Locales; end;
 
   -- Initalized data
-  LOCALE : Hashed_Locale.Unsafe.Map; -- := Initialize_Localization;
+  LOCALE : Hashed_Locale.Unsafe.Map := Initialize_Localization;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
@@ -442,25 +454,11 @@ package body Neo.Core.Console is
   -------------------
   
   type Control_State is new Controlled with null record;
-  procedure Initialize (Control : in out Control_State);
-  procedure Finalize   (Control : in out Control_State);
-  procedure Initialize (Control : in out Control_State) is
-    Data : Ada_IO.File_Type;
-    I    : Natural     := 0;
-    Text : Str_Unbound := NULL_STR_UNBOUND;
-    begin
-      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & S & PATH_CONFIG)); -- Str_8 !!!
-      while not Ada_IO.End_Of_File (Data) loop
-        Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
-        I    := Index (Text, "--");
-        if I = 0 then Submit (S (Text));
-        elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
-      end loop;
-    exception when others => null; end; -- No configuration file.. use defaults
+  procedure Finalize (Control : in out Control_State);
   procedure Finalize (Control : in out Control_State) is
     Data : Ada_IO.File_Type;
     begin
-      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (App_Path.Get & S & PATH_CONFIG)); -- Str_8 !!!
+      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (PATH_CONFIG)); -- Str_8 !!!
 
       -- Header
       Ada_IO.Put_Line (Data, "-- " & NAME_ID & " " & VERSION & " config: " & To_Str (Image (Get_Start_Time)));
@@ -481,5 +479,19 @@ package body Neo.Core.Console is
       end loop;
       Ada_IO.Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
-    Controller : Control_State;
+  Controller : Control_State;
+begin
+  declare
+  Data : Ada_IO.File_Type;
+  I    : Natural     := 0;
+  Text : Str_Unbound := NULL_STR_UNBOUND;
+  begin
+    Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_CONFIG)); -- Str_8 !!!
+    while not Ada_IO.End_Of_File (Data) loop
+      Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
+      I    := Index (Text, "--");
+      if I = 0 then Submit (S (Text));
+      elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+    end loop;
+  exception when others => Line ("No configuration found... using defaults.");
 end;

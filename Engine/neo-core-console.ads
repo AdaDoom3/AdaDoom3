@@ -28,7 +28,7 @@ package Neo.Core.Console is
   --------
   -- IO --
   --------
-
+  
   function Lines                     return Int_64_Unsigned;
   function Log                       return Str_Unbound;
   function Log                       return Str is (S (Log));
@@ -45,6 +45,25 @@ package Neo.Core.Console is
   procedure Input_Entry (Val  : Str);
   procedure Set_Put     (Val  : Ptr_Procedure_Put);
   procedure Use_Ada_Put; -- For debugging purposes, using this may crash if compiled in non-debugging mode
+
+  ---------------
+  -- Debugging --
+  ---------------
+
+  -- Assertion to check imported C function calls. They raise a Program_Error if the value is null or 0 **if debugging is active**
+  procedure Assert (Val : Ptr);
+  procedure Assert (Val : Bool);
+  procedure Assert (Val : Int_C);
+  procedure Assert (Val : Int_16_Unsigned_C);
+  procedure Assert (Val : Int_Unsigned_C);
+
+  -- Ignore procedures swallow the result of C functions that return useless results
+  procedure Ignore (Val : Bool)              is null;
+  procedure Ignore (Val : Ptr)               is null;
+  procedure Ignore (Val : Int_Ptr)           is null;
+  procedure Ignore (Val : Int_C)             is null;
+  procedure Ignore (Val : Int_16_Unsigned_C) is null;
+  procedure Ignore (Val : Int_Unsigned_C)    is null;
 
   -------------
   -- Command --

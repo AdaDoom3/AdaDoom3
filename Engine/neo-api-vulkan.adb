@@ -14,22 +14,11 @@
 --                                                                                                                                      --
 
 package body Neo.API.Vulkan is
-
-  -- For easy result assertion for Vulkan subprograms
   procedure VkAssert (result : Int_Unsigned_C) is begin Assert (result = VK_SUCCESS); end;
   
   -- Load function pointers to the Vulkan dynamic library
   procedure Initialize is
-
-    -- Assert the pointer is not null
-    function Get (Name : Str) return Ptr is
-      Result : Ptr := Get_Vulkan_Subprogram (Name);
-      begin
-        Assert (Result);
-        return Result;
-      end;
-
-    -- Load and convert the pointers
+    function Get (Name : Str) return Ptr renames Get_Vulkan_Subprogram;
     begin
       vkCmdDraw                                 := To_Ptr_vkCmdDraw                                 (Get ("vkCmdDraw"));
       vkCmdCopyBufferToImage                    := To_Ptr_vkCmdCopyBufferToImage                    (Get ("vkCmdCopyBufferToImage"));

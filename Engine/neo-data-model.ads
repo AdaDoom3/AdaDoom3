@@ -21,6 +21,8 @@ with Neo.Core.Ordered;
 -- Unified 3D model, shader, and surface type definitions
 package Neo.Data.Model is
 
+  generic package Vectors renames Neo.Core.Vectors;
+
   -------------
   -- Formats --
   -------------
@@ -37,14 +39,14 @@ package Neo.Data.Model is
       Point       : Point_3D;
       Orientation : Quaternion_4D;
     end record;
-  package Vector_Camera_Frame is new Neo.Core.Vectors (Camera_Frame_State);
+  package Vector_Camera_Frame is new Vectors (Camera_Frame_State);
 
   type Camera_State is record
       Frame_Rate : Positive;
       Frames     : Vector_Camera_Frame.Unsafe.Vector;
       Cuts       : Vector_Positive.Unsafe.Vector;
     end record;
-  package Hashed_Camera is new Neo.Core.Hashed (Camera_State);
+  package Hashed_Camera is new Hashed (Camera_State);
 
   ---------------
   -- Animation --
@@ -59,19 +61,19 @@ package Neo.Data.Model is
       Point       : Point_3D;
       Orientation : Quaternion_4D;
     end record;
-  package Treed_Joint is new Neo.Core.Trees (Joint_State);
+  package Treed_Joint is new Trees (Joint_State);
 
   type Animation_Frame_State is record
       Bounding : Bounding_State;
       Skeleton : Treed_Joint.Unsafe.Tree;
     end record;
-  package Vector_Animation_Frame is new Neo.Core.Vectors (Animation_Frame_State);
+  package Vector_Animation_Frame is new Vectors (Animation_Frame_State);
  
   type Animation_State is record
       Frame_Rate : Positive;
       Frames     : Vector_Animation_Frame.Unsafe.Vector;
     end record;
-  package Hashed_Animation is new Neo.Core.Hashed (Animation_State);
+  package Hashed_Animation is new Hashed (Animation_State);
 
   ----------
   -- Mesh --
@@ -82,38 +84,54 @@ package Neo.Data.Model is
       Point  : Point_3D; 
       Amount : Real_Percent;
     end record;
-  package Vector_Weight is new Neo.Core.Vectors (Weight_State);
+  package Vector_Weight is new Vectors (Weight_State);
 
-  type Vertex_State (Has_Weights : Bool := False) is record
+  type Animated_Vertex_State is record
+      Texture                  : Point_2D;
+      Start_Weight, End_Weight : Positive := 1;
+    end record with Convention => C;
+  package Vector_Animated_Vertex is new Vectors (Animated_Vertex_State); 
+
+  type Static_Vertex_State is record
       Texture : Point_2D;
-      case Has_Weights is
-        when True  =>
-          Weights : Vector_Weight.Unsafe.Vector;
-        when False =>
-          Point  : Point_3D;
-          Normal : Point_3D;
-      end case;
+      Point   : Point_3D;
+      Normal  : Point_3D;
+    end record with Convention => C;
+  package Vector_Vertex is new Vectors (Vertex_State); 
+
+  type Triangle_State is record
+      A, B, C : Int_Unsigned;
     end record;
-  package Vector_Vertex is new Neo.Core.Vectors (Vertex_State); 
+  package Vector_Triangle is new Vectors (Triangle_State);
 
-  type Triangle_Array is array (1..3) of Natural;
-  package Vector_Triangle is new Neo.Core.Vectors (Triangle_Array);
-
-  type Mesh_State is record
+  type Animated_Group_State is record
       Material : Str_Unbound;
-      Vertices : Vector_Vertex.Unsafe.Vector; -- Starts at 0
+      Vertices : Animated_Vertex_State.Unsafe.Vector; -- Starts at 0
       Indicies : Vector_Triangle.Unsafe.Vector;
       Bounding : Bounding_State;
     end record;
-  package Vector_Mesh is new Neo.Core.Vectors (Mesh_State);
+  package Vector_Animated_Group is new Vectors (Animated_Group_State);
 
-  type Skeletal_Mesh_State is record
-      Groups     : Vector_Mesh.Unsafe.Vector;
-      Skeleton   : Treed_Joint.Unsafe.Tree;
-      Animations : Vector_Str_Unbound.Unsafe.Vector;
+  type Static_Group_State is record
+      Material : Str_Unbound;
+      Vertices : Static_Vertex_State.Unsafe.Vector; -- Starts at 0
+      Indicies : Vector_Triangle.Unsafe.Vector;
+      Bounding : Bounding_State;
     end record;
-  package Hashed_Mesh is new Neo.Core.Hashed (Skeletal_Mesh_State);
+  package Vector_Static_Group is new Vectors (Static_Group_State);
 
+  type Mesh_State (Is_Animated : Bool := False) is record
+      case Is_Animated is
+        when False => Static_Groups : Vector_Static_Group.Unsafe.Vector;
+        when True =>
+          Animated_Groups : Vector_Animated_Group.Unsafe.Vector;
+          Weights         : Vector_Weight.Unsafe.Vector; -- Seporated out of animated vertices for GPU skinning optimization
+          Skeleton        : Treed_Joint.Unsafe.Tree;
+          Animations      : Vector_Str_Unbound.Unsafe.Vector;
+      end case;
+    end record;
+  package Hashed_Animated_Mesh is new Hashed (Animated_Mesh_State);
+  
   -----------
   -- Level --
   -----------
@@ -127,7 +145,7 @@ package Neo.Data.Model is
         when Normal_Partition => Plane   : Plane_4D := (others => <>);
       when others => null; end case;
     end record;
-  package Treed_Partition_Node is new Neo.Core.Trees (Partition_Node_State);
+  package Treed_Partition_Node is new Trees (Partition_Node_State);
 
   type Brush_Side_State is record
       Material : Str_Unbound  := NULL_STR_UNBOUND;
@@ -135,9 +153,9 @@ package Neo.Data.Model is
       Origin   : Point_3D     := (others => <>);
       Plane    : Plane_4D     := (others => <>);
     end record;
-  package Vector_Brush_Side  is new Neo.Core.Vectors (Brush_Side_State);
-  package Vector_Brush       is new Neo.Core.Vectors (Vector_Brush_Side.Unsafe.Vector);
-  package Hashed_Str_Unbound is new Neo.Core.Hashed (Str_Unbound);
+  package Vector_Brush_Side  is new Vectors (Brush_Side_State);
+  package Vector_Brush       is new Vectors (Vector_Brush_Side.Unsafe.Vector);
+  package Hashed_Str_Unbound is new Hashed (Str_Unbound);
 
   type Entity_Kind is (
     Character_Entity,
@@ -229,7 +247,7 @@ package Neo.Data.Model is
         when others => null;
       end case;
     end record;
-  package Hashed_Entity is new Neo.Core.Hashed (Entity_State);
+  package Hashed_Entity is new Hashed (Entity_State);
 
   type Clip_State is record
       Bounding      : Bounding_State := (others => <>);
@@ -249,14 +267,14 @@ package Neo.Data.Model is
       Is_Animation  : Bool := False;
       Is_Obstacle   : Bool := False;
     end record;
-  package Vector_Clip is new Neo.Core.Vectors (Clip_State);
+  package Vector_Clip is new Vectors (Clip_State);
 
   type Edge_State is record
       A, B      : Point_3D := (others => <>);
       Internal  : Natural  := 0; -- ???
       Num_Users : Natural  := 0;
     end record;
-  package Vector_Edge is new Neo.Core.Vectors (Edge_State);
+  package Vector_Edge is new Vectors (Edge_State);
 
   type Polygon_State is record
       Material : Str_Unbound    := NULL_STR_UNBOUND;
@@ -264,14 +282,14 @@ package Neo.Data.Model is
       Plane    : Plane_4D       := (others => <>);
       Edges    : Vector_Natural.Unsafe.Vector;
     end record;
-  package Vector_Polygon is new Neo.Core.Vectors (Polygon_State);
+  package Vector_Polygon is new Vectors (Polygon_State);
 
   type Collision_Node_State is record
       Is_Back   : Bool;
       Distance  : Real;
       Dimension : Dimension_Kind;
     end record;
-  package Treed_Collision_Node is new Neo.Core.Trees (Collision_Node_State);
+  package Treed_Collision_Node is new Trees (Collision_Node_State);
 
   type Collision_State is record
       Name     : Str_Unbound := NULL_STR_UNBOUND;
@@ -280,7 +298,7 @@ package Neo.Data.Model is
       Edges    : Vector_Edge.Unsafe.Vector;
       Nodes    : Treed_Collision_Node.Unsafe.Tree;
     end record;
-  package Vector_Collision is new Neo.Core.Vectors (Collision_State);
+  package Vector_Collision is new Vectors (Collision_State);
 
   -- type Area_Kind is (Ladder_Area, Floor_Area, Liquid_Area);
   --
@@ -331,7 +349,7 @@ package Neo.Data.Model is
       Partitions   : Treed_Partition_Node.Unsafe.Tree;
       -- AI : AI_State;
     end record;
-  package Hashed_Level_State is new Neo.Core.Hashed (Level_State);
+  package Hashed_Level_State is new Hashed (Level_State);
 
   -------------
   -- Surface --
@@ -388,42 +406,45 @@ package Neo.Data.Model is
   --   web.archive.org/web/20160305174701/https://www.iddevnet.com/doom3/materials.php
   --
 
-  type Cube_Map_Kind is (No_Cube_Map,    Image_Cube_Map,  Camera_Cube_Map,       Mirror_Cube_Map, Skybox_Cube_Map);
-  type Domain_Kind   is (Surface_Domain, Decal_Domain,    Post_Process_Domain,   Light_Domain,    Menu_Domain);
-  type Blend_Kind    is (Opaque_Blend,   Masked_Blend,    Additive_Blend,        Modulate_Blend,  Mirror_Blend,  Remote_Blend);
-  type Shading_Kind  is (Unlit_Shading,  Lit_Shading,     Subsurface_Shading,    Profile_Shading, Skin_Shading,  Clear_Coat_Shading);
-  type Deform_Kind   is (No_Deform,      Sprite_Deform,   Tube_Deform,           Flare_Deform,    Expand_Deform, Move_Deform,
-                         Eye_Deform,     Particle_Deform, Small_Particle_Deform, Turbulent_Deform);
+  type Cube_Kind    is (No_Cube,        Image_Cube,      Camera_Cube,           Mirror_Cube,     Skybox_Cube);
+  type Domain_Kind  is (Surface_Domain, Decal_Domain,    Post_Process_Domain,   Light_Domain,    Menu_Domain);
+  type Blend_Kind   is (Opaque_Blend,   Masked_Blend,    Additive_Blend,        Modulate_Blend,  Mirror_Blend,  Remote_Blend);
+  type Shading_Kind is (Unlit_Shading,  Lit_Shading,     Subsurface_Shading,    Profile_Shading, Skin_Shading,  Clear_Coat_Shading);
+  type Deform_Kind  is (No_Deform,      Sprite_Deform,   Tube_Deform,           Flare_Deform,    Expand_Deform, Move_Deform,
+                        Eye_Deform,     Particle_Deform, Small_Particle_Deform, Turbulent_Deform);
 
   type Material_State (Kind : Domain_Kind := Surface_Domain) is record
-      Shadow_Self    : Bool         := True;
-      Cast_Shadow    : Bool         := True;
-      Two_Sided      : Bool         := False;
-      Smoothed_Tan   : Bool         := True;
-      Transform      : Transform_4D := (others => <>);
-      Vertex_Program : Str_Unbound  := NULL_STR_UNBOUND;
-      Surface        : Surface_kind := Thin_Rock_Surface;
-      Deform         : Deform_Kind  := No_Deform;
+      Has_Smoothed_Tan : Bool         := True;
+      Is_Two_Sided     : Bool         := False;
+      Is_Ambient       : Bool         := False;
+      Vertex_Program   : Str_Unbound  := NULL_STR_UNBOUND;
+      Surface          : Surface_kind := Thin_Rock_Surface;
+      Deform           : Deform_Kind  := No_Deform;
+      Color_Mod        : Color_State  := NULL_COLOR;
+      Transform        : Transform_4D := (1.0, 0.0, 0,0, 0,0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0); -- ???
       case Kind is
-        when Light_Domain => Pattern : Str_Unbound := NULL_STR_UNBOUND;
         when Menu_Domain  => Menu_Id : Str_Unbound := NULL_STR_UNBOUND;
         when others =>
-          -- Blend                : Blend_Kind    := Opaque_Blend;  
-          Cube_Map             : Cube_Map_Kind := No_Cube_Map; -- Cube map textures assume _px, _py, _pz, _nx, _ny, _nz name convention
-          Base_Color           : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
-          Specular             : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          Emissive_Color       : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
-          Normal               : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          Displacement         : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          Metallic             : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          Roughness            : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          -- Subsurface_Color     : Str_Unbound   := NULL_STR_UNBOUND; -- RGB
-          -- Clear_Coat           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          -- Ambient_Occlusion    : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
-          -- Refraction           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+          Base_Color : Str_Unbound := NULL_STR_UNBOUND; -- RGBA
+          case Kind is
+            when Light_Domain => null;
+            when others =>
+              -- Blend                : Blend_Kind    := Opaque_Blend;  
+              Cube                 : Cube_Map_Kind := No_Cube_Map; -- Cube map textures assume _px, _py, _pz, _nx, _ny, _nz name convention              
+              Prefilter            : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              Irradiance           : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
+              Specular             : Str_Unbound   := NULL_STR_UNBOUND; -- RGBA
+              Normal               : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              Displacement         : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              Metallic             : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              Roughness            : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              -- brdfLUT     : Str_Unbound   := NULL_STR_UNBOUND; -- RGB
+              -- albedoMap           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              -- Ambient_Occlusion    : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
+              -- Refraction           : Str_Unbound   := NULL_STR_UNBOUND; -- Single channel
       end case;
     end record;
-  package Hashed_Material is new Neo.Core.Hashed (Material_State);
+  package Hashed_Material is new Hashed (Material_State);
 
   --------
   -- IO --

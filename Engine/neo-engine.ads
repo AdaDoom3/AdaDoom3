@@ -13,38 +13,47 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
-with GNAT.Traceback.Symbolic; use GNAT.Traceback.Symbolic;
-with GNAT.Traceback;          use GNAT.Traceback;
-with Ada.Task_Identification; use Ada.Task_Identification;
-with Neo.API.Vulkan;          use Neo.API.Vulkan;
-with Neo.Core.Math;           use Neo.Core.Math;
-with Neo.Core.Console;        use Neo.Core.Console;
---with Neo.Core.Compression;    use Neo.Core.Compression;
-with Neo.Core.Strings;        use Neo.Core.Strings;
-with Neo.Core.Arrays;         use Neo.Core.Arrays;
-with Neo.Core.Hashed;
-with Neo.Core.Vectors;
-with Neo.Core.Ordered;
+with GNAT.Sockets;       use GNAT.Sockets;
+with Neo.API.Vulkan;     use Neo.API.Vulkan;
+with Neo.Data;           use Neo.Data;
+with Neo.Data.Model;     use Neo.Data.Model;
+with Neo.Core;           use Neo.Core;
+with Neo.Core.Math;      use Neo.Core.Math;
+with Neo.Core.Console;   use Neo.Core.Console;
+--with Neo.Core.Compression;   use Neo.Core.Compression;
 
 -- Primary interface for the "Game" layer, see Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
 
   -- Main entry point, this should only be called by main.adb
   procedure Run;
-
+  
   -----------------
   -- Information --
   -----------------
 
   type OS_Info_State is record
-      Bit_Size : Positive    := 1;
       Version  : Str_Unbound := NULL_STR_UNBOUND;
       Username : Str_Unbound := NULL_STR_UNBOUND;
-      App_Name : Str_Unbound := NULL_STR_UNBOUND;
-      Path     : Str_Unbound := NULL_STR_UNBOUND;
-      Path_Sep : Char        := NULL_CHAR;
+      Bit_Size : Positive    := 1;
     end record;
   function OS_Info return OS_Info_State;
+
+  ---------------
+  -- Windowing --
+  ---------------
+
+  -- Enumerated types for cvar settings
+  type Mode_Kind      is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
+  type Cursor_Kind    is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
+  type Activated_Kind is (Other_Activated, Click_Activated,    Other_Deactivated, Minimize_Deactivated);
+
+  -- Window and desktop location and size information
+  type Border_State is record
+      Top, Bottom, Left, Right : Int := 0;
+    end record;
+  package Vector_Border is new Neo.Core.Vectors (Border_State);
+  function Get_Windows return Vector_Border.Unsafe_Array;
 
   ---------------
   -- Clipboard --
@@ -53,178 +62,81 @@ package Neo.Engine is
   function Paste return Str;
   procedure Copy (Item : Str);
 
-  --------------------
-  -- Error Handling --
-  --------------------
-
-  type Icon_Kind is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
-  type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
-
-  -- Message box function to query user action
-  function Ok (Name, Message : Str;
-               Buttons       : Buttons_Kind := Okay_Button;
-               Icon          : Icon_Kind    := No_Icon)
-               return Bool;
-
-  -- Use the OS to notify the user that the game needs your attention (flashing, bouncing, etc.)
-  function Alerting return Bool;
-  procedure Alert (Val  : Bool := True);
-
-  -- Subprograms controlling the spawning and desturction of the auxiliary OS console window
-  procedure Initialize_Console;
-  procedure Finalize_Console;  
-  function Running_Console return Bool;
-
-  -- Generate debugging info for a given exception
-  procedure Handle (Occurrence : Exception_Occurrence);
-
-  -------------
-  -- Tasking --
-  -------------
-
-  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
-  generic
-    with procedure Run;
-  package Tasks is
-      task type Task_Unsafe is
-          entry Initialize (Id : out Task_ID); end;
-      type Task_Unsafe_Ptr is access all Task_Unsafe;
-      protected type Safe_Task is
-          procedure Initialize;
-          procedure Finalize;
-          function Running return Bool;
-        private
-          Current_Task : Task_Unsafe_Ptr := null;
-          Current_Id   : Task_Id         := NULL_TASK_ID;
-        end;
-    end;
-
-  ---------------
-  -- Windowing --
-  ---------------
-
-  -- Enumerated types for cvar settings
-  type Cursor_Kind is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
-  type Mode_Kind   is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
-
-  -- CVars for controlling window and game properties                    
-  package Menu            is new CVar ("menu",      "Cursor capture",               Bool, True, False);
-  package Cursor          is new CVar ("cursor",    "Cursor style",                 Cursor_Kind, Inactive_Cursor, False);    
-  package Mode            is new CVar ("mode",      "Window mode",                  Mode_Kind, Windowed_Mode);
-  package Aspect_Narrow_X is new CVar ("narrowx",   "Windowed min narrow aspect x", Int_64_Positive, 16);
-  package Aspect_Narrow_Y is new CVar ("narrowy",   "Windowed min narrow aspect y", Int_64_Positive, 9);
-  package Aspect_Wide_X   is new CVar ("widex",     "Windowed min wide aspect x",   Int_64_Positive, 4);
-  package Aspect_Wide_Y   is new CVar ("widey",     "Windowed min wide aspect y",   Int_64_Positive, 3);
-  package Windowed_Height is new CVar ("winheight", "Height in windowed mode",      Int_64_Positive, 600);
-  package Windowed_Width  is new CVar ("winwidth",  "Width in windowed mode",       Int_64_Positive, 800);
-
-  -- Window and desktop location and size information
-  type Border_State is record
-      Top, Bottom, Left, Right : Int_64 := 0;
-    end record;
-  package Vector_Border is new Neo.Core.Vectors (Border_State);
-  function Get_Windows return Vector_Border.Unsafe_Array;
-
-  ----------------
-  -- Connection --
-  ----------------
-
-  -- Unimplemented...
-  type Connection_State is record
-      IP : Str_Unbound;
-    end record;
-  type Connection_OS_Info_State is record
-      --Last_Sent       : ;
-      --Last_Reply      : ;
-      Packets_Read    : Int_64_Unsigned := 0;
-      Packets_Written : Int_64_Unsigned := 0;
-      Bytes_Read      : Int_64_Unsigned := 0;
-      Bytes_Written   : Int_64_Unsigned := 0;
-    end record;
-  procedure Silence  (Connection : in out Connection_State);
-  procedure Vocalize (Connection : in out Connection_State);
-  procedure Connect  (Connection : in out Connection_State; Address   : Str);
-  procedure Send     (Connection :        Connection_State; Recipient : Str; Data : Stream_Element_Array);
-  function Get_Stats (Connection :        Connection_State) return Connection_OS_Info_State;
-  function Recieve   (Connection :        Connection_State;
-                      Sender     :    out Str_Unbound;
-                      Timeout    :        Duration := 0.0) return Array_Stream;
-
   -----------
   -- Input --
   -----------
 
   -- Input device descriptions
-  type Stick_Kind   is (Left_Stick,           Right_Stick);
-  type Trigger_Kind is (Left_Trigger,         Right_Trigger);
-  type Mouse_Kind   is (Left_Button,          Right_Button,        Middle_Button,     Aux_1_Button,          
-                        Aux_2_Button,         Wheel_Up_Button,     Wheel_Down_Button, Wheel_Left_Button,
+  type Stick_Kind   is (Left_Stick,          Right_Stick);
+  type Trigger_Kind is (Left_Trigger,        Right_Trigger);
+  type Mouse_Kind   is (Left_Button,         Right_Button,        Middle_Button,     Aux_1_Button,          
+                        Aux_2_Button,        Wheel_Up_Button,     Wheel_Down_Button, Wheel_Left_Button,    
                         Wheel_Right_Button);
-  type Device_Kind  is (Keyboard_Device,      Mouse_Device,        Gamepad_Device);
-  type Impulse_Kind is (Stick_Impulse,        Gamepad_Impulse,     Trigger_Impulse,   Text_Impulse,       
-                        Key_Impulse,          Cursor_Impulse,      Mouse_Impulse);
-  type Gamepad_Kind is (Y_Button,             B_Button,            A_Button,          X_Button,          
-                        Start_Button,         Back_Button,         System_Button,     Left_Bumper_Button, 
-                        Right_Bumper_Button,  DPad_Up_Button,      DPad_Down_Button,  DPad_Left_Button,  
-                        DPad_Right_Button,    Left_Stick_Button,   Right_Stick_Button);
-  type Key_Kind is     (Null_Key,             PA1_Key,             Alt_Key,           Shift_Key,
-                        Escape_Key,           One_Key,             Two_Key,           Three_Key,
-                        Four_Key,             Five_Key,            Six_Key,           Seven_Key,
-                        Eight_Key,            Nine_Key,            Zero_Key,          Dash_Key,
-                        Equals_Key,           Backspace_Key,       Tab_Key,           Q_Key,
-                        W_Key,                E_Key,               R_Key,             T_Key,
-                        Y_Key,                U_Key,               I_Key,             O_Key,
-                        P_Key,                Left_Bracket_Key,    Right_Bracket_Key, Enter_Key,
-                        Left_Ctrl_Key,        A_Key,               S_Key,             D_Key,
-                        F_Key,                G_Key,               H_Key,             J_Key,
-                        K_Key,                L_Key,               Semicolon_Key,     Apostrophe_Key,
-                        Grave_Accent_Key,     Left_Shift_Key,      Backslash_Key,     Z_Key,
-                        X_Key,                C_Key,               V_Key,             B_Key,
-                        N_Key,                M_Key,               Comma_Key,         Period_Key,
-                        Slash_Key,            Right_Shift_Key,     Star_Key,          Left_Alt_Key,
-                        Space_Key,            Capital_Lock_Key,    F1_Key,            F2_Key,
-                        F3_Key,               F4_Key,              F5_Key,            F6_Key,
-                        F7_Key,               F8_Key,              F9_Key,            F10_Key,
-                        Number_Lock_Key,      Scroll_Lock_Key,     Pad_Seven_Key,     Pad_Eight_Key,
-                        Pad_Nine_Key,         Pad_Dash_Key,        Pad_Four_Key,      Pad_Five_Key,
-                        Pad_Size_Key,         Pad_Plus_Key,        Pad_One_Key,       Pad_Two_Key,
-                        Pad_Three_Key,        Pad_Zero_Key,        Pad_Period_Key,    OEM_102_Key,
-                        F11_Key,              F12_Key,             Left_Windows_Key,  Right_Windows_Key,
-                        Middle_Windows_Key,   F13_Key,             F14_Key,           F15_Key,
-                        Kana_Key,             Brazilian_1_Key,     Convert_Key,       No_Convert_Key,
-                        Yen_Key,              Brazilian_2_Key,     Pad_Equals_Key,    Previous_Track_Key,
-                        At_Symbol_Key,        Colon_Key,           Underline_Key,     Kanji_Key,
-                        Stop_Key,             Ax_Key,              Unlabeled_Key,     Next_Track_Key,
-                        Pad_Enter_Key,        Right_Ctrl_Key,      Volume_Mute_Key,   Calculator_Key,
-                        Play_Pause_Track_Key, Stop_Track_Key,      Volume_Down_Key,   Volume_Up_Key,
-                        Web_Home_Key,         Pad_Comma_Key,       Pad_Slash_Key,     Print_Screen_Key,
-                        Right_Alt_Key,        Pause_Break_Key,     Home_Key,          Up_Arrow_Key,
-                        Page_Up_Key,          Left_Arrow_Key,      Right_Arrow_Key,   End_Key,
-                        Down_Arrow_Key,       Page_Down_Key,       Insert_Key,        Delete_Key,
-                        Left_Windows_2_Key,   Right_Windows_2_Key, App_Menu_Key,      System_Power_Key,
-                        System_Sleep_Key,     System_Wake_Key,     Web_Search_Key,    Web_Favorites_Key,
-                        Web_Refresh_Key,      Web_Stop_Key,        Web_Forward_Key,   Web_Backward_Key,
-                        My_Computer_Key,      Web_Mail_Key,        Media_Select_Key,  Cancel_Key,
-                        Junja_Key,            Final_Key,           Hanja_Key,         Accept_Key,
-                        Mode_Change_Key,      Select_Key,          Execute_Key,       Print_Key,
-                        Help_Key,             OEM_1_Key,           OEM_2_Key,         OEM_3_Key,
-                        OEM_4_Key,            OEM_5_Key,           OEM_6_Key,         OEM_7_Key,
-                        OEM_8_Key,            OEM_9_Key,           OEM_10_Key,        OEM_11_Key,
-                        OEM_12_Key,           OEM_13_Key,          OEM_14_Key,        OEM_15_Key,
-                        OEM_16_Key,           OEM_17_Key,          OEM_18_Key,        OEM_19_Key,
-                        OEM_20_Key,           OEM_21_Key,          OEM_22_Key,        OEM_23_Key,
-                        OEM_24_Key,           F16_Key,             F17_Key,           F18_Key,
-                        F19_Key,              F20_Key,             F21_Key,           F22_Key,
-                        F23_Key,              F24_Key,             Pad_Six_Key,       Pad_Star_Key,
-                        Separator_Key,        App_1_Key,           App_2_Key,         Ctrl_Key,
-                        Plus_Key,             Play_Key,            Zoom_Key,          Clear_Key,
-                        Erase_EOF_Key,        Attention_Key,       Process_Key,       Exsel_Key,
+  type Device_Kind  is (Keyboard_Device,     Mouse_Device,        Gamepad_Device);
+  type Impulse_Kind is (Stick_Impulse,       Gamepad_Impulse,     Trigger_Impulse,   Text_Impulse,       
+                        Key_Impulse,         Cursor_Impulse,      Mouse_Impulse);
+  type Gamepad_Kind is (Y_Button,            B_Button,            A_Button,          X_Button,          
+                        Start_Button,        Back_Button,         System_Button,     Left_Bumper_Button, 
+                        Right_Bumper_Button, DPad_Up_Button,      DPad_Down_Button,  DPad_Left_Button,  
+                        DPad_Right_Button,   Left_Stick_Button,   Right_Stick_Button);
+  type Key_Kind is     (Null_Key,            PA1_Key,             Alt_Key,           Shift_Key,
+                        Escape_Key,          One_Key,             Two_Key,           Three_Key,
+                        Four_Key,            Five_Key,            Six_Key,           Seven_Key,
+                        Eight_Key,           Nine_Key,            Zero_Key,          Dash_Key,
+                        Equals_Key,          Backspace_Key,       Tab_Key,           Q_Key,
+                        W_Key,               E_Key,               R_Key,             T_Key,
+                        Y_Key,               U_Key,               I_Key,             O_Key,
+                        P_Key,               Left_Bracket_Key,    Right_Bracket_Key, Enter_Key,
+                        Left_Ctrl_Key,       A_Key,               S_Key,             D_Key,
+                        F_Key,               G_Key,               H_Key,             J_Key,
+                        K_Key,               L_Key,               Semicolon_Key,     Apostrophe_Key,
+                        Grave_Accent_Key,    Left_Shift_Key,      Backslash_Key,     Z_Key,
+                        X_Key,               C_Key,               V_Key,             B_Key,
+                        N_Key,               M_Key,               Comma_Key,         Period_Key,
+                        Slash_Key,           Right_Shift_Key,     Star_Key,          Left_Alt_Key,
+                        Space_Key,           Capital_Lock_Key,    F1_Key,            F2_Key,
+                        F3_Key,              F4_Key,              F5_Key,            F6_Key,
+                        F7_Key,              F8_Key,              F9_Key,            F10_Key,
+                        Number_Lock_Key,     Scroll_Lock_Key,     Pad_Seven_Key,     Pad_Eight_Key,
+                        Pad_Nine_Key,        Pad_Dash_Key,        Pad_Four_Key,      Pad_Five_Key,
+                        Pad_Size_Key,        Pad_Plus_Key,        Pad_One_Key,       Pad_Two_Key,
+                        Pad_Three_Key,       Pad_Zero_Key,        Pad_Period_Key,    OEM_102_Key,
+                        F11_Key,             F12_Key,             Left_Windows_Key,  Right_Windows_Key,
+                        Middle_Windows_Key,  F13_Key,             F14_Key,           F15_Key,
+                        Kana_Key,            Brazilian_1_Key,     Convert_Key,       No_Convert_Key,
+                        Yen_Key,             Brazilian_2_Key,     Pad_Equals_Key,    Previous_Track_Key,
+                        At_Symbol_Key,       Colon_Key,           Underline_Key,     Kanji_Key,
+                        Stop_Key,            Ax_Key,              Unlabeled_Key,     Next_Track_Key,
+                        Pad_Enter_Key,       Right_Ctrl_Key,      Volume_Mute_Key,   Calculator_Key,
+                        Play_Pause_Key,      Stop_Track_Key,      Volume_Down_Key,   Volume_Up_Key,
+                        Web_Home_Key,        Pad_Comma_Key,       Pad_Slash_Key,     Print_Screen_Key,
+                        Right_Alt_Key,       Pause_Break_Key,     Home_Key,          Up_Arrow_Key,
+                        Page_Up_Key,         Left_Arrow_Key,      Right_Arrow_Key,   End_Key,
+                        Down_Arrow_Key,      Page_Down_Key,       Insert_Key,        Delete_Key,
+                        Left_Windows_2_Key,  Right_Windows_2_Key, App_Menu_Key,      System_Power_Key,
+                        System_Sleep_Key,    System_Wake_Key,     Web_Search_Key,    Web_Favorites_Key,
+                        Web_Refresh_Key,     Web_Stop_Key,        Web_Forward_Key,   Web_Backward_Key,
+                        My_Computer_Key,     Web_Mail_Key,        Media_Select_Key,  Cancel_Key,
+                        Junja_Key,           Final_Key,           Hanja_Key,         Accept_Key,
+                        Mode_Change_Key,     Select_Key,          Execute_Key,       Print_Key,
+                        Help_Key,            OEM_1_Key,           OEM_2_Key,         OEM_3_Key,
+                        OEM_4_Key,           OEM_5_Key,           OEM_6_Key,         OEM_7_Key,
+                        OEM_8_Key,           OEM_9_Key,           OEM_10_Key,        OEM_11_Key,
+                        OEM_12_Key,          OEM_13_Key,          OEM_14_Key,        OEM_15_Key,
+                        OEM_16_Key,          OEM_17_Key,          OEM_18_Key,        OEM_19_Key,
+                        OEM_20_Key,          OEM_21_Key,          OEM_22_Key,        OEM_23_Key,
+                        OEM_24_Key,          F16_Key,             F17_Key,           F18_Key,
+                        F19_Key,             F20_Key,             F21_Key,           F22_Key,
+                        F23_Key,             F24_Key,             Pad_Six_Key,       Pad_Star_Key,
+                        Separator_Key,       App_1_Key,           App_2_Key,         Ctrl_Key,
+                        Plus_Key,            Play_Key,            Zoom_Key,          Clear_Key,
+                        Erase_EOF_Key,       Attention_Key,       Process_Key,       Exsel_Key,
                         Clear_selection_Key);
 
   -- Binding states
   subtype Real_Interval is Real_32 range -100.0..100.0;
   type Stick_State  is record X, Y : Real_Interval := 0.0; end record;
-  type Cursor_State is record X, Y : Int_64        := 0;   end record;
+  type Cursor_State is record X, Y : Int           := 0;   end record;
   type Press_State is record
       Down : Bool := False;
       Last : Time := Get_Start_Time;
@@ -263,7 +175,7 @@ package Neo.Engine is
   function Get_Cursor_Normalized return Cursor_State;
 
   -- Operations to assign devices to different players or query each device's state
-  package Ordered_Device is new Neo.Core.Ordered (Int_Ptr, Device_State);
+  package Ordered_Device is new Core.Ordered (Int_Ptr, Device_State);
   procedure Set_Device (Id : Int_Ptr; Player : Positive := 1);
   function Get_Device  (Id : Int_Ptr) return Device_State;
   function Get_Devices                return Ordered_Device.Unsafe.Map;
@@ -273,7 +185,6 @@ package Neo.Engine is
   -------------
   --
   -- An "impulse" is how an interaction between... more info !!!
-  -- An Impulse instantiation *must* never go out of scope, a runtime exception will occur if this happens!
   --
   -- Ex:
   --   procedure Callback_Shoot (Args : Impulse_Arg_Array) is
@@ -288,7 +199,7 @@ package Neo.Engine is
   --
 
   -- Discriminate union to represent an impulse "binding"
-  NO_COMBO : constant := 0;
+  NO_COMBO : constant Natural := 0;
   type Binding_State (Kind : Impulse_Kind := Key_Impulse) is record
       Player : Positive;
       Combo  : Natural := NO_COMBO;
@@ -321,10 +232,10 @@ package Neo.Engine is
         when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State := (others => <>);
       end case;
     end record;
-  package Vector_Impulse_Arg is new Neo.Core.Vectors (Impulse_Arg_State);
+  package Vector_Impulse_Arg is new Core.Vectors (Impulse_Arg_State);
 
   -- Needed for the task-safe manipulation of bindings for each impulse
-  package Vector_Binding is new Neo.Core.Vectors (Binding_State);
+  package Vector_Binding is new Core.Vectors (Binding_State);
 
   -- Actual impulse package used to dispatch input callbacks
   generic 
@@ -336,4 +247,75 @@ package Neo.Engine is
       procedure Enable;
       procedure Disable;
     end;
+
+  --------------------
+  -- Error Handling --
+  --------------------
+
+  type Icon_Kind is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
+  type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
+
+  -- Message box function to query user action
+  function Ok (Message : Str;
+               Buttons : Buttons_Kind := Okay_Button;
+               Icon    : Icon_Kind    := No_Icon)
+               return Bool;
+
+  -- Use the OS to notify the user that the game needs your attention (flashing, bouncing, etc.)
+  function Alerting return Bool;
+  procedure Alert (Val  : Bool := True);
+
+  -- Subprograms controlling the spawning and desturction of the auxiliary OS console window
+  procedure Initialize_Console;
+  procedure Finalize_Console;  
+  function Running_Console return Bool;
+
+  -- Generate debugging info for a given exception
+  procedure Handle (Occurrence : Exception_Occurrence);
+
+  -------------
+  -- Tasking --
+  -------------
+
+  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
+  generic
+    with procedure Run;
+  package Tasks is
+      task type Task_Unsafe is
+          entry Initialize (Id : out Task_ID); end;
+      type Task_Unsafe_Ptr is access all Task_Unsafe;
+      protected type Safe_Task is
+          procedure Initialize;
+          procedure Finalize;
+          function Running return Bool;
+        private
+          Current_Task : Task_Unsafe_Ptr := null;
+          Current_Id   : Task_Id         := NULL_TASK_ID;
+        end;
+    end;
+
+  ----------------
+  -- Connection --
+  ----------------
+
+  -- Unimplemented...
+  type Connection_State is record
+      IP : Str_Unbound;
+    end record;
+  type Connection_OS_Info_State is record
+      --Last_Sent       : ;
+      --Last_Reply      : ;
+      Packets_Read    : Int_64_Unsigned := 0;
+      Packets_Written : Int_64_Unsigned := 0;
+      Bytes_Read      : Int_64_Unsigned := 0;
+      Bytes_Written   : Int_64_Unsigned := 0;
+    end record;
+  procedure Silence  (Connection : in out Connection_State);
+  procedure Vocalize (Connection : in out Connection_State);
+  procedure Connect  (Connection : in out Connection_State; Address   : Str);
+  procedure Send     (Connection :        Connection_State; Recipient : Str; Data : Stream_Element_Array);
+  function Get_Stats (Connection :        Connection_State) return Connection_OS_Info_State;
+  function Recieve   (Connection :        Connection_State;
+                      Sender     :    out Str_Unbound;
+                      Timeout    :        Duration := 0.0) return Array_Stream;
 end;

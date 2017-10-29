@@ -21,17 +21,23 @@ package body Neo.Data is
 
   -- Load a file into a binary buffer
   function Load (Path : Str) return Array_Byte is
-    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (App_Path.Get & Path)))); -- Str_8 !!!
+    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (PATH_GAME & S & Path)))); -- Str_8 !!!
     package Blob_IO is new Ada.Direct_IO (Blob);
     File   : Blob_IO.File_Type;
     Result : Blob := (others => 0);
     begin
-      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (App_Path.Get & Path)); -- Str_8 !!!
+      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (PATH_GAME & S & Path)); -- Str_8 !!!
       Blob_IO.Read (File, Result);
       Blob_IO.Close (File);
       return Result;    
     end;
-  
+    
+  --procedure Skip (File : in out File_Type; Bytes : Positive) is
+  --  Junk : Byte := 0;
+  --  begin
+  --    for I in 1.. loop Junk := Byte'Read (File); end loop;
+  --  end;
+    
   -------------
   -- Handler --
   -------------
@@ -76,7 +82,6 @@ package body Neo.Data is
         Controller : Control_State;
       end;
   end;
-
   ------------
   -- Parser --
   ------------
@@ -111,7 +116,7 @@ package body Neo.Data is
         Assert ((if MULTILINE_REMOVE then Comment_End /= NULL_STR else Comment_End /= NULL_STR));
 
         -- Open the file
-        Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (App_Path.Get & Path)); -- Must be Str_8 ???
+        Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_GAME & S & Path)); -- Must be Str_8 ???
 
         -- Perform first pass
         while not Ada_IO.End_Of_File (Data) loop
@@ -170,9 +175,8 @@ package body Neo.Data is
     -- Globals --
     -------------
 
-    This    : Array_Str_Unbound := Load; -- Cause the loading of data to be performed at package instantiation
-    Row     : Positive          := 1;
-    Column  : Positive          := 1;
+    This : Array_Str_Unbound := Load; -- Cause the loading of data to be performed at package instantiation
+    Row, Column : Positive := 1;
 
     -------------
     -- Parsing --
@@ -263,10 +267,10 @@ package body Neo.Data is
 
     -- Next number
     function Next_Internal return Real_64 is
-      Found_Decimal : Bool := False;
-      Found_Digit   : Bool := False;
-      Found_Sign    : Bool := False;
-      Result        : Str_Unbound;
+      Found_Decimal,
+      Found_Digit,
+      Found_Sign : Bool := False;
+      Result : Str_Unbound;
       begin
         while Column <= Length (This (Row)) loop
           if not Is_Digit (Element (This (Row), Column)) then
@@ -290,19 +294,19 @@ package body Neo.Data is
     function Next return Real            is (Real            (Next_Internal));
     function Next return Byte            is (Byte            (Next_Internal));
     function Next return Int             is (Int             (Next_Internal));
-    function Next return Int_Unsigned is (Int_Unsigned (Next_Internal));
+    function Next return Int_Unsigned    is (Int_Unsigned    (Next_Internal));
     function Next return Int_64          is (Int_64          (Next_Internal));
     function Next return Int_64_Unsigned is (Int_64_Unsigned (Next_Internal));
 
     -- Next string
     function Next_Line return Str_Unbound is
-      Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+      Result : Str_Unbound := U (Slice (This (Row), Column, Length (This (Row))));
       begin
         Parser.Skip_Line;
         return Result;
       end;
     function Next return Str_Unbound is
-      Result : Str_Unbound := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+      Result : Str_Unbound := U (Slice (This (Row), Column, Length (This (Row))));
       I      : Natural     := Index (Result, "" & Separator);
       begin
         if I /= 0 then Delete (Result, I, Length (Result)); end if;
@@ -314,13 +318,12 @@ package body Neo.Data is
     -- Next delimited group or set
     function Next_Set (Ending : Str) return Str_Unbound is (Next_Set ("" & Element (This (Row), Column), Ending));
     function Next_Set (Starting, Ending : Str) return Str_Unbound is
-      Result : Str_Unbound;
-      Buffer : Str_Unbound;
-      I      : Natural;
+      Result, Buffer : Str_Unbound;
+      I : Natural;
       begin
         Assert (Starting);
         while not At_EOF loop
-          Buffer := To_Str_Unbound (Slice (This (Row), Column, Length (This (Row))));
+          Buffer := U (Slice (This (Row), Column, Length (This (Row))));
           I      := Index (Buffer, Ending);
           if I = 0 then
             Column := 1;

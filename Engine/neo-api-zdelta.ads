@@ -20,16 +20,16 @@ package Neo.API.ZDelta is
   -- Types --
   -----------
 
-typedef char charf;
-typedef int intf;
-typedef void *voidpf;
+  -- typedef char charf;
+  -- typedef int intf;
+  -- typedef void *voidpf;
   -- uInt    Int_Unsigned_C 
   -- uLong   Int_Ptr
   -- uLongf  Int_Ptr
-typedef void *voidp;
-typedef Int_Unsigned char Byte;
-typedef off_t z_off_t;
-typedef void *const voidpc;
+  -- typedef void *voidp;
+  -- typedef Int_Unsigned char Byte;
+  -- typedef off_t z_off_t;
+  -- typedef void *const voidpc;
 
   ---------------
   -- Constants --

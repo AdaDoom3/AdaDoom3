@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.API.OPUS; use Neo.API.OPUS;
+with API.OPUS; use API.OPUS;
 
 -- Xiph.Org Foundation OPUS audio loading
 separate (Neo.Data.Audio) package body OPUS is

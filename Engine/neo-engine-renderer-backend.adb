@@ -1,4 +1,4 @@
-
+=
 --                                                                                                                                      --
 --                                                         N E O  E N G I N E                                                           --
 --                                                                                                                                      --
@@ -93,8 +93,7 @@ separate (Neo.Engine.Renderer) procedure Backend is
                                                                                   others  => <>), others => <>), others => <>);
   Clear_Rectange : aliased VkClearRect := (baseArrayLayer => 0,
                                            layerCount     => 1,
-                                           rect           => (extent => Swapchain, others => <>),
-                                           others         => <>);
+                                           rect           => (extent => Swapchain, others => <>), others => <>);
   procedure Clear_Color (Value : Color_State) is
     begin
       Attachment.aspectMask := VK_IMAGE_ASPECT_COLOR_BIT;
@@ -147,9 +146,9 @@ begin
     -----------------
 
     -- Prepare globals and empty garbage
-    Free_Images;
-    Free_Memory;
-    Flush_Staging;
+    Free_Sampler_Garbage;
+    Free_Memory_Garbage;
+    Free_Staging_Buffer;
     Current_Frame          := (Current_Frame + 1) mod NUM_FRAME_DATA;
     Current_Descriptor_Set := 0;
     vkResetDescriptorPool (Device, Framebuffer.Element (Current_Frame).Descriptor_Pool, 0);

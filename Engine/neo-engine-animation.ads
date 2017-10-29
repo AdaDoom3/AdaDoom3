@@ -13,16 +13,11 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Data.Model; use Neo.Data.Model;
-with Neo.Core.Math;  use Neo.Core.Math;
-with Neo.Vector;
-with Neo.Hashed;
-
 package Neo.Engine.Animation is
 
-  ----------
-  -- Pose --
-  ----------
+  ---------------
+  -- Animation --
+  ---------------
 
   INFINITE_CYCLE : constant Natural := 0;
 
@@ -33,19 +28,19 @@ package Neo.Engine.Animation is
       Animation : Str_Unbound  := NULL_STR_UNBOUND;
       Start     : Duration     := No_Duration;
     end record;
-  package Hashed_Blend is new Hashed (Blend_State);
+  package Hashed_Blend is new Core.Hashed (Blend_State);
 
   -- Bone modifiers for generated animations like player-look rotation
   type Bone_State is record
       Joint     : Str_Unbound  := NULL_STR_UNBOUND;
       Transform : Transform_4D := (others => 0.0);
     end record;
-  package Hashed_Bone is new Hashed (Bone_State);
+  package Hashed_Bone is new Core.Hashed (Bone_State);
 
   type Pose_State is record
       Blends : Hashed_Blend.Unsafe.Map;
       Bones  : Hashed_Bone.Unsafe.Map;
     end record;
 
-  function Render (Mesh : Skeletal_Mesh_State; Pose : Pose_State) return Vector_Mesh.Unsafe.Vector;
+  function Render (Mesh : Skeletal_Mesh_State; Pose : Pose_State) return Treed_Joint.Unsafe.Tree;
 end;
