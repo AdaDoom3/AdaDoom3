@@ -22,8 +22,6 @@ Planned Features:
 
 To compile with GPRBuild:
 
-`cd Setup`
-
 `gprbuild -p -P neo.gpr `
 
 Or the Gnat Programming Studio IDE may be used (email is optional):
