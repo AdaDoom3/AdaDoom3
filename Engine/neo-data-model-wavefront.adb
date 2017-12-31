@@ -20,7 +20,7 @@ separate (Neo.Data.Model) package body Wavefront is
   -- Mesh --
   ----------
 
-  function Load (Path : Str) return Vector_Mesh.Unsafe.Vector is
+  function Load (Path : Str) return Mesh_State is
 
     -- Load an obj mesh: https://web.archive.org/web/20160810123453/https://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
     package Mesh_Parser is new Parser (Path, Comment => "#"); use Mesh_Parser;
@@ -61,39 +61,33 @@ separate (Neo.Data.Model) package body Wavefront is
     -- s 4
     -- # 56 polygons - 208 triangles
 
-    Meshes   : Vector_Mesh.Unsafe.Vector;
     Indicies : Vector_Int_32_Natural.Unsafe.Vector;
     Normals  : Vector_Point_3D.Unsafe.Vector;
     Texture  : Vector_Point_2D.Unsafe.Vector;
-    Vertex   : Vertex_State (Has_Weights => False);
-    Index    : Int;
-    Mesh     : Mesh_State;
+    Vertex   : Static_Vertex_State  := (others => <>);
+    Surface  : Static_Surface_State := (others => <>);
+    Mesh     : Mesh_State           := (Is_Animated => False, others => <>);
+    Index    : Int                  := 0;
     begin
 
       -- Handle groups
       while not At_EOF loop
 
         -- Load Vertices
-        while Peek = "v" loop Skip; 
-          Mesh.Vertices.Append ((Point => (Next, Next, Next), others => <>));
-        end loop;
-        Assert (Mesh.Vertices.Length > 0);
+        while Peek = "v" loop Skip; Surface.Vertices.Append ((Point => (Next, Next, Next), others => <>)); end loop;
+        Assert (Surface.Vertices.Length > 0);
 
         -- Load vertex normals
-        while Peek = "vn" loop Skip;
-          Normals.Append ((Next, Next, Next));
-        end loop;
+        while Peek = "vn" loop Skip; Normals.Append ((Next, Next, Next)); end loop;
         Assert (Normals.Length > 0);
 
         -- Load vertex texture coordinates
-        while Peek = "vt" loop Skip;
-          Texture.Append ((Next, Next)); Skip; -- Skip the weight
-        end loop;
+        while Peek = "vt" loop Skip; Texture.Append ((Next, Next)); Skip; end loop; -- Skip the weight
         Assert (Texture.Length > 0);
         
         -- Load material
         Skip_Until ("usemtl", Fail_On_EOF => True);
-        Mesh.Material := Next;
+        Surface.Material := Next;
 
         -- Load and build triangles 
         while not At_EOF loop
@@ -103,35 +97,35 @@ separate (Neo.Data.Model) package body Wavefront is
           -- Load polygon face
           while not At_EOL loop
             Index  := Next; Assert ("/"); 
-            Vertex := Mesh.Vertices.Element (Index);
+            Vertex := Surface.Vertices.Element (Index);
             if Vertex.Texture = (0.0, 0.0) then Index := -1; end if;
             Vertex.Normal  := Normals.Element (Next); Assert ("/");
             Vertex.Texture := Texture.Element (Next);
 
             -- Duplicate Vertices when different normals or texture points are encountered for the same vertex
             if Index = -1 then
-              Mesh.Vertices.Append (Vertex);
-              Indicies.Append (Mesh.Vertices.Last_Index - 1);
+              Surface.Vertices.Append (Vertex);
+              Indicies.Append (Surface.Vertices.Last_Index - 1);
             else
-              Mesh.Vertices.Replace_Element (Index, Vertex);
+              Surface.Vertices.Replace_Element (Index, Vertex);
               Indicies.Append (Index - 1);
             end if;
           end loop;
           Assert (Indicies.Length > 0);
 
           -- Add resulting indicies
-          Mesh.Indicies.Append (To_Triangles (Indicies));
+          Surface.Indicies.Append (To_Triangles (Indicies));
           Indicies.Clear;
         end loop;
-        Assert (Mesh.Indicies.Length > 0);
+        Assert (Surface.Indicies.Length > 0);
 
         -- Add to result
-        Meshes.Append (Mesh);
+        Mesh.Static_Surfaces.Append (Surface);
         Normals.Clear;
         Texture.Clear;
-        Mesh.Vertices.Clear;
-        Mesh.Indicies.Clear;
+        Surface.Vertices.Clear;
+        Surface.Indicies.Clear;
       end loop;
-      return Meshes;
+      return Mesh;
     end;
 end;

@@ -34,7 +34,7 @@ package Neo.Engine.Network is
       Elapsed    : Duration;
       Level      : Level_State := (others => <>);
     end record;
-  package Hashed_World is new Hashed (World_State);
+  package Hashed_World is new Neo.Core.Hashed (World_State);
 end;
   -----------
   -- Frame --

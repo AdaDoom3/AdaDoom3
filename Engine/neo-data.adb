@@ -21,22 +21,20 @@ package body Neo.Data is
 
   -- Load a file into a binary buffer
   function Load (Path : Str) return Array_Byte is
-    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (PATH_GAME & S & Path)))); -- Str_8 !!!
+    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (Path)))); -- Str_8 !!!
     package Blob_IO is new Ada.Direct_IO (Blob);
     File   : Blob_IO.File_Type;
     Result : Blob := (others => 0);
     begin
-      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (PATH_GAME & S & Path)); -- Str_8 !!!
+      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
       Blob_IO.Read (File, Result);
       Blob_IO.Close (File);
       return Result;    
     end;
     
-  --procedure Skip (File : in out File_Type; Bytes : Positive) is
-  --  Junk : Byte := 0;
-  --  begin
-  --    for I in 1.. loop Junk := Byte'Read (File); end loop;
-  --  end;
+  procedure Skip (File : in out Ada.Streams.Stream_IO.File_Type; Bytes : Positive) is
+    Junk : Byte := 0;
+    begin for I in 1..Bytes loop Byte'Read (Ada.Streams.Stream_IO.Stream (File), Junk); end loop; end;
     
   -------------
   -- Handler --
@@ -82,6 +80,7 @@ package body Neo.Data is
         Controller : Control_State;
       end;
   end;
+  
   ------------
   -- Parser --
   ------------
@@ -98,7 +97,6 @@ package body Neo.Data is
       SINGLELINE_REMOVE : constant Bool := Comment         /= NULL_STR;
       MULTILINE_REMOVE  : constant Bool := Comment_Start   /= NULL_STR;
       TAB_REPLACE       : constant Bool := Tab_Replacement /= NULL_CHAR_16;
-
       In_Multiline_Comment : Bool        := False;
       Comment_Start_Index  : Natural     := 0;
       Comment_End_Index    : Natural     := 0;
@@ -116,7 +114,7 @@ package body Neo.Data is
         Assert ((if MULTILINE_REMOVE then Comment_End /= NULL_STR else Comment_End /= NULL_STR));
 
         -- Open the file
-        Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_GAME & S & Path)); -- Must be Str_8 ???
+        Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (Path)); -- Must be Str_8 ???
 
         -- Perform first pass
         while not Ada_IO.End_Of_File (Data) loop
@@ -172,15 +170,12 @@ package body Neo.Data is
       end;
 
     -------------
-    -- Globals --
+    -- Parsing --
     -------------
 
     This : Array_Str_Unbound := Load; -- Cause the loading of data to be performed at package instantiation
     Row, Column : Positive := 1;
 
-    -------------
-    -- Parsing --
-    -------------
 
     -- Internal procedure for skipping whitespace
     procedure Seek is
@@ -338,5 +333,31 @@ package body Neo.Data is
         end loop;
         raise Invalid;
       end;
+      
+    -- The cost of convenience
+    function Next_Then_Assert (Text       : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Real            is R : Real            := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Real            is R : Real            := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Real            is R : Real            := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Real_64         is R : Real_64         := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Real_64         is R : Real_64         := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Real_64         is R : Real_64         := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Byte            is R : Byte            := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Byte            is R : Byte            := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Byte            is R : Byte            := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Int             is R : Int             := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Int             is R : Int             := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Int             is R : Int             := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Int_64          is R : Int_64          := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Int_64          is R : Int_64          := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Int_64          is R : Int_64          := Next; begin Assert (T1, T2, T3); return R; end;
+    function Next_Then_Assert (Text       : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (Text);       return R; end;
+    function Next_Then_Assert (T1, T2     : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (T1, T2);     return R; end;
+    function Next_Then_Assert (T1, T2, T3 : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (T1, T2, T3); return R; end;
   end;
 end;

@@ -13,6 +13,9 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with GNAT.Compiler_Version;
+with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
+with GNAT.Traceback;               use GNAT.Traceback;
 with Interfaces;                   use Interfaces;
 with Interfaces.C;                 use Interfaces.C;
 with System;                       use System;
@@ -31,16 +34,15 @@ with Ada.Strings.Unbounded;        use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
 with Ada.Streams;                  use Ada.Streams;
-with Ada.Streams.Stream_IO;
+with Ada.Streams.Stream_IO;        
+with Ada.Wide_Text_IO;
 with Ada.Unchecked_Deallocation;   
 with Ada.Unchecked_Conversion;
-with Ada.Wide_Text_IO;
-with GNAT.Compiler_Version;
+with Is_Debugging;
 
--- String constants and base data-types
-package Neo is pragma Suppress (Elaboration_Check);
+-- String constants and base data types
+package Neo is
   
-
   -------------
   -- Renames --
   -------------
@@ -104,8 +106,8 @@ package Neo is pragma Suppress (Elaboration_Check);
   subtype Real_64_C        is Interfaces.C.Double;
   subtype Real_64_Natural  is Real_64 range 0.0..Real_64'Last;
   subtype Real_64_Positive is Real_64 range 1.0..Real_64'Last;
-  subtype Real_64_Range    is Real_64 range -100.0..100.0;
   subtype Real_64_Percent  is Real_64 range 0.0..100.0;
+  subtype Real_64_Range    is Real_64 range -Real_64_Percent'Last..Real_64_Percent'Last;
   subtype Real_64_Degree   is Real_64 range 1.0..360.0;
   subtype Real_32          is Float;
   subtype Real_32_C        is Interfaces.C.C_Float;
@@ -132,7 +134,7 @@ package Neo is pragma Suppress (Elaboration_Check);
   type Ptr_Int_16_Unsigned_C is access all Int_16_Unsigned_C;
   type Ptr_Int_8_Unsigned_C  is access all Int_8_Unsigned_C;
   type Ptr_Real_32_C         is access all Real_32_C;
-  type Ptr_Char_8_C          is access all Interfaces.C.Char;
+  type Ptr_Char_8_C          is access all Char_8_C;
   type Ptr_Char_16_C         is access all Char_16_C;
   type Ptr_Const_Char_8_C    is access constant Char_8_C;
   type Ptr_Const_Char_16_C   is access constant Char_16_C;
@@ -149,8 +151,8 @@ package Neo is pragma Suppress (Elaboration_Check);
   subtype Int_C              is Int_32_Signed_C;
   subtype Real               is Real_32;
   subtype Real_C             is Real_32_C;
-  subtype Real_Percent       is Real_32_Percent;
-  subtype Real_Degree        is Real_32_Degree;
+  subtype Real_Percent       is Real_64_Percent;
+  subtype Real_Degree        is Real_64_Degree;
   subtype Int_64             is Int_64_Signed;
   subtype Int_64_C           is Int_64_Signed_C;
   subtype Int_16             is Int_16_Signed;
@@ -172,9 +174,9 @@ package Neo is pragma Suppress (Elaboration_Check);
   function To_Ptr                   is new Unchecked_Conversion (Int_Ptr,               Ptr);
   function To_Ptr_Char_8_C          is new Unchecked_Conversion (Ptr,                   Ptr_Char_8_C);
   function To_Ptr_Char_16_C         is new Unchecked_Conversion (Ptr,                   Ptr_Char_16_C);
-  function To_Ptr_Const_Char_8_C    is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_8_C);
   function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Ptr,                   Ptr_Const_Char_16_C);
   function To_Ptr_Const_Char_16_C   is new Unchecked_Conversion (Int_Ptr,               Ptr_Const_Char_16_C);
+  function To_Int_64_Unsigned       is new Unchecked_Conversion (Real_64,               Int_64_Unsigned);
   function To_Int_32_Unsigned_C     is new Unchecked_Conversion (Int_32_Signed_C,       Int_Unsigned_C);
   function To_Int_32_Unsigned       is new Unchecked_Conversion (Int_32_Signed_C,       Int_Unsigned);
   function To_Int_32_Unsigned       is new Unchecked_Conversion (Real_32,               Int_Unsigned);
@@ -185,10 +187,9 @@ package Neo is pragma Suppress (Elaboration_Check);
   function To_Int_16_Unsigned       is new Unchecked_Conversion (Char_16_C,             Int_16_Unsigned);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Int_16_Unsigned_C, Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Int_Ptr);
-  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_8_C,    Int_Ptr);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Char_8_C,    Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr,                   Int_Ptr);
   function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_Unsigned);
-  function To_Int_64_Unsigned       (Val : Real_32) return Int_64_Unsigned is (Int_64_Unsigned (To_Int_32_Unsigned (Val)));
 
   -- Prerequisite string constants
   CHAR_16_REPLACEMENT : constant Char_8         := '~';
@@ -213,7 +214,7 @@ package Neo is pragma Suppress (Elaboration_Check);
     type Num_T is mod <>;
   function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary strings
   function To_Str_8               (Item : Str_16)              return Str_8;
-  function To_Str_8               (Item : Ptr_Const_Char_8_C)  return Str_8;
+  function To_Str_8               (Item : Ptr_Char_8_C)        return Str_8;
   function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
   function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound  renames To_Unbounded_String;
   function To_Str_16              (Item : Str_16_Unbound)      return Str_16         renames To_Wide_String;
@@ -226,14 +227,17 @@ package Neo is pragma Suppress (Elaboration_Check);
   function To_Str_8               (Item : Str_8_C)             return Str_8          is (To_Ada (Item, True));
   function To_Str_8_C             (Item : Str_8)               return Str_8_C        is (To_C   (Item, True));
   function To_Str_8_C             (Item : Str_16)              return Str_8_C        is (To_Str_8_C (To_Str_8 (Item)));
+  function To_Str_8_C             (Item : Ptr_Char_8_C)        return Str_8_C        is (To_Str_8_C (To_Str_8 (Item)));
   function To_Str_16              (Item : Char_16)             return Str_16         is ("" & Item);
   function To_Str_16              (Item : Str_8_C)             return Str_16         is (To_Str_16 (To_Str_8 (Item)));
-  function To_Str_16              (Item : Ptr_Const_Char_8_C)  return Str_16         is (To_Str_16 (To_Str_8 (Item)));
+  function To_Str_16              (Item : Ptr_Char_8_C)        return Str_16         is (To_Str_16 (To_Str_8 (Item)));
   function To_Str_16              (Item : Char_8)              return Str_16         is (To_Str_16 ("" & Item));
   function To_Str_16_Unbound      (Item : Str_8)               return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
   function To_Str_16_Unbound      (Item : Char_16)             return Str_16_Unbound is (To_Str_16_Unbound ("" & Item));
+  function To_Str_16_Unbound      (Item : Str_8_C)             return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
+  function To_Str_Unbound         (Item : Str_8_C)             return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_Unbound         (Item : Str_8)               return Str_16_Unbound renames To_Str_16_Unbound;
-  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;
+  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;  
   function To_Str_16_C            (Item : Str_16)              return Str_16_C       is (To_C        (Item & NULL_CHAR_16));
   function To_Str_16_C            (Item : Str_16_Unbound)      return Str_16_C       is (To_Str_16_C (To_Str_16 (Item)));
   function To_Str_C               (Item : Str_16)              return Str_16_C       renames To_Str_16_C;
@@ -243,7 +247,7 @@ package Neo is pragma Suppress (Elaboration_Check);
   function To_Str                 (Item : Ptr_Const_Char_16_C) return Str_16         renames To_Str_16;
   function To_Str                 (Item : Char_16)             return Str_16         renames To_Str_16;
   function To_Str                 (Item : Str_8_C)             return Str_16         renames To_Str_16;
-  function To_Str                 (Item : Ptr_Const_Char_8_C)  return Str_16         renames To_Str_16;
+  function To_Str                 (Item : Ptr_Char_8_C)        return Str_16         renames To_Str_16;
   function To_Str                 (Item : Char_8)              return Str_16         renames To_Str_16;
   function To_Str                 (Item : Str_16_Unbound)      return Str_16         renames To_Str_16;
   function S                      (Item : Str_16_C)            return Str_16         renames To_Str_16;
@@ -251,6 +255,7 @@ package Neo is pragma Suppress (Elaboration_Check);
   function To_Ptr_Char_8_C        (Item : in out Str_8_C)      return Ptr_Char_8_C   is (Item (Item'First)'Unchecked_Access);
   function To_Ptr_Char_16_C       (Item : in out Str_16_C)     return Ptr_Char_16_C  is (Item (Item'First)'Unchecked_Access);
   function C                      (Item : in out Str_16_C)     return Ptr_Char_16_C  renames To_Ptr_Char_16_C;
+  function C                      (Item : in out Str_8_C)      return Ptr_Char_8_C   renames To_Ptr_Char_8_C;
   function To_Char_8              (Item : Char_16)             return Char_8;
   function To_Char_8_C            (Item : Char_8)              return Char_8_C       is (Char_8_C'Val  (Char_8'Pos    (Item)));
   function To_Char_8              (Item : Char_8_C)            return Char_8         is (Char_8'Val    (Char_8_C'Pos  (Item)));
@@ -282,29 +287,39 @@ package Neo is pragma Suppress (Elaboration_Check);
   VERSION : constant Str := "0.1.0";
   
   package GNAT_Info is new GNAT.Compiler_Version;
-  
-  type Game_Info_State is record
-      Name_ID : Str_Unbound := NULL_STR_UNBOUND;
-      Version : Str_Unbound := NULL_STR_UNBOUND;
-    end record;
-  function Game_Info return Game_Info_State;
-  
-  -----------
-  -- Paths --
-  -----------
-  
+
   -- We need to get the path separator explicitly because Windows uses backslashes
   function Path_Separator return Char is ((if Index (Current_Directory, "\") = 0 then '/' else '\'));
   function S return Char renames Path_Separator; -- For convience
   
-  PATH_GAME            : constant Str := To_Str (Current_Directory) & S & "Games" & S & S (Game_Info.Name_ID);
-  PATH_LOGS            : constant Str := PATH_GAME   & S & "Logs";
-  PATH_ASSETS          : constant Str := PATH_GAME   & S & "Assets";
-  PATH_LOCALE          : constant Str := PATH_ASSETS & S & "locale.csv";
-  PATH_CONFIG          : constant Str := PATH_ASSETS & S & "config.txt";
-  PATH_ICON            : constant Str := PATH_ASSETS & S & "icon";
-  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & S & "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & S & "cursor_inactive";
+  PATH_LOGS            : constant Str := "Logs"   & S;
+  PATH_ASSETS          : constant Str := "Assets" & S;
+  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
+  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
+  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
+  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
+  
+  ---------------
+  -- Debugging --
+  ---------------
+
+  function Get_Stack return Str;
+
+  -- Assertion to check imported C function calls. They raise a Program_Error if the value is null or 0
+  procedure Assert (Val : Ptr);
+  procedure Assert (Val : Bool);
+  procedure Assert (Val : Int_C);
+  procedure Assert (Val : Int_16_Unsigned_C);
+  procedure Assert (Val : Int_Unsigned_C);
+
+  -- Ignore procedures swallow the result of C functions that return useless results
+  procedure Ignore (Val : Bool)              is null;
+  procedure Ignore (Val : Ptr)               is null;
+  procedure Ignore (Val : Int_Ptr)           is null;
+  procedure Ignore (Val : Int_C)             is null;
+  procedure Ignore (Val : Int_16_Unsigned_C) is null;
+  procedure Ignore (Val : Int_Unsigned_C)    is null;
   
   ------------
   -- Status --
@@ -316,6 +331,21 @@ package Neo is pragma Suppress (Elaboration_Check);
       procedure Occupied (Val : Bool);
     private
       Status : Bool := False;
+    end;
+  
+  -------------
+  -- Counter --
+  -------------
+  
+  protected type Safe_Counter with Lock_Free is
+      function Get return Int;
+      procedure Set (Val : Int);
+      procedure Increment (Amount : Int); 
+      procedure Increment;
+      procedure Decrement (Amount : Int);
+      procedure Decrement;
+    private
+      Count : Int := 0;
     end;
 
   -----------
@@ -331,18 +361,13 @@ package Neo is pragma Suppress (Elaboration_Check);
   function Get_Duration   (Timer :        Timer_State) return Duration;
   procedure Start         (Timer : in out Timer_State);
   procedure Stop          (Timer : in out Timer_State);
-
-  --------------------
-  -- Build Settings --
-  --------------------
-  
-  function Is_Debugging return Bool;
   
   -----------
   -- Color --
   -----------
 
   type Color_State is record Red, Green, Blue, Alpha : Byte := 16#FF#; end record;
+  NULL_COLOR         : constant Color_State := (16#FF#, 16#00#, 16#00#, 16#00#);
   COLOR_RED          : constant Color_State := (16#FF#, 16#00#, 16#00#, 16#FF#);
   COLOR_TAN          : constant Color_State := (16#D2#, 16#B4#, 16#8C#, 16#FF#);
   COLOR_BLUE         : constant Color_State := (16#00#, 16#00#, 16#FF#, 16#FF#);

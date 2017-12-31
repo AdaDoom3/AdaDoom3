@@ -274,9 +274,7 @@ separate (Neo.Engine.System) package body Console is
 
         -- Restrict resizing
         when WM_GETMINMAXINFO =>
-          declare
-          Min_Max : Ptr_MINMAXINFO := To_Ptr_MINMAXINFO (lParam);
-          begin
+          declare Min_Max : Ptr_MINMAXINFO := To_Ptr_MINMAXINFO (lParam); begin
             Min_Max.ptMinTrackSize.x := Console_Width;
             Min_Max.ptMinTrackSize.y := Console_Height;
             return 1;

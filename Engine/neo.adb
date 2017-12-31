@@ -14,19 +14,36 @@
 --                                                                                                                                      --
 
 package body Neo is
+  
+  ---------------
+  -- Debugging --
+  ---------------
 
-  -----------------
-  -- Information --
-  -----------------
+  procedure Assert (Val : Int_16_Unsigned_C) is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Int_Unsigned_C)    is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Int_C)             is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
+  procedure Assert (Val : Bool)              is begin if not Val then raise Program_Error; end if; end;--  pragma Assert (Val);      end;
 
-  function Game_Info return Game_Info_State is separate;
-  
-  --------------------
-  -- Build Settings --
-  --------------------
-  
-  function Is_Debugging return Bool is separate;
-  
+  function Get_Stack return Str is
+    Traces : Tracebacks_Array (1..128);
+    Result : Str_Unbound := NULL_STR_UNBOUND;
+    Skip   : Bool        := False;
+    Length : Natural     := 0;
+    begin
+      Call_Chain (Traces, Length);
+      
+      -- Change line endings
+      for Item of Symbolic_Traceback (Traces) loop
+        if not Skip and Item = '0' then Skip := True;
+        elsif Item = ASCII.LF then
+          if Skip then Skip := False;
+          else Result := Result & EOL; end if;
+        elsif not Skip then Result := Result & To_Str (Item); end if;
+      end loop;
+      return S (Result);
+    end;
+    
   ------------
   -- Status --
   ------------
@@ -34,6 +51,19 @@ package body Neo is
   protected body Safe_Status is
       function Occupied return Bool is (Status);
       procedure Occupied (Val : Bool) is begin Status := Val; end;
+    end;
+
+  -------------
+  -- Counter --
+  -------------
+  
+  protected body Safe_Counter is
+      function Get        return Int     is (Count);
+      procedure Set       (Val : Int)    is begin Count := Val;            end;
+      procedure Increment (Amount : Int) is begin Count := Count - Amount; end;
+      procedure Decrement (Amount : Int) is begin Count := Count + Amount; end;
+      procedure Increment                is begin Count := Count + 1;      end;
+      procedure Decrement                is begin Count := Count - 1;      end;
     end;
 
   ------------
@@ -106,15 +136,15 @@ package body Neo is
       end loop;
       return S (Buffer);
     end;          
-  function To_Str_8 (Item : Ptr_Const_Char_8_C) return Str_8 is 
+  function To_Str_8 (Item : Ptr_Char_8_C) return Str_8 is 
     Length : Int                := 0;
     Buffer : Str_8_Unbound      := NULL_STR_8_UNBOUND;
-    Temp   : Ptr_Const_Char_8_C := Item;
+    Temp   : Ptr_Char_8_C := Item;
     begin
       while Temp.all /= NULL_CHAR_8_C loop
         Length := Length + 1;
         Buffer := Buffer & Char_8 (Temp.all);
-        Temp   := To_Ptr_Const_Char_8_C (To_Ptr (To_Int_Ptr (Temp) + Char_8_C'Size / Byte'Size));
+        Temp   := To_Ptr_Char_8_C (To_Ptr (To_Int_Ptr (Temp) + Char_8_C'Size / Byte'Size));
       end loop;
       return To_Str_8 (Buffer);
     end;

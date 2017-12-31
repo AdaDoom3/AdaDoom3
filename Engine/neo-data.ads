@@ -14,15 +14,16 @@
 --                                                                                                                                      --
 
 with Ada.Direct_IO;
-with Ada.Directories;    use Ada.Directories;
-with Neo.Core;           use Neo.Core;
-with Neo.Core.Math;      use Neo.Core.Math;
-with Neo.Core.Arrays;    use Neo.Core.Arrays;
-with Neo.Core.Strings;   use Neo.Core.Strings;
-with Neo.Core.Console;   use Neo.Core.Console;
-with Neo.Core.Debugging; use Neo.Core.Debugging;
+with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+with Ada.Directories;       use Ada.Directories;
+with Neo.Core.Math;         use Neo.Core.Math;
+with Neo.Core.Arrays;       use Neo.Core.Arrays;
+with Neo.Core.Strings;      use Neo.Core.Strings;
+with Neo.Core.Console;      use Neo.Core.Console;
 with Neo.Core.Vectors;
 with Neo.Core.Ordered;
+with Neo.Core.Hashed;
+with Neo.Core.Trees;
 
 -- Separator for the "Data" layer consisting of packages for loading and understanding file formats
 package Neo.Data is
@@ -32,7 +33,7 @@ package Neo.Data is
   ------------
 
   function Load (Path : Str) return Array_Byte;
-  --procedure Skip (File : in out File_Type; Bytes : Positive);
+  procedure Skip (File : in out Ada.Streams.Stream_IO.File_Type; Bytes : Positive);
 
   -------------
   -- Parsing --
@@ -90,7 +91,7 @@ package Neo.Data is
   -- Package for catagorizing sets of parsers that load a single data file (e.g. an image format)
   generic
     type Format_T is (<>);
-    type T is private;
+    type T (<>) is private;
   package Handler is
 
       -- Dispatching load function
@@ -166,5 +167,58 @@ package Neo.Data is
       procedure Assert (T1, T2, T3         : Str);
       procedure Assert (T1, T2, T3, T4     : Str);
       procedure Assert (T1, T2, T3, T4, T5 : Str);
+      
+      -- Combination Next and Assert for convenience
+      function Next_Then_Assert (Text       : Str) return Str_Unbound;
+      function Next_Then_Assert (T1, T2     : Str) return Str_Unbound;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Str_Unbound;
+      function Next_Then_Assert (Text       : Str) return Str is (S (Next_Then_Assert (Text)));
+      function Next_Then_Assert (T1, T2     : Str) return Str is (S (Next_Then_Assert (T1, T2)));
+      function Next_Then_Assert (T1, T2, T3 : Str) return Str is (S (Next_Then_Assert (T1, T2, T3)));
+      function Next_Then_Assert (Text       : Str) return Real;
+      function Next_Then_Assert (T1, T2     : Str) return Real;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Real;
+      function Next_Then_Assert (Text       : Str) return Real_64;
+      function Next_Then_Assert (T1, T2     : Str) return Real_64;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Real_64;
+      function Next_Then_Assert (Text       : Str) return Byte;
+      function Next_Then_Assert (T1, T2     : Str) return Byte;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Byte;
+      function Next_Then_Assert (Text       : Str) return Int;
+      function Next_Then_Assert (T1, T2     : Str) return Int;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Int;
+      function Next_Then_Assert (Text       : Str) return Int_Unsigned;
+      function Next_Then_Assert (T1, T2     : Str) return Int_Unsigned;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Int_Unsigned;
+      function Next_Then_Assert (Text       : Str) return Int_64;
+      function Next_Then_Assert (T1, T2     : Str) return Int_64;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Int_64;
+      function Next_Then_Assert (Text       : Str) return Int_64_Unsigned;
+      function Next_Then_Assert (T1, T2     : Str) return Int_64_Unsigned;
+      function Next_Then_Assert (T1, T2, T3 : Str) return Int_64_Unsigned;
     end;
 end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

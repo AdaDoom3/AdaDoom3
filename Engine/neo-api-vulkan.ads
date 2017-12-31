@@ -13,8 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Core.Debugging; use Neo.Core.Debugging;
-with Neo.Core.Arrays;    use Neo.Core.Arrays;
+with Neo.Core.Arrays; use Neo.Core.Arrays;
+with Neo.Core.Vectors;
 
 -- Custom binding to the Vulkan API: http://web.archive.org/save/_embed/https://www.khronos.org/files/vulkan10-reference-guide.pdf
 package Neo.API.Vulkan is
@@ -101,6 +101,13 @@ package Neo.API.Vulkan is
   -- VkImageViewType                         Int_Unsigned_C
   -- VkComponentSwizzle                      Int_Unsigned_C
   -- VkFramebufferCreateFlags                Int_Unsigned_C
+  -- VkCompareOp                             Int_Unsigned_C
+  -- VkSamplerCreateFlags                    Int_Unsigned_C
+  -- VkBorderColor                           Int_Unsigned_C
+  -- VkFilter                                Int_Unsigned_C
+  -- VkSamplerAddressMode                    Int_Unsigned_C
+  -- VkSamplerMipmapMode                     Int_Unsigned_C
+  -- VkFenceCreateFlags                      Int_Unsigned_C
   -- VkDescriptorSetLayout                   Ptr
   -- VkSampler                               Ptr
   -- VkFence                                 Ptr
@@ -132,55 +139,17 @@ package Neo.API.Vulkan is
   -- Constants --
   ---------------
 
-  -- http://vulkan-spec-chunked.ahcox.com/ch10s02.html
-  VK_MAX_MEMORY_TYPES : constant Int_Unsigned_C := 32;
+  -- OS driver library paths
+  VK_WIN32_DLL_NAME : aliased Str_16_C := To_Str_16_C ("vulkan-1.dll"); -- ???
   
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkColorComponentFlagBits.html
-  VK_COLOR_COMPONENT_R_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkColorComponentFlagBits
-  VK_COLOR_COMPONENT_G_BIT : constant Int_Unsigned_C := 16#0000_0002#; -- VkColorComponentFlagBits
-  VK_COLOR_COMPONENT_B_BIT : constant Int_Unsigned_C := 16#0000_0004#; -- VkColorComponentFlagBits
-  VK_COLOR_COMPONENT_A_BIT : constant Int_Unsigned_C := 16#0000_0008#; -- VkColorComponentFlagBits
-    
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCullModeFlagBits.html
-  VK_CULL_MODE_NONE           : constant Int_Unsigned_C := 16#0000_0000#; -- VkCullModeFlagBits
-  VK_CULL_MODE_FRONT_BIT      : constant Int_Unsigned_C := 16#0000_0001#; -- VkCullModeFlagBits
-  VK_CULL_MODE_BACK_BIT       : constant Int_Unsigned_C := 16#0000_0002#; -- VkCullModeFlagBits
-  VK_CULL_MODE_FRONT_AND_BACK : constant Int_Unsigned_C := 16#0000_0003#; -- VkCullModeFlagBits
-
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentStoreOp.html
-  VK_ATTACHMENT_STORE_OP_STORE     : constant Int_Unsigned_C := 0; -- VkAttachmentStoreOp 
-  VK_ATTACHMENT_STORE_OP_DONT_CARE : constant Int_Unsigned_C := 1; -- VkAttachmentStoreOp 
-
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentLoadOp.html
-  VK_ATTACHMENT_LOAD_OP_LOAD      : constant Int_Unsigned_C := 0; -- VkAttachmentLoadOp
-  VK_ATTACHMENT_LOAD_OP_CLEAR     : constant Int_Unsigned_C := 1; -- VkAttachmentLoadOp
-  VK_ATTACHMENT_LOAD_OP_DONT_CARE : constant Int_Unsigned_C := 2; -- VkAttachmentLoadOp 
+  -- http://vulkan-spec-chunked.ahcox.com/ch10s02.html
+  VK_MAX_MEMORY_TYPES : constant Int_Unsigned_C := 32; -- ???
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMappedMemoryRange.html
+  VK_WHOLE_SIZE : constant Int_64_Unsigned_C := Int_64_Unsigned_C'Last; -- (~0ULL)
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentDescriptionFlagBits.html
   VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkAttachmentDescriptionFlagBits 
-
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorType.html
-  VK_DESCRIPTOR_TYPE_SAMPLER                : constant Int_Unsigned_C := 0;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER : constant Int_Unsigned_C := 1;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE          : constant Int_Unsigned_C := 2;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_STORAGE_IMAGE          : constant Int_Unsigned_C := 3;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER   : constant Int_Unsigned_C := 4;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER   : constant Int_Unsigned_C := 5;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER         : constant Int_Unsigned_C := 6;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_STORAGE_BUFFER         : constant Int_Unsigned_C := 7;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC : constant Int_Unsigned_C := 8;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC : constant Int_Unsigned_C := 9;  -- VkDescriptorType
-  VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT       : constant Int_Unsigned_C := 10; -- VkDescriptorType
-
-  -- http://vulkan-spec-chunked.ahcox.com/apes09.html
-  VK_WIN32_DLL_NAME                       : aliased Str_16_C := To_Str_16_C ("vulkan-1.dll");                -- ???
-  VK_KHR_MAINTENANCE2_NAME                : constant Str_8_C := To_Str_8_C (S ("VK_KHR_maintenance2"));      -- ???
-  VK_KHR_SWAPCHAIN_EXTENSION_NAME         : constant Str_8_C := To_Str_8_C (S ("VK_KHR_swapchain"));         -- ???
-  VK_KHR_SURFACE_EXTENSION_NAME           : constant Str_8_C := To_Str_8_C (S ("VK_KHR_surface"));           -- ???
-  VK_KHR_WIN32_SURFACE_EXTENSION_NAME     : constant Str_8_C := To_Str_8_C (S ("VK_KHR_win32_surface"));     -- ???
-  VK_EXT_DEBUG_REPORT_EXTENSION_NAME      : constant Str_8_C := To_Str_8_C (S ("VK_EXT_debug_report"));      -- ???
-  VK_LAYER_LUNARG_API_DUMP_EXTENSION_NAME : constant Str_8_C := To_Str_8_C (S ("VK_LAYER_LUNARG_api_dump")); -- ???
-  --VK_LAYER_LUNARG_standard_validation     : constant Str_8_C := To_Str_8_C (S ("VK_LAYER_LUNARG_standard_validation")); -- ???
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VK_NULL_HANDLE.html
   VK_NULL_HANDLE : constant Int_Unsigned_C := 0; -- 0
@@ -204,12 +173,44 @@ package Neo.API.Vulkan is
   VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE : constant Int_Unsigned_C := 0; -- VkInternalAllocationType
   
   -- http://nopper.tv/Vulkan/1.0/VkColorSpaceKHR.html
-  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR : constant Int_Unsigned_C := 0; -- VkColorSpaceKHR\
+  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR : constant Int_Unsigned_C := 0; -- VkColorSpaceKHR
   
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFenceCreateFlagBits.html
+  VK_FENCE_CREATE_SIGNALED_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkFenceCreateFlagBits
+
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBool32.html
   VK_TRUE  : constant Int_Unsigned_C := 1; -- VkBool32
   VK_FALSE : constant Int_Unsigned_C := 0; -- VkBool32
   
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFilter.html
+  VK_FILTER_NEAREST : constant Int_Unsigned_C := 0; -- VkFilter
+  VK_FILTER_LINEAR  : constant Int_Unsigned_C := 1; -- VkFilter
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSamplerMipmapMode.html
+  VK_SAMPLER_MIPMAP_MODE_NEAREST : constant Int_Unsigned_C := 0; -- VkSamplerMipmapMode
+  VK_SAMPLER_MIPMAP_MODE_LINEAR  : constant Int_Unsigned_C := 1; -- VkSamplerMipmapMode
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkColorComponentFlagBits.html
+  VK_COLOR_COMPONENT_R_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkColorComponentFlagBits
+  VK_COLOR_COMPONENT_G_BIT : constant Int_Unsigned_C := 16#0000_0002#; -- VkColorComponentFlagBits
+  VK_COLOR_COMPONENT_B_BIT : constant Int_Unsigned_C := 16#0000_0004#; -- VkColorComponentFlagBits
+  VK_COLOR_COMPONENT_A_BIT : constant Int_Unsigned_C := 16#0000_0008#; -- VkColorComponentFlagBits
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCullModeFlagBits.html
+  VK_CULL_MODE_NONE           : constant Int_Unsigned_C := 16#0000_0000#; -- VkCullModeFlagBits
+  VK_CULL_MODE_FRONT_BIT      : constant Int_Unsigned_C := 16#0000_0001#; -- VkCullModeFlagBits
+  VK_CULL_MODE_BACK_BIT       : constant Int_Unsigned_C := 16#0000_0002#; -- VkCullModeFlagBits
+  VK_CULL_MODE_FRONT_AND_BACK : constant Int_Unsigned_C := 16#0000_0003#; -- VkCullModeFlagBits
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentStoreOp.html
+  VK_ATTACHMENT_STORE_OP_STORE     : constant Int_Unsigned_C := 0; -- VkAttachmentStoreOp 
+  VK_ATTACHMENT_STORE_OP_DONT_CARE : constant Int_Unsigned_C := 1; -- VkAttachmentStoreOp 
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentLoadOp.html
+  VK_ATTACHMENT_LOAD_OP_LOAD      : constant Int_Unsigned_C := 0; -- VkAttachmentLoadOp
+  VK_ATTACHMENT_LOAD_OP_CLEAR     : constant Int_Unsigned_C := 1; -- VkAttachmentLoadOp
+  VK_ATTACHMENT_LOAD_OP_DONT_CARE : constant Int_Unsigned_C := 2; -- VkAttachmentLoadOp 
+
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageTiling.html
   VK_IMAGE_TILING_OPTIMAL : constant Int_Unsigned_C := 0; -- VkImageTiling
   VK_IMAGE_TILING_LINEAR  : constant Int_Unsigned_C := 1; -- VkImageTiling
@@ -298,6 +299,81 @@ package Neo.API.Vulkan is
   VK_PRESENT_MODE_MAILBOX_KHR      : constant Int_Unsigned_C := 1; -- VkPresentModeKHR
   VK_PRESENT_MODE_FIFO_KHR         : constant Int_Unsigned_C := 2; -- VkPresentModeKHR
   VK_PRESENT_MODE_FIFO_RELAXED_KHR : constant Int_Unsigned_C := 3; -- VkPresentModeKHR 
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferUsageFlagBits.html
+  VK_BUFFER_USAGE_TRANSFER_SRC_BIT         : constant Int_Unsigned_C := 16#0000_0001#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_TRANSFER_DST_BIT         : constant Int_Unsigned_C := 16#0000_0002#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT : constant Int_Unsigned_C := 16#0000_0004#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT : constant Int_Unsigned_C := 16#0000_0008#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT       : constant Int_Unsigned_C := 16#0000_0010#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_STORAGE_BUFFER_BIT       : constant Int_Unsigned_C := 16#0000_0020#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_INDEX_BUFFER_BIT         : constant Int_Unsigned_C := 16#0000_0040#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_VERTEX_BUFFER_BIT        : constant Int_Unsigned_C := 16#0000_0080#; -- VkBufferUsageFlagBits 
+  VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT      : constant Int_Unsigned_C := 16#0000_0100#; -- VkBufferUsageFlagBits 
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageCreateFlagBits.html
+  VK_IMAGE_CREATE_SPARSE_BINDING_BIT   : constant Int_Unsigned_C := 16#0000_0001#; -- VkImageCreateFlagBits
+  VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT : constant Int_Unsigned_C := 16#0000_0002#; -- VkImageCreateFlagBits
+  VK_IMAGE_CREATE_SPARSE_ALIASED_BIT   : constant Int_Unsigned_C := 16#0000_0004#; -- VkImageCreateFlagBits
+  VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT   : constant Int_Unsigned_C := 16#0000_0008#; -- VkImageCreateFlagBits
+  VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT  : constant Int_Unsigned_C := 16#0000_0010#; -- VkImageCreateFlagBits
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSampleCountFlagBits.html
+  VK_SAMPLE_COUNT_1_BIT  : constant Int_Unsigned_C := 16#0000_0001#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_2_BIT  : constant Int_Unsigned_C := 16#0000_0002#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_4_BIT  : constant Int_Unsigned_C := 16#0000_0004#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_8_BIT  : constant Int_Unsigned_C := 16#0000_0008#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_16_BIT : constant Int_Unsigned_C := 16#0000_0010#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_32_BIT : constant Int_Unsigned_C := 16#0000_0020#; -- VkSampleCountFlagBits
+  VK_SAMPLE_COUNT_64_BIT : constant Int_Unsigned_C := 16#0000_0040#; -- VkSampleCountFlagBits
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBorderColor.html
+  VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK : constant Int_Unsigned_C := 0; -- VkBorderColor
+  VK_BORDER_COLOR_INT_TRANSPARENT_BLACK   : constant Int_Unsigned_C := 1; -- VkBorderColor
+  VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK      : constant Int_Unsigned_C := 2; -- VkBorderColor
+  VK_BORDER_COLOR_INT_OPAQUE_BLACK        : constant Int_Unsigned_C := 3; -- VkBorderColor
+  VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE      : constant Int_Unsigned_C := 4; -- VkBorderColor
+  VK_BORDER_COLOR_INT_OPAQUE_WHITE        : constant Int_Unsigned_C := 5; -- VkBorderColor
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorType.html
+  VK_DESCRIPTOR_TYPE_SAMPLER                : constant Int_Unsigned_C := 0;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER : constant Int_Unsigned_C := 1;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE          : constant Int_Unsigned_C := 2;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_STORAGE_IMAGE          : constant Int_Unsigned_C := 3;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER   : constant Int_Unsigned_C := 4;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER   : constant Int_Unsigned_C := 5;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER         : constant Int_Unsigned_C := 6;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_STORAGE_BUFFER         : constant Int_Unsigned_C := 7;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC : constant Int_Unsigned_C := 8;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC : constant Int_Unsigned_C := 9;  -- VkDescriptorType
+  VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT       : constant Int_Unsigned_C := 10; -- VkDescriptorType
+
+  -- http://vulkan-spec-chunked.ahcox.com/apes09.html
+  VK_LAYER_LUNARG_IMAGE_NAME                  : aliased Str_8_C := "VK_LAYER_LUNARG_image"; -- ???
+  VK_LAYER_LUNARG_OBJECT_TRACKER_NAME         : aliased Str_8_C := "VK_LAYER_LUNARG_object_tracker"; -- ???
+  VK_LAYER_LUNARG_PARAMETER_VALIDATION_NAME   : aliased Str_8_C := "VK_LAYER_LUNARG_parameter_validation"; -- ???        
+  VK_LAYER_LUNARG_API_DUMP_EXTENSION_NAME     : aliased Str_8_C := "VK_LAYER_LUNARG_api_dump"; -- ???
+  VK_LAYER_LUNARG_CORE_VALIDATION_NAME        : aliased Str_8_C := "VK_LAYER_LUNARG_core_validation"; -- ???
+  VK_LAYER_LUNARG_DEVICE_LIMITS_NAME          : aliased Str_8_C := "VK_LAYER_LUNARG_device_limits"; -- ???
+  VK_LAYER_LUNARG_SWAPCHAIN_NAME              : aliased Str_8_C := "VK_LAYER_LUNARG_swapchain"; -- ???
+  VK_EXT_DEBUG_REPORT_EXTENSION_NAME          : aliased Str_8_C := "VK_EXT_debug_report";      -- ??? 
+  VK_KHR_MAINTENANCE2_NAME                    : aliased Str_8_C := "VK_KHR_maintenance2";      -- ???
+  VK_KHR_SWAPCHAIN_EXTENSION_NAME             : aliased Str_8_C := "VK_KHR_swapchain";         -- ???
+  VK_KHR_SURFACE_EXTENSION_NAME               : aliased Str_8_C := "VK_KHR_surface";           -- ???
+  VK_KHR_WIN32_SURFACE_EXTENSION_NAME         : aliased Str_8_C := "VK_KHR_win32_surface";     -- ???
+  VK_KHR_MAINTENANCE1_NAME                    : aliased Str_8_C := "VK_KHR_maintenance1"; -- ???
+  VK_KHR_BIND_MEMORY2_NAME                    : aliased Str_8_C := "VK_KHR_bind_memory2"; -- ???
+  VK_KHR_IMAGE_FORMAT_LIST_NAME               : aliased Str_8_C := "VK_KHR_image_format_list"; -- ???
+  VK_KHR_GET_MEMORY_REQUIREMENTS2_NAME        : aliased Str_8_C := "VK_KHR_get_memory_requirements2"; -- ???
+  VK_KHR_GET_SURFACE_CAPABILITIES2_NAME       : aliased Str_8_C := "VK_KHR_get_surface_capabilities2"; -- ???
+  VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES2_NAME : aliased Str_8_C := "VK_KHR_get_physical_device_properties2"; -- ???
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSamplerAddressMode.html
+  VK_SAMPLER_ADDRESS_MODE_REPEAT               : constant Int_Unsigned_C := 0; -- VkSamplerAddressMode
+  VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT      : constant Int_Unsigned_C := 1; -- VkSamplerAddressMode
+  VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE        : constant Int_Unsigned_C := 2; -- VkSamplerAddressMode
+  VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER      : constant Int_Unsigned_C := 3; -- VkSamplerAddressMode
+  VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE : constant Int_Unsigned_C := 4; -- VkSamplerAddressMode
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageViewType.html
   VK_IMAGE_VIEW_TYPE_1D         : constant Int_Unsigned_C := 0; -- VkImageViewType
@@ -314,15 +390,6 @@ package Neo.API.Vulkan is
   VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU   : constant Int_Unsigned_C := 2; -- VkPhysicalDeviceType
   VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU    : constant Int_Unsigned_C := 3; -- VkPhysicalDeviceType
   VK_PHYSICAL_DEVICE_TYPE_CPU            : constant Int_Unsigned_C := 4; -- VkPhysicalDeviceType
-
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSampleCountFlagBits.html
-  VK_SAMPLE_COUNT_1_BIT  : constant Int_Unsigned_C := 1;  -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_2_BIT  : constant Int_Unsigned_C := 2;  -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_4_BIT  : constant Int_Unsigned_C := 4;  -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_8_BIT  : constant Int_Unsigned_C := 8;  -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_16_BIT : constant Int_Unsigned_C := 16; -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_32_BIT : constant Int_Unsigned_C := 32; -- VkSampleCountFlagBits
-  VK_SAMPLE_COUNT_64_BIT : constant Int_Unsigned_C := 64; -- VkSampleCountFlagBits
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMemoryPropertyFlagBits.html
   VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT     : constant Int_Unsigned_C := 1;  -- VkMemoryPropertyFlagBits
@@ -526,6 +593,13 @@ package Neo.API.Vulkan is
   VK_EVENT_SET                      : constant Int_Unsigned_C := 3;                                  -- VkResult
   VK_EVENT_RESET                    : constant Int_Unsigned_C := 4;                                  -- VkResult
   VK_INCOMPLETE                     : constant Int_Unsigned_C := 5;                                  -- VkResult
+  VK_SUBOPTIMAL_KHR                 : constant Int_Unsigned_C := 1000001003;                         -- VkResult
+  VK_ERROR_OUT_OF_DATE_KHR          : constant Int_Unsigned_C := 3294966292;                         -- VkResult
+  VK_ERROR_SURFACE_LOST_KHR         : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000000); -- VkResult
+  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000001); -- VkResult
+  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000003001); -- VkResult
+  VK_ERROR_VALIDATION_FAILED_EXT    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000011001); -- VkResult
+  VK_ERROR_INVALID_SHADER_NV        : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000012000); -- VkResult
   VK_ERROR_OUT_OF_HOST_MEMORY       : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1);          -- VkResult
   VK_ERROR_OUT_OF_DEVICE_MEMORY     : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-2);          -- VkResult
   VK_ERROR_INITIALIZATION_FAILED    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-3);          -- VkResult
@@ -537,13 +611,6 @@ package Neo.API.Vulkan is
   VK_ERROR_INCOMPATIBLE_DRIVER      : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-9);          -- VkResult
   VK_ERROR_TOO_MANY_OBJECTS         : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-10);         -- VkResult
   VK_ERROR_FORMAT_NOT_SUPPORTED     : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-11);         -- VkResult
-  VK_ERROR_SURFACE_LOST_KHR         : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000000); -- VkResult
-  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000001); -- VkResult
-  VK_SUBOPTIMAL_KHR                 : constant Int_Unsigned_C := 1000001003;                         -- VkResult
-  VK_ERROR_OUT_OF_DATE_KHR          : constant Int_Unsigned_C := 3294966292; -- VkResult
-  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000003001); -- VkResult
-  VK_ERROR_VALIDATION_FAILED_EXT    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000011001); -- VkResult
-  VK_ERROR_INVALID_SHADER_NV        : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000012000); -- VkResult
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkStructureType.html
   VK_STRUCTURE_TYPE_APPLICATION_INFO                          : constant Int_Unsigned_C := 0;          -- VkStructureType 
@@ -801,11 +868,14 @@ package Neo.API.Vulkan is
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VK_MAKE_VERSION.html
   function VK_MAKE_VERSION (Major, Minor, Patch : Int_Unsigned) return Int_Unsigned_C is
-    (Int_Unsigned_C (Shift_Left (Major, 22) or Shift_Left (Minor,12) or Patch));
+    (Int_Unsigned_C (Shift_Left (Major, 22) or Shift_Left (Minor, 12) or Patch));
   function VK_VERSION_STR (Version : Int_Unsigned_C) return Str is
-    (NULL_STR);
+    (Trim (Shift_Right (Int_Unsigned (Version), 22)'Wide_Image, Both) & "." &
+     Trim (Shift_Right (Shift_Left (Int_Unsigned (Version), 10), 22)'Wide_Image, Both) & "." &
+     Trim (Shift_Right (Shift_Left (Int_Unsigned (Version), 22), 22)'Wide_Image, Both));
+  function VK_MAKE_VERSION (Val : Str) return Int_Unsigned_C;
     
-  VK_API_VERSION_1_0 : constant Int_Unsigned_C := VK_MAKE_VERSION(1, 0, 0);
+  VK_API_VERSION_1_0 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 0, 0);
 
   ----------------
   -- Allocation --
@@ -854,10 +924,60 @@ package Neo.API.Vulkan is
                                                      with Convention => C;
   function To_Ptr_vkAllocationFunction is new Unchecked_Conversion (Ptr, Ptr_vkAllocationFunction);
   vkAllocationFunction : Ptr_vkAllocationFunction := null;
-
+    
   ----------------
   -- Structures --
   ----------------
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFenceCreateInfo.html
+  type VkFenceCreateInfo;
+  type Ptr_VkFenceCreateInfo is access all VkFenceCreateInfo;
+  type VkFenceCreateInfo is record
+      sType : Int_Unsigned_C := VK_STRUCTURE_TYPE_FENCE_CREATE_INFO; -- VkStructureType
+      pNext : Ptr_VkFenceCreateInfo := null; -- const void*
+      flags : Int_Unsigned_C := 0; -- VkFenceCreateFlags
+    end record with Convention => C;
+  type Array_VkFenceCreateInfo is array (Positive range <>) of aliased VkFenceCreateInfo;
+  type Ptr_Array_VkFenceCreateInfo is access all Array_VkFenceCreateInfo;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMappedMemoryRange.html
+  type VkMappedMemoryRange;
+  type Ptr_VkMappedMemoryRange is access all VkMappedMemoryRange;
+  type VkMappedMemoryRange is record
+      sType  : Int_Unsigned_C := VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE; -- VkStructureType
+      pNext  : Ptr_VkMappedMemoryRange := null; -- const void*
+      memory : Int_64_Unsigned_C := 0; -- VkDeviceMemory
+      offset : Int_64_Unsigned_C := 0; -- VkDeviceSize
+      size   : Int_64_Unsigned_C := 0; -- VkDeviceSize
+    end record with Convention => C;
+  type Array_VkMappedMemoryRange is array (Positive range <>) of aliased VkMappedMemoryRange;
+  type Ptr_Array_VkMappedMemoryRange is access all Array_VkMappedMemoryRange;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSamplerCreateInfo.html
+  type VkSamplerCreateInfo;
+  type Ptr_VkSamplerCreateInfo is access all VkSamplerCreateInfo with Convention => C;
+  type VkSamplerCreateInfo is record
+      sType                   : Int_Unsigned_C := VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO; -- VkStructureType
+      pNext                   : Ptr_VkSamplerCreateInfo := null; -- const void*
+      flags                   : Int_Unsigned_C := 0;        -- VkSamplerCreateFlags
+      magFilter               : Int_Unsigned_C := 0;        -- VkFilter
+      minFilter               : Int_Unsigned_C := 0;        -- VkFilter
+      mipmapMode              : Int_Unsigned_C := 0;        -- VkSamplerMipmapMode
+      addressModeU            : Int_Unsigned_C := 0;        -- VkSamplerAddressMode
+      addressModeV            : Int_Unsigned_C := 0;        -- VkSamplerAddressMode
+      addressModeW            : Int_Unsigned_C := 0;        -- VkSamplerAddressMode
+      mipLodBias              : Real_C         := 0.0;      -- float
+      anisotropyEnable        : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      maxAnisotropy           : Real_C         := 0.0;      -- float
+      compareEnable           : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      compareOp               : Int_Unsigned_C := 0;        -- VkCompareOp
+      minLod                  : Real_C         := 0.0;      -- float
+      maxLod                  : Real_C         := 0.0;      -- float
+      borderColor             : Int_Unsigned_C := 0;        -- VkBorderColor
+      unnormalizedCoordinates : Int_Unsigned_C := VK_FALSE; -- VkBool32
+    end record with Convention => C;
+  type Array_VkSamplerCreateInfo is array (Positive range <>) of aliased VkSamplerCreateInfo;
+  type Ptr_Array_VkSamplerCreateInfo is access all Array_VkSamplerCreateInfo;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkExtent2D.html
   type VkExtent2D;
@@ -1079,61 +1199,61 @@ package Neo.API.Vulkan is
   type VkPhysicalDeviceFeatures;
   type Ptr_VkPhysicalDeviceFeatures is access all VkPhysicalDeviceFeatures with Convention => C;
   type VkPhysicalDeviceFeatures is record
-      robustBufferAccess                      : Int_Unsigned_C := 0; -- VkBool32
-      fullDrawIndexUint32                     : Int_Unsigned_C := 0; -- VkBool32
-      imageCubeArray                          : Int_Unsigned_C := 0; -- VkBool32
-      independentBlend                        : Int_Unsigned_C := 0; -- VkBool32
-      geometryShader                          : Int_Unsigned_C := 0; -- VkBool32
-      tessellationShader                      : Int_Unsigned_C := 0; -- VkBool32
-      sampleRateShading                       : Int_Unsigned_C := 0; -- VkBool32
-      dualSrcBlend                            : Int_Unsigned_C := 0; -- VkBool32
-      logicOp                                 : Int_Unsigned_C := 0; -- VkBool32
-      multiDrawIndirect                       : Int_Unsigned_C := 0; -- VkBool32
-      drawIndirectFirstInstance               : Int_Unsigned_C := 0; -- VkBool32
-      depthClamp                              : Int_Unsigned_C := 0; -- VkBool32
-      depthBiasClamp                          : Int_Unsigned_C := 0; -- VkBool32
-      fillModeNonSolid                        : Int_Unsigned_C := 0; -- VkBool32
-      depthBounds                             : Int_Unsigned_C := 0; -- VkBool32
-      wideLines                               : Int_Unsigned_C := 0; -- VkBool32
-      largePoints                             : Int_Unsigned_C := 0; -- VkBool32
-      alphaToOne                              : Int_Unsigned_C := 0; -- VkBool32
-      multiViewport                           : Int_Unsigned_C := 0; -- VkBool32
-      samplerAnisotropy                       : Int_Unsigned_C := 0; -- VkBool32
-      textureCompressionETC2                  : Int_Unsigned_C := 0; -- VkBool32
-      textureCompressionASTC_LDR              : Int_Unsigned_C := 0; -- VkBool32
-      textureCompressionBC                    : Int_Unsigned_C := 0; -- VkBool32
-      occlusionQueryPrecise                   : Int_Unsigned_C := 0; -- VkBool32
-      pipelineStatisticsQuery                 : Int_Unsigned_C := 0; -- VkBool32
-      vertexPipelineStoresAndAtomics          : Int_Unsigned_C := 0; -- VkBool32
-      fragmentStoresAndAtomics                : Int_Unsigned_C := 0; -- VkBool32
-      shaderTessellationAndGeometryPointSize  : Int_Unsigned_C := 0; -- VkBool32
-      shaderImageGatherExtended               : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageImageExtendedFormats       : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageImageMultisample           : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageImageReadWithoutFormat     : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageImageWriteWithoutFormat    : Int_Unsigned_C := 0; -- VkBool32
-      shaderUniformBufferArrayDynamicIndexing : Int_Unsigned_C := 0; -- VkBool32
-      shaderSampledImageArrayDynamicIndexing  : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageBufferArrayDynamicIndexing : Int_Unsigned_C := 0; -- VkBool32
-      shaderStorageImageArrayDynamicIndexing  : Int_Unsigned_C := 0; -- VkBool32
-      shaderClipDistance                      : Int_Unsigned_C := 0; -- VkBool32
-      shaderCullDistance                      : Int_Unsigned_C := 0; -- VkBool32
-      shaderFloat64                           : Int_Unsigned_C := 0; -- VkBool32
-      shaderInt64                             : Int_Unsigned_C := 0; -- VkBool32
-      shaderInt16                             : Int_Unsigned_C := 0; -- VkBool32
-      shaderResourceResidency                 : Int_Unsigned_C := 0; -- VkBool32
-      shaderResourceMinLod                    : Int_Unsigned_C := 0; -- VkBool32
-      sparseBinding                           : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidencyBuffer                   : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidencyImage2D                  : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidencyImage3D                  : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidency2Samples                 : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidency4Samples                 : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidency8Samples                 : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidency16Samples                : Int_Unsigned_C := 0; -- VkBool32
-      sparseResidency                         : Int_Unsigned_C := 0; -- VkBool32
-      variableMultisampleRate                 : Int_Unsigned_C := 0; -- VkBool32
-      inheritedQueries                        : Int_Unsigned_C := 0; -- VkBool32
+      robustBufferAccess                      : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      fullDrawIndexUint32                     : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      imageCubeArray                          : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      independentBlend                        : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      geometryShader                          : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      tessellationShader                      : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sampleRateShading                       : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      dualSrcBlend                            : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      logicOp                                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      multiDrawIndirect                       : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      drawIndirectFirstInstance               : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      depthClamp                              : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      depthBiasClamp                          : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      fillModeNonSolid                        : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      depthBounds                             : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      wideLines                               : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      largePoints                             : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      alphaToOne                              : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      multiViewport                           : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      samplerAnisotropy                       : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      textureCompressionETC2                  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      textureCompressionASTC_LDR              : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      textureCompressionBC                    : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      occlusionQueryPrecise                   : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      pipelineStatisticsQuery                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      vertexPipelineStoresAndAtomics          : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      fragmentStoresAndAtomics                : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderTessellationAndGeometryPointSize  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderImageGatherExtended               : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageImageExtendedFormats       : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageImageMultisample           : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageImageReadWithoutFormat     : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageImageWriteWithoutFormat    : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderUniformBufferArrayDynamicIndexing : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderSampledImageArrayDynamicIndexing  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageBufferArrayDynamicIndexing : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderStorageImageArrayDynamicIndexing  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderClipDistance                      : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderCullDistance                      : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderFloat64                           : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderInt64                             : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderInt16                             : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderResourceResidency                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      shaderResourceMinLod                    : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseBinding                           : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidencyBuffer                   : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidencyImage2D                  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidencyImage3D                  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidency2Samples                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidency4Samples                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidency8Samples                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidency16Samples                : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      sparseResidency                         : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      variableMultisampleRate                 : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      inheritedQueries                        : Int_Unsigned_C := VK_FALSE; -- VkBool32
     end record with Convention => C;
   type Array_VkPhysicalDeviceFeatures is array (Positive range <>) of aliased VkPhysicalDeviceFeatures;
   type Ptr_Array_VkPhysicalDeviceFeatures is access all Array_VkPhysicalDeviceFeatures;
@@ -1233,7 +1353,7 @@ package Neo.API.Vulkan is
       sampledImageStencilSampleCounts                 : Int_Unsigned_C              := 0;          -- VkSampleCountFlags
       storageImageSampleCounts                        : Int_Unsigned_C              := 0;          -- VkSampleCountFlags
       maxSampleMaskWords                              : Int_Unsigned_C              := 0;          -- uint32_t     
-      timestampComputeAndGraphics                     : Int_Unsigned_C              := 0;          -- VkBool32
+      timestampComputeAndGraphics                     : Int_Unsigned_C              := VK_FALSE;   -- VkBool32
       timestampPeriod                                 : Real_C                      := 0.0;        -- float
       maxClipDistances                                : Int_Unsigned_C              := 0;          -- uint32_t     
       maxCullDistances                                : Int_Unsigned_C              := 0;          -- uint32_t     
@@ -1243,8 +1363,8 @@ package Neo.API.Vulkan is
       lineWidthRange                                  : Array_Real_32 (1..2)        := (0.0, 0.0); -- float [2]
       pointSizeGranularity                            : Real_C                      := 0.0;        -- float
       lineWidthGranularity                            : Real_C                      := 0.0;        -- float
-      strictLines                                     : Int_Unsigned_C              := 0;          -- VkBool32
-      standardSampleLocations                         : Int_Unsigned_C              := 0;          -- VkBool32
+      strictLines                                     : Int_Unsigned_C              := VK_FALSE;   -- VkBool32
+      standardSampleLocations                         : Int_Unsigned_C              := VK_FALSE;   -- VkBool32
       optimalBufferCopyOffsetAlignment                : Int_64_Unsigned_C           := 0;          -- VkDeviceSize
       optimalBufferCopyRowPitchAlignment              : Int_64_Unsigned_C           := 0;          -- VkDeviceSize
       nonCoherentAtomSize                             : Int_64_Unsigned_C           := 0;          -- VkDeviceSize
@@ -1256,11 +1376,11 @@ package Neo.API.Vulkan is
   type VkPhysicalDeviceSparseProperties;
   type Ptr_VkPhysicalDeviceSparseProperties is access all VkPhysicalDeviceSparseProperties with Convention => C;
   type VkPhysicalDeviceSparseProperties is record
-      residencyStandard2DBlockShape            : Int_Unsigned_C := 0; -- VkBool32
-      residencyStandard2DMultisampleBlockShape : Int_Unsigned_C := 0; -- VkBool32
-      residencyStandard3DBlockShape            : Int_Unsigned_C := 0; -- VkBool32
-      residencyAlignedMipSize                  : Int_Unsigned_C := 0; -- VkBool32
-      residencyNonResidentStrict               : Int_Unsigned_C := 0; -- VkBool32
+      residencyStandard2DBlockShape            : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      residencyStandard2DMultisampleBlockShape : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      residencyStandard3DBlockShape            : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      residencyAlignedMipSize                  : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      residencyNonResidentStrict               : Int_Unsigned_C := VK_FALSE; -- VkBool32
     end record with Convention => C;
   type Array_VkPhysicalDeviceSparseProperties is array (Positive range <>) of aliased VkPhysicalDeviceSparseProperties;
   type Ptr_Array_VkPhysicalDeviceSparseProperties is access all Array_VkPhysicalDeviceSparseProperties;
@@ -1584,8 +1704,7 @@ package Neo.API.Vulkan is
       format     : Int_Unsigned_C := 0; -- VkFormat
       colorSpace : Int_Unsigned_C := 0; -- VkColorSpaceKHR
     end record with Convention => C;
-  type Array_VkSurfaceFormatKHR is array (Positive range <>) of aliased VkSurfaceFormatKHR;
-  type Ptr_Array_VkSurfaceFormatKHR is access all Array_VkSurfaceFormatKHR;
+  package Vector_VkSurfaceFormatKHR is new Neo.Core.Vectors (VkSurfaceFormatKHR);
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkOffset2D.html
   type VkOffset2D;
@@ -1709,6 +1828,7 @@ package Neo.API.Vulkan is
       offset   : Int_Unsigned_C := 0; -- uint32_t
     end record with Convention => C;
   type Array_VkVertexInputAttributeDescription is array (Positive range <>) of aliased VkVertexInputAttributeDescription;
+  type Ptr_Array_VkVertexInputAttributeDescription is access all Array_VkVertexInputAttributeDescription;
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineVertexInputStateCreateInfo.html
   type VkPipelineVertexInputStateCreateInfo;
@@ -1722,6 +1842,8 @@ package Neo.API.Vulkan is
       vertexAttributeDescriptionCount : Int_Unsigned_C                           := 0;    -- uint32_t
       pVertexAttributeDescriptions    : Ptr_VkVertexInputAttributeDescription    := null; -- const VkVertexInputAttributeDescription*
     end record with Convention => C;
+  type Array_VkPipelineVertexInputStateCreateInfo is array (Positive range <>) of aliased VkPipelineVertexInputStateCreateInfo;
+  type Ptr_Array_VkPipelineVertexInputStateCreateInfo is access all Array_VkPipelineVertexInputStateCreateInfo;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineInputAssemblyStateCreateInfo.html
   type VkPipelineInputAssemblyStateCreateInfo;
@@ -1729,9 +1851,9 @@ package Neo.API.Vulkan is
   type VkPipelineInputAssemblyStateCreateInfo is record
       sType                  : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO; -- VkStructureType
       pNext                  : Ptr_VkPipelineInputAssemblyStateCreateInfo := null; -- const void*
-      flags                  : Int_Unsigned_C := 0; -- VkPipelineInputAssemblyStateCreateFlags
-      topology               : Int_Unsigned_C := 0; -- VkPrimitiveTopology
-      primitiveRestartEnable : Int_Unsigned_C := 0; -- VkBool32
+      flags                  : Int_Unsigned_C := 0;        -- VkPipelineInputAssemblyStateCreateFlags
+      topology               : Int_Unsigned_C := 0;        -- VkPrimitiveTopology
+      primitiveRestartEnable : Int_Unsigned_C := VK_FALSE; -- VkBool32
     end record With Convention => C;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineTessellationStateCreateFlags.html
@@ -1775,17 +1897,17 @@ package Neo.API.Vulkan is
   type VkPipelineRasterizationStateCreateInfo is record
       sType                   : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO; -- VkStructureType
       pNext                   : Ptr_VkPipelineRasterizationStateCreateInfo := null; -- const void*
-      flags                   : Int_Unsigned_C := 0;   -- VkPipelineRasterizationStateCreateFlags
-      depthClampEnable        : Int_Unsigned_C := 0;   -- VkBool32
-      rasterizerDiscardEnable : Int_Unsigned_C := 0;   -- VkBool32
-      polygonMode             : Int_Unsigned_C := 0;   -- VkPolygonMode
-      cullMode                : Int_Unsigned_C := 0;   -- VkCullModeFlags
-      frontFace               : Int_Unsigned_C := 0;   -- VkFrontFace
-      depthBiasEnable         : Int_Unsigned_C := 0;   -- VkBool32
-      depthBiasConstantFactor : Real_C         := 0.0; -- float
-      depthBiasClamp          : Real_C         := 0.0; -- float
-      depthBiasSlopeFactor    : Real_C         := 0.0; -- float
-      lineWidth               : Real_C         := 0.0; -- float
+      flags                   : Int_Unsigned_C := 0;        -- VkPipelineRasterizationStateCreateFlags
+      depthClampEnable        : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      rasterizerDiscardEnable : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      polygonMode             : Int_Unsigned_C := 0;        -- VkPolygonMode
+      cullMode                : Int_Unsigned_C := 0;        -- VkCullModeFlags
+      frontFace               : Int_Unsigned_C := 0;        -- VkFrontFace
+      depthBiasEnable         : Int_Unsigned_C := VK_FALSE; -- VkBool32
+      depthBiasConstantFactor : Real_C         := 0.0;      -- float
+      depthBiasClamp          : Real_C         := 0.0;      -- float
+      depthBiasSlopeFactor    : Real_C         := 0.0;      -- float
+      lineWidth               : Real_C         := 0.0;      -- float
     end record with Convention => C;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineMultisampleStateCreateInfo.html
@@ -1794,13 +1916,13 @@ package Neo.API.Vulkan is
   type VkPipelineMultisampleStateCreateInfo is record
       sType                 : Int_Unsigned_C :=  VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkPipelineRasterizationStateCreateInfo := null; -- const void*
-      flags                 : Int_Unsigned_C     := 0;    -- VkPipelineMultisampleStateCreateFlags
-      rasterizationSamples  : Int_Unsigned_C     := 0;    -- VkSampleCountFlagBits
-      sampleShadingEnable   : Int_Unsigned_C     := 0;    -- VkBool32
-      minSampleShading      : Real_C             := 0.0;  -- float
-      pSampleMask           : Ptr_Int_Unsigned_C := null; -- const VkSampleMask*
-      alphaToCoverageEnable : Int_Unsigned_C     := 0;    -- VkBool32
-      alphaToOneEnable      : Int_Unsigned_C     := 0;    -- VkBool32
+      flags                 : Int_Unsigned_C     := 0;        -- VkPipelineMultisampleStateCreateFlags
+      rasterizationSamples  : Int_Unsigned_C     := 0;        -- VkSampleCountFlagBits
+      sampleShadingEnable   : Int_Unsigned_C     := VK_FALSE; -- VkBool32
+      minSampleShading      : Real_C             := 0.0;      -- float
+      pSampleMask           : Ptr_Int_Unsigned_C := null;     -- const VkSampleMask*
+      alphaToCoverageEnable : Int_Unsigned_C     := VK_FALSE; -- VkBool32
+      alphaToOneEnable      : Int_Unsigned_C     := VK_FALSE; -- VkBool32
     end record with Convention => C;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkStencilOpState.html
@@ -1823,11 +1945,11 @@ package Neo.API.Vulkan is
       sType                 : Int_Unsigned_C :=  VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO; -- VkStructureType
       pNext                 : Ptr_VkPipelineDepthStencilStateCreateInfo := null;  -- const void*
       flags                 : Int_Unsigned_C   := 0;              -- VkPipelineDepthStencilStateCreateFlags
-      depthTestEnable       : Int_Unsigned_C   := 0;              -- VkBool32
-      depthWriteEnable      : Int_Unsigned_C   := 0;              -- VkBool32
+      depthTestEnable       : Int_Unsigned_C   := VK_FALSE;       -- VkBool32
+      depthWriteEnable      : Int_Unsigned_C   := VK_FALSE;       -- VkBool32
       depthCompareOp        : Int_Unsigned_C   := 0;              -- VkCompareOp
-      depthBoundsTestEnable : Int_Unsigned_C   := 0;              -- VkBool32
-      stencilTestEnable     : Int_Unsigned_C   := 0;              -- VkBool32
+      depthBoundsTestEnable : Int_Unsigned_C   := VK_FALSE;       -- VkBool32
+      stencilTestEnable     : Int_Unsigned_C   := VK_FALSE;       -- VkBool32
       front                 : VkStencilOpState := (others => <>); -- VkStencilOpState
       back                  : VkStencilOpState := (others => <>); -- VkStencilOpState
       minDepthBounds        : Real_C           := 0.0;            -- float
@@ -1855,7 +1977,7 @@ package Neo.API.Vulkan is
       sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO; -- VkStructureType
       pNext           : Ptr_VkPipelineColorBlendStateCreateInfo := null;            -- const void*
       flags           : Int_Unsigned_C                          := 0;               -- VkPipelineColorBlendStateCreateFlags
-      logicOpEnable   : Int_Unsigned_C                          := 0;               -- VkBool32
+      logicOpEnable   : Int_Unsigned_C                          := VK_FALSE;        -- VkBool32
       logicOp         : Int_Unsigned_C                          := 0;               -- VkLogicOp
       attachmentCount : Int_Unsigned_C                          := 0;               -- uint32_t
       pAttachments    : Ptr_VkPipelineColorBlendAttachmentState := null;            -- const VkPipelineColorBlendAttachmentState*
@@ -2020,7 +2142,7 @@ package Neo.API.Vulkan is
       flags         : Int_Unsigned_C                 := 0;    -- VkDescriptorPoolCreateFlags    
       maxSets       : Int_Unsigned_C                 := 0;    -- uint32_t
       poolSizeCount : Int_Unsigned_C                 := 0;    -- uint32_t
-      pPoolSizes    : Ptr_Array_VkDescriptorPoolSize := null; -- const VkDescriptorPoolSize*
+      pPoolSizes    : Ptr_VkDescriptorPoolSize       := null; -- const VkDescriptorPoolSize*
     end record with Convention => C;
   type Array_VkDescriptorPoolCreateInfo is array (Positive range <>) of aliased VkDescriptorPoolCreateInfo;
   type Ptr_Array_VkDescriptorPoolCreateInfo is access all Array_VkDescriptorPoolCreateInfo;
@@ -2081,7 +2203,7 @@ package Neo.API.Vulkan is
       pNext              : Ptr_VkDescriptorSetAllocateInfo := null;     -- const void*
       descriptorPool     : Ptr                             := NULL_PTR; -- VkDescriptorPool                
       descriptorSetCount : Int_Unsigned_C                  := 0;        -- uint32_t                        
-      pSetLayouts        : Ptr_Array_Ptr                   := null;     -- const VkDescriptorSetLayout*
+      pSetLayouts        : Ptr_Ptr                         := null;     -- const VkDescriptorSetLayout*
     end record with Convention => C;
   type Array_VkDescriptorSetAllocateInfo is array (Positive range <>) of aliased VkDescriptorSetAllocateInfo;
   type Ptr_Array_VkDescriptorSetAllocateInfo is access all Array_VkDescriptorSetAllocateInfo;
@@ -2175,25 +2297,139 @@ package Neo.API.Vulkan is
   type Array_VkImageViewCreateInfo is array (Positive range <>) of aliased VkImageViewCreateInfo;
   type Ptr_Array_VkImageViewCreateInfo is access all Array_VkImageViewCreateInfo;
   
-  ---------------
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageFormatProperties.html
+  type VkImageFormatProperties;
+  type Ptr_VkImageFormatProperties is access all VkImageFormatProperties with Convention => C;
+  type VkImageFormatProperties is record
+      maxExtent       : VkExtent3D        := (others => <>); -- VkExtent3D
+      maxMipLevels    : Int_Unsigned_C    := 0;              -- uint32_t
+      maxArrayLayers  : Int_Unsigned_C    := 0;              -- uint32_t
+      sampleCounts    : Int_Unsigned_C    := 0;              -- VkSampleCountFlags
+      maxResourceSize : Int_64_Unsigned_C := 0;              -- VkDeviceSize
+    end record with Convention => C;
+      
+  --------------- 
   -- Functions --
   ---------------
   
-  -- Template
-  -- type Ptr_ is access function ( : ; -- 
-  --                                : ; -- 
-  --                                : ; -- 
-  --                                : ; -- 
-  --                                : ; -- 
-  --                                : ) --
-  --                               return  -- 
-  --                               with Convention => C;
-  --function To_Ptr_ is new Unchecked_Conversion (Ptr, Ptr_);
-  -- : Ptr_ := null;
+  -- Convert booleans
+  function To_VkBool32 (Val : Boolean) return Int_Unsigned_C is (if Val then VK_TRUE else VK_FALSE);
   
   -- Assert VK_SUCCESS
-  procedure vkAssert (result : Int_Unsigned_C); -- VkResult
+  procedure vkAssert (Result : Int_Unsigned_C); -- VkResult
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceImageFormatProperties.html
+  type Ptr_vkGetPhysicalDeviceImageFormatProperties is access function (physicalDevice         : Ptr;                         -- VkPhysicalDevice
+                                                                        format                 : Int_Unsigned_C;              -- VkFormat
+                                                                        typ                    : Int_Unsigned_C;              -- VkImageType
+                                                                        tiling                 : Int_Unsigned_C;              -- VkImageTiling
+                                                                        usage                  : Int_Unsigned_C;              -- VkImageUsageFlags
+                                                                        flags                  : Int_Unsigned_C;              -- VkImageCreateFlags
+                                                                        pImageFormatProperties : Ptr_VkImageFormatProperties) -- VkImageFormatProperties*
+                                                                        return Int_Unsigned_C                                 -- VkResult
+                                                                        with Convention => C;
+  function To_Ptr_vkGetPhysicalDeviceImageFormatProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceImageFormatProperties);
+  vkGetPhysicalDeviceImageFormatProperties : Ptr_vkGetPhysicalDeviceImageFormatProperties := null;
+               
+  -- https://manned.org/vkDestroySurfaceKHR/adcec40c
+  type Ptr_vkDestroySurfaceKHR is access procedure (instance   : Ptr;                       -- VkInstance
+                                                    surface    : Ptr;                       -- VkSurfaceKHR
+                                                    pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                    with Convention => C;
+  function To_Ptr_vkDestroySurfaceKHR is new Unchecked_Conversion (Ptr, Ptr_vkDestroySurfaceKHR);
+  vkDestroySurfaceKHR : Ptr_vkDestroySurfaceKHR := null;
   
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkFlushMappedMemoryRanges.html
+  type Ptr_vkFlushMappedMemoryRanges is access function (device           : Ptr;                     -- VkDevice
+                                                         memoryRangeCount : Int_Unsigned_C;          -- uint32_t
+                                                         pMemoryRanges    : Ptr_VkMappedMemoryRange) -- const VkMappedMemoryRange* 
+                                                         return Int_Unsigned_C                       -- VkResult
+                                                         with Convention => C;
+  function To_Ptr_vkFlushMappedMemoryRanges is new Unchecked_Conversion (Ptr, Ptr_vkFlushMappedMemoryRanges);
+  vkFlushMappedMemoryRanges : Ptr_vkFlushMappedMemoryRanges := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSampler.html
+  type Ptr_vkCreateSampler is access function (device      : Ptr;                       -- VkDevice
+                                               pCreateInfo : Ptr_VkSamplerCreateInfo;   -- const VkSamplerCreateInfo* 
+                                               pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
+                                               pSampler    : Ptr_Ptr)                   -- VkSampler*
+                                               return Int_Unsigned_C                    -- VkResult
+                                               with Convention => C;
+  function To_Ptr_vkCreateSampler is new Unchecked_Conversion (Ptr, Ptr_vkCreateSampler);
+  vkCreateSampler : Ptr_vkCreateSampler := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyImage.html
+  type Ptr_vkDestroyImage is access procedure (device     : Ptr;                       -- VkDevice
+                                               image      : Ptr;                       -- VkImage
+                                               pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks* 
+                                               with Convention => C;
+  function To_Ptr_vkDestroyImage is new Unchecked_Conversion (Ptr, Ptr_vkDestroyImage);
+  vkDestroyImage : Ptr_vkDestroyImage := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyPipeline.html
+  type Ptr_vkDestroyPipeline is access procedure (device     : Ptr;                       -- VkDevice
+                                                  pipeline   : Ptr;                       -- VkPipeline
+                                                  pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks* 
+                                                  with Convention => C;
+  function To_Ptr_vkDestroyPipeline is new Unchecked_Conversion (Ptr, Ptr_vkDestroyPipeline);
+  vkDestroyPipeline : Ptr_vkDestroyPipeline := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroySampler.html
+  type Ptr_vkDestroySampler is access procedure (device     : Ptr;                       -- VkDevice
+                                                 sampler    : Ptr;                       -- VkSampler
+                                                 pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                 with Convention => C;
+  function To_Ptr_vkDestroySampler is new Unchecked_Conversion (Ptr, Ptr_vkDestroySampler);
+  vkDestroySampler : Ptr_vkDestroySampler := null;
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDescriptorPool.html
+  type Ptr_vkDestroyDescriptorPool is access procedure (device         : Ptr;                       -- VkDevice
+                                                        descriptorPool : Ptr;                       -- VkDescriptorPool
+                                                        pAllocator     : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                        with Convention => C;
+  function To_Ptr_vkDestroyDescriptorPool is new Unchecked_Conversion (Ptr, Ptr_vkDestroyDescriptorPool);
+  vkDestroyDescriptorPool : Ptr_vkDestroyDescriptorPool := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDescriptorSetLayout.html
+  type Ptr_vkDestroyDescriptorSetLayout is access procedure (device              : Ptr;                       -- VkDevice
+                                                             descriptorSetLayout : Ptr;                       -- VkDescriptorSetLayout
+                                                             pAllocator          : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks* 
+                                                             with Convention => C;
+  function To_Ptr_vkDestroyDescriptorSetLayout is new Unchecked_Conversion (Ptr, Ptr_vkDestroyDescriptorSetLayout);
+  vkDestroyDescriptorSetLayout : Ptr_vkDestroyDescriptorSetLayout := null;
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyPipelineLayout.html
+  type Ptr_vkDestroyPipelineLayout is access procedure (device         : Ptr;                       -- VkDevice
+                                                        pipelineLayout : Ptr;                       -- VkPipelineLayout
+                                                        pAllocator     : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                        with Convention => C;
+  function To_Ptr_vkDestroyPipelineLayout is new Unchecked_Conversion (Ptr, Ptr_vkDestroyPipelineLayout);
+  vkDestroyPipelineLayout : Ptr_vkDestroyPipelineLayout := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyRenderPass.html
+  type Ptr_vkDestroyRenderPass is access procedure (device     : Ptr;                       -- VkDevice                                    
+                                                    renderPass : Ptr;                       -- VkRenderPass                                
+                                                    pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks* 
+                                                    with Convention => C;
+  function To_Ptr_vkDestroyRenderPass is new Unchecked_Conversion (Ptr, Ptr_vkDestroyRenderPass);
+  vkDestroyRenderPass : Ptr_vkDestroyRenderPass := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyImageView.html
+  type Ptr_vkDestroyImageView is access procedure (device     : Ptr;                       -- VkDevice
+                                                   imageView  : Ptr;                       -- VkImageView
+                                                   pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                   with Convention => C;
+  function To_Ptr_vkDestroyImageView is new Unchecked_Conversion (Ptr, Ptr_vkDestroyImageView);
+  vkDestroyImageView : Ptr_vkDestroyImageView := null;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyFramebuffer.html
+  type Ptr_vkDestroyFramebuffer is access procedure (device      : Ptr;                       -- VkDevice
+                                                     framebuffer : Ptr;                       -- VkFramebuffer
+                                                     pAllocator  : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks* 
+                                                     with Convention => C;
+  function To_Ptr_vkDestroyFramebuffer is new Unchecked_Conversion (Ptr, Ptr_vkDestroyFramebuffer);
+  vkDestroyFramebuffer : Ptr_vkDestroyFramebuffer := null;
+   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCmdCopyBufferToImage.html
   type Ptr_vkCmdCopyBufferToImage is access procedure (commandBuffer  : Ptr;                   -- VkCommandBuffer                             
                                                        srcBuffer      : Ptr;                   -- VkBuffer                                    
@@ -2337,7 +2573,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html
   type Ptr_vkGetPhysicalDeviceQueueFamilyProperties is access procedure (physicalDevice            : Ptr;                               -- VkPhysicalDevice 
                                                                          pQueueFamilyPropertyCount : Ptr_Int_Unsigned_C;                -- uint32_t*
-                                                                         pQueueFamilyProperties    : Ptr_Array_VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
+                                                                         pQueueFamilyProperties    : Ptr_VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
                                                                          with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceQueueFamilyProperties);
   vkGetPhysicalDeviceQueueFamilyProperties : Ptr_vkGetPhysicalDeviceQueueFamilyProperties;
@@ -2363,7 +2599,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEnumeratePhysicalDevices.html
   type Ptr_vkEnumeratePhysicalDevices is access function (instance             : Ptr;                -- VkInstance
                                                           pPhysicalDeviceCount : Ptr_Int_Unsigned_C; -- uint32_t*
-                                                          pPhysicalDevices     : Ptr_Array_Ptr)      -- VkPhysicalDevice*
+                                                          pPhysicalDevices     : Ptr_Ptr)      -- VkPhysicalDevice*
                                                           return Int_Unsigned_C                      -- VkResult
                                                           with Convention => C;
   function To_Ptr_vkEnumeratePhysicalDevices is new Unchecked_Conversion (Ptr, Ptr_vkEnumeratePhysicalDevices);
@@ -2400,11 +2636,11 @@ package Neo.API.Vulkan is
   vkGetPhysicalDeviceSurfaceSupportKHR : Ptr_vkGetPhysicalDeviceSurfaceSupportKHR;    
 
   -- http://nopper.tv/Vulkan/1.0/vkGetPhysicalDeviceSurfaceFormatsKHR.html
-  type Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is access function (physicalDevice      : Ptr;                          -- VkPhysicalDevice
-                                                                    surface             : Ptr;                          -- VkSurfaceKHR
-                                                                    pSurfaceFormatCount : Ptr_Int_Unsigned_C;           -- uint32_t* 
-                                                                    pSurfaceFormats     : Ptr_Array_VkSurfaceFormatKHR) -- VkSurfaceFormatKHR*
-                                                                    return Int_Unsigned_C                               -- VkResult 
+  type Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is access function (physicalDevice      : Ptr;                    -- VkPhysicalDevice
+                                                                    surface             : Ptr;                    -- VkSurfaceKHR
+                                                                    pSurfaceFormatCount : Ptr_Int_Unsigned_C;     -- uint32_t* 
+                                                                    pSurfaceFormats     : Ptr_VkSurfaceFormatKHR) -- VkSurfaceFormatKHR*
+                                                                    return Int_Unsigned_C                         -- VkResult 
                                                                     with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR);
   vkGetPhysicalDeviceSurfaceFormatsKHR : Ptr_vkGetPhysicalDeviceSurfaceFormatsKHR := null; 
@@ -2554,15 +2790,15 @@ package Neo.API.Vulkan is
   vkDestroySwapchainKHR : Ptr_vkDestroySwapchainKHR := null;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDevice.html
-  type Ptr_vkDestroyDevice is access procedure (device     : Ptr; -- VkDevice                                    
-                                                pAllocator : Ptr) -- const VkAllocationCallbacks*
+  type Ptr_vkDestroyDevice is access procedure (device     : Ptr;                       -- VkDevice                                    
+                                                pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
                                                 with Convention => C;
   function To_Ptr_vkDestroyDevice is new Unchecked_Conversion (Ptr,  Ptr_vkDestroyDevice);
   vkDestroyDevice : Ptr_vkDestroyDevice := null; 
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyInstance.html
-  type Ptr_vkDestroyInstance is access procedure (instance   : Ptr; -- VkInstance
-                                                  pAllocator : Ptr) -- const VkAllocationCallbacks*
+  type Ptr_vkDestroyInstance is access procedure (instance   : Ptr;                       -- VkInstance
+                                                  pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
                                                   with Convention => C;
   function To_Ptr_vkDestroyInstance is new Unchecked_Conversion (Ptr, Ptr_vkDestroyInstance);
   vkDestroyInstance : Ptr_vkDestroyInstance := null;
@@ -2590,7 +2826,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkWaitForFences.html
   type Ptr_vkWaitForFences is access function (device     : Ptr;               -- VkDevice
                                                fenceCount : Int_Unsigned_C;    -- uint32_t
-                                               pFences    : Ptr;               -- const VkFence* 
+                                               pFences    : Ptr_Ptr;           -- const VkFence* 
                                                waitAll    : Int_Unsigned_C;    -- VkBool32
                                                timeout    : Int_64_Unsigned_C) -- uint64_t
                                                return Int_Unsigned_C           -- VkResult
@@ -2601,7 +2837,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkResetFences.html
   type Ptr_vkResetFences is access function (device     : Ptr;            -- VkDevice
                                              fenceCount : Int_Unsigned_C; -- uint32_t
-                                             pFences    : Ptr)            -- const VkFence*  
+                                             pFences    : Ptr_Ptr)        -- const VkFence*  
                                              return Int_Unsigned_C        -- VkResul
                                              with Convention => C;
   function To_Ptr_vkResetFences is new Unchecked_Conversion (Ptr, Ptr_vkResetFences);
@@ -2616,19 +2852,19 @@ package Neo.API.Vulkan is
   vkGetFenceStatus : Ptr_vkGetFenceStatus := null; 
 
   -- http://web.archive.org/web/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyFence.html
-  type Ptr_vkDestroyFence is access procedure (device     : Ptr; -- VkDevice
-                                               fence      : Ptr; -- VkFence
-                                               pAllocator : Ptr) -- const VkAllocationCallbacks*
+  type Ptr_vkDestroyFence is access procedure (device     : Ptr;                       -- VkDevice
+                                               fence      : Ptr;                       -- VkFence
+                                               pAllocator : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
                                                with Convention => C;
   function To_Ptr_vkDestroyFence is new Unchecked_Conversion (Ptr, Ptr_vkDestroyFence);
   vkDestroyFence : Ptr_vkDestroyFence := null;
 
   -- http://web.archive.org/web/20160324124456/https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateFence.html
-  type Ptr_vkCreateFence is access function (device      : Ptr;    -- VkDevice
-                                             pCreateInfo : Ptr;    -- const VkFenceCreateInfo*
-                                             pAllocator  : Ptr;    -- const VkAllocationCallbacks*
-                                             pFence      : Ptr)    -- VkFence*
-                                             return Int_Unsigned_C -- VkResult 
+  type Ptr_vkCreateFence is access function (device      : Ptr;                       -- VkDevice
+                                             pCreateInfo : Ptr_VkFenceCreateInfo;     -- const VkFenceCreateInfo*
+                                             pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
+                                             pFence      : Ptr_Ptr)                   -- VkFence*
+                                             return Int_Unsigned_C                    -- VkResult 
                                              with Convention => C;
   function To_Ptr_vkCreateFence is new Unchecked_Conversion (Ptr, Ptr_vkCreateFence);  
   vkCreateFence : Ptr_vkCreateFence := null;
@@ -2825,20 +3061,20 @@ package Neo.API.Vulkan is
   vkCreateDescriptorPool : Ptr_vkCreateDescriptorPool := null;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkAllocateDescriptorSets.html
-  type Ptr_vkAllocateDescriptorSets is access function (device          : Ptr;                -- VkDevice                                    
-                                                        pAllocateInfo   : Ptr_Ptr;            -- const VkDescriptorSetAllocateInfo*
-                                                        pDescriptorSets : Ptr_Int_Unsigned_C) -- VkDescriptorSet*
-                                                        return Int_Unsigned_C                 -- VkResult
+  type Ptr_vkAllocateDescriptorSets is access function (device          : Ptr;                             -- VkDevice                                    
+                                                        pAllocateInfo   : Ptr_VkDescriptorSetAllocateInfo; -- const VkDescriptorSetAllocateInfo*
+                                                        pDescriptorSets : Ptr_Ptr)                         -- VkDescriptorSet*
+                                                        return Int_Unsigned_C                              -- VkResult
                                                         with Convention => C; 
   function To_Ptr_vkAllocateDescriptorSets is new Unchecked_Conversion (Ptr, Ptr_vkAllocateDescriptorSets);
   vkAllocateDescriptorSets : Ptr_vkAllocateDescriptorSets := null;
 
   -- https://manned.org/vkUpdateDescriptorSets/4ca27893
-  type Ptr_vkUpdateDescriptorSets is access procedure (device               : Ptr;                           -- VkDevice                                    
-                                                       descriptorWriteCount : Int_Unsigned_C;                -- uint32_t                                                     
-                                                       pDescriptorWrites    : Ptr_VkCopyDescriptorSet;       -- const VkWriteDescriptorSet*                 
-                                                       descriptorCopyCount  : Int_Unsigned_C;                -- uint32_t
-                                                       pDescriptorCopies    : Ptr_Array_VkCopyDescriptorSet) -- const VkCopyDescriptorSet*
+  type Ptr_vkUpdateDescriptorSets is access procedure (device               : Ptr;                      -- VkDevice                                    
+                                                       descriptorWriteCount : Int_Unsigned_C;           -- uint32_t                                                     
+                                                       pDescriptorWrites    : Ptr_VkWriteDescriptorSet; -- const VkWriteDescriptorSet*                 
+                                                       descriptorCopyCount  : Int_Unsigned_C;           -- uint32_t
+                                                       pDescriptorCopies    : Ptr_VkCopyDescriptorSet)  -- const VkCopyDescriptorSet*
                                                        with Convention => C; 
   function To_Ptr_vkUpdateDescriptorSets is new Unchecked_Conversion (Ptr, Ptr_vkUpdateDescriptorSets);
   vkUpdateDescriptorSets : Ptr_vkUpdateDescriptorSets := null;

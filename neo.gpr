@@ -80,15 +80,15 @@ project Neo is
     when "Windows"       => null;
     when "Linux" | "Mac" => System_API := "SDL"; -- Linux and Mac get SDL support only
   end case;
-  for Languages   use ("Ada");--, "C");    -- Support both Ada and OpenGL Shader Language
+  for Languages   use ("Ada", "Project File");--, "C");    -- Support both Ada and OpenGL Shader Language
   for Main        use ("main.adb");    -- Main entry point
   for Object_Dir  use "Object";        -- Trash folder
   for Exec_Dir    use "Games/" & GAME; -- Game distributable 
-  for Source_Dirs use (".",                                         -- 
+  for Source_Dirs use (".",                                         -- Project file and readme
                        "Shaders/",                                  -- GLSL shaders
-                       "Engine/", "Engine/" & System_API,           -- Engine and system specific source
+                       "Engine/", "Engine/System/" & System_API,    -- Engine and system specific source
                        "Games/" & GAME & "/Base/**",                -- Game specific source
-                       "Engine/Settings/Debugging_" & DEBUG & "/"); -- Give the source access to senario variable DEBUG
+                       "Engine/Settings/Debugging " & DEBUG & "/"); -- Give the source access to senario variable DEBUG
 
   --------------
   -- Switches --
@@ -104,6 +104,7 @@ project Neo is
   case DEBUG is
     when "Yes" => Switch_Compiler := Switch_Compiler & ("-O0",          -- Avoid any optimization
                                                         "-gnato",       -- Check overflow for numerics
+                                                        --"-gnatDG",      -- Produce expanded output
                                                         "-gnatf",       -- Show extra info in errors
                                                         "-g");          -- Extend info in stack traces
     when "No"  => Switch_Compiler := Switch_Compiler & ("-O3",          -- Optimize as much as possible
@@ -138,10 +139,11 @@ project Neo is
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
                       for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
-  package Naming   is for Body_Suffix ("C++")      use (".glv", ".glf", ".glt");      -- GLSL code
-                          Body_Suffix ("C")        use ".hta";          end Naming;   -- Javascript ActiveX HTA module
+  --package Naming   is for Body_Suffix ("C++")      use (".glv", ".glf", ".glt");      -- GLSL code
+  --                        Body_Suffix ("C")        use ".hta";          end Naming;   -- Javascript ActiveX HTA module
 
   package Compiler is for Default_Switches ("Ada") use Switch_Compiler;
-                      for Driver ("C++") use "Tools\GLSLang\glslangValidator.exe";    -- Trick GPS into verifiying shader code
-                      for Driver ("C")   use "";                        end Compiler; -- C is only used for syntax highlighting
+  end Compiler;
+  --                    for Driver ("C++") use "Tools\GLSLang\glslangValidator.exe";    -- Trick GPS into verifiying shader code
+  --                    for Driver ("C")   use "";                        end Compiler; -- C is only used for syntax highlighting
 end Neo;

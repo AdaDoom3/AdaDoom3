@@ -21,12 +21,14 @@ separate (Neo.Engine) package body System is
   -----------------
   -- Information --
   -----------------
-
-  -- Get OS and executable information
+        
   function OS_Info_Internal return OS_Info_State is
     Buffer : aliased Int_C := 0;
+    Folder : aliased Str_C (1..MAX_PATH) := (others => NULL_CHAR_C);
     begin       
-      Assert (GetUserNameW (null, Buffer'Unchecked_Access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER); 
+      Assert (GetUserNameW (null, Buffer'Unchecked_Access) = 0 and then GetLastError = ERROR_INSUFFICIENT_BUFFER);
+      Assert (GetModuleFileNameW (NULL_PTR, C (Folder), Folder'Length));
+      Folder (Int_Size_C (Index (To_Str (Folder), "\", Backward))) := NULL_CHAR_C;   
       declare
       Username : aliased Str_C (1..Int_Size_C (Buffer) + 5);
       begin
@@ -34,6 +36,8 @@ separate (Neo.Engine) package body System is
         Assert (IsWow64Process (GetCurrentProcess, Buffer'Unchecked_Access));
         return (Username => U (To_Str (Username)),
                 Version  => U ("Windows" & NULL_STR),
+                Path     => U (To_Str (Folder)) & S,
+                App_Name => Delete (U (To_Str (Folder)), 1, Index (To_Str (Folder), "\", Backward)),
                 Bit_Size => (if WORD_SIZE = 64 or Buffer = 1 then 64 else 32));
         end;
     end;
@@ -47,16 +51,15 @@ separate (Neo.Engine) package body System is
   -------------
 
   -- Window titles
-  APP_NAME           : constant Str   := S (Game_Info.Name_ID);
-  GAME_NAME          : aliased  Str_C := To_Str_C (APP_NAME);
-  INPUT_NAME         : aliased  Str_C := To_Str_C (APP_NAME & " Input");
-  CONSOLE_NAME       : aliased  Str_C := To_Str_C (APP_NAME & " Console");
-  MULTI_MONITOR_NAME : aliased  Str_C := To_Str_C (APP_NAME & " Multi-monitor");
+  GAME_NAME          : aliased  Str_C := To_Str_C (OS_Info.App_Name);
+  INPUT_NAME         : aliased  Str_C := To_Str_C (OS_Info.App_Name & " Input");
+  CONSOLE_NAME       : aliased  Str_C := To_Str_C (OS_Info.App_Name & " Console");
+  MULTI_MONITOR_NAME : aliased  Str_C := To_Str_C (OS_Info.App_Name & " Multi-monitor");
 
   -- Asset paths
-  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (PATH_ICON             & ".ico");
-  WIN32_PATH_CURSOR_ACTIVE   : aliased Str_C := To_Str_C (PATH_CURSOR_ACTIVE    & ".cur");
-  WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (PATH_CURSOR_INACTIVE  & ".cur");
+  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_ICON             & ".ico");
+  WIN32_PATH_CURSOR_ACTIVE   : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_CURSOR_ACTIVE    & ".cur");
+  WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_CURSOR_INACTIVE  & ".cur");
 
   -- Main "HWND"s for the invisible input window and game window
   Game, Input : aliased Ptr := NULL_PTR;
@@ -82,26 +85,25 @@ separate (Neo.Engine) package body System is
   ------------
 
   -- Pointer to the driver dll
-  Vulkan_DLL : Ptr := LoadLibraryW (To_Ptr_Char_16_C (VK_WIN32_DLL_NAME));
+  Vulkan_DLL : Ptr := LoadLibraryW (C (VK_WIN32_DLL_NAME));
 
   -- Load a pointer to a procedure based on a name
   function Get_Vulkan_Subprogram (Name : Str) return Ptr is (GetProcAddress (Vulkan_DLL, To_Str_8_C (Name)));
 
-  -- Fetch extension strings
-  function Get_Vulkan_Extension return Str_8_C is (VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+  -- Fetch surface extension strings
+  function Get_Vulkan_Extension return Ptr_Char_8_C is (C (VK_KHR_WIN32_SURFACE_EXTENSION_NAME));
 
   -- Finalization and initialization (mostly revolve around loading the dll)
   procedure Finalize_Vulkan_Library is begin Assert (FreeLibrary (Vulkan_DLL)); end;
   procedure Initialize_Vulkan_Library is
-    begin
-      vkCreateWin32SurfaceKHR := To_Ptr_vkCreateWin32SurfaceKHR (Get_Vulkan_Subprogram ("vkCreateWin32SurfaceKHR"));
-    end;
+    begin vkCreateWin32SurfaceKHR := To_Ptr_vkCreateWin32SurfaceKHR (Get_Vulkan_Subprogram ("vkCreateWin32SurfaceKHR")); end;
 
   -- Create a new surface
   function Create_Vulkan_Surface (Instance : Ptr) return Ptr is
     Result       : aliased Ptr                         := NULL_PTR;
     Surface_Info : aliased VkWin32SurfaceCreateInfoKHR := (hWnd => Game, hInstance => GetModuleHandleW (null), others => <>);
     begin
+      Assert (Game); -- The window must be created already
       vkAssert (vkCreateWin32SurfaceKHR (Instance, Surface_Info'Unchecked_Access, null, Result'Unchecked_Access));
       Assert (Result);
       return Result;
@@ -205,7 +207,7 @@ separate (Neo.Engine) package body System is
   -- Create a message box 
   function Ok (Message : Str; Buttons : Buttons_Kind; Icon : Icon_Kind) return Bool is
 
-    -- Temporary variables for pointer passing
+    -- Temporary variable for pointer passing
     C_Message : aliased Str_C := To_Str_C (Message);
     
     -- Strap in for a custom icon
@@ -220,7 +222,7 @@ separate (Neo.Engine) package body System is
         -- Identify the message box by class and window text
         Assert (GetClassNameW (Window, C (Class_Name), Class_Name'Length));
         Ignore (GetWIndowTextW (Window, C (Window_Text), Window_Text'Length) = 0);
-        if nCode = HCBT_ACTIVATE and S (Class_Name) = S (DIALOG_CLASS) and S (Window_Text) = APP_NAME then
+        if nCode = HCBT_ACTIVATE and S (Class_Name) = S (DIALOG_CLASS) and Window_Text = GAME_NAME then
 
           -- Load that icon!
           Icon := LoadImageW (hinst     => NULL_PTR,
@@ -266,8 +268,8 @@ separate (Neo.Engine) package body System is
   ---------------
 
   -- Styles for game windowing modes
-  STYLE_FULLSCREEN : constant Int_Unsigned_C := WS_VISIBLE or WS_SYSMENU or WS_TOPMOST or WS_POPUP;
-  STYLE_WINDOWED   : constant Int_Unsigned_C := WS_VISIBLE or WS_SYSMENU or WS_CAPTION or WS_BORDER or WS_SIZEBOX or WS_MAXIMIZEBOX;
+  STYLE_FULLSCREEN : constant Int_Unsigned_C := WS_SYSMENU or WS_TOPMOST or WS_POPUP;
+  STYLE_WINDOWED   : constant Int_Unsigned_C := WS_SYSMENU or WS_CAPTION or WS_BORDER or WS_SIZEBOX or WS_MAXIMIZEBOX;
 
   -- Icons and cursors
   Icon, Cursor_Inactive, Cursor_Active : Ptr := NULL_PTR;
@@ -335,14 +337,14 @@ separate (Neo.Engine) package body System is
                         Fullscreen => True);
       Assert (ReleaseDC (GetDesktopWindow, Context));
     end;
-  procedure Make_Windowed is
+  procedure Restore is
     Context : Ptr := GetDC (GetDesktopWindow);
     begin
       Assert (Context);
-      Adjust_Windowing (X          => Int (GetDeviceCaps (Context, SM_CYDLGFRAME)) / 2 - Windowed_Width.Get  / 2,
-                        Y          => Int (GetDeviceCaps (Context, SM_CXHTHUMB))   / 2 - Windowed_Height.Get / 2,
-                        Width      => Windowed_Width.Get,
-                        Height     => Windowed_Height.Get,
+      Adjust_Windowing (X          => Int (GetDeviceCaps (Context, SM_CYDLGFRAME)) / 2 - Window_Width.Get  / 2,
+                        Y          => Int (GetDeviceCaps (Context, SM_CXHTHUMB))   / 2 - Window_Height.Get / 2,
+                        Width      => Window_Width.Get,
+                        Height     => Window_Height.Get,
                         Fullscreen => False);
       Assert (ReleaseDC (GetDesktopWindow, Context));
     end;
@@ -417,20 +419,13 @@ separate (Neo.Engine) package body System is
         when WM_COMMAND => if wParam = SC_KEYMENU or wParam = SC_SCREENSAVE then return 0; end if;
         when WM_SYSKEYDOWN => return 0;
 
-        -- Inject characters into player one (this unfortunatly could not be separated from the windowing thread easily)
-        when WM_CHAR =>
-          if (GetKeyState (Int_C (VK_CONTROL)) and 16#8000#) = 0 then -- Do not inject text into the input system if ctrl is held
-            Inject_Into_Player_1 ((Text_Impulse, (Text_Impulse, 1, NO_COMBO), To_Str_Unbound (Char_16'Val (Int (wParam)))));
-          end if;
-
         -- Pass window action information to the engine
         when WM_ACTIVATE => Activated.Set (if (wParam and 16#0000_FFFF#) = 0 or (wParam and 16#FFFF_0000#) /= 0 then Other_Deactivated
                                            elsif (wParam and 16#0000_FFFF#) = WA_CLICKACTIVE then Click_Activated else Other_Activated);
         when WM_SIZE =>
           case wParam is
             when SIZE_MINIMIZED => Activated.Set (Minimize_Deactivated);
-            when SIZE_MAXIMIZED => Mode.Set (Fullscreen_Mode); 
-          when others => null; end case;
+            when SIZE_MAXIMIZED => Mode.Set (Fullscreen_Mode); when others => null; end case;
           return 0;
 
         -- Extract sizing event information then let the engine modify the final result 
@@ -456,8 +451,6 @@ separate (Neo.Engine) package body System is
       
   -- Register the application class and make the callback for the game window
   procedure Initialize_Windowing is
-
-    -- Main window class
     Class : aliased WNDCLASSEX := (others => <>);
     begin
 
@@ -493,8 +486,7 @@ separate (Neo.Engine) package body System is
                 hIcon         => Icon,
                 hCursor       => Cursor_Inactive,
                 hbrBackground => COLOR_GRAYTEXT,
-                lpszClassName => C (GAME_NAME),
-                others        => <>);
+                lpszClassName => C (GAME_NAME), others => <>);
       Assert (RegisterClassExW (Class'Access));
     end;
 
@@ -525,7 +517,7 @@ separate (Neo.Engine) package body System is
   function Get_Monitors return Vector_Border.Unsafe_Array is
     Monitors : Vector_Border.Unsafe.Vector;
 
-    -- Callback for hook
+    -- Hook each monitor
     function MonitorEnumProc (hMonitor, hdcMonitor : Ptr; lprcMonitor : Ptr_RECT; dwData : Ptr_Int_Ptr) return Int_C with Convention => Stdcall;
     function MonitorEnumProc (hMonitor, hdcMonitor : Ptr; lprcMonitor : Ptr_RECT; dwData : Ptr_Int_Ptr) return Int_C is
       Info : aliased MONITORINFO := (others => <>);
@@ -535,8 +527,6 @@ separate (Neo.Engine) package body System is
         return 1;
       end;
     begin
-
-      -- Call hook
       Assert (EnumDisplayMonitors (NULL_PTR, null, MonitorEnumProc'Address, 0));
       Assert (Monitors.Length > 0);
       return Vector_Border.To_Unsafe_Array (Monitors);
@@ -673,9 +663,9 @@ separate (Neo.Engine) package body System is
   Gamepads : aliased array (0..3) of aliased XINPUT_GAMEPAD := (others => (others => <>));
 
   -- Vibrate an Xbox controller
-  procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_32_Percent) is
-    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real (Int_16_Unsigned_C'Last)),
-                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real (Int_16_Unsigned_C'Last)));
+  procedure Vibrate (Id : Int_Ptr; Hz_High, Hz_Low : Real_Percent) is
+    Vibration : aliased XINPUT_VIBRATION := (wLeftMotorSpeed  => Int_16_Unsigned_C (Hz_Low  / 100.0 * Real_64 (Int_16_Unsigned_C'Last)),
+                                             wRightMotorSpeed => Int_16_Unsigned_C (Hz_High / 100.0 * Real_64 (Int_16_Unsigned_C'Last)));
     begin if Id in 0..3 then Assert (XInputSetState (Int_Unsigned_C (Id), Vibration'Address) = 0); end if; end;
 
   -- Fetch raw cursor coordinates from the system cursor
@@ -744,7 +734,7 @@ separate (Neo.Engine) package body System is
           end if;
           Devices.Next (Current_Device);
         end loop;
-        delay 0.01; -- Do this for XInput or something ???
+        delay 0.01; -- Give the XBox 360 controllers time to respond
 
         -- Query the XInput API for Xbox 360 controllers and add them to our device list
         for I in Gamepads'Range loop
@@ -901,10 +891,10 @@ separate (Neo.Engine) package body System is
       end;
     procedure Unpack_Stick (Player : Int; Stick : Stick_Kind; X, Y : Int_16_Signed_C) is
       begin
-        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real (X) / Real (Int_16_Signed_C'Last)
-                                                 else          Real (X) / Real (Int_16_Signed_C'First)),
-                                                (if Y > 0 then Real (Y) / Real (Int_16_Signed_C'Last)
-                                                 else          Real (Y) / Real (Int_16_Signed_C'First))));
+        Inject_Stick (Int_Ptr (Player), Stick, ((if X > 0 then Real_64 (X) / Real_64 (Int_16_Signed_C'Last)
+                                                          else Real_64 (X) / Real_64 (Int_16_Signed_C'First)),
+                                                (if Y > 0 then Real_64 (Y) / Real_64 (Int_16_Signed_C'Last)
+                                                          else Real_64 (Y) / Real_64 (Int_16_Signed_C'First))));
       end;
       
     -- Start of Update_Input
@@ -938,8 +928,8 @@ separate (Neo.Engine) package body System is
           -- Convert ranges
           if State.Gamepad.sThumbLX /= Gamepads (I).sThumbLX or State.Gamepad.sThumbLY /= Gamepads (I).sThumbLY then Unpack_Stick (I, Left_Stick,  State.Gamepad.sThumbLX, State.Gamepad.sThumbLY); end if;
           if State.Gamepad.sThumbRX /= Gamepads (I).sThumbRX or State.Gamepad.sThumbRY /= Gamepads (I).sThumbRY then Unpack_Stick (I, Right_Stick, State.Gamepad.sThumbRX, State.Gamepad.sThumbRY); end if;
-          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real (State.Gamepad.bLeftTrigger)  / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
-          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real (State.Gamepad.bRightTrigger) / Real (Int_8_Unsigned_C'Last) * 100.0); end if;
+          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real_64 (State.Gamepad.bLeftTrigger)  / Real_64 (Int_8_Unsigned_C'Last) * 100.0); end if;
+          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real_64 (State.Gamepad.bRightTrigger) / Real_64 (Int_8_Unsigned_C'Last) * 100.0); end if;
           Gamepads (I) := State.Gamepad;
         end if;
       end loop; exception when others => null; end; -- Random crashes ???

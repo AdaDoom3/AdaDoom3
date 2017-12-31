@@ -20,23 +20,24 @@ package body Neo.Data.Model is
   -- Conversions --
   -----------------
 
+  function To_Joint_Name (Val : Str_Unbound) return Str_8 is
+    Name : Str_8 (1..32) := (others => NULL_CHAR_8);
+    begin
+      for I in Name'Range loop Name (I) := To_Char_8 (Element (Val, I)); end loop;
+      return Name;
+    end;
   function To_Triangles (Polygon : Vector_Int_32_Natural.Unsafe.Vector) return Vector_Triangle.Unsafe.Vector is
     Result : Vector_Triangle.Unsafe.Vector;
     begin
-      return Result; -- 0 (i) (i + 1)  [for i in 1..(n - 2)] 
-    --0 1 2
-    --0 2 3
-    --  for I in 0..Patch_Height loop
-    --    for J in 1..Patch_Width loop
-    --      Triangle := (if J mod 2 = 0 then (I * Patch_Width + J - 1, I * Patch_Width + J, (I + 1) * Patch_Width + J - 1)
-    --                   else (I * Patch_Width + J - 1, (I + 1) * Patch_Width + J - 2, (I + 1) * Patch_Width + J - 1));
-    --    end loop;
-    --  end loop;
+      --return Result; -- 0 (i) (i + 1)  [for i in 1..(n - 2)] --0 1 2 --0 2 3
+      --for I in 0..Patch_Height loop
+      --  for J in 1..Patch_Width loop
+      --    Triangle := (if J mod 2 = 0 then (I * Patch_Width + J - 1, I * Patch_Width + J, (I + 1) * Patch_Width + J - 1)
+      --                 else (I * Patch_Width + J - 1, (I + 1) * Patch_Width + J - 2, (I + 1) * Patch_Width + J - 1));
+      --  end loop;
+      --end loop;
+      return Result;
     end;
-
-  --function To_Mesh (Plane : Plane_3D) return Mesh_State is
-  --  begin
-  --  end;
 
   --------------
   -- Bounding --
@@ -52,9 +53,11 @@ package body Neo.Data.Model is
       if Point.Z < Bounding.B.Z then Bounding.B.Z := Point.Z; end if;
     end;
 
-  procedure Build_Bounding (Mesh : in out Mesh_State) is
+  function Build_Bounding (Joints : Vector_Joint.Unsafe.Vector) return Bounding_State is
+    Bounding : Bounding_State := (others => <>);
     begin
-      for Vertex of Mesh.Vertices loop Adjust_Bounding (Vertex.Point, Mesh.Bounding); end loop;
+      for Joint of Joints loop Adjust_Bounding (Joint.Point, Bounding); end loop;
+      return Bounding;
     end;
 
   -------------
@@ -62,47 +65,36 @@ package body Neo.Data.Model is
   -------------
 
   -- Separate packages (one for each Model.Format_Kind)
-  package Wavefront is
-      function Load (Path : Str) return Vector_Mesh.Unsafe.Vector;
-    end;
+  package Wavefront is function Load (Path : Str) return Mesh_State; end;
   package body Wavefront is separate;
   
   package Id_Tech is
+      function Load (Path : Str) return Mesh_State;
       function Load (Path : Str) return Level_State;
       function Load (Path : Str) return Camera_State;
       function Load (Path : Str) return Animation_State;
-      function Load (Path : Str) return Skeletal_Mesh_State;
       function Load (Path : Str) return Hashed_Material.Unsafe.Map;
-    end;
-  package body Id_Tech is separate;
+    end; package body Id_Tech is separate;
 
   -- Create the loaders
-  package Mesh          is new Handler (Format_Kind, Vector_Mesh.Unsafe.Vector);
-  package Level         is new Handler (Format_Kind, Level_State);
-  package Camera        is new Handler (Format_Kind, Camera_State);
-  package Animation     is new Handler (Format_Kind, Animation_State);
-  package Skeletal_Mesh is new Handler (Format_Kind, Skeletal_Mesh_State);
-  package Material      is new Handler (Format_Kind, Hashed_Material.Unsafe.Map);
+  package Mesh      is new Handler (Format_Kind, Mesh_State);
+  package Level     is new Handler (Format_Kind, Level_State);
+  package Camera    is new Handler (Format_Kind, Camera_State);
+  package Animation is new Handler (Format_Kind, Animation_State);
+  package Material  is new Handler (Format_Kind, Hashed_Material.Unsafe.Map);
 
   -- Register the formats in the loaders
-  package Wavefront_Mesh        is new Mesh.Format          (Wavefront_Format, Wavefront.Load, "obj");
-  package Id_Tech_Level         is new Level.Format         (Id_Tech_Format,   Id_Tech.Load,   "proc,cm,map,aas48");
-  package Id_Tech_Camera        is new Camera.Format        (Id_Tech_Format,   Id_Tech.Load,   "md5camera");
-  package Id_Tech_Material      is new Material.Format      (Id_Tech_Format,   Id_Tech.Load,   "mtr");
-  package Id_Tech_Animation     is new Animation.Format     (Id_Tech_Format,   Id_Tech.Load,   "md5anim");
-  package Id_Tech_Skeletal_Mesh is new Skeletal_Mesh.Format (Id_Tech_Format,   Id_Tech.Load,   "md5mesh");
+  package Wavefront_Mesh    is new Mesh.Format      (Wavefront_Format, Wavefront.Load, "obj");
+  package Id_Tech_Mesh      is new Mesh.Format      (Id_Tech_Format,   Id_Tech.Load,   "md5mesh");
+  package Id_Tech_Level     is new Level.Format     (Id_Tech_Format,   Id_Tech.Load,   "proc,cm,map,aas48");
+  package Id_Tech_Camera    is new Camera.Format    (Id_Tech_Format,   Id_Tech.Load,   "md5camera");
+  package Id_Tech_Material  is new Material.Format  (Id_Tech_Format,   Id_Tech.Load,   "mtr");
+  package Id_Tech_Animation is new Animation.Format (Id_Tech_Format,   Id_Tech.Load,   "md5anim");
 
   -- Redirect internal handlers to public load functions
-  function Load (Path : Str) return Vector_Mesh.Unsafe.Vector  renames Mesh.Load;
+  function Load (Path : Str) return Mesh_State                 renames Mesh.Load;
   function Load (Path : Str) return Level_State                renames Level.Load;
   function Load (Path : Str) return Camera_State               renames Camera.Load;
   function Load (Path : Str) return Animation_State            renames Animation.Load;
-  function Load (Path : Str) return Skeletal_Mesh_State        renames Skeletal_Mesh.Load;
   function Load (Path : Str) return Hashed_Material.Unsafe.Map renames Material.Load;
-
-  --------------
-  -- Surfaces --
-  --------------
-  
-  -- function Get_Surface (Kind : Surface_Kind) return Surface_State is (return (case Kind is 
 end;

@@ -15,6 +15,9 @@
 
 package body Neo.Core.Console is
 
+  -- Prompt output prefix
+  INFO_PREFIX : constant Str := ">>> ";
+  
   --------
   -- IO --
   --------
@@ -65,6 +68,9 @@ package body Neo.Core.Console is
   procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                end;
   procedure Put         (Item : Char)                      is begin Put (Item & "");               end;                  
   procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);            end;
+  procedure Line_Info   (Item : Char)                      is begin Line (INFO_PREFIX & Item);     end;    
+  procedure Line_Info   (Item : Str_Unbound)               is begin Line (INFO_PREFIX & Item);     end;   
+  procedure Line_Info   (Item : Str := "")                 is begin Line (INFO_PREFIX & Item);     end;   
   procedure Line        (Item : Char)                      is begin Line (Item & "");              end;    
   procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));               end;
   procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);              end;
@@ -86,7 +92,7 @@ package body Neo.Core.Console is
     begin
       if not Val then
         Line ("PANIC!");
-        Put_Stack;
+        Line (Get_Stack);
         if Is_Debugging then raise Program_Error; end if;
       end if;
     end;
@@ -94,9 +100,6 @@ package body Neo.Core.Console is
   --------------------
   -- Internal State --
   --------------------
-
-  -- Prompt output prefix
-  FEEDBACK_PREFIX : constant Str := ">>> ";
    
   -- Internal data structures
   type Command_State is record 
@@ -110,8 +113,8 @@ package body Neo.Core.Console is
    end record;
 
   -- Data types
-  package Hashed_CVar    is new Hashed (CVar_State);
-  package Hashed_Command is new Hashed (Command_State);
+  package Hashed_CVar    is new Neo.Core.Hashed (CVar_State);
+  package Hashed_Command is new Neo.Core.Hashed (Command_State);
   use Hashed_CVar.Unsafe; use Hashed_Command.Unsafe;
 
   -- Global maps
@@ -206,12 +209,13 @@ package body Neo.Core.Console is
             Vals := U (Var_T'First'Wide_Image & " .." & Var_T'Last'Wide_Image);
           else
             for I in Var_T'Range loop
-              Vals := Vals & ", " & To_Str_Unbound (I);
+              if Vals = NULL_STR_UNBOUND then Vals := " " & U (I'Wide_Image);
+              else Vals := Vals & ", " & U (I'Wide_Image); end if;
             end loop;
           end if;
-          return FEEDBACK_PREFIX & Help & EOL &
-                 FEEDBACK_PREFIX & "Current value: " & S (Get) & EOL &
-                 FEEDBACK_PREFIX & (if Settable then "Possible values:" & S (Vals) else NULL_STR);
+          return INFO_PREFIX & Help & EOL &
+                 INFO_PREFIX & "Current value: " & S (Get) & EOL &
+                 INFO_PREFIX & "Possible values:" & S (Vals);
         end;
       procedure Handle_Set (Val : Str) is
         begin
@@ -226,7 +230,7 @@ package body Neo.Core.Console is
               Set (I);
               exit;
             elsif I = Var_T'Last then
-              Line (FEEDBACK_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
+              Line (INFO_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
               Line (Handle_Get);
             end if;
           end loop;
@@ -262,18 +266,18 @@ package body Neo.Core.Console is
 
       -- Commandline interaction
       function Handle_Get return Str is
-        (FEEDBACK_PREFIX & Help & EOL &
-         FEEDBACK_PREFIX & "Current value: " & S (Get) & EOL &
-         FEEDBACK_PREFIX & "Possible values: " & S (Var_T'First) & ".." & S (Var_T'Last));
+        (INFO_PREFIX & Help & EOL &
+         INFO_PREFIX & "Current value: " & S (Get) & EOL &
+         INFO_PREFIX & "Possible values: " & S (Var_T'First) & ".." & S (Var_T'Last));
       procedure Handle_Set (Val : Str) is
         begin
           if not Settable then
-            Line (FEEDBACK_PREFIX & Name & " is not settable!");
+            Line (INFO_PREFIX & Name & " is not settable!");
             return;
           end if;
           Set (Var_T'Wide_Value (Val));
         exception when Constraint_Error =>
-          Line (FEEDBACK_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
+          Line (INFO_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
           Line (Handle_Get);
         end;
 
@@ -307,11 +311,11 @@ package body Neo.Core.Console is
       function To_Str_Unbound (Val : Str_Unbound) return Str_Unbound is (Val);
 
       -- Commandline interaction
-      function Handle_Get return Str is (FEEDBACK_PREFIX & Help & EOL & FEEDBACK_PREFIX & "cCurrent value: " & Get);
+      function Handle_Get return Str is (INFO_PREFIX & Help & EOL & INFO_PREFIX & "Current value: " & Get);
       procedure Handle_Set (Val : Str) is
         begin
           if not Settable then
-            Line (FEEDBACK_PREFIX & Name & " is not settable!");
+            Line (INFO_PREFIX & Name & " is not settable!");
             return;
           end if;
           Set (Val);
@@ -353,7 +357,7 @@ package body Neo.Core.Console is
           if CVars.Get (CMD).Get /= null then Line (CVars.Get (CMD).Get.All); end if;
         elsif CVars.Get (CMD).Set /= null then CVars.Get (CMD).Set.All (S (Tokens (2))); end if;
       else raise Constraint_Error; end if;
-    exception when others => Line (FEEDBACK_PREFIX & "No such cvar or command!"); end;
+    exception when others => Line (INFO_PREFIX & "No such cvar or command!"); end;
 
   -- Autocomplete aid
   function Autocomplete (Text : Str) return Array_Str_Unbound is
@@ -370,8 +374,8 @@ package body Neo.Core.Console is
   ------------------
 
   -- Data types
-  package Hashed_Language is new Hashed (Str_Unbound);                use Hashed_Language.Unsafe;
-  package Hashed_Locale   is new Hashed (Hashed_Language.Unsafe.Map); use Hashed_Locale.Unsafe; 
+  package Hashed_Language is new Neo.Core.Hashed (Str_Unbound);                use Hashed_Language.Unsafe;
+  package Hashed_Locale   is new Neo.Core.Hashed (Hashed_Language.Unsafe.Map); use Hashed_Locale.Unsafe; 
   
   -- Initialization
   function Initialize_Localization return Hashed_Locale.Unsafe.Map is
@@ -380,7 +384,7 @@ package body Neo.Core.Console is
       begin
         return Result;
       end;
-    package Hashed_Indexes is new Hashed (Positive);
+    package Hashed_Indexes is new Neo.Core.Hashed (Positive);
     J         : Int  := 1;
     In_Column : Bool := True;
     In_Quote  : Bool := False;
@@ -425,8 +429,7 @@ package body Neo.Core.Console is
         for I in Locales.Iterate loop
           Language := Element (I);
           Language.Insert (Entries (Indexes.Element (ENG)), (if Int (Entries.Length) >= Indexes.Element (Key (I)) then
-                                                               Entries (Indexes.Element (Key (I)))
-                                                             else NULL_STR_UNBOUND));
+                                                               Entries (Indexes.Element (Key (I))) else NULL_STR_UNBOUND));
           Locales.Replace (Key (I), Language);
         end loop;
       end loop;
@@ -435,7 +438,7 @@ package body Neo.Core.Console is
     exception when others => return Locales; end;
 
   -- Initalized data
-  LOCALE : Hashed_Locale.Unsafe.Map := Initialize_Localization;
+  LOCALE : Hashed_Locale.Unsafe.Map; --  := Initialize_Localization;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
@@ -493,5 +496,5 @@ begin
       if I = 0 then Submit (S (Text));
       elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
     end loop;
-  exception when others => Line ("No configuration found... using defaults.");
+  exception when others => Line ("No configuration found... using defaults."); end;
 end;

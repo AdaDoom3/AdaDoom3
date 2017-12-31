@@ -18,14 +18,16 @@ with Neo.API.Vulkan; use Neo.API.Vulkan;
 -- Unified texture type definitions
 package Neo.Data.Texture is
 
-  -- http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
-  type Format_Kind is (Khronos_Format);
+  type Format_Kind is (Khronos_Format); -- http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
 
-  type Image_Data_Array is array (Positive range <>, Positive range <>, Positive range <>, Positive range <>) of Byte;
+  type Image_Data_Array is array (Int_Unsigned range <>, Int_Unsigned range <>, Int_Unsigned range <>, Int_Unsigned range <>) of Byte;
+  type Image_State (Kind : Format_Kind; Mipmaps, Length, Faces, Face_Size : Int_Unsigned) is record
+      Data            : Image_Data_Array (1..Mipmaps, 1..Length, 1..Faces, 1..Face_Size);
+      Internal_Format : Int_Unsigned_C := VK_FORMAT_R8G8B8A8_UNORM;
+      Is_Cube_Map     : Bool           := False;
+      Width           : Positive       := 1;
+      Height          : Positive       := 1;
+    end record;
 
-  type Image_State (Kind : Format_Kind; Mipmaps, Length, Faces, Face_Size : Positive) is record
-       Data : Image_Data_Array (1..Mipmaps, 1..Length, 1..Faces, 1..Face_Size) := (others => 0, others => 0, others => 0, others => 0);
-       Internal_Format : Int_Unsigned_C := VK_FORMAT_R8G8B8A8_UNORM;
-
-  function Load (Path : Str) return Compressed_Image;
+  function Load (Path : Str) return Image_State;
 end;

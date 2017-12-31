@@ -30,9 +30,15 @@ package Neo.Core.Math is
   type Point_2D is record X, Y       : Real_64 := 0.0; end record;
   type Point_3D is record X, Y, Z    : Real_64 := 0.0; end record; -- Listing 2.8
   type Point_4D is record X, Y, Z, W : Real_64 := 0.0; end record;
-  package Vector_Point_2D is new Vectors (Point_2D);
-  package Vector_Point_3D is new Vectors (Point_3D);
 
+  package Vector_Point_2D is new Neo.Core.Vectors (Point_2D);
+  package Vector_Point_3D is new Neo.Core.Vectors (Point_3D);
+  package Vector_Point_4D is new Neo.Core.Vectors (Point_4D);
+  
+  ZERO_POINT_2D : constant Point_2D := (others => 0.0);
+  ZERO_POINT_3D : constant Point_3D := (others => 0.0);
+  ZERO_POINT_4D : constant Point_4D := (others => 0.0);
+  
   -- 3D Operations
   function "+" (A, B : Point_3D) return Point_3D is ((A.X + B.X, A.Y + B.Y, A.Z + B.Z)); 
   function "-" (A, B : Point_3D) return Point_3D is ((A.X - B.X, A.Y - B.Y, A.Z - B.Z)); 
@@ -46,6 +52,14 @@ package Neo.Core.Math is
   type Vector_3D is record X, Y, Z    : Real_64 := 0.0; end record; -- Listing 1.1
   type Vector_4D is record X, Y, Z, W : Real_64 := 0.0; end record;
 
+  package Vector_Vector_2D is new Neo.Core.Vectors (Vector_2D);
+  package Vector_Vector_3D is new Neo.Core.Vectors (Vector_3D);
+  package Vector_Vector_4D is new Neo.Core.Vectors (Vector_4D);
+  
+  ZERO_VECTOR_2D : constant Vector_2D := (others => 0.0);
+  ZERO_VECTOR_3D : constant Vector_3D := (others => 0.0);
+  ZERO_VECTOR_4D : constant Vector_4D := (others => 0.0);
+  
   -- Conversions
   function To_Vector_3D (P : Point_3D)               return Vector_3D is ((P.X, P.Y, P.Z));
   function To_Vector_3D (V : Vector_4D)              return Vector_3D is ((V.X, V.Y, V.Z));
@@ -98,7 +112,15 @@ package Neo.Core.Math is
       XZ, YZ, ZZ, WZ,
       XW, YW, ZW, WW : Real_64 := 0.0;
     end record;
-
+  
+  package Vector_Matrix_2D is new Neo.Core.Vectors (Matrix_2D);
+  package Vector_Matrix_3D is new Neo.Core.Vectors (Matrix_3D);
+  package Vector_Matrix_4D is new Neo.Core.Vectors (Matrix_4D);
+  
+  ZERO_MATRIX_2D : constant Matrix_2D := (others => 0.0);
+  ZERO_MATRIX_3D : constant Matrix_3D := (others => 0.0);
+  ZERO_MATRIX_4D : constant Matrix_4D := (others => 0.0);
+  
   -- 3D Conversions
   procedure Set_Matrix_3D_X (M : in out Matrix_3D; V : Vector_3D);
   procedure Set_Matrix_3D_Y (M : in out Matrix_3D; V : Vector_3D);
@@ -185,7 +207,13 @@ package Neo.Core.Math is
       XZ, YZ, ZZ, WZ : Real_64 := 0.0;
       -- 0.0, 0.0, 0.0, 1.0
     end record;
-
+  
+  package Vector_Transform_3D is new Neo.Core.Vectors (Transform_3D);
+  package Vector_Transform_4D is new Neo.Core.Vectors (Transform_4D);
+  
+  ZERO_TRANSFORM_3D : constant Transform_3D := (others => 0.0);
+  ZERO_TRANSFORM_4D : constant Transform_3D := (others => 0.0);
+  
   -- Conversions
   procedure Set_Transform_4D_X (H : in out Transform_4D; V : Vector_3D);                    -- Listing 2.9
   procedure Set_Transform_4D_Y (H : in out Transform_4D; V : Vector_3D);                    -- Listing 2.9
@@ -245,7 +273,9 @@ package Neo.Core.Math is
   ----------------
 
   -- Definition
-  type Quaternion_4D is new Vector_4D; -- Listing 2.10
+  type Quaternion_4D is new Vector_4D; -- Listing 2.10  
+  package Vector_Quaternion_4D is new Neo.Core.Vectors (Quaternion_4D);
+  ZERO_QUATERNION_4D : constant Quaternion_4D := (others => 0.0);
 
   -- Conversions
   function To_Vector_3D     (Q : Quaternion_4D)          return Vector_3D     is ((Q.X, Q.Y, Q.Z));    -- Listing 2.10
@@ -268,6 +298,7 @@ package Neo.Core.Math is
   -- Definition
   type Plane_4D is new Vector_4D; -- Listing 3.4
   package Vector_Plane is new Vectors (Plane_4D);
+  ZERO_PLANE_4D : constant Plane_4D := (others => 0.0);
 
   -- Operations 
   function Reflect (F : Plane_4D)                   return Transform_4D;                                           -- Listing 3.5

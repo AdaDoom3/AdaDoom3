@@ -16,8 +16,12 @@
 with Neo;              use Neo;
 with Neo.Engine;       use Neo.Engine;
 with Neo.Core;         use Neo.Core;
+with Neo.Core.Strings; use Neo.Core.Strings;
 with Neo.Core.Console; use Neo.Core.Console;
 with Ada.Command_Line; use Ada.Command_Line;
 
-procedure Main is begin for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop; Run;
-                  exception when others => Set_Exit_Status (Failure); end;
+procedure Main is
+  begin
+    for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop;
+    Run;
+  exception when others => Set_Exit_Status (Failure); end;

@@ -13,14 +13,21 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
-with GNAT.Sockets;       use GNAT.Sockets;
-with Neo.API.Vulkan;     use Neo.API.Vulkan;
-with Neo.Data;           use Neo.Data;
-with Neo.Data.Model;     use Neo.Data.Model;
-with Neo.Core;           use Neo.Core;
-with Neo.Core.Math;      use Neo.Core.Math;
-with Neo.Core.Console;   use Neo.Core.Console;
---with Neo.Core.Compression;   use Neo.Core.Compression;
+with GNAT.Sockets;         use GNAT.Sockets;
+with Neo.API.Vulkan;       use Neo.API.Vulkan;
+with Neo.Data;             use Neo.Data;
+with Neo.Data.Model;       use Neo.Data.Model;
+with Neo.Data.Texture;     use Neo.Data.Texture;
+with Neo.Core;             use Neo.Core;
+with Neo.Core.Math;        use Neo.Core.Math;
+with Neo.Core.Console;     use Neo.Core.Console;
+--with Neo.Core.Compression; use Neo.Core.Compression;
+with Neo.Core.Strings;     use Neo.Core.Strings;
+with Neo.Core.Arrays;      use Neo.Core.Arrays;
+with Neo.Core.Hashed;
+with Neo.Core.Ordered;
+with Neo.Core.Vectors;
+with Neo.Core.Vectors_Unconstrained;
 
 -- Primary interface for the "Game" layer, see Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
@@ -28,11 +35,19 @@ package Neo.Engine is
   -- Main entry point, this should only be called by main.adb
   procedure Run;
   
+  ------------
+  -- Assets --
+  ------------
+  
+  Materials : Hashed_Material.Safe_Map;
+  
   -----------------
   -- Information --
   -----------------
 
   type OS_Info_State is record
+      Path     : Str_Unbound := NULL_STR_UNBOUND;
+      App_Name : Str_Unbound := NULL_STR_UNBOUND;
       Version  : Str_Unbound := NULL_STR_UNBOUND;
       Username : Str_Unbound := NULL_STR_UNBOUND;
       Bit_Size : Positive    := 1;
@@ -47,8 +62,9 @@ package Neo.Engine is
   type Mode_Kind      is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
   type Cursor_Kind    is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
   type Activated_Kind is (Other_Activated, Click_Activated,    Other_Deactivated, Minimize_Deactivated);
+  type Sampling_Kind  is (No_Sampling, X2_Sampling, X4_Sampling, X8_Sampling, X16_Sampling);
 
-  -- Window and desktop location and size information
+  -- Window and desktop location information
   type Border_State is record
       Top, Bottom, Left, Right : Int := 0;
     end record;
@@ -134,7 +150,7 @@ package Neo.Engine is
                         Clear_selection_Key);
 
   -- Binding states
-  subtype Real_Interval is Real_32 range -100.0..100.0;
+  subtype Real_Interval is Real_64 range -100.0..100.0;
   type Stick_State  is record X, Y : Real_Interval := 0.0; end record;
   type Cursor_State is record X, Y : Int           := 0;   end record;
   type Press_State is record
@@ -170,12 +186,13 @@ package Neo.Engine is
   procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1);
 
   -- Various cursor operations
-  procedure Set_Cursor           (Pos : Cursor_State);
-  function Get_Cursor            return Cursor_State;
   function Get_Cursor_Normalized return Cursor_State;
+  function Get_Cursor            return Cursor_State;
+  function In_Main_Window        (Pos : Cursor_State := Get_Cursor) return Bool;
+  procedure Set_Cursor           (Pos : Cursor_State);
 
   -- Operations to assign devices to different players or query each device's state
-  package Ordered_Device is new Core.Ordered (Int_Ptr, Device_State);
+  package Ordered_Device is new Ordered (Int_Ptr, Device_State);
   procedure Set_Device (Id : Int_Ptr; Player : Positive := 1);
   function Get_Device  (Id : Int_Ptr) return Device_State;
   function Get_Devices                return Ordered_Device.Unsafe.Map;
@@ -232,10 +249,10 @@ package Neo.Engine is
         when Mouse_Impulse | Key_Impulse | Gamepad_Impulse => Press : Press_State := (others => <>);
       end case;
     end record;
-  package Vector_Impulse_Arg is new Core.Vectors (Impulse_Arg_State);
+  package Vector_Impulse_Arg is new Vectors (Impulse_Arg_State);
 
   -- Needed for the task-safe manipulation of bindings for each impulse
-  package Vector_Binding is new Core.Vectors (Binding_State);
+  package Vector_Binding is new Vectors (Binding_State);
 
   -- Actual impulse package used to dispatch input callbacks
   generic 
@@ -293,29 +310,4 @@ package Neo.Engine is
           Current_Id   : Task_Id         := NULL_TASK_ID;
         end;
     end;
-
-  ----------------
-  -- Connection --
-  ----------------
-
-  -- Unimplemented...
-  type Connection_State is record
-      IP : Str_Unbound;
-    end record;
-  type Connection_OS_Info_State is record
-      --Last_Sent       : ;
-      --Last_Reply      : ;
-      Packets_Read    : Int_64_Unsigned := 0;
-      Packets_Written : Int_64_Unsigned := 0;
-      Bytes_Read      : Int_64_Unsigned := 0;
-      Bytes_Written   : Int_64_Unsigned := 0;
-    end record;
-  procedure Silence  (Connection : in out Connection_State);
-  procedure Vocalize (Connection : in out Connection_State);
-  procedure Connect  (Connection : in out Connection_State; Address   : Str);
-  procedure Send     (Connection :        Connection_State; Recipient : Str; Data : Stream_Element_Array);
-  function Get_Stats (Connection :        Connection_State) return Connection_OS_Info_State;
-  function Recieve   (Connection :        Connection_State;
-                      Sender     :    out Str_Unbound;
-                      Timeout    :        Duration := 0.0) return Array_Stream;
 end;

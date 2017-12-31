@@ -14,12 +14,44 @@
 --                                                                                                                                      --
 
 package body Neo.API.Vulkan is
-  procedure VkAssert (result : Int_Unsigned_C) is begin Assert (result = VK_SUCCESS); end;
+  procedure VkAssert (Result : Int_Unsigned_C) is begin Assert (Result = VK_SUCCESS); end;
+  
+  function VK_MAKE_VERSION (Val : Str) return Int_Unsigned_C is
+    Result : Int_Unsigned := 0;
+    I, J   : Int          := Val'First;
+    begin
+    
+      -- Major
+      while Val (I) /= '.' loop I := I + 1; if I = Val'Last then return Int_Unsigned_C (Result); end if; end loop;
+      Result := Shift_Left (Int_Unsigned'Wide_Value (Val (Val'First..I - 1)), 22);
+      I := I + 1;
+      J := I;
+      
+      -- Minor
+      while Val (I) /= '.' loop I := I + 1; if I = Val'Last then return Int_Unsigned_C (Result); end if; end loop;
+
+      -- Revision
+      return Int_Unsigned_C (Result or Shift_Left (Int_Unsigned'Wide_Value (Val (J..I - 1)), 12) or
+                               Int_Unsigned'Wide_Value (Val (I + 1..Val'Last)));
+    end;
   
   -- Load function pointers to the Vulkan dynamic library
   procedure Initialize is
     function Get (Name : Str) return Ptr renames Get_Vulkan_Subprogram;
     begin
+      vkDestroySurfaceKHR                       := To_Ptr_vkDestroySurfaceKHR                       (Get ("vkDestroySurfaceKHR"));
+      vkGetPhysicalDeviceImageFormatProperties  := To_Ptr_vkGetPhysicalDeviceImageFormatProperties  (Get ("vkGetPhysicalDeviceImageFormatProperties"));
+      vkFlushMappedMemoryRanges                 := To_Ptr_vkFlushMappedMemoryRanges                 (Get ("vkFlushMappedMemoryRanges"));
+      vkCreateSampler                           := To_Ptr_vkCreateSampler                           (Get ("vkCreateSampler"));
+      vkDestroyImage                            := To_Ptr_vkDestroyImage                            (Get ("vkDestroyImage"));
+      vkDestroyPipeline                         := To_Ptr_vkDestroyPipeline                         (Get ("vkDestroyPipeline"));
+      vkDestroySampler                          := To_Ptr_vkDestroySampler                          (Get ("vkDestroySampler"));
+      vkDestroyDescriptorPool                   := To_Ptr_vkDestroyDescriptorPool                   (Get ("vkDestroyDescriptorPool"));
+      vkDestroyDescriptorSetLayout              := To_Ptr_vkDestroyDescriptorSetLayout              (Get ("vkDestroyDescriptorSetLayout"));
+      vkDestroyPipelineLayout                   := To_Ptr_vkDestroyPipelineLayout                   (Get ("vkDestroyPipelineLayout"));
+      vkDestroyRenderPass                       := To_Ptr_vkDestroyRenderPass                       (Get ("vkDestroyRenderPass"));
+      vkDestroyImageView                        := To_Ptr_vkDestroyImageView                        (Get ("vkDestroyImageView"));
+      vkDestroyFramebuffer                      := To_Ptr_vkDestroyFramebuffer                      (Get ("vkDestroyFramebuffer"));
       vkCmdDraw                                 := To_Ptr_vkCmdDraw                                 (Get ("vkCmdDraw"));
       vkCmdCopyBufferToImage                    := To_Ptr_vkCmdCopyBufferToImage                    (Get ("vkCmdCopyBufferToImage"));
       vkCreateShaderModule                      := To_Ptr_vkCreateShaderModule                      (Get ("vkCreateShaderModule"));

@@ -28,14 +28,14 @@ package Neo.Engine.Animation is
       Animation : Str_Unbound  := NULL_STR_UNBOUND;
       Start     : Duration     := No_Duration;
     end record;
-  package Hashed_Blend is new Core.Hashed (Blend_State);
+  package Hashed_Blend is new Core.Neo.Core.Hashed (Blend_State);
 
   -- Bone modifiers for generated animations like player-look rotation
   type Bone_State is record
       Joint     : Str_Unbound  := NULL_STR_UNBOUND;
       Transform : Transform_4D := (others => 0.0);
     end record;
-  package Hashed_Bone is new Core.Hashed (Bone_State);
+  package Hashed_Bone is new Core.Neo.Core.Hashed (Bone_State);
 
   type Pose_State is record
       Blends : Hashed_Blend.Unsafe.Map;

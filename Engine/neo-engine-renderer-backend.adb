@@ -15,6 +15,107 @@
 
 -- The "backend" procedure exists to separate all Vulkan command generation so it may execute in an auxiliary task.
 separate (Neo.Engine.Renderer) procedure Backend is
+                          
+  -- ???
+  package Model              is new Uniform (Layout_Set => 2, Binding =>  9, Uniform_T => Matrix_4D);
+  package Projection         is new Uniform (Layout_Set => 2, Binding => 10, Uniform_T => Matrix_4D);
+  package MVP                is new Uniform (Layout_Set => 2, Binding => 11, Uniform_T => Matrix_4D);
+  package View               is new Uniform (Layout_Set => 2, Binding => 12, Uniform_T => Matrix_4D);
+  package Transform          is new Uniform (Layout_Set => 2, Binding => 13, Uniform_T => Matrix_4D); -- S, T, Q, Enabled
+  package Light_Projection   is new Uniform (Layout_Set => 2, Binding => 14, Uniform_T => Matrix_4D); -- S, T, Q
+  package Local_Light_Origin is new Uniform (Layout_Set => 2, Binding => 15, Uniform_T => Vector_4D);
+  package Local_View_Origin  is new Uniform (Layout_Set => 2, Binding => 16, Uniform_T => Vector_4D);
+  package Color_Value        is new Uniform (Layout_Set => 2, Binding => 24, Uniform_T => Vector_4D);
+  package Local_To_Global    is new Uniform (Layout_Set => 2, Binding => 25, Uniform_T => Vector_4D);
+  package Local_To_Eye       is new Uniform (Layout_Set => 2, Binding => 26, Uniform_T => Vector_4D);
+  --package Tesselation_Max    is new Uniform (Layout_Set => 2, Binding =>  6, Uniform_T => Real_64_C);
+  --package Tesselation_Amount is new Uniform (Layout_Set => 2, Binding =>  7, Uniform_T => Real_64_C);
+  --package Delta_MS           is new Uniform (Layout_Set => 2, Binding =>  8, Uniform_T => Int_64_Unsigned_C);
+  --package Test_Alpha         is new Uniform (Layout_Set => 2, Binding => 17, Uniform_T => Vector_4D);
+  --package Light_Falloff      is new Uniform (Layout_Set => 2, Binding => 18, Uniform_T => Vector_4D);
+  --package Light_Scale        is new Uniform (Layout_Set => 2, Binding => 19, Uniform_T => Vector_4D);
+  --package Screen_Factor      is new Uniform (Layout_Set => 2, Binding => 20, Uniform_T => Vector_4D);
+  --package UI_Coord           is new Uniform (Layout_Set => 2, Binding => 21, Uniform_T => Vector_4D);
+  --package Diffuse_Modifier   is new Uniform (Layout_Set => 2, Binding => 22, Uniform_T => Vector_4D);
+  --package Specular_Modifier  is new Uniform (Layout_Set => 2, Binding => 23, Uniform_T => Vector_4D);
+  --package Vertex_Color_Mod   is new Uniform (Layout_Set => 2, Binding => 27, Uniform_T => Vector_4D);
+  --package Vertex_Color_Add   is new Uniform (Layout_Set => 2, Binding => 28, Uniform_T => Vector_4D);
+  --package Overbright         is new Uniform (Layout_Set => 2, Binding => 29, Uniform_T => Vector_4D);
+          
+  -- Shader feature flags
+  --package Enable_Tesselation is new Uniform (Layout_Set => 2, Binding => 1, Uniform_T => Bool);
+  --package Enable_Bloom       is new Uniform (Layout_Set => 2, Binding => 2, Uniform_T => Bool); 
+  --package Enable_HDR         is new Uniform (Layout_Set => 2, Binding => 3, Uniform_T => Bool); 
+  --package Enable_Blur        is new Uniform (Layout_Set => 2, Binding => 4, Uniform_T => Bool); 
+  --package Enable_Haze        is new Uniform (Layout_Set => 2, Binding => 5, Uniform_T => Bool);
+  
+    Vertex_Bindings : Array_VkDescriptorSetLayoutBinding := (1 => (binding         => 0, -- UBO
+                                                                   descriptorCount => 1,
+                                                                   descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                                   stageFlags      => VK_SHADER_STAGE_VERTEX_BIT, others => <>));
+    Fragment_Bindings : Array_VkDescriptorSetLayoutBinding := (1 => (binding         => 1, -- Sampler
+                                                                     descriptorCount => 1,
+                                                                     descriptorType  => VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                                     stageFlags      => VK_SHADER_STAGE_FRAGMENT_BIT, others => <>));
+    Animated_Vertex_Input : Array_VkVertexInputAttributeDescription := ((binding  => 0, -- Position
+                                                                         location => 0,
+                                                                         format   => VK_FORMAT_R32G32B32A32_SFLOAT,
+                                                                         offset   => Static_Vertex_Obj.Point'Position / 8),
+                                                                        (binding  => 0, -- Texture Coordinate
+                                                                         location => 1,
+                                                                         format   => VK_FORMAT_R16G16_SFLOAT,
+                                                                         offset   => Static_Vertex_Obj.Texture'Position / 8),
+                                                                        (binding  => 0, -- Normal
+                                                                         location => 2,
+                                                                         format   => VK_FORMAT_R8G8B8A8_UNORM,
+                                                                         offset   => Static_Vertex_Obj.Normal'Position / 8),
+                                                                        (binding  => 0, -- Velocity
+                                                                         location => 3,
+                                                                         format   => VK_FORMAT_R8G8B8A8_UNORM,
+                                                                         offset   => Static_Vertex_Obj.Velocity'Position / 8));
+    Static_Vertex_Input : Array_VkVertexInputAttributeDescription := ((binding  => 0, -- Texture Coordinate
+                                                                       location => 1,
+                                                                       format   => VK_FORMAT_R16G16_SFLOAT,
+                                                                       offset   => Animated_Vertex_Obj.Texture'Position / 8),
+                                                                      (binding  => 0, -- Start weight
+                                                                       location => 2,
+                                                                       format   => VK_FORMAT_R8G8B8A8_UNORM,
+                                                                       offset   => Animated_Vertex_Obj.Start_Weight'Position / 8),
+                                                                      (binding  => 0, -- Weight count
+                                                                       location => 3,
+                                                                       format   => VK_FORMAT_R8G8B8A8_UNORM,
+                                                                       offset   => Animated_Vertex_Obj.Weight_Count'Position / 8),
+                                                                      (binding  => 0, -- Velocity
+                                                                       location => 4,
+                                                                       format   => VK_FORMAT_R8G8B8A8_UNORM,
+                                                                       offset   => Animated_Vertex_Obj.Velocity'Position / 8));
+  package Depth_Pass  is new Shader ("depth"); 
+  package Light_Pass  is new Shader ("light");
+  --package Fog_Pass    is new Shader ("fog"); 
+  --package Sky_Pass    is new Shader ("sky");
+  --package UI_Pass     is new Shader ("ui"); 
+  --package Post_Pass   is new Shader ("post");
+  --package Shadow_Pass is new Shader (Path                  => "shadow",
+  --                                   Static_Vertex_Input   => ((binding  => 0, -- Position
+  --                                                              location => 0,
+  --                                                              format   => VK_FORMAT_R32G32B32A32_SFLOAT,
+  --                                                              offset   => Static_Vertex_Obj.Point'Position / Byte'Size),
+  --                                                             (binding  => 0, -- Velocity
+  --                                                              location => 4,
+  --                                                              format   => VK_FORMAT_R8G8B8A8_UNORM,
+  --                                                              offset   => Static_Vertex_Obj.Texture'Position / Byte'Size)),                                     
+  --                                   Animated_Vertex_Input => ((binding  => 0, -- Start weight
+  --                                                              location => 0,
+  --                                                              format   => VK_FORMAT_R32G32B32A32_SFLOAT,
+  --                                                              offset   => Animated_Vertex_Obj.Start_Weight'Position / Byte'Size),
+  --                                                             (binding  => 0, -- Weight count
+  --                                                              location => 4,
+  --                                                              format   => VK_FORMAT_R8G8B8A8_UNORM,
+  --                                                              offset   => Animated_Vertex_Obj.Weight_Count'Position / Byte'Size),
+  --                                                             (binding  => 0, -- Velocity
+  --                                                              location => 5,
+  --                                                              format   => VK_FORMAT_R8G8B8A8_UNORM,
+  --                                                              offset   => Animated_Vertex_Obj.Velocity'Position / Byte'Size)));
 
   ----------------------------
   -- Prepare_Texture_Matrix --
@@ -148,7 +249,7 @@ begin
     -- Prepare globals and empty garbage
     Free_Sampler_Garbage;
     Free_Memory_Garbage;
-    Free_Staging_Buffer;
+    Free_Image_Garbage;
     Current_Frame          := (Current_Frame + 1) mod NUM_FRAME_DATA;
     Current_Descriptor_Set := 0;
     vkResetDescriptorPool (Device, Framebuffer.Element (Current_Frame).Descriptor_Pool, 0);

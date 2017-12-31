@@ -14,8 +14,8 @@
 --                                                                                                                                      --
 
 with Ada.Locales;      use Ada.Locales;
-with Neo.Core.Arrays;  use Neo.Core.Arrays;
 with Neo.Core.Strings; use Neo.Core.Strings;
+with Neo.Core.Arrays;  use Neo.Core.Arrays;
 with Neo.Core.Hashed;
 
 -- Task safe IO and console interfacing types
@@ -38,6 +38,9 @@ package Neo.Core.Console is
   procedure Put         (Item : Str_Unbound);
   procedure Put         (Item : Char);                  
   procedure Put         (Item : Str);
+  procedure Line_Info   (Item : Char);
+  procedure Line_Info   (Item : Str := "");
+  procedure Line_Info   (Item : Str_Unbound);
   procedure Line        (Item : Char);
   procedure Line        (Item : Str := "");
   procedure Line        (Item : Str_Unbound);
