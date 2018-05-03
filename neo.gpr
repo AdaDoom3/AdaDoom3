@@ -69,7 +69,7 @@ project Neo is
   SYSTEM   : System_Option   := External ("System", "Windows");
   DEBUG    : Boolean_Option  := External ("Debug", "Yes");
   GAME     : Game_Option     := External ("Game", "DOOM");
-  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "64");
+  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "32");
  
   --------------
   -- Settings --
