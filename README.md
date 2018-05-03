@@ -20,13 +20,23 @@ Planned Features:
 
 ## Compiling
 
-To compile with GPRBuild:
+There are 4 scenario options available:
+ - System : Windows, Linux, or Mac
+ - Debug : Yes or No
+ - Game : any folder within the Games subfolder
+ - Bitsize : 32 or 64
 
-`gprbuild -p -P neo.gpr `
+To compile from command line with all the defaults (Windows, Yes, DOOM, 32):
 
-Or the Gnat Programming Studio IDE may be used (email is optional):
-http://libre.adacore.com/download/
+`gprbuild -P neo.gpr`
 
+To compile from command line with specific options
+
+`gprbuild -P neo.gpr -XSystem=Windows -XDebug=Yes -XGame=DOOM -XBitsize=32`
+
+The binary file gets built in the GAMES\{game}\{game}.exe
+
+Or the free IDE [Gnat Programming Studio](http://libre.adacore.com/download/) can open and compile gpr files.
 To compile with GPS click the gear and hammer button after ensuring the
 scenario drop boxes are correct.
 
