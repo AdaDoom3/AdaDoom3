@@ -39,6 +39,7 @@ package body Neo.API.Vulkan is
   procedure Initialize is
     function Get (Name : Str) return Ptr renames Get_Vulkan_Subprogram;
     begin
+      vkFreeDescriptorSets                      := To_Ptr_vkFreeDescriptorSets                      (Get ("vkFreeDescriptorSets"));
       vkDestroySurfaceKHR                       := To_Ptr_vkDestroySurfaceKHR                       (Get ("vkDestroySurfaceKHR"));
       vkGetPhysicalDeviceImageFormatProperties  := To_Ptr_vkGetPhysicalDeviceImageFormatProperties  (Get ("vkGetPhysicalDeviceImageFormatProperties"));
       vkFlushMappedMemoryRanges                 := To_Ptr_vkFlushMappedMemoryRanges                 (Get ("vkFlushMappedMemoryRanges"));

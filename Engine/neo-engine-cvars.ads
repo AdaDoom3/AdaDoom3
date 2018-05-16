@@ -13,27 +13,32 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
--- User facing interactive settings (e.g. console variables and commands)
+with Neo.Engine.Renderer; use Neo.Engine.Renderer;
+
 package Neo.Engine.CVars is
 
   -- Rendering
   CVAR_R : constant Str := "r_";
-  package Tesselation        is new CVar (CVAR_R & "tess",        "GPU local memory in MB",         Bool,          True);
-  package Bloom              is new CVar (CVAR_R & "bloom",       "GPU local memory in MB",         Bool,          True);
-  package HDR                is new CVar (CVAR_R & "hdr",         "GPU local memory in MB",         Bool,          True);
-  package Blur               is new CVar (CVAR_R & "blur",        "GPU local memory in MB",         Bool,          True);
-  package Haze               is new CVar (CVAR_R & "haze",        "GPU local memory in MB",         Bool,          True);
+  package Drawing_Backend    is new CVar (CVAR_R & "backend",     "Rendering backend",              Backend_Kind,  Doom3_Backend);
   package Max_GPU_Memory     is new CVar (CVAR_R & "maxgpumb",    "GPU local memory in MB",         Int_Ptr,       128);
   package Max_Visible_Memory is new CVar (CVAR_R & "maxhostmb",   "CPU visible memory in MB",       Int_Ptr,       64);
   package Max_Upload_Buffer  is new CVar (CVAR_R & "maxuploadmb", "GPU upload buffer size in MB",   Int_Ptr,       64);
-  package Sampling           is new CVar (CVAR_R & "sampling",    "number of antialiasing samples", Sampling_Kind, No_Sampling);
+  package Sampling           is new CVar (CVAR_R & "sampling",    "Number of antialiasing samples", Sampling_Kind, No_Sampling);
+
+  -- Doom III specific
+  CVAR_D3 : constant Str := "d3_";
+  package Tesselation is new CVar (CVAR_D3 & "tess",  "Enable tesselation",              Bool, True);
+  package Bloom       is new CVar (CVAR_D3 & "bloom", "Enable bloom",                    Bool, True);
+  package HDR         is new CVar (CVAR_D3 & "hdr",   "Enable high-dynamic range (HDR)", Bool, True);
+  package Blur        is new CVar (CVAR_D3 & "blur",  "Enable blur",                     Bool, True);
+  package Haze        is new CVar (CVAR_D3 & "haze",  "Enable heat-haze",                Bool, True);
 
   -- System
   CVAR_S : constant Str := "s_";
-  package Tasks     is new CVar (CVAR_S & "tasks",     "Number of running tasks",             Positive,       1,               False);
-  package Activated is new CVar (CVAR_S & "activated", "Query last window activation action", Activated_Kind, Other_Activated, False);
-  package Cursor    is new CVar (CVAR_S & "cursor",    "Cursor style",                        Cursor_Kind,    Inactive_Cursor, False);
-  package Menu      is new CVar (CVAR_S & "menu",      "Cursor capture",                      Bool,           True,            False);
+  package Task_Count is new CVar (CVAR_S & "tasks",     "Number of running tasks",             Positive,       1,               False);
+  package Activated  is new CVar (CVAR_S & "activated", "Query last window activation action", Activated_Kind, Other_Activated, False);
+  package Cursor     is new CVar (CVAR_S & "cursor",    "Cursor style",                        Cursor_Kind,    Inactive_Cursor, False);
+  package In_Menu    is new CVar (CVAR_S & "inmenu",    "Cursor capture",                      Bool,           True,            False);
 
   -- Windowing
   CVAR_W : constant Str := "w_";

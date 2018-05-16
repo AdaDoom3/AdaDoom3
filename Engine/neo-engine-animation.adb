@@ -15,6 +15,22 @@
 
 package body Neo.Engine.Animation is
 
+  -----------
+  -- Frame --
+  -----------
+
+  -- Build a skeleton and its 3D bounds from a Joint array into a tree for animation purposes
+  function Build_Frame (Joints : Vector_Indexed_Joint.Unsafe.Vector) return Animation_Frame_State is
+    Frame : Animation_Frame_State := (others => <>);
+    begin
+      for Joint of Joints loop
+        Adjust_Bounding (Joint.Point, Frame.Bounding);
+        if Joint.Parent_Index = -1 then Frame.Skeleton.Append_Child (Frame.Skeleton.Root, Joint);
+        else Frame.Skeleton.Append_Child (Frame.Skeleton.Find (Joints.Element (Int (Joint.Parent_Index + 1))), Joint); end if;
+      end loop;
+      return Frame;
+    end;
+    
   ------------
   -- Render --
   ------------

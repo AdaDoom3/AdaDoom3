@@ -19,13 +19,16 @@ with GNAT.Traceback;               use GNAT.Traceback;
 with Interfaces;                   use Interfaces;
 with Interfaces.C;                 use Interfaces.C;
 with System;                       use System;
+with System.Machine_Code;          use System.Machine_Code;
 with Ada.Containers;               use Ada.Containers;
 with Ada.Directories;              use Ada.Directories;
 with Ada.Exceptions;               use Ada.Exceptions;
 with Ada.Finalization;             use Ada.Finalization;
+with Ada.Command_Line;             use Ada.Command_Line;
 with Ada.Calendar;                 use Ada.Calendar;
 with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
 with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
+with Ada.Characters.Handling;      use Ada.Characters.Handling;
 with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
 with Ada.Task_Identification;      use Ada.Task_Identification;
 with Ada.Strings;                  use Ada.Strings;
@@ -35,6 +38,7 @@ with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
 with Ada.Streams;                  use Ada.Streams;
 with Ada.Streams.Stream_IO;        
+with Ada.Text_IO;
 with Ada.Wide_Text_IO;
 with Ada.Unchecked_Deallocation;   
 with Ada.Unchecked_Conversion;
@@ -212,8 +216,11 @@ package Neo is
   -- String conversions
   generic
     type Num_T is mod <>;
-  function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary strings
-  function To_Str_8               (Item : Str_16)              return Str_8;
+  function Generic_To_Str_16_Int (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str_16; -- For hex or binary strings
+  generic
+    type Num_T is digits <>;
+  function Generic_To_Str_16_Real (Item : Num_T) return Str_16;
+  function To_Str_8               (Item : Str_16)              return Str_8          is (To_String (Item, CHAR_16_REPLACEMENT));
   function To_Str_8               (Item : Ptr_Char_8_C)        return Str_8;
   function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
   function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound  renames To_Unbounded_String;
@@ -292,34 +299,33 @@ package Neo is
   function Path_Separator return Char is ((if Index (Current_Directory, "\") = 0 then '/' else '\'));
   function S return Char renames Path_Separator; -- For convience
   
-  PATH_LOGS            : constant Str := "Logs"   & S;
-  PATH_ASSETS          : constant Str := "Assets" & S;
-  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
-  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
-  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
-  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
-  
   ---------------
   -- Debugging --
   ---------------
 
-  function Get_Stack return Str;
-
   -- Assertion to check imported C function calls. They raise a Program_Error if the value is null or 0
-  procedure Assert (Val : Ptr);
   procedure Assert (Val : Bool);
+  procedure Assert (Val : Ptr);
+  procedure Assert (Val : Int_Ptr);
   procedure Assert (Val : Int_C);
-  procedure Assert (Val : Int_16_Unsigned_C);
   procedure Assert (Val : Int_Unsigned_C);
+  procedure Assert (Val : Int_16_Unsigned_C);
 
+  -- ???
+  procedure Debug_Assert (Val : Bool);
+  procedure Debug_Assert (Val : Ptr);
+  procedure Debug_Assert (Val : Int_Ptr);
+  procedure Debug_Assert (Val : Int_C);
+  procedure Debug_Assert (Val : Int_Unsigned_C);
+  procedure Debug_Assert (Val : Int_16_Unsigned_C);
+  
   -- Ignore procedures swallow the result of C functions that return useless results
   procedure Ignore (Val : Bool)              is null;
   procedure Ignore (Val : Ptr)               is null;
   procedure Ignore (Val : Int_Ptr)           is null;
   procedure Ignore (Val : Int_C)             is null;
-  procedure Ignore (Val : Int_16_Unsigned_C) is null;
   procedure Ignore (Val : Int_Unsigned_C)    is null;
+  procedure Ignore (Val : Int_16_Unsigned_C) is null;
   
   ------------
   -- Status --
@@ -361,6 +367,14 @@ package Neo is
   function Get_Duration   (Timer :        Timer_State) return Duration;
   procedure Start         (Timer : in out Timer_State);
   procedure Stop          (Timer : in out Timer_State);
+  
+  -----------
+  -- Sizes --
+  -----------
+  
+  GB : constant Int_Ptr := 32768 ** 2;
+  MB : constant Int_Ptr := 1024  ** 2;
+  kB : constant Int_Ptr := 1024;
   
   -----------
   -- Color --

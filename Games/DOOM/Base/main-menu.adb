@@ -1,0 +1,518 @@
+
+--                                                                                                                                      --
+--                                                         N E O  E N G I N E                                                           --
+--                                                                                                                                      --
+--                                                 Copyright (C) 2016 Justin Squirek                                                    --
+--                                                                                                                                      --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
+-- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
+--                                                                                                                                      --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
+--                                                                                                                                      --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
+--                                                                                                                                      --
+
+with Neo.Data.Model; use Neo.Data.Model;
+--with Characters;     use Characters;
+
+separate (Main) procedure Menu is
+  begin
+    Line;
+    --Add_Character ("zombie-fat");
+    --               Materials => ());
+    Meshes.Insert     ("zombie-fat",       Load (ASSET_PATH & "Models" & S & "Zombie-Fat" & S & "md5mesh" & S & "Zombie-Fat.md5mesh"));
+    Animations.Insert ("zombie-fat-walk1", Load (ASSET_PATH & "Models" & S & "Zombie-Fat" & S & "md5anim" & S & "walk1.md5anim"));
+    Line ("The materials needed for zombie-fat:");
+    declare Mesh : Mesh_State := Meshes.Get ("zombie-fat"); begin
+      for I in 1..Int (Mesh.Animated_Surfaces.Length) loop
+        Line (Mesh.Animated_Surfaces.Element (I).Material);
+      end loop;
+    end;
+    Buffer_Mesh ("zombie-fat"); -- Load it up
+    loop
+      delay 0.2;
+    end loop;
+  end;
+
+  --------------
+  -- Settings --
+  --------------
+--
+--    LOGO_X : constant :=  20
+--    LOGO_Y : constant :=  20
+--    LOGO_WIDTH : constant :=  304
+--    LOGO_HEIGHT : constant := 153.6
+--
+--    TEXT_X_4BY3 : constant :=  25
+--    TEXT_X_16BY9 : constant :=  15.555
+--    TEXT_X_16BY10 : constant :=  22.222
+--    TEXT_Y : constant :=  9.5
+--    TEXT_SIZE : constant :=  0.06
+--    TEXT_COLOR : constant := _ 0.6,0.6,0.6,1
+--    TEXT_COLOR : constant :=  "0.6,0.6,0.6,1"
+--    TEXT_16BY9 : constant :=  "fonts/negotiate169"
+--    TEXT_4BY3 : constant :=  "fonts/negotiate"
+--    TEXT_16BY10 : constant :=  "fonts/negotiate"
+--
+--    BUTTON_HEIGHT : constant :=  40
+--    BUTTON_COLOR : constant :=  "0.85,0.425,0,1"
+--    BUTTON_BLANK : constant :=  "0,0,0,0"
+--    BUTTON_TEXT_COLOR : constant :=  "0,0,0,1"
+--    BUTTON_COLUMN_SPACING  : constant := (0.6666 * MENU_BUTTON_WIDTH)
+--
+--    MENU_BUTTON_WIDTH : constant :=  340
+--    MENU_BUTTON_X : constant :=  110
+--    MENU_BUTTON_Y : constant :=  0
+--    MENU_BUTTON_ALIGNMENT 0
+--    MENU_BUTTON_RECT(n) MENU_BUTTON_RECT_(n,"desktop::scaleAspect")
+--    MENU_BUTTON_RECT_(n,s) MENU_BUTTON_Y * s,MENU_BUTTON_X + (n * BUTTON_HEIGHT),MENU_BUTTON_WIDTH * s,BUTTON_HEIGHT
+--
+--    OVERLAY_TEXT_ALIGN 1
+--    OVERLAY_MAXDARK 0.9
+--    OVERLAY_TEXT_Y 200
+--    OVERLAY_HEADING_Y 2 //OVERLAY_TEXT_Y - (OVERLAY_BORDER / 2)
+--    OVERLAY_BORDER 5
+--    OVERLAY_BUTTON_HEIGHT 16
+--    OVERLAY_BUTTON_WIDTH 100
+--    OVERLAY_BUTTON_X 0
+--    OVERLAY_BUTTON_Y 0
+--    OVERLAY_TEXT_AREA_Y
+--
+--    CHOICE_ALIGN_X_4BY3 226.644 //Should be (0.6666 * MENU_BUTTON_WIDTH)
+--    CHOICE_ALIGN_X_16BY9 176.261 //Should be (0.6666 * MENU_BUTTON_WIDTH * 0.7777)
+--    CHOICE_ALIGN_X_16BY10 201.4444
+--    CHOICE_ALIGN_Y TEXT_Y
+--
+--    SLIDER_SHADER "guis/assets/element_slider_control.tga"
+--    SLIDER_COLOR TEXT_COLOR
+--    SLIDER_COLOR_ TEXT_COLOR_
+--    SLIDER_COLOR_HIGHLIGHT "0.4,0.4,0.4,1"
+--    SLIDER_BACKING_PADDING 5
+--    SLIDER_LENGTH (MENU_BUTTON_WIDTH - BUTTON_COLUMN_SPACING + SLIDER_BACKING_PADDING)
+--    SLIDER_RECT (MENU_BUTTON_Y + BUTTON_COLUMN_SPACING + SLIDER_BACKING_PADDING) * "desktop::scaleAspect",MENU_BUTTON_X + number_down * BUTTON_HEIGHT + SLIDER_BACKING_PADDING,(SLIDER_LENGTH - SLIDER_BACKING_PADDING) * "desktop::scaleAspect",BUTTON_HEIGHT - (SLIDER_BACKING_PADDING * 2)
+--
+--    CVAR_VOLUME : constant :=  "s_volume_dB"
+--    CVAR_ASPECTRATIO  : constant := "r_aspectRatio"
+--    CVAR_NUMBEROFSPEAKERS  : constant := "s_numberOfSpeakers"
+--    CVAR_USEEAXREVERB  : constant := "s_useEAXReverb"
+--
+--    VOLUME_LOW -60
+--    VOLUME_HIGH 0
+--    VOLUME_STEP 1
+--
+--    CAPTION_PLAYMULTIPLAYER "#str_00000"
+--    CAPTION_HOSTMULTIPLAYER "#str_00001"
+--    CAPTION_TRAINING "#str_00002"
+--    CAPTION_OPTIONS "#str_00003"
+--    CAPTION_QUIT "#str_00004"
+--    CAPTION_DONE "#str_00006"
+--    CAPTION_BACK "#str_00005"
+--    CAPTION_AUDIO "#str_00008"
+--    CAPTION_VIDEO "#str_00009"
+--    CAPTION_KEYBOARDMOUSE "#str_00010"
+--    CAPTION_CONTROLLER "#str_00011"
+--    CAPTION_VOLUME "#str_00012"
+--    CAPTION_SPEAKERLAYOUT "#str_00014"
+--    CAPTION_SOUNDQUALITY "#str_00015"
+--    CAPTION_PUSHTOTALKKEY "#str_00016"
+--    CAPTION_SETUPMICROPHONE "#str_00017"
+--    CAPTION_QUITPROMPT "#str_00061"
+--
+--    CHOICES_SPEAKERLAYOUT  : constant := "#str_00018"
+--    CHOICES_SOUNDQUALITY : constant :=  "#str_00020"
+--
+--    VALUES_SPEAKERLAYOUT  : constant := "2;6"
+--    VALUES_SOUNDQUALITY  : constant := "1;0"
+--
+--    COMMAND_SPEAKERLAYOUT : constant :=  "sound speakers"
+--    COMMAND_RESTARTSOUND : constant :=  "restart sound"
+--
+--    BIND_PUSHTOTALK : constant :=  "savegame quick"
+--
+--    LINE_HEIGHT : constant := _PERCENT 0.1
+--    LINE_HEIGHT : constant :=  LINE_HEIGHT_PERCENT * BUTTON_HEIGHT
+--    LINE_WIDTH : constant :=  MENU_BUTTON_WIDTH
+--
+--    AUDIO_CLICK : constant :=  "play menu_click3"
+--    AUDIO_MUSIC : constant :=  "music music_tachi"
+--    AUDIO_MUSIC_LENGTH : constant :=  330
+--
+--    MENU_IN_SPEED : constant :=  "500"
+--    MENU_OUT_SPEED : constant := "300"
+--
+--    -- Start of Main
+--    begin
+--      Make_Window (Graphic_Logo, "guis/assets/logo.tga" LOGO_X,LOGO_Y,LOGO_WIDTH * "desktop::scaleAspect",LOGO_HEIGHT);
+--      Make_Menu (
+--
+--
+--
+--
+--      windowDef desktop{
+--    menuGui 1
+--    rect    0,0,640,480
+--    float   scaleAspect 0
+--    editDef cvarAspectRatio{
+--      cvar     CVAR_ASPECTRATIO
+--      noEvents 1
+--    }
+--    windowDef handleAspectResize{
+--      float previousValue -1
+--      onEvent{
+--        if("handleAspectResize::previousValue" != "cvarAspectRatio::text"){
+--          if("cvarAspectRatio::text" == 1){
+--            set "desktop::scaleAspect" "0.7777";
+--            set "handleAspectResize::previousValue" "1";
+--          }else if("cvarAspectRatio::text" == 2){
+--            set "desktop::scaleAspect" "0.8888";
+--            set "handleAspectResize::previousValue" "2";
+--          }else{
+--            set "desktop::scaleAspect" "1.0";
+--            set "handleAspectResize::previousValue" "0";
+--          }
+--        }
+--      }
+--    }
+--    /*windowDef backingMain{
+--      rect 0,0,640,480
+--      windowDef backingMainForeground{
+--        rect       0,0,640,480
+--        background "guis/assets/background.tga"
+--        noEvents   1
+--      }
+--    }*/
+--    windowDef graphiclogo{
+--      rect       LOGO_X,LOGO_Y,LOGO_WIDTH * "desktop::scaleAspect",LOGO_HEIGHT
+--      background "guis/assets/logo.tga"
+--      noEvents   1
+--    }
+--    menuDef(MM,1) //menuMain
+--      menuButtonDef(0,MMPM0,MMPM1,MMPM2,MMPM3,CAPTION_PLAYMULTIPLAYER) //PLAY MULTIPLAYER
+--      menuButtonDef(1,MMHM0,MMHM1,MMHM2,MMHM3,CAPTION_HOSTMULTIPLAYER) //HOST MULTIPLAYER
+--      menuButtonDef(2,MMT0,MMT1,MMT2,MMT3,CAPTION_TRAINING)            //TRAINING
+--      menuButtonDef(3,MMO0,MMO1,MMO2,MMO3,CAPTION_OPTIONS)             //OPTIONS
+--      menuButtonDef(4,MMQ0,MMQ1,MMQ2,MMQ3,CAPTION_QUIT)                //QUIT
+--    }
+--    menuDef(MO,-1) //menuOptions
+--      menuButtonDef(0,MOA0,MOA1,MOA2,MOA3,CAPTION_AUDIO)             //AUDIO
+--      menuButtonDef(1,MOV0,MOV1,MOV2,MOV3,CAPTION_VIDEO)             //VIDEO
+--      menuButtonDef(2,MOKM0,MOKM1,MOKM2,MOKM3,CAPTION_KEYBOARDMOUSE) //KEYBOARD MOUSE
+--      menuButtonDef(3,MOC0,MOC1,MOC2,MOC3,CAPTION_CONTROLLER)        //CONTROLLER
+--      lineDef(4.05,MOL)                                              //---------------
+--      menuButtonDef(4.2,MOB0,MOB1,MOB2,MOB3,CAPTION_BACK)            //BACK
+--    }
+--    menuDef(MA,-1) //menuAudio
+--      float hasChanged 0
+--      menuSliderDef(0,CVAR_VOLUME,1,-60,0,MAV0,MAV1,MAV2,MAV3,MAV4,MAV5,CAPTION_VOLUME) //Volume
+--      menuChoiceDef(1,0,VALUES_SPEAKERLAYOUT,CHOICES_SPEAKERLAYOUT,CVAR_NUMBEROFSPEAKERS,COMMAND_SPEAKERLAYOUT,"MA::hasChanged",MASL0,MASL1,MASL2,MASL3,MASL4,MASL5,MASL6,CAPTION_SPEAKERLAYOUT)//Speaker Layout
+--      menuChoiceDef(2,0,VALUES_SOUNDQUALITY, CHOICES_SOUNDQUALITY, CVAR_USEEAXREVERB,    COMMAND_SOUNDEAX,     "MA::hasChanged",MASQ0,MASQ1,MASQ2,MASQ3,MASQ4,MASQ5,MASQ6,CAPTION_SPEAKERLAYOUT)//Sound Quality
+--      menuBindDef(3,BIND_PUSHTOTALK,MAPTTK0,MAPTTK1,MAPTTK2,MAPTTK3,MAPTTK4,MAPTTK5,MAPTTK6,CAPTION_PUSHTOTALKKEY) //Push To Talk Key
+--      menuButtonDef(4,  MASM0,MASM1,MASM2,MASM3,CAPTION_SETUPMICROPHONE) //SETUP MICROPHONE
+--      lineDef(5.05,MAL)
+--      menuButtonDef(5.2,MAB0 ,MAB1, MAB2, MAB3, CAPTION_BACK)            //BACK
+--    }
+--    //overlayTwoOptionDef(OQ,OQ0,OQ1,OQ2,OQ3,OQ4,OQ5,OQ6,OQ7,CAPTION_QUITPROMPT)
+--    windowDef handleLaunchFade{
+--      rect      0,0,640,480
+--      backColor 0,0,0,1
+--      onActivate{
+--        transition "handleLaunchFade::backColor" "1,1,1,1" "0,0,0,1" "1500";
+--        transition "handleLaunchFade::backColor" "0,0,0,1" "0,0,0,0" "1500";
+--      }
+--    }
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--    --Mesh : Buffered_Mesh := Buffer_Mesh (PATH_ASSETS & "Bob/bob_lamp_update.md5mesh");
+--    begin
+--      loop
+--        for Entity of Entities loop Entity.Do_Action end loop;
+--        delay 0.2; -- Insert code here.
+--      end loop;
+--    end;
+--  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+--  // Macros
+--  //
+--  // On lines of the macros ending in a single quote (") a plus zero (+ 0) is added because the scripting language can't seem to
+--  // recognize the eol backslashes without it.
+--  //
+--  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+--    menuDef(name,hide)  \
+--    windowDef name{           \
+--      rect 0,0,hide * 640,480
+--    lineDef(number_down,name)                                                                                       \
+--    windowDef name{                                                                                                       \
+--      rect      MENU_BUTTON_Y,MENU_BUTTON_X + number_down * BUTTON_HEIGHT,LINE_WIDTH * "desktop::scaleAspect",LINE_HEIGHT \
+--      backColor TEXT_COLOR_                                                                                               \
+--      noEvents  1                                                                                                         \
+--    }
+--    textDef(y,x,w,h,align_x,x2,x3,align_y,alignment,name1,name2,name3,caption, s) \
+--    windowDef name1{                                                                    \
+--      rect       y,x,w * s,h                                                            \
+--      font       TEXT_4BY3 + 0                                                          \
+--      textScale  TEXT_SIZE                                                              \
+--      textAlignY align_y                                                                \
+--      textAlignX align_x                                                                \
+--      textAlign  alignment                                                              \
+--      foreColor  TEXT_COLOR_                                                            \
+--      text       caption                                                                \
+--      visible    ("cvarAspectRatio::text" == 0)                                         \
+--      noEvents   1                                                                      \
+--    }                                                                                   \
+--    windowDef name2{                                                                    \
+--      rect       y,x,w * s,h                                                            \
+--      font       TEXT_16BY9 + 0                                                         \
+--      textScale  TEXT_SIZE                                                              \
+--      textAlignY align_y                                                                \
+--      textAlignX x2                                                                     \
+--      textAlign  alignment                                                              \
+--      foreColor  TEXT_COLOR_                                                            \
+--      text       caption                                                                \
+--      visible    ("cvarAspectRatio::text" == 1)                                         \
+--      noEvents   1                                                                      \
+--    }                                                                                   \
+--    windowDef name3{                                                                    \
+--      rect       y,x,w * s,h                                                            \
+--      font       TEXT_16BY10 + 0                                                        \
+--      textScale  TEXT_SIZE                                                              \
+--      textAlignY align_y                                                                \
+--      textAlign   X x3                                                                  \
+--      textAlign  alignment                                                              \
+--      foreColor  TEXT_COLOR_                                                            \
+--      text       caption                                                                \
+--      visible    ("cvarAspectRatio::text" == 2)                                         \
+--      noEvents   1                                                                      \
+--    }
+--    menuSliderDef(number_down,cvar_,step_,low_,high_,name0,name1,name2,name3,name4,name5,caption) \
+--    menuButtonDef(number_down,name0,name1,name2,name3,caption)                                          \
+--    windowDef name4{                                                                                    \
+--      rect      SLIDER_RECT                                                                             \
+--      backColor SLIDER_COLOR_                                                                           \
+--    }                                                                                                   \
+--    sliderDef name5{                                                                                    \
+--      rect        SLIDER_RECT                                                                           \
+--      low         low_                                                                                  \
+--      high        high_                                                                                 \
+--      step        step_                                                                                 \
+--      thumbShader SLIDER_SHADER  + 0                                                                    \
+--      cvar        cvar_  + 0                                                                            \
+--    }
+--    menuChoiceDef(number_down,choice,values_,choices_,cvar_,cmd,v,name0,name1,name2,name3,name4,name5,name6,caption)                     \
+--    windowDef name0{                                                                                                                           \
+--      rect     MENU_BUTTON_RECT(number_down)                                                                                                   \
+--      noEvents 1                                                                                                                               \
+--    }                                                                                                                                          \
+--    textDef(MENU_BUTTON_RECT_(number_down,1),TEXT_X_4BY3,TEXT_X_16BY9,TEXT_X_16BY10,TEXT_Y,0,name1,name2,name3,caption,"desktop::scaleAspect") \
+--    choiceDef name4{                                                                                                                           \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      choices     choices_                                                                                                                     \
+--      values      values_                                                                                                                      \
+--      textAlignX  CHOICE_ALIGN_X_4BY3                                                                                                          \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      cvar        cvar_                                                                                                                        \
+--      choiceType  choice                                                                                                                       \
+--      font        TEXT_4BY3 + 0                                                                                                                \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 0)                                                                                                \
+--      onAction{                                                                                                                                \
+--        set "cmd" cmd;                                                                                                                         \
+--        set v "1";                                                                                                                             \
+--      }                                                                                                                                        \
+--    }                                                                                                                                          \
+--    choiceDef name5{                                                                                                                           \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      choices     choices_                                                                                                                     \
+--      values      values_                                                                                                                      \
+--      textAlignX  CHOICE_ALIGN_X_16BY9                                                                                                         \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      cvar        cvar_                                                                                                                        \
+--      choiceType  choice                                                                                                                       \
+--      font        TEXT_16BY9 + 0                                                                                                               \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 1)                                                                                                \
+--      onAction{                                                                                                                                \
+--        set "cmd" cmd;                                                                                                                         \
+--        set v "1";                                                                                                                             \
+--      }                                                                                                                                        \
+--    }                                                                                                                                          \
+--    choiceDef name6{                                                                                                                           \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      choices     choices_                                                                                                                     \
+--      values      values_                                                                                                                      \
+--      textAlignX  CHOICE_ALIGN_X_16BY10                                                                                                        \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      cvar        cvar_                                                                                                                        \
+--      choiceType  choice                                                                                                                       \
+--      font        TEXT_16BY10 + 0                                                                                                              \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 2)                                                                                                \
+--      onAction{                                                                                                                                \
+--        set "cmd" cmd;                                                                                                                         \
+--        set v "1";                                                                                                                             \
+--      }                                                                                                                                        \
+--    }
+--    menuButtonDef(number_down,name0,name1,name2,name3,caption) \
+--    windowDef name0{                                                 \
+--      rect     MENU_BUTTON_RECT(number_down)                         \
+--      noEvents 1                                                     \
+--    }                                                                \
+--    textDef(MENU_BUTTON_RECT_(number_down,1),TEXT_X_4BY3,TEXT_X_16BY9,TEXT_X_16BY10,TEXT_Y,0,name1,name2,name3,caption,"desktop::scaleAspect")
+--    menuBindDef(number_down,bind_,name0,name1,name2,name3,name4,name5,name6,caption)                                                     \
+--    windowDef name0{                                                                                                                           \
+--      rect     MENU_BUTTON_RECT(number_down)                                                                                                   \
+--      noEvents 1                                                                                                                               \
+--    }                                                                                                                                          \
+--    textDef(MENU_BUTTON_RECT_(number_down,1),TEXT_X_4BY3,TEXT_X_16BY9,TEXT_X_16BY10,TEXT_Y,0,name1,name2,name3,caption,"desktop::scaleAspect") \
+--    bindDef name4{                                                                                                                             \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      bind        bind_                                                                                                                        \
+--      textAlignX  CHOICE_ALIGN_X_4BY3                                                                                                          \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      font        TEXT_4BY3 + 0                                                                                                                \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 0)                                                                                                \
+--    }                                                                                                                                          \
+--    bindDef name5{                                                                                                                             \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      bind        bind_                                                                                                                        \
+--      textAlignX  CHOICE_ALIGN_X_16BY9                                                                                                         \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      font        TEXT_16BY9 + 0                                                                                                               \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 1)                                                                                                \
+--    }                                                                                                                                          \
+--    bindDef name6{                                                                                                                             \
+--      rect        MENU_BUTTON_RECT(number_down)                                                                                                \
+--      bind        bind_                                                                                                                        \
+--      textAlignX  CHOICE_ALIGN_X_16BY10                                                                                                        \
+--      textAlignY  CHOICE_ALIGN_Y                                                                                                               \
+--      font        TEXT_16BY10 + 0                                                                                                              \
+--      textscale   TEXT_SIZE                                                                                                                    \
+--      forecolor   TEXT_COLOR_                                                                                                                  \
+--      visible    ("cvarAspectRatio::text" == 2)                                                                                                \
+--    }
+--    listenMenuDef(name,last,hide) \
+--    windowDef name{                     \
+--      rect  0,0,640 * hide,480          \
+--      float v last
+--    listenMenuButtonDef(number_down,active,name,isActive,current_selection,backing,text1,text2,text3) \
+--    windowDef name{                                                                                         \
+--      rect  MENU_BUTTON_RECT(number_down)                                                                   \
+--      float v active                                                                                        \
+--      onMouseEnter{                                                                                         \
+--        if(isActive == 0){                                                                                  \
+--          set isActive "1";                                                                                 \
+--          set current_selection number_down;                                                                \
+--        }                                                                                                   \
+--      }                                                                                                     \
+--      onEvent{                                                                                              \
+--        if(current_selection != number_down && isActive != 0){                                              \
+--          set isActive "0";                                                                                 \
+--          set backing BUTTON_BLANK;                                                                         \
+--          set text1 TEXT_COLOR;                                                                             \
+--          set text2 TEXT_COLOR;                                                                             \
+--          set text3 TEXT_COLOR;                                                                             \
+--        }                                                                                                   \
+--        if(isActive == 1){                                                                                  \
+--          set isActive "2";                                                                                 \
+--          set backing BUTTON_COLOR;                                                                         \
+--          set text1 BUTTON_TEXT_COLOR;                                                                      \
+--          set text2 BUTTON_TEXT_COLOR;                                                                      \
+--          set text3 BUTTON_TEXT_COLOR;                                                                      \
+--        }                                                                                                   \
+--      }
+--    listenMenuSliderDef(number_down,active,name,isActive,current_selection,backing,text1,text2,text3,text4) \
+--    windowDef name{                                                                                               \
+--      rect  MENU_BUTTON_RECT(number_down)                                                                         \
+--      float v active                                                                                              \
+--      onMouseEnter{                                                                                               \
+--        if(isActive == 0){                                                                                        \
+--          set isActive "1";                                                                                       \
+--          set current_selection number_down;                                                                      \
+--        }                                                                                                         \
+--      }                                                                                                           \
+--      onEvent{                                                                                                    \
+--        if(current_selection != number_down && isActive != 0){                                                    \
+--          set isActive "0";                                                                                       \
+--          set backing BUTTON_BLANK;                                                                               \
+--          set text1 TEXT_COLOR;                                                                                   \
+--          set text2 TEXT_COLOR;                                                                                   \
+--          set text3 TEXT_COLOR;                                                                                   \
+--          set text4 SLIDER_COLOR;                                                                                 \
+--        }                                                                                                         \
+--        if(isActive == 1){                                                                                        \
+--          set isActive "2";                                                                                       \
+--          set backing BUTTON_COLOR;                                                                               \
+--          set text1 BUTTON_TEXT_COLOR;                                                                            \
+--          set text2 BUTTON_TEXT_COLOR;                                                                            \
+--          set text3 BUTTON_TEXT_COLOR;                                                                            \
+--          set text4 SLIDER_COLOR_HIGHLIGHT;                                                                       \
+--        }                                                                                                         \
+--      }                                                                                                           \
+--    }
+--    listenMenuChoiceDef(number_down,active,name,isActive,current_selection,backing,text1,text2,text3,text4,text5,text6) \
+--    windowDef name{                                                                                                           \
+--      rect  MENU_BUTTON_RECT(number_down)                                                                                     \
+--      float v active                                                                                                          \
+--      onMouseEnter{                                                                                                           \
+--        if(isActive == 0){                                                                                                    \
+--          set isActive "1";                                                                                                   \
+--          set current_selection number_down;                                                                                  \
+--        }                                                                                                                     \
+--      }                                                                                                                       \
+--      onEvent{                                                                                                                \
+--        if(current_selection != number_down && isActive != 0){                                                                \
+--          set isActive "0";                                                                                                   \
+--          set backing BUTTON_BLANK;                                                                                           \
+--          set text1 TEXT_COLOR;                                                                                               \
+--          set text2 TEXT_COLOR;                                                                                               \
+--          set text3 TEXT_COLOR;                                                                                               \
+--          set text4 TEXT_COLOR;                                                                                               \
+--          set text5 TEXT_COLOR;                                                                                               \
+--          set text6 TEXT_COLOR;                                                                                               \
+--        }                                                                                                                     \
+--        if(isActive == 1){                                                                                                    \
+--          set isActive "2";                                                                                                   \
+--          set backing BUTTON_COLOR;                                                                                           \
+--          set text1 BUTTON_TEXT_COLOR;                                                                                        \
+--          set text2 BUTTON_TEXT_COLOR;                                                                                        \
+--          set text3 BUTTON_TEXT_COLOR;                                                                                        \
+--          set text4 BUTTON_TEXT_COLOR;                                                                                        \
+--          set text5 BUTTON_TEXT_COLOR;                                                                                        \
+--          set text6 BUTTON_TEXT_COLOR;                                                                                        \
+--        }                                                                                                                     \
+--      }                                                                                                                       \
+--    }
+--    actionDef(previous,previous_listener,current,current_listener,current_activated,current_selected,v) \
+--    onAction{                                                                                                 \
+--      set        "cmd" AUDIO_CLICK;                                                                           \
+--      set        current_selected v;                                                                          \
+--      set        current_activated "1";                                                                       \
+--      transition previous "0,0,640,480" "-640,0,640,480" MENU_OUT_SPEED;                                      \
+--      transition previous_listener "0,0,640,480" "-640,0,640,480" MENU_OUT_SPEED;                             \
+--      transition current "-640,0,640,480" "0,0,640,480" MENU_IN_SPEED;                                        \
+--      transition current_listener "-640,0,640,480" "0,0,640,480" MENU_IN_SPEED;
+--    overlayTwoOptionDef(name,name0,name1,name2,name3,name4,name5,name6,name7,caption)  \
+--    windowDef name{                                                                          \
+--      rect 0,0,640,480                                                                       \
+--      backColor 0,0,0,OVERLAY_MAXDARK                                                        \
+--    }                                                                                        \
+--    textDef(0,OVERLAY_TEXT_Y,640,480,0,0,0,0,OVERLAY_TEXT_ALIGN,name1,name2,name3,caption,1) \
+--    listenOverlayDef(previous_listener,v,quoted_name) \
+--      set       "cmd" AUDIO_CLICK;                          \
+--      set       v "1";                                      \
+--      set       previous_listener "-640,0,640,480";         \
+--      resetTime quoted_name "0";

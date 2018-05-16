@@ -16,22 +16,6 @@
 -- Id Software's Id Tech 4 skeletal mesh, animation, shader, and level data format loaders
 separate (Neo.Data.Model) package body Id_Tech is
 
-  -----------
-  -- Frame --
-  -----------
-
-  -- Build a skeleton and its 3D bounds from a Joint array into a tree for animation purposes
-  function Build_Frame (Joints : Vector_Joint.Unsafe.Vector) return Animation_Frame_State is
-    Frame : Animation_Frame_State := (others => <>);
-    begin
-      for Joint of Joints loop
-        Adjust_Bounding (Joint.Point, Frame.Bounding);
-        if Joint.Parent_Index = -1 then Frame.Skeleton.Append_Child (Frame.Skeleton.Root, Joint);
-        else Frame.Skeleton.Append_Child (Frame.Skeleton.Find (Joints.Element (Int (Joint.Parent_Index + 1))), Joint); end if;
-      end loop;
-      return Frame;
-    end;
-
   --------------
   -- Material --
   --------------
@@ -181,7 +165,6 @@ separate (Neo.Data.Model) package body Id_Tech is
     -- }
 
     -- Local variables
-    Joints  : Vector_Joint.Unsafe.Vector;
     Surface : Animated_Surface_State := (others => <>);
     Mesh    : Mesh_State             := (Is_Animated => True, others => <>);
     begin
@@ -194,11 +177,12 @@ separate (Neo.Data.Model) package body Id_Tech is
 
       -- Load joints
       Assert ("joints", "{");
-      while Peek /= "}" loop 
-        Joints.Append ((Name         => To_Joint_Name (Next_Set ("""", """")),
-                        Parent_Index => Next_Then_Assert ("("),
-                        Point        => (Next, Next, Next_Then_Assert (")", "(")),
-                        Orientation  => To_Quaternion_4D ((Next, Next, Next_Then_Assert (")")))));
+      while Peek /= "}" loop         
+        Mesh.Base_Frame.Joints.Append ((Name         => To_Joint_Name (Next_Set ("""", """")),
+                                        Parent_Index => Next_Then_Assert ("("),
+                                        Point        => (Next, Next, Next_Then_Assert (")", "(")),
+                                        Orientation  => To_Quaternion_4D ((Next, Next, Next_Then_Assert (")")))));
+        Adjust_Bounding (Mesh.Base_Frame.Joints.Last_Element.Point, Mesh.Base_Frame.Bounding);
       end loop; Skip;
 
       -- Load meshes
@@ -215,14 +199,14 @@ separate (Neo.Data.Model) package body Id_Tech is
 
         -- Load triangles
         Assert ("numtris"); Skip;
-        while Peek = "tri" loop Skip (2); Surface.Indicies.Append ((Next, Next, Next)); end loop; 
+        while Peek = "tri" loop Skip (2); for I in 1..3 loop Surface.Indicies.Append (Next); end loop; end loop; 
 
         -- Load weights
         Assert ("numweights"); Skip;
         while Peek = "weight" loop Skip (2);
           Surface.Weights.Append ((Joint_Index => Next,
-                                   Data        => (Amount => Next_Then_Assert ("("),
-                                                   Point  => (Next, Next, Next_Then_Assert (")")))));
+                                   Amount      => Next_Then_Assert ("("),
+                                   Point       => (Next, Next, Next_Then_Assert (")"))));
         end loop; Assert ("}");
 
         -- Store data
@@ -231,9 +215,7 @@ separate (Neo.Data.Model) package body Id_Tech is
         Surface.Vertices.Clear;
         Surface.Weights.Clear;
       end loop;
-
-      -- Build the skeleton and link the weights to joints
-      Mesh.Base_Frame := Build_Frame (Joints);
+      
       return Mesh;
     end;
 
@@ -288,7 +270,6 @@ separate (Neo.Data.Model) package body Id_Tech is
     -- Local variables
     Frame_Base : Vector_Joint_Base.Unsafe.Vector;
     Frame_Data : Vector_Real_64.Unsafe.Vector;
-    Joints     : Vector_Joint.Unsafe.Vector;
     Joint      : Joint_State     := (others => <>);
     Animation  : Animation_State := (others => <>);
     I          : Positive        := 1;
@@ -316,7 +297,7 @@ separate (Neo.Data.Model) package body Id_Tech is
       Assert ("bounds", "{");
       while Peek /= "}" loop Assert ("(");
         Animation.Frames.Append ((Bounding => (A => (Next, Next, Next_Then_Assert (")", "(")),
-                                               B => (Next, Next, Next), others => <>), others => <>)); Assert (")");
+                                               B => (Next, Next, Next)), others => <>)); Assert (")");
       end loop; Skip;
 
       -- Load the "base frame" or starting position of the animation
@@ -328,7 +309,7 @@ separate (Neo.Data.Model) package body Id_Tech is
       end loop; Skip;
 
       -- Load animation delta data
-      while not At_EOF loop
+      for Frame of Animation.Frames loop
         Assert ("frame"); Skip; Assert ("{"); 
         while Peek /= "}" loop Frame_Data.Append (Next); end loop; Skip;
         for Base of Frame_Base loop
@@ -340,10 +321,8 @@ separate (Neo.Data.Model) package body Id_Tech is
           if (Base.Flags and 16#0F#) > 0 then Joint.Orientation.Y := Frame_Data.Element (I); I := I + 1; end if;
           if (Base.Flags and 16#10#) > 0 then Joint.Orientation.Z := Frame_Data.Element (I); I := I + 1; end if;
           Joint.Orientation := To_Quaternion_4D (To_Vector_3D (Joint.Orientation));
-          Joints.Append (Joint);
+          Frame.Joints.Append (Joint);
         end loop;
-        Animation.Frames.Append (Build_Frame (Joints));
-        Joints.Clear;
       end loop;
       return Animation;
     end;
@@ -561,7 +540,6 @@ separate (Neo.Data.Model) package body Id_Tech is
       Brush        : Vector_Brush_Side.Unsafe.Vector;
       Patch        : Static_Surface_State := (others => <>);
       Entity       : Entity_State         := (others => <>);
-      Triangle     : Triangle_State       := (others => <>);
       Token        : Str_Unbound          := NULL_STR_UNBOUND;
       Patch_Height : Int_Unsigned         := 0;
       Patch_Width  : Int_Unsigned         := 0;
@@ -615,8 +593,14 @@ separate (Neo.Data.Model) package body Id_Tech is
                 -- Build indicies
                 for I in 0..Patch_Height loop
                   for J in 1..Patch_Width loop
-                    Triangle := (if J mod 2 = 0 then (I * Patch_Width + J - 1, I       * Patch_Width + J,     (I + 1) * Patch_Width + J - 1)
-                                                else (I * Patch_Width + J - 1, (I + 1) * Patch_Width + J - 2, (I + 1) * Patch_Width + J - 1));
+                    if J mod 2 = 0 then
+                      Patch.Indicies.Append (I * Patch_Width + J - 1);
+                      Patch.Indicies.Append (I * Patch_Width + J);
+                    else
+                      Patch.Indicies.Append (I * Patch_Width + J - 1);
+                      Patch.Indicies.Append ((I + 1) * Patch_Width + J - 2);
+                    end if;
+                    Patch.Indicies.Append ((I + 1) * Patch_Width + J - 1);
                   end loop;
                 end loop;
                 Entity.Patches.Append (Patch);

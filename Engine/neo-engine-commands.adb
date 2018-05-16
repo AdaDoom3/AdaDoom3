@@ -40,7 +40,7 @@ package body Neo.Engine.Commands is
     end;
     
   procedure Command_Map (Args : Array_Str_Unbound) is
-    begin null;
+    begin null; end;
       --if Args (2) /= "multi" then Initialize_Single_Player (Args (2)); end if;
       --else 
       
@@ -63,6 +63,9 @@ package body Neo.Engine.Commands is
   --     if ( FS_ReadFile (expanded, NULL) == -1 ) {
   --       Com_Printf ("Can't find map %s\n", expanded);
   --       return;
+  
+  procedure Command_Game_Type (Args : Array_Str_Unbound) is
+    begin null;
   --     }
   --     -- force latched values to get set
   --     Cvar_Get ("g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH );
@@ -222,4 +225,15 @@ package body Neo.Engine.Commands is
     begin
       null;
     end;
+    --!helpmenu -- This brings up a special help menu with information for you to view as a player on the server.
+--maprate -- This brings up specific information for you to view regarding the servers map rate settings.
+--maprating -- This brings up a menu for you to rate the map currently being played.
+--!die -- This cause you to forefit your life or commit sucide.
+--hlx -- This brings up your player statistics for the servers that run the HlStatsX system.
+--!achievement -- This brings up information regarding your specific achievements towards the achievements on the server.
+--    votekick -- This starts a vote to kick a specific player from the server if the server has the option enabled to allow public votes to kick players.
+--voteban -- This starts a vote to ban a specific player from the server if the server has the option enabled to allow public votes to ban players.
+--votemap -- This starts a vote to change the map from the current map to another map
+--rtv -- This starts a vote which queries the players on the server to determine if they want to conduct a vote to change the map.
+--nominate -- This nominates a specific map in regards to pending map vote started at the end of the round or due to a rtv vote being initiated.
 end;

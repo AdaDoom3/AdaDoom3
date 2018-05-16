@@ -46,19 +46,4 @@ package body Neo.Core.Strings is
       end loop;
       return Result;
     end;
-
-  -----------
-  -- Count --
-  -----------
-
-  function Count (Text : Str; Item : Char) return Natural is
-    Result : Natural := 0;
-    begin
-      for C of Text loop
-        if C = To_Char_16 (ASCII.CR) then
-          Result := Result + 1;
-        end if;
-      end loop;
-      return Result;
-    end;
 end;

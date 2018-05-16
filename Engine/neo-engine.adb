@@ -17,12 +17,31 @@ with Neo.Engine.CVars;    use Neo.Engine.CVars;
 with Neo.Engine.Commands; use Neo.Engine.Commands;
 
 package body Neo.Engine is
-
+ 
+  procedure Resize (To : Border_State) is begin null; end;
+  
   --------------
-  -- Separate --
+  -- Subunits --
   --------------
+  
+  -- Architecture dependant subprograms
+  package CPU is
+      
+      -- CPU Info
+      function Get_CPU return CPU_State;
+        
+      -- Stack checking
+      procedure Put_Stack;
+      procedure Clear_Stack;
+      procedure Check_Exceptions;
+      function Is_Stack_Empty return Boolean;
+      
+      -- Settings
+      procedure Set_Rounding  (Val : Rounding_Kind);
+      procedure Set_Precision (Val : Precision_Kind);
+    end; 
     
-  -- System-dependant subprograms. Note: Some may have side effects like setting of cvars or calling a private subprogram !!!
+  -- System dependant subprograms
   package System is
 
       -- Vulkan
@@ -45,7 +64,6 @@ package body Neo.Engine is
 
       -- Error Handling
       procedure Run_Console;
-      procedure Alert        (Val : Bool);
       procedure Open_Text    (Path : Str);
       procedure Open_Webpage (Path : Str);
       procedure Execute      (Path : Str);
@@ -65,6 +83,7 @@ package body Neo.Engine is
       procedure Hide_Cursor      (Do_Hide : Bool := True);
       procedure Set_Cursor_Style (Kind : Cursor_Kind);
       procedure Set_Cursor       (Pos  : Cursor_State);
+      procedure Resize           (To   : Border_State);
       function Get_Cursor        return Cursor_state;
       function Get_Windows       return Vector_Border.Unsafe_Array;
       function Get_Decoration    return Border_State;
@@ -72,58 +91,35 @@ package body Neo.Engine is
       function Only_Instance     return Bool;
       function Update_Windowing  return Bool; -- Set Activated and Mode cvars
     end;
-  use System;
-
-  -- Rendering is reactive to global world data, the visible subprograms here are for the main window (e.g. backend)
-  package Renderer is
-      procedure Initialize;
-      procedure Finalize;
-      procedure Present;
-    end;
-  use Renderer;
   
   -----------------
   -- Information --
   -----------------
 
   function OS_Info return OS_Info_State renames System.OS_Info;
+  function Asset_Path return Str is (S (System.OS_Info.Path) & PATH_ASSETS);
+  
+  ---------------
+  -- Clipboard --
+  ---------------
+  
   function Paste return Str renames System.Paste;
   procedure Copy (Item : Str) renames System.Copy;
+  
+  ------------
+  -- Vulkan --
+  ------------
 
-  -------------------
-  -- Error Handing --
-  -------------------
-
-  -- Display a message-box prompt, if this fails we have serious problems
-  function Ok (Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames System.Ok;
-
-  -- Fetch imported system error codes
-  function Last_Error return Str is ("System error:" & System.Last_Error'Wide_Image);
-
-  -- Subprograms used during alerts. They are non-vital so don't propagate errors
-  Alert_Status : Safe_Status;
-  function Alerting return Bool is (Alert_Status.Occupied);
-  procedure Alert (Val : Bool := True) is
-    begin
-      Alert_Status.Occupied (Val);
-      System.Alert (Val);
-    end;
-
-  -- Called by all tasks (including the main execution) during an error to report exception and trace information
-  procedure Handle (Occurrence : Exception_Occurrence) is
-    begin
-      Line;
-      Line (To_Str (Exception_Name    (Occurrence)));
-      Line (To_Str (Exception_Message (Occurrence)));
-      Line (Last_Error);   
-      Line (Get_Stack);
-    end;
-    
+  procedure Initialize_Vulkan_Library                        renames System.Initialize_Vulkan_Library;
+  procedure Finalize_Vulkan_Library                          renames System.Finalize_Vulkan_Library;
+  function Create_Vulkan_Surface (Instance : Ptr) return Ptr renames System.Create_Vulkan_Surface;
+  function Get_Vulkan_Subprogram (Name     : Str) return Ptr renames System.Get_Vulkan_Subprogram;
+  function Get_Vulkan_Extension return Ptr_Char_8_C          renames System.Get_Vulkan_Extension;
+      
   -----------
   -- Tasks --
   -----------
 
-  package Task_Count is new CVar ("taskcount", "Number of running tasks", Positive, 1, Settable => False);
   package body Tasks is
       procedure Finalize is new Unchecked_Deallocation (Task_Unsafe, Task_Unsafe_Ptr);
       task body Task_Unsafe is
@@ -159,20 +155,13 @@ pragma Warnings (On);
             exception when others => return False; end;
         end;
     end;
-
-  -------------
-  -- Console --
-  -------------
-
-  -- Colors used in the console GUI
-  COLOR_BACKGROUND : Color_State := COLOR_BLACK;
-  COLOR_FOREGROUND : Color_State := COLOR_CRIMSON;
-
-  -- URL to go to when "sending" a log
-  ERROR_REPORTING_URL : Str := "www.google.com";
+  
+  -------------------
+  -- Error Handing --
+  -------------------
 
   -- Console task
-  package Console_Tasks is new Tasks (Run_Console);
+  package Console_Tasks is new Tasks (System.Run_Console);
   Console_Task : Console_Tasks.Safe_Task;
 
   -- External access to console task
@@ -181,26 +170,122 @@ pragma Warnings (On);
   procedure Finalize_Console is begin Console_Task.Finalize; end;
 
   -- Console button actions
-  procedure Send_Log is begin Open_Webpage (ERROR_REPORTING_URL); end;
+  procedure Send_Log is begin System.Open_Webpage (CONSOLE_ERROR_REPORTING_URL); end;
   procedure Save_Log is
     use Ada.Streams.Stream_IO;
     Path        : Str_8 := To_Str_8 (S (OS_Info.Username) & ".txt");
     File        : Ada.Streams.Stream_IO.File_Type;
     File_Stream : Ada.Streams.Stream_IO.Stream_Access;
     begin
-      --Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.Bin_Path) & S & PATH_LOGS & S) & Path);
+      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.Path) & S & PATH_LOGS & S) & Path);
       File_Stream := Ada.Streams.Stream_IO.Stream (File);
       for Element of Log loop Char'Write (File_Stream, Element); end loop;
       Ada.Streams.Stream_IO.Close (File);
-      --Open_Text (To_Str (OS_Info.Bin_Path) & S & PATH_LOGS & S & To_Str (Path));
+      System.Open_Text (To_Str (OS_Info.Path) & S & PATH_LOGS & S & To_Str (Path));
     end;
 
+  -- Display a message-box prompt, if this fails we have serious problems
+  function Ok (Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool renames System.Ok;
+
+  -- Called by all tasks (including the main execution) during an error to report exception and trace information
+  procedure Handle (Occurrence : Exception_Occurrence) is
+    begin
+      Set_Exit_Status (Failure);
+      Line (To_Str (Exception_Name    (Occurrence)));
+      Line (To_Str (Exception_Message (Occurrence)));  
+      Line ("System status:" & System.Last_Error'Wide_Image); 
+    end;
+
+  ---------
+  -- CPU --
+  ---------
+   
+  -- System renames
+  procedure Put_Stack                            renames CPU.Put_Stack;
+  procedure Clear_Stack                          renames CPU.Clear_Stack;
+  procedure Check_Exceptions                     renames CPU.Check_Exceptions;
+  procedure Set_Rounding  (Val : Rounding_Kind)  renames CPU.Set_Rounding;
+  procedure Set_Precision (Val : Precision_Kind) renames CPU.Set_Precision;
+  function Is_Stack_Empty return Bool            renames CPU.Is_Stack_Empty;   
+  function Get_CPU        return CPU_State       renames CPU.Get_CPU;
+  
+  -- Return a comma-separated string with all of the CPU extensions listed
+  function Get_Extensions_Image (CPU : CPU_State) return Str is
+  
+    -- Result state and helper function to make it all pretty
+    Result : Str_Unbound := NULL_STR_UNBOUND;
+    Count  : Natural     := 0;
+    procedure Put_Into_Result (Item : Str) is
+      begin
+        if Count /= 0 then Result := Result & ", "; end if;
+        Result := Result & Item;
+        Count  := Count + 1;
+      end;
+      
+    -- Start of Get_Extensions_Image
+    begin
+      case CPU.Vendor is
+        when Advanced_RISC_Machines_Vendor =>
+          if CPU.Has_NEON                                       then Put_Into_Result ("NEON");      end if;
+          if CPU.Has_Vector_Floating_Point                      then Put_Into_Result ("VFP");       end if;
+        when Apple_IBM_Motorola_Vendor =>
+          if CPU.Has_Vector_Multimedia_Instructions             then Put_Into_Result ("VMI");       end if;
+          if CPU.Has_Vector_Scalar_Instructions                 then Put_Into_Result ("VSI");       end if;
+          if CPU.Has_Altivec_Additional_Registers               then Put_Into_Result ("VMX128");    end if;
+          if CPU.Has_Altivec                                    then Put_Into_Result ("Altivec");   end if;
+        when Intel_Vendor | Advanced_Micro_Devices_Vendor =>
+          if CPU.Has_Multi_Media_Extensions                     then Put_Into_Result ("MMX");       end if;
+          if CPU.Has_Streaming_SIMD_Extensions_1                then Put_Into_Result ("SSE");       end if;
+          if CPU.Has_Streaming_SIMD_Extensions_2                then Put_Into_Result ("SSE2");      end if;
+          if CPU.Has_Streaming_SIMD_Extensions_3                then Put_Into_Result ("SSE3");      end if;
+          if CPU.Has_Streaming_SIMD_Extensions_3_Supplement     then Put_Into_Result ("SSSE3");     end if;
+          if CPU.Has_Streaming_SIMD_Extensions_4_1              then Put_Into_Result ("SSE4.1");    end if;
+          if CPU.Has_Streaming_SIMD_Extensions_4_2              then Put_Into_Result ("SSE4.2");    end if;
+          if CPU.Has_Carryless_Multiplication_Of_Two_64_Bit     then Put_Into_Result ("PCLMULQDQ"); end if;
+          if CPU.Has_Advanced_Vector_Extensions_Enabled         then Put_Into_Result ("AVX");       end if;
+          if CPU.Has_Advanced_Vector_Extensions_2               then Put_Into_Result ("AVX2");      end if;
+          if CPU.Has_Advanced_Encryption_Service                then Put_Into_Result ("AES");       end if;
+          if CPU.Has_Advanced_State_Operations                  then Put_Into_Result ("FXSR");      end if;
+          if CPU.Has_Bit_Manipulation_Extensions_1              then Put_Into_Result ("BMI1");      end if;
+          if CPU.Has_Bit_Manipulation_Extensions_2              then Put_Into_Result ("BMI2");      end if;
+          if CPU.Has_Fused_Multiply_Add_3                       then Put_Into_Result ("FMA3");      end if;
+          if CPU.Has_Fused_Multiply_Add_4                       then Put_Into_Result ("FMA4");      end if;
+          if CPU.Has_Hyperthreading                             then Put_Into_Result ("HTT");       end if;
+          if CPU.Has_High_Precision_Convert                     then Put_Into_Result ("CVT16");     end if;
+          if CPU.Has_Half_Precision_Floating_Point_Convert      then Put_Into_Result ("F16C");      end if;
+          if CPU.Has_Extended_States_Enabled                    then Put_Into_Result ("OSXSAVE");   end if;
+          if CPU.Has_Population_Count                           then Put_Into_Result ("POPCNT");    end if;
+          if CPU.Has_Context_ID_Manager                         then Put_Into_Result ("INVPCID");   end if;
+          if CPU.Has_Conditional_Move                           then Put_Into_Result ("CMOV");      end if;
+          if CPU.Has_Leading_Zero_Count                         then Put_Into_Result ("LZCNT");     end if;
+          if CPU.Has_Extended_Operation_Support                 then Put_Into_Result ("XOP");       end if;
+          case CPU.Vendor is
+            when Advanced_Micro_Devices_Vendor =>
+              if CPU.Has_Streaming_SIMD_Extensions_4_Supplement then Put_Into_Result ("SSE4a");     end if;
+              if CPU.Has_3DNow                                  then Put_Into_Result ("3DNow!");    end if;
+              if CPU.Has_3DNow_Supplement                       then Put_Into_Result ("3DNow!+");   end if;
+              if CPU.Has_Multi_Media_Extensions_Supplement      then Put_Into_Result ("MMX+");      end if;
+          when others => null; end case;
+      when others => null; end case;
+      
+      return S (Result);
+    end;
+    
   ---------------
   -- Windowing --
-  ---------------
-
-  -- Renames for fetching system and game window properties
-  function Get_Windows return Vector_Border.Unsafe_Array renames System.Get_Windows;
+  ---------------  
+  
+  -- System renames
+  function Get_Windows      return Vector_Border.Unsafe_Array renames System.Get_Windows;
+  function Only_Instance    return Bool                       renames System.Only_Instance;
+  function Update_Windowing return Bool                       renames System.Update_Windowing;
+  procedure Initialize_Windowing                              renames System.Initialize_Windowing;
+  procedure Finalize_Windowing                                renames System.Finalize_Windowing;
+  procedure Initialize_Multi_Monitor                          renames System.Initialize_Multi_Monitor;
+  procedure Finalize_Multi_Monitor                            renames System.Finalize_Multi_Monitor;
+  procedure Minimize                                          renames System.Minimize;
+  procedure Maximize                                          renames System.Maximize;
+  procedure Restore                                           renames System.Restore;
 
   -- Resize window respecting minimum narrow and wide aspect ratios
   MINIMUM_FACTOR : constant Int := 256;
@@ -208,7 +293,7 @@ pragma Warnings (On);
                        Bottom_Right_Resize, Bottom_Left_Resize, Bottom_Resize,    Other_Resize);
   function Resize (Kind : Resize_Kind; Border : Border_State) return Border_State is
     Result         : Border_State := Border;
-    Decoration     : Border_State := Get_Decoration;
+    Decoration     : Border_State := System.Get_Decoration;
     Extra_Width    : Int := Decoration.Right  + Decoration.Left;
     Extra_Height   : Int := Decoration.Bottom + Decoration.Top;
     Current_Width  : Int := (if Border.Right  - Border.Left - Extra_Width  < MINIMUM_FACTOR then MINIMUM_FACTOR else Border.Right - Border.Left - Extra_Width);
@@ -259,14 +344,15 @@ pragma Warnings (On);
   -----------
   -- Input --
   -----------
-
-  -- Input polling statuses
-  Input_Status  : Safe_Status;
-  Cursor_Status : Safe_Status;
-
+  
+  -- System renames
+  procedure Set_Cursor_Style (Kind    : Cursor_Kind)  renames System.Set_Cursor_Style;
+  procedure Clip_Cursor      (Do_Clip : Bool := True) renames System.Clip_Cursor;
+  procedure Hide_Cursor      (Do_Hide : Bool := True) renames System.Hide_Cursor;
+  procedure Set_Cursor       (Pos : Cursor_State)     renames System.Set_Cursor;
+  function Get_Cursor        return Cursor_state      renames System.Get_Cursor;
+  
   -- Global mouse cursor operations
-  procedure Set_Cursor (Pos : Cursor_State) renames System.Set_Cursor;
-  function Get_Cursor return Cursor_state renames System.Get_Cursor;
   function Get_Cursor_Normalized return Cursor_State is
     Main_Window : Border_State := Get_Windows (1);
     Cursor      : Cursor_State := Get_Cursor;
@@ -277,7 +363,7 @@ pragma Warnings (On);
   -- Main game window operations
   function In_Main_Window (Pos : Cursor_State := Get_Cursor) return Bool is
     Main_Window : Border_State := Get_Windows (1);
-    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then Get_Decoration else (others => 0));
+    Decoration  : Border_State := (if Mode.Get = Windowed_Mode then System.Get_Decoration else (others => 0));
     begin
       return Pos.X >= Main_Window.Left + Decoration.Left and Pos.X <= Main_Window.Right  - Decoration.Right and
              Pos.Y >= Main_Window.Top  + Decoration.Top  and Pos.Y <= Main_Window.Bottom - Decoration.Bottom; 
@@ -302,7 +388,7 @@ pragma Warnings (On);
       Duplicate : Exception;
 
       -- Rename the impulse callback to make it passable to outter scopes...
-      procedure Informal_Callback (Args : Vector_Impulse_Arg.Unsafe_Array) renames Callback;
+      procedure Informal_Callback (Args : Vector_Impulse_Arg.Unsafe_Array) is begin Callback (Args); end;
 
       -- Constructor overhead...
       type Control_State is new Controlled with null record;
@@ -358,7 +444,7 @@ pragma Warnings (On);
   procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1) is
     begin
       for I in Devices.Get.Iterate loop
-        if Ordered_Device.Unsafe.Element (I).Player = Player then Vibrate (Ordered_Device.Unsafe.Key (I), Hz_High, Hz_Low); end if;
+        if Ordered_Device.Unsafe.Element (I).Player = Player then System.Vibrate (Ordered_Device.Unsafe.Key (I), Hz_High, Hz_Low); end if;
       end loop;
     end;
 
@@ -403,15 +489,14 @@ pragma Warnings (On);
     Player          : Player_State := (others => <>);
     
     -- Timing
-    INPUT_POLLING_DURATION : constant Duration := 1.0 / 200.0; -- Suitable input response range is 0.05 (poor) to 0.005 (excellent)
     Last_Time : Time := Clock;
     
     -- Start of Run_Input
     begin
-      Initialize_Input;
-      while Update_Input loop
+      System.Initialize_Input;
+      while System.Update_Input loop
 
-        -- Loop through all of the devices and rebuild a the players for each input frame
+        -- Loop through all of the devices and rebuild the players for each input frame
         Old_Players := Players.Get;
         Current_Devices := Devices.Get;
         for Device of Current_Devices loop
@@ -489,19 +574,20 @@ pragma Warnings (On);
 
 -- A binding in the combo is not active
 goto Combo_Not_Activated;
+
                       end if;
                       Args.Append (Build_Impulse_Arg (Other_Binding, Players.Get (Other_Binding.Player)));
                     end if;
                   end loop;
                 end if;
 
-                -- 
                 -- Message_Server (Impulse.Name & " " & To_Str (Args));
                 Impulse.Callback (Vector_Impulse_Arg.To_Unsafe_Array (Args));
               end if;
 
 -- Skip further tests for combo activation
 <<Combo_Not_Activated>>
+
             end loop;
           end loop;
 
@@ -510,247 +596,21 @@ goto Combo_Not_Activated;
         end if;
 
         -- Delay the main loop if you have some spare time
-        delay INPUT_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
+        delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
       end loop;
-      Finalize_Input;
-    end;
-
-  -- Input task creation
-  package Input_Tasks is new Tasks (Run_Input);
-  Input_Task : Input_Tasks.Safe_Task;
-
-  --------------
-  -- Impulses --
-  --------------
-
-  Game_Entry_Check_Status : Safe_Status;
-  procedure Callback_Enter_Game   (Args : Vector_Impulse_Arg.Unsafe_Array);
-  procedure Callback_Exit_To_Menu (Args : Vector_Impulse_Arg.Unsafe_Array);
-  procedure Callback_Fullscreen   (Args : Vector_Impulse_Arg.Unsafe_Array);
-  package Enter_Game   is new Impulse ("entergame",  Callback_Enter_Game);
-  package Exit_To_Menu is new Impulse ("exittomenu", Callback_Exit_To_Menu);
-  package Fullscreen   is new Impulse ("togglemode", Callback_Fullscreen);
-      
-  -- Enter or exit menu mode 
-  procedure Callback_Enter_Game (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down and then In_Main_Window then
-        if Menu.Get then Menu.Set (False);
-        else Game_Entry_Check_Status.Occupied (True); end if;
-      end if;
-    end;
-
-  -- Enter or exit menu mode 
-  procedure Callback_Exit_To_Menu (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down then Menu.Set (True); end if;
-    end;
-
-  -- Toggle fullscreen mode
-  procedure Callback_Fullscreen (Args : Vector_Impulse_Arg.Unsafe_Array) is
-    begin
-      if Args (Args'First).Press.Down then
-        Mode.Set ((case Mode.Get is
-                     when Multi_Monitor_Mode | Fullscreen_Mode => Windowed_Mode,
-                     when Windowed_Mode => Fullscreen_Mode));
-      end if;
+      System.Finalize_Input;
     end;
   
-  --------------
-  -- Subunits --
-  --------------
+  -- Input task and external lifecycle routines
+  package Input_Tasks is new Tasks (Run_Input);
+  Input_Task : Input_Tasks.Safe_Task;
+  procedure Initialize_Input is begin Input_Task.Initialize; end;
+  procedure Finalize_Input   is begin Input_Task.Finalize;   end;
+  
+  --------------------
+  -- Subunit Bodies --
+  --------------------
 
-  procedure Game_Main is separate;
-  package Game_Tasks is new Tasks (Game_Main);
-  Game_Task : Game_Tasks.Safe_Task;
-
-  package body System   is separate;
-  package body Renderer is separate;
-
-  ---------
-  -- Run --
-  ---------
-
-  procedure Run is
-
-    -- Set the windowing mode based on the cvar Mode
-    procedure Set_Windowing_Mode is
-      begin
-        case Mode.Get is
-          when Multi_Monitor_Mode => Initialize_Multi_Monitor;
-          when Windowed_Mode      => Restore;       
-          when Fullscreen_Mode    => Maximize;                        
-        end case;
-        Clip_Cursor (Mode.Get = Fullscreen_Mode);
-      end;
-
-    -- Timing
-    WINDOW_POLLING_DURATION : constant Duration := 1.0 / 300.0; -- Seconds per duration / Highest FPS rate possible
-    Last_Time : Time := Clock;
-
-    -- Main
-    begin
-
-      -- Block to catch runtime exceptions
-      begin
-
-        -- Make sure this is the only game instance running
-        if not Only_Instance then return; end if;
-
-        -- Log system information
-        Line ("Started by " & OS_Info.Username & " on " & To_Str (Image (Get_Start_Time)) & " via " & OS_Info.Path);
-        Line ("Game: " & OS_Info.App_Name & WORD_SIZE'Wide_Image & (if Is_Debugging then " w/ debugging enabled" else NULL_STR));
-        Line ("Engine: " & NAME_ID & " " & VERSION);
-        Line ("Compiler: " & "GNAT " & To_Str (GNAT_Info.Version) & " for " & S (OS_Info.Version));
-        
-        -- Do debugging actions when debugging is set at the scenario level
-        if Is_Debugging then
-          Use_Ada_Put;
-          Initialize_Console;
-        end if;
-        
-        -- Initialize
-        Initialize_Windowing;
-        Set_Windowing_Mode;
-        Input_Task.Initialize;
-        --Client_Task.Initialize;
-        Renderer.Initialize;
-        
-        -- Set window interaction bindings
-        Enter_Game.Bindings.Append   (Mouse (Left_Button));
-        Fullscreen.Bindings.Append   (Keyboard (F11_Key));
-        Exit_To_Menu.Bindings.Append (Keyboard (Escape_Key));
-       
-        -- Main loop
-        declare
-        Saved_Pos         : Cursor_State   := Get_Cursor;
-        Current_Menu      : Bool           := Menu.Get;
-        Current_Mode      : Mode_Kind      := Mode.Get;
-        Current_Cursor    : Cursor_Kind    := Cursor.Get;
-        Current_Activated : Activated_Kind := Activated.Get;
-        begin
-          Enter_Game.Enable;
-          Input_Status.Occupied (True);
-          while Update_Windowing loop -- Client.Running and Game_Task.Running
-
-            -- Set cursor
-            if Current_Cursor /= Cursor.Get then
-              if Menu.Get then Set_Cursor_Style (Cursor.Get); end if;
-              Current_Cursor := Cursor.Get;
-            end if;
-
-            -- Handle mode switching
-            if Current_Mode /= Mode.Get then
-              if Current_Mode = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
-              Set_Windowing_Mode;
-              if Mode.Get /= Multi_Monitor_Mode then -- Decide to set or save cursor position
-                if not In_Main_Window             then Set_Cursor (Main_Window_Center); end if;
-                if not In_Main_Window (Saved_Pos) then Saved_Pos := Main_Window_Center; end if;
-              end if;
-              Current_Mode := Mode.Get;
-            end if;
-
-            -- Handle menu entry
-            if Current_Menu /= Menu.Get or Game_Entry_Check_Status.Occupied then
-              Game_Entry_Check_Status.Occupied (False);
-              if Menu.Get then
-                Cursor_Status.Occupied (False);
-                Exit_To_Menu.Disable;
-                if Mode.Get /= Fullscreen_Mode then Clip_Cursor (False); end if;
-                Set_Cursor_Style (Cursor.Get);
-                Set_Cursor (Saved_Pos);
-                Hide_Cursor (False);
-                Enter_Game.Enable;
-              else
-                Saved_Pos := Get_Cursor;
-                Enter_Game.Disable;
-                Hide_Cursor;
-                Clip_Cursor;
-                Cursor_Status.Occupied (True);
-                Exit_To_Menu.Enable;
-              end if;
-              Current_Menu := Menu.Get;
-            end if;
-
-            -- Activation is complex and branching can easily lead to problems, so handle cases explicitly
-            if Current_Activated /= Activated.Get then
-              case Activated.Get is
-                when Other_Activated =>
-                  Input_Status.Occupied (True);
-                  case Mode.Get is
-                    when Windowed_Mode =>
-                      Input_Status.Occupied (True);
-                      if not Menu.Get then
-                        Cursor_Status.Occupied (False);
-                        Exit_To_Menu.Disable;
-                        Enter_Game.Enable;
-                      else Set_Cursor_Style (Cursor.Get); end if;
-                    when Multi_Monitor_Mode | Fullscreen_Mode =>
-                      Maximize;
-                      if Mode.Get = Multi_Monitor_Mode then Initialize_Multi_Monitor; end if;
-                      if Menu.Get then Set_Cursor_Style (Cursor.Get);
-                      elsif Mode.Get = Multi_Monitor_Mode then
-                        Hide_Cursor;
-                        Set_Cursor (Saved_Pos);
-                        Cursor_Status.Occupied (True);
-                      else
-                        Hide_Cursor;
-                        Clip_Cursor;
-                        Set_Cursor (Saved_Pos);
-                        Cursor_Status.Occupied (True);                      
-                      end if;
-                  end case;
-                when Click_Activated =>
-                  case Mode.Get is
-                    when Windowed_Mode =>
-                      Input_Status.Occupied (True);
-                      if Menu.Get then Set_Cursor_Style (Cursor.Get);
-                      elsif In_Main_Window then
-                        Saved_Pos := Get_Cursor;
-                        Hide_Cursor;
-                        Clip_Cursor;
-                        Cursor_Status.Occupied (True);
-                      else -- This is a title-bar click in game mode
-                        Cursor_Status.Occupied (False);
-                        Exit_To_Menu.Disable;
-                        Enter_Game.Enable;
-                      end if;
-                    when others => null; end case;
-                when Other_Deactivated | Minimize_Deactivated =>
-                  if not Menu.Get and In_Main_Window then Set_Cursor (Saved_Pos); end if;
-                  Input_Status.Occupied (False);
-                  Clip_Cursor (False);
-                  Set_Cursor_Style (System_Cursor);
-                  Hide_Cursor (False);
-                  if Activated.Get = Other_Deactivated then
-                    case Mode.Get is
-                      when Multi_Monitor_Mode => Finalize_Multi_Monitor; Minimize;
-                      when Fullscreen_Mode    => Minimize; 
-                      when others => null; end case;
-                  elsif Mode.Get = Multi_Monitor_Mode then Finalize_Multi_Monitor; end if;
-              end case;
-              Current_Activated := Activated.Get;
-            end if;
-
-            -- Show the frame buffer
-            --Renderer.Present;
-            
-            -- Save some cycles
-            delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
-          end loop;
-        end;
-
-      -- Handle exceptions
-      exception when Occurrence: others => Handle (Occurrence);
-          if not Running_Console and then Ok (Icon    => Error_Icon,
-                                              Message => Localize ("An error has occurred, would you like to view more information?"),
-                                              Buttons => Yes_No_Buttons) then Initialize_Console; end if;                         
-      end;     
-      
-      -- Finalize
-      Finalize_Windowing;
-      --Renderer.Finalize;
-      Input_Task.Finalize;
-      Game_Task.Finalize;
-    end;
+  package body CPU    is separate;
+  package body System is separate;
 end;

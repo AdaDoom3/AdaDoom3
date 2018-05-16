@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
--- Shadow stencil shading with prenumbra: https://web.archive.org/web/20160417154820/http://www.terathon.com/gdc05_lengyel.pdf
+-- Renderer for the global engine state
 separate (Neo.Engine.Renderer) procedure Frontend is
 
   -- Amount of idle frontend light job tasks that are allowed to sit idle until tasks start being destroyed
@@ -52,9 +52,9 @@ separate (Neo.Engine.Renderer) procedure Frontend is
               -- We found a light that add something
               for Register of Light.Stage.Registers loop
                 exit Outter when Register > 0.0;
-              end loop;              
+              end loop;
             end if;
-            if Stage := Light.Stages.Last then 
+            if Stage := Light.Stages.Last then
 
 -- We didn't find any addition to the scene
 goto Skip_Light;
@@ -69,7 +69,7 @@ goto Skip_Light;
       -- Calculate the matrix that projects the zero-to-one cube to exactly cover the light frustum in clip space
 
       -- Calculate the project bounds, either not clipped at all, near clipped, or fully clipped
-        
+
       -- Build the scissor
 
       -- Create interactions with all entities the light may touch and add entities that may cast shadows
@@ -81,10 +81,10 @@ goto Skip_Light;
           -- Check the models in this area
           for Model of Reference.Entities loop
             if not (vLight.entityInteractionState[ edef.index ] /= viewLight_t::INTERACTION_UNCHECKED or else
-                        
+
               -- A large fraction of static entity / light pairs will still have no interactions even though they are both present in the same area(s)
               eModel /= NULL && !eModel.IsDynamicModel && inter = INTERACTION_EMPTY or else
-                        
+
                 -- We don't want the lights on weapons to illuminate anything else. There are two assumptions here - that
                 -- allowLightInViewID is only used for weapon lights, and that all weapons will have weaponDepthHack. A more general
                 -- solution would be to have an allowLightOnEntityID field.
@@ -93,9 +93,9 @@ goto Skip_Light;
                 --
                 (eParms.noShadow or ( eModel && !eModel.ModelHasShadowCastingSurfaces ) ) && !edef.IsDirectlyVisible or else
                 eModel && !eModel.ModelHasInteractingSurfaces && !eModel.ModelHasShadowCastingSurfaces or else
-                inter = NULL and (eParms.noDynamicInteractions or R_CullModelBoundsToLight( light, edef.localReferenceBounds, edef.modelRenderMatrix )) or else 
-                edef.IsDirectlyVisible 
-                !lightCastsShadows 
+                inter = NULL and (eParms.noDynamicInteractions or R_CullModelBoundsToLight( light, edef.localReferenceBounds, edef.modelRenderMatrix )) or else
+                edef.IsDirectlyVisible
+                !lightCastsShadows
             then
 
             end if;
@@ -138,7 +138,7 @@ goto Skip_Light;
 
         -- Go through all the portals
         for Portal of Portals loop
-          
+
           -- Check the portal isn't a closed door and that it is facing the view
           Distance := Portal.Plane.Distance (Origin);
           if not Portal.Double_Portal.Is_View_Block and Distance < -0.1 then
@@ -187,20 +187,14 @@ goto Skip_Light;
             end if;
           end if;
 
-          -- 
+          --
           newStack.portalPlanes[newStack.numPortalPlanes] := p.plane;
           Flood_View_Through_Portals (origin, Portal.Into_Area, New_Portals);
         end loop;
       end if;
     end;
 
-  ----------
-  -- Main --
-  ----------
-  --
-  --
-  --
-
+  -- Start of Frontend
   begin
     for View of Views loop
 
@@ -209,10 +203,42 @@ goto Skip_Light;
                  Axis.XY, Axis.YY, Axis.ZY, -Origin.X * Axis.XY - Origin.Y * YY - Origin.Z * Axis.ZY,
                  Axis.XZ, Axis.YZ, Axis.ZZ, -Origin.X * Axis.XZ - Origin.Y * YZ - Origin.Z * Axis.ZZ);
 
---         -- Setup the projection matrix (use the ol' "infinite far z trick")
---         Jitter_Values := (if Jitter.Get then (Random_Float, Random_Float) else  (others => <>));
---         R_SetupProjectionMatrix
+      -- Setup the projection matrix (use the ol' "infinite far z trick")
+      const float zNear = ( viewDef->renderView.cramZNear ) ? ( r_znear.GetFloat() * 0.25f ) : r_znear.GetFloat();
+      float ymax = zNear * idMath::Tan( DEG2RAD( viewDef->renderView.fov_y ) * 0.5f );
+      float ymin = -ymax;
+      float xmax = zNear * idMath::Tan( DEG2RAD( viewDef->renderView.fov_x ) * 0.5f );
+      float xmin = -xmax;
+      const float width = xmax - xmin;
+      const float height = ymax - ymin;
+      const int viewWidth = viewDef->viewport.x2 - viewDef->viewport.x1 + 1;
+      const int viewHeight = viewDef->viewport.y2 - viewDef->viewport.y1 + 1;
 
+      viewDef->projectionMatrix[0*4+0] = 2.0f * zNear / width;
+      viewDef->projectionMatrix[1*4+0] = 0.0f;
+      viewDef->projectionMatrix[2*4+0] = 0.0f;
+      viewDef->projectionMatrix[3*4+0] = 0.0f;
+      viewDef->projectionMatrix[0*4+1] = 0.0f;
+      viewDef->projectionMatrix[1*4+1] = -2.0f * zNear / height;
+      viewDef->projectionMatrix[2*4+1] = 0.0f;
+      viewDef->projectionMatrix[3*4+1] = 0.0f;
+
+      -- this is the far-plane-at-infinity formulation, and
+      -- crunches the Z range slightly so w=0 vertexes do not
+      -- rasterize right at the wraparound point
+
+      viewDef->projectionMatrix[0*4+2] = 0.0f;
+      viewDef->projectionMatrix[1*4+2] = 0.0f;
+      viewDef->projectionMatrix[2*4+2] = -0.999f; // adjust value to prevent imprecision issues
+      viewDef->projectionMatrix[3*4+2] = -1.0f * zNear;
+      viewDef->projectionMatrix[0*4+3] = 0.0f;
+      viewDef->projectionMatrix[1*4+3] = 0.0f;
+      viewDef->projectionMatrix[2*4+3] = -1.0f;
+      viewDef->projectionMatrix[3*4+3] = 0.0f;
+      if ( viewDef->renderView.flipProjection ) {
+      	viewDef->projectionMatrix[1*4+1] = -viewDef->projectionMatrix[1*4+1];
+      }
+}
       -- Setup render matricies for faster culliong
       View.Render_Projection := Transpose (View.Projection);
       View.World_Space.MVP := View.Render_Projection * Transpose (View.World_Space.Model_View);
@@ -249,8 +275,8 @@ goto Skip_Light;
 --         if Area := OUTSIDE_AREA then View.Connected_Areas := (others => True)
 --         else View.Level.Portals.Iterate_Subtree (Flood_Portals); end if;
 
-      -- R_SortDrawSurfs            -- A simple C qsort call. C++ sort would have been faster thanks to inlining.       
-      -- R_GenerateSubViews
-      -- R_AddDrawViewCmd 
+      -- R_SortDrawSurfs            -- A simple C qsort call. C++ sort would have been faster thanks to inlining.
+      -- R_Generate1024 ** 2s
+      -- R_AddDrawViewCmd
     end loop;
   end;

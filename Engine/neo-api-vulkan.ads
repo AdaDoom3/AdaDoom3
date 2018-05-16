@@ -220,8 +220,8 @@ package Neo.API.Vulkan is
   VK_SHARING_MODE_CONCURRENT : constant Int_Unsigned_C := 1; -- VkSharingMode
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkIndexType.html
-  VK_INDEX_TYPE_UINT16 : constant Int_Unsigned_C := 0; -- VkIndexType
-  VK_INDEX_TYPE_UINT32 : constant Int_Unsigned_C := 1; -- VkIndexType
+  VK_INDEX_TYPE_UINT16 : constant Int_64_Unsigned_C := 0; -- VkIndexType
+  VK_INDEX_TYPE_UINT32 : constant Int_64_Unsigned_C := 1; -- VkIndexType
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferLevel.html
   VK_COMMAND_BUFFER_LEVEL_PRIMARY   : constant Int_Unsigned_C := 0; -- VkCommandBufferLevel
@@ -1705,6 +1705,7 @@ package Neo.API.Vulkan is
       colorSpace : Int_Unsigned_C := 0; -- VkColorSpaceKHR
     end record with Convention => C;
   package Vector_VkSurfaceFormatKHR is new Neo.Core.Vectors (VkSurfaceFormatKHR);
+  subtype Array_VkSurfaceFormatKHR is Vector_VkSurfaceFormatKHR.Unsafe_Array;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkOffset2D.html
   type VkOffset2D;
@@ -1805,7 +1806,8 @@ package Neo.API.Vulkan is
       pName               : Ptr_Char_8_C             := null;     -- const char*
       pSpecializationInfo : Ptr_VkSpecializationInfo := null;     -- const VkSpecializationInfo*
     end record with Convention => C;
-  type Array_VkPipelineShaderStageCreateInfo is array (Positive range <>) of aliased VkPipelineShaderStageCreateInfo;
+  package Vector_VkPipelineShaderStageCreateInfo is new Neo.Core.Vectors (VkPipelineShaderStageCreateInfo);
+  subtype Array_VkPipelineShaderStageCreateInfo is Vector_VkPipelineShaderStageCreateInfo.Unsafe_Array;
   type Ptr_Array_VkPipelineShaderStageCreateInfo is access all Array_VkPipelineShaderStageCreateInfo;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkVertexInputBindingDescription.html
@@ -1827,7 +1829,8 @@ package Neo.API.Vulkan is
       format   : Int_Unsigned_C := 0; -- VkFormat
       offset   : Int_Unsigned_C := 0; -- uint32_t
     end record with Convention => C;
-  type Array_VkVertexInputAttributeDescription is array (Positive range <>) of aliased VkVertexInputAttributeDescription;
+  package Vector_VkVertexInputAttributeDescription is new Neo.Core.Vectors (VkVertexInputAttributeDescription);
+  subtype Array_VkVertexInputAttributeDescription is Vector_VkVertexInputAttributeDescription.Unsafe_Array;
   type Ptr_Array_VkVertexInputAttributeDescription is access all Array_VkVertexInputAttributeDescription;
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineVertexInputStateCreateInfo.html
@@ -1842,7 +1845,8 @@ package Neo.API.Vulkan is
       vertexAttributeDescriptionCount : Int_Unsigned_C                           := 0;    -- uint32_t
       pVertexAttributeDescriptions    : Ptr_VkVertexInputAttributeDescription    := null; -- const VkVertexInputAttributeDescription*
     end record with Convention => C;
-  type Array_VkPipelineVertexInputStateCreateInfo is array (Positive range <>) of aliased VkPipelineVertexInputStateCreateInfo;
+  package Vector_VkPipelineVertexInputStateCreateInfo is new Neo.Core.Vectors (VkPipelineVertexInputStateCreateInfo);
+  subtype Array_VkPipelineVertexInputStateCreateInfo is Vector_VkPipelineVertexInputStateCreateInfo.Unsafe_Array;
   type Ptr_Array_VkPipelineVertexInputStateCreateInfo is access all Array_VkPipelineVertexInputStateCreateInfo;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPipelineInputAssemblyStateCreateInfo.html
@@ -2157,7 +2161,8 @@ package Neo.API.Vulkan is
       stageFlags         : Int_Unsigned_C := 0;    -- VkShaderStageFlags    
       pImmutableSamplers : Ptr_Ptr        := null; -- const VkSampler*
     end record with Convention => C;
-  type Array_VkDescriptorSetLayoutBinding is array (Positive range <>) of aliased VkDescriptorSetLayoutBinding;
+  package Vector_VkDescriptorSetLayoutBinding is new Neo.Core.Vectors (VkDescriptorSetLayoutBinding);
+  subtype Array_VkDescriptorSetLayoutBinding is Vector_VkDescriptorSetLayoutBinding.Unsafe_Array;
   type Ptr_Array_VkDescriptorSetLayoutBinding is access all Array_VkDescriptorSetLayoutBinding;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkDescriptorSetLayoutCreateInfo.html
@@ -2218,12 +2223,16 @@ package Neo.API.Vulkan is
       dstBinding       : Int_Unsigned_C             := 0;        -- uint32_t                         
       dstArrayElement  : Int_Unsigned_C             := 0;        -- uint32_t                         
       descriptorCount  : Int_Unsigned_C             := 0;        -- uint32_t                         
-      descriptorType   : Int_Unsigned_C             := 0;        -- VkDescriptorType                 
-      pImageInfo       : Ptr_VkDescriptorImageInfo  := null;     -- const VkDescriptorImageInfo*
-      pBufferInfo      : Ptr_VkDescriptorBufferInfo := null;     -- const VkDescriptorBufferInfo*
+      descriptorType   : Int_Unsigned_C             := 0;        -- VkDescriptorType    
+      
+      -- HACKS AHOY
+      pImageInfo       : Ptr := NULL_PTR; -- Ptr_VkDescriptorImageInfo  := null;     -- const VkDescriptorImageInfo*
+      pBufferInfo      : Ptr := NULL_PTR; -- Ptr_VkDescriptorBufferInfo := null;     -- const VkDescriptorBufferInfo*
+      
       pTexelBufferView : Ptr_Ptr                    := null;     -- const VkBufferView* 
     end record with Convention => C;
-  type Array_VkWriteDescriptorSet is array (Positive range <>) of aliased VkWriteDescriptorSet;
+  package Vector_VkWriteDescriptorSet is new Neo.Core.Vectors (VkWriteDescriptorSet);
+  subtype Array_VkWriteDescriptorSet is Vector_VkWriteDescriptorSet.Unsafe_Array;
   type Ptr_Array_VkWriteDescriptorSet is access all Array_VkWriteDescriptorSet;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCopyDescriptorSet.html
@@ -2317,6 +2326,16 @@ package Neo.API.Vulkan is
   
   -- Assert VK_SUCCESS
   procedure vkAssert (Result : Int_Unsigned_C); -- VkResult
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkFreeDescriptorSets.html
+  type Ptr_vkFreeDescriptorSets is access function (device             : Ptr;            -- VkDevice
+                                                    descriptorPool     : Ptr;            -- VkDescriptorPool
+                                                    descriptorSetCount : Int_Unsigned_C; -- uint32_t
+                                                    pDescriptorSets    : Ptr_Ptr)        -- const VkDescriptorSet*
+                                                    return Int_Unsigned_C                -- VkResult
+                                                    with Convention => C;
+  function To_Ptr_vkFreeDescriptorSets is new Unchecked_Conversion (Ptr, Ptr_vkFreeDescriptorSets);
+  vkFreeDescriptorSets : Ptr_vkFreeDescriptorSets := null;
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceImageFormatProperties.html
   type Ptr_vkGetPhysicalDeviceImageFormatProperties is access function (physicalDevice         : Ptr;                         -- VkPhysicalDevice
@@ -2352,7 +2371,7 @@ package Neo.API.Vulkan is
   type Ptr_vkCreateSampler is access function (device      : Ptr;                       -- VkDevice
                                                pCreateInfo : Ptr_VkSamplerCreateInfo;   -- const VkSamplerCreateInfo* 
                                                pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
-                                               pSampler    : Ptr_Ptr)                   -- VkSampler*
+                                               pSampler    : Ptr) -- Ptr_Ptr)           -- VkSampler*
                                                return Int_Unsigned_C                    -- VkResult
                                                with Convention => C;
   function To_Ptr_vkCreateSampler is new Unchecked_Conversion (Ptr, Ptr_vkCreateSampler);
@@ -2493,7 +2512,7 @@ package Neo.API.Vulkan is
   type Ptr_vkCreateImageView is access function (device      : Ptr;                       -- VkDevice
                                                  pCreateInfo : Ptr_VkImageViewCreateInfo; -- const VkImageViewCreateInfo*
                                                  pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
-                                                 pView       : Ptr_Ptr)                   -- VkImageView* 
+                                                 pView       : Ptr) -- Ptr_Ptr)           -- VkImageView* 
                                                  return Int_Unsigned_C                    -- VkResult
                                                  with Convention => C;
   function To_Ptr_vkCreateImageView is new Unchecked_Conversion (Ptr, Ptr_vkCreateImageView);
@@ -2752,7 +2771,7 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCreateSemaphore.html
   type Ptr_vkCreateSemaphore is access function (device      : Ptr;                       -- VkDevice                                    
                                                  pCreateInfo : Ptr_VkSemaphoreCreateInfo; -- const VkSemaphoreCreateInfo* 
-                                                 pAllocator  : Ptr;                       -- const VkAllocationCallbacks* 
+                                                 pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks* 
                                                  pSemaphore  : Ptr_Ptr)                   -- VkSemaphore*
                                                  return Int_Unsigned_C                    -- VkResult
                                                  with Convention => C;

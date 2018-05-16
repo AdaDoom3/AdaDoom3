@@ -35,7 +35,7 @@ package Neo.Engine.Network is
       Level      : Level_State := (others => <>);
     end record;
   package Hashed_World is new Neo.Core.Hashed (World_State);
-end;
+  
   -----------
   -- Frame --
   -----------

@@ -23,11 +23,12 @@ package body Neo.Data.Model is
   function To_Joint_Name (Val : Str_Unbound) return Str_8 is
     Name : Str_8 (1..32) := (others => NULL_CHAR_8);
     begin
-      for I in Name'Range loop Name (I) := To_Char_8 (Element (Val, I)); end loop;
+      Debug_Assert (Length (Val) <= 32);    
+      for I in Name'First..Length (Val) loop Name (I) := To_Char_8 (Element (Val, I)); end loop;
       return Name;
     end;
-  function To_Triangles (Polygon : Vector_Int_32_Natural.Unsafe.Vector) return Vector_Triangle.Unsafe.Vector is
-    Result : Vector_Triangle.Unsafe.Vector;
+  function To_Triangles (Polygon : Vector_Int_32_Natural.Unsafe.Vector) return Vector_Int_32_Unsigned.Unsafe.Vector is
+    Result : Vector_Int_32_Unsigned.Unsafe.Vector;
     begin
       --return Result; -- 0 (i) (i + 1)  [for i in 1..(n - 2)] --0 1 2 --0 2 3
       --for I in 0..Patch_Height loop

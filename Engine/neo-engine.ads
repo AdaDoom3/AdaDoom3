@@ -24,63 +24,151 @@ with Neo.Core.Console;     use Neo.Core.Console;
 --with Neo.Core.Compression; use Neo.Core.Compression;
 with Neo.Core.Strings;     use Neo.Core.Strings;
 with Neo.Core.Arrays;      use Neo.Core.Arrays;
+with Neo.Core.Maps;        use Neo.Core.Maps;
 with Neo.Core.Hashed;
 with Neo.Core.Ordered;
 with Neo.Core.Vectors;
-with Neo.Core.Vectors_Unconstrained;
 
 -- Primary interface for the "Game" layer, see Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
-
-  -- Main entry point, this should only be called by main.adb
-  procedure Run;
   
   ------------
   -- Assets --
   ------------
   
-  Materials : Hashed_Material.Safe_Map;
+  function Asset_Path return Str;
+  
+  -- Asset and configuration paths
+  PATH_LOGS            : constant Str := "Logs"   & S;
+  PATH_ASSETS          : constant Str := "Assets" & S;
+  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
+  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
+  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
+  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
+  
+  Meshes     : Hashed_Mesh.Safe_Map;
+  Animations : Hashed_Animation.Safe_Map;
+  --Materials : Hashed_Material. := ;
   
   -----------------
   -- Information --
   -----------------
-
+  
   type OS_Info_State is record
-      Path     : Str_Unbound := NULL_STR_UNBOUND;
-      App_Name : Str_Unbound := NULL_STR_UNBOUND;
-      Version  : Str_Unbound := NULL_STR_UNBOUND;
-      Username : Str_Unbound := NULL_STR_UNBOUND;
-      Bit_Size : Positive    := 1;
+      Size_Memory : Int_64_Unsigned := 0; -- In bytes
+      Path        : Str_Unbound     := NULL_STR_UNBOUND;
+      App_Name    : Str_Unbound     := NULL_STR_UNBOUND;
+      Version     : Str_Unbound     := NULL_STR_UNBOUND;
+      Username    : Str_Unbound     := NULL_STR_UNBOUND;
+      Bit_Size    : Positive        := 1;
     end record;
-  function OS_Info return OS_Info_State;
-
-  ---------------
-  -- Windowing --
-  ---------------
-
-  -- Enumerated types for cvar settings
-  type Mode_Kind      is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
-  type Cursor_Kind    is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
-  type Activated_Kind is (Other_Activated, Click_Activated,    Other_Deactivated, Minimize_Deactivated);
-  type Sampling_Kind  is (No_Sampling, X2_Sampling, X4_Sampling, X8_Sampling, X16_Sampling);
-
-  -- Window and desktop location information
-  type Border_State is record
-      Top, Bottom, Left, Right : Int := 0;
-    end record;
-  package Vector_Border is new Neo.Core.Vectors (Border_State);
-  function Get_Windows return Vector_Border.Unsafe_Array;
-
+  function OS_Info return OS_Info_State;  
+  
   ---------------
   -- Clipboard --
   ---------------
 
   function Paste return Str;
-  procedure Copy (Item : Str);
+  procedure Copy (Item : Str); 
+
+  -------------
+  -- Tasking --
+  -------------
+
+  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
+  generic
+    with procedure Run;
+  package Tasks is
+      task type Task_Unsafe is
+          entry Initialize (Id : out Task_ID); end;
+      type Task_Unsafe_Ptr is access all Task_Unsafe;
+      protected type Safe_Task is
+          procedure Initialize;
+          procedure Finalize;
+          function Running return Bool;
+        private
+          Current_Task : Task_Unsafe_Ptr := null;
+          Current_Id   : Task_Id         := NULL_TASK_ID;
+        end;
+    end;
+    
+  ------------
+  -- Vulkan --
+  ------------
+
+  procedure Initialize_Vulkan_Library;
+  procedure Finalize_Vulkan_Library;
+  function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
+  function Get_Vulkan_Subprogram (Name     : Str) return Ptr;
+  function Get_Vulkan_Extension  return Ptr_Char_8_C;
+      
+  --------------------
+  -- Error Handling --
+  --------------------
+  
+  -- Colors used in the console GUI
+  CONSOLE_BACKGROUND_COLOR : constant Color_State := COLOR_BLACK;
+  CONSOLE_FOREGROUND_COLOR : constant Color_State := COLOR_CRIMSON;
+
+  -- URL to go to when "sending" a log
+  CONSOLE_ERROR_REPORTING_URL : constant Str := "www.google.com";  
+
+  type Icon_Kind    is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
+  type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
+
+  -- Message box function to query user action
+  function Ok (Message : Str; Buttons : Buttons_Kind := Okay_Button; Icon : Icon_Kind := No_Icon) return Bool;
+
+  -- Lifecycle routines for the auxiliary OS console window
+  procedure Initialize_Console;
+  procedure Finalize_Console;  
+  function Running_Console return Bool;
+
+  -- 
+  procedure Save_Log;
+  procedure Send_Log;
+  
+  -- Generate debugging info for a given exception
+  procedure Handle (Occurrence : Exception_Occurrence);
+  
+  ---------------
+  -- Windowing --
+  ---------------
+  
+  -- General delay amount to save cycles in between frames
+  WINDOW_POLLING_DURATION : constant Duration := 1.0 / 300.0; -- Seconds per duration / Highest FPS rate possible
+  
+  -- Enumerated types for cvar settings
+  type Mode_Kind      is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
+  type Cursor_Kind    is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
+  type Activated_Kind is (Other_Activated, Click_Activated,    Other_Deactivated, Minimize_Deactivated);
+  type Sampling_Kind  is (No_Sampling, x2_Sampling, x4_Sampling, x8_Sampling, x16_Sampling);
+  
+  -- Window and desktop location information
+  type Border_State is record Top, Bottom, Left, Right : Int := 0; end record;
+  package Vector_Border is new Neo.Core.Vectors (Border_State);
+  
+  -- Lifecycle
+  function Update_Windowing return Bool; -- Set Activated and Mode cvars
+  procedure Initialize_Windowing;
+  procedure Finalize_Windowing;
+  procedure Initialize_Multi_Monitor;
+  procedure Finalize_Multi_Monitor;
+  
+  -- Test if there is another instance of the game running
+  function Only_Instance return Bool;
+  
+  -- Window state modification
+  procedure Minimize;
+  procedure Maximize;
+  procedure Restore;
+  procedure Resize (To : Border_State);  
+  function Get_Windows return Vector_Border.Unsafe_Array;
 
   -----------
   -- Input --
-  -----------
+  -----------  
 
   -- Input device descriptions
   type Stick_Kind   is (Left_Stick,          Right_Stick);
@@ -181,21 +269,36 @@ package Neo.Engine is
           Cursor   : Cursor_State  := (others => <>);
       end case;
     end record;
-
+  package Ordered_Device is new Ordered (Int_Ptr, Device_State);
+  
+  -- Mutexes for extra task safety
+  Input_Status      : Safe_Status;  
+  Cursor_Status     : Safe_Status;
+  Game_Entry_Status : Safe_Status;
+  
+  -- Lifecycle
+  procedure Initialize_Input;
+  procedure Finalize_Input;
+  
   -- Virbrate a player's set of gamepad devices
   procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1);
-
+  
   -- Various cursor operations
   function Get_Cursor_Normalized return Cursor_State;
   function Get_Cursor            return Cursor_State;
+  procedure Set_Cursor           (Pos     : Cursor_State);
+  procedure Set_Cursor_Style     (Kind    : Cursor_Kind);
+  procedure Clip_Cursor          (Do_Clip : Bool := True);
+  procedure Hide_Cursor          (Do_Hide : Bool := True);
+
+  -- Window-cursor information
   function In_Main_Window        (Pos : Cursor_State := Get_Cursor) return Bool;
-  procedure Set_Cursor           (Pos : Cursor_State);
+  function Main_Window_Center    return Cursor_State;
 
   -- Operations to assign devices to different players or query each device's state
-  package Ordered_Device is new Ordered (Int_Ptr, Device_State);
   procedure Set_Device (Id : Int_Ptr; Player : Positive := 1);
   function Get_Device  (Id : Int_Ptr) return Device_State;
-  function Get_Devices                return Ordered_Device.Unsafe.Map;
+  function Get_Devices return Ordered_Device.Unsafe.Map;
 
   -------------
   -- Impulse --
@@ -263,51 +366,90 @@ package Neo.Engine is
       Bindings : aliased Vector_Binding.Safe_Vector;
       procedure Enable;
       procedure Disable;
-    end;
+    end;  
+  
+  ---------
+  -- CPU --
+  ---------
+  
+  -- Floating point exceptions
+  Denormalized_Operand : Exception;
+  Invalid_Operation    : Exception;
+  Numeric_Underflow    : Exception;
+  Numeric_Overflow     : Exception;
+  Divide_By_Zero       : Exception;
+  Inexact_Result       : Exception;
+  Stack_Fault          : Exception;
+  
+  type Precision_Kind is (Single_Precision, Double_Precision, Double_Extended_Precision); for Precision_Kind use (24, 53, 64);
+  type Rounding_Kind  is (Up_Rounding, Down_Rounding, Nearest_Rounding, Truncate_Rounding);  
+  type Vendor_Kind    is (Unknown_Vendor,
+                          Intel_Vendor,                  -- http://web.archive.org/web/20130402202112/http://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-2a-manual.pdf
+                          Advanced_Micro_Devices_Vendor, -- http://web.archive.org/web/20130123012528/http://developer.amd.com/resources/documentation-articles/developer-guides-manuals/
+                          Advanced_RISC_Machines_Vendor, -- http://web.archive.org/web/20081030041403/http://infocenter.arm.com/help/index.jsp
+                          Apple_IBM_Motorola_Vendor);    -- http://web.archive.org/web/20110811041906/https://www-01.ibm.com/chips/techlib/techlib.nsf/techdocs/852569B20050FF778525699600741775/$file/prg.pdf
 
-  --------------------
-  -- Error Handling --
-  --------------------
-
-  type Icon_Kind is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
-  type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
-
-  -- Message box function to query user action
-  function Ok (Message : Str;
-               Buttons : Buttons_Kind := Okay_Button;
-               Icon    : Icon_Kind    := No_Icon)
-               return Bool;
-
-  -- Use the OS to notify the user that the game needs your attention (flashing, bouncing, etc.)
-  function Alerting return Bool;
-  procedure Alert (Val  : Bool := True);
-
-  -- Subprograms controlling the spawning and desturction of the auxiliary OS console window
-  procedure Initialize_Console;
-  procedure Finalize_Console;  
-  function Running_Console return Bool;
-
-  -- Generate debugging info for a given exception
-  procedure Handle (Occurrence : Exception_Occurrence);
-
-  -------------
-  -- Tasking --
-  -------------
-
-  -- Package to create spawnable tasks in a simple way (coordination between them is done via protected types and cvars)
-  generic
-    with procedure Run;
-  package Tasks is
-      task type Task_Unsafe is
-          entry Initialize (Id : out Task_ID); end;
-      type Task_Unsafe_Ptr is access all Task_Unsafe;
-      protected type Safe_Task is
-          procedure Initialize;
-          procedure Finalize;
-          function Running return Bool;
-        private
-          Current_Task : Task_Unsafe_Ptr := null;
-          Current_Id   : Task_Id         := NULL_TASK_ID;
-        end;
-    end;
+  type CPU_State (Vendor : Vendor_Kind := Intel_Vendor) is record
+      Speed : Int_64_Unsigned := 0; -- In Mhz
+      case Vendor is
+        when Advanced_RISC_Machines_Vendor =>
+          Has_NEON                                       : Bool := False;
+          Has_Vector_Floating_Point                      : Bool := False;
+        when Apple_IBM_Motorola_Vendor =>
+          Has_Vector_Multimedia_Instructions             : Bool := False;
+          Has_Vector_Scalar_Instructions                 : Bool := False;
+          Has_Altivec_Additional_Registers               : Bool := False;
+          Has_Altivec                                    : Bool := False;
+        when Intel_Vendor | Advanced_Micro_Devices_Vendor =>
+          Has_Multi_Media_Extensions                     : Bool := False;
+          Has_Streaming_SIMD_Extensions_1                : Bool := False;
+          Has_Streaming_SIMD_Extensions_2                : Bool := False;
+          Has_Streaming_SIMD_Extensions_3                : Bool := False;
+          Has_Streaming_SIMD_Extensions_3_Supplement     : Bool := False;
+          Has_Streaming_SIMD_Extensions_4_1              : Bool := False;
+          Has_Streaming_SIMD_Extensions_4_2              : Bool := False;
+          Has_Carryless_Multiplication_Of_Two_64_Bit     : Bool := False;
+          Has_Advanced_Vector_Extensions_Enabled         : Bool := False;
+          Has_Advanced_Vector_Extensions_1               : Bool := False;
+          Has_Advanced_Vector_Extensions_2               : Bool := False;
+          Has_Advanced_Encryption_Service                : Bool := False;
+          Has_Advanced_State_Operations                  : Bool := False;
+          Has_Bit_Manipulation_Extensions_1              : Bool := False;
+          Has_Bit_Manipulation_Extensions_2              : Bool := False;
+          Has_Fused_Multiply_Add_3                       : Bool := False;
+          Has_Fused_Multiply_Add_4                       : Bool := False;
+          Has_Hyperthreading                             : Bool := False;
+          Has_High_Precision_Convert                     : Bool := False;
+          Has_Half_Precision_Floating_Point_Convert      : Bool := False;
+          Has_Extended_States_Enabled                    : Bool := False;
+          Has_Population_Count                           : Bool := False;
+          Has_Context_ID_Manager                         : Bool := False;
+          Has_Conditional_Move                           : Bool := False;
+          Has_Leading_Zero_Count                         : Bool := False;
+          Has_Extended_Operation_Support                 : Bool := False;
+          case Vendor is
+            when Advanced_Micro_Devices_Vendor =>
+              Has_Streaming_SIMD_Extensions_4_Supplement : Bool := False;
+              Has_3DNow                                  : Bool := False;
+              Has_3DNow_Supplement                       : Bool := False;
+              Has_Multi_Media_Extensions_Supplement      : Bool := False;
+            when others => null;
+          end case;
+        when Unknown_Vendor => null;
+      end case;
+    end record;
+    
+  -- CPU Info
+  function Get_CPU              return CPU_State;
+  function Get_Extensions_Image (CPU : CPU_State) return Str;
+    
+  -- Stack checking
+  procedure Put_Stack;
+  procedure Clear_Stack;
+  procedure Check_Exceptions;
+  function Is_Stack_Empty return Bool;
+  
+  -- Settings
+  procedure Set_Rounding  (Val : Rounding_Kind);
+  procedure Set_Precision (Val : Precision_Kind);
 end;

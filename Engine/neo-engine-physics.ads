@@ -15,6 +15,5 @@
 
 package Neo.Engine.Physics is
 
-  -
 
 end;

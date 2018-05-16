@@ -15,9 +15,6 @@
 
 package body Neo.Core.Console is
 
-  -- Prompt output prefix
-  INFO_PREFIX : constant Str := ">>> ";
-  
   --------
   -- IO --
   --------
@@ -52,70 +49,52 @@ package body Neo.Core.Console is
         begin
           Current_Log := Current_Log & Item;
           if Current_Put /= null then Current_Put.All (Item); end if;
-          
+
           -- Count new lines
           for I of Item loop
             if I = To_Char_16 (ASCII.CR) then Current_Lines := Current_Lines + 1; end if;
           end loop;
-        end;
+        exception when Device_Error => null; end;
     end;
 
   -- Public Safe_IO interface to wrap the protected type
-  procedure Use_Ada_Put                                    is begin Set_Put (Ada_IO.Put'Access);   end; 
-  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (U (Val)); end;
-  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);       end;
-  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);         end;
-  procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                end;
-  procedure Put         (Item : Char)                      is begin Put (Item & "");               end;                  
-  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);            end;
-  procedure Line_Info   (Item : Char)                      is begin Line (INFO_PREFIX & Item);     end;    
-  procedure Line_Info   (Item : Str_Unbound)               is begin Line (INFO_PREFIX & Item);     end;   
-  procedure Line_Info   (Item : Str := "")                 is begin Line (INFO_PREFIX & Item);     end;   
-  procedure Line        (Item : Char)                      is begin Line (Item & "");              end;    
-  procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));               end;
-  procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);              end;
+  procedure Use_Ada_Put                                    is begin Set_Put (Ada_IO.Put'Access);           end;
+  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (U (Val));         end;
+  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);               end;
+  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);                 end;
+  procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                        end;
+  procedure Put         (Item : Char)                      is begin Put (Item & "");                       end;
+  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);                    end;
+  procedure Line        (Item : Char)                      is begin Line (Item & "");                      end;
+  procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));                       end;
+  procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);                      end;
+  procedure Line_Error  (Item : Str)                       is begin Line; Line ("ERROR: "   & Item); Line; end;
+  procedure Line_Warn   (Item : Str)                       is begin Line; Line ("WARNING: " & Item); Line; end;
+  procedure Line_Info   (Item : Str)                       is begin Line; Line ("INFO: "    & Item); Line; end;
   function Extension    (Path : Str) return Str            is (Path (Index (Path, ".") + 1..Path'Last));
   function Log                       return Str_Unbound    is (Safe_IO.Log);
-  function Input_Entry               return Str            is (S (Safe_IO.Input_Entry)); 
+  function Input_Entry               return Str            is (S (Safe_IO.Input_Entry));
   function Lines                     return Int_64_Natural is (Safe_IO.Lines);
   function Line_Size                 return Positive       is (Safe_IO.Line_Size);
 
-  ---------------
-  -- Debugging --
-  ---------------
-
-  procedure Assert (Val : Int_16_Unsigned_C) is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Int_Unsigned_C)    is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Int_C)             is begin Assert (Val /= 0);        end;
-  procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
-  procedure Assert (Val : Bool) is
-    begin
-      if not Val then
-        Line ("PANIC!");
-        Line (Get_Stack);
-        if Is_Debugging then raise Program_Error; end if;
-      end if;
-    end;
-    
   --------------------
   -- Internal State --
   --------------------
-   
+
   -- Internal data structures
-  type Command_State is record 
+  type Command_State is record
       Save     : access function return Str := null;
       Callback : access procedure (Args : Array_Str_Unbound) := null;
     end record;
-  type CVar_State is record 
+  type CVar_State is record
       Val : Str_Unbound := NULL_STR_UNBOUND; -- A cvar that goes out of scope is not forgotten
       Get : access function return Str := null;
       Set : access procedure (Val : Str) := null;
    end record;
 
   -- Data types
-  package Hashed_CVar    is new Neo.Core.Hashed (CVar_State);
-  package Hashed_Command is new Neo.Core.Hashed (Command_State);
-  use Hashed_CVar.Unsafe; use Hashed_Command.Unsafe;
+  package Hashed_CVar    is new Neo.Core.Hashed (CVar_State);    use Hashed_CVar.Unsafe;
+  package Hashed_Command is new Neo.Core.Hashed (Command_State); use Hashed_Command.Unsafe;
 
   -- Global maps
   Commands : Hashed_Command.Safe_Map;
@@ -135,16 +114,39 @@ package body Neo.Core.Console is
     Settable : Bool := True;
     with procedure Handle_Set (Val : Str);
     with function Handle_Get return Str;
-    with procedure Set (Val : Var_T);
-    with function Get return Var_T;
-    with function To_Str_Unbound (Val : Var_T) return Str_Unbound; -- Because 'Image only works on scalar things...
-  package CVar_Internal is end;
+    with function To_Str (Item : Var_T) return Str;
+  package CVar_Internal is
+      procedure Set (Val : Var_T);
+      function Get return Var_T;
+    end;
 
   package body CVar_Internal is
-      Duplicate, Parse : Exception;
+      Duplicate : Exception;
 
-      procedure Informal_Handle_Set (Val : Str) renames Handle_Set;
-      function Informal_Handle_Get return Str renames Handle_Get;
+      -- Internal data
+      protected Safe_Var_T is
+          function Get return Var_T;
+          procedure Set (Val : Var_T);
+        private
+          Current : Var_T;
+        end;
+      protected body Safe_Var_T is
+          function Get return Var_T is (Current);
+          procedure Set (Val : Var_T) is begin Current := Val; end;
+        end;
+
+      -- Accessors
+      function Get return Var_T is (Safe_Var_T.Get);
+      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
+      function Informal_Handle_Get return Str is (Handle_Get);
+      procedure Informal_Handle_Set (Val : Str) is
+        begin
+          if not Settable then
+            Line (Name & " is not settable!");
+            return;
+          end if;
+          Handle_Set (Val);
+        end;
 
       -- Controller
       type Control_State is new Limited_Controlled with null record;
@@ -152,10 +154,8 @@ package body Neo.Core.Console is
       procedure Finalize (Control : in out Control_State) is
         begin
           Line ("There is a finalization bug here, because this is never called!"); -- !!! ???
-          Line (S (To_Str_Unbound (Get)));
-          if Settable then CVars.Replace (Name, (Val => To_Str_Unbound (Get),
-                                                 Get => null,
-                                                 Set => null));
+          Line (To_Str (Get));
+          if Settable then CVars.Replace (Name, (Val => U (To_Str (Get)), Get => null, Set => null));
           else CVars.Delete (Name); end if;
         end;
       Controller : Control_State;
@@ -179,27 +179,10 @@ package body Neo.Core.Console is
   ----------
 
   -- Maximum cvar values displayable after query
-  MAX_VALUES_DISPLAYABLE : constant Positive := 5; 
+  MAX_VALUES_DISPLAYABLE : constant Positive := 5;
 
   package body CVar is
-      
-      -- Internal data
-      protected Safe_Var_T with Lock_Free is -- Lock free!
-          function Get return Var_T;
-          procedure Set (Val : Var_T);
-        private
-          Current : Var_T;
-        end;
-      protected body Safe_Var_T is
-          function Get return Var_T is (Current);
-          procedure Set (Val : Var_T) is begin Current := Val; end;
-        end;
-
-      -- Accessors
-      function Get return Var_T is (Safe_Var_T.Get);
-      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
-      function S (Val : Var_T) return Str is (To_Str (Trim (Get'Img, Both)));
-      function To_Str_Unbound (Val : Var_T) return Str_Unbound is (To_Str_Unbound (Trim (Get'Img, Both)));
+      function To_Str (Val : Var_T) return Str is (Trim (Get'Wide_Image, Both));
 
       -- Commandline interaction
       function Handle_Get return Str is
@@ -213,31 +196,26 @@ package body Neo.Core.Console is
               else Vals := Vals & ", " & U (I'Wide_Image); end if;
             end loop;
           end if;
-          return INFO_PREFIX & Help & EOL &
-                 INFO_PREFIX & "Current value: " & S (Get) & EOL &
-                 INFO_PREFIX & "Possible values:" & S (Vals);
+          return Help & EOL & "Current value: " & To_Str (Get) & EOL & "Possible values:" & S (Vals);
         end;
       procedure Handle_Set (Val : Str) is
         begin
-          if not Settable then
-            Line (Name & " is not settable!");
-            return;
-          end if;
           Set (Var_T'Wide_Value (Val));
         exception when Constraint_Error =>
           for I in Var_T'Range loop
-            if Val = S (I) then
+            if Val = To_Str (I) then
               Set (I);
               exit;
             elsif I = Var_T'Last then
-              Line (INFO_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
-              Line (Handle_Get);
+              Line ("Incorrect parameter for cvar """ & Name & """: " & Val & EOL & Handle_Get);
             end if;
           end loop;
         end;
 
       -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
+      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, To_Str);
+      function Get return Var_T renames Internal.Get;
+      procedure Set (Val : Var_T) renames Internal.Set;
     end;
 
   ---------------
@@ -245,44 +223,23 @@ package body Neo.Core.Console is
   ---------------
 
   package body CVar_Real is
-
-      -- Internal data
-      protected Safe_Var_T with Lock_Free is -- Lock free!
-          function Get return Var_T;
-          procedure Set (Val : Var_T);
-        private
-          Current : Var_T;
-        end;
-      protected body Safe_Var_T is
-          function Get return Var_T is (Current);
-          procedure Set (Val : Var_T) is begin Current := Val; end;
-        end;
-
-      -- Accessors
-      function Get return Var_T is (Safe_Var_T.Get);
-      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
-      function S (Val : Var_T) return Str is (To_Str (Trim (Get'Img, Both)));
-      function To_Str_Unbound (Val : Var_T) return Str_Unbound is (To_Str_Unbound (Trim (Get'Img, Both)));
+      function To_Str is new Generic_To_Str_16_Real (Var_T);
 
       -- Commandline interaction
       function Handle_Get return Str is
-        (INFO_PREFIX & Help & EOL &
-         INFO_PREFIX & "Current value: " & S (Get) & EOL &
-         INFO_PREFIX & "Possible values: " & S (Var_T'First) & ".." & S (Var_T'Last));
+        (Help & EOL & "Current value: " & To_Str (Get) & EOL & "Possible values: " & To_Str (Var_T'First) & " .. " & To_Str (Var_T'Last));
       procedure Handle_Set (Val : Str) is
         begin
-          if not Settable then
-            Line (INFO_PREFIX & Name & " is not settable!");
-            return;
-          end if;
           Set (Var_T'Wide_Value (Val));
         exception when Constraint_Error =>
-          Line (INFO_PREFIX & "Incorrect parameter for cvar """ & Name & """: " & Val);
+          Line ("Incorrect parameter for cvar """ & Name & """: " & Val);
           Line (Handle_Get);
         end;
 
       -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
+      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, To_Str);
+      function Get return Var_T renames Internal.Get;
+      procedure Set (Val : Var_T) renames Internal.Set;
     end;
 
   --------------
@@ -291,39 +248,17 @@ package body Neo.Core.Console is
 
   package body CVar_Str is
 
-      -- Internal data
-      protected Safe_Var_T is
-          function Get return Str_Unbound;
-          procedure Set (Val : Str_Unbound);
-        private
-          Current : Str_Unbound;
-        end;
-      protected body Safe_Var_T is
-          function Get return Str_Unbound is (Current);
-          procedure Set (Val : Str_Unbound) is begin Current := Val; end;
-        end;
-
-      -- Accessors
-      function Get return Str is (S (Safe_Var_T.Get));
-      function Get return Str_Unbound is (Safe_Var_T.Get);
-      procedure Set (Val : Str) is begin Safe_Var_T.Set (To_Str_Unbound (Val)); end;
-      procedure Set (Val : Str_Unbound) is begin Safe_Var_T.Set (Val); end;
-      function To_Str_Unbound (Val : Str_Unbound) return Str_Unbound is (Val);
-
       -- Commandline interaction
-      function Handle_Get return Str is (INFO_PREFIX & Help & EOL & INFO_PREFIX & "Current value: " & Get);
-      procedure Handle_Set (Val : Str) is
-        begin
-          if not Settable then
-            Line (INFO_PREFIX & Name & " is not settable!");
-            return;
-          end if;
-          Set (Val);
-        end;
+      function Handle_Get return Str is (Help & EOL & "Current value: " & Get);
+pragma Warnings (Off); -- warning: call to "Set" may occur before body is seen
+      procedure Handle_Set (Val : Str) is begin Set (Val); end;
+pragma Warnings (On);
 
       -- Global registration
       package Internal is new
-        CVar_Internal (Name, Str_Unbound, To_Str_Unbound (Initial), Settable, Handle_Set, Handle_Get, Set, Get, To_Str_Unbound);
+        CVar_Internal (Name, Str_Unbound, To_Str_Unbound (Initial), Settable, Handle_Set, Handle_Get, S);
+      function Get return Str is (S (Internal.Get));
+      procedure Set (Val : Str) is begin Internal.Set (To_Str_Unbound (Val)); end;
     end;
 
   -------------
@@ -334,7 +269,7 @@ package body Neo.Core.Console is
       Duplicate, Parse : Exception;
 
       -- Callback is a generic formal so a rename needs to be present to pass out function pointers
-      procedure Informal_Callback (Args : Array_Str_Unbound) renames Callback; 
+      procedure Informal_Callback (Args : Array_Str_Unbound) is begin Callback (Args); end;
 
       -- Controller
       type Control_State is new Controlled with null record;
@@ -357,7 +292,15 @@ package body Neo.Core.Console is
           if CVars.Get (CMD).Get /= null then Line (CVars.Get (CMD).Get.All); end if;
         elsif CVars.Get (CMD).Set /= null then CVars.Get (CMD).Set.All (S (Tokens (2))); end if;
       else raise Constraint_Error; end if;
-    exception when others => Line (INFO_PREFIX & "No such cvar or command!"); end;
+    exception when others => Line ("No such cvar or command!"); end;
+  procedure Submit is
+    begin
+      if Input_Entry /= NULL_STR then
+        Line (">>> " & Input_Entry);
+        Submit (Input_Entry);
+        Input_Entry (NULL_STR);
+      end if;
+    end;
 
   -- Autocomplete aid
   function Autocomplete (Text : Str) return Array_Str_Unbound is
@@ -375,28 +318,29 @@ package body Neo.Core.Console is
 
   -- Data types
   package Hashed_Language is new Neo.Core.Hashed (Str_Unbound);                use Hashed_Language.Unsafe;
-  package Hashed_Locale   is new Neo.Core.Hashed (Hashed_Language.Unsafe.Map); use Hashed_Locale.Unsafe; 
-  
+  package Hashed_Locale   is new Neo.Core.Hashed (Hashed_Language.Unsafe.Map); use Hashed_Locale.Unsafe;
+
+  -- Initalized data
+  Locales : Hashed_Locale.Unsafe.Map; --  := Initialize_Localization;
+
   -- Initialization
-  function Initialize_Localization return Hashed_Locale.Unsafe.Map is
+  procedure Initialize_Localization (Path : Str) is
     function Split_Columns (Text : Str) return Vector_Str_Unbound.Unsafe.Vector is
       Result     : Vector_Str_Unbound.Unsafe.Vector;
       begin
         return Result;
       end;
-    package Hashed_Indexes is new Neo.Core.Hashed (Positive);
     J         : Int  := 1;
     In_Column : Bool := True;
     In_Quote  : Bool := False;
     Column    : Str_Unbound;
     Data      : Ada_IO.File_Type;
-    Indexes   : Hashed_Indexes.Unsafe.Map;
-    Locales   : Hashed_Locale.Unsafe.Map;
+    Indexes   : Hashed_Positive.Unsafe.Map;
     Language  : Hashed_Language.Unsafe.Map;
     Entries   : Vector_Str_Unbound.Unsafe.Vector;
     ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
     begin
-      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
+      --Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
       for I of Split (Ada_IO.Get_Line (Data), ",") loop
         Indexes.Insert (I, J);
         Locales.Insert (I, Language);
@@ -434,11 +378,7 @@ package body Neo.Core.Console is
         end loop;
       end loop;
       Ada_IO.Close (Data);
-      return Locales;
-    exception when others => return Locales; end;
-
-  -- Initalized data
-  LOCALE : Hashed_Locale.Unsafe.Map; --  := Initialize_Localization;
+    exception when others => Line ("No localization found... using English"); end;
 
   -- Locale lookup
   function Localize (Item : Str) return Str is
@@ -446,22 +386,20 @@ package body Neo.Core.Console is
     LANG : constant Str_Unbound   := To_Str_Unbound (CODE (1) & CODE (2) & CODE (3)); -- This is stupid...
     begin
       return (if S (LANG) /= "eng"
-                and then LOCALE.Contains (LANG)
-                and then LOCALE.Element (LANG).Contains (To_Str_Unbound (Item))
-              then S (LOCALE.Element (LANG).Element (To_Str_Unbound (Item)))
+                and then Locales.Contains (LANG)
+                and then Locales.Element (LANG).Contains (To_Str_Unbound (Item))
+              then S (Locales.Element (LANG).Element (To_Str_Unbound (Item)))
               else Item);
     end;
 
   -------------------
   -- Configuration --
   -------------------
-  
-  type Control_State is new Controlled with null record;
-  procedure Finalize (Control : in out Control_State);
-  procedure Finalize (Control : in out Control_State) is
+
+  procedure Finalize_Configuration (Path : Str) is
     Data : Ada_IO.File_Type;
     begin
-      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (PATH_CONFIG)); -- Str_8 !!!
+      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (Path)); -- Str_8 !!!
 
       -- Header
       Ada_IO.Put_Line (Data, "-- " & NAME_ID & " " & VERSION & " config: " & To_Str (Image (Get_Start_Time)));
@@ -474,7 +412,7 @@ package body Neo.Core.Console is
 
       -- Commands
       for I in Commands.Get.Iterate loop
-        if Element (I).Save /= null then 
+        if Element (I).Save /= null then
           Ada_IO.New_Line (Data);
           Ada_IO.Put_Line (Data, "-- " & S (Key (I)));
           Ada_IO.Put_Line (Data, Element (I).Save.All);
@@ -482,19 +420,19 @@ package body Neo.Core.Console is
       end loop;
       Ada_IO.Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
-  Controller : Control_State;
-begin
-  declare
-  Data : Ada_IO.File_Type;
-  I    : Natural     := 0;
-  Text : Str_Unbound := NULL_STR_UNBOUND;
-  begin
-    Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_CONFIG)); -- Str_8 !!!
-    while not Ada_IO.End_Of_File (Data) loop
-      Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
-      I    := Index (Text, "--");
-      if I = 0 then Submit (S (Text));
-      elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
-    end loop;
-  exception when others => Line ("No configuration found... using defaults."); end;
+
+  -- ??
+  procedure Initialize_Configuration (Path : Str) is
+    Data : Ada_IO.File_Type;
+    I    : Natural     := 0;
+    Text : Str_Unbound := NULL_STR_UNBOUND;
+    begin
+      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
+      while not Ada_IO.End_Of_File (Data) loop
+        Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
+        I    := Index (Text, "--");
+        if I = 0 then Submit (S (Text));
+        elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+      end loop;
+    exception when others => Line ("No configuration found... using defaults"); end;
 end;

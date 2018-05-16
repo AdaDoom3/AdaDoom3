@@ -19,31 +19,54 @@ package body Neo is
   -- Debugging --
   ---------------
 
+  procedure Debug_Assert (Val : Int_Unsigned_C)    is begin if Is_Debugging then Assert (Val /= 0);        end if; end;
+  procedure Debug_Assert (Val : Int_16_Unsigned_C) is begin if Is_Debugging then Assert (Val /= 0);        end if; end;
+  procedure Debug_Assert (Val : Int_C)             is begin if Is_Debugging then Assert (Val /= 0);        end if; end;
+  procedure Debug_Assert (Val : Int_Ptr)           is begin if Is_Debugging then Assert (Val /= 0);        end if; end;
+  procedure Debug_Assert (Val : Ptr)               is begin if Is_Debugging then Assert (Val /= NULL_PTR); end if; end;
+  procedure Debug_Assert (Val : Bool)              is begin if Is_Debugging then Assert (Val);             end if; end;
+  
   procedure Assert (Val : Int_16_Unsigned_C) is begin Assert (Val /= 0);        end;
   procedure Assert (Val : Int_Unsigned_C)    is begin Assert (Val /= 0);        end;
   procedure Assert (Val : Int_C)             is begin Assert (Val /= 0);        end;
+  procedure Assert (Val : Int_Ptr)           is begin Assert (Val /= 0);        end;
   procedure Assert (Val : Ptr)               is begin Assert (Val /= NULL_PTR); end;
-  procedure Assert (Val : Bool)              is begin if not Val then raise Program_Error; end if; end;--  pragma Assert (Val);      end;
-
-  function Get_Stack return Str is
-    Traces : Tracebacks_Array (1..128);
-    Result : Str_Unbound := NULL_STR_UNBOUND;
-    Skip   : Bool        := False;
-    Length : Natural     := 0;
+  procedure Assert (Val : Bool) is
     begin
-      Call_Chain (Traces, Length);
+      if not Val then
       
-      -- Change line endings
-      for Item of Symbolic_Traceback (Traces) loop
-        if not Skip and Item = '0' then Skip := True;
-        elsif Item = ASCII.LF then
-          if Skip then Skip := False;
-          else Result := Result & EOL; end if;
-        elsif not Skip then Result := Result & To_Str (Item); end if;
-      end loop;
-      return S (Result);
+        -- Get the call stack at the point of failure so we can return it through an exception message
+        declare
+        Traces        : Tracebacks_Array (1..128);
+        Result        : Str_8_Unbound := NULL_STR_8_UNBOUND;
+        Chain_Length  : Natural       := 0;
+        Hit_At, In_At : Boolean       := False;
+        begin
+          Call_Chain (Traces, Chain_Length);
+          
+          -- Change line endings and ignore subprogram names due to dated exception message length restrictions - see RM 11.4.1(18)
+          for Item of Symbolic_Traceback (Traces) loop
+            if Item = ASCII.LF then
+              Append (Result, EOL_8);
+              Hit_At := False;
+            elsif Hit_At then Append (Result, Item);
+            elsif Item = ' ' then
+              Hit_At := In_At;
+              In_At  := not In_At;
+            end if;
+          end loop;
+          
+          -- Trim irrelevant bits
+          Head (Result, Index (Result, "b__main") - EOL_8'Length);
+          Tail (Result, Length (Result) - Index (Result, "neo.adb:"));
+          Tail (Result, Length (Result) - Index (Result, EOL_8) - 1);
+          
+          -- Propagate the exception with the trimmed stack trace as its message
+          raise Program_Error with To_Str_8 (Result);
+        end;
+      end if;
     end;
-    
+        
   ------------
   -- Status --
   ------------
@@ -96,12 +119,6 @@ package body Neo is
     (if Char_16'Pos (Item) > Char_8'Pos (Char_8'Last) then CHAR_16_REPLACEMENT else Char_8'Val (Char_16'Pos (Item)));
 
   -- String conversions
-  function To_Str_8 (Item : Str) return Str_8 is
-    Result : Str_8 (Item'First..Item'Length);
-    begin
-      for I in Item'Range loop Result (I) := To_Char_8 (Item (I)); end loop;
-      return Result;
-    end;
   function To_Str_16_C (Item : Str_8_C) return Str_16_C is
     Result : Str_16_C (Item'First..Item'Length);
     begin
@@ -150,7 +167,7 @@ package body Neo is
     end;
 
   -- Integer to string with a changable base (e.g. decimal to binary or hex)
-  function Generic_To_Str_16 (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str is
+  function Generic_To_Str_16_Int (Item : Num_T; Base : Positive; Do_Pad_Zeros : Bool := True) return Str is
     package Num_T_Text_IO is new Ada_IO.Modular_IO (Num_T);
     Buffer : Str_Unbound   := NULL_STR_UNBOUND;
     Input  : Str (1..4096) := (others => NULL_CHAR);
@@ -161,8 +178,31 @@ package body Neo is
       Delete (Buffer, 1, Trim (Base'Img, Both)'Length + 1);
       Delete (Buffer, Length (Buffer), Length (Buffer));
       if Item /= Num_T'Last and Do_Pad_Zeros then
-        for I in 1..Generic_To_Str_16 (Num_T'Last, Base)'Length - Length (Buffer) loop Insert (Buffer, 1, "0"); end loop;
+        for I in 1..Generic_To_Str_16_Int (Num_T'Last, Base)'Length - Length (Buffer) loop Insert (Buffer, 1, "0"); end loop;
       end if;
       return S (Buffer);
+    end;
+    
+  -- Float to string
+  function Generic_To_Str_16_Real (Item : Num_T) return Str_16 is
+    package Var_T_IO is new Ada.Text_IO.Float_IO (Num_T);
+    Result : Str_8 (1..Num_T'Digits * 2) := (others => ' ');
+    begin
+    
+      -- Obtain Val's image and decide whether to use exponent notation if we encounter something ridiculous
+      if Item > 100_000_000_000_000.0 or Item < -0.000000000001 then
+        Var_T_IO.Put (Result, Item);
+      else
+        Var_T_IO.Put (Result, Item, Exp => 0);
+      end if;
+      
+      -- Trim zeros
+      for I in reverse Result'Range loop
+        if Result (I) = '.' then Result (I) := ' '; exit; end if;
+        exit when Result (I) /= '0';
+        Result (I) := ' ';
+      end loop;
+      
+      return To_Str (Trim (Result, Both));
     end;
 end;

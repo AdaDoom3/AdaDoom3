@@ -13,15 +13,15 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers.Indefinite_Ordered_Maps;
+with Ada.Containers.Ordered_Maps;
 
 generic
   type Key_T is (<>);
-  type Map_T (<>) is private;
+  type Map_T is private;
 package Neo.Core.Ordered is
 
   -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Ordered_Maps (Key_T, Map_T, "<", "="); use Unsafe;
+  package Unsafe is new Ada.Containers.Ordered_Maps (Key_T, Map_T, "<", "="); use Unsafe;
   subtype Cursor is Unsafe.Cursor;
   NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
 

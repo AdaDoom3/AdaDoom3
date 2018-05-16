@@ -13,12 +13,12 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers.Hashed_Maps;
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
 with Neo.Core.Arrays; use Neo.Core.Arrays;
 
 generic
-  type Map_T (<>) is private;
+  type Map_T is private;
 package Neo.Core.Hashed is
 
   -----------------
@@ -26,9 +26,10 @@ package Neo.Core.Hashed is
   -----------------
 
   -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Hashed_Maps (Str_Unbound, Map_T, Wide_Hash, "=");
+  package Unsafe is new Ada.Containers.Hashed_Maps (Str_Unbound, Map_T, Wide_Hash, "=");
   subtype Cursor is Unsafe.Cursor;
-  NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
+  NO_ELEMENT : constant Cursor     := Unsafe.NO_ELEMENT;
+  EMPTY_MAP  : constant Unsafe.Map := Unsafe.EMPTY_MAP;
 
   -- Fetch a sorted list of keys
   function Keys (Val : Unsafe.Map) return Array_Str_Unbound;

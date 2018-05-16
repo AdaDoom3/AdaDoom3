@@ -13,11 +13,23 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --    
 
-with Neo.Engine.Physics; 
-
-generic
-  Path : Str;
 package Neo.World is
+  
+  ------------
+  -- Assets --
+  ------------
+  
+  -- Exceptions related when referencing unbuffered assets
+  Unknown_Audio_Clip        : Exception;
+  Unknown_Sound_Emitter     : Exception;
+  Unknown_Level             : Exception;
+  Unknown_Mesh              : Exception;
+  Unknown_Image_In_Material : Exception;
+  Unknown_Material_In_Mesh  : Exception;
+  
+  -- Vector of material "definitions" containing all shading/render descriptions. It does not represent loaded textures!
+  Materials : Hashed_Material.Safe_Map;
+  Meshs     : Hashed_Mesh.Safe_Map;
 
   -----------
   -- World --
@@ -37,6 +49,4 @@ package Neo.World is
       Level      : Level_State := (others => <>);
     end record;
   package Hashed_World is new Neo.Core.Hashed (World_State);
-  
-  procedure Run_Frame;
 end;

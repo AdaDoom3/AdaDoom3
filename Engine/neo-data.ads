@@ -32,7 +32,8 @@ package Neo.Data is
   -- Binary --
   ------------
 
-  function Load (Path : Str) return Array_Byte;
+  function Load_Padded (Path : Str; Amount : Positive) return Array_Byte; -- Amount in bytes
+  function Load        (Path : Str)                    return Array_Byte is (Load_Padded (Path, 1));
   procedure Skip (File : in out Ada.Streams.Stream_IO.File_Type; Bytes : Positive);
 
   -------------

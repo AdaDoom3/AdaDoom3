@@ -20,16 +20,17 @@ package body Neo.Data is
   ------------
 
   -- Load a file into a binary buffer
-  function Load (Path : Str) return Array_Byte is
+  function Load_Padded (Path : Str; Amount : Positive) return Array_Byte is
     subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (Path)))); -- Str_8 !!!
     package Blob_IO is new Ada.Direct_IO (Blob);
+    use Vector_Int_8_Unsigned; -- For  "&"
     File   : Blob_IO.File_Type;
     Result : Blob := (others => 0);
     begin
       Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
       Blob_IO.Read (File, Result);
       Blob_IO.Close (File);
-      return Result;    
+      return (if Blob'Length mod Amount = 0 then Result else Result & (1..Result'Length mod Amount => 0));
     end;
     
   procedure Skip (File : in out Ada.Streams.Stream_IO.File_Type; Bytes : Positive) is
@@ -65,7 +66,7 @@ package body Neo.Data is
 
     -- Package for registering format callbacks
     package body Format is
-        function Informal_Load (Path : Str) return T renames Format.Load;
+        function Informal_Load (Path : Str) return T is (Format.Load (Path)); -- RM 6.3.1 (17/3)
 
         -- Controller
         type Control_State is new Controlled with null record;
@@ -175,7 +176,6 @@ package body Neo.Data is
 
     This : Array_Str_Unbound := Load; -- Cause the loading of data to be performed at package instantiation
     Row, Column : Positive := 1;
-
 
     -- Internal procedure for skipping whitespace
     procedure Seek is

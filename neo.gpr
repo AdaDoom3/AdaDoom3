@@ -57,68 +57,65 @@ project Neo is
   -- Types --
   -----------
 
+  type CPU_Option      is ("x86-64", "PPC");
   type Bit_Size_Option is ("32", "64");
   type Boolean_Option  is ("No", "Yes");
   type Game_Option     is ("Neotek", "DOOM");
-  type System_Option   is ("Windows", "Linux", "Mac");
+  type System_Option   is ("Win32", "Linux", "Mac", "Android");
 
   --------------
   -- Scenario --
   --------------
 
-  SYSTEM   : System_Option   := External ("System", "Windows");
+  CPU      : CPU_Option      := External ("CPU", "x86-64");
+  SYSTEM   : System_Option   := External ("System", "Win32");
   DEBUG    : Boolean_Option  := External ("Debug", "Yes");
   GAME     : Game_Option     := External ("Game", "DOOM");
-  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "32");
+  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "64");
  
   --------------
   -- Settings --
   --------------
 
-  System_API := SYSTEM;
+  OS_API := SYSTEM;
   case SYSTEM is
-    when "Windows"       => null;
-    when "Linux" | "Mac" => System_API := "SDL"; -- Linux and Mac get SDL support only
+    when "Win32"                     => null;
+    when "Linux" | "Mac" | "Android" => OS_API := "SDL"; -- Linux and Mac get SDL support only
   end case;
-  for Languages   use ("Ada", "Project File");--, "C");    -- Support both Ada and OpenGL Shader Language
-  for Main        use ("main.adb");    -- Main entry point
-  for Object_Dir  use "Object";        -- Trash folder
-  for Exec_Dir    use "Games/" & GAME; -- Game distributable 
-  for Source_Dirs use (".",                                         -- Project file and readme
-                       "Shaders/",                                  -- GLSL shaders
-                       "Engine/", "Engine/System/" & System_API,    -- Engine and system specific source
+  for Languages   use ("Ada");--, "C");                             -- Support both Ada and OpenGL Shader Language
+  for Main        use ("main.adb");                                 -- Main entry point
+  for Object_Dir  use "Object";                                     -- Trash folder
+  for Exec_Dir    use "Games/" & GAME & "/";                        -- Game distributable 
+  for Source_Dirs use ("Shaders/",                                  -- GLSL shaders
+                       "Engine/", "Engine/Systems/" & OS_API,       -- Engine and system specific source
+                       "Engine/Assembly/" & CPU,                    -- CPU specific source
                        "Games/" & GAME & "/Base/**",                -- Game specific source
-                       "Engine/Settings/Debugging " & DEBUG & "/"); -- Give the source access to senario variable DEBUG
+                       "Engine/Settings/Debugging-" & DEBUG & "/"); -- Give the source access to senario variable DEBUG
 
   --------------
   -- Switches --
   --------------
 
-  Switch_Binder   := ("-E");                 -- Store traceback in exceptions
-  Switch_Linker   := ("-fprofile-generate"); -- Generate code coverage                                                                         
-  Switch_Compiler := ("-gnatE",              -- Enable dynamic generic elaboration checks
-                      "-gnatW8");            -- Enable wide-character unicode identifiers
-  Switch_Builder  := ("-j0",                 -- Use all available threads for compilation
-                      "-k",                  -- Keep building as far as possible
-                      "-s");                 -- Recompile if switches are changed
+  Switch_Binder   := ("-E");                -- Store traceback in exceptions
+  Switch_Linker   := ("-fprofile-generate", -- Generate code coverage     
+                      "-mwindows");         -- Remove the command console
+  Switch_Compiler := ("-gnatE",             -- Enable dynamic generic elaboration checks
+                      "-gnatW8",            -- Enable wide-character unicode identifiers
+                      "-g");                -- Extend info in stack traces
+  Switch_Builder  := ("-j0",                -- Use all available threads for compilation
+                      "-k",                 -- Keep building as far as possible
+                      "-s");                -- Recompile if switches are changed
   case DEBUG is
-    when "Yes" => Switch_Compiler := Switch_Compiler & ("-O0",          -- Avoid any optimization
-                                                        "-gnato",       -- Check overflow for numerics
-                                                        --"-gnatDG",      -- Produce expanded output
+    when "Yes" => Switch_Compiler := Switch_Compiler & ("-gnato",       -- Check overflow for numerics
                                                         "-gnatf",       -- Show extra info in errors
-                                                        "-g");          -- Extend info in stack traces
+                                                        "-O0");         -- Avoid any optimization
     when "No"  => Switch_Compiler := Switch_Compiler & ("-O3",          -- Optimize as much as possible
                                                         "-gnatp",       -- Surpress all checks 
                                                         "-ffast-math"); -- Force SIMD optmization
   end case;
   case SYSTEM is
-    when "Mac"     => null;
-    when "Linux"   => null;
-    when "Windows" =>
-      case DEBUG is
-        when "Yes" => null;
-        when "No"  => Switch_Linker := Switch_Linker & ("-mwindows"); -- Remove the command console
-      end case;
+    when "Mac" | "Linux" | "Android" =>
+    when "Win32" =>
       case BIT_SIZE is
         when "32" => null;
         when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation

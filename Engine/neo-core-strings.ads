@@ -33,10 +33,9 @@ package Neo.Core.Strings is
   function Replace (Item : Str;         From : Str; To : Str) return Str is (S (Replace (U (Item), From, To)));
   procedure Replace (Item : in out Str_Unbound; From : Str; To : Str);
 
-  -----------
-  -- Count --
-  -----------
+  ------------------------
+  -- Number Conversions --
+  ------------------------
 
-  function Count (Text : Str;         Item : Char) return Natural;
-  function Count (Text : Str_Unbound; Item : Char) return Natural is (Count (S (Text), Item));
+  function To_Str is new Generic_To_Str_16_Real (Real_64);
 end;

@@ -16,7 +16,7 @@
 with Ada.Containers.Indefinite_Multiway_Trees;
 
 generic
-  type Tree_T (<>) is private;
+  type Tree_T is private;
 package Neo.Core.Trees is
 
   -- Base type
