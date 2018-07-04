@@ -22,15 +22,13 @@ Planned Features:
 
 To compile with GPRBuild:
 
-`cd Setup`
-
 `gprbuild -p -P neo.gpr `
 
-Or the Gnat Programming Studio IDE may be used (email is optional):
+Or the Gnat Programming Studio IDE may be used:
 http://libre.adacore.com/download/
 
-To compile with GPS click the gear and hammer button after ensuring the
-scenario drop boxes are correct.
+To compile with GPS click the build-all hammer button after ensuring the
+scenario drop boxes from the View > Scenario menu are correct.
 
 After successfully compiling press play ▶ to run.
 
