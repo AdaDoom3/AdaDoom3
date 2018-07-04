@@ -1,0 +1,780 @@
+guisounds_introsound {
+
+	description		"id software presents... doom3"
+
+	minDistance	4
+	maxDistance	8
+	volume	3
+
+	sound/ed/gui/logo.wav
+
+}
+
+guisounds_IntroMC
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/VO/MarsCity/00_intro_temp.wav
+}
+
+guisounds_IntroVO
+{
+	description 	"Introduction Text VO"
+	global
+	volume 		0
+
+	sound/VO/intro/intro_test12.wav
+}
+
+guisounds_videoloop {
+	description		"12 second video loop for intro static background"
+	global	
+	
+	volume		-8
+	
+	sound/cinematics/mars_city1/video_loop_12s.wav
+}
+
+guisounds_idlogo
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/misc/idlogo_audio.wav
+}
+guisounds_LogoIn
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/patd/logoin3.wav
+}
+
+guisounds_Gamestart
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/ambient/thuds/loop_thud_02.wav
+}
+
+guisounds_restartTest
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/chris/wavs/Chris_beds_1/Breathing_groan_loop.wav
+}
+
+guisounds_sttpVo
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/marscity/turkey_puncher_vo.wav
+}
+
+guisounds_sttpTurkSqish
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/turksquish22.wav
+}
+
+guisounds_sttpPunch1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/marscity/punch1.wav
+}
+guisounds_sttpPunch2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/marscity/punch2.wav
+}
+
+guisounds_sttpTurkey1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/marscity/turkey1.wav
+}
+
+guisounds_sttpTurkey2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/marscity/turkey2.wav
+}
+
+guisounds_alert
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/alarms_buzzers/loop_alarm_01.wav
+}
+
+guisounds_objnew_up
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/line.wav
+	sound/ed/gui/objnew_up.wav
+}
+
+guisounds_objdone_up
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/objdone_up.wav
+	//sound/patd/connect2.wav
+}
+
+guisounds_obj_down
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beepdown1.wav
+	sound/ed/gui/obj_down.wav
+}
+
+guisounds_air
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/air.wav	
+	// sound/patd/click2.wav
+}
+
+guisounds_cancel
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/admin_error.wav
+	// sound/patd/click1.wav
+}
+
+guisounds_menuclickup
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/menuclickup.wav
+	// sound/patd/click1.wav
+}
+
+guisounds_menuclickdown
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beepdown1.wav
+	sound/ed/gui/obj_down.wav
+}
+
+guisounds_menuerror
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/error1.wav
+	sound/ed/gui/error.wav
+}
+
+guisounds_menumousein
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/whoosh_gui_in_test5.wav
+}
+
+guisounds_menumouseout
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/whoosh_gui_out_test4.wav
+}
+
+
+guisounds_pdaclick1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/twobeep_test1.wav
+}
+
+guisounds_pdaclick2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/twobeep_test2.wav
+}
+
+guisounds_pdaclick3
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/twobeep_test3.wav
+}
+
+guisounds_staticdown1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/test1.wav
+}
+
+guisounds_demon
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ambient/spooky/1shot_demonlaughs_05_44.wav
+}
+
+guisounds_mfs
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	pdas/video/mfs.wav
+}
+
+guisounds_compup
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/comp_up.wav
+	sound/ed/gui/comp_up.wav
+}
+
+guisounds_change
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/change.wav
+}
+
+guisounds_armor
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/armor1.wav
+}
+
+guisounds_weapon
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/w_pkup.wav
+}
+
+guisounds_health
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/l_health.wav
+}
+
+guisounds_ammo
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/am_pkup.wav
+}
+
+guisounds_item
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/itemup2.wav
+}
+
+//
+
+guisounds_beep1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beep1.wav
+	sound/ed/gui/beep1.wav
+}
+
+guisounds_beep2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beep2.wav
+	sound/ed/gui/beep2.wav
+}
+
+guisounds_beepdown1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beepdown1.wav
+	sound/ed/gui/beepdown1.wav
+}
+
+guisounds_beepdown2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/beepdown2.wav
+	sound/ed/gui/beepdown2.wav
+}
+
+guisounds_beepdown3
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/beepdown3.wav
+	// sound/patd/beepdown3.wav
+}
+
+guisounds_beepdown4
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/beepdown4.wav
+	// sound/patd/beepdown4.wav
+}
+
+guisounds_chirpconnect
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/chirpconnect.wav
+	// sound/patd/chirpconnect.wav
+}
+
+guisounds_click1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/twobeep_test1.wav
+	// sound/patd/click1.wav
+}
+
+guisounds_click2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/air.wav
+	// sound/patd/click2.wav
+}
+
+guisounds_click3
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/click3.wav
+	// sound/patd/click3.wav
+}
+
+guisounds_clickstatic
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/clickstatic.wav
+	// sound/patd/clickstatic.wav
+}
+
+guisounds_clickstatic2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/clickstatic2.wav
+	// sound/patd/clickstatic2.wav
+}
+
+guisounds_connect1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	
+	sound/ed/gui/connect1.wav
+	// sound/patd/connect1.wav
+}
+
+guisounds_connect2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+	sound/ed/gui/connect2.wav
+	//	sound/patd/connect2.wav
+}
+
+guisounds_connect3
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+	
+	sound/ed/gui/connect3.wav
+	//	sound/patd/connect3.wav
+}
+
+guisounds_connectstatic
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/connectstatic.wav
+}
+
+guisounds_disconnect1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/disconnect1.wav
+	sound/ed/gui/disconnect1.wav
+}
+
+guisounds_disconnect2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/disconnect2.wav
+	sound/ed/gui/beepdown2.wav
+}
+
+guisounds_error1
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/comp_up.wav
+}
+
+guisounds_hellwarble
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/hellwarble.wav
+}
+
+guisounds_line
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/line.wav
+	sound/ed/gui/line1.wav
+}
+
+guisounds_line2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/line2.wav
+	sound/ed/gui/line2.wav 
+}
+
+guisounds_line2a
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		-6
+
+	sound/patd/line2.wav
+	// sound/ed/gui/line2.wav 
+}
+
+guisounds_oddsignal
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/oddsignal.wav
+}
+
+guisounds_pingup
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/pingup.wav
+	sound/ed/gui/ping_up.wav
+}
+
+guisounds_pingup2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		-6
+
+	sound/patd/pingup.wav
+	// sound/ed/gui/ping_up.wav
+}
+
+guisounds_pinglow
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/pinglow.wav
+	sound/ed/gui/ping_low.wav
+}
+
+guisounds_ping2
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/ping2.wav
+	sound/ed/gui/ping2.wav
+}
+
+guisounds_ping
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	// sound/patd/ping.wav
+	sound/ed/gui/ping.wav
+}
+
+guisounds_what
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/patd/what.wav
+}
+

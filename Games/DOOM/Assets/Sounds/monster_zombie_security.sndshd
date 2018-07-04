@@ -1,0 +1,179 @@
+monster_zombie_security_chatter1 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_chatter1.wav
+	sound/ed/sfx/radio_chatter/radio_chatter4.wav
+	
+	}
+
+monster_zombie_security_chatter_combat {
+
+	minDistance	1
+	maxDistance	15
+
+	sound/xian/monsters/zsec/combat_01.wav
+	sound/xian/monsters/zsec/combat_02.wav
+	sound/xian/monsters/zsec/combat_03.wav
+	sound/xian/monsters/zsec/combat_04.wav
+	sound/xian/monsters/zsec/combat_05.wav
+}
+
+
+monster_zombie_security_chatter2 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_chatter2.wav
+	sound/ed/sfx/radio_chatter/radio_chatter5.wav
+
+	}
+
+monster_zombie_security_chatter3 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound\ed\sfx\radio_chatter\radio_chatter12.wav
+	sound\ed\sfx\radio_chatter\radio_chatter4.wav
+
+	}
+
+
+monster_zombie_security_alert1 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_alert1.wav
+
+	}
+
+monster_zombie_security_alert2 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_alert2.wav
+
+	}
+
+monster_zombie_security_alert3 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_chatter3.wav
+
+	}
+
+monster_zombie_security_alert4 {
+
+	minDistance	5
+	maxDistance	15
+
+	sound/ed/sfx/radio_chatter/radio_chatter10.wav
+
+	}
+
+
+monster_zombie_security_footstep {
+
+	minDistance	5
+	maxDistance	35
+	volume		-2
+	plain
+	no_dups
+	
+	sound/ed/zombie_pistol/step1.wav
+	sound/ed/zombie_pistol/step2.wav
+	sound/ed/zombie_pistol/step3.wav
+	sound/ed/zombie_pistol/step4.wav
+
+}
+
+monster_zombie_security_sight {
+
+	minDistance	1
+	maxDistance	35
+	volume		6
+
+	sound/ed/zombie_pistol/sight1_radio.wav
+	sound\ed\sfx\radio_chatter\chirp6.wav
+
+	//I'm trying something - Tim
+	//sound/ed/zombie_pistol/sight1.wav
+	//sound/ed/zombie_pistol/sight2.wav
+	//sound/ed/zombie_pistol/sight3.wav
+}
+
+monster_zombie_security_melee {
+
+	minDistance	2
+	maxDistance	35
+	volume		6
+
+	sound/ed/zombie_pistol/melee1.wav
+	sound/ed/zombie_pistol/melee2.wav
+	sound/ed/zombie_pistol/melee3.wav	
+}
+
+monster_zombie_security_fire
+{
+	minDistance	2
+	maxDistance	35
+	volume		6
+
+	sound/weapons/pistol/1shot_shot_08.wav
+}
+
+monster_zombie_security_chatter
+{
+	minDistance	1
+	maxDistance	20
+	volume		3
+
+	sound/ed/zombie_pistol/idle1.wav
+	sound/ed/zombie_pistol/idle2.wav
+	sound/ed/zombie_pistol/idle3.wav
+	sound/ed/zombie_pistol/idle4.wav
+	sound/ed/zombie_pistol/idle5.wav
+	sound/ed/zombie_pistol/idle6.wav
+	sound/ed/zombie_pistol/idle7.wav
+
+	//sound/monsters/zombie_security/chatter_01.wav
+	//sound/monsters/zombie_security/chatter_02.wav
+}
+
+monster_zombie_security_die
+{
+	minDistance	2
+	maxDistance	35
+	volume		6
+
+	sound/ed/zombie_pistol/die1.wav
+	sound/ed/zombie_pistol/die2.wav
+	sound/ed/zombie_pistol/die3.wav
+	sound/ed/zombie_pistol/die4.wav
+	
+	//sound/monsters/zombie_security/death_01.wav
+}
+
+monster_zombie_security_pain
+{
+	minDistance	2
+	maxDistance	35
+	volume		6
+
+	sound/ed/zombie_pistol/pain1.wav
+	sound/ed/zombie_pistol/pain2.wav
+	sound/ed/zombie_pistol/pain3.wav
+	sound/ed/zombie_pistol/pain4.wav
+	sound/ed/zombie_pistol/pain5.wav
+	sound/ed/zombie_pistol/pain6.wav
+
+	//sound/monsters/zombie_security/pain_01.wav
+	//sound/monsters/zombie_security/pain_02.wav
+}

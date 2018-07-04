@@ -1,0 +1,198 @@
+cpu_intro_music {
+
+	volume	6
+	global
+	sound/ed/cpu/cpu_intro_music.wav
+
+}
+
+cpu_shields {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	no_dups
+	
+	sound/movers/cpuboss/shield_01.wav
+	sound/movers/cpuboss/shield_02.wav
+	sound/movers/cpuboss/shield_03.wav
+	sound/movers/cpuboss/shield_04.wav
+}
+
+//********* sarge taunts
+
+sarge_warning_1 {
+	description "sarge is gonna kill you"	
+	sound/vo/cpuboss/sarge_warning_01.wav
+}
+
+sarge_warning_2 {
+	description "sarge is coming for you"	
+	sound/vo/cpuboss/sarge_warning_02.wav
+}
+
+sarge_warning_3 {
+	description "sarge is waiting"	
+	sound/vo/cpuboss/sarge_warning_03.wav
+}
+
+sarge_warning_4 {
+	description "sarge will destroy you"	
+	sound/vo/cpuboss/sarge_warning_04.wav
+}
+
+sarge_taunt_1 {
+	description "I can smear your fear"	
+	sound/vo/cpuboss/sarge_taunt_01.wav
+}
+
+sarge_taunt_2 {
+	description "I look into soul"	
+	sound/vo/cpuboss/sarge_taunt_02.wav
+}
+
+sarge_taunt_3 {
+	description "I waiting for you"	
+	sound/vo/cpuboss/sarge_taunt_03.wav
+}
+
+sarge_taunt_4 {
+	description "I  killed campbell"	
+	sound/vo/cpuboss/sarge_taunt_04.wav
+}
+
+//********* sarge taunts
+
+bridge_rotation_6s {
+	minDistance 50
+	maxDistance	100
+	volume		8
+	unclamped
+	
+	
+	sound/levels/cpu/bridge_rot_6s_01.wav
+	sound/levels/cpu/bridge_rot_6s_02.wav
+	sound/levels/cpu/bridge_rot_6s_03.wav
+	sound/levels/cpu/bridge_rot_6s_04.wav
+}
+
+bridge_rotation_10s {
+	minDistance	50
+	maxDistance	100
+	volume		3
+	unclamped
+	
+		
+	//sound/levels/cpu/bridge_rot_10s_01.wav
+	//sound/levels/cpu/bridge_rot_10s_02.wav
+	//sound/levels/cpu/bridge_rot_10s_03.wav
+	//sound/levels/cpu/bridge_rot_10s_04.wav
+	sound/levels/cpu/bridge_rot_10s_05.wav
+}
+
+
+cpu_bridge_down_6s {
+	minDistance	50
+	maxDistance	100
+	volume		2
+	unclamped
+	
+	sound/levels/cpu/bridge_down_6s.wav
+}
+
+cpu_arm_down_5s {
+	minDistance 50
+	maxDistance	100
+	volume		2
+	unclamped
+	
+	sound/levels/cpu/arm_down_5s.wav
+}
+
+cpu_bridge_down_5s {
+	minDistance	50
+	maxDistance	100
+	volume		3
+	unclamped
+
+	sound/movers/alphalabs4/rotbridge_tech_5s_03.wav
+}
+
+cpu_bridge_rails {
+	minDistance	50
+	maxDistance	100
+	volume		0
+
+	no_dups
+
+	sound/movers/alphalabs4/mach_1s_02.wav
+	sound/movers/alphalabs4/mach_1s_03.wav
+	sound/movers/alphalabs4/mach_1s_04.wav
+	sound/movers/alphalabs4/mach_1s_05.wav
+}
+
+cpu_light_sounds {
+	minDistance	1
+	maxDistance	25
+	volume		-17
+
+	sound/lights/specials/bulbclick.wav
+}
+
+cpu_m3_start {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	unclamped
+	
+	sound/movers/_general_movement/m3_start.wav
+}
+
+cpu_m3_loop {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	unclamped
+	
+	looping
+	
+	sound/movers/_general_movement/m3_loop.wav
+}
+
+cpu_m3_stop {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	unclamped
+	
+	sound/movers/_general_movement/m3_end.wav
+}
+
+// -------------------
+
+cpu_m4_start {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	unclamped
+	
+	sound/movers/_general_movement/m4_start.wav
+}
+
+cpu_m4_loop {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	looping
+	unclamped
+	
+	sound/movers/_general_movement/m4_loop.wav
+}
+
+cpu_m4_stop {
+	minDistance	5
+	maxDistance	50
+	volume		3
+	unclamped	
+	
+	sound/movers/_general_movement/m4_end.wav
+}

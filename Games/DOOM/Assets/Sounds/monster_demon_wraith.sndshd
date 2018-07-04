@@ -1,0 +1,246 @@
+
+
+monster_demon_wraith_footstep {
+	minDistance	1
+	maxDistance	25
+	volume		-6
+	no_dups
+
+	sound/monsters/wraith/footstep1.wav
+	sound/monsters/wraith/footstep2.wav
+	sound/monsters/wraith/footstep3.wav
+	sound/monsters/wraith/footstep4.wav
+	sound/monsters/wraith/footstep5.wav
+}
+
+monster_demon_wraith_sight {
+
+	minDistance	1
+	maxDistance	25
+	volume		-3
+	shakes		0.1
+
+	//sound/xian/monsters/wraith/sight1.wav
+	sound/monsters/wraith/sight.wav
+
+}
+
+monster_demon_wraith_sight2 {
+
+	minDistance	1
+	maxDistance	25
+	
+	no_dups
+	sound/xian/monsters/wraith/sight2.wav	
+}
+
+monster_demon_wraith_alert_idle {
+
+	minDistance	1
+	maxDistance	17
+	volume		-3
+	no_dups
+
+}
+
+
+monster_demon_wraith_chatter {
+
+	minDistance	1
+	maxDistance	17
+	volume		-3
+	no_dups
+
+	sound/monsters/wraith/idle.wav
+}
+
+monster_demon_wraith_chatter_combat {
+
+	minDistance	1
+	maxDistance	25
+	volume		-4
+
+	sound/xian/monsters/wraith/chatter1.wav
+	sound/xian/monsters/wraith/chatter2.wav
+	sound/xian/monsters/wraith/chatter3.wav
+	sound/xian/monsters/wraith/chatter4.wav
+//	sound/xian/monsters/wraith/chatter5.wav
+//	sound/xian/monsters/wraith/chatter6.wav
+//	sound/xian/monsters/wraith/chatter7.wav
+}
+
+monster_demon_wraith_pain {
+
+	minDistance	4
+	maxDistance	30
+	volume		-3
+	no_dups
+
+	//sound/xian/monsters/wraith/pain1.wav
+	//sound/xian/monsters/wraith/pain2.wav
+	
+	sound/monsters/wraith/pain.wav
+	sound/monsters/wraith/pain_head.wav
+	sound/monsters/wraith/pain_chest.wav
+	sound/monsters/wraith/pain_left_arm.wav
+	sound/monsters/wraith/pain_right_arm.wav
+	
+}
+
+monster_demon_wraith_attackmelee_1 {
+
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/monsters/wraith/attack1.wav
+	sound/monsters/wraith/attack1_no_vo.wav
+	sound/monsters/wraith/attack1_solo.wav
+
+//	sound/xian/monsters/wraith/melee1.wav
+//	sound/xian/monsters/wraith/melee2.wav
+//	sound/xian/monsters/wraith/melee3.wav
+//	sound/xian/monsters/wraith/melee4.wav
+}
+
+monster_demon_wraith_attackmelee_2 {
+
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/monsters/wraith/attack2.wav
+	sound/monsters/wraith/attack2_no_vo.wav
+	sound/monsters/wraith/attack2_solo.wav
+
+//	sound/xian/monsters/wraith/melee1.wav
+//	sound/xian/monsters/wraith/melee2.wav
+//	sound/xian/monsters/wraith/melee3.wav
+//	sound/xian/monsters/wraith/melee4.wav
+
+}
+
+monster_demon_wraith_attackmelee_3 {
+
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/monsters/wraith/attack3.wav
+	sound/monsters/wraith/attack3_no_vo.wav
+	sound/monsters/wraith/attack3_solo.wav
+}
+
+monster_demon_wraith_die {
+
+	minDistance	5
+	maxDistance	35
+	volume		2
+	no_dups
+	
+	sound/monsters/wraith/death.wav
+	sound/monsters/wraith/death_01.wav
+	sound/monsters/wraith/death_02.wav
+	sound/monsters/wraith/death_03.wav
+	sound/monsters/wraith/death_04.wav
+	
+	
+	//sound/xian/monsters/wraith/death1.wav	
+	//sound/xian/monsters/wraith/death2.wav
+	//sound/xian/monsters/wraith/death3.wav
+	
+
+
+}
+
+monster_demon_wraith_melee_hit {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+	sound/xian/monsters/imp/melee/hit_01.wav
+	sound/xian/monsters/imp/melee/hit_02.wav
+	sound/xian/monsters/imp/melee/hit_03.wav
+	sound/xian/monsters/imp/melee/hit_04.wav
+	//sound/xian/monsters/imp/melee/hit_05.wav
+}
+
+monster_demon_wraith_melee_miss {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+	sound/xian/monsters/imp/melee/miss_01.wav
+	sound/xian/monsters/imp/melee/miss_02.wav
+	sound/xian/monsters/imp/melee/miss_03.wav
+	sound/xian/monsters/imp/melee/miss_04.wav
+}
+
+monster_demon_wraith_evade_left {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/wraith/evade_left.wav
+	sound/monsters/wraith/evade_left_no_vo.wav
+	sound/monsters/wraith/evade_left_solo.wav
+}
+
+monster_demon_wraith_evade_right {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/wraith/evade_right.wav
+	sound/monsters/wraith/evade_right_no_vo.wav
+	sound/monsters/wraith/evade_right_solo.wav
+}
+
+monster_demon_wraith_ceiling_attack1 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/wraith/ceiling_attack1.wav
+	sound/monsters/wraith/ceiling_attack1_no_voc.wav
+	sound/monsters/wraith/ceiling_attack1_solo.wav
+}
+
+monster_demon_wraith_ceiling_attack2 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/wraith/ceiling_attack2.wav
+	sound/monsters/wraith/ceiling_attack2_no_vo.wav
+	sound/monsters/wraith/ceiling_attack2_solo.wav
+}
+
+monster_demon_wraith_ceiling_attack3 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/wraith/ceiling_attack3.wav
+	sound/monsters/wraith/ceiling_attack3_no_vo.wav
+	sound/monsters/wraith/ceiling_attack3_solo.wav
+}
+
+monster_demon_wraith_fade_out {
+	minDistance	3
+	maxDistance	35
+	volume		0
+	shakes		0.1
+	
+	//sound/monsters/wraith/fade_out.wav
+	sound/monsters/wraith/teleport_out_01.wav
+}
+
+monster_demon_wraith_fade_in {
+	minDistance	5
+	maxDistance	25
+	shakes		0.15
+	volume		0
+	
+	sound/monsters/wraith/teleport_in_01.wav
+}

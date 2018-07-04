@@ -19,9 +19,9 @@ with Neo;                        use Neo;
 with Neo.Core.Strings;           use Neo.Core.Strings;
 with Neo.Core.Console;           use Neo.Core.Console;
 with Neo.Engine;                 use Neo.Engine;
-with Neo.Engine.CVars;           use Neo.Engine.CVars;
 with Neo.Engine.Renderer;        use Neo.Engine.Renderer;
-with Neo.Engine.Impulses;        use Neo.Engine.Impulses;
+with Neo.World.CVars;            use Neo.World.CVars;
+with Neo.World.Impulses;         use Neo.World.Impulses;
 with Ada.Calendar;               use Ada.Calendar;
 with Ada.Calendar.Formatting;    use Ada.Calendar.Formatting;
 with Ada.Command_Line;           use Ada.Command_Line;
@@ -29,7 +29,7 @@ with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
 
 procedure Main is
 
-  -- Game
+  -- Game task
   procedure Menu is separate;
   package Menu_Tasks is new Tasks (Menu);
   Menu_Task : Menu_Tasks.Safe_Task;
@@ -55,9 +55,9 @@ procedure Main is
     for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop;
 
     -- Load config and dump information
+    Initialize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG); -- Does not work due to finalization bug in GNAT !!!
+    Initialize_Localization  (S (OS_Info.App_Path) & PATH_LOCALE);
     Line ("Started by " & OS_Info.Username & " on " & To_Str (Image (Get_Start_Time)));
-    Initialize_Configuration (S (OS_Info.Path) & PATH_CONFIG); -- Does not work due to finalization bug in GNAT !!!
-    -- Initialize_Localization  (S (OS_Info.Path) & PATH_LOCALE);
     Line ("Game: " & OS_Info.App_Name & WORD_SIZE'Wide_Image & (if Is_Debugging then " w/ debugging" else NULL_STR));
     Line ("Engine: " & NAME_ID & " " & VERSION);
     Line ("Compiler: " & "GNAT " & To_Str (GNAT_Info.Version) & " for " & S (OS_Info.Version));
@@ -66,18 +66,17 @@ procedure Main is
     -- Initialize
     Initialize_Windowing;
     Set_Windowing_Mode;
-    Initialize_Drawing (Drawing_Backend.Get);
+    Initialize_Drawing;
     Initialize_Input;
     Menu_Task.Initialize;
 
     -- Handle debugging
     if Is_Debugging then -- Linked directly to the "Debug" scenario variable
-      Use_Ada_Put;
-      --Initialize_Console;
+      --Use_Ada_Put;
+      null;--Initialize_Console;
     end if; Initialize_Console;
 
     -- Set window interaction bindings
-    Enter_Game.Bindings.Append   (Mouse (Left_Button));
     Fullscreen.Bindings.Append   (Keyboard (F11_Key));
     Exit_To_Menu.Bindings.Append (Keyboard (Escape_Key));
 
@@ -85,23 +84,15 @@ procedure Main is
     declare
     Last_Time         : Time           := Clock;
     Saved_Pos         : Cursor_State   := Get_Cursor;
+    Current_Mode      : Mode_Kind      := Mode.Get;
+    Current_Menu      : Bool           := In_Menu.Get;
+    Current_Cursor    : Cursor_Kind    := Cursor.Get;
     Current_Width     : Positive       := Window_Width.Get;
     Current_Height    : Positive       := Window_Height.Get;
-    Current_Menu      : Bool           := In_Menu.Get;
-    Current_Mode      : Mode_Kind      := Mode.Get;
-    Current_Cursor    : Cursor_Kind    := Cursor.Get;
     Current_Activated : Activated_Kind := Activated.Get;
-    Current_Backend   : Backend_Kind   := Drawing_Backend.Get;
     begin
       Input_Status.Occupied (True);
       while Update_Windowing and then Menu_Task.Running loop
-
-        -- Reset backend if necessary
-        if Current_Backend /= Drawing_Backend.Get then
-          Current_Backend := Drawing_Backend.Get;
-          Finalize_Drawing;
-          Initialize_Drawing (Current_Backend);
-        end if;
 
         -- Set cursor
         if Current_Cursor /= Cursor.Get then
@@ -187,7 +178,7 @@ procedure Main is
                     Cursor_Status.Occupied (True);
 
                   -- Title-bar click in "game" mode
-                  else -- This is a
+                  else
                     Exit_To_Menu.Disable;
                     Enter_Game.Enable;
                   end if;
@@ -218,10 +209,9 @@ procedure Main is
           Current_Width  := Window_Width.Get;
           Current_Height := Window_Height.Get;
           Restart_Framebuffer;
-        end if;
 
-        -- Show the framebuffer
-        Present_Drawing;
+        -- Also perform a restart if the framebuffer itself triggers the need for one
+        elsif not Framebuffer_Status.Occupied then Restart_Framebuffer; end if;
 
         -- Save some cycles
         delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
@@ -236,7 +226,7 @@ procedure Main is
     end;
 
     -- Finalize
-    Finalize_Configuration (S (OS_Info.Path) & PATH_CONFIG);
+    Finalize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
     Menu_Task.Finalize;
     Finalize_Drawing;
     Finalize_Windowing;

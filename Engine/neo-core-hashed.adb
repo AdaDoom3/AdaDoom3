@@ -15,23 +15,28 @@
 
 package body Neo.Core.Hashed is
   protected body Safe_Map is
-      procedure Set     (Val : Unsafe.Map)                      is begin This := Val;                                       end;
-      procedure Clear                                           is begin This.Clear;                                        end;
-      procedure Next    (Pos : in out Cursor)                   is begin Unsafe.Next          (Pos);                        end;
-      procedure Delete  (Pos : in out Cursor)                   is begin This.Delete          (Pos);                        end;
-      procedure Delete  (Key : Str)                             is begin This.Delete          (To_Str_Unbound (Key));       end;
-      procedure Replace (Pos : Cursor; Item : Map_T)            is begin This.Replace_Element (Pos, Item);                  end;
-      procedure Replace (Key : Str; Item : Map_T)               is begin This.Replace         (To_Str_Unbound (Key), Item); end;
-      procedure Insert  (Key : Str; Item : Map_T)               is begin This.Insert          (To_Str_Unbound (Key), Item); end;
-      function Has      (Key : Str)    return Bool              is (This.Contains             (To_Str_Unbound (Key)));
-      function Has      (Pos : Cursor) return Bool              is (Unsafe.Has_Element        (Pos));
-      function Key      (Pos : Cursor) return Str               is (S (Unsafe.Key             (Pos)));
-      function Get      (Key : Str)    return Map_T             is (This                      (To_Str_Unbound (Key)));
-      function Get      (Pos : Cursor) return Map_T             is (Unsafe.Element            (Pos));
-      function Get                     return Unsafe.Map        is (This);
-      function Keys                    return Array_Str_Unbound is (Keys                      (This));
-      function First                   return Cursor            is (This.First);
-      function Length                  return Natural           is (Natural (This.Length));
+      procedure Set     (Val : Unsafe.Map)                           is begin This := Val;                                       end;
+      procedure Clear                                                is begin This.Clear;                                        end;
+      procedure Next    (Pos : in out Cursor)                        is begin Unsafe.Next          (Pos);                        end;
+      procedure Delete  (Pos : in out Cursor)                        is begin This.Delete          (Pos);                        end;
+      procedure Delete  (Key : Str)                                  is begin This.Delete          (To_Str_Unbound (Key));       end;
+      procedure Delete  (Key : Str_Unbound)                          is begin This.Delete          (Key);       end;
+      procedure Replace (Pos : Cursor;      Item : Map_T)            is begin This.Replace_Element (Pos, Item);                  end;
+      procedure Replace (Key : Str;         Item : Map_T)            is begin This.Replace         (To_Str_Unbound (Key), Item); end;
+      procedure Replace (Key : Str_Unbound; Item : Map_T)            is begin This.Replace         (Key, Item); end;
+      procedure Insert  (Key : Str;         Item : Map_T)            is begin This.Insert          (To_Str_Unbound (Key), Item); end;
+      procedure Insert  (Key : Str_Unbound; Item : Map_T)            is begin This.Insert          (Key, Item); end;
+      function Has      (Key : Str)         return Bool              is (This.Contains             (To_Str_Unbound (Key)));
+      function Has      (Key : Str_Unbound) return Bool              is (This.Contains             (Key));
+      function Has      (Pos : Cursor)      return Bool              is (Unsafe.Has_Element        (Pos));
+      function Key      (Pos : Cursor)      return Str               is (S (Unsafe.Key             (Pos)));
+      function Get      (Key : Str)         return Map_T             is (This                      (To_Str_Unbound (Key)));
+      function Get      (Key : Str_Unbound) return Map_T             is (This                      (Key));
+      function Get      (Pos : Cursor)      return Map_T             is (Unsafe.Element            (Pos));
+      function Get                          return Unsafe.Map        is (This);
+      function Keys                         return Array_Str_Unbound is (Keys                      (This));
+      function First                        return Cursor            is (This.First);
+      function Length                       return Natural           is (Natural (This.Length));
     end;
 
   -- Sorted key conversions

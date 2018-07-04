@@ -1,0 +1,62 @@
+u1mach_on {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/delta2b/u1_beam_on.wav
+}
+ 
+u1mach_off {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/delta2b/u1_beam_off.wav
+}
+
+u1mach_loop {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/levels/delta2b/u1_beam.wav
+
+
+}
+
+delta2b_hazmat_trigger {
+	minDistance	5
+	maxDistance	35
+	volume		2
+	unclamped
+
+	sound/vo/delta2b/02_scientist_trigger.wav
+}
+
+delta2b_hazmat_primary {
+	minDistance	5
+	maxDistance	35
+	volume		2
+	unclamped
+
+	sound/vo/delta2b/04_scientist_primary.wav
+}
+
+delta2b_hazmat_secondary1 {
+	minDistance	5
+	maxDistance	35
+	volume		2
+	unclamped
+
+	sound/vo/delta2b/05_scientist_secondary.wav
+}
+
+delta2b_hazmat_secondary2 {
+	minDistance	5
+	maxDistance	35
+	volume		4
+	unclamped
+	
+	sound/vo/delta2b/06_scientist_secondary.wav
+}

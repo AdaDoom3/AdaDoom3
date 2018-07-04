@@ -1,0 +1,19 @@
+comm1_swann_video1 {
+	minDistance	5
+	maxDistance	15
+	onDemand
+	sound/vo/comm/swann_vidphone1.wav
+}
+
+comm1_swann_video2 {
+	minDistance	5
+	maxDistance	15
+	onDemand
+	sound/vo/comm/swann_vidphone2.wav
+}
+comm1_swann_video3 {
+	minDistance	5
+	maxDistance	15
+	onDemand
+	sound/vo/comm/swann_vidphone3.wav
+}

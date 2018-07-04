@@ -1,0 +1,26 @@
+bloodsplat {
+	minDistance		3
+	maxDistance		15
+	
+	sound/xian/bloodsplats/bsplat_11.wav
+	//sound/xian/bloodsplats/bsplat_10.wav
+	//sound/xian/bloodsplats/bsplat_09.wav
+	sound/xian/bloodsplats/bsplat_08.wav
+	sound/xian/bloodsplats/bsplat_07.wav
+	sound/xian/bloodsplats/bsplat_06.wav
+	//sound/xian/bloodsplats/bsplat_05.wav
+}
+
+bloodspurt {
+	minDistance		3
+	maxDistance		15
+	volume			2
+	
+	//sound/xian/bloodsplats/bspurt_01.wav
+	//sound/xian/bloodsplats/bspurt_02.wav
+	//sound/xian/bloodsplats/bspurt_03.wav
+	sound/xian/bloodsplats/bspurt_04.wav
+	sound/xian/bloodsplats/bspurt_05.wav
+	sound/xian/bloodsplats/bspurt_06.wav
+	//sound/xian/bloodsplats/bspurt_07.wav
+}

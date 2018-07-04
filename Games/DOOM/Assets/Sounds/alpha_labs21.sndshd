@@ -1,0 +1,358 @@
+al2_maggot_rattlecage {
+	minDistance	3
+	maxDistance	20
+	volume		8
+
+	sound/LEVELS/alphalabs2/maggot_cage_rattle.wav
+
+}
+
+
+a2_crane_overobject {
+	minDistance	3
+	maxDistance	20
+	volume		3
+	
+	sound/levels/alphalabs2/crane_on_object.wav
+}
+
+a2_crane_offobject {
+	minDistance	3
+	maxDistance	20
+	volume		3
+	
+	sound/levels/alphalabs2/crane_off_object.wav
+}
+
+
+
+a2_crane_move_x {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/crane/x_axis.wav
+}
+
+a2_crane_move_y {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/crane/y_axis.wav
+}
+
+
+a2_crane_move_claw {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/crane/claw.wav
+}
+
+
+a2_crane_move_updown {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/crane/updown.wav
+}
+
+
+a2_mfs_secretdoor_open {
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_secretdoor_open.wav
+
+}
+
+a2_mfs_secretladder {
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_secretladder.wav
+
+}
+
+a2_mfs_flaps_close {
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_flaps_close.wav
+
+}
+
+a2_mfs_flaps_open {
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_flaps_open.wav
+
+}
+
+a2_mfs_tube2_movement1	{
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_movement.wav
+
+}
+
+a2_mfs_tube2_decent {
+	minDistance	3
+	maxDistance	20
+	volume		2
+
+	sound/ed/mfs_compressor/mfs_decent.wav
+
+}
+
+a2_mfs_punger_in {
+	minDistance	3
+	maxDistance	20
+	volume		2
+	
+	sound/ed/mfs_compressor/mfs_plunger_in.wav
+
+}
+
+a2_mfs_punger_out {
+	minDistance	3
+	maxDistance	20
+	volume		2
+	
+	sound/ed/mfs_compressor/mfs_plunger_out.wav
+
+}
+
+a2_mfs_can_insertion {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/mfs_compressor/mfs_can_insertion.wav
+
+}
+
+a2_mfs_roller_movement_in {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/mfs_compressor/mfs_roller_movement_in.wav
+
+}
+
+a2_mfs_roller_movement_out {
+	minDistance	3
+	maxDistance	20
+	volume		0
+	
+	sound/ed/mfs_compressor/mfs_roller_movement_out.wav
+
+}
+
+a2_mfs_drum_rotation {
+	minDistance	3
+	maxDistance	20
+	volume		3
+	
+	sound/ed/mfs_compressor/mfs_drum_rotation.wav
+
+}
+
+emp_soundblast {
+	minDistance	3
+	maxDistance	20
+	volume 2
+	no_dups
+
+	sound/levels/alphalabs2/empblast_01.wav
+	sound/levels/alphalabs2/empblast_02.wav
+	sound/levels/alphalabs2/empblast_03.wav
+	sound/levels/alphalabs2/empblast_04.wav
+}
+
+alpha_labs2_scientist_trigger_1 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_1.wav
+
+}
+
+alpha_labs2_scientist_trigger_2 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_2.wav
+
+}
+
+alpha_labs2_scientist_trigger_3 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_3.wav
+
+}
+
+alpha_labs2_scientist_trigger_4 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_4.wav
+
+}
+
+alpha_labs2_scientist_trigger_5 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_5.wav
+
+}
+
+alpha_labs2_scientist_trigger_6 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_6.wav
+
+}
+
+alpha_labs2_scientist_trigger_7 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_7.wav
+
+}
+
+alpha_labs2_scientist_trigger_8 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_8.wav
+
+}
+
+alpha_labs2_scientist_trigger_9 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_9.wav
+
+}
+
+alpha_labs2_scientist_trigger_10 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_10.wav
+
+}
+
+alpha_labs2_scientist_trigger_11 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_11.wav
+
+}
+
+alpha_labs2_scientist_trigger_12 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_trigger_12.wav
+
+}
+
+alpha_labs2_scientist_primary {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	sound/vo/alpha_labs2/scientist_primary_1.wav
+
+}
+
+alpha_labs2_scientist_secondary1 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_secondary_1.wav
+}
+
+alpha_labs2_scientist_secondary2 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_secondary_2.wav
+}
+
+alpha_labs2_scientist_hurry1 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_secondary_3.wav
+}
+
+alpha_labs2_scientist_hurry2 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_secondary_4.wav
+}
+
+alpha_labs2_scientist_attacked1 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_attacked_1.wav
+}
+
+alpha_labs2_scientist_attacked2 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_attacked_2.wav
+}
+
+alpha_labs2_scientist_attacked3 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_attacked_3.wav
+}
+
+alpha_labs2_scientist_saved1 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_saved_1.wav
+}
+
+alpha_labs2_scientist_saved2 {
+	minDistance	5
+	maxDistance	15
+	volume 2
+	
+	sound/vo/alpha_labs2/scientist_saved_2.wav
+}

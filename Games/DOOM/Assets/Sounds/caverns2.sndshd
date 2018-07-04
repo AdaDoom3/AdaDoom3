@@ -1,0 +1,135 @@
+caverns2_maint1_trig {
+
+	volume	0
+	minDistance	5
+	maxDistance	25
+
+	sound/vo/caverns2/maint1_trig.wav
+
+}
+
+caverns2_maint1_primary {
+
+	volume	0
+	minDistance	5
+	maxDistance	25
+
+	sound/vo/caverns2/maint1_1.wav
+
+}
+
+caverns2_maint1_secondary1 {
+
+	volume	0
+	minDistance	5
+	maxDistance	25
+
+	sound/vo/caverns2/maint1_2.wav
+
+}
+
+caverns2_maint1_secondary2 {
+
+	volume	0
+	minDistance	5
+	maxDistance	25
+
+	sound/vo/caverns2/maint1_3.wav
+
+}
+
+caverns2_maint1_whimpering {
+	
+	volume	0
+	minDistance	5
+	maxDistance	25
+
+	sound/vo/caverns2/maint1_whimper1.wav
+	sound/vo/caverns2/maint1_whimper2.wav
+	sound/vo/caverns2/maint1_whimper3.wav
+	sound/vo/caverns2/maint1_whimper4.wav
+	sound/vo/caverns2/maint1_whimper5.wav
+
+}	
+
+caverns2_boulder {
+
+	minDistance	5
+	maxDistance	30
+	volume		2
+	unclamped
+	shakes		0.1
+	no_dups
+
+	sound/ed/boulder/boulder1.wav
+	sound/ed/boulder/boulder2.wav
+	sound/ed/boulder/boulder3.wav
+	sound/ed/boulder/boulder4.wav
+	sound/ed/boulder/boulder5.wav
+	sound/ed/boulder/boulder6.wav
+	sound/ed/boulder/boulder7.wav
+	sound/ed/boulder/boulder7.wav
+
+}
+
+caverns2_generator {
+
+	minDistance	3
+	maxDistance	20
+	volume	0
+
+	leadin
+	looping
+	sound/ed/sfx/generator_startup.wav
+	sound/ed/sfx/generator_loop.wav
+	
+
+}
+
+crane_main_speaker	{
+
+	minDistance	3
+	maxDistance	30
+	volume		0
+	unclamped
+	looping
+
+	sound/ed/sfx/crane1.wav
+
+}
+	
+crane_carrier_speaker	{
+
+	minDistance	3
+	maxDistance	30
+	volume		0
+	looping
+
+	sound/ed/sfx/crane2.wav
+
+}	
+
+caverns2_burn {
+
+	minDistance	3
+	maxDistance	15
+	volume		-3
+	looping
+
+	sound/ed/caverns2/burning.wav
+
+}
+
+caverns2_scamper {
+
+	minDistance	1
+	maxDistance	10
+	volume	-9
+	no_occlusion
+	
+	sound/ed/caverns2/bugscamper.wav
+
+}
+
+
+	

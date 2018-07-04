@@ -1,0 +1,610 @@
+monster_zombie_commando_cgun_fire {
+	minDistance	2
+	maxDistance	45
+	volume	3
+	
+	sound/ed/chaingun/fire1.wav
+	sound/ed/chaingun/fire2.wav
+	sound/ed/chaingun/fire3.wav
+	sound/ed/chaingun/fire4.wav
+}
+
+monster_zombie_commando_alert1 {
+
+	
+	minDistance	10
+	maxDistance	45
+	volume	3
+	sound/ed/zombie_commando/range1_1.wav
+	}
+
+monster_zombie_commando_alert2 {
+
+	
+	minDistance	10
+	maxDistance	45
+	volume	3
+	sound/ed/zombie_commando/melee5_4.wav
+	}
+
+
+monster_zombie_commando_sight1 {
+	minDistance	10
+	maxDistance	45
+	volume		3
+	unclamped
+
+	sound/ed/zombie_commando/site1.wav
+	sound/ed/zombie_commando/site2.wav
+	sound/ed/zombie_commando/site3_you.wav
+	sound/ed/zombie_commando/site6_die.wav
+
+/*
+	sound/ed/zombie_commando/site12.wav
+	sound/ed/zombie_commando/site13.wav
+	sound/ed/zombie_commando/site14.wav
+	sound/ed/zombie_commando/site15.wav
+	sound/ed/zombie_commando/site16.wav
+*/
+
+	//sound/ed/zombie_commando/site4_you.wav
+	//sound/ed/zombie_commando/site5_you.wav
+	//sound/ed/zombie_commando/site10_youwilldie.wav
+	//sound/ed/zombie_commando/site11_youwilldie.wav
+	//sound/ed/zombie_commando/site7_die.wav
+	//sound/ed/zombie_commando/site8_die.wav
+	//sound/ed/zombie_commando/site9_die.wav
+
+
+}
+
+monster_zombie_commando_sight2 {
+	minDistance	10
+	maxDistance	45
+	volume		3
+	unclamped
+
+	sound/ed/zombie_commando/2site1.wav
+	sound/ed/zombie_commando/2site2.wav
+	sound/ed/zombie_commando/2site3.wav
+	
+/*	sound/ed/zombie_commando/2site4.wav
+	sound/ed/zombie_commando/2site5.wav
+	sound/ed/zombie_commando/2site6.wav
+	sound/ed/zombie_commando/2site7.wav
+*/
+}
+
+monster_zombie_commando_sight7 {
+
+	minDistance	10
+	maxDistance	45
+	volume		3
+	unclamped
+
+	sound/ed/zombie_commando/2site3.wav
+
+}
+
+monster_zombie_commando_chatter {
+	minDistance	15
+	maxDistance	25
+	volume	0
+	no_dups
+
+	sound/ed/zombie_commando/idle_breath1.wav
+	sound/ed/zombie_commando/idle_breath2.wav
+	sound/ed/zombie_commando/idle_breath3.wav
+	sound/ed/zombie_commando/idle_breath4.wav
+	
+/*	
+	sound/ed/zombie_commando/idle_breath5.wav
+	sound/ed/zombie_commando/idle_breath6.wav
+	sound/ed/zombie_commando/idle_breath7.wav
+	sound/ed/zombie_commando/idle_breath8.wav
+	sound/ed/zombie_commando/idle_breath9.wav
+	sound/ed/zombie_commando/idle_breath10.wav
+	sound/ed/zombie_commando/idle_breath11.wav
+*/
+}
+
+monster_zombie_commando_chatter_combat {
+	minDistance	15
+	maxDistance	35
+	volume	0
+
+	sound/ed/zombie_commando/site1.wav
+	sound/ed/zombie_commando/site6_die.wav
+	sound/ed/zombie_commando/site11_youwilldie.wav
+
+/*
+	sound/ed/zombie_commando/site7_die.wav
+	sound/ed/zombie_commando/site8_die.wav
+	sound/ed/zombie_commando/site9_die.wav
+	sound/ed/zombie_commando/site10_youwilldie.wav
+*/
+	
+}
+
+
+monster_zombie_commando_pain {
+	minDistance	10
+	maxDistance	45
+	volume	0
+	no_dups	
+
+	sound/ed/zombie_commando/pain1.wav
+	sound/ed/zombie_commando/pain2.wav
+	sound/ed/zombie_commando/pain3.wav
+	sound/ed/zombie_commando/pain4.wav
+	
+/*	sound/ed/zombie_commando/pain5.wav
+	sound/ed/zombie_commando/pain6.wav
+	sound/ed/zombie_commando/pain7.wav
+	sound/ed/zombie_commando/pain8.wav
+	sound/ed/zombie_commando/pain9.wav
+	sound/ed/zombie_commando/pain10.wav
+	sound/ed/zombie_commando/pain11.wav
+	sound/ed/zombie_commando/pain12.wav
+*/
+}
+
+monster_zombie_commando_attackmelee_1 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/melee1_1.wav
+	sound/ed/zombie_commando/melee1_2.wav
+	sound/ed/zombie_commando/melee1_3.wav
+
+//	sound/ed/zombie_commando/melee1_4.wav
+//	sound/ed/zombie_commando/melee1_5.wav
+
+}
+
+monster_zombie_commando_attackmelee_2 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+	
+	sound/ed/zombie_commando/melee2_1.wav
+	sound/ed/zombie_commando/melee2_2.wav
+	sound/ed/zombie_commando/melee2_3.wav
+	sound/ed/zombie_commando/melee2_4.wav
+	
+
+}
+
+monster_zombie_commando_attackmelee_3 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/melee3_1.wav
+	sound/ed/zombie_commando/melee3_2.wav
+	sound/ed/zombie_commando/melee3_3.wav
+	sound/ed/zombie_commando/melee3_4.wav
+
+}
+
+monster_zombie_commando_attackmelee_4 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/melee4_1.wav
+	sound/ed/zombie_commando/melee4_2.wav
+	sound/ed/zombie_commando/melee4_3.wav
+	sound/ed/zombie_commando/melee4_4.wav
+
+}
+
+monster_zombie_commando_attackmelee_5 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/melee5_1.wav
+	sound/ed/zombie_commando/melee5_2.wav
+	sound/ed/zombie_commando/melee5_3.wav
+	sound/ed/zombie_commando/melee5_4.wav
+
+}
+
+monster_zombie_commando_range_attack_1 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/range1_1.wav
+	sound/ed/zombie_commando/range1_2.wav
+	sound/ed/zombie_commando/range1_3.wav
+
+}
+
+monster_zombie_commando_range_attack_2 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/range2_1.wav
+	sound/ed/zombie_commando/range2_2.wav
+	sound/ed/zombie_commando/range2_3.wav
+
+}
+
+monster_zombie_commando_range_attack_3 {
+	minDistance	10
+	maxDistance	25
+	volume	3
+	no_dups
+
+	sound/ed/zombie_commando/range3_1.wav
+	sound/ed/zombie_commando/range3_2.wav
+	sound/ed/zombie_commando/range3_3.wav
+
+}
+
+monster_zombie_commando_melee_hit {
+
+	minDistance	10
+	maxDistance	25
+	volume	4.5
+
+	sound/ed/zombie_commando/punches/punch1.wav
+	sound/ed/zombie_commando/punches/punch4.wav
+	sound/ed/zombie_commando/punches/punch5.wav
+	sound/ed/zombie_commando/punches/punch6.wav
+
+//	sound/ed/zombie_commando/punches/punch2.wav
+//	sound/ed/zombie_commando/punches/punch3.wav
+
+
+}
+
+monster_zombie_commando_melee_miss {
+
+	minDistance	10
+	maxDistance	25
+	volume	4.5
+
+	sound/ed/zombie_commando/whooshes/whoosh11_light.wav
+	sound/ed/zombie_commando/whooshes/whoosh12_light.wav
+	sound/ed/zombie_commando/whooshes/whoosh16_thin.wav
+	sound/ed/zombie_commando/whooshes/whoosh17_thin.wav
+
+/*
+	sound/ed/zombie_commando/whooshes/whoosh13_light.wav
+	sound/ed/zombie_commando/whooshes/whoosh14_light.wav
+	sound/ed/zombie_commando/whooshes/whoosh15_light.wav
+	sound/ed/zombie_commando/whooshes/whoosh18_thin.wav
+	sound/ed/zombie_commando/whooshes/whoosh19_thin.wav
+	sound/ed/zombie_commando/whooshes/whoosh20_thin.wav
+*/
+
+}
+
+monster_zombie_commando_melee_tentacle_hit {
+
+	minDistance	10
+	maxDistance	25
+	volume	4.5
+
+	sound/ed/zombie_commando/squishes/squish10_impact.wav
+	sound/ed/zombie_commando/squishes/squish11_impact.wav
+	sound/ed/zombie_commando/squishes/squish12_impact.wav
+	sound/ed/zombie_commando/squishes/squish14_impact.wav
+
+}
+
+monster_zombie_commando_melee_tentacle_miss {
+
+	minDistance	10
+	maxDistance	25
+	volume	4.5
+
+	sound/ed/zombie_commando/whooshes/whoosh1_deep.wav
+	sound/ed/zombie_commando/whooshes/whoosh2_deep.wav
+	sound/ed/zombie_commando/whooshes/whoosh5_deeper.wav
+	sound/ed/zombie_commando/whooshes/whoosh6_deeper.wav
+
+/*
+	sound/ed/zombie_commando/whooshes/whoosh3_deep.wav
+	sound/ed/zombie_commando/whooshes/whoosh4_deep.wav
+	sound/ed/zombie_commando/whooshes/whoosh7_deeper.wav
+	sound/ed/zombie_commando/whooshes/whoosh8_deeper.wav
+	sound/ed/zombie_commando/whooshes/whoosh9_deeper.wav
+	sound/ed/zombie_commando/whooshes/whoosh10_deeper.wav
+*/
+}
+
+monster_zombie_commando_tentacle_out {
+
+	minDistance	10
+	maxDistance	25
+	volume	-3
+
+	sound/ed/zombie_commando/squishes/squish4.wav
+	sound/ed/zombie_commando/squishes/squish5.wav
+	sound/ed/zombie_commando/squishes/squish6.wav
+
+}
+
+monster_zombie_commando_tentacle_in {
+
+	minDistance	1
+	maxDistance	25
+	volume		-7
+
+	sound/ed/zombie_commando/squishes/squish7.wav
+	sound/ed/zombie_commando/squishes/squish8.wav
+	sound/ed/zombie_commando/squishes/squish9.wav
+
+}
+
+monster_zombie_commando_footstep {
+
+	minDistance	1
+	maxDistance	25
+	volume	-1
+//	shakes		0.2
+
+	sound/ed/zombie_commando/step1.wav
+	sound/ed/zombie_commando/step2.wav
+	sound/ed/zombie_commando/step3.wav
+	sound/ed/zombie_commando/step4.wav
+}
+
+// Testing a dual mix footstep for these guys.. big, heavy, beefy... now with 100% more clink !
+
+monster_zombie_commando_footstep_clinks {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/xian/player/footsteps/concrete_klinks/pfs_01.wav
+	sound/xian/player/footsteps/concrete_klinks/pfs_02.wav
+	sound/xian/player/footsteps/concrete_klinks/pfs_07.wav
+	sound/xian/player/footsteps/concrete_klinks/pfs_08.wav
+}
+
+monster_zombie_commando_death {
+	minDistance	10
+	maxDistance	45
+	volume	3
+
+	sound/ed/zombie_commando/death1.wav
+	sound/ed/zombie_commando/death2.wav
+	sound/ed/zombie_commando/death3.wav
+	sound/ed/zombie_commando/death4.wav
+
+/*
+	sound/ed/zombie_commando/death5.wav
+	sound/ed/zombie_commando/death6.wav
+	sound/ed/zombie_commando/death7.wav
+	sound/ed/zombie_commando/death8.wav
+*/
+
+}
+
+
+monster_zombie_commando_die_1 {
+	minDistance	10
+	maxDistance	45
+	volume	3
+
+	sound/ed/zombie_commando/death1.wav
+	sound/ed/zombie_commando/death2.wav
+	sound/ed/zombie_commando/death3.wav
+	sound/ed/zombie_commando/death4.wav
+	
+/*	sound/ed/zombie_commando/death5.wav
+	sound/ed/zombie_commando/death6.wav
+	sound/ed/zombie_commando/death7.wav
+	sound/ed/zombie_commando/death8.wav
+*/
+}
+
+monster_zombie_commando_die_2 {
+	minDistance	10
+	maxDistance	45
+	volume	3
+
+	sound/ed/zombie_commando/death1.wav
+	sound/ed/zombie_commando/death2.wav
+	sound/ed/zombie_commando/death3.wav
+	sound/ed/zombie_commando/death4.wav
+
+/*
+	sound/ed/zombie_commando/death5.wav
+	sound/ed/zombie_commando/death6.wav
+	sound/ed/zombie_commando/death7.wav
+	sound/ed/zombie_commando/death8.wav
+*/
+}
+
+monster_zombie_commando_thud {
+	minDistance	1
+	maxDistance	45
+	volume	3
+
+}
+
+
+
+// these are added for chaingun commando
+
+
+monster_zombie_commando_cgun_chains  {
+	minDistance	1
+	maxDistance	8
+	volume		0
+}
+
+monster_zombie_commando_cgun_melee_hit {
+
+	minDistance	1
+	maxDistance	45
+	volume	3
+
+	sound/weapons/projectiles/bulletimpact_flesh_02.wav
+	sound/weapons/projectiles/bulletimpact_flesh_03.wav
+}
+
+monster_zombie_commando_cgun_melee_miss {
+
+	minDistance	1
+	maxDistance	45
+	volume	3
+
+	sound/xian/monsters/imp/melee/miss_01.wav	
+}
+
+monster_zombie_commando_fire {
+
+	minDistance	1
+	maxDistance	45
+	volume	0
+
+	sound/weapons/cgun/fire_01.wav
+	sound/weapons/cgun/fire_02.wav
+	sound/weapons/cgun/fire_03.wav
+	sound/weapons/cgun/fire_04.wav
+	sound/weapons/cgun/fire_05.wav
+	
+}
+
+monster_zombie_commando_winddown {
+
+	minDistance	1
+	maxDistance	45
+	volume		-2
+
+	sound/weapons/cgun/wind_down.wav
+}
+
+monster_zombie_commando_windup {
+
+	minDistance	1
+	maxDistance	45
+	volume		-7
+
+	sound/weapons/cgun/wind_up.wav
+}
+
+monster_zombie_commando_cgun_die {
+
+	minDistance	10
+	maxDistance	45
+	volume	3
+	
+}
+
+monster_zombie_commando_cgun_melee_1 {
+
+	minDistance	1
+	maxDistance	45
+	volume	3
+
+	
+}
+
+monster_zombie_commando_cgun_melee_2 {
+
+	minDistance	1
+	maxDistance	45
+	volume	3
+}
+
+monster_zombie_commando_breath {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/zombie_commando/idle_breath1.wav
+	sound/ed/zombie_commando/idle_breath2.wav
+	sound/ed/zombie_commando/idle_breath3.wav
+	sound/ed/zombie_commando/idle_breath4.wav
+	
+/*	
+	sound/ed/zombie_commando/idle_breath5.wav
+	sound/ed/zombie_commando/idle_breath6.wav
+	sound/ed/zombie_commando/idle_breath7.wav
+	sound/ed/zombie_commando/idle_breath8.wav
+	sound/ed/zombie_commando/idle_breath9.wav
+	sound/ed/zombie_commando/idle_breath10.wav
+	sound/ed/zombie_commando/idle_breath11.wav
+*/
+}
+
+monster_zombie_commando_breath_inhale {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/zombie_commando/idle_breath1.wav
+	sound/ed/zombie_commando/idle_breath2.wav
+	sound/ed/zombie_commando/idle_breath3.wav
+	sound/ed/zombie_commando/idle_breath4.wav
+
+/*
+	sound/ed/zombie_commando/idle_breath5.wav
+	sound/ed/zombie_commando/idle_breath6.wav
+	sound/ed/zombie_commando/idle_breath7.wav
+	sound/ed/zombie_commando/idle_breath8.wav
+	sound/ed/zombie_commando/idle_breath9.wav
+	sound/ed/zombie_commando/idle_breath10.wav
+	sound/ed/zombie_commando/idle_breath11.wav
+*/
+
+}
+
+monster_zombie_commando_breath_exhale {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/zombie_commando/idle_breath1.wav
+	sound/ed/zombie_commando/idle_breath2.wav
+	sound/ed/zombie_commando/idle_breath3.wav
+	sound/ed/zombie_commando/idle_breath4.wav
+
+/*
+	sound/ed/zombie_commando/idle_breath5.wav
+	sound/ed/zombie_commando/idle_breath6.wav
+	sound/ed/zombie_commando/idle_breath7.wav
+	sound/ed/zombie_commando/idle_breath8.wav
+	sound/ed/zombie_commando/idle_breath9.wav
+	sound/ed/zombie_commando/idle_breath10.wav
+	sound/ed/zombie_commando/idle_breath11.wav
+*/
+}
+
+
+monster_zombie_commando_body_roll {
+	minDistance	1
+	maxDistance	30
+	volume		0
+
+}
+
+monster_zombie_commando_cgun_reload {
+
+	minDistance	1
+	maxDistance	45
+	volume		-2
+
+	sound/weapons/chaingun/cg_reload_twist_01.wav
+
+}

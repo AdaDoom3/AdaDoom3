@@ -1,0 +1,377 @@
+audiolog_mc1_berneche {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/mc1_berneche.wav
+}
+
+audiolog_admin_banks_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/admin_01_WilliamBanks.wav
+}
+
+audiolog_admin_banks_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/admin_02_WilliamBanks.wav
+}
+
+audiolog_admin_simons_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/Admin_03_PaulSimons.wav
+}
+
+audiolog_alphalabs1_berger_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs1_02_KyleBerger.wav
+}
+
+audiolog_alphalabs1_smith_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs1_01_JackSmith.wav
+}
+
+audiolog_alphalabs2_chin_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs2_02_AndrewChin.wav
+}
+
+audiolog_alphalabs2_connors_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs2_01_WalterConnors.wav
+}
+
+audiolog_alphalabs3_abrams_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs3_02_MichaelAbrams.wav
+}
+
+audiolog_alphalabs3_lamia_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs3_03_MarkLamia.wav
+}
+
+audiolog_alphalabs3_nelson_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/alphalabs3_01_HenryNelson.wav
+}
+
+audiolog_caverns1_cody_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/caverns1_01_RobertCody.wav
+}
+
+audiolog_comm1_blake_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/comm1_01_SeamusBlake.wav
+}
+
+audiolog_comm1_wolfe_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/comm1_02_BenWolfe.wav
+}
+
+audiolog_commoutside_holiday_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/commoutside_02_JamesHoliday.wav
+}
+
+audiolog_commoutside_ridge_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/commoutside_01_RonRidge.wav
+}
+
+audiolog_cpu_bates_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/cpu_01_TonyBates.wav
+}
+
+audiolog_cpu_bates_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/cpu_02_TonyBates.wav
+}
+
+audiolog_cpu_haskell_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/cpu_02_CharlieHaskell.wav
+}
+
+audiolog_audio_log_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/temp_audio_log.wav
+}
+
+audiolog_audio_log_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/temp_audio_log.wav
+}
+
+audiolog_delta1_price_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta1_01_RobertPrice.wav
+}
+
+audiolog_delta1_price_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta1_02_RobertPrice.wav
+}
+
+audiolog_delta2a_raleigh_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta2a_02_PeterRaleigh.wav
+}
+
+audiolog_delta2a_raleigh_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta2a_03_PeterRaleigh.wav
+}
+
+audiolog_delta2a_wilson_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta2a_01_PhilWilson.wav
+}
+
+audiolog_delta2b_bullman_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta2b_02_LarryBullman.wav
+}
+
+audiolog_delta2a_cinders_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta2a_04_FrankCinders.wav
+}
+
+audiolog_delta3_cerano_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta3_04_FrankCerano.wav
+}
+
+audiolog_delta3_lee_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta3_02_HanLee.wav
+}
+
+audiolog_delta3_lee_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta3_03_HanLee.wav
+}
+
+audiolog_delta3_shultz_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta3_05_MartenShultz.wav
+}
+
+audiolog_delta5_swann_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta5_01_ElliotSwann.wav
+}
+
+audiolog_delta5_swann_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/delta5_02_ElliotSwann.wav
+}
+
+audiolog_enpro_hammer_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/enpro_03_SteveHammer.wav
+}
+
+audiolog_enpro_chasar_1 {
+	onDemand
+	volume	-1
+	unclamped
+	sound/vo/audio_logs/enpro_04_Chasar.wav
+}
+
+audiolog_enpro_raad_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/enpro_01_PaulRaad.wav
+}
+
+audiolog_enpro_raad_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/enpro_02_PaulRaad.wav
+}
+
+audiolog_hell_garlick_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/hell_02_SimmonGarlick.wav
+}
+
+audiolog_hell_garlick_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/hell_03_SimmonGarlick.wav
+}
+
+audiolog_hell_hebert_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/hell_01_JoshuaHebert.wav
+}
+
+audiolog_marscity2_caseon_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/marscity2_02_ThomasCaseon.wav
+}
+
+audiolog_marscity2_caseon_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/marscity2_03_ThomasCaseon.wav
+}
+
+audiolog_marscity2_stanton_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/marscity2_06_MarkStanton.wav
+}
+
+audiolog_marscity2_tyson_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/marscity2_05_BillTyson.wav
+}
+
+audiolog_marscity2_tyson_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/marscity2_04_BillTyson.wav
+}
+
+audiolog_mcunderground_baston_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/mcunderground_03_GrantBaston.wav
+}
+
+audiolog_mcunderground_delahue_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/mcunderground_01_FrankDelahue.wav
+}
+
+audiolog_mcunderground_delahue_2 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/mcunderground_02_FrankDelahue.wav
+}
+
+audiolog_monorail_harding_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/monorail_01_SamHarding.wav
+}
+
+audiolog_monorail_hollies_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/monorail_02_CharlesHollies.wav
+}
+
+audiolog_recycling1_sadowayj_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/recycling1_01_NicholasSadowayj.wav
+}
+
+audiolog_site3_davis_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/site3_02_RichardDavis.wav
+}
+
+audiolog_site3_rogers_1 {
+	volume 2
+	onDemand
+	unclamped
+	sound/vo/audio_logs/site3_01_PierceRogers.wav
+}

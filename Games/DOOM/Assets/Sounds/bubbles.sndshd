@@ -1,0 +1,23 @@
+deep_bubbles {
+
+	minDistance	1
+	maxDistance	10
+	volume		-3
+	looping
+	sound/ed/sfx/bubbles11.wav
+	sound/ed/sfx/bubbles12.wav
+	sound/ed/sfx/bubbles13.wav
+
+}
+
+bubbles {
+	
+	minDistance	1
+	maxDistance	10
+	volume		-3
+	looping
+	sound/ed/sfx/bubbles1.wav
+	sound/ed/sfx/bubbles2.wav
+	sound/ed/sfx/bubbles3.wav
+
+}

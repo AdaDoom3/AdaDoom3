@@ -1,0 +1,74 @@
+zombie_morgue_footstep {
+	minDistance	1
+	maxDistance	15
+	volume		-5
+	
+	sound/monsters/zombie_morgue/fs_01.wav
+	sound/monsters/zombie_morgue/fs_02.wav
+	sound/monsters/zombie_morgue/fs_03.wav
+	sound/monsters/zombie_morgue/fs_04.wav
+	sound/monsters/zombie_morgue/fs_05.wav
+}
+
+
+zombie_morgue_sight {
+	minDistance	2
+	maxDistance	20
+	volume		2
+	unclamped
+
+	sound/monsters/zombie_morgue/sight_01.wav
+}
+
+zombie_morgue_chatter {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	
+	no_dups
+	
+	sound/monsters/zombie_morgue/chatter_01.wav
+	sound/monsters/zombie_morgue/chatter_02.wav
+	sound/monsters/zombie_morgue/chatter_03.wav
+	sound/monsters/zombie_morgue/chatter_04.wav
+	
+/*	
+	sound/monsters/zombie_morgue/
+	sound/monsters/zombie_morgue/
+	sound/monsters/zombie_morgue/
+*/
+}
+
+zombie_morgue_pain {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	
+	no_dups
+	
+	sound/monsters/zombie_morgue/pain_01.wav		
+	sound/monsters/zombie_morgue/pain_02.wav
+	sound/monsters/zombie_morgue/pain_03.wav
+
+}
+
+
+zombie_morgue_death {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	
+	sound/monsters/zombie_morgue/death_01.wav		
+}
+
+zombie_morgue_melee {
+	minDistance	2
+	maxDistance	20
+	volume		0
+
+	no_dups
+	
+	sound/monsters/zombie_morgue/melee_01.wav
+	sound/monsters/zombie_morgue/melee_02.wav
+	sound/monsters/zombie_morgue/melee_03.wav
+}

@@ -1,0 +1,476 @@
+mcu_zombiesting {
+	minDistance	5
+	maxDistance	45
+	volume		3
+	unclamped
+	
+	sound/levels/mc_underground/zombie_stinger.wav
+}
+
+mcu_spiritsting {
+	minDistance	5
+	maxDistance	40
+	volume		3
+	unclamped
+	
+	shakes		0.2
+	
+	sound/stingers/spiritsting.wav
+}
+
+zombiesting {
+	minDistance	2
+	maxDistance	20
+	volume		4
+	shakes		0.1
+	unclamped
+	
+	sound/stingers/zombiesting.wav
+}
+
+rchat_1 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_01.wav
+}
+
+rchat_2 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_02.wav
+}
+
+rchat_3 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_03.wav
+}
+
+rchat_4 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_04.wav
+}
+
+rchat_5 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_05.wav
+}
+
+rchat_6 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_06.wav
+}
+
+rchat_7 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_07.wav
+}
+
+rchat_8 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter/chatter_08.wav
+}
+
+rchat_9 {
+	global	
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/abandoning_positions.wav
+}
+
+rchat_10 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/breaking_through_the_walls.wav
+}
+
+rchat_11 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/code_red.wav
+}
+
+rchat_12 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/massive_structural_damage.wav
+}
+
+rchat_13 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/random_screaming.wav
+}
+
+rchat_14 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/some_guy_dying.wav
+}
+
+rchat_15 {
+	global
+	volume	-5
+	
+	sound/vo/combat_chatter/radio_chatter2/were_overrun.wav
+}
+
+mcu_video1 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video1.wav
+}
+
+mcu_video2 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video2.wav
+}
+ 
+mcu_video3 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video3.wav
+}  
+
+mcu_video4 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video5.wav
+}  
+
+mcu_video6 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video6.wav
+}  
+
+mcu_video7 {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/cinematics/mc_underground/invasion/video7.wav
+}  
+
+mc_polgergeist {
+	minDistance	2
+	maxDistance	30
+	volume		2
+	unclamped
+	shakes		0.2
+	
+	sound/levels/mc_underground/invasion/poltergeist_02.wav
+}
+
+mc_hellblast_explosion {
+	minDistance	5
+	maxDistance	30
+	volume		3
+	unclamped
+	shakes		0.1
+	
+	sound/levels/mc_underground/invasion/hellblast_explosion.wav
+}
+
+mc_leatherface {
+	minDistance	5
+	maxDistance	35
+	volume		4
+	unclamped
+	
+	sound/cinematics/enpro/leatherface.wav
+}
+
+mc_invasion_stuff {
+	omnidirectional
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/levels/mc_underground/invasion/stereo_stuff.wav
+}
+
+mc_substing_01 {           
+	minDistance	1
+	maxDistance	30
+	unclamped
+	volume		2
+	shakes		0.2
+	
+	sound/levels/mc_underground/invasion/bass_sting_01.wav
+}
+
+mc_substing_02 {
+	minDistance	1
+	maxDistance	30
+	unclamped
+	volume		2
+	shakes		0.2
+	
+	sound/levels/mc_underground/invasion/bass_sting_02.wav
+}
+
+mc_skull_passby {
+	minDistance	2
+	maxDistance	30
+	unclamped
+	volume		4
+	shakes		0.1
+	
+	sound/levels/mc_underground/invasion/skull_flyby.wav
+}
+
+mc_skull_shriek {
+	minDistance	2
+	maxDistance	30
+	volume		4
+	unclamped
+	
+	sound/ed/guardian/seeker4.wav
+}
+
+mc_underground_invasion_roq1 {
+	minDistance	5
+	maxDistance	25
+	unclamped
+	volume		4
+	
+	sound/misc/e3_outro_test.wav
+}
+
+mc_underground_invasion_roq2 {
+	minDistance	5
+	maxDistance	25
+	unclamped
+	volume		4
+	
+	sound/ambient/1shot_metalhit_09.wav
+}
+
+//computer VO
+
+mars_city1_annc_09 {
+	description "becareful of your weapons"
+	onDemand	
+	sound/vo/marscity/comp_announce9.wav
+}
+
+
+mcu_commchatter_1 {
+	global
+	volume	0
+	
+	sound/xian/seq_suspense/mcu_comchatter_01.wav
+}
+
+mcu_impdoor_tear1 {
+	minDistance	5
+	maxDistance	25
+	volume		4
+
+	sound/levels/mc_underground/impdoor_tear_01.wav
+}
+
+mcu_impdoor_tear2 {
+	minDistance	5
+	maxDistance	25
+	volume		3
+
+	sound/levels/mc_underground/impdoor_tear_02.wav
+}
+
+mcu_impdoor_tear3 {
+	minDistance	5
+	maxDistance	25
+	volume		5
+
+	sound/levels/mc_underground/impdoor_tear_03.wav
+}
+
+mcu_impdoor_tear4 {
+	minDistance	5
+	maxDistance	25
+	volume		6
+
+	sound/levels/mc_underground/impdoor_tear_04.wav
+}
+
+mcu_imp_skulkaway {
+	// door sequence
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/imp/breath_test22.wav
+}
+
+mcu_imp_teh_angar {
+	// JeffK is my hero -Xian
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/imp/squeal_test12.wav
+}
+
+mcu_imp_teh_angar2 {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/imp/squeal_test33.wav
+}
+
+mcu_imp_teh_angar3 {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/imp/squeal_test32.wav
+}
+
+
+scinuts1 {
+
+	minDistance	1
+	maxDistance	40
+	volume		10
+	sound/vo/mc_underground/scinuts1.wav
+
+}
+
+scinuts2 {
+
+	minDistance	1
+	maxDistance	40
+	volume		10
+	sound/vo/mc_underground/scinuts2.wav
+
+}
+
+scinuts3 {
+
+	minDistance	1
+	maxDistance	40
+	volume		10
+	sound/vo/mc_underground/scinuts3.wav
+
+}
+
+
+scinuts1a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan15_tk2.wav
+
+}
+
+scinuts2a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan16.wav
+
+}
+
+scinuts3a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan17.wav
+
+}
+
+
+scinuts4a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan18.wav
+
+}
+
+scinuts5a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan09.wav
+
+}
+
+scinuts6a {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan14.wav
+
+}
+
+scinutsend {
+
+	minDistance	1
+	maxDistance	40
+	volume		15
+	sound/vo/mc_underground/jonathan_end.wav
+
+}
+
+// IMP INTRO CUTSCENE
+
+mc_underground_imp_intro {
+
+	minDistance	10
+	maxDistance	30
+	no_occlusion
+	volume	12
+
+	sound/ed/music/mc_underground/mc_underground_imp_intro.wav
+
+}
+
+guilt {
+
+	minDistance	10
+	maxDistance	30
+	no_occlusion
+	volume	-6
+
+	sound/ed/music/mc_underground/guilt.wav
+
+}

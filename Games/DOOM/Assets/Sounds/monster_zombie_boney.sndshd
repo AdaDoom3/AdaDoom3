@@ -1,0 +1,78 @@
+
+monster_zombie_boney_sight
+{
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	no_dups
+
+	sound/monsters/boney/sight_01.wav
+	sound/monsters/boney/sight_02.wav
+}
+
+
+monster_zombie_boney_chatter
+{
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+	no_dups
+
+	sound/monsters/boney/chatter_01.wav
+	sound/monsters/boney/chatter_02.wav
+}
+
+monster_zombie_boney_chatter_combat{
+
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+	no_dups
+
+	sound/monsters/boney/chatter_01.wav
+	sound/monsters/boney/chatter_02.wav
+}
+
+monster_zombie_boney_pain
+{
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	no_dups
+
+	sound/monsters/boney/pain_01.wav
+	sound/monsters/boney/pain_02.wav
+	sound/monsters/boney/pain_03.wav
+	sound/monsters/boney/pain_04.wav
+}
+
+monster_zombie_boney_attackmelee
+{
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	no_dups
+
+	sound/monsters/boney/attack_01.wav
+	sound/monsters/boney/attack_02.wav
+	sound/monsters/boney/attack_03.wav
+}
+
+monster_zombie_boney_die
+{
+	minDistance	5
+	maxDistance	35
+	volume		2
+	unclamped
+	no_dups
+
+	sound/monsters/boney/death_01.wav
+	sound/monsters/boney/death_02.wav
+	sound/monsters/boney/death_03.wav
+}
+

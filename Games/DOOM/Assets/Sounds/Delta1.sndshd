@@ -1,0 +1,49 @@
+delta1_sarge_vcd {
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta1/sarge_video1.wav
+}
+
+hologram_datalinker {
+	minDistance	5
+	maxDistance	25
+	volume		6
+	unclamped
+	
+	sound/ed/delta1/datalinker.wav
+}
+
+hologram_movement {
+	minDistance	5
+	maxDistance	25
+	volume		4
+	unclamped
+	
+	sound/ed/delta1/mapitemmove.wav
+}
+
+hologram_spawn {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/ed/delta1/mapitemspawn.wav
+}
+
+hologram_spawnout {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/ed/delta1/mapitemspawnout.wav
+}
+
+
+hologram_loop {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/ed/delta1/maploop.wav
+}

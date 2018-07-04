@@ -1,0 +1,1538 @@
+// This is the sound shader file for lights
+
+// --
+// Sputter On lights
+// --
+
+sputter_on_01 {
+	minDistance		2
+	maxDistance		15
+	volume			-6
+	looping
+
+	leadin	sound/lights/power_on_lights/activate_loop_on_01.wav
+	sound/lights/power_on_lights/loop_on_01.wav
+}
+
+sputter_on_02 {
+	minDistance		2
+	maxDistance		15
+	volume			-6
+	looping
+
+	leadin	sound/lights/power_on_lights/activate_loop_on_02.wav
+	sound/lights/power_on_lights/loop_on_02.wav
+}
+
+sputter_on_03 {
+	minDistance		2
+	maxDistance		15
+	volume			-6
+	looping
+
+	leadin	sound/lights/power_on_lights/activate_loop_on_03.wav
+	sound/lights/power_on_lights/loop_on_03.wav
+}
+
+sputter_on_04 {
+	minDistance		2
+	maxDistance		15
+	volume			-6
+	looping
+
+	leadin	sound/lights/power_on_lights/activate_loop_on_04.wav
+	sound/lights/power_on_lights/loop_on_04.wav
+}
+
+
+
+// ----------------------------------
+// Break sound with silence following
+//
+// Use this as an altSound on a light shader if you want to shoot it, and have the light
+// go silent with no flickering after it's broken.
+// ----------------------------------
+
+light_break {
+	minDistance		5
+	maxDistance		25
+	volume			5						// This should be played louder so it's heard
+											// over weapon effects and whatnot.
+	unclamped
+
+
+	leadin sound/lights/1shot_lightbreak_01.wav
+}
+
+
+map10_pulse_light {
+
+	minDistance	1
+	maxDistance	5	
+	volume		-30
+	plain
+	looping
+
+	sound/electronics/loop_computer_hum_02.wav
+
+}
+
+light_beep_red	{
+
+	minDistance		1
+	maxDistance		7
+	volume			-9
+
+	sound/lights/light_beep_red01.wav
+}
+
+steady_on_break_silent {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break				// Specify an alternate shader to play when states change
+	
+	sound/ed/sfx/null.wav
+}
+
+steadyhum_break_silent_01 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break				// Specify an alternate shader to play when states change
+	//sound/ed/sfx/fusebox/hum2.wav					// This sound is too high-pitched for general use -Xian
+	sound/lights/steadyhum_break_silent_01.wav
+}
+
+light_breaksound {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	looping
+	
+	sound/lights/1shot_lightbreak_01.wav
+
+}
+
+light_broken_01 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	leadinVolume	10
+	looping
+
+	// Is leadin broken ? Not playing the looping sound ?
+	//leadin	light_breaksound
+	leadin	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/loop_broken_01.wav
+	
+}
+
+light_broken_02 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	leadinVolume	10
+	looping
+
+	leadin	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/loop_broken_02.wav
+}
+
+light_broken_03 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	leadinVolume	10
+	
+	leadin	sound/lights/1shot_lightbreak_03.wav
+	sound/lights/loop_broken_03.wav
+}
+
+light_broken_04 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	leadinVolume	10
+	
+	leadin	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/loop_broken_04.wav
+}
+
+light_broken_05 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	leadinVolume	10
+
+	leadin	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/loop_broken_05.wav
+}
+
+light_broken_06 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	leadinVolume	10
+
+	leadin	sound/lights/1shot_lightbreak_03.wav
+	sound/lights/loop_broken_06.wav
+}
+
+light_broken_07 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	leadinVolume	10
+	
+	leadin	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/loop_broken_07.wav
+}
+
+light_buzz_break {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+	sound/lights/loop_neonlight_buzz_03.wav
+}
+
+light_buzz_03 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	sound/lights/loop_neonlight_buzz_03.wav
+}
+
+light_flicker_101 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+	
+	sound/lights/light_flicker101.wav
+}
+
+light_flicker_101_betrugger {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		betrugger_laugh_01
+	
+	sound/lights/light_flicker101.wav
+}
+
+light_flicker_102 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker102.wav
+}
+
+light_flicker_103 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker103.wav
+}
+
+light_flicker_104 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker104.wav
+}
+
+light_flicker_105 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker105.wav
+}
+
+light_flicker_106 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker106.wav
+}
+
+light_flicker_107 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker107.wav
+}
+
+light_flicker_108 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker108.wav
+}
+
+light_flicker_109 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+	
+	sound/lights/light_flicker109.wav
+}
+
+light_flicker_110 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker110.wav
+}
+
+light_flicker_111 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker111.wav
+}
+
+light_flicker_112 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker112.wav
+}
+
+light_flicker_113 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker113.wav
+}
+
+light_flicker_114 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker114.wav
+}
+
+light_flicker_115 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker115.wav
+}
+
+light_flicker_116 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker116.wav
+}
+
+light_flicker_117 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker117.wav
+}
+
+light_flicker_118 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker118.wav
+}
+
+light_flicker_119 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker119.wav
+}
+
+light_flicker_120 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker120.wav
+}
+
+light_flicker_121 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker121.wav
+}
+
+light_flicker_122 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker122.wav
+}
+
+light_flicker_123 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker123.wav
+}
+
+light_flicker_124 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_flicker124.wav
+}
+
+light_hum_101 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_hum101.wav
+}
+
+light_hum_102 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_hum102.wav
+}
+
+light_hum_103 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_hum103.wav
+}
+
+light_hum_104 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/light_hum104.wav
+}
+
+
+light_flawed_01_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_01
+
+	sound/lights/loop_flawed_01.wav
+}
+
+light_flawed_02_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_02
+
+	sound/lights/loop_flawed_02.wav
+}
+
+light_flawed_03_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_03
+
+	sound/lights/loop_flawed_03.wav
+}
+
+light_flawed_04_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_04
+	
+	sound/lights/loop_flawed_04.wav
+}
+
+light_flawed_05_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_broken_05
+	
+	sound/lights/loop_flawed_05.wav
+}
+
+light_flawed_06_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_06
+	
+	sound/lights/loop_flawed_06.wav
+}
+
+light_flawed_07_shatter {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_07
+
+	sound/lights/loop_flawed_07.wav
+}
+
+
+light_hum_01_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+	
+	sound/lights/loop_hum_01.wav
+}
+
+light_hum_02_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_02.wav
+}
+
+light_hum_03_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_03.wav
+}
+
+light_hum_04_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_04.wav
+}
+
+light_hum_05_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_05.wav
+}
+
+light_hum_06_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_06.wav
+}
+
+light_hum_07_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_07.wav
+}
+
+light_hum_08_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_08.wav
+}
+
+light_hum_09_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_09.wav
+}
+
+light_hum_10_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_10.wav
+}
+
+light_hum_11_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_11.wav
+}
+
+light_hum_12_shatter
+{
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound	light_broken_03
+
+	sound/lights/loop_hum_12.wav
+}
+
+breakable_light_flicker_off
+{
+	looping
+	
+	altSound	light_break
+
+	sound/lights/loop_brokenlight_02.wav
+}
+
+
+breakable_light_neonbuzz_02 {
+	description		"A light that is broken to begin with, that breaks more when you shoot it"
+	looping
+	
+	altSound	light_broken_04
+
+	sound/lights/loop_broken_01.wav
+}
+
+
+light_1s_beep_01 {
+	volume			-30
+	minDistance	1
+	maxDistance	7
+	volume		0
+	looping
+	sound/xian/beeps/1s_beep_01.wav
+}
+
+e3_breakable_light_hum {
+	volume			-30
+	looping
+	
+	altSound	light_broken_01
+	
+	sound/lights/loop_e3light_03.wav
+}
+
+breakable_swinglight_long_wbulbs {
+	looping
+	volume			-30
+
+	altSound	light_break
+	
+	sound/lights/loop_e3light_03.wav
+}
+
+breakable_light_neonbuzz {
+	looping
+	volume			-30
+
+	altSound	light_broken_02
+
+	sound/lights/loop_neonlight_buzz_03.wav
+	sound/lights/loop_brokenlight_02.wav
+}
+
+breakable_light_neonbuzz_break {
+	maxDistance 20
+	volume			-30
+	looping
+	reverb 200,10
+	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/1shot_lightbreak_03.wav
+}
+
+breakable_light_hum
+{
+	volume			-30
+	looping
+	altSound	light_buzz_break
+	sound/lights/loop_neonlight_buzz_05.wav
+}
+
+breakable_light_hum_break {
+	maxDistance 20
+	volume			-30
+	reverb 220,15
+	looping
+	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/1shot_lightbreak_03.wav
+}
+			
+breakable_light_hum_01 {
+	looping
+	volume			-30
+	
+	altSound		light_buzz_03
+	sound/lights/loop_neonlight_buzz_01.wav
+	
+}
+
+breakable_light_hum_01_break {
+	maxDistance 20
+	volume			-30
+	reverb 220,15
+	looping
+	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/1shot_lightbreak_03.wav
+}
+
+breakable_light_gone {
+	volume			-30
+	looping
+	altsound sound/lights/1shot_lightbreak_01.wav
+	sound/lights/loop_neonlight_buzz_05.wav
+}
+
+breakable_light_gone_break {
+	maxDistance 20
+	volume			-30
+	reverb 220,15
+	looping
+	sound/lights/1shot_lightbreak_01.wav
+	sound/lights/1shot_lightbreak_02.wav
+	sound/lights/1shot_lightbreak_03.wav
+}
+
+light_buzz_01 {
+	looping
+	maxDistance 10
+	minDistance 1
+	volume			-30
+	altSound		light_broken_01
+	sound/lights/44k/loop_neonlight_01.wav
+	sound/lights/44k/loop_neonlight_02.wav
+	sound/lights/44k/loop_neonlight_03.wav
+	sound/lights/44k/loop_neonlight_04.wav
+}
+
+light_neon_buzz_02 {
+	minDistance	2
+	maxDistance	10
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_neonlight_buzz_02.wav
+}
+
+
+light_neon_buzz_03 {
+	minDistance	2
+	maxDistance	10
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_neonlight_buzz_03.wav
+}
+
+light_neon_buzz_04 {
+	minDistance	2
+	maxDistance	10
+	volume			-30
+	looping
+
+	sound/lights/loop_neonlight_buzz_04.wav
+}
+
+light_neon_buzz_01_cont {
+	minDistance	2
+	maxDistance	10
+	volume			-30
+	looping
+
+	sound/lights/loop_neonlight_buzz_01.wav
+}
+
+light_neon_withhealth
+{
+	volume			-30
+	looping
+	sound/lights/loop_neonlight_buzz_05.wav
+}
+
+light_neon_withhealth_buzz_02
+{
+	volume			-30
+	looping
+	sound/lights/loop_neonlight_buzz_02.wav
+}
+
+
+// --- Lights that emit sound, but make no sound when broken...
+
+xlight_flicker_101 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker101.wav
+}
+
+xlight_flicker_102 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker102.wav
+}
+
+xlight_flicker_103 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker103.wav
+}
+
+xlight_flicker_104 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker104.wav
+}
+
+xlight_flicker_105 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker105.wav
+}
+
+xlight_flicker_106 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker106.wav
+}
+
+xlight_flicker_107 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker107.wav
+}
+
+xlight_flicker_108 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker108.wav
+}
+
+xlight_flicker_109 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker109.wav
+}
+
+xlight_flicker_110 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker110.wav
+}
+
+xlight_flicker_111 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker111.wav
+}
+
+xlight_flicker_112 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker112.wav
+}
+
+xlight_flicker_113 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker113.wav
+}
+
+xlight_flicker_114 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker114.wav
+}
+
+xlight_flicker_115 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker115.wav
+}
+
+xlight_flicker_116 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker116.wav
+}
+
+xlight_flicker_117 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker117.wav
+}
+
+xlight_flicker_118 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker118.wav
+}
+
+xlight_flicker_119 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker119.wav
+}
+
+xlight_flicker_120 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker120.wav
+}
+
+xlight_flicker_121 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker121.wav
+}
+
+xlight_flicker_122 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker122.wav
+}
+
+xlight_flicker_123 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker123.wav
+}
+
+xlight_flicker_124 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/light_flicker124.wav
+}
+
+breakable_strobe_01 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_01.wav
+}
+
+breakable_strobe_02 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_02.wav
+}
+
+breakable_strobe_03 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_03.wav
+}
+
+breakable_strobe_04 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_04.wav
+}
+
+breakable_strobe_05 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_05.wav
+}
+
+breakable_strobe_06 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_06.wav
+}
+
+breakable_strobe_07 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_07.wav
+}
+
+breakable_strobe_08 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	altSound		light_broken_01
+	sound/lights/loop_strobe_08.wav
+}
+
+// *******************************************************
+// Flickering lights that break, and go silent
+// *******************************************************
+
+light_flicker_silentbreak_101 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+	
+	sound/lights/light_flicker101.wav
+}
+
+light_flicker_silentbreak_102 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker102.wav
+}
+
+light_flicker_silentbreak_103 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker103.wav
+}
+
+light_flicker_silentbreak_104 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker104.wav
+}
+
+light_flicker_silentbreak_105 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker105.wav
+}
+
+light_flicker_silentbreak_106 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker106.wav
+}
+
+light_flicker_silentbreak_107 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker107.wav
+}
+
+light_flicker_silentbreak_108 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker108.wav
+}
+
+light_flicker_silentbreak_109 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+	
+	sound/lights/light_flicker109.wav
+}
+
+light_flicker_silentbreak_110 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker110.wav
+}
+
+light_flicker_silentbreak_111 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker111.wav
+}
+
+light_flicker_silentbreak_112 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker112.wav
+}
+
+light_flicker_silentbreak_113 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker113.wav
+}
+
+light_flicker_silentbreak_114 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker114.wav
+}
+
+light_flicker_silentbreak_115 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker115.wav
+}
+
+light_flicker_silentbreak_116 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker116.wav
+}
+
+light_flicker_silentbreak_117 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker117.wav
+}
+
+light_flicker_silentbreak_118 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker118.wav
+}
+
+light_flicker_silentbreak_119 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker119.wav
+}
+
+light_flicker_silentbreak_120 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker120.wav
+}
+
+light_flicker_silentbreak_121 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker121.wav
+}
+
+light_flicker_silentbreak_122 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker122.wav
+}
+
+light_flicker_silentbreak_123 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker123.wav
+}
+
+light_flicker_silentbreak_124 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_flicker124.wav
+}
+
+light_hum_silentbreak_101 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_hum101.wav
+}
+
+light_hum_silentbreak_102 {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+
+	altSound		light_break
+
+	sound/lights/light_hum102.wav
+}
+
+//no flicker but breaks and plays breaking sound
+light_solid_break {
+	minDistance		2
+	maxDistance		15
+	volume			-30
+	looping
+	no_flicker
+
+	altSound		light_broken_01
+	
+	sound/lights/light_flicker101.wav
+}

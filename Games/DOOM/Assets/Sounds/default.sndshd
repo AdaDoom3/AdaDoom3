@@ -1,0 +1,28 @@
+default_trigger {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	sound/ed/default/default_trigger.wav
+
+}
+
+default_primary {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	sound/ed/default/default_primary.wav
+
+}
+
+default_secondary {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	ordered
+	sound/ed/default/default_secondary.wav
+	sound/ed/default/default_secondary2.wav
+
+}

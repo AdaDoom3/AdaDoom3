@@ -1,0 +1,47 @@
+co_step_out {
+	minDistance	2
+	maxDistance	35
+	volume		5
+	shakes		0.1
+	unclamped
+	
+	sound/ed/sfx/filter_out.wav
+}
+
+commoutside_computer_liftcall {
+	volume	0
+	minDistance	3
+	maxDistance	12
+	
+	sound/vo/commoutside/comp_service_lift_called.wav
+
+}
+
+humvee_01 {
+	volume	0
+	minDistance	10
+	maxDistance	50
+	
+	sound/cinematics/commoutside/humvee_03.wav
+
+}
+
+humvee_02 {
+	volume	0
+	minDistance	10
+	maxDistance	50
+	
+	sound/cinematics/commoutside/humvee_02.wav
+
+}
+
+
+betrugger_laugh_01 {
+
+	volume	0
+	minDistance	3
+	maxDistance	15
+		
+	sound/levels/commoutside/betrugar_distnt_laugh15_fx2.wav
+}
+

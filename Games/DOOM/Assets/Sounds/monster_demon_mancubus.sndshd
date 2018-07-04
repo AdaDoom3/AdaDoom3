@@ -1,0 +1,110 @@
+
+monster_demon_mancubus_sight
+{	
+	minDistance	15
+	maxDistance	45
+	volume		9
+
+	sound/ed/mancubus/sight1.wav
+	sound/ed/mancubus/sight2.wav
+	sound/ed/mancubus/sight3.wav
+	sound/ed/mancubus/sight4.wav
+}
+
+
+monster_demon_mancubus_die
+{
+	minDistance	15
+	maxDistance	45
+	volume	9
+
+	sound/ed/mancubus/die1.wav
+	sound/ed/mancubus/die2.wav
+	sound/ed/mancubus/die3.wav
+	sound/ed/mancubus/die4_long.wav
+
+}
+
+monster_demon_mancubus_attackmissle {
+
+	minDistance	10
+	maxDistance	55
+	volume	1
+	shakes		0.1
+	no_dups
+
+	//sound/monsters/mancubus/fire_01.wav
+	//sound/monsters/mancubus/fire_02.wav
+	//sound/monsters/mancubus/fire_02.wav
+	sound/monsters/mancubus/ft_01.wav
+	sound/monsters/mancubus/ft_02.wav
+	sound/monsters/mancubus/ft_03.wav
+	sound/monsters/mancubus/ft_04.wav
+	//sound/monsters/mancubus/ft_05.wav
+	
+
+}
+
+monster_demon_mancubus_pain
+{	
+	minDistance	15
+	maxDistance	45
+	volume		9
+
+	sound/ed/mancubus/pain5.wav
+	sound/ed/mancubus/pain6.wav
+	sound/ed/mancubus/pain7.wav
+	sound/ed/mancubus/pain8.wav
+}
+
+
+monster_demon_mancubus_chatter
+{
+	minDistance	15
+	maxDistance	45
+	volume	9
+	
+	sound/ed/mancubus/chatter1.wav
+	sound/ed/mancubus/chatter2.wav
+
+}
+
+monster_demon_mancubus_chatter_combat
+{
+	minDistance	15
+	maxDistance	45
+	volume	9
+	
+	sound/ed/mancubus/chatter_combat1.wav
+	sound/ed/mancubus/chatter_combat2.wav
+	sound/ed/mancubus/chatter_combat3.wav
+	sound/ed/mancubus/chatter_combat4.wav
+
+}
+
+monster_demon_mancubus_step
+
+{
+
+	minDistance	10	
+	maxDistance	27
+	shakes 	0.08
+	volume	9
+
+	sound/ed/mancubus/step1.wav
+	sound/ed/mancubus/step2.wav
+	sound/ed/mancubus/step3.wav
+	sound/ed/mancubus/step4.wav
+	sound/ed/mancubus/step5.wav
+
+}
+
+monster_demon_mancubus_burn {
+
+	minDistance	5
+	maxDistance	20
+	volume	4.5
+
+	sound/ed/hellknight/hk_burn.wav
+
+}

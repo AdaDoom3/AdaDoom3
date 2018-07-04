@@ -13,16 +13,17 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Data.Model; use Neo.Data.Model;
+with Neo.Data.Model;   use Neo.Data.Model;
+with Neo.Data.Texture; use Neo.Data.Texture;
 --with Characters;     use Characters;
 
 separate (Main) procedure Menu is
   begin
-    Line;
+    --Line;
     --Add_Character ("zombie-fat");
     --               Materials => ());
-    Meshes.Insert     ("zombie-fat",       Load (ASSET_PATH & "Models" & S & "Zombie-Fat" & S & "md5mesh" & S & "Zombie-Fat.md5mesh"));
-    Animations.Insert ("zombie-fat-walk1", Load (ASSET_PATH & "Models" & S & "Zombie-Fat" & S & "md5anim" & S & "walk1.md5anim"));
+    Meshes.Insert     ("zombie-fat",       Load (S (OS_Info.App_Path) & PATH_MODELS & "Zombie-Fat.md5mesh"));
+    Animations.Insert ("zombie-fat-walk1", Load (S (OS_Info.App_Path) & PATH_MODELS & "zombie-fat-walk1.md5anim"));
     Line ("The materials needed for zombie-fat:");
     declare Mesh : Mesh_State := Meshes.Get ("zombie-fat"); begin
       for I in 1..Int (Mesh.Animated_Surfaces.Length) loop

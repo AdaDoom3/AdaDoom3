@@ -1,0 +1,78 @@
+// Hellknight Intro
+
+delta4_hellknight_intro_music {
+	global
+	volume	0
+	sound/ed/music/delta4/hellknight_intro_cutscene.wav
+
+}
+
+hk_intro_sfx {
+
+	volume	3
+	global
+	unclamped
+	sound/ed/delta4/hk_intro_sfx.wav
+
+}
+
+d4_hazmat_ohno {
+	minDistance	3
+	maxDistance	25
+	volume		6
+	
+	sound/cinematics/delta4/hazmat_ohno.wav
+}
+
+d4_hazmat_scream {
+	minDistance	3
+	maxDistance	25
+	volume		7
+	
+	sound/cinematics/delta4/hazmat_scream.wav
+}
+
+d4_hazmat_what {
+	minDistance	3
+	maxDistance	25
+	volume		6
+	
+	sound/cinematics/delta4/hazmat_what.wav
+}
+
+
+delta4_teleport_to_hell {
+	volume	15
+	global
+	sound/levels/delta4/teleporter.wav
+}
+
+
+delta4_betruger_escape {
+	minDistance	10
+	maxDistance	75
+	volume		10
+
+	sound/vo/delta4/bet_cannot_escape.wav
+
+}
+
+delta4_betruger_hell {
+	global
+	volume		15
+
+	sound/vo/delta4/bet_your_hell.wav
+
+}
+
+delta4_betruger_laugh {
+	minDistance	10
+	maxDistance	75
+	volume		10
+
+	sound/vo/delta4/bet_laugh1.wav
+
+}
+
+
+

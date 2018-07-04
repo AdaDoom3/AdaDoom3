@@ -41,18 +41,23 @@ package Neo.Core.Hashed is
       procedure Next    (Pos : in out Cursor);
       procedure Delete  (Pos : in out Cursor);
       procedure Delete  (Key : Str);
-      procedure Replace (Pos : Cursor; Item : Map_T);
-      procedure Replace (Key : Str; Item : Map_T);
-      procedure Insert  (Key : Str; Item : Map_T);
-      function Has      (Key : Str)    return Bool;
-      function Has      (Pos : Cursor) return Bool;
-      function Key      (Pos : Cursor) return Str;
-      function Get      (Key : Str)    return Map_T;
-      function Get      (Pos : Cursor) return Map_T;
-      function Get                     return Unsafe.Map;
-      function Keys                    return Array_Str_Unbound; -- See below
-      function First                   return Cursor;
-      function Length                  return Natural;
+      procedure Delete  (Key : Str_Unbound);
+      procedure Replace (Pos : Cursor;      Item : Map_T);
+      procedure Replace (Key : Str;         Item : Map_T);
+      procedure Replace (Key : Str_Unbound; Item : Map_T);
+      procedure Insert  (Key : Str;         Item : Map_T);
+      procedure Insert  (Key : Str_Unbound; Item : Map_T);
+      function Has      (Key : Str)         return Bool;
+      function Has      (Key : Str_Unbound) return Bool;
+      function Has      (Pos : Cursor)      return Bool;
+      function Key      (Pos : Cursor)      return Str;
+      function Get      (Key : Str)         return Map_T;
+      function Get      (Key : Str_Unbound) return Map_T;
+      function Get      (Pos : Cursor)      return Map_T;
+      function Get                          return Unsafe.Map;
+      function Keys                         return Array_Str_Unbound;
+      function First                        return Cursor;
+      function Length                       return Natural;
     private
       This : Unsafe.Map;
     end;

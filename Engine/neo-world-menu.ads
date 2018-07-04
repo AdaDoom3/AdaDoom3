@@ -15,6 +15,8 @@
 
 package Neo.Engine.Menu is
 
+  UI_Elements : Treed_UI_Element.Safe.Tree;
+  
   ----------
   -- Menu --
   ----------
@@ -44,6 +46,9 @@ package Neo.Engine.Menu is
       case Kind is 
         when World_Element =>
           Camera_Entity : Str_Unbound := NULL_STR_UNBOUND;
+          Start_Time : Time;
+          Elapsed    : Duration;
+          Level      : Level_State := (others => <>);
         when Render_Element =>
           Model        : Str_Unbound := NULL_STR_UNBOUND;
           Animation    : Str_Unbound := NULL_STR_UNBOUND;

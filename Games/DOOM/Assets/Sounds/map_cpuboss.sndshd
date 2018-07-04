@@ -1,0 +1,41 @@
+cpuboss_hallseq_1 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_1.wav
+}
+
+cpuboss_hallseq_2 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_2.wav
+}
+
+cpuboss_hallseq_3 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_3.wav
+}
+
+cpuboss_hallseq_4 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_4.wav
+}
+
+cpuboss_hallseq_5 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_5.wav
+}
+
+cpuboss_hallseq_6 {
+	plain
+	no_occlusion
+	
+	sound/xian/music/cpuboss/cpu2hall_6.wav
+}

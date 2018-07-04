@@ -13,10 +13,10 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Engine.CVars; use Neo.Engine.CVars;
+with Neo.World.CVars; use Neo.World.CVars;
 
 package body Neo.Engine.Renderer is
- 
+  
   -------------
   -- Shaders --
   -------------
@@ -48,7 +48,7 @@ package body Neo.Engine.Renderer is
       Current_Val : Str_Unbound := NULL_STR_UNBOUND;
       function Get return Str is (S (Current_Val));
       procedure Set (Val : Str) is
-        Image : Buffer_State := Buffered_Images.Element (U (Val));
+        Image : Buffer_State := Buffered_Images.Get (U (Val));
         begin
           Writes.Append (Write_Descriptor_State'(Is_Image   => True,
                                                  Image_Info => (imageLayout => VK_IMAGE_LAYOUT_GENERAL,
@@ -77,12 +77,12 @@ package body Neo.Engine.Renderer is
                                                                  descriptorCount => 1,
                                                                  descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, others => <>)));
           Current_Val := Val;
-          Set_Buffer (Buffer, Val'Address, Val'Size);
+          Safe_Staging.Set_Buffer (Buffer, Val'Address, Val'Size);
         end;
     
     -- Register a new buffer and save the index for writes/sets
     begin
-      Buffered_Uniforms.Insert (U (Name_ID), (Usage, Uniform_BUffer, Binding => Binding, Size => Uniform_T'Object_Size / Byte'Size, others => <>));
+      Buffered_Uniforms.Insert (U (Name_ID), (Usage, Uniform_Buffer, Binding => Binding, Size => Uniform_T'Object_Size / Byte'Size, others => <>));
       Uniform_Index := Int (Buffered_Uniforms.Length);
     end;
 
@@ -117,12 +117,180 @@ package body Neo.Engine.Renderer is
   -- Tesselation 
   package Enable_Tesselation is new Uniform (Layout_Set => 2, Binding => 1, Uniform_T => Bool,      Name_ID => "enableTesselation");
   package Tesselation_Max    is new Uniform (Layout_Set => 2, Binding => 6, Uniform_T => Real_64_C, Name_ID => "tesselationMax");
-  package Tesselation_Amount is new Uniform (Layout_Set => 2, Binding => 7, Uniform_T => Real_64_C, Name_ID => "tesselationAmount");
-  
-  ------------
-  -- Memory --
-  ------------
+  package Tesselation_Amount is new Uniform (Layout_Set => 2, Binding => 7, Uniform_T => Real_64_C, Name_ID => "tesselationAmount");  
 
+  ---------------------
+  -- Implementations --
+  ---------------------
+  
+  package body Doom3    is separate;
+  package body FGED2    is separate;
+  package body Raytrace is separate;
+  
+  procedure Run_Frontend is
+    Last_Time : Time := Clock;
+    begin
+      loop
+        View.Set (case Rendering.Get is when Doom3_Rendering    => Doom3.Build_View,
+                                        when FGED2_Rendering    => FGED2.Build_View,
+                                        when Raytrace_Rendering => Raytrace.Build_View);
+        
+        -- Save cycles
+        delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;        
+      end loop;
+    end;
+  
+  procedure Run_Backend is 
+  
+    -- ???
+    procedure Trigger_Framebuffer_Restart is
+      begin
+      
+        -- Signal the main task to perfor a restart and give it some time
+        Framebuffer_Status.Occupied (False);
+        delay 10.0;
+        
+        -- There has been a catastrophic failure...
+        raise Program_Error;
+      end;      
+  
+    -- Image index for presentation
+    I           :         Int            := 1;
+    Image_Index : aliased Int_Unsigned_C := 0;
+    
+    -- Timing
+    Last_Frame_Time   : Time := Clock + WINDOW_POLLING_DURATION;
+    Last_Collect_Time : Time := Clock;
+    
+    -- ???
+    Command_Buffer_Begin_Info : aliased VkCommandBufferBeginInfo := (others => <>);  
+    Render_Pass_Begin_Info    : aliased VkRenderPassBeginInfo    := (renderPass => Render_Pass,
+                                                                     renderArea => (offset => (0, 0),
+                                                                                    extent => Surface_Extent), others => <>); 
+                                                                                    
+    -- ??? 
+    Present_Info : aliased VkPresentInfoKHR := (swapchainCount     => 1,
+                                                pSwapchains        => Swapchain'Unchecked_Access,
+                                                waitSemaphoreCount => 1,
+                                                pImageIndices      => Image_Index'Unchecked_Access, others => <>);
+                                                                                    
+    -- Transition our swap image to present instead of having the renderpass do the transition to avoid additional image barriers
+    Image_Memory_Barrier : aliased VkImageMemoryBarrier := (srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                            dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
+                                                            oldLayout           => VK_IMAGE_LAYOUT_GENERAL,
+                                                            newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                                            srcAccessMask       => VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                                                            subresourceRange    => (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
+                                                                                    baseMipLevel   => 0,
+                                                                                    levelCount     => 1,
+                                                                                    baseArrayLayer => 0,
+                                                                                    layerCount     => 1), others => <>);
+
+    -- ???
+    Wait_Stage  : aliased Int_Unsigned_C := VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; 
+    Submit_Info : aliased VkSubmitInfo   := (commandBufferCount   => 1,
+                                             pWaitDstStageMask    => Wait_Stage'Unchecked_Access,
+                                             waitSemaphoreCount   => 1,
+                                             signalSemaphoreCount => 1, others => <>);
+                                             
+    -- Start of Run_Backend
+    begin
+      loop
+
+        -- Fetch the next image index from the swap chain if there is one
+        case vkAcquireNextImageKHR (Device      => Device,
+                                    swapchain   => Swapchain,
+                                    timeout     => Int_64_Unsigned_C'Last,
+                                    semaphore   => Framebuffer (I).Acquire_Status,
+                                    fence       => NULL_PTR,
+                                    pImageIndex => Image_Index'Unchecked_Access)
+        is
+          when VK_ERROR_OUT_OF_DATE_KHR | VK_SUBOPTIMAL_KHR => Trigger_Framebuffer_Restart;
+          when VK_TIMEOUT | VK_NOT_READY | VK_SUCCESS       => null;
+          when others                                       => raise Program_Error;
+        end case;
+  
+        -- Housekeeping
+        if GARBAGE_POLLING_DURATION <= Clock - Last_Collect_Time then
+          Safe_Allocation.Finalize_Buffers;
+          Last_Collect_Time := Clock;
+        end if;
+
+        -- Save cycles
+        delay WINDOW_POLLING_DURATION - (Clock - Last_Frame_Time); Last_Frame_Time := Clock; 
+         
+        -- Wait for the frame's commands to finish execution the reinitialize it
+	vkAssert (vkWaitForFences       (Device, 1, Framebuffer (I).Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+        vkAssert (vkResetFences         (Device, 1, Framebuffer (I).Fence'Unchecked_Access));
+        vkAssert (vkResetDescriptorPool (Device, Descriptor_Pool, 0));  
+        vkAssert (vkBeginCommandBuffer  (Framebuffer (I).Commands, Command_Buffer_Begin_Info'Unchecked_Access));
+
+        -- End render pass
+        Render_Pass_Begin_Info.framebuffer := Framebuffer (Positive (Image_Index + 1)).Swapchain_Buffer;
+        vkCmdBeginRenderPass (Framebuffer (I).Commands, Render_Pass_Begin_Info'Unchecked_Access, VK_SUBPASS_CONTENTS_INLINE);
+  
+        -- Dispatch to the appropriate rendering path
+        case Rendering.Get is
+          when Doom3_Rendering    => Doom3.Build_Frame    (Framebuffer (I), View.Get);
+          when FGED2_Rendering    => FGED2.Build_Frame    (Framebuffer (I), View.Get);
+          when Raytrace_Rendering => Raytrace.Build_Frame (Framebuffer (I), View.Get);
+        end case;
+        
+        -- End render pass
+        Image_Memory_Barrier.image := Framebuffer (Positive (Image_Index + 1)).Image;
+        vkCmdEndRenderPass (Framebuffer (I).Commands);  
+        vkCmdPipelineBarrier (commandBuffer            => Framebuffer (I).Commands,
+                              srcStageMask             => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                              dstStageMask             => VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                              dependencyFlags          => 0,
+                              memoryBarrierCount       => 0,
+                              pMemoryBarriers          => null,
+                              bufferMemoryBarrierCount => 0,
+                              pBufferMemoryBarriers    => null,
+                              imageMemoryBarrierCount  => 1,
+                              pImageMemoryBarriers     => Image_Memory_Barrier'Unchecked_Access);        
+        vkAssert (vkEndCommandBuffer (Framebuffer (I).Commands));
+        
+        -- Submit the current frame's commands  
+        Submit_Info.pCommandBuffers   := Framebuffer (I).Commands'Unchecked_Access;
+        Submit_Info.pWaitSemaphores   := Framebuffer (I).Acquire_Status'Unchecked_Access;
+        Submit_Info.pSignalSemaphores := Framebuffer (I).Render_Status'Unchecked_Access;
+        vkAssert (vkQueueSubmit (Queue, 1, Submit_Info'Unchecked_Access, Framebuffer (I).Fence));
+  
+        -- Show the resulting image
+        Present_Info.pWaitSemaphores := Framebuffer (I).Render_Status'Unchecked_Access;
+        if vkQueuePresentKHR (Queue, Present_Info'Unchecked_Access) in VK_ERROR_OUT_OF_DATE_KHR | VK_SUBOPTIMAL_KHR then
+          Trigger_Framebuffer_Restart;
+        end if;
+        
+        -- Iterate the current frame
+        I := I mod Framebuffer'Length + 1;    
+      end loop;
+    end; 
+
+  package Backend_Tasks  is new Tasks (Run_Backend);
+  package Frontend_Tasks is new Tasks (Run_Frontend);
+
+  Backend_Task  : Backend_Tasks.Safe_Task;
+  Frontend_Task : Frontend_Tasks.Safe_Task;
+  
+  ----------------
+  -- Allocation --
+  ----------------
+    
+  -- ???
+  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Count_Type) is
+    Buffer_Info : aliased VkBufferCreateInfo := (size        => Int_64_Unsigned_C (Data_Size),
+                                                 usage       => Usage_Bits or VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                                                 sharingMode => VK_SHARING_MODE_EXCLUSIVE, others => <>);
+    begin
+      vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, Buffer.Data'Unchecked_Access));
+      Safe_Allocation.Allocate_Buffer (Buffer);
+      vkAssert (vkBindBufferMemory (Device, Buffer.Data, Buffer.Device_Memory, Buffer.Offset));
+      Safe_Staging.Set_Buffer (Buffer, Data, Data_Size);
+      Buffer.Count := Int_Unsigned_C (Count);
+    end;
+    
   -- ???
   function Find_Memory_Type_Index (Memory_Type_Bits : Int_Unsigned_C; Usage : Usage_Kind) return Int_Unsigned_C is
     Properties, Preferred, Required : Int_Unsigned_C := 0;
@@ -139,7 +307,7 @@ package body Neo.Engine.Renderer is
       -- Try to find a memory type that has both required and preferred properties
       for I in 1..Int (Memory_Properties.memoryTypeCount) loop
         Properties := Memory_Properties.memoryTypes (I).propertyFlags;
-        if (Memory_Type_Bits and 2**(I - 1)) /= 0 and (Properties and Preferred) > 0 and (Properties and Required) > 0 then
+        if (Memory_Type_Bits and 2 ** (I - 1)) /= 0 and (Properties and Preferred) > 0 and (Properties and Required) > 0 then
           return Int_Unsigned_C (I - 1);
         end if;
       end loop;    
@@ -147,291 +315,358 @@ package body Neo.Engine.Renderer is
       -- Couldn't find a suitable memory type, so match on the required parts at least
       for I in 1..Int (Memory_Properties.memoryTypeCount) loop
         Properties := Memory_Properties.memoryTypes (I).propertyFlags;
-        if (Memory_Type_Bits and 2**(I - 1)) /= 0 and (Properties and Required) > 0 then return Int_Unsigned_C (I - 1); end if;
+        if (Memory_Type_Bits and 2 ** (I - 1)) /= 0 and (Properties and Required) > 0 then return Int_Unsigned_C (I - 1); end if;
       end loop;
       
       -- Go with preferred when we can't even match on required
       for I in 1..Int (Memory_Properties.memoryTypeCount) loop
         Properties := Memory_Properties.memoryTypes (I).propertyFlags;
-        if (Memory_Type_Bits and 2**(I - 1)) /= 0 and (Properties and Preferred) > 0 then return Int_Unsigned_C (I - 1); end if;
+        if (Memory_Type_Bits and 2 ** (I - 1)) /= 0 and (Properties and Preferred) > 0 then return Int_Unsigned_C (I - 1); end if;
       end loop;
       
       -- No suitable memory types
       raise Program_Error;
     end;
     
-  -- ???
-  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Count_Type) is
-    Buffer_Info : aliased VkBufferCreateInfo := (size        => Buffer.Size,
-                                                 usage       => Usage_Bits or VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                                                 sharingMode => VK_SHARING_MODE_EXCLUSIVE, others => <>);
-    begin
-      vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, Buffer.Data'Unchecked_Access));
-      Allocate_Buffer (Buffer);
-      vkAssert (vkBindBufferMemory (Device, Buffer.Data, Buffer.Device_Memory, Buffer.Offset));
-      Set_Buffer (Buffer, Data, Data_Size);
-      Buffer.Count := Int_Unsigned_C (Count);
-    end;
-
-  -- ???
-  procedure Set_Buffer (Buffer : in out Buffer_State; Data : Ptr; Data_Size : Int_Ptr) is
-    begin
-      case Buffer.Usage is
-        when GPU_Usage =>
-          Assert (Data_Size <= Max_Upload_Buffer.Get * MB);
+  protected body Safe_Allocation is 
   
-          -- Flush the garbage if we have reached the max
-          if Staging_Offset + Data_Size >= Max_Upload_Buffer.Get * MB then
-            declare
-            Command_Buffer_Info : aliased VkCommandBufferBeginInfo := (others => <>);
-            Memory_Range : aliased VkMappedMemoryRange := (memory => Int_64_Unsigned_C (To_Int_Ptr (Data)), size => VK_WHOLE_SIZE, others => <>);
-            Submit_Info  : aliased VkSubmitInfo := (commandBufferCount => 1, pCommandBuffers => Staging_Commands'Unchecked_Access, others => <>);
-            begin
-              vkAssert (vkFlushMappedMemoryRanges (Device, 1, Memory_Range'Unchecked_Access));
-              vkAssert (vkQueueSubmit (Queue, 1, Submit_Info'Unchecked_Access, Staging_Fence));
-  
-              -- Reset the command buffer only after the staging buffer is avaliable
-              vkAssert (vkWaitForFences      (Device, 1, Staging_Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
-              vkAssert (vkResetFences        (Device, 1, Staging_Fence'Unchecked_Access));
-              vkAssert (vkBeginCommandBuffer (Staging_Commands, Command_Buffer_Info'Unchecked_Access));
-              Staging_Offset := 0;
-            end;
-          end if;
-          
-          -- Copy it in
-          declare
-          Source, Destination : Array_Byte (1..Int (Data_Size) / Byte'Size);
-          for Source'Address use Data; for Destination'Address use To_Ptr (To_Int_Ptr (Staging_Data) + Staging_Offset);
-          Buffer_Copy : aliased VkBufferCopy := (srcOffset => Int_64_Unsigned_C (Staging_Offset),
-                                                 dstOffset => Int_64_Unsigned_C (To_Int_Ptr (Staging_Data) + Staging_Offset),
-                                                 size      => Int_64_Unsigned_C (Data_Size), others => <>);
+      -- ???
+      procedure Throw_Away (Buffer : Buffer_State) is begin Buffered_Garbage.Append (Buffer); end;
+    
+      -- Grab some memory from a Heap
+      procedure Allocate_Buffer (Buffer : in out Buffer_State) is
+      
+        -- #define ALIGN (x, a) (((x) + ((a) - 1)) & ~((a) - 1))
+        function Align (Offset, Alignment : Int_64_Unsigned_C) return Int_64_Unsigned_C is ((Alignment - 1 + Offset) and not (Alignment - 1));
+    
+        -- Check if two offsets and sizes are suitable for the same page - see the Vulkan spec "Buffer-Image Granularity"
+        function Can_Be_On_Same_Page (Offset_A, Size_A, Offset_B : Int_64_Unsigned_C) return Bool is
+          (((Offset_A + Size_A - 1) and (not (Device_Properties.limits.bufferImageGranularity - 1))) =
+            (Offset_B               and (not (Device_Properties.limits.bufferImageGranularity - 1))));
+    
+    
+        -- Check that the memory kinds do not have a granularity conflict
+        function Has_Granularity_Conflict (Allocation_A, Allocation_B : Allocation_Kind) return Bool is
+          TEST_A : constant Allocation_Kind := (if Allocation_A > Allocation_B then Allocation_B else Allocation_A);
+          TEST_B : constant Allocation_Kind := (if TEST_A       = Allocation_A then Allocation_B else Allocation_A);
           begin
-            Destination := Source;
-            vkCmdCopyBuffer (Framebuffer (Current_Frame).Commands, Staging_Buffer, Buffer.Data, 1, Buffer_Copy'Unchecked_Access);
+            return (case TEST_A is when Free_Allocation                             => False,
+                                   when Buffer_Allocation | Linear_Image_Allocation => TEST_B = Optimal_Image_Allocation,
+                                   when Optimal_Image_Allocation                    => False);
           end;
           
-          -- Move over the staging offset to reflect the copied buffer data
-          Staging_Offset := Staging_Offset + Int_Ptr (Data_Size);
-        when others => null; --Buffer.Memory.Data := Staging_Offset + Offset + data (size);
-      end case;
-    end;
-
-  -- Grab some memory from a Heap
-  procedure Allocate_Buffer (Buffer : in out Buffer_State) is
-  
-    -- #define ALIGN (x, a) (((x) + ((a) - 1)) & ~((a) - 1))
-    function Align (Offset, Alignment : Int_64_Unsigned_C) return Int_64_Unsigned_C is ((Alignment - 1 + Offset) and not (Alignment - 1));
-
-    -- Check if two offsets and sizes are suitable for the same page - see the Vulkan spec "Buffer-Image Granularity"
-    function Can_Be_On_Same_Page (Offset_A, Size_A, Offset_B : Int_64_Unsigned_C) return Bool is
-      (((Offset_A + Size_A - 1) and (not (Device_Properties.limits.bufferImageGranularity - 1))) =
-        (Offset_B               and (not (Device_Properties.limits.bufferImageGranularity - 1))));
-
-
-    -- Check that the memory kinds do not have a granularity conflict
-    function Has_Granularity_Conflict (Allocation_A, Allocation_B : Allocation_Kind) return Bool is
-      TEST_A : constant Allocation_Kind := (if Allocation_A > Allocation_B then Allocation_B else Allocation_A);
-      TEST_B : constant Allocation_Kind := (if TEST_A       = Allocation_A then Allocation_B else Allocation_A);
-      begin
-        return (case TEST_A is when Free_Allocation                             => False,
-                               when Buffer_Allocation | Linear_Image_Allocation => TEST_B = Optimal_Image_Allocation,
-                               when Optimal_Image_Allocation                    => False);
-      end;
-      
-    -- Global Variables
-    Allocation          :         Allocation_Kind      := (if Buffer.Kind = Image_Buffer then Optimal_Image_Allocation else Buffer_Allocation);
-    Memory_Type_Index   :         Int_Unsigned_C       := 0;
-    Offset              :         Int_64_Unsigned_C    := 0;
-    Aligned_Size        :         Int_64_Unsigned_C    := 0;
-    Memory_Requirements : aliased VkMemoryRequirements := (others => <>);
-    Current             : aliased Ptr_Allocation_State := null;
-      
-    -- Allocate the buffer from a given chunk and Heap = the globals above are used heavily
-    procedure Allocate_From_Chunk (Chunk : Ptr_Allocation_State; Heap_Cursor : Vector_Heap.Cursor) is
-      Heap : Heap_State := Element (Heap_Cursor);
-      begin
-      
-        -- Split the best fitting chunk when the size is not an exact fit
-        if Chunk.Size > Memory_Requirements.size then
-          Chunk.Next := new Allocation_State'(ID       => Heap.Next_ID,
-                                              Offset   => Offset + Memory_Requirements.size,
-                                              Size     => Chunk.Size - Aligned_Size,
-                                              Kind     => Free_Allocation,
-                                              Next     => Chunk.Next,
-                                              Previous => Chunk);
-          Chunk.Size := Memory_Requirements.size;
-          Heap.Next_ID := Heap.Next_ID + 1;
-        end if;
-
-        -- Assign the chunk and mark it as allocated
-        Heap.Allocated := Heap.Allocated + Chunk.Size;
-        Replace_Element (Heaps, Heap_Cursor, Heap);
-        Chunk.Kind := Allocation;
-        
-        -- Build the result
-        Buffer.ID            := Chunk.ID;
-        Buffer.Offset        := Offset;
-        Buffer.Size          := Chunk.Size;
-        Buffer.Device_Memory := Heap.Device_Memory;
-        Buffer.Heap          := Heap_Cursor;
-        if Buffer.Kind /= Image_Buffer and Buffer.Usage /= GPU_Usage then
-          Buffer.Data := To_Ptr (To_Int_Ptr (Heap.Data) + Int_Ptr (Offset));
-        end if;
-      end;
-      
-    -- Start of Allocate_Buffer
-    begin 
-      
-      -- Get the memory requirements
-      if Buffer.Kind = Image_Buffer then vkGetImageMemoryRequirements (Device, Buffer.Data, Memory_Requirements'Unchecked_Access);
-      else vkGetBufferMemoryRequirements (Device, Buffer.Data, Memory_Requirements'Unchecked_Access); end if;
-      Memory_Type_Index := Find_Memory_Type_Index (Memory_Requirements.memoryTypeBits, Buffer.Usage);
-      
-      -- Try to allocate from a suitable Heap
-      for I in Iterate (Heaps) loop declare Heap : Heap_State := Element (I); begin
-      
-        -- Test if the current Heap is too small
-        if Heap.Index = Memory_Type_Index and then Heap.Size - Heap.Allocated >= Memory_Requirements.size then
-
-          -- Find the best fit chunk
-          Current := Heap.First_Chunk;
-          Inner: while Current /= null loop
-
-            -- Only example chunks that are free 
-            if Current.Kind = Free_Allocation then
-
-              -- Set the offset in case the current chunk's granularity conflicts with the previous chunk
-              Offset := Align (Current.Offset, Memory_Requirements.alignment);
-              if Current.Previous /= null and then Device_Properties.limits.bufferImageGranularity > 1
-                and then Can_Be_On_Same_Page (Current.Previous.Offset, Current.Previous.Size, Offset)
-                and then Has_Granularity_Conflict (Current.Previous.Kind, Allocation)
-              then
-                Offset := Align (Offset, Device_Properties.limits.bufferImageGranularity);
-              end if;
-
-              -- Check the next chunk's allocation for suitability
-              Aligned_Size := Offset - Current.Offset + Memory_Requirements.size;
-              if Aligned_Size <= Current.Size then 
-
-                -- Bail when the Heap is too small to allocate a new one
-                exit when Aligned_Size + Heap.Allocated >= Heap.Size;
-
-                -- Check for granularity conflicts with the next chunk before allocating
-                if Current.Next = null or else Device_Properties.limits.bufferImageGranularity <= 1
-                  or else not Can_Be_On_Same_Page (Offset, Memory_Requirements.size, Current.Next.Offset)
-                  or else not Has_Granularity_Conflict (Allocation, Current.Next.Kind)
-                then
-                  Allocate_From_Chunk (Current, I);
-                  return;
-                end if;
-              end if;
-            end if;
-
-            -- Advance to the chunk within the Heap
-            Current := Current.Next;
-          end loop Inner;
-        end if;
-      end; end loop;
-
-      -- Allocate a new Heap since no suitable existing ones could be found
-      declare
-      Heap : Heap_State := (Index => Memory_Type_Index,
-                            Usage => Buffer.Usage,
-                            Size  => Int_64_Unsigned_C ((if Buffer.Usage = GPU_Usage then Max_GPU_Memory.Get
-                                                         else Max_Visible_Memory.Get) * MB), others => <>);
-      Allocate_Info : aliased VkMemoryAllocateInfo := (allocationSize  => Heap.Size,
-                                                       memoryTypeIndex => Memory_Type_Index, others => <>);
-      begin
-      
-        -- Make a new heap
-        Heap.First_Chunk := new Allocation_State'(Size => Heap.Size, others => <>);    
-        vkAssert (vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, Heap.Device_Memory'Unchecked_Access));
-        if Heap.Usage /= GPU_Usage then
-          vkAssert (vkMapMemory (Device, Heap.Device_Memory, 0, Memory_Requirements.size, 0, Heap.Data'Unchecked_Access));
-        end if;
-        Heaps.Append (Heap);
-        
-        -- Allocate from its first chunk
-        Offset := 0;
-        Allocate_From_Chunk (Heap.First_Chunk, Heaps.Last);
-      end;
-    end;
-    
-  -- Clear all unused heaps and unreferenced images
-  procedure Finalize_Buffers is
-    Pos                     : Hashed_Buffer.Cursor;
-    Current, Previous, Next : Ptr_Allocation_State := null;
-    begin
-    
-      -- Look for unreferenced images and add them to the garbage
-      for I in Buffered_Images.Iterate loop Pos := I;
-        declare Buffered_Image : Buffer_State := Hashed_Buffer.Unsafe.Element (I); begin
-          if Buffered_Image.References = 0 then
-            vkDestroyImage     (Device, Buffered_Image.Data,    null);
-            vkDestroyImageView (Device, Buffered_Image.View,    null);
-            vkDestroySampler   (Device, Buffered_Image.Sampler, null);
-            Buffered_Garbage.Append (Buffered_Image);
-            Buffered_Images.Delete (Pos);
-          end if;
-        end;
-      end loop;
-      
-      -- Take out the trash...
-      for Piece of Buffered_Garbage loop
-        declare Heap : Heap_State := Element (Piece.Heap); begin   
-
-          -- Find the chunk corresponding to the Memory
-          Current := Heap.First_Chunk;
-          while Current /= null loop
-            if Current.ID = Piece.ID then
-            
-              -- Mark it as available
-              Current.Kind := Free_Allocation;
-
-              -- Join the chunk with the previous one if it is free
-              if Current.Previous /= null and then Current.Previous.Kind = Free_Allocation then
-                Previous := Current.Previous;
-                Previous.Next := Current.Next;
-                if Current.Next /= null then Current.Next.Previous := Previous; end if;
-                Previous.Size := Previous.Size + Current.Size;
-                Free (Current);
-                Current := Previous;
-              end if;
-
-              -- Same with the next chunk
-              if Current.Next /= null and then Current.Next.Kind = Free_Allocation then
-                Next := Current.Next;
-                if Next.Next /= null then Next.Next.Previous := Current; end if;
-                Current.Next := Next.Next;
-                Current.Size := Current.Size + Next.Size;
-                Free (Next);
-              end if;
-              
-              -- Modify Heap to handle new size
-              Heap.Allocated := Heap.Allocated - Piece.Size;
-              Heaps.Replace_Element (Piece.Heap, Heap);
-              exit;
-            end if;
-            Current := Current.Next;
-          end loop;
+        -- Global Variables
+        Allocation           :         Allocation_Kind      := (if Buffer.Kind = Image_Buffer then Optimal_Image_Allocation else Buffer_Allocation);
+        Memory_Type_Index    :         Int_Unsigned_C       := 0;
+        Offset, Aligned_Size :         Int_64_Unsigned_C    := 0;
+        Memory_Requirements  : aliased VkMemoryRequirements := (others => <>);
+        Current              : aliased Ptr_Allocation_State := null;
           
-          -- Kill the Heap if there is nothing left
-          if Heap.Allocated = 0 then
-            if Heap.Usage /= GPU_Usage then vkUnmapMemory (Device, Heap.Device_Memory); end if;
-            vkFreeMemory (Device, Heap.Device_Memory, null);        
-            Heap.Device_Memory := NULL_PTR;
-            while Heap.First_Chunk /= null loop
-              Current := Heap.First_Chunk;
-              Heap.First_Chunk := Current.Next;
-              Free (Current);
-            end loop;
-            Heaps.Delete (Piece.Heap);
-          end if;
-        end;
-      end loop;
-      Buffered_Garbage.Clear;
-    end;    
+        -- Allocate the buffer from a given chunk and Heap = the globals above are used heavily
+        procedure Allocate_From_Chunk (Chunk : Ptr_Allocation_State; Heap_Cursor : Vector_Heap.Cursor) is
+          Heap : Heap_State := Element (Heap_Cursor);
+          begin
+          
+            -- Split the best fitting chunk when the size is not an exact fit
+            if Chunk.Size > Memory_Requirements.size then
+              Chunk.Next := new Allocation_State'(ID       => Heap.Next_ID,
+                                                  Offset   => Offset + Memory_Requirements.size,
+                                                  Size     => Chunk.Size - Aligned_Size,
+                                                  Kind     => Free_Allocation,
+                                                  Next     => Chunk.Next,
+                                                  Previous => Chunk);
+              Chunk.Size := Memory_Requirements.size;
+              Heap.Next_ID := Heap.Next_ID + 1;
+            end if;
     
+            -- Assign the chunk and mark it as allocated
+            Heap.Allocated := Heap.Allocated + Chunk.Size;
+            Replace_Element (Heaps, Heap_Cursor, Heap);
+            Chunk.Kind := Allocation;
+            
+            -- Build the result
+            Buffer.ID            := Chunk.ID;
+            Buffer.Offset        := Offset;
+            Buffer.Size          := Chunk.Size;
+            Buffer.Device_Memory := Heap.Device_Memory;
+            Buffer.Heap          := Heap_Cursor;
+            if Buffer.Kind /= Image_Buffer and Buffer.Usage /= GPU_Usage then
+              Buffer.Data := To_Ptr (To_Int_Ptr (Heap.Data) + Int_Ptr (Offset));
+            end if;
+          end;
+          
+        -- Start of Allocate_Buffer
+        begin 
+          
+          -- Get the memory requirements
+          if Buffer.Kind = Image_Buffer then vkGetImageMemoryRequirements (Device, Buffer.Data, Memory_Requirements'Unchecked_Access);
+          else vkGetBufferMemoryRequirements (Device, Buffer.Data, Memory_Requirements'Unchecked_Access); end if;
+          Memory_Type_Index := Find_Memory_Type_Index (Memory_Requirements.memoryTypeBits, Buffer.Usage);
+          
+          -- Try to allocate from a suitable Heap
+          for I in Iterate (Heaps) loop declare Heap : Heap_State := Element (I); begin
+          
+            -- Test if the current Heap is too small
+            if Heap.Index = Memory_Type_Index and then Heap.Size - Heap.Allocated >= Memory_Requirements.size then
+    
+              -- Find the best fit chunk
+              Current := Heap.First_Chunk;
+              Inner: while Current /= null loop
+    
+                -- Only example chunks that are free 
+                if Current.Kind = Free_Allocation then
+    
+                  -- Set the offset in case the current chunk's granularity conflicts with the previous chunk
+                  Offset := Align (Current.Offset, Memory_Requirements.alignment);
+                  if Current.Previous /= null and then Device_Properties.limits.bufferImageGranularity > 1
+                    and then Can_Be_On_Same_Page (Current.Previous.Offset, Current.Previous.Size, Offset)
+                    and then Has_Granularity_Conflict (Current.Previous.Kind, Allocation)
+                  then
+                    Offset := Align (Offset, Device_Properties.limits.bufferImageGranularity);
+                  end if;
+    
+                  -- Check the next chunk's allocation for suitability
+                  Aligned_Size := Offset - Current.Offset + Memory_Requirements.size;
+                  if Aligned_Size <= Current.Size then 
+    
+                    -- Bail when the Heap is too small to allocate a new one
+                    exit when Aligned_Size + Heap.Allocated >= Heap.Size;
+    
+                    -- Check for granularity conflicts with the next chunk before allocating
+                    if Current.Next = null or else Device_Properties.limits.bufferImageGranularity <= 1
+                      or else not Can_Be_On_Same_Page (Offset, Memory_Requirements.size, Current.Next.Offset)
+                      or else not Has_Granularity_Conflict (Allocation, Current.Next.Kind)
+                    then
+                      Allocate_From_Chunk (Current, I);
+                      return;
+                    end if;
+                  end if;
+                end if;
+    
+                -- Advance to the chunk within the Heap
+                Current := Current.Next;
+              end loop Inner;
+            end if;
+          end; end loop;
+    
+          -- Allocate a new Heap since no suitable existing ones could be found
+          declare
+          Heap : Heap_State := (Index => Memory_Type_Index,
+                                Usage => Buffer.Usage,
+                                Size  => Int_64_Unsigned_C ((if Buffer.Usage = GPU_Usage then Max_GPU_Memory.Get
+                                                             else Max_Visible_Memory.Get) * MB), others => <>);
+          Allocate_Info : aliased VkMemoryAllocateInfo := (allocationSize  => Heap.Size,
+                                                           memoryTypeIndex => Memory_Type_Index, others => <>);
+          begin
+          
+            -- Make a new heap
+            Heap.First_Chunk := new Allocation_State'(Size => Heap.Size, others => <>);    
+            vkAssert (vkAllocateMemory (Device, Allocate_Info'Unchecked_Access, null, Heap.Device_Memory'Unchecked_Access));
+            if Heap.Usage /= GPU_Usage then
+              vkAssert (vkMapMemory (Device, Heap.Device_Memory, 0, Memory_Requirements.size, 0, Heap.Data'Unchecked_Access));
+            end if;
+            Heaps.Append (Heap);
+            
+            -- Allocate from its first chunk
+            Offset := 0;
+            Allocate_From_Chunk (Heap.First_Chunk, Heaps.Last);
+          end;
+        end;
+        
+      -- Clear all unused heaps and unreferenced images
+      procedure Finalize_Buffers (Force_Total_Finalization : Bool := False) is
+      
+        -- Cursors for iterating through and removing elements from the Buffered_Images map and the Heaps vector
+        I : Hashed_Buffer.Cursor := Buffered_Images.First;
+        
+        -- Chunk pointers for dealing with each heap's chunk list
+        Current, Previous, Next : Ptr_Allocation_State := null;
+        
+        -- Start of Finalize_Buffers
+        begin    
+        
+          -- !!! THE BELOW LOOP IS GARBAGE !!!
+        
+          -- Look for unreferenced images and add them to the garbage
+          while Has_Element (I) loop declare Buffered_Image : Buffer_State := Element (I); begin
+            if Force_Total_Finalization or Buffered_Image.References = 0 then
+              vkDestroyImage     (Device, Buffered_Image.Data,    null);
+              vkDestroyImageView (Device, Buffered_Image.View,    null);
+              vkDestroySampler   (Device, Buffered_Image.Sampler, null);
+              Buffered_Garbage.Append (Buffered_Image);
+              Buffered_Images.Delete (I);
+            end if;
+            Hashed_Buffer.Unsafe.Next (I);
+          end; end loop;
+          
+          -- Take out the trash...
+          for Piece of Buffered_Garbage loop declare Heap : Heap_State := Element (Piece.Heap); begin   
+    
+            -- Find the chunk corresponding to the Memory
+            Current := Heap.First_Chunk;
+            while Current /= null loop
+              if Current.ID = Piece.ID then
+                if Piece.Kind /= Image_Buffer then vkDestroyBuffer (Device, Piece.Data, null); end if;
+              
+                -- Mark it as available
+                Current.Kind := Free_Allocation;
+    
+                -- Join the chunk with the previous one if it is free
+                if Current.Previous /= null and then Current.Previous.Kind = Free_Allocation then
+                  Previous := Current.Previous;
+                  Previous.Next := Current.Next;
+                  if Current.Next /= null then Current.Next.Previous := Previous; end if;
+                  Previous.Size := Previous.Size + Current.Size;
+                  Free (Current);
+                  Current := Previous;
+                end if;
+    
+                -- Same with the next chunk
+                if Current.Next /= null and then Current.Next.Kind = Free_Allocation then
+                  Next := Current.Next;
+                  if Next.Next /= null then Next.Next.Previous := Current; end if;
+                  Current.Next := Next.Next;
+                  Current.Size := Current.Size + Next.Size;
+                  Free (Next);
+                end if;
+                
+                -- Modify Heap to handle new size
+                Heap.Allocated := Heap.Allocated - Piece.Size;
+                Heaps.Replace_Element (Piece.Heap, Heap);
+                exit;
+              end if;
+              Current := Current.Next;
+            end loop;          
+          end; end loop;
+          Buffered_Garbage.Clear;
+          
+          -- Kill heaps with nothing left or if we are killing all the heaps during shutdown
+          for J in reverse Heaps.First_Index..Heaps.Last_Index loop
+            if Force_Total_Finalization or Heaps.Element (J).Allocated = 0 then
+            
+              -- Clear the GPU allocation
+              if Heaps.Element (J).Usage /= GPU_Usage then
+                vkUnmapMemory (Device, Heaps.Element (J).Device_Memory);
+              end if;
+              vkFreeMemory (Device, Heaps.Element (J).Device_Memory, null);        
+              
+              -- Free its chunks
+              Current := Heaps.Element (J).First_Chunk;
+              while Current /= null loop
+                Next := Current.Next;
+                Free (Current);
+                Current := Next;
+              end loop;
+              Heaps.Delete (J);
+            end if;
+          end loop;
+        end;    
+      end;
+    
+  -------------
+  -- Staging --
+  -------------
+  
+  -- ???
+  protected body Safe_Staging is
+        
+      -- ???
+      procedure Initialize is
+        Alignment_Mod,
+        Alignment_Size               :         Int_64_Unsigned_C           := 0;
+        Memory_Requirements          : aliased VkMemoryRequirements        := (others => <>);
+        Memory_Allocate_Info         : aliased VkMemoryAllocateInfo        := (others => <>);
+        Buffer_Info                  : aliased VkBufferCreateInfo          := (others => <>);
+        Command_Buffer_Allocate_Info : aliased VkCommandBufferAllocateInfo := (others => <>);
+        Command_Buffer_Begin_Info    : aliased VkCommandBufferBeginInfo    := (others => <>);
+        Fence_Info                   : aliased VkFenceCreateInfo           := (flags => VK_FENCE_CREATE_SIGNALED_BIT, others => <>);
+        Command_Pool_Info            : aliased VkCommandPoolCreateInfo     := (flags => VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+                                                                               queueFamilyIndex => Queue_Family, others => <>);
+        begin       
+          
+          -- Fence
+          vkAssert (vkCreateFence (Device, Fence_Info'Unchecked_Access, null, Staging_Fence'Access)); 
+    
+          -- Command pool
+          vkAssert (vkCreateCommandPool (Device, Command_Pool_Info'Unchecked_Access, null, Staging_Command_Pool'Unchecked_Access));
+          Command_Buffer_Allocate_Info := (commandPool => Staging_Command_Pool, commandBufferCount => 1, others => <>);
+
+          -- Command buffer
+          vkAssert (vkAllocateCommandBuffers (Device, Command_Buffer_Allocate_Info'Unchecked_Access, Staging_Commands'Access));
+          
+          -- Buffer
+          Buffer_Info := (size => Int_64_Unsigned (Max_Upload_Buffer.Get * MB), usage => VK_BUFFER_USAGE_TRANSFER_SRC_BIT, others => <>); 
+          vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, Staging_Buffer'Access));
+          
+          -- Memory for buffer
+          vkGetBufferMemoryRequirements (Device, Staging_Buffer, Memory_Requirements'Unchecked_Access);
+          Alignment_Mod        := Memory_Requirements.size mod Memory_Requirements.alignment;
+          Alignment_Size       := Memory_Requirements.size + (if Alignment_Mod /= 0 then Memory_Requirements.alignment - Alignment_Mod else 0);
+          Memory_Allocate_Info := (allocationSize  => Alignment_Size,
+                                   memoryTypeIndex => Find_Memory_Type_Index (Memory_Requirements.memoryTypeBits, CPU_To_GPU_Usage), others => <>);
+          vkAssert (vkAllocateMemory   (Device, Memory_Allocate_Info'Unchecked_Access, null, Staging_Device_Memory'Access));
+          vkAssert (vkBindBufferMemory (Device, Staging_Buffer, Staging_Device_Memory, 0));
+          vkAssert (vkMapMemory        (Device, Staging_Device_Memory, 0, Alignment_Size, 0, Staging_Data'Access));
+        end;
+          
+      -- ???
+      procedure Finalize is
+        begin
+          vkAssert (vkWaitForFences (Device, 1, Staging_Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+          vkUnmapMemory        (Device, Staging_Device_Memory);
+          vkFreeCommandBuffers (Device, Staging_Command_Pool, 1, Staging_Commands'Unchecked_Access);
+          vkDestroyCommandPool (Device, Staging_Command_Pool,  null); 
+          vkFreeMemory         (Device, Staging_Device_Memory, null);
+          vkDestroyFence       (Device, Staging_Fence,         null);
+          vkDestroyBuffer      (Device, Staging_Buffer,        null);
+        end;
+        
+      -- ???
+      procedure Set_Buffer (Buffer : in out Buffer_State; Data : Ptr; Data_Size : Int_Ptr) is
+        begin
+          case Buffer.Usage is
+            when GPU_Usage =>
+              Assert (Data_Size <= Max_Upload_Buffer.Get * MB);
+              
+              -- Copy it in
+              declare
+              Command_Buffer_Info : aliased VkCommandBufferBeginInfo := (others => <>);
+              Memory_Range        : aliased VkMappedMemoryRange      := (memory => Int_64_Unsigned_C (To_Int_Ptr (Staging_Device_Memory)),
+                                                                         size   => VK_WHOLE_SIZE, others => <>);
+              Submit_Info         : aliased VkSubmitInfo             := (commandBufferCount => 1,
+                                                                         pCommandBuffers    => Staging_Commands'Unchecked_Access, others => <>);
+              
+              -- Objects for raw data manipulation
+              Source, Destination : Array_Byte (1..Int (Data_Size) / Byte'Size);
+              for Source'Address      use Data;
+              for Destination'Address use To_Ptr (To_Int_Ptr (Staging_Data) + Staging_Offset);
+              Buffer_Copy : aliased VkBufferCopy := (srcOffset => Int_64_Unsigned_C (Staging_Offset),
+                                                     dstOffset => Int_64_Unsigned_C (To_Int_Ptr (Staging_Data) + Staging_Offset),
+                                                     size      => Int_64_Unsigned_C (Data_Size), others => <>);
+              begin
+              
+                -- Reset the command buffer only after the staging buffer is avaliable
+                vkAssert (vkWaitForFences      (Device, 1, Staging_Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+                vkAssert (vkResetFences        (Device, 1, Staging_Fence'Unchecked_Access));
+                vkAssert (vkBeginCommandBuffer (Staging_Commands, Command_Buffer_Info'Unchecked_Access));
+                
+                Destination := Source;
+                vkCmdCopyBuffer (Staging_Commands, Staging_Buffer, Buffer.Data, 1, Buffer_Copy'Unchecked_Access);
+                
+                -- Move over the staging offset to reflect the copied buffer data
+                Staging_Offset := Staging_Offset + Int_Ptr (Data_Size);
+                
+                -- Submit the queue and flush to the GPU
+                vkAssert (vkFlushMappedMemoryRanges (Device, 1, Memory_Range'Unchecked_Access));
+                vkAssert (vkEndCommandBuffer (Staging_Commands));
+                vkAssert (vkQueueSubmit (Queue, 1, Submit_Info'Unchecked_Access, Staging_Fence));   
+                Staging_Offset := 0;
+              end;
+            when others => null; --Buffer.Memory.Data := Staging_Offset + Offset + data (size);
+          end case;
+        end;
+      end;
+      
   ---------------
   -- Buffering --
   ---------------
@@ -445,16 +680,16 @@ package body Neo.Engine.Renderer is
   procedure Remove_Material_Reference (Path : Str) is null;
     
   -- Manage counters for Buffered_Image references
-  procedure Add_Image_Reference (Path : Str_Unbound) is Buffered_Image : Buffer_State := Buffered_Images (Path);
+  procedure Add_Image_Reference (Path : Str_Unbound) is Buffered_Image : Buffer_State := Buffered_Images.Get (Path);
     begin Buffered_Image.References := Buffered_Image.References + 1; Buffered_Images.Replace (Path, Buffered_Image); end;
-  procedure Remove_Image_Reference (Path : Str_Unbound) is Buffered_Image : Buffer_State := Buffered_Images (Path);
+  procedure Remove_Image_Reference (Path : Str_Unbound) is Buffered_Image : Buffer_State := Buffered_Images.Get (Path);
     begin Buffered_Image.References := Buffered_Image.References - 1; Buffered_Images.Replace (Path, Buffered_Image); end;
   
-  -- There is a bit of code duplication here...
+  -- Add a 3D mesh to the GPU memory
   procedure Buffer_Mesh (Path : Str) is    
+    Mesh            : Mesh_State := Meshes.Get (Path);
     Buffered_Mesh   : Vector_Buffer_Surface.Unsafe.Vector;
-    Mesh            : Mesh_State                              := Meshes.Get (Path);
-    Current_Surface : Buffer_Surface_State (Mesh.Is_Animated);-- := (others => <>);
+    Current_Surface : Buffer_Surface_State (Mesh.Is_Animated);
     begin   
       Assert (Meshes.Has (Path));
     
@@ -462,7 +697,7 @@ package body Neo.Engine.Renderer is
       if Mesh.Is_Animated then
         
         -- ??
-        for I in 1..Int (Mesh.Animated_Surfaces.Length) loop
+        for I in Mesh.Animated_Surfaces.First_Index..Mesh.Animated_Surfaces.Last_Index loop
         
           -- Material
           --Buffer_Material (S (Mesh.Animated_Surfaces.Element (I).Material));
@@ -500,7 +735,7 @@ package body Neo.Engine.Renderer is
         
       -- Non-animated mesh, so loop through the static surfaces
       else      
-        for I in 1..Int (Mesh.Static_Surfaces.Length) loop
+        for I in Mesh.Static_Surfaces.First_Index..Mesh.Static_Surfaces.Last_Index loop
         
           -- Material
           --Buffer_Material (S (Mesh.Static_Surfaces.Element (I).Material));
@@ -529,20 +764,20 @@ package body Neo.Engine.Renderer is
       end if;
       
       -- Add the result to the global buffered meshes
-      Buffered_Meshes.Insert (U (Path), Buffered_Mesh);
+      Buffered_Meshes.Insert (Path, Buffered_Mesh);
     end;
     
   -- ???
   procedure Unbuffer_Mesh (Path : Str) is
-    Buffered_Mesh : Vector_Buffer_Surface.Unsafe.Vector := Buffered_Meshes.Element (U (Path));
+    Buffered_Mesh : Vector_Buffer_Surface.Unsafe.Vector := Buffered_Meshes.Get (Path);
     begin
       for Surface of Buffered_Mesh loop
-        Remove_Material_Reference (S (Surface.Material));
-        Buffered_Garbage.Append (Surface.Vertices);
-        Buffered_Garbage.Append (Surface.Indicies);
-        if Surface.Is_Animated then Buffered_Garbage.Append (Surface.Weights); end if;
+        Remove_Material_Reference (S (Surface.Material));        
+        Safe_Allocation.Throw_Away (Surface.Vertices);
+        Safe_Allocation.Throw_Away (Surface.Indicies);
+        if Surface.Is_Animated then Safe_Allocation.Throw_Away (Surface.Weights); end if;
       end loop;    
-      Buffered_Meshes.Delete (U (Path));
+      Buffered_Meshes.Delete (Path);
     end;
 
   -- Load a material's textures and mark it 
@@ -550,7 +785,7 @@ package body Neo.Engine.Renderer is
     begin
 
       -- Sanity check
-      if Buffered_Materials.Contains (U (Path)) then return; end if;
+      if Buffered_Materials.Has (Path) then return; end if;
 
       -- Buffer the material and load all images associated with the material to the GPU
       declare
@@ -562,7 +797,7 @@ package body Neo.Engine.Renderer is
         for Path of PATHS loop
         
           -- Increment the count if it is loaded already
-          if Buffered_Images.Contains (Path & Hash) then Add_Image_Reference (Path & Hash);
+          if Buffered_Images.Has (Path & Hash) then Add_Image_Reference (Path & Hash);
           
           -- Otherwise, buffer the image
           else
@@ -630,9 +865,9 @@ package body Neo.Engine.Renderer is
               
               -- Buffer the image
               vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, Buffered_Image.Data'Unchecked_Access));
-              Allocate_Buffer (Buffered_Image);
+              Safe_Allocation.Allocate_Buffer (Buffered_Image);
               vkAssert (vkBindImageMemory (Device, Buffered_Image.Data, Buffered_Image.Device_Memory, Buffered_Image.Offset));
-              Set_Buffer (Buffered_Image, Image.Data'Address, Image.Data'Size / Byte'Size);
+              Safe_Staging.Set_Buffer (Buffered_Image, Image.Data'Address, Image.Data'Size / Byte'Size);
               Image_View_Info.image := Buffered_Image.Data;
               vkAssert (vkCreateImageView (Device, Image_View_Info'Unchecked_Access, null, Buffered_Image.View'Address));
   
@@ -676,7 +911,8 @@ package body Neo.Engine.Renderer is
   -----------------
   -- Framebuffer --
   -----------------
-    
+  
+  -- ???
   procedure Restart_Framebuffer is
     begin
     
@@ -686,11 +922,10 @@ package body Neo.Engine.Renderer is
         Surface_Extent := Surface_Details.minImageExtent;
       
         -- Cleanup, everybody
-        Framebuffer_Status.Occupied (False);
         Finalize_Framebuffer;
-        Finalize_Buffers;
+        Safe_Allocation.Finalize_Buffers;
       
-        -- Start fresh
+        -- Start anew
         Initialize_Framebuffer;
       end if;
     end;
@@ -698,24 +933,26 @@ package body Neo.Engine.Renderer is
   -- ???
   procedure Finalize_Framebuffer is
     begin
-    
-      -- Make sure we are safe
-      Assert (not Framebuffer_Status.Occupied);
+      Backend_Task.Finalize;
+      if Frontend_Task.Running then Frontend_Task.Finalize; end if;
     
       -- Framebuffer
       for Frame of Framebuffer.all loop
-        vkDestroyDescriptorPool (Device, Frame.Descriptor_Pool,  null);
-        vkDestroyImageView      (Device, Frame.Image_View,       null);
-        vkDestroyFramebuffer    (Device, Frame.Swapchain_Buffer, null);
-        vkFreeCommandBuffers    (Device, Command_Pool, 1, Frame.Commands'Unchecked_Access);
+	vkAssert (vkWaitForFences (Device, 1, Frame.Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+        vkDestroySemaphore   (Device, Frame.Acquire_Status,   null);
+        vkDestroySemaphore   (Device, Frame.Render_Status,    null);  
+        vkDestroyImageView   (Device, Frame.Image_View,       null);
+        vkDestroyFramebuffer (Device, Frame.Swapchain_Buffer, null);
+        vkDestroyFence       (Device, Frame.Fence,            null);
+        vkFreeCommandBuffers (Device, Command_Pool, 1, Frame.Commands'Unchecked_Access);
       end loop;
-      Vector_Framebuffer.Free (Framebuffer);   
+      Vector_Framebuffer.Free (Framebuffer);  
       
       -- Depth image
       vkDestroySampler   (Device, Depth_Image.Sampler, null);
       vkDestroyImage     (Device, Depth_Image.Data,    null);
       vkDestroyImageView (Device, Depth_Image.View,    null);
-      Buffered_Garbage.Append (Depth_Image);
+      Safe_Allocation.Throw_Away (Depth_Image);
     
       -- Render pass
       vkDestroyRenderPass (Device, Render_Pass, null);
@@ -728,11 +965,10 @@ package body Neo.Engine.Renderer is
   -- ???
   procedure Initialize_Framebuffer is
    
-    -- Framebuffer
-    Frame_Buffer_Info            : aliased VkFramebufferCreateInfo     := (others => <>);    
-    Command_Buffer_Begin_Info    : aliased VkCommandBufferBeginInfo    := (others => <>);  
-    Command_Buffer_Allocate_Info : aliased VkCommandBufferAllocateInfo := (commandPool => Command_Pool, commandBufferCount => 1, others => <>);
-   
+    -- Syncronization
+    Semaphore_Info : aliased VkSemaphoreCreateInfo := (others => <>);
+    Fence_Info     : aliased VkFenceCreateInfo     := (flags => VK_FENCE_CREATE_SIGNALED_BIT, others => <>);
+    
     -- Swap Chain
     Indexes        : aliased Array_Int_Unsigned_C     := (1 => Queue_Family);
     Swapchain_Info : aliased VkSwapchainCreateInfoKHR := (surface          => Surface,
@@ -747,11 +983,15 @@ package body Neo.Engine.Renderer is
                                                           oldSwapchain     => Swapchain,
                                                           preTransform     => Surface_Details.currentTransform,
                                                           imageExtent      => Surface_Details.currentExtent,
-
+  
       -- Pick the queue length or number of images in the swap-chain - push for one more than the minimum for triple buffering
       minImageCount => (if Surface_Details.maxImageCount > 0 and Surface_Details.minImageCount + 1 > Surface_Details.maxImageCount
                         then Surface_Details.maxImageCount else Surface_Details.minImageCount + 1), others => <>);
     Images : aliased Array_Ptr (1..Int (Swapchain_Info.minImageCount)) := (others => NULL_PTR);
+   
+    -- Framebuffer
+    Frame_Buffer_Info            : aliased VkFramebufferCreateInfo     := (others => <>);  
+    Command_Buffer_Allocate_Info : aliased VkCommandBufferAllocateInfo := (commandPool => Command_Pool, commandBufferCount => 1, others => <>);
                     
     -- Viewport 
     Viewport : aliased VkViewport := (x        => 0.0,
@@ -765,7 +1005,7 @@ package body Neo.Engine.Renderer is
                                                                         pViewports    => Viewport'Unchecked_Access,
                                                                         scissorCount  => 1,
                                                                         pScissors     => Scissor'Unchecked_Access, others => <>);
-
+  
     -- Depth image
     Depth_Image_View_Info : aliased VkImageViewCreateInfo := (format           => Depth_Format.format,
                                                               viewType         => VK_IMAGE_VIEW_TYPE_2D,
@@ -796,16 +1036,8 @@ package body Neo.Engine.Renderer is
                                                                          colorAttachmentCount    => 1,
                                                                          pColorAttachments       => Color_Reference'Unchecked_Access,
                                                                          pDepthStencilAttachment => Depth_Reference'Unchecked_Access, others  => <>));
-    Subpass_Dependencies : aliased Array_VkSubpassDependency := (1 => (srcSubpass    => VK_SUBPASS_EXTERNAL,
-                                                                       dstSubpass    => 0,
-                                                                       srcStageMask  => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                                                       srcAccessMask => 0,
-                                                                       dstStageMask  => VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                                                       dstAccessMask => VK_ACCESS_COLOR_ATTACHMENT_READ_BIT or
-                                                                                        VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, others => <>));
                                             
     -- Render Pass
-    Clear_Values : aliased Array_VkClearValue := ((color => ((0.0, 1.0, 0.0, 1.0)), others => <>), (depthStencil => (1.0, 0), others => <>));
     Attachments : aliased Array_VkAttachmentDescription := ((format         => Swapchain_Format.format,
                                                              samples        => VK_SAMPLE_COUNT_1_BIT,
                                                              loadOp         => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
@@ -834,27 +1066,20 @@ package body Neo.Engine.Renderer is
     Render_Pass_Info : aliased VkRenderPassCreateInfo := (attachmentCount => Attachments'Length,
                                                           pAttachments    => Attachments (1)'Unchecked_Access,
                                                           subpassCount    => Subpasses_Description'Length,
-                                                          pSubpasses      => Subpasses_Description (1)'Unchecked_Access,
-                                                          dependencyCount => Subpass_Dependencies'Length,
-                                                          pDependencies   => Subpass_Dependencies (1)'Unchecked_Access, others => <>);
-    Render_Pass_Begin_Info : aliased VkRenderPassBeginInfo := (clearValueCount => Clear_Values'Length,
-                                                               pClearValues    => Clear_Values (1)'Unchecked_Access,
-                                                               renderArea      => (Offset => (0, 0),
-                                                                                   Extent => Swapchain_Info.imageExtent), others => <>);
+                                                          pSubpasses      => Subpasses_Description (1)'Unchecked_Access, others => <>);
     begin
     
       -- Make sure we are safe
-      Assert (not Framebuffer_Status.Occupied);
       vkAssert (vkDeviceWaitIdle (Device));
-
+  
       -- Swapchain
-      Framebuffer := new Vector_Framebuffer.Unsafe_Array (Images'Range);
       vkAssert (vkCreateSwapchainKHR (Device, Swapchain_Info'Unchecked_Access, null, Swapchain'Unchecked_Access));
       vkAssert (vkGetSwapchainImagesKHR (device               => Device,
                                          swapchain            => Swapchain,
                                          pSwapchainImageCount => Swapchain_Info.minImageCount'Unchecked_Access,
                                          pSwapchainImages     => Images (1)'Unchecked_Access));
-      for I in Framebuffer'Range loop
+      Framebuffer := new Vector_Framebuffer.Unsafe_Array (Images'Range);
+      for I in Images'Range loop
         Framebuffer (I).Image := Images (I);
         declare
         Image_View_Info : aliased VkImageViewCreateInfo := (image            => Framebuffer (I).Image,
@@ -869,17 +1094,17 @@ package body Neo.Engine.Renderer is
           vkAssert (vkCreateImageView (Device, Image_View_Info'Unchecked_Access, null, Framebuffer (I).Image_View'Address));
         end;
       end loop;
- 
+  
       -- Render pass
       vkAssert (vkCreateRenderPass (Device, Render_Pass_Info'Unchecked_Access, null, Render_Pass'Unchecked_Access));
-
+  
       -- Depth image
       vkAssert (vkCreateImage (Device, Depth_Image_Info'Unchecked_Access, null, Depth_Image.Data'Unchecked_Access));
-      Allocate_Buffer (Depth_Image);
+      Safe_Allocation.Allocate_Buffer (Depth_Image);
       vkAssert (vkBindImageMemory (Device, Depth_Image.Data, Depth_Image.Device_Memory, Depth_Image.Offset));
       Depth_Image_View_Info.image := Depth_Image.Data;
       vkAssert (vkCreateImageView  (Device, Depth_Image_View_Info'Unchecked_Access, null, Depth_Image.View'Address));
-
+  
       -- Framebuffer
       Attachment_Data (2) := Depth_Image.View;
       for Frame of Framebuffer.all loop
@@ -892,119 +1117,50 @@ package body Neo.Engine.Renderer is
                               layers          => 1, others => <>);
         vkAssert (vkCreateFramebuffer      (Device, Frame_Buffer_Info'Unchecked_Access, null, Frame.Swapchain_Buffer'Unchecked_Access));
         vkAssert (vkAllocateCommandBuffers (Device, Command_Buffer_Allocate_Info'Unchecked_Access, Frame.Commands'Unchecked_Access));
-        vkAssert (vkBeginCommandBuffer     (Frame.Commands, Command_Buffer_Begin_Info'Unchecked_Access));
+        vkAssert (vkCreateSemaphore        (Device, Semaphore_Info'Unchecked_Access, null, Frame.Acquire_Status'Unchecked_Access));
+        vkAssert (vkCreateSemaphore        (Device, Semaphore_Info'Unchecked_Access, null, Frame.Render_Status'Unchecked_Access));
+        vkAssert (vkCreateFence            (Device, Fence_Info'Unchecked_Access,     null, Frame.Fence'Unchecked_Access));  
       end loop;
       
-      -- Signal that the framebuffer is in a valid state and is not in need of reset
-      Framebuffer_Status.Occupied (True); 
-    end;
-    
-  ---------------------
-  -- Present_Drawing --
-  ---------------------
-  
-  -- Acquire the rendered image, show it in the window, and handle changes to the resolution
-  procedure Present_Drawing is        
-    Image_Index : aliased Int_Unsigned_C := Int_Unsigned_C (Current_Frame) - 1; -- Zero index conversion for C
-    Wait_Stage  : aliased Int_Unsigned_C := VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; 
-    Submit_Info : aliased VkSubmitInfo   := (commandBufferCount   => 1,
-                                             pWaitDstStageMask    => Wait_Stage'Unchecked_Access,
-                                             waitSemaphoreCount   => 1,
-                                             pWaitSemaphores      => Acquire_Status'Unchecked_Access,
-                                             signalSemaphoreCount => 1,
-                                             pSignalSemaphores    => Render_Status'Unchecked_Access, others => <>);
-    Present_Info : aliased VkPresentInfoKHR := (swapchainCount     => 1,
-                                                pSwapchains        => Swapchain'Unchecked_Access,
-                                                waitSemaphoreCount => 1,
-                                                pWaitSemaphores    => Render_Status'Unchecked_Access, others => <>);
-    begin
- 
-      -- Fetch the next image index from the swap chain if there is one
-      vkAssert (vkQueueWaitIdle (Queue));
-      case vkAcquireNextImageKHR (Device      => Device,
-                                  swapchain   => Swapchain,
-                                  timeout     => Int_64_Unsigned_C'Last,
-                                  semaphore   => Acquire_Status,
-                                  fence       => NULL_PTR,
-                                  pImageIndex => Image_Index'Unchecked_Access)
-      is
-        when VK_ERROR_OUT_OF_DATE_KHR | VK_SUBOPTIMAL_KHR => Restart_Framebuffer; return;
-        when VK_TIMEOUT               | VK_NOT_READY      => return;
-        when VK_SUCCESS                                   => null;
-        when others                                       => raise Program_Error;
-      end case;
-      
-      -- Housekeeping
-      if GARBAGE_POLLING_DURATION <= Clock - Last_Time then
-        Finalize_Buffers;
-        Last_Time := Clock;
-      end if;
-
-      -- Set the index
-      Submit_Info.pCommandBuffers := Framebuffer (Current_Frame).Commands'Unchecked_Access;
-      vkAssert (vkQueueSubmit (Queue, 1, Submit_Info'Unchecked_Access, NULL_PTR));
-  
-      -- Show the resulting image
-      Present_Info.pImageIndices := Image_Index'Unchecked_Access;
-      if vkQueuePresentKHR (Queue, Present_Info'Unchecked_Access) in VK_ERROR_OUT_OF_DATE_KHR | VK_SUBOPTIMAL_KHR then
-        Restart_Framebuffer;
-      end if;
+      -- Reset the indexes reate the inital view
+      View.Set (case Rendering.Get is when Doom3_Rendering    => Doom3.Build_View,
+                                      when FGED2_Rendering    => FGED2.Build_View,
+                                      when Raytrace_Rendering => Raytrace.Build_View);
+      Backend_Task.Initialize;
+      Frontend_Task.Initialize;
+      Framebuffer_Status.Occupied (True);
     end;
     
   ----------------------
   -- Finalize_Drawing --
   ----------------------
   
-  -- Kill anything that is not controlled and that is not the main Device or Instance
+  -- Kill anything that is not controlled
   procedure Finalize_Drawing is
-    Chunk : Ptr_Allocation_State := null;
     begin
     
       -- Shaders
       -- ???
       
       -- Models
-      for Key of Hashed_Vector_Buffer_Surface.Keys (Buffered_Meshes) loop Unbuffer_Mesh (S (Key)); end loop;
-    
-      -- Textures
-      for Buffered_Image of Buffered_Images loop
-        vkDestroySampler   (Device, Buffered_Image.Sampler, null);
-        vkDestroyImage     (Device, Buffered_Image.Data,    null);
-        vkDestroyImageView (Device, Buffered_Image.View,    null);
-      end loop;
+      for Key of Buffered_Meshes.Keys loop Unbuffer_Mesh (S (Key)); end loop;
+      Safe_Allocation.Throw_Away (Joint_Buffer);
 
       -- Uniforms
-      for Uniform of Buffered_Uniforms loop vkDestroyBuffer (Device, Uniform.Data, null); end loop;
-      --vkDestroyBuffer (Device, Buffer_Joints.Data, null);
+      for Uniform of Buffered_Uniforms loop Safe_Allocation.Throw_Away (Uniform); end loop;
 
       -- Staging 
-      vkUnmapMemory        (Device, Staging_Device_Memory);
-      vkFreeCommandBuffers (Device, Staging_Command_Pool, 1, Staging_Commands'Unchecked_Access);
-      vkDestroyCommandPool (Device, Staging_Command_Pool,  null); 
-      vkFreeMemory         (Device, Staging_Device_Memory, null);
-      vkDestroyFence       (Device, Staging_Fence,         null);
-      vkDestroyBuffer      (Device, Staging_Buffer,        null);
+      Safe_Staging.Finalize;
 
       -- Framebuffer
-      Framebuffer_Status.Occupied (False);
       Finalize_Framebuffer;
       
-      -- Globals
+      -- Pools
       vkDestroyDescriptorPool (Device, Descriptor_Pool, null);
-      vkDestroySemaphore      (Device, Acquire_Status,  null);
-      vkDestroySemaphore      (Device, Render_Status,   null);  
-      vkDestroyCommandPool    (Device, Command_Pool,    null);  
+      vkDestroyCommandPool    (Device, Command_Pool,    null);
       
       -- Memory heaps and chunks
-      for Heap of Heaps loop
-        if Heap.Usage /= GPU_Usage then vkUnmapMemory (Device, Heap.Device_Memory); end if;
-        vkFreeMemory (Device, Heap.Device_Memory, null);
-        while Heap.First_Chunk /= null loop
-          Chunk := Heap.First_Chunk.Next;
-          Free (Heap.First_Chunk);
-          Heap.First_Chunk := Chunk;
-        end loop;
-      end loop;
+      Safe_Allocation.Finalize_Buffers (Force_Total_Finalization => True);
       
       -- Device
       vkDestroyDevice     (Device, null);
@@ -1017,8 +1173,8 @@ package body Neo.Engine.Renderer is
   ----------
    
   -- Main drawing routine
-  procedure Draw (Data : Bottom_Level_State; Visibilities : Visibility_Array) is
-    Mesh                : Vector_Buffer_Surface.Unsafe.Vector := Buffered_Meshes.Element (Data.Mesh);
+  procedure Draw (Data : Bottom_Level_State; Commands : in out Ptr; Surface_Sort : Surface_Sort_Array) is
+    Mesh                : Vector_Buffer_Surface.Unsafe.Vector := Buffered_Meshes.Get (Data.Mesh);
     Descriptor_Set      : aliased Ptr                         := NULL_PTR;
     Current_Pipeline    : aliased Ptr                         := NULL_PTR; 
     Set_Allocation_Info : aliased VkDescriptorSetAllocateInfo := (descriptorSetCount => 1,
@@ -1039,7 +1195,7 @@ package body Neo.Engine.Renderer is
                           Set         => (dstBinding      => JOINT_BUFFER_BINDING,
                                           descriptorCount => 1,
                                           descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, others => <>)));
-          Set_Buffer (Joint_Buffer, Joints (1)'Address, Joint_State'Object_Size * Joints'Length / Byte'Size);
+          Safe_Staging.Set_Buffer (Joint_Buffer, Joints (1)'Address, Joint_State'Object_Size * Joints'Length / Byte'Size);
         end;
       end if;
       
@@ -1048,7 +1204,7 @@ package body Neo.Engine.Renderer is
       
         -- Fetch the material and create a hash we can use to stage buffered image components of the materials
         declare
-        Material : Material_State := Materials.Get (S (Data.Materials_Map.Element (Surface.Material)));
+        Material : Material_State := Materials.Get (S (Surface.Material));--(Data.Materials_Map.Element (Surface.Material)));
         Hash     : Str_Unbound    := Get_Material_Info_Hash (Material);
 
         -- Flag a meterial texture and setup a sampler
@@ -1066,7 +1222,7 @@ package body Neo.Engine.Renderer is
           Debug_Assert (Data.Is_Animated = Surface.Is_Animated);
           
           -- Optimize
-          if Visibilities (Material.Visibility) then
+          if Surface_Sort (Material.Sort) then
           
             -- Optimize out searching through buffered pipelines if our previous one is a match
             if Previous_Pipeline.Val = Pipeline then
@@ -1203,10 +1359,10 @@ goto Have_Pipeline;
 -- Bind the current pipeline and remember the previous one to potentially avoid searching on the next draw
 <<Have_Pipeline>>       
             Previous_Pipeline := (Pipeline, Current_Pipeline);    
-            vkCmdBindPipeline (Framebuffer (Current_Frame).Commands, VK_PIPELINE_BIND_POINT_GRAPHICS, Current_Pipeline);         
+            vkCmdBindPipeline (Commands, VK_PIPELINE_BIND_POINT_GRAPHICS, Current_Pipeline);         
             
             -- Stage material
-            if Buffered_Materials.Contains (Surface.Material) then raise Program_Error with "Unbuffered material encountered"; end if;
+            if Buffered_Materials.Has (Surface.Material) then raise Program_Error with "Unbuffered material encountered"; end if;
             case Material.Domain is -- Must match Neo.Data.Model.Material_State
               when Surface_Domain =>
                 Stage_Image (Material.Base_Color, Base_Color_Sampler.Set'Access, Enable_Base_Color.Set'Access);
@@ -1234,7 +1390,7 @@ goto Have_Pipeline;
                 vkUpdateDescriptorSets (Device, Resulting_Writes'Length, Resulting_Writes (1)'Unchecked_Access, 0, null);        
               end;        
             end if;
-            vkCmdBindDescriptorSets (commandBuffer      => Framebuffer (Current_Frame).Commands, 
+            vkCmdBindDescriptorSets (commandBuffer      => Commands, 
                                      pipelineBindPoint  => VK_PIPELINE_BIND_POINT_GRAPHICS, 
                                      layout             => Pipeline.Shader.Pipeline_Layout,
                                      firstSet           => 0,
@@ -1244,18 +1400,18 @@ goto Have_Pipeline;
                                      pDynamicOffsets    => null);
         
             -- Bind 3D data
-            vkCmdBindVertexBuffers (commandBuffer => Framebuffer (Current_Frame).Commands,
+            vkCmdBindVertexBuffers (commandBuffer => Commands,
                                     firstBinding  => 0,
                                     bindingCount  => 1,
                                     pBuffers      => Surface.Vertices.Data'Address,
                                     pOffsets      => Surface.Vertices.Offset'Address);  
-            vkCmdBindIndexBuffer   (commandBuffer => Framebuffer (Current_Frame).Commands,
+            vkCmdBindIndexBuffer   (commandBuffer => Commands,
                                     buffer        => Surface.Indicies.Data'Address,
                                     offset        => Surface.Indicies.Offset,
                                     indexType     => VK_INDEX_TYPE_UINT32);
                                      
             -- Draw
-            vkCmdDrawIndexed (Framebuffer (Current_Frame).Commands, Surface.Indicies.Count, 1, 0, 0, 0);
+            vkCmdDrawIndexed (Commands, Surface.Indicies.Count, 1, 0, 0, 0);
             
             -- Kill the current Descriptor_Set... does one really need to be allocated for every draw? Also, what is the overhead of freeing?
             vkAssert (vkFreeDescriptorSets (Device, Descriptor_Pool, 1, Descriptor_Set'Unchecked_Access));
@@ -1269,7 +1425,7 @@ goto Have_Pipeline;
   -- Initialize_Drawing --
   ------------------------
   
-  procedure Initialize_Drawing (Backend : Backend_Kind) is
+  procedure Initialize_Drawing is
 
     -- Load the function pointers from our driver library
     procedure Initialize_Vulkan_Subprograms is new API.Vulkan.Initialize (Get_Vulkan_Subprogram);
@@ -1284,16 +1440,6 @@ goto Have_Pipeline;
         return Result;
       end;
 
-    -- Staging
-    Alignment_Mod,
-    Alignment_Size               :         Int_64_Unsigned_C           := 0;
-    Memory_Requirements          : aliased VkMemoryRequirements        := (others => <>);
-    Fence_Info                   : aliased VkFenceCreateInfo           := (others => <>);
-    Memory_Allocate_Info         : aliased VkMemoryAllocateInfo        := (others => <>);
-    Command_Buffer_Allocate_Info : aliased VkCommandBufferAllocateInfo := (others => <>);
-    Command_Buffer_Begin_Info    : aliased VkCommandBufferBeginInfo    := (others => <>);
-    Buffer_Info                  : aliased VkBufferCreateInfo          := (others => <>);
-
     -- Temporaries for fetching and testing physical device features
     Count,
     Current_Graphics_Family,
@@ -1305,11 +1451,9 @@ goto Have_Pipeline;
     Current_Surface_Details   : aliased VkSurfaceCapabilitiesKHR         := (others => <>);
     Current_Device_Properties : aliased VkPhysicalDeviceProperties       := (others => <>);
     Current_Memory_Properties : aliased VkPhysicalDeviceMemoryProperties := (others => <>);
-    
-    -- Atomic GPU queue semaphores 
-    Semaphore_Info : aliased VkSemaphoreCreateInfo := (others => <>);
                                                                       
-    -- Command pools
+    -- Command pools    
+    Buffer_Info       : aliased VkBufferCreateInfo      := (others => <>);
     Command_Pool_Info : aliased VkCommandPoolCreateInfo := (flags => VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, others => <>);
     
     -- Application details
@@ -1351,6 +1495,8 @@ goto Have_Pipeline;
     Descriptor_Pool_Sizes  : aliased Array_VkDescriptorPoolSize (1..2) := (others => (others => <>));
     Descriptor_Pool_Info   : aliased VkDescriptorPoolCreateInfo        := (poolSizeCount => Descriptor_Pool_Sizes'Length,
                                                                            pPoolSizes    => Descriptor_Pool_Sizes (1)'Unchecked_Access, others => <>);
+    
+    -- Start of Initialize_Drawing
     begin
       
       -- Load driver
@@ -1364,9 +1510,9 @@ goto Have_Pipeline;
         if not Is_Debugging then raise Program_Error; end if;
         
         -- Otherwise print some info to the user, remove the debugging layers, and try instantiating the instance again
-        Line_Info ("Using Vulkan's debugging layer requires the LunarG"
-                   & Char'Val (16#00AE#) & " Vulkan" & Char'Val (16#2122#) & " SDK!" & EOL
-                   & "It can be downloaded from https://vulkan.lunarg.com"           & EOL
+        Line_Info ("Using Vulkan's debugging layer requires the LunarG" & Char'Val (16#00AE#)
+                   & " Vulkan" & Char'Val (16#2122#) & " SDK!" & EOL
+                   & "It can be downloaded from https://vulkan.lunarg.com" & EOL
                    & "Continuing without the debugging layer enabled...");
         Instance_Info.enabledLayerCount   := 0;
         Instance_Info.ppEnabledLayerNames := NULL_PTR;
@@ -1529,37 +1675,17 @@ goto Have_Pipeline;
       vkAssert (vkCreateDevice (Physical_Device, Device_Info'Unchecked_Access, null, Device'Access));
       vkGetDeviceQueue (Device, Queue_Family, 0, Queue'Unchecked_Access);
          
-      -- Command pools
+      -- Command pool
       Command_Pool_Info.queueFamilyIndex := Queue_Family;
       vkAssert (vkCreateCommandPool (Device, Command_Pool_Info'Unchecked_Access, null, Command_Pool'Access));
-      vkAssert (vkCreateCommandPool (Device, Command_Pool_Info'Unchecked_Access, null, Staging_Command_Pool'Access));
-
-      -- Staging command buffer
-      Buffer_Info := (size => Int_64_Unsigned (Max_Upload_Buffer.Get * MB), usage => VK_BUFFER_USAGE_TRANSFER_SRC_BIT, others => <>);
-      Command_Buffer_Allocate_Info := (commandPool => Staging_Command_Pool, commandBufferCount => 1, others => <>);
-      vkAssert (vkAllocateCommandBuffers (Device, Command_Buffer_Allocate_Info'Unchecked_Access, Staging_Commands'Access));
-      vkAssert (vkBeginCommandBuffer     (Staging_Commands, Command_Buffer_Begin_Info'Unchecked_Access));
-      vkAssert (vkCreateBuffer           (Device, Buffer_Info'Unchecked_Access, null, Staging_Buffer'Access));
       
-      -- Staging memory
-      vkGetBufferMemoryRequirements (Device, Staging_Buffer, Memory_Requirements'Unchecked_Access);
-      Alignment_Mod        := Memory_Requirements.size mod Memory_Requirements.alignment;
-      Alignment_Size       := Memory_Requirements.size + (if Alignment_Mod /= 0 then Memory_Requirements.alignment - Alignment_Mod else 0);
-      Memory_Allocate_Info := (allocationSize  => Alignment_Size,
-                               memoryTypeIndex => Find_Memory_Type_Index (Memory_Requirements.memoryTypeBits, CPU_To_GPU_Usage), others => <>);
-      vkAssert (vkAllocateMemory   (Device, Memory_Allocate_Info'Unchecked_Access, null, Staging_Device_Memory'Access));
-      vkAssert (vkBindBufferMemory (Device, Staging_Buffer, Staging_Device_Memory, 0));
-      vkAssert (vkMapMemory        (Device, Staging_Device_Memory, 0, Alignment_Size, 0, Staging_Data'Access));
-      
-      -- Semaphores and fences
-      vkAssert (vkCreateFence     (Device, Fence_Info'Unchecked_Access,     null, Staging_Fence'Access));
-      vkAssert (vkCreateSemaphore (Device, Semaphore_Info'Unchecked_Access, null, Acquire_Status'Unchecked_Access));
-      vkAssert (vkCreateSemaphore (Device, Semaphore_Info'Unchecked_Access, null, Render_Status'Unchecked_Access));
+      -- Staging
+      Safe_Staging.Initialize;
       
       -- Joint buffer
       Buffer_Info := (size => Joint_Buffer.Size, usage => VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT or VK_BUFFER_USAGE_TRANSFER_DST_BIT, others => <>);
       vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, Joint_Buffer.Data'Unchecked_Access));
-      Allocate_Buffer (Joint_Buffer);
+      Safe_Allocation.Allocate_Buffer (Joint_Buffer);
       vkAssert (vkBindBufferMemory (Device, Joint_Buffer.Data, Joint_Buffer.Device_Memory, Joint_Buffer.Offset));
       
       -- Uniforms
@@ -1568,7 +1694,7 @@ goto Have_Pipeline;
                         usage => VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT or
                                    (if Uniform.Usage = GPU_Usage then VK_BUFFER_USAGE_TRANSFER_DST_BIT else 0), others => <>);
         vkAssert (vkCreateBuffer (Device, Buffer_Info'Unchecked_Access, null, Uniform.Data'Unchecked_Access));
-        Allocate_Buffer (Uniform);
+        Safe_Allocation.Allocate_Buffer (Uniform);
         vkAssert (vkBindBufferMemory (Device, Uniform.Data, Uniform.Device_Memory, Uniform.Offset));
       end loop;
       
@@ -1630,7 +1756,7 @@ goto Have_Pipeline;
                                      stageFlags     => Shader_Flags, others => <>));
           end loop;
             
-          -- Load the stage's SPIR-V and apply the descriptors
+          -- Load the stage's SPIR-V data and apply the descriptors
           declare
           Program                : aliased Array_Byte := Load_Padded (S (Shader_Path), Amount => 4);
           Result_Layout_Bindings : aliased Array_VkDescriptorSetLayoutBinding :=
@@ -1658,9 +1784,6 @@ goto Have_Pipeline;
       end loop;       
       
       -- Kick off the second stage!
-      Framebuffer_Status.Occupied (False);
       Initialize_Framebuffer;
-      --Frontend_Task.Initialize;
-      --Backend_Task.Initialize;
     exception when others => Line_Error ("Vulkan driver not installed or up to date?"); raise Program_Error; end;
 end;

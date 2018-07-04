@@ -1,0 +1,343 @@
+cavcin_hk_sight {
+	minDistance	10
+	maxDistance	60
+	volume		0
+	shakes		0.3
+
+	sound/ed/hellknight/sight1_1.wav
+}
+
+cavcin_hk_pain {
+
+	minDistance	10
+	maxDistance	60
+	volume		2
+	unclamped
+	no_dups
+	
+	//sound/ed/hellknight/nupain1.wav
+	//sound/ed/hellknight/nupain2.wav
+	//sound/ed/hellknight/nupain3.wav
+	
+	sound/ed/hellknight/hk_pain_01.wav
+	sound/ed/hellknight/hk_pain_02.wav
+	sound/ed/hellknight/hk_pain_03.wav
+}
+
+cavcin_hk_bridgebreak {
+	minDistance	10
+	maxDistance	80
+	volume		0
+	
+	sound/cinematics/caverns1/bridge_impact_break.wav
+}
+
+cavcin_hk_die {
+	minDistance	10
+	maxDistance	60
+	volume		2
+	unclamped
+	shakes		0.3
+
+	sound/ed/hellknight/die1.wav
+}
+
+monster_demon_hellknight_burn {
+
+	minDistance	5
+	maxDistance	30
+	volume	0
+
+	sound/ed/hellknight/hk_burn.wav
+
+}
+
+monster_demon_hellknight_pain {
+
+	minDistance	10
+	maxDistance	60
+	volume		2
+	unclamped
+	no_dups
+	
+	sound/ed/hellknight/hk_pain_01.wav
+	sound/ed/hellknight/hk_pain_02.wav
+	sound/ed/hellknight/hk_pain_03.wav
+}
+
+monster_demon_hellknight_die {
+
+	minDistance	10
+	maxDistance	60
+	volume		2
+	unclamped
+	shakes		0.2
+
+	sound/ed/hellknight/die1.wav
+	sound/ed/hellknight/die2.wav
+	sound/ed/hellknight/die3.wav
+
+}
+
+monster_demon_hellknight_attackmissile {
+
+}
+
+
+monster_demon_hellknight_sight1
+{
+	minDistance	10
+	maxDistance	60
+	volume		0
+	shakes		0.1
+
+	sound/ed/hellknight/sight1_1.wav
+	sound/ed/hellknight/sight1_2.wav
+
+}
+
+monster_demon_hellknight_sight1_d4
+{
+	minDistance	10
+	maxDistance	60
+	volume		3
+	shakes		0.1
+
+	sound/ed/hellknight/sight1_1.wav
+	sound/ed/hellknight/sight1_2.wav
+
+}
+
+monster_demon_hellknight_sight2 {
+
+	minDistance		10
+	maxDistance		60
+	volume			0
+	shakes			0.1
+
+	sound/ed/hellknight/sight2_1.wav
+	sound/ed/hellknight/sight2_2.wav
+	sound/ed/hellknight/sight2_3.wav
+
+}
+
+monster_demon_hellknight_sight2_d4 {
+
+	minDistance		10
+	maxDistance		60
+	volume			3
+	shakes			0.1
+
+	sound/ed/hellknight/sight2_1.wav
+	sound/ed/hellknight/sight2_2.wav
+	sound/ed/hellknight/sight2_3.wav
+
+}
+
+monster_demon_hellknight_sight3
+{
+	minDistance	10
+	maxDistance	60
+	volume		0
+	shakes		0.1
+
+	sound/ed/hellknight/sight3_1.wav
+	sound/ed/hellknight/sight3_2.wav
+
+}
+
+monster_demon_hellknight_chatter_d4
+{
+	minDistance	5
+	maxDistance	60
+	volume		3
+	no_dups
+
+	sound/ed/hellknight/hk_chatter_01.wav
+	sound/ed/hellknight/hk_chatter_02.wav
+	sound/ed/hellknight/hk_chatter_03.wav
+}
+
+monster_demon_hellknight_chatter
+{
+	minDistance	5
+	maxDistance	50
+	volume		0
+	no_dups
+
+	sound/ed/hellknight/hk_chatter_01.wav
+	sound/ed/hellknight/hk_chatter_02.wav
+	sound/ed/hellknight/hk_chatter_03.wav
+}
+
+monster_demon_hellknight_chatter_combat
+{
+	minDistance	5
+	maxDistance	60
+	volume		0
+	no_dups
+
+	//sound/ed/hellknight/chatter_combat1.wav
+	//sound/ed/hellknight/chatter_combat2.wav
+	//sound/ed/hellknight/chatter_combat3.wav
+	sound/ed/hellknight/ncc_01.wav
+	sound/ed/hellknight/ncc_02.wav
+	sound/ed/hellknight/ncc_03.wav
+}
+
+monster_demon_hellknight_chatter_combat_d4
+{
+	minDistance	5
+	maxDistance	60
+	volume		3
+	no_dups
+
+//	sound/ed/hellknight/chatter_combat1.wav
+//	sound/ed/hellknight/chatter_combat2.wav
+//	sound/ed/hellknight/chatter_combat3.wav
+	
+	sound/ed/hellknight/ncc_01.wav
+	sound/ed/hellknight/ncc_02.wav
+	sound/ed/hellknight/ncc_03.wav
+}
+
+monster_demon_hellknight_footstep
+{
+	minDistance	4
+	maxDistance	35
+	volume		2
+	unclamped
+	no_dups
+	
+	sound/ed/hellknight/step/ns1_v3.wav			// Pitched lower
+	sound/ed/hellknight/step/ns2_v3.wav
+	sound/ed/hellknight/step/ns3_v3.wav
+	sound/ed/hellknight/step/ns4_v3.wav
+	sound/ed/hellknight/step/ns5_v3.wav
+}
+
+hk_cin_footstep
+{
+	minDistance	4
+	maxDistance	35
+	volume		4
+	unclamped
+	no_dups
+	
+	sound/ed/hellknight/step/ns1_v3.wav			// Pitched lower
+	sound/ed/hellknight/step/ns2_v3.wav
+	sound/ed/hellknight/step/ns3_v3.wav
+	sound/ed/hellknight/step/ns4_v3.wav
+	sound/ed/hellknight/step/ns5_v3.wav
+}
+
+
+hellknight_deepfs {
+	minDistance 5
+	maxDistance	55
+	volume		1
+	unclamped
+	shakes		0.2	
+	
+//	sound/monsters/hellknight/deepfs_01.wav
+//	sound/monsters/hellknight/deepfs_02.wav
+//	sound/monsters/hellknight/deepfs_03.wav
+//	sound/monsters/hellknight/deepfs_04.wav
+//	sound/monsters/hellknight/deepfs_05.wav
+	
+	//sound/monsters/hellknight/dfs_01.wav
+	
+	sound/monsters/hellknight/dfs_02.wav			// Mod 2
+}
+
+monster_demon_cin_hellknight_footstep
+{
+	minDistance	10
+	maxDistance	45
+	volume		6
+	shakes		0.1
+
+	sound/ed/hellknight/step1.wav
+	sound/ed/hellknight/step2.wav
+	sound/ed/hellknight/step3.wav
+	sound/ed/hellknight/step4.wav
+	
+}
+
+monster_demon_cin_hellknight_footstep2
+{
+	minDistance	10
+	maxDistance	45
+	volume		6
+	shakes		0.1
+
+	sound/ed/hellknight/step1.wav
+	sound/ed/hellknight/step2.wav
+	sound/ed/hellknight/step3.wav
+	sound/ed/hellknight/step4.wav	
+
+}
+
+// here's the swipe
+monster_demon_hellknight_melee_1
+{
+	minDistance	10
+	maxDistance	45
+	volume		4
+	unclamped
+	no_dups
+
+	sound/ed/revenant/melee1.wav
+	sound/ed/revenant/melee2.wav
+	sound/ed/revenant/melee3.wav
+	sound/ed/revenant/melee4.wav
+	sound/ed/revenant/melee5.wav
+}
+// here's the chomp
+monster_demon_hellknight_melee_2
+
+{
+	minDistance	10
+	maxDistance	45
+	volume		3
+	no_dups
+	unclamped
+
+	sound/ed/hellknight/chomp1.wav
+	sound/ed/hellknight/chomp2.wav
+	sound/ed/hellknight/chomp3.wav
+
+}
+
+monster_demon_hellknight_fireball_create {
+	minDistance	6
+	maxDistance	40
+	volume		1
+	
+	sound/ed/hellknight/fb_create_02.wav
+}
+
+monster_demon_hellknight_fireball_flight {
+
+	minDistance	6
+	maxDistance	20
+	volume		3
+	looping
+	
+	sound/ed/hellknight/fb_fly.wav
+
+}
+
+monster_demon_hellknight_fireball_explode {
+
+	minDistance	3
+	maxDistance	35
+	volume		7
+	shakes		0.1
+
+	sound/weapons/explosions/impexp_05.wav
+	sound/weapons/explosions/impexp_06.wav
+	sound/weapons/explosions/impexp_04.wav
+	sound/weapons/explosions/impexp_03.wav
+
+}

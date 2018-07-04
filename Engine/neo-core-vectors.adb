@@ -20,6 +20,7 @@ package body Neo.Core.Vectors is
       procedure Clear                                                              is begin This.Clear;                                        end;
       procedure Next    (Pos : in out Cursor)                                      is begin Unsafe.Next           (Pos);                       end;
       procedure Replace (Pos :        Cursor; Item : Vec_T)                        is begin This.Replace_Element  (Pos, Item);                 end;
+      procedure Replace (Pos : Positive;      Item : Vec_T)                        is begin This.Replace_Element  (Pos, Item);                 end;
       procedure Append                       (Item : Vec_T; Count : Positive := 1) is begin This.Append           (Item,  Count_Type (Count)); end;
       procedure Prepend                      (Item : Vec_T; Count : Positive := 1) is begin This.Prepend          (Item,  Count_Type (Count)); end;
       procedure Insert  (Before : Positive;   Item : Vec_T; Count : Positive := 1) is begin This.Insert           (Before, Item);              end;

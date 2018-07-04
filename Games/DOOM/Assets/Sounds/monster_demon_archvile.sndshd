@@ -1,0 +1,132 @@
+monster_demon_archvile_sight {
+	minDistance	10	
+	maxDistance	45
+	volume	3
+	unclamped	
+	shakes		0.1
+	
+	sound/ed/archvile/sight11.wav
+	sound/ed/archvile/sight12.wav
+	sound/ed/archvile/sight13.wav
+}
+
+monster_demon_archvile_footstep {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	shakes		0.12
+
+	sound/ed/archvile/step1.wav
+	sound/ed/archvile/step2.wav
+	sound/ed/archvile/step3.wav
+	sound/ed/archvile/step4.wav
+
+}
+
+monster_demon_archvile_chatter {
+
+	minDistance	5
+	maxDistance	40
+	volume		0
+	no_dups
+
+	sound/ed/archvile/breath1.wav	
+	sound/ed/archvile/breath2.wav
+	sound/ed/archvile/breath3.wav
+}
+
+monster_demon_archvile_pain {
+	minDistance	10
+	maxDistance	35
+	volume		6
+
+	sound/ed/archvile/pain1.wav
+	sound/ed/archvile/pain2.wav
+	sound/ed/archvile/pain3.wav
+	sound/ed/archvile/pain4.wav
+}
+
+monster_demon_archvile_die {
+	minDistance	5
+	maxDistance	45
+	volume		4
+	unclamped
+
+	sound/ed/archvile/die1.wav
+	sound/ed/archvile/die2.wav
+	sound/ed/archvile/die3.wav
+	sound/ed/archvile/die4.wav
+
+}
+
+archvile_fireloop {
+	minDistance	2
+	maxDistance	25
+	volume		0
+	shakes		0.2
+	looping
+	
+	sound/monsters/archvile/flameloop_01.wav
+	sound/monsters/archvile/flameloop_02.wav
+	sound/monsters/archvile/flameloop_03.wav
+
+}
+
+monster_demon_archvile_attack {
+	minDistance	5
+	maxDistance	45
+	volume		1
+	unclamped
+	shakes		0.2
+	
+	sound/monsters/archvile/fire_01.wav
+	sound/monsters/archvile/fire_02.wav
+	sound/monsters/archvile/fire_03.wav
+	sound/monsters/archvile/fire_04.wav
+	sound/monsters/archvile/fire_05.wav
+}
+
+monster_demon_archvile_resurrection {
+
+	minDistance	15
+	maxDistance	40
+	volume	0
+	
+	sound/ed/archvile/resurrection.wav
+
+}
+
+monster_demon_archvile_melee {
+	
+	minDistance	5
+	maxDistance	35
+	volume	0
+	no_dups
+	
+	sound/ed/zombie/zombie_whoosh1.wav
+	sound/ed/zombie/zombie_whoosh2.wav
+	sound/ed/zombie/zombie_whoosh3.wav
+
+}
+
+monster_demon_archvile_sight2 {
+	minDistance	15
+	maxDistance	40
+	volume	3
+	unclamped
+	shakes	0.1
+	
+	sound/ed/archvile/sight2_1.wav
+	sound/ed/archvile/sight2_2.wav
+	sound/ed/archvile/sight2_3.wav
+}
+
+monster_demon_archvile_burn {
+
+	minDistance	10
+	maxDistance	30
+	volume		0
+
+	sound/ed/archvile/burn.wav
+
+}

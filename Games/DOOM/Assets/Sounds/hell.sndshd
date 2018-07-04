@@ -1,0 +1,252 @@
+hell_corpsemover {
+	minDistance	5
+	maxDistance	40
+	volume		0
+	looping
+	
+	sound/levels/hell/corpsemover.wav
+}
+
+gates_land {
+	global
+	
+	sound/levels/hell/st_gate_landing.wav
+}
+
+cage_decent {
+	global
+	
+	sound/levels/hell/st_decent.wav
+}
+
+hell_guardian_death_music  {
+	
+	volume	3
+	unclamped
+
+	global	
+	sound/ed/hell/guardian_death_music.wav
+
+}
+
+
+hell_guardian_intro_music {
+	
+	volume	3
+	unclamped
+
+	global	
+	sound/ed/hell/guardian_intro_music.wav
+
+}
+
+hellride_platrot {
+	minDistance	10
+	maxDistance	30
+	volume		6
+	unclamped
+	shakes		0.3
+	
+	sound/levels/hell/hellplat_rotate.wav
+}
+
+hellride_lower_2s {
+	minDistance	10
+	maxDistance	30
+	volume		2
+	shakes		0.2
+	
+	sound/levels/hell/hellride_lower_2s.wav
+}
+
+hell_rockride_8s {
+	minDistance	10
+	maxDistance	30
+	volume		3
+	unclamped
+	shakes		0.05
+	
+	sound/levels/hell/rockride_8s.wav
+}
+
+wallmover_01 {
+	minDistance	2
+	maxDistance	25
+	unclamped
+	volume		2
+	shakes		0.1
+	
+	sound/levels/hell/wallmover_4s_01.wav
+}
+
+wallmover_02 {
+	minDistance	2
+	maxDistance	25
+	unclamped
+	volume		2
+	shakes		0.1
+	
+	sound/levels/hell/wallmover_4s_02.wav
+}
+
+gateimpact_01 {
+	minDistance	5
+	maxDistance	25
+	shakes		0.2
+	volume		3
+	unclamped
+	
+	sound/levels/hell/gateimpact_01.wav
+}
+
+gateimpact_02 {
+	minDistance	5
+	maxDistance	25
+	shakes		0.2
+	unclamped
+	volume		3
+	
+	sound/levels/hell/gateimpact_02.wav
+}
+
+gateimpact_03 {
+	minDistance	5
+	maxDistance	25
+	shakes		0.2
+	unclamped
+	volume		3
+	
+	sound/levels/hell/gateimpact_03.wav
+}
+
+gateimpact_04 {
+	minDistance	5
+	maxDistance	25
+	shakes		0.2
+	unclamped
+	volume		3
+	
+	sound/levels/hell/gateimpact_04.wav
+}
+
+gateimpact_05 {
+	minDistance	5
+	maxDistance	25
+	shakes		0.2
+	unclamped
+	volume		3
+	
+	sound/levels/hell/gateimpact_05.wav
+}
+
+hell_gatelower {
+	minDistance	10
+	maxDistance	50
+	shakes		0.2
+	
+	sound/levels/hell/gates_lower.wav
+}
+
+hk_wallbust {
+	minDistance	5
+	maxDistance	50
+	shakes		0.1
+	
+	sound/levels/hell/hk_wall.wav
+}
+
+hk_wallbust2 {
+	minDistance	5
+	maxDistance	50
+	shakes		0.1
+	
+	sound/levels/hell/hk_wall2.wav
+}
+
+hk_revwallbust {
+	minDistance	5
+	maxDistance	50
+	shakes		0.1
+	
+	sound/levels/hell/hk_revwall2_1s.wav
+}
+
+hell_revgate {
+	minDistance	5
+	maxDistance	50
+	unclamped
+	volume		3
+	shakes		0.1
+	
+	sound/levels/hell/revgate.wav
+}
+
+thunderclap {
+	minDistance	50
+	maxDistance	250
+	volume		0
+	shakes		0.3
+	
+	no_dups
+	
+	sound/levels/hell/thunderclap_01a.wav
+	sound/levels/hell/thunderclap_02a.wav
+	sound/levels/hell/thunderclap_03a.wav
+	sound/levels/hell/thunderclap_04a.wav
+}
+
+gargoyle_01 {
+	minDistance	10
+	maxDistance	60
+	volume		3
+	omnidirectional
+	unclamped
+	shakes		0.2
+	
+	sound/levels/hell/gargoyle_01.wav
+}
+
+gargoyle_02 {
+	minDistance	10
+	maxDistance	60
+	volume		3
+	omnidirectional
+	unclamped
+	shakes		0.2
+	
+	sound/levels/hell/gargoyle_02.wav
+}
+
+tp_electro {
+	minDistance	3
+	maxDistance	30
+	volume		0
+	no_dups
+	
+	//sound/levels/hell/electro_01.wav
+	//sound/levels/hell/electro_02.wav
+	sound/levels/hell/electro_03.wav
+	sound/levels/hell/electro_04.wav
+}
+
+helldoor_open {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	shakes		0.2
+	
+	sound/doors/hell/open_01.wav
+	sound/doors/hell/open_02.wav
+}
+
+helldoor_close {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	shakes		0.2
+	
+	sound/doors/hell/close_01.wav
+	sound/doors/hell/close_02.wav
+}

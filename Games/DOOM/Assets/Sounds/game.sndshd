@@ -1,0 +1,102 @@
+//
+//
+// game sounds
+//
+//
+
+glass_bullethole {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/glass/bullet_glass_impact1.wav
+	sound/ed/glass/bullet_glass_impact2.wav
+	sound/ed/glass/bullet_glass_impact3.wav
+	sound/ed/glass/bullet_glass_impact4.wav
+	sound/ed/glass/bullet_glass_impact5.wav
+	sound/ed/glass/bullet_glass_impact6.wav
+
+}
+
+glass_shatter {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/glass/glass_break1.wav
+	sound/ed/glass/glass_break2.wav
+	sound/ed/glass/glass_break3.wav
+	sound/ed/glass/glass_break4.wav
+	sound/ed/glass/glass_break5.wav
+	sound/ed/glass/glass_break6.wav
+	sound/ed/glass/glass_break7.wav
+	sound/ed/glass/glass_break8.wav
+	sound/ed/glass/glass_break9.wav
+	sound/ed/glass/glass_break10.wav
+	sound/ed/glass/glass_break11.wav
+
+}
+
+elevator_moving_loop {
+	minDistance 1
+	maxDistance 10
+	volume 0
+	shakes	0.1
+	looping
+	sound/ed/elevator/elev_loop.wav
+}
+
+security_camera_moving {
+	minDistance 1
+	maxDistance 10
+	volume -40
+	
+	looping
+	sound/machinery/camera/loop_moving.wav
+	//sound/machinery/camera/loop_moving_02.wav
+}
+
+security_camera_end {
+	minDistance 1
+	maxDistance 10
+	volume -40
+	
+	sound/machinery/camera/1shot_stop.wav
+}
+
+security_camera_sight {
+	minDistance 1
+	maxDistance 10
+	volume -40
+	
+	sound/machinery/camera/1shot_sight.wav
+}
+
+security_camera_activate {
+	minDistance 1
+	maxDistance 10
+	volume -40
+	
+	sound/machinery/camera/1shot_activate.wav
+}
+
+//this is an example of a triggered sound that will loop continously when triggered
+loop_mover_01 {
+	looping
+	sound/machinery/loop_mover_01.wav
+}
+
+//this is an example of a 1shot sound that is triggered
+oneshot_mover_01 {
+	sound/machinery/loop_mover_01.wav
+}
+
+//this is an example of a looping sound in the world that starts when the level starts
+loop_computer_hum_01 {
+	minDistance 0.5
+	maxDistance 3
+	looping
+	sound/electronics/loop_computer_hum_01.wav
+}

@@ -1,0 +1,41 @@
+lightsout_generator_on {
+
+	looping
+	leadin	sound/levels/alphalabs1/epd_fadein_03.wav
+	sound/levels/alphalabs1/epd_idle_01.wav
+}
+
+lightsout_generator_off {
+
+	looping
+	leadin	sound/levels/alphalabs1/epd_fadeout_01.wav
+	sound/levels/alphalabs1/epd_idle_low_01.wav
+}
+
+lightsout_shutters_start {
+
+	looping
+	leadin	sound/levels/lightsout/servo1_start.wav
+	sound/levels/lightsout/servo1_loop.wav
+}
+
+lightsout_shutters_stop {
+
+	sound/levels/lightsout/servo1_stop.wav
+}
+
+lightsout_waterdrops {
+
+	sound/ambient/water/1shot_drip_01.wav
+	sound/ambient/water/1shot_drip_02.wav
+	sound/ambient/water/1shot_drip_03.wav
+}
+
+lightsout_berserk {
+
+	volume -15
+
+	looping
+
+	sound/levels/berserk.wav
+}

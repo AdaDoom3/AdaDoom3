@@ -1,0 +1,108 @@
+sabaoth_taunts {
+	minDistance	50
+	maxDistance	100
+	volume		4
+	unclamped
+	
+	sound/monsters/cpuboss/taunt_01.wav
+	sound/monsters/cpuboss/taunt_02.wav
+	sound/monsters/cpuboss/taunt_03.wav
+	sound/monsters/cpuboss/taunt_04.wav
+	sound/monsters/cpuboss/taunt_05.wav
+	sound/monsters/cpuboss/taunt_06.wav
+}
+
+sabaoth_move_start {
+	minDistance	5
+	maxDistance	55
+	volume		-1
+
+	sound/monsters/cpuboss/move_start.wav
+	sound/monsters/cpuboss/move_start_alt.wav
+	sound/monsters/cpuboss/move_start_no_vo.wav
+}
+
+sabaoth_move_stop {
+	minDistance	5
+	maxDistance	55
+	volume		-1
+
+	sound/monsters/cpuboss/move_stop.wav
+	sound/monsters/cpuboss/move_stop_alt.wav
+	sound/monsters/cpuboss/move_stop_no_vo.wav
+}
+
+sabaoth_move {
+	minDistance	5
+	maxDistance	55
+	volume		0
+	looping
+	unclamped
+			
+	sound/monsters/cpuboss/walk.wav
+	sound/monsters/cpuboss/walk_no_vo.wav
+}
+
+sabaoth_pain_chest {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	
+	sound/monsters/cpuboss/pain_chest.wav
+	sound/monsters/cpuboss/pain_chest_no_vo.wav
+}
+
+sabaoth_pain_head {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	
+	sound/monsters/cpuboss/pain_head.wav
+	sound/monsters/cpuboss/pain_head_no_vo.wav
+}
+
+sabaoth_pain_left_arm {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	
+	sound/monsters/cpuboss/pain_left_arm.wav
+	sound/monsters/cpuboss/pain_left_arm_no_vo.wav
+}
+
+sabaoth_pain_right_arm {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	
+	sound/monsters/cpuboss/pain_right_arm.wav
+	sound/monsters/cpuboss/pain_right_arm_no_vo.wav
+}
+
+sabaoth_sight {
+	minDistance	50
+	maxDistance	100
+	volume		2
+	unclamped
+	
+	sound/monsters/cpuboss/sight.wav
+}
+
+sabaoth_melee {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	
+	sound/monsters/cpuboss/melee_attack.wav
+	sound/monsters/cpuboss/melee_attack_no_vo.wav
+	sound/monsters/cpuboss/melee_attack_no_vo_hand.wav
+}
+
+sabaoth_death {
+	global
+	volume		2
+	shakes		0.3
+	unclamped
+	
+	sound/monsters/cpuboss/death.wav
+}

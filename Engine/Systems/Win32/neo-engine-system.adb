@@ -39,7 +39,7 @@ separate (Neo.Engine) package body System is
         return (Username    => U (To_Str (Username)),
                 Size_Memory => 0,
                 Version     => U ("Windows" & NULL_STR),
-                Path        => U (To_Str (Folder)) & S,
+                App_Path    => U (To_Str (Folder)) & S,
                 App_Name    => Delete (U (To_Str (Folder)), 1, Index (To_Str (Folder), "\", Backward)),
                 Bit_Size    => (if WORD_SIZE = 64 or Buffer = 1 then 64 else 32));
         end;
@@ -60,9 +60,9 @@ separate (Neo.Engine) package body System is
   MULTI_MONITOR_NAME : aliased  Str_C := To_Str_C (OS_Info.App_Name & " Multi-monitor");
 
   -- Asset paths
-  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_ICON             & ".ico");
-  WIN32_PATH_CURSOR_ACTIVE   : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_CURSOR_ACTIVE    & ".cur");
-  WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (S (OS_Info.Path) & PATH_CURSOR_INACTIVE  & ".cur");
+  WIN32_PATH_ICON            : aliased Str_C := To_Str_C (S (OS_Info.App_Path) & PATH_ICON             & ".ico");
+  WIN32_PATH_CURSOR_ACTIVE   : aliased Str_C := To_Str_C (S (OS_Info.App_Path) & PATH_CURSOR_ACTIVE    & ".cur");
+  WIN32_PATH_CURSOR_INACTIVE : aliased Str_C := To_Str_C (S (OS_Info.App_Path) & PATH_CURSOR_INACTIVE  & ".cur");
 
   -- Main "HWND"s for the invisible input window and game window
   Game_Window, Input_Window, Console_Window : aliased Ptr := NULL_PTR;

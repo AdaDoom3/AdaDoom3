@@ -1,0 +1,38 @@
+// WOUNDED SWANN
+
+
+delta5_swann_trigger {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/vo/delta5/swann_full_trigger.wav
+
+}
+
+delta5_swann_primary {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/vo/delta5/swann_primary.wav
+
+}
+
+delta5_swann_secondary1 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/vo/delta5/swann_secondary_1.wav
+
+}
+
+delta5_swann_secondary2 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/vo/delta5/swann_secondary_2.wav
+
+}

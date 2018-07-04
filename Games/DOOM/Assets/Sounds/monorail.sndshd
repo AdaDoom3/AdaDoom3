@@ -1,0 +1,331 @@
+
+
+// Specific shaders for the monorail map
+// sound/vo/monorail/comp_turrets.wav
+// sound/vo/monorail/comp_turrets_shutdown.wav
+
+monorail_brakesqueal {
+	global
+	
+	sound/levels/monorail/train/braking_squeal.wav
+}
+
+monorail_jumpdown {
+	minDistance	15
+	maxDistance	60
+	volume	3
+	unclamped	
+
+	sound/ed/marscity/duffle.wav
+}
+
+monorail_exertion {
+	minDistance	25
+	maxDistance	60
+	omnidirectional
+	volume		4
+	unclamped
+	
+	sound/cinematics/monorail/exertion_02.wav
+}
+
+monorail_metal_01 {
+	minDistance	1
+	maxDistance	25
+	volume		5
+	
+	sound/levels/monorail/metal_01.wav
+}
+
+monorail_metal_02 {
+	minDistance	1
+	maxDistance	25
+	volume		4
+	
+	sound/levels/monorail/metal_02.wav
+}
+
+monorail_metal_03 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/levels/monorail/metal_04mix.wav
+}
+
+monorail_evil_chant {
+	minDistance	40
+	maxDistance	80
+	volume		0
+	shakes		0.3
+	omnidirectional
+	
+	sound/levels/monorail/evil_voice.wav
+}
+
+monorail_crash {
+	minDistance	10
+	maxDistance	40
+	volume		3
+
+	sound/levels/monorail/train/train_crash.wav
+}
+
+monorail_computer_turrets_on {
+	minDistance	40
+	maxDistance	80
+	volume		-5
+	omnidirectional
+	
+	sound/vo/monorail/comp_turrets.wav
+}
+
+monorail_computer_turrets_off {
+	minDistance	40
+	maxDistance	80
+	volume		-5
+	omnidirectional
+	
+	sound/vo/monorail/comp_turrets_shutdown.wav
+}
+
+monorail_trackhitch {
+	minDistance		5
+	maxDistance		25
+	volume			0
+	shakes			0.3
+
+	no_dups
+
+	sound/levels/monorail/train/ambient_squeal_01.wav
+	sound/levels/monorail/train/ambient_squeal_02.wav
+	sound/levels/monorail/train/ambient_squeal_03.wav
+	sound/levels/monorail/train/ambient_squeal_04.wav
+}
+
+monorail_movement_ambience {
+	minDistance		10
+	maxDistance		25
+	volume			-8
+	shakes			0.25
+	
+	ordered
+
+	sound/xian/levels/monorail/loop_movement_01.wav
+	sound/xian/levels/monorail/loop_movement_02.wav
+	sound/xian/levels/monorail/loop_movement_03.wav
+	sound/xian/levels/monorail/loop_movement_04.wav
+//	sound/xian/levels/monorail/loop_movement_05.wav
+}
+
+monorail_thump {
+	minDistance	10
+	maxDistance	25
+	volume		0
+	shakes		0.25
+
+	sound/metal/1shot_metalhit_08.wav
+}
+
+monorail_thump2 {
+	minDistance	10
+	maxDistance	25
+	volume		0
+	shakes		0.25
+
+	sound/ambient/metals/1shot_metalhit_06.wav
+}
+
+
+monorail_squeal {
+	minDistance	10
+	maxDistance	25
+	volume		0
+	sound/levels/monorail/train/ambient_squeal_01.wav
+	sound/levels/monorail/train/ambient_squeal_02.wav
+	sound/levels/monorail/train/ambient_squeal_03.wav
+	sound/levels/monorail/train/ambient_squeal_04.wav
+	sound/levels/monorail/train/trainsounds_04.wav
+}
+
+monorail_suitguy_surprise {
+
+	minDistance	1
+	maxDistance	35
+	omnidirectional
+	volume		0
+	unclamped
+
+	sound/vo/monorail/monorail_suitguy_surprise.wav
+
+}
+
+monorail_suitguy_trigger {
+
+	minDistance	1
+	maxDistance	35
+	omnidirectional
+	volume		0
+	unclamped
+
+	sound/vo/monorail/monorail_suitguy_trigger.wav
+
+}
+
+monorail_suitguy_primary {
+
+	minDistance	1
+	maxDistance	35
+	omnidirectional
+	volume		0
+	unclamped
+
+	sound/vo/monorail/monorail_suitguy_primary.wav
+
+}
+
+monorail_suitguy_secondary1 {
+
+	minDistance	1
+	maxDistance	35
+	omnidirectional
+	volume		0
+	unclamped
+	
+	sound/vo/monorail/monorail_suitguy_secondary1.wav
+
+}
+
+monorail_suitguy_secondary2 {
+
+	minDistance	1
+	maxDistance	35
+	omnidirectional
+	volume		0
+	unclamped
+	
+	sound/vo/monorail/monorail_suitguy_secondary2.wav
+
+}
+
+monorail_computer_01 {
+	description "Now leaving Environmental reprocessing center. Next stop, site 2"
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_01.wav
+}
+
+monorail_computer_02 {
+	description "Remember, safety first..."
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_02.wav
+}
+
+monorail_computer_03 {
+	description "Now entering site 2"
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_03.wav
+}
+
+monorail_computer_04 {
+	description "Warning, airlock malfunction..."
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_04.wav
+}
+
+monorail_computer_05 {
+	description "Now leaving Site 2. Next stop, Delta Complex"
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_05.wav
+}
+
+monorail_computer_06 {
+	description "Airlock security overide enabled"
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_06.wav
+}
+
+monorail_computer_07 {
+	description "Engineering, please report to Site 2 access ramp. Airlock malfunction detected"
+	minDistance	40
+	maxDistance	100
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_07.wav
+}
+
+monorail_computer_08 {
+	description "Engineering, please report to Delta Complex access ramp. Track failure detected"
+	minDistance	40
+	maxDistance	80
+	volume		0
+	omnidirectional
+	onDemand
+	
+	sound/vo/monorail/computer_08.wav
+}
+
+monorail_betruger_one {
+	global
+	sound/vo/monorail/bet_mrail_intro_1_line1.wav
+
+}
+
+monorail_betruger_two {
+	global
+	sound/vo/monorail/bet_mrail_intro_1_line2.wav
+
+}
+
+monorail_betruger_three {
+	global
+	sound/vo/monorail/bet_mrail_intro_1_line3.wav
+
+}
+
+monorail_intro_sound {
+
+	volume	6
+	global
+	sound/ed/monorail/monorail_intro_sfx.wav
+
+}
+
+monorail_intro_music {
+
+	volume	6
+	global
+	sound/ed/monorail/monorail_intro_music.wav
+
+}

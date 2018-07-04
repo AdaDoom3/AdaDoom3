@@ -1,0 +1,74 @@
+bernie_footdrag {
+	minDistance	5
+	maxDistance	25
+	volume		-15
+	
+	no_dups
+
+	sound/monsters/bernie/footdrag_01.wav
+	sound/monsters/bernie/footdrag_02.wav
+	sound/monsters/bernie/footdrag_03.wav
+	sound/monsters/bernie/footdrag_04.wav
+}
+
+bernie_attack {
+	minDistance	5
+	maxDistance	25
+	no_dups
+	
+	sound/monsters/bernie/attack_01.wav	
+	sound/monsters/bernie/attack_02.wav
+	sound/monsters/bernie/attack_03.wav
+	sound/monsters/bernie/attack_04.wav
+}
+
+bernie_chatter {
+	minDistance	5
+	maxDistance	25
+	no_dups
+	
+	sound/monsters/bernie/chatter_01.wav
+	sound/monsters/bernie/chatter_02.wav
+	sound/monsters/bernie/chatter_03.wav
+}
+
+bernie_chatter_combat {
+	minDistance	5
+	maxDistance	35
+	no_dups
+	
+	sound/monsters/bernie/chatter_combat_01.wav
+	sound/monsters/bernie/chatter_combat_02.wav
+	sound/monsters/bernie/chatter_combat_03.wav
+	sound/monsters/bernie/chatter_combat_04.wav
+}
+
+bernie_death {
+	minDistance 5
+	maxDistance	45
+		
+	sound/monsters/bernie/death_01.wav
+	sound/monsters/bernie/death_02.wav
+	sound/monsters/bernie/death_03.wav
+	sound/monsters/bernie/death_04.wav
+}
+
+bernie_pain {
+	minDistance	5
+	maxDistance	45
+	no_dups
+	
+	sound/monsters/bernie/pain_01.wav
+	sound/monsters/bernie/pain_02.wav
+	sound/monsters/bernie/pain_03.wav
+	sound/monsters/bernie/pain_04.wav
+	sound/monsters/bernie/pain_05.wav
+}
+
+bernie_sight {
+	minDistance	5
+	maxDistance	45
+	
+	sound/monsters/bernie/sight_01.wav
+	sound/monsters/bernie/sight_02.wav
+}

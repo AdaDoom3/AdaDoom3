@@ -1,0 +1,451 @@
+// 0.5 second doors
+
+cpu_fasthatch_open {
+	minDistance	3
+	maxDistance	20
+	
+	sound/doors/xdoors/cpu_fasthatch_05s_open.wav
+}
+
+cpu_fasthatch_close {
+	minDistance	3
+	maxDistance	20
+	
+	sound/doors/xdoors/cpu_fasthatch_05s_close.wav
+}
+
+
+cpuboss_bigdoor {
+	minDistance	10
+	maxDistance	70
+	
+	sound/doors/xdoors/cpuboss_bigdoor_open.wav
+}
+
+cpuboss_smalldoor {
+	minDistance	5
+	maxDistance	35
+	
+	sound/doors/xdoors/cpuboss_smalldoor_open_2s.wav
+}
+
+//2 seconds
+
+enpro_bulkhead_open {
+	minDistance	8
+	maxDistance	30
+	unclamped
+	volume		2
+	
+	sound/doors/xdoors/enpro_bulkhead_open.wav
+}
+
+//2 seconds
+
+enpro_bulkhead_close {
+	minDistance	8
+	maxDistance	30
+	volume		2
+	unclamped
+	
+	sound/doors/xdoors/enpro_bulkhead_close.wav
+}
+
+
+// 0.5 seconds
+rec_hatch_open {
+	minDistance	3
+	maxDistance	20
+	volume		5
+	unclamped
+	
+	sound/doors/xdoors/recycling_vert_hatch_open.wav
+}
+
+// 0.5 seconds
+rec_hatch_close {	
+	minDistance	3
+	maxDistance	20
+	volume		3
+	unclamped
+	
+	sound/doors/xdoors/recycling_vert_hatch_close.wav
+}
+
+cpu_door_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/doors/xdoors/cpudoor_open_01.wav
+}
+
+cpu_door_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/doors/xdoors/cpudoor_close_01.wav
+}
+
+
+cpu_hatch_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/doors/xdoors/cpudoor_close.wav
+}
+
+cpu_hatch_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/doors/xdoors/cpudoor_open.wav
+	
+}
+
+
+grunge_hatch_open {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/doors/xdoors/hatch_01a.wav
+}
+
+grunge_hatch_close {
+	minDistance	1
+	maxDistance 20
+	volume		0
+	
+	sound/doors/xdoors/hatch_02a.wav
+}
+
+broken_silver_sliding_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_delta2a_broken/open.wav
+}
+
+broken_silver_sliding_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_delta2a_broken/close.wav
+}
+
+
+
+silver_sliding_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_silver_sliding/sliding_door_open_test1a.wav
+}
+
+silver_sliding_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_silver_sliding/sliding_door_close_test1a.wav
+}
+
+
+elevator_inner_door {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/doors/_elevator_silver_twopaned/inner_1.wav	
+}
+
+elevator_outer_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/doors/_elevator_silver_twopaned/open1.wav
+
+}
+
+elevator_outer_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_elevator_silver_twopaned/close1.wav
+}
+
+twopart_door_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_blue_singlepaned/open3.wav
+}
+
+twopart_door_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+		
+	sound/ed/doors/_door_blue_singlepaned/close4.wav
+}
+
+base_door_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/ed/doors/_door_silver_sliding_twoparted/sliding_door_open_test3a.wav
+}
+
+base_door_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_silver_sliding_twoparted/sliding_door_close_test3a.wav
+}
+
+small_door_open {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_silver_sliding/sliding_door_open_test1a.wav
+}
+
+small_door_close {
+	minDistance	1
+	maxDistance	15
+	volume		0
+
+	sound/ed/doors/_door_silver_sliding/sliding_door_close_test1a.wav
+}
+
+co_hatch_open {
+	minDistance	1
+	maxDistance	15
+	volume		-3
+	
+	sound/doors/airlocks/open_1s_03.wav
+}
+
+co_hatch_close {
+	minDistance	1
+	maxDistance	15
+	volume		-3
+	
+	sound/doors/airlocks/close_1s_01.wav
+}
+
+cage_elevatordoor_open {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	
+	sound/ed/doors/_elevator_silver_twopaned/outer_1.wav
+}
+
+cage_elevatordoor_close {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	
+	sound/ed/doors/_elevator_silver_twopaned/close1.wav
+}
+
+
+airlock_locks_0_25s {
+	minDistance	1
+	maxDistance	25
+	volume		5
+	
+	sound/doors/airlocks/lock_0_25s_02.wav
+}
+
+airlock_locks_0_75s {
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+	sound/doors/airlocks/lock_0_75s_01.wav
+	sound/doors/airlocks/lock_0_75s_02.wav
+	sound/doors/airlocks/lock_0_75s_03.wav
+}
+
+airlock_locks_1_2s_open {
+	minDistance	1
+	maxDistance	25
+	volume		3
+
+	sound/doors/airlocks/door_movement_1_2s_01.wav
+
+}
+
+mc2_airlock_locks_1_2s_open {
+	minDistance	10
+	maxDistance	35
+	volume		6
+
+	sound/doors/airlocks/mc2_door_movement_1_2s_01.wav
+
+}
+
+airlock_locks_1_2s_close {	
+	minDistance	1
+	maxDistance	25
+	volume		3
+
+	sound/doors/airlocks/door_movement_1_2s_02.wav
+	sound/doors/airlocks/door_movement_1_2s_03.wav
+}
+
+
+stonedoor_4s_open {
+	minDistance	5
+	maxDistance	35
+	volume		4
+	unclamped
+	shakes		0.1
+	
+	sound/levels/caverns2/4s_stonedoor_01.wav
+}
+
+stonedoor_4s_close {
+	minDistance	5
+	maxDistance	35
+	volume		4
+	unclamped
+	shakes		0.1
+	
+	sound/levels/caverns2/4s_stonedoor_02.wav
+}
+
+
+glasspanel_halfsecond {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	
+	sound/doors/glasspanel_halfsecond.wav
+}
+
+glasspanel_1second {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	
+	sound/doors/glass_panel_1s_01.wav
+}
+
+secret_door {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	
+	sound/doors/secret_door_0_5s_01.wav
+}
+
+default_door_unlocked {
+	minDistance	1
+	maxDistance	15
+	volume		-5
+	
+	sound/doors/door_unlocked_02.wav
+}
+
+default_door_open {
+	minDistance 1
+	maxDistance 20
+	volume		0
+	
+	sound/ed/doors/_door_blue_twopaned_diagonal/open6.wav
+}
+
+default_door_locked {
+	minDistance	5
+	maxDistance	10
+	volume		0
+	
+	sound/xian/beeps/error_02.wav
+}
+
+default_door_close {
+	minDistance 1
+	maxDistance 20
+	volume		0
+	
+	sound/ed/doors/_door_blue_twopaned_diagonal/close8.wav
+}
+
+door_01_open {
+	minDistance 1
+	maxDistance 10
+	volume		9
+	sound/movers/1shot_door_open_01.wav
+}
+
+door_01_close {
+	minDistance 1
+	maxDistance 10
+	volume		9
+	sound/movers/1shot_door_close_01.wav
+}
+
+door_01_broken_open
+{
+	minDistance 1
+	maxDistance 10
+	volume		9
+	sound/movers/1shot_door_open_01_broken.wav
+}
+
+door_01_broken_close
+{
+	minDistance 1
+	maxDistance 10
+	volume		9
+	sound/movers/1shot_door_close_01.wav
+}
+
+//fred global door
+door_01_open_global {
+	minDistance 1
+	maxDistance 10
+	global
+	volume		9
+	sound/movers/1shot_door_open_01.wav
+}
+
+door_yellow_rusted_open {
+
+	minDistance	3
+	maxDistance	15
+	volume	0
+
+	sound/doors/xdoors/cavedoor_01.wav
+	//sound/ed/doors/_door_rust_yellowlight/rust_door_open_test4.wav
+
+}
+
+door_yellow_rusted_close {
+
+	minDistance	3
+	maxDistance	15
+	volume	0
+	sound/doors/xdoors/cavedoor_02.wav
+	//sound/ed/doors/_door_rust_yellowlight/rust_door_close_test4.wav
+
+}
+

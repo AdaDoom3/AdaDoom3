@@ -1,0 +1,353 @@
+monster_demon_imp_chomp {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/imp/chomp_01.wav
+	sound/monsters/imp/chomp_02.wav
+	sound/monsters/imp/chomp_03.wav
+}
+
+monster_demon_imp_footstep {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	
+	sound/monsters/imp/imp_footstep_01.wav
+	sound/monsters/imp/imp_footstep_02.wav
+	sound/monsters/imp/imp_footstep_03.wav
+	sound/monsters/imp/imp_footstep_04.wav
+}
+
+monster_demon_imp_footstep_cin {
+	minDistance	2
+	maxDistance	25
+	global
+	volume		-5
+	
+	sound/monsters/imp/imp_footstep_01.wav
+	sound/monsters/imp/imp_footstep_02.wav
+	sound/monsters/imp/imp_footstep_03.wav
+	sound/monsters/imp/imp_footstep_04.wav
+}
+
+monster_demon_imp_sight {
+
+	minDistance	10
+	maxDistance	35
+	volume		9
+	no_dups
+	
+	sound/monsters/imp/imp_sight_01.wav
+	sound/monsters/imp/imp_sight_02.wav
+	sound/monsters/imp/imp_sight_03.wav
+	sound/monsters/imp/imp_sight_04.wav
+}	
+
+monster_demon_imp_sight_cin {
+
+	minDistance	10
+	maxDistance	35
+	global
+	volume		15
+	no_dups
+	
+	sound/monsters/imp/imp_sight_01.wav
+	sound/monsters/imp/imp_sight_02.wav
+	sound/monsters/imp/imp_sight_03.wav
+	sound/monsters/imp/imp_sight_04.wav	
+}
+
+monster_demon_imp_sight_scare {
+
+	minDistance	10
+	maxDistance	35
+	volume		9
+
+	sound/monsters/imp/sight_scare.wav
+}
+
+monster_demon_imp_sight2 {
+
+	minDistance	10
+	maxDistance	35
+	volume		9
+	no_dups
+	
+	sound/monsters/imp/sight2_01.wav
+	sound/monsters/imp/sight2_02.wav
+	sound/monsters/imp/sight2_03.wav
+}
+
+
+//added for alphalabs2 door arm imp
+monster_demon_imp_sight2_loud{
+
+	minDistance	10
+	maxDistance	35
+	volume		15
+	
+	sound/monsters/imp/sight2_03.wav
+}
+
+monster_demon_imp_sight8 {
+
+	minDistance	10
+	maxDistance	35
+	volume		3
+
+	sound/ed/imp/squeal_test31.wav
+	sound/ed/imp/squeal_test32.wav
+	sound/ed/imp/squeal_test33.wav
+
+}
+
+monster_demon_imp_alert_idle {
+
+	minDistance	9
+	maxDistance	17
+	volume		0
+	no_dups
+	
+	sound/ed/imp/alert_test32.wav
+	sound/ed/imp/alert_test33.wav
+	sound/ed/imp/alert_test34.wav
+	sound/ed/imp/alert_test39.wav
+}
+
+
+monster_demon_imp_chatter {
+
+	minDistance	9
+	maxDistance	17
+	volume		0
+	no_dups
+	sound/ed/imp/breath_test21.wav
+	sound/ed/imp/breath_test23.wav
+	sound/ed/imp/breath_test25.wav
+
+	//sound/ed/imp/breath_test22.wav
+	//sound/ed/imp/breath_test24.wav
+	
+}
+
+monster_demon_imp_chatter_cin {
+
+	minDistance	9
+	maxDistance	17
+	global
+	volume		0
+	no_dups
+	sound/ed/imp/breath_test21.wav
+	sound/ed/imp/breath_test23.wav
+	sound/ed/imp/breath_test25.wav
+	
+}
+
+monster_demon_imp_chatter_combat {
+
+
+	minDistance	10
+	maxDistance	35
+	volume		-1
+
+	sound/ed/imp/attack_test1.wav
+	sound/ed/imp/attack_test2.wav
+	sound/ed/imp/attack_test3.wav
+	sound/ed/imp/attack_test4.wav
+	//sound/ed/imp/attack_test5.wav
+	//sound/ed/imp/attack_test6.wav
+}
+
+monster_demon_imp_pain {
+
+	minDistance	10
+	maxDistance	35
+	volume		4
+
+	sound/ed/imp/pain_test3.wav
+	sound/ed/imp/pain_test4.wav
+	sound/ed/imp/pain_test5.wav
+
+	//sound/ed/imp/pain_test1.wav
+	//sound/ed/imp/pain_test2.wav
+	//sound/ed/imp/pain_test6.wav
+
+}
+
+monster_demon_imp_attackmelee_1 {
+
+	minDistance	10
+	maxDistance	35
+	volume		6
+
+	sound/ed/imp/attack_test1.wav
+	sound/ed/imp/attack_test2.wav
+	sound/ed/imp/attack_test3.wav
+	sound/ed/imp/attack_test4.wav
+	
+	//sound/ed/imp/attack_test5.wav
+	//sound/ed/imp/attack_test6.wav
+}
+
+monster_demon_imp_attackmelee_2 {
+
+	minDistance	10
+	maxDistance	35
+	volume		6
+
+	sound/ed/imp/attack_test1.wav
+	sound/ed/imp/attack_test2.wav
+	sound/ed/imp/attack_test3.wav
+	sound/ed/imp/attack_test4.wav
+}
+
+monster_demon_imp_attackmissile {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+
+}
+
+monster_demon_imp_die {
+
+	minDistance	10
+	maxDistance	35
+	volume		5
+	no_dups
+
+	
+	sound/monsters/imp/imp_death_01.wav
+	sound/monsters/imp/imp_death_02.wav
+	sound/monsters/imp/imp_death_03.wav
+	sound/monsters/imp/imp_death_04.wav
+}
+
+monster_demon_imp_thud {
+
+
+	minDistance	10
+	maxDistance	35
+	volume		4
+
+	sound/xian/monsters/imp/thud/thud_01.wav
+	sound/xian/monsters/imp/thud/thud_02.wav
+	sound/xian/monsters/imp/thud/thud_03.wav
+	sound/xian/monsters/imp/thud/thud_04.wav
+	
+}
+
+monster_demon_imp_thud_cin {
+
+
+	minDistance	10
+	maxDistance	35
+	global
+	volume		4
+
+	sound/xian/monsters/imp/thud/thud_01.wav
+	sound/xian/monsters/imp/thud/thud_02.wav
+	sound/xian/monsters/imp/thud/thud_03.wav
+	sound/xian/monsters/imp/thud/thud_04.wav
+	
+}
+
+monster_demon_imp_fireball_create {
+
+	minDistance	6
+	maxDistance	40
+	volume		4
+
+	//sound/monsters/imp/fireball_sizzle_03.wav
+	//sound/monsters/imp/fireball_sizzle_02.wav
+	//sound/monsters/imp/fireball_sizzle_01.wav
+	sound/monsters/imp/fireball_create_02.wav	
+}
+
+monster_demon_imp_fireball_throw {
+
+	minDistance	6
+	maxDistance	35
+	volume		5
+	
+	sound/monsters/imp/fireball_throw_01.wav
+}	
+
+monster_demon_imp_fireball_flight {
+
+	minDistance	6
+	maxDistance	20
+	volume		3
+	looping
+	
+	sound/monsters/imp/fireball_flight_03.wav
+	sound/monsters/imp/fireball_flight_04.wav
+
+	//sound/monsters/imp/fireball_flight.wav
+	//sound/monsters/imp/fireball_flight_02.wav
+
+
+}
+
+monster_demon_imp_fireball_explode {
+
+	minDistance	3
+	maxDistance	35
+	volume		1
+	shakes		0.1
+
+	sound/weapons/explosions/impexp_05.wav
+	sound/weapons/explosions/impexp_06.wav
+	sound/weapons/explosions/impexp_04.wav
+	sound/weapons/explosions/impexp_03.wav
+	
+//	sound/xian/monsters/imp/fireball_impact_01.wav
+//	sound/xian/monsters/imp/fireball_impact_02.wav
+//	sound/xian/monsters/imp/fireball_impact_03.wav
+//	sound/xian/monsters/imp/fireball_impact_04.wav
+}
+monster_demon_imp_melee_hit {
+
+	minDistance	2
+	maxDistance	25
+	volume		10
+	sound/monsters/imp/melee/hit_01.wav
+	sound/monsters/imp/melee/hit_03.wav
+	sound/monsters/imp/melee/hit_04.wav
+	sound/monsters/imp/melee/hit_05.wav
+}
+
+monster_demon_imp_melee_miss {
+
+	minDistance	2
+	maxDistance	25
+	volume		10
+	sound/monsters/imp/melee/miss_01.wav
+	sound/monsters/imp/melee/miss_02.wav
+	sound/monsters/imp/melee/miss_03.wav
+	
+	//sound/xian/monsters/imp/melee/miss_04.wav
+}
+
+delta2a_columncrawlersight {
+
+	minDistance	1
+	maxDistance	25
+	volume		2
+
+
+}
+
+delta2a_columncrawlerjumpoff {
+
+	minDistance	1
+	maxDistance	25
+	volume		2
+
+
+}
+
+

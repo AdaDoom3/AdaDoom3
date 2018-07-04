@@ -69,32 +69,32 @@ package body Neo.Data.Model is
   package Wavefront is function Load (Path : Str) return Mesh_State; end;
   package body Wavefront is separate;
   
-  package Id_Tech is
+  package Doom3 is
       function Load (Path : Str) return Mesh_State;
-      function Load (Path : Str) return Level_State;
+      function Load (Path : Str) return Map_State;
       function Load (Path : Str) return Camera_State;
       function Load (Path : Str) return Animation_State;
       function Load (Path : Str) return Hashed_Material.Unsafe.Map;
-    end; package body Id_Tech is separate;
+    end; package body Doom3 is separate;
 
   -- Create the loaders
+  package Map       is new Handler (Format_Kind, Map_State);
   package Mesh      is new Handler (Format_Kind, Mesh_State);
-  package Level     is new Handler (Format_Kind, Level_State);
   package Camera    is new Handler (Format_Kind, Camera_State);
   package Animation is new Handler (Format_Kind, Animation_State);
   package Material  is new Handler (Format_Kind, Hashed_Material.Unsafe.Map);
 
   -- Register the formats in the loaders
-  package Wavefront_Mesh    is new Mesh.Format      (Wavefront_Format, Wavefront.Load, "obj");
-  package Id_Tech_Mesh      is new Mesh.Format      (Id_Tech_Format,   Id_Tech.Load,   "md5mesh");
-  package Id_Tech_Level     is new Level.Format     (Id_Tech_Format,   Id_Tech.Load,   "proc,cm,map,aas48");
-  package Id_Tech_Camera    is new Camera.Format    (Id_Tech_Format,   Id_Tech.Load,   "md5camera");
-  package Id_Tech_Material  is new Material.Format  (Id_Tech_Format,   Id_Tech.Load,   "mtr");
-  package Id_Tech_Animation is new Animation.Format (Id_Tech_Format,   Id_Tech.Load,   "md5anim");
+  package Wavefront_Mesh  is new Mesh.Format      (Wavefront_Format, Wavefront.Load, "obj");
+  package Doom3_Level     is new Map.Format       (Doom3_Format,     Doom3.Load,     "proc,cm,map,aas48");
+  package Doom3_Mesh      is new Mesh.Format      (Doom3_Format,     Doom3.Load,     "md5mesh");
+  package Doom3_Camera    is new Camera.Format    (Doom3_Format,     Doom3.Load,     "md5camera");
+  package Doom3_Material  is new Material.Format  (Doom3_Format,     Doom3.Load,     "mtr");
+  package Doom3_Animation is new Animation.Format (Doom3_Format,     Doom3.Load,     "md5anim");
 
   -- Redirect internal handlers to public load functions
+  function Load (Path : Str) return Map_State                  renames Map.Load;
   function Load (Path : Str) return Mesh_State                 renames Mesh.Load;
-  function Load (Path : Str) return Level_State                renames Level.Load;
   function Load (Path : Str) return Camera_State               renames Camera.Load;
   function Load (Path : Str) return Animation_State            renames Animation.Load;
   function Load (Path : Str) return Hashed_Material.Unsafe.Map renames Material.Load;

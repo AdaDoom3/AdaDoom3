@@ -22,7 +22,7 @@ package Neo.Data.Model is
   -- Formats --
   -------------
 
-  type Format_Kind is (Id_Tech_Format,    -- web.archive.org/web/20121018035741/http://www.modwiki.net/wiki/Modelling
+  type Format_Kind is (Doom3_Format,      -- web.archive.org/web/20121018035741/http://www.modwiki.net/wiki/Modelling
                        Wavefront_Format); -- web.archive.org/web/20160810123453/https://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
 
   ------------
@@ -156,7 +156,7 @@ package Neo.Data.Model is
   ---------------------
 
   type Clip_State is record
-      Sides         : Vector_Plane.Unsafe.Vector;
+      Sides         : Vector_Plane_4D.Unsafe.Vector;
       Bounding      : Bounding_State := (others => <>);
       Is_Player     : Bool           := False;
       Is_Opaque     : Bool           := False;
@@ -252,114 +252,28 @@ package Neo.Data.Model is
   --     Clusters        : Vector_Cluster.Unsafe.Vector;
   --   end record;
   
-  ------------
-  -- Entity --
-  ------------
-
-  type Entity_Kind is (
-    Character_Entity,
-    Camera_Entity,
-    AI_Entity,
-    Moveable_Entity,
-    Information_Entity,
-    Speaker_Entity,
-    Activator_Entity,
-    Animated_Entity,
-    Light_Entity,
-    Camera_View_Entity,
-    Clip_Model_Entity,
-    Door_Entity,
-    Earthquake_Entity,
-    Elevator_Entity,
-    Emitter_Entity,
-    Explosion_Entity,
-    Forcefield_Entity,
-    Fracture_Entity,
-    Effects_Entity,
-    Portal_Entity,
-    Remove_Entity);
-
-  type Physics_Kind is (
-    Rigid_Body_Physics,
-    Soft_Body_Physics,
-    No_Physics,
-    Simple_Physics);
-
-  type Damage_State is record
-      Nothing : Boolean;
-      --"damage" "[Damage Ammount]" 
-      --"kickDir" "0 0 0" 
-      --"mtr_blob" "genericDamage" 
-      --"blob_time" "0" 
-      --"blob_size" "0" 
-      --"blob_offset_x" "0" 
-      --"knockback" "0" 
-      --"kick_time" "0" 
-      --"kick_amplitude" "0" 
-      --"dv_time" "100" 
-    end record;
-
-  type Entity_State (Kind : Entity_Kind := Entity_Kind'First) is record
+  type Map_Entity_State is record
       Point       : Point_3D      := (others => <>);
       Orientation : Quaternion_4D := (others => <>);
-      Model       : Str_Unbound   := NULL_STR_UNBOUND;
-      Visible     : Bool          := False;
-      Physics     : Physics_Kind  := No_Physics;
-      Health      : Int_64        := 0;
       Key_Values  : Hashed_Str_Unbound.Unsafe.Map;
       Patches     : Vector_Static_Surface.Unsafe.Vector;
       Targets     : Vector_Str_Unbound.Unsafe.Vector;
       Brushes     : Vector_Brush.Unsafe.Vector;
-      case Kind is
-        when Light_Entity =>
-          Is_Broken    : Bool          := False;
-          Broken_Model : Str_Unbound   := NULL_STR_UNBOUND;
-          Frustum      : Frustum_State := (others => <>); 
-          Glare_Material : Str_Unbound := NULL_STR_UNBOUND;
-
-        when Character_Entity =>
-          World : Positive      := 1;
-          Area  : Positive      := 1;
-          --Pose  : Pose_State    := (others => <>);
-          View  : Frustum_State := (others => <>); 
-          
-        when Speaker_Entity =>
-          Clip           : Str_Unbound    := NULL_STR_UNBOUND;
-          --Position       : Position_State := (others => <>);
-          Is_Mute        : Bool           := False;
-          Is_Paused      : Bool           := False;
-          Is_Playing     : Bool           := False;
-          Min_Distance   : Real           := 0.0;
-          Max_Distance   : Real           := 0.0;
-          Current_Volume : Real_Percent   := 75.0;
-          Current_Shake  : Real_Percent   := 75.0;
-        when Door_Entity =>
-          Lip              : Natural       := 0;
-          Locked           : Bool          := False;
-          Speed            : Real          := 10.0;
-          Move_Orientation : Quaternion_4D := (others => <>);
-          Close_Sound      : Str_Unbound   := NULL_STR_UNBOUND;
-          Open_Sound       : Str_Unbound   := NULL_STR_UNBOUND;
-          Locked_Sound     : Str_Unbound   := NULL_STR_UNBOUND;
-        --when Hurt_Entity =>
-        --  Damage : Damage_State := (others => <>);
-        when others => null;
-      end case;
     end record;
-  package Hashed_Entity is new Neo.Core.Hashed (Entity_State);
-  
-  -----------
-  -- Level --
-  -----------
+  package Hashed_Entity is new Neo.Core.Hashed (Map_Entity_State);
+    
+  ---------
+  -- Map --
+  ---------
 
-  type Level_State is record
+  type Map_State is record
       Geometry_CRC : Int_64_Unsigned := 0;
       Collisions   : Vector_Collision.Unsafe.Vector;
       Entities     : Hashed_Entity.Unsafe.Map;
       Partitions   : Treed_Partition_Node.Unsafe.Tree;
       -- AI : AI_State;
     end record;
-  package Hashed_Level_State is new Neo.Core.Hashed (Level_State);
+  package Hashed_Map_State is new Neo.Core.Hashed (Map_State);
 
   -------------
   -- Surface --
@@ -416,21 +330,23 @@ package Neo.Data.Model is
   --   web.archive.org/web/20160305174701/https://www.iddevnet.com/doom3/materials.php
   --
 
-  type Filter_Kind     is (Linear_Filter,     Nearest_Filter);
-  type Visibility_Kind is (Opaque_Visibility, Subview_Visibility, Perforated_Visibility);
-  type Clamp_Kind      is (No_Clamp,          Zero_Clamp,         Normal_Clamp,          Zero_Alpha_Clamp);
-  type Cube_Kind       is (No_Cube,           Image_Cube,         Camera_Cube,           Mirror_Cube,     Skybox_Cube);
-  type Domain_Kind     is (Surface_Domain,    Decal_Domain,       Post_Process_Domain,   Light_Domain,    Menu_Domain,   No_Domain);
-  type Blend_Kind      is (Opaque_Blend,      Masked_Blend,       Additive_Blend,        Modulate_Blend,  Mirror_Blend,  Remote_Blend);
-  type Shading_Kind    is (Unlit_Shading,     Lit_Shading,        Subsurface_Shading,    Profile_Shading, Skin_Shading,  Clear_Coat_Shading);
-  type Deform_Kind     is (No_Deform,         Sprite_Deform,      Tube_Deform,           Flare_Deform,    Expand_Deform, Move_Deform,
-                           Eye_Deform,        Particle_Deform,    Small_Particle_Deform, Turbulent_Deform);
-                         
+  type Filter_Kind  is (Linear_Filter,  Nearest_Filter);
+  type Clamp_Kind   is (No_Clamp,       Zero_Clamp,      Normal_Clamp,          Zero_Alpha_Clamp);
+  type Cube_Kind    is (No_Cube,        Image_Cube,      Camera_Cube,           Mirror_Cube,       Skybox_Cube);
+  type Domain_Kind  is (Surface_Domain, Decal_Domain,    Post_Process_Domain,   Light_Domain,      Menu_Domain,   No_Domain);
+  type Blend_Kind   is (Opaque_Blend,   Masked_Blend,    Additive_Blend,        Modulate_Blend,    Mirror_Blend,  Remote_Blend);
+  type Shading_Kind is (Unlit_Shading,  Lit_Shading,     Subsurface_Shading,    Profile_Shading,   Skin_Shading,  Clear_Coat_Shading);
+  type Deform_Kind  is (No_Deform,      Sprite_Deform,   Tube_Deform,           Flare_Deform,      Expand_Deform, Move_Deform,
+                        Eye_Deform,     Particle_Deform, Small_Particle_Deform, Turbulent_Deform);
+  type Sort_Kind    is (Subview_Sort,   GUI_Sort,        Opaque_Sort,           Sky_Sort,          Decal_Sort,    Far_Sort,
+                        Medium_Sort,    Close_Sort,      Almost_Near_Sort,      Nearest_Sort,      Post_Sort);
+                                                  
   type Material_State (Domain : Domain_Kind := Surface_Domain) is record
       Has_Smoothed_Tan : Bool            := True;
       Is_Two_Sided     : Bool            := False;
       Is_Ambient       : Bool            := False;
-      Visibility       : Visibility_Kind := Perforated_Visibility;
+      Is_Opaque        : Bool            := False;
+      Sort             : Sort_Kind       := Opaque_Sort;
       Clamp            : Clamp_Kind      := No_Clamp;
       Filter           : Filter_Kind     := Linear_Filter;
       Surface          : Surface_kind    := Thin_Rock_Surface;
@@ -469,7 +385,7 @@ package Neo.Data.Model is
   -- IO --
   --------
 
-  function Load (Path : Str) return Level_State;
+  function Load (Path : Str) return Map_State;
   function Load (Path : Str) return Camera_State;
   function Load (Path : Str) return Animation_State;
   function Load (Path : Str) return Mesh_State;

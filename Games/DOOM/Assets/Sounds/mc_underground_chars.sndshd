@@ -1,0 +1,522 @@
+jonathan_no {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/vo/mc_underground/invasion/jonathan_no.wav
+}
+
+jonathan_aya {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/vo/mc_underground/invasion/jonathan_aya.wav
+}
+
+jonathan_lord_help_us {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/vo/mc_underground/invasion/jonathan_lord_help_us.wav
+}
+
+jonathan_huh {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/vo/mc_underground/invasion/jonathan_huh.wav
+}
+
+brooks01welcome
+{
+	minDistance	2
+	maxDistance	25
+	volume		3
+
+	sound/vo/mc_underground/brooks01welcome.wav
+}
+
+brooks02imgonnaneed
+{
+	minDistance	2
+	maxDistance	25
+	volume		3
+
+	sound/vo/mc_underground/brooks02imgonnaneed.wav
+}
+
+brooks03grabyourgear
+{
+	minDistance	2
+	maxDistance	25
+	volume		3
+
+	sound/vo/mc_underground/brooks03grabyourgear.wav
+}
+
+brooks04letmeradiotest
+{
+	minDistance	2
+	maxDistance	25
+	volume		0
+
+	sound/vo/mc_underground/brooks04letmeradiotest.wav
+}
+
+brooks05radiocheck
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks05radiocheck.wav
+}
+
+brooks06mission
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks06mission.wav
+}
+
+brooks07allset
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks07allset.wav
+}
+
+brooks08dontshootcivilians
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks08dontshootcivilians.wav
+}
+
+brooks09re_secureyourgear
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks09re_secureyourgear.wav
+}
+
+brooks13re_storagecabinet
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks13re_storagecabinet.wav
+}
+
+brooks14readyforcombat
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks14readyforcombat.wav
+}
+
+brooks_cowerwatch
+{
+	minDistance	2
+	maxDistance	25
+	volume		4
+
+	sound/vo/mc_underground/brooks16re_watchtheshooting.wav
+}
+
+brooks_cowerdontfire
+{
+	minDistance	2
+	maxDistance	25
+	volume		4
+
+	sound/vo/mc_underground/brooks17re_dontfire.wav
+}
+
+brooks18re_moveout
+{
+	global
+	volume		2
+
+	sound/vo/mc_underground/brooks18re_moveout.wav
+}
+
+daniel_mcu_primary
+{
+	minDistance	1
+	maxDistance	12
+	volume		7
+
+	sound/vo/mc_underground/daniel_01.wav
+}
+
+daniel_mcu_secondary1
+{
+	minDistance	1
+	maxDistance	12
+	volume		7
+
+	sound/vo/mc_underground/daniel_02.wav
+}
+
+daniel_mcu_secondary2
+{
+	minDistance	1
+	maxDistance	12
+	volume		7
+
+	sound/vo/mc_underground/daniel_03.wav
+}
+
+daniel_mcu_excuseme
+{
+	minDistance	1
+	maxDistance	12
+	volume		7
+
+	sound/vo/mc_underground/daniel_excuseme.wav
+}
+
+daniel_mcu_donttouchthat
+{
+	minDistance	1
+	maxDistance	12
+	volume		7
+
+	sound/vo/mc_underground/daniel_donttouchthat.wav
+}
+
+ross_mcu_listenscotty
+{
+	minDistance	3
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_listenscotty.wav
+}
+
+ross_mcu_because
+{
+	minDistance	3
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_because.wav
+}
+
+ross_mcu_justfinish
+{
+	minDistance	3
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_justfinish.wav
+}
+
+ross_mcu_secondary1
+{
+	minDistance	1
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_secondary1.wav
+}
+
+ross_mcu_secondary2
+{
+	minDistance	1
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_secondary2.wav
+}
+
+ross_mcu_primary
+{
+	minDistance	1
+	maxDistance	15
+	volume		3
+
+	sound/vo/mc_underground/ross_primary.wav
+}
+
+scotty_mcu_youcrawl
+{
+	minDistance	3
+	maxDistance	20
+	volume		6
+
+	sound/vo/mc_underground/scotty_youcrawl_vent.wav
+}
+
+scotty_mcu_rossshot1
+{
+	minDistance	3
+	maxDistance	20
+	volume		6
+
+	sound/vo/mc_underground/scotty_rossshot1_vent.wav
+}
+
+scotty_mcu_rossshot2
+{
+	minDistance	3
+	maxDistance	20
+	volume		6
+
+	sound/vo/mc_underground/scotty_rossshot2_vent.wav
+}
+
+scotty_mcu_die
+{
+	minDistance	3
+	maxDistance	20
+	volume		6
+
+	sound/vo/mc_underground/scotty_die_vent.wav
+}
+
+eric_mcu_worktalk1
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/eric_worktalk1.wav
+}
+
+eric_mcu_worktalk2
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/eric_worktalk2.wav
+}
+
+eric_mcu_zombieattack
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/eric_zombieattack.wav
+}
+
+eric_mcu_die
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/eric_die.wav
+}
+
+eric_mcu_thankyou
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/eric_thankyou.wav
+}
+
+todd_mcu_talk1
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/todd01.wav
+}
+
+todd_mcu_talk2
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/todd02.wav
+}
+
+todd_mcu_talk3
+{
+	minDistance	3
+	maxDistance	15
+	volume		6
+
+	sound/vo/mc_underground/todd03.wav
+}
+
+charles_mcu_primary
+{
+	minDistance	1
+	maxDistance	12
+	volume		6
+
+	sound/vo/mc_underground/charles_dontlisten.wav
+}
+
+charles_mcu_secondary1
+{
+	minDistance	1
+	maxDistance	12
+	volume		6
+
+	sound/vo/mc_underground/charles_shouldnttalk.wav
+}
+
+charles_mcu_secondary2
+{
+	minDistance	1
+	maxDistance	12
+	volume		6
+
+	sound/vo/mc_underground/charles_notmybiz.wav
+}
+
+charles_mcu_hey
+{
+	minDistance	1
+	maxDistance	12
+	volume		6
+
+	sound/vo/mc_underground/charles_hey.wav
+}
+
+charles_mcu_notsure
+{
+	minDistance	1
+	maxDistance	12
+	volume		6
+
+	sound/vo/mc_underground/charles_notsure.wav
+}
+
+mark_mcu_triggered
+{
+	minDistance	3
+	maxDistance	13
+	volume		6
+
+	sound/vo/mc_underground/mark_triggered.wav
+}
+
+mark_mcu_primary
+{
+	minDistance	1
+	maxDistance	13
+	volume		6
+
+	sound/vo/mc_underground/mark_primary.wav
+}
+
+mark_mcu_secondary1
+{
+	minDistance	1
+	maxDistance	13
+	volume		6
+
+	sound/vo/mc_underground/mark_secondary.wav
+}
+
+mark_mcu_secondary2
+{
+	minDistance	1
+	maxDistance	13
+	volume		6
+
+	sound/vo/mc_underground/mark_primary.wav
+}
+
+
+ian_mcu_idle
+{
+	minDistance	3
+	maxDistance	14
+	volume		3
+	unclamped
+
+	sound/vo/mc_underground/ian_idle01.wav
+	sound/vo/mc_underground/ian_idle02.wav
+}
+
+ian_mcu_trigger
+{
+	minDistance	3
+	maxDistance	12
+	volume		3
+	unclamped
+	sound/vo/mc_underground/ian_primary.wav
+}
+
+ian_mcu_primary
+{
+	minDistance	3
+	maxDistance	12
+	volume		3
+	unclamped
+	sound/vo/mc_underground/ian_secondary01.wav
+}
+
+ian_mcu_secondary
+{
+	minDistance	3
+	maxDistance	12
+	volume		3
+	unclamped
+	sound/vo/mc_underground/ian_secondary02.wav
+}
+
+jonathan_workdamnit
+{
+	minDistance	3
+	maxDistance	20
+	volume		5
+	sound/vo/mc_underground/jonathan01.wav
+}
+
+//random screams
+mcu_random_scream01
+{
+	minDistance	3
+	maxDistance	20
+	volume		5
+	sound/vo/mc_underground/random_scream01.wav
+}
+
+mcu_random_scream02
+{
+	minDistance	3
+	maxDistance	20
+	volume		5
+	sound/vo/mc_underground/random_scream02.wav
+}
+
+mcu_random_scream03
+{
+	minDistance	3
+	maxDistance	20
+	volume		5
+	sound/vo/mc_underground/random_scream03.wav
+}
+
+mcu_random_scream04
+{
+	minDistance	3
+	maxDistance	20
+	volume		5
+	sound/vo/mc_underground/random_scream04.wav
+}
+

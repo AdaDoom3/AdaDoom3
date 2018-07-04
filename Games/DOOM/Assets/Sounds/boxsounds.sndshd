@@ -1,0 +1,26 @@
+snd_cardbox {
+
+	volume	-6
+	minDistance	3
+	maxDistance	15
+	no_dups
+	
+	sound/ed/crates/cardbox1.wav
+	sound/ed/crates/cardbox2.wav
+	sound/ed/crates/cardbox3.wav
+
+}
+
+snd_steelbox {
+
+	volume	-6
+	minDistance	3
+	maxDistance	15
+	no_dups
+	
+	sound/ed/crates/steelbox1.wav
+	sound/ed/crates/steelbox2.wav
+	sound/ed/crates/steelbox3.wav
+	sound/ed/crates/steelbox4.wav
+
+}

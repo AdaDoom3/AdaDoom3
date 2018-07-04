@@ -48,7 +48,7 @@ package body Neo.Core.Console is
       procedure Put (Item : Str) is
         begin
           Current_Log := Current_Log & Item;
-          if Current_Put /= null then Current_Put.All (Item); end if;
+          if Current_Put /= null then Current_Put.all (Item); end if;
 
           -- Count new lines
           for I of Item loop
@@ -110,34 +110,18 @@ package body Neo.Core.Console is
   generic
     Name     : Str;
     type Var_T is private;
-    Initial  : Var_T;
     Settable : Bool := True;
+    with procedure Set (Val : Var_T);
+    with function Get return Var_T;
     with procedure Handle_Set (Val : Str);
     with function Handle_Get return Str;
     with function To_Str (Item : Var_T) return Str;
-  package CVar_Internal is
-      procedure Set (Val : Var_T);
-      function Get return Var_T;
-    end;
+  package CVar_Internal is end;
 
   package body CVar_Internal is
       Duplicate : Exception;
 
-      -- Internal data
-      protected Safe_Var_T is
-          function Get return Var_T;
-          procedure Set (Val : Var_T);
-        private
-          Current : Var_T;
-        end;
-      protected body Safe_Var_T is
-          function Get return Var_T is (Current);
-          procedure Set (Val : Var_T) is begin Current := Val; end;
-        end;
-
       -- Accessors
-      function Get return Var_T is (Safe_Var_T.Get);
-      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
       function Informal_Handle_Get return Str is (Handle_Get);
       procedure Informal_Handle_Set (Val : Str) is
         begin
@@ -170,7 +154,6 @@ package body Neo.Core.Console is
         CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
                              Get => Informal_Handle_Get'Unrestricted_Access,
                              Set => Informal_Handle_Set'Unrestricted_Access));
-        Set (Initial);
       end if;
     end;
 
@@ -183,6 +166,14 @@ package body Neo.Core.Console is
 
   package body CVar is
       function To_Str (Val : Var_T) return Str is (Trim (Get'Wide_Image, Both));
+
+      -- Internal data
+      package Safe_Internal is new Safe_Discrete (Var_T, Initial);
+      Safe_Var_T : Safe_Internal.T;
+
+      -- Accessors
+      function Get return Var_T is (Safe_Var_T.Get);
+      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
 
       -- Commandline interaction
       function Handle_Get return Str is
@@ -213,9 +204,7 @@ package body Neo.Core.Console is
         end;
 
       -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, To_Str);
-      function Get return Var_T renames Internal.Get;
-      procedure Set (Val : Var_T) renames Internal.Set;
+      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, To_Str);
     end;
 
   ---------------
@@ -224,6 +213,14 @@ package body Neo.Core.Console is
 
   package body CVar_Real is
       function To_Str is new Generic_To_Str_16_Real (Var_T);
+
+      -- Internal data
+      package Safe_Internal is new Safe_Digits (Var_T, Initial);
+      Safe_Var_T : Safe_Internal.T;
+
+      -- Accessors
+      function Get return Var_T is (Safe_Var_T.Get);
+      procedure Set (Val : Var_T) is begin Safe_Var_T.Set (Val); end;
 
       -- Commandline interaction
       function Handle_Get return Str is
@@ -237,9 +234,7 @@ package body Neo.Core.Console is
         end;
 
       -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Initial, Settable, Handle_Set, Handle_Get, To_Str);
-      function Get return Var_T renames Internal.Get;
-      procedure Set (Val : Var_T) renames Internal.Set;
+      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, To_Str);
     end;
 
   --------------
@@ -247,6 +242,16 @@ package body Neo.Core.Console is
   --------------
 
   package body CVar_Str is
+
+      -- Internal data
+      package Safe_Internal is new Safe (Str_Unbound, U (Initial));
+      Safe_Var_T : Safe_Internal.T;
+
+      -- Accessors
+      function Get return Str_Unbound is (Safe_Var_T.Get);
+      function Get return Str         is (S (Safe_Var_T.Get));
+      procedure Set (Val : Str_Unbound) is begin Safe_Var_T.Set (Val); end;
+      procedure Set (Val : Str)         is begin Safe_Var_T.Set (U (Val)); end;
 
       -- Commandline interaction
       function Handle_Get return Str is (Help & EOL & "Current value: " & Get);
@@ -256,9 +261,7 @@ pragma Warnings (On);
 
       -- Global registration
       package Internal is new
-        CVar_Internal (Name, Str_Unbound, To_Str_Unbound (Initial), Settable, Handle_Set, Handle_Get, S);
-      function Get return Str is (S (Internal.Get));
-      procedure Set (Val : Str) is begin Internal.Set (To_Str_Unbound (Val)); end;
+        CVar_Internal (Name, Str_Unbound, Settable, Set, Get, Handle_Set, Handle_Get, S);
     end;
 
   -------------

@@ -1,0 +1,105 @@
+rev_burn {
+
+	minDistance	1
+	maxDistance	20
+	volume	0
+
+	looping
+	sound/ed/recycling1/burn.wav
+}
+
+recycling_video_betruger1 {
+	unclamped
+	volume	0
+	minDistance	3	
+	maxDistance	35
+	sound/vo/recycling2/cs_bert01.wav
+
+}
+
+recycling_video_betruger2 {
+	unclamped
+	volume	0
+	minDistance	3
+	maxDistance	35
+	sound/vo/recycling2/cs_bert02.wav
+
+}
+
+recycling1_revenant_intro {
+
+	minDistance	10
+	maxDistance	30
+	no_occlusion
+	volume	9
+
+	sound/ed/music/recycling1/recycling1_revenant_intro.wav
+
+}
+
+recycling2_mancubus_intro {
+
+	minDistance	10
+	maxDistance	30
+	no_occlusion
+	unclamped
+	volume	6
+
+	sound/ed/music/recycling2/recycling2_mancubus_intro.wav
+
+}
+
+recycling1_revintro_stress {
+
+	volume	3
+	global
+	sound/ed/recycling1/stress1.wav
+
+}
+
+recycling_revintro_clang1 {
+
+	volume	3
+	global
+	sound/ed/recycling1/clang1.wav
+
+}
+
+recycling_revintro_clang2 {
+
+	volume	3
+	global
+	sound/ed/recycling1/clang2.wav
+
+}
+
+recycling_revintro_clang3 {
+
+	volume	3
+	global
+	sound/ed/recycling1/clang3.wav
+
+}
+
+recycling_revintro_clang4 {
+
+	volume	3
+	global
+	sound/ed/recycling1/clang4.wav
+
+}
+
+recycling1_revintro_explo1 {
+
+	volume	3
+	global
+	sound/ed/recycling1/explo1.wav
+
+}
+
+recycling1_revintro_explo2 {
+	volume	6
+	global
+	sound/ed/recycling1/explo2.wav
+
+}

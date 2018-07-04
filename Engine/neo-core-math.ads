@@ -297,7 +297,7 @@ package Neo.Core.Math is
 
   -- Definition
   type Plane_4D is new Vector_4D; -- Listing 3.4
-  package Vector_Plane is new Vectors (Plane_4D);
+  package Vector_Plane_4D is new Vectors (Plane_4D);
   ZERO_PLANE_4D : constant Plane_4D := (others => 0.0);
 
   -- Operations 

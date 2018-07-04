@@ -1,0 +1,94 @@
+error_01a {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	no_occlusion
+	
+	sound/xian/beeps/error_01a.wav
+}
+
+single_alarm_01
+{
+	minDistance	1
+	maxDistance	8
+	volume		1
+
+	sound/alarms_buzzers/1shot_alarm_01.wav
+}
+
+loop_alarm_02a 
+{
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+
+	sound/alarms_buzzers/loop_alarm_02a.wav
+}
+
+
+loop_alarm_03a {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/alarms_buzzers/loop_alarm_03a.wav
+}
+
+
+loop_alarm_03b {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/alarms_buzzers/loop_alarm_03b.wav
+}
+
+loop_alarm_08
+{
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+
+	sound/alarms_buzzers/loop_alarm_08.wav
+}
+
+
+
+loop_alarm_10 {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/alarms_buzzers/loop_alarm_10.wav
+}
+
+
+loop_alarm_12 {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/alarms_buzzers/loop_alarm_12.wav
+}
+
+loop_alarm_13 
+{
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+
+	sound/alarms_buzzers/loop_alarm_13.wav
+}
+
+loop_alarm_14
+{
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+
+	sound/alarms_buzzers/loop_alarm_14.wav
+}

@@ -1,0 +1,129 @@
+monster_boss_cyberdemon_step	{
+
+	minDistance	25
+	maxDistance	120
+	volume	2
+	unclamped
+	shakes	0.1
+		
+	sound/ed/cyberdemon/step1.wav
+	sound/ed/cyberdemon/step2.wav
+	sound/ed/cyberdemon/step3.wav
+	sound/ed/cyberdemon/step4.wav
+
+}
+
+monster_boss_cyberdemon_ceilingstep
+
+{
+
+	minDistance	100		
+	maxDistance	200
+	shakes 	0.2
+	volume	2
+	unclamped
+
+	sound/ed/cyberdemon/ceilingstep1.wav
+	sound/ed/cyberdemon/ceilingstep2.wav
+	sound/ed/cyberdemon/ceilingstep3.wav
+
+}
+
+monster_boss_cyberdemon_sight1 {
+
+	minDistance	40
+	maxDistance	120
+	volume	2
+	shakes	0.5
+	unclamped
+
+	sound/ed/cyberdemon/sight1.wav
+
+}
+
+monster_boss_cyberdemon_sight2 {
+
+	minDistance	40
+	maxDistance	120
+	volume	2
+	shakes	0.5
+	unclamped
+
+	sound/ed/cyberdemon/sight2.wav
+
+}
+
+monster_boss_cyberdemon_sight3 {
+
+	minDistance	40
+	maxDistance 120
+	volume	2
+	shakes	0.5
+	unclamped
+
+	sound/ed/cyberdemon/sight3.wav
+
+}
+
+monster_boss_cyberdemon_chatter {
+
+	minDistance	25
+	maxDistance	120
+	volume	2
+	unclamped
+
+	sound/ed/cyberdemon/chatter1.wav
+	sound/ed/cyberdemon/chatter2.wav
+	sound/ed/cyberdemon/chatter3.wav
+	sound/ed/cyberdemon/chatter4.wav
+
+}
+
+monster_boss_cyberdemon_chatter_combat {
+	minDistance	25
+	maxDistance	120
+	
+	volume	2
+	unclamped
+	
+	sound/ed/cyberdemon/chatter1.wav
+	sound/ed/cyberdemon/chatter2.wav
+	sound/ed/cyberdemon/chatter3.wav
+	sound/ed/cyberdemon/chatter4.wav
+}
+
+monster_boss_cyberdemon_pain {
+
+	minDistance	50
+	maxDistance	150
+	volume	2
+	unclamped
+	shakes 0.2
+
+	sound/ed/cyberdemon/pain1.wav
+	sound/ed/cyberdemon/pain2.wav
+	sound/ed/cyberdemon/pain3.wav
+	sound/ed/cyberdemon/pain4.wav
+
+}
+
+monster_boss_cyberdemon_attackmissile {
+	minDistance	50
+	maxDistance	130
+	volume		2
+	unclamped	
+	no_dups
+	
+	shakes		0.3
+	
+	sound/monsters/cyberdemon/rocket_fire_01.wav
+	sound/monsters/cyberdemon/rocket_fire_02.wav
+	sound/monsters/cyberdemon/rocket_fire_03.wav
+	sound/monsters/cyberdemon/rocket_fire_04.wav
+}
+
+monster_boss_cyberdemon_die {
+
+}
+
+	

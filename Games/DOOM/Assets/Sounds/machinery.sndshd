@@ -1,0 +1,1596 @@
+c1_sentry_loader_out {
+	minDistance	10
+	maxDistance	25
+	unclamped 
+	volume		3
+	
+	sound/movers/comm1/sentry_loader_out.wav
+}
+
+c1_sentry_loader_in {
+	minDistance	10
+	maxDistance	25
+	
+	no_occlusion
+	volume		3
+	
+	sound/movers/comm1/sentry_loader_in.wav
+}
+
+al4_plat_start {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/movers/alphalabs4/platform_start.wav
+}
+
+al4_plat_loop {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/movers/alphalabs4/platform_loop.wav
+}
+
+al4_plat_stop {
+	minDistance 5
+	maxDistance	25
+	volume		0
+	
+	sound/movers/alphalabs4/platform_end.wav
+}
+
+// -- Start Enpro
+
+
+
+tb_reloader1 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/tb_reloader_01.wav
+}
+
+tb_reloader2 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/tb_reloader_02.wav
+}
+
+tb_whomp {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/whomp_01.wav
+	sound/movers/enpro/whomp_02.wav
+	sound/movers/enpro/whomp_03.wav
+}
+
+tb_whompout {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/whompout_01.wav
+	sound/movers/enpro/whompout_02.wav
+	sound/movers/enpro/whompout_03.wav
+	
+
+}
+
+tb_arm1 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/mech_1s_01a.wav
+	sound/movers/enpro/mech_1s_02a.wav
+	sound/movers/enpro/mech_1s_04a.wav
+}
+
+tb_arm2 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/mech_1s_05a.wav
+	sound/movers/enpro/mech_1s_06a.wav
+	sound/movers/enpro/mech_1s_08a.wav
+}
+
+tb_arm3 {
+	minDistance 2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/enpro/mech_1s_07a.wav
+	sound/movers/enpro/mech_1s_09a.wav
+}
+
+tb_m3_loop {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	looping
+	
+	sound/movers/_general_movement/m3_loop.wav
+}
+
+tb_m4_stop {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	
+	sound/movers/_general_movement/m4_end.wav
+}
+
+
+// -- End Enpro
+
+// -- start comm1
+
+c1_mcarrier {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	
+	sound/movers/mc_underground/saftey_bridge_01.wav
+}
+
+c1_pipeupaway {
+	minDistance	3
+	maxDistance	25
+	volume	0
+	unclamped
+	no_dups
+	
+	sound/movers/alphalabs4/pounder_1second_01.wav
+	sound/movers/alphalabs4/pounder_1second_02.wav
+	sound/movers/alphalabs4/pounder_1second_03.wav
+	sound/movers/alphalabs4/pounder_1second_04.wav
+	sound/movers/alphalabs4/pounder_1second_05.wav
+}
+
+c1_pipedownbounce {
+	minDistance	3
+	maxDistance	25
+	volume		5
+	unclamped
+	
+	sound/movers/comm1/pipe_down_bounce.wav
+}
+
+c1_mloop1 {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	looping
+	
+	sound/movers/_general_movement/m3_loop.wav
+}
+
+c1_mloop1_end {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	looping
+	
+	sound/movers/_general_movement/m3_end.wav
+}
+
+
+c1_mloop2 {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	looping
+	
+	sound/movers/_general_movement/m5_loop.wav
+}
+
+c1_mloop2_end {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	looping
+	
+	sound/movers/_general_movement/m5_end.wav
+}
+
+c1_pipeloader {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_06.wav
+}
+
+c1_pipeloader2 {	
+	minDistance	3
+	maxDistance	25
+	volume		0
+	unclamped
+	
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_01.wav
+}
+
+c1_pipeloader3 {	
+	minDistance	3
+	maxDistance	25
+	volume		3
+	unclamped
+	
+	//sound/machinery/machines/loops_05s/singles/single_machinery_05s_28.wav
+	sound/machinery/machines/loops_1_5s/loop_machinery_1_5s_23.wav
+}
+
+
+
+// --- end comm1
+
+cav1_lift_start {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/ed/caverns2/elevator_start_5s.wav
+}
+
+cav1_lift_loop {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	looping
+
+	sound/ed/caverns2/elevator_loop.wav
+}
+
+cav1_lift_stop {
+	minDistance	5
+	maxDistance	30
+	volume		0
+
+	sound/ed/caverns2/elevator_out.wav
+}
+
+// Delta 3 sounds for teleport panels
+
+dc3_gui_panel_1 {
+	minDistance		1
+	maxDistance		15
+	volume			0
+	
+	sound/movers/delta3/gui_panel_1s.wav
+
+}
+
+dc3_gui_panel_2 {
+	minDistance		1
+	maxDistance		15
+	volume			0
+	
+	sound/movers/delta3/gui_panel_1s_02.wav
+
+}
+
+
+rec2_pump_05s_01 {
+	minDistance		1
+	maxDistance		15
+	volume			0
+	
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_29.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_09.wav
+}
+
+rec2_pump_1s_01 {
+	minDistance		1
+	maxDistance		15
+	volume			0
+
+	sound/machinery/machines/loops_1s/singles/loop_machinery_1s_01.wav
+	sound/machinery/machines/loops_1s/singles/loop_machinery_1s_06.wav
+	sound/machinery/machines/loops_1s/singles/loop_machinery_1s_10.wav
+}
+
+co_lift_up_2s {
+	minDistance	3
+	maxDistance	25
+	volume		5
+	unclamped
+	
+	sound/movers/alphalabs4/spinner_2s_07.wav
+}
+
+co_lift_down_2s {
+	minDistance	3
+	maxDistance	25
+	volume		5
+	unclamped
+	
+	sound/movers/alphalabs4/spinner_2s_05.wav
+}
+
+
+co_m4_start {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	
+	sound/movers/_general_movement/m4_start.wav
+}
+
+co_m4_loop {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/movers/_general_movement/m4_loop.wav
+}
+
+co_m4_stop {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	
+	sound/movers/_general_movement/m4_end.wav
+}
+
+co_conpanel {
+	minDistance	1
+	maxDistance	10
+	volume		0
+	
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_05.wav
+}
+
+co_lift_rotation {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	
+	sound/movers/commoutside/lift_rotation_2s.wav
+}
+
+co_lift_up_3s {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/movers/commoutside/lift_up_3s.wav
+}
+
+co_lift_down_3s {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/movers/commoutside/lift_down_3s.wav
+}
+
+
+
+co_goofy_updown {
+	minDistance	1
+	maxDistance	15
+	volume		-3
+	no_dups
+	
+	sound/movers/alphalabs4/support_05s_01.wav
+	sound/movers/alphalabs4/support_05s_04.wav
+	sound/movers/alphalabs4/support_05s_07.wav
+	
+}
+
+co_05s_machinery_01 {
+	minDistance	1
+	maxDistance	15
+	volume		-3
+	no_dups
+	
+	//sound/machinery/machines/loops_05s/singles/single_machinery_05s_03.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_06.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_14.wav
+	//sound/machinery/machines/loops_05s/singles/single_machinery_05s_21.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_28.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_29.wav
+}
+
+rec1_1_rotation {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/rotation.wav
+}
+
+rec1_2_rotation {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/rotation2.wav
+}
+
+rec1_3_rotation {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/rotation3.wav
+}
+
+
+rec1_pivot_0_3s {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/pivot_0_3s_01.wav
+}
+
+rec1_pivot_0_4s {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/pivot_0_4s_01.wav
+}
+
+rec1_pivot_0_7s {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/pivot_0_7s_01.wav
+	sound/movers/recycling1/pivot_0_7s_02.wav
+}
+
+rec1_pivot_0_8s {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/movers/recycling1/pivot_0_8s_01.wav
+}
+
+rec1_1_5s_movement {
+	minDistance	4
+	maxDistance	25
+	volume		0
+
+	sound/movers/recycling1/movement_1_5s_01.wav
+}
+
+rec1_1_2s_movement {
+	minDistance	4
+	maxDistance	25
+	volume		0
+
+	sound/movers/recycling1/movement_1_2s_01.wav
+}
+
+rec1_2s_rotation {
+	minDistance	2
+	maxDistance	20
+	volume		-3
+
+	sound/machinery/machines/loops_2s/loop_machinery_2s_12a.wav
+}
+
+rec1_3s_piston {
+	minDistance	2
+	maxDistance	20
+	volume		6
+	
+	sound/levels/recycling1/piston_3s_01.wav
+}
+
+rec1_pump_movement_1_5s {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/machinery/hydraulics/movement_1_5s_02.wav
+}
+
+rec1_pump_endclack_01 {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/machinery/hydraulics/elements/clack_01.wav
+}
+
+rec1_pump_movement_0_4s {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/machinery/hydraulics/movement_0_4s_01.wav
+}
+
+rec1_pump_movement_0_5s {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/machinery/hydraulics/movement_0_5s_01.wav
+}
+
+rec1_steamchuff {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/machinery/steamchuffs/steamchuff_01.wav
+	sound/machinery/steamchuffs/steamchuff_02.wav
+	sound/machinery/steamchuffs/steamchuff_03.wav
+	sound/machinery/steamchuffs/steamchuff_04.wav
+}
+
+airwhomp {
+	minDistance	1
+	maxDistance	25
+	volume		6
+	
+	sound/machinery/airflow/whoomp_01.wav
+	sound/machinery/airflow/whoomp_02.wav
+	sound/machinery/airflow/whoomp_03.wav
+	sound/machinery/airflow/whoomp_04.wav
+}
+
+mech_fingers_1_5s {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	unClamped
+
+	sound/levels/delta2a/fingers_1_5s_01.wav
+	sound/levels/delta2a/fingers_1_5s_02.wav
+}
+
+something_interesting {    // (tm) Matt Hooper				-Xian
+	minDistance	1
+	maxDistance	25
+	volume		-9
+	
+	sound/movers/mc_underground/something_interesting.wav
+
+}
+
+something_interesting_2 {    
+	minDistance	1
+	maxDistance	25
+	volume		-9
+		
+	sound/movers/mc_underground/something_interesting_02.wav
+}
+
+
+servo_1s_01 {
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/levels/delta2a/shoulder_1s_01.wav
+}
+
+servo_1s_02 {
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/machinery/gears/servo_1s_01.wav
+
+}
+
+metalbounce_1 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/movers/mc_underground/metalbounce_02.wav
+}
+
+metalbounce_2 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/movers/mc_underground/metalbounce_04.wav
+}
+
+
+m1_start {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m1_start.wav
+}
+
+m1_loop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	looping
+	
+	sound/movers/_general_movement/m1_loop.wav
+}
+
+m1_stop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m1_end.wav
+}
+
+m2_start {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m2_start.wav
+}
+
+m2_loop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	looping
+	
+	sound/movers/_general_movement/m2_loop.wav
+}
+
+m2_stop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m2_end.wav
+}
+
+// -------------------
+
+m3_start {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m3_start.wav
+}
+
+m3_loop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	looping
+	
+	sound/movers/_general_movement/m3_loop.wav
+}
+
+m3_stop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m3_end.wav
+}
+
+// -------------------
+
+m4_start {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m4_start.wav
+}
+
+m4_loop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	looping
+	
+	sound/movers/_general_movement/m4_loop.wav
+}
+
+m4_stop {
+	minDistance	1
+	maxDistance	25
+	volume		-5
+	
+	sound/movers/_general_movement/m4_end.wav
+}
+
+// -------------------
+
+m5_start {
+	minDistance	2
+	maxDistance	25
+	volume		-3
+	
+	sound/movers/_general_movement/m5_start.wav
+}
+
+m5_loop {
+	minDistance	2
+	maxDistance	25
+	volume		-3
+	looping
+	
+	sound/movers/_general_movement/m5_loop.wav
+}
+
+m5_stop {
+	minDistance	2
+	maxDistance	25
+	volume		1
+	
+	sound/movers/_general_movement/m5_end.wav
+}
+
+// -------------------
+
+mcu_safteybridge_01 {
+	minDistance	1
+	maxDistance	25
+	volume		-2
+	
+	sound/movers/mc_underground/saftey_bridge_01.wav
+}
+
+mcu_safteybridge_02 {
+	minDistance	1
+	maxDistance	25
+	volume		-2
+	
+	sound/movers/mc_underground/saftey_bridge_02.wav
+}
+
+
+mcu_rotate_canister {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/movers/mc_underground/seq_canister_4_5s.wav
+}
+
+game_crash {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/xian/game_crash.wav
+}
+
+enpro_bridge_2s {
+	minDistance	7
+	maxDistance	30
+	unclamped
+	shakes		0.05
+	volume		5
+	
+	sound/movers/enpro/2second_movement_03.wav
+}
+
+enpro_bridge_rails_1s {
+	minDistance	5
+	maxDistance	30
+	volume		2
+	unclamped
+	
+	sound/movers/alphalabs4/mach_1s_07.wav
+}
+
+enpro_bridge_rails_2_1s {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/movers/alphalabs4/mach_1s_03.wav
+}
+
+
+msmall_pounder {
+	minDistance	1
+	maxDistance	15
+	volume	3
+	no_dups
+	
+	sound/movers/alphalabs4/pounder_1second_01.wav
+	sound/movers/alphalabs4/pounder_1second_02.wav
+	sound/movers/alphalabs4/pounder_1second_03.wav
+	sound/movers/alphalabs4/pounder_1second_04.wav
+	sound/movers/alphalabs4/pounder_1second_05.wav
+}
+
+mset1_movement {
+	minDistance	1
+	maxDistance	10
+	looping
+
+	sound/xian/machinery/constant/set1_movement.wav
+}
+
+mset1_stop {
+	minDistance	1
+	maxDistance	10
+	volume	0
+
+	sound/xian/machinery/constant/set1_stop.wav
+}
+
+mset2_movement {
+	minDistance	1
+	maxDistance	10
+	volume 	-3
+	looping
+
+	sound/xian/machinery/constant/set2_movement.wav
+}
+
+mset2_stop {
+	minDistance	1
+	maxDistance	10
+	volume	-3
+
+	sound/xian/machinery/constant/set2_stop.wav
+}
+
+
+random_mover_sounds {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_01.wav
+	sound/xian/machinery/constant/mach_02.wav
+	sound/xian/machinery/constant/mach_03.wav
+	sound/xian/machinery/constant/mach_04.wav
+	sound/xian/machinery/constant/mach_05.wav
+	sound/xian/machinery/constant/mach_06.wav
+	sound/xian/machinery/constant/mach_07.wav
+}
+
+constant_mover_01 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_01.wav
+}
+
+constant_mover_02 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_02.wav
+}
+
+constant_mover_03 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_03.wav
+}
+
+constant_mover_04 {
+	minDistance	3
+	maxDistance	35
+	unclamped
+	volume		6
+	looping
+
+	sound/xian/machinery/constant/mach_04.wav
+}
+
+constant_mover_05 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_05.wav
+}
+
+constant_mover_06 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_06.wav
+}
+
+constant_mover_07 {
+	minDistance	1
+	maxDistance	30
+	looping
+
+	sound/xian/machinery/constant/mach_07.wav
+}
+
+
+
+small_mover_impact {
+	minDistance	7
+	maxDistance	20
+	volume		3
+	no_dups
+	
+	sound/impact/small_mover_impacts/sm_impact_01.wav
+	sound/impact/small_mover_impacts/sm_impact_02.wav
+	sound/impact/small_mover_impacts/sm_impact_03.wav
+	sound/impact/small_mover_impacts/sm_impact_04.wav
+	sound/impact/small_mover_impacts/sm_impact_05.wav
+	sound/impact/small_mover_impacts/sm_impact_06.wav
+	sound/impact/small_mover_impacts/sm_impact_07.wav
+	sound/impact/small_mover_impacts/sm_impact_08.wav
+	sound/impact/small_mover_impacts/sm_impact_09.wav
+}
+
+al4_plat_movement {
+	minDistance	1
+	maxDistance	20
+	volume		1
+	no_dups
+	looping
+	
+	sound/movers/alphalabs4/plat_mover_loop_01.wav
+	sound/movers/alphalabs4/plat_mover_loop_02.wav
+	sound/movers/alphalabs4/plat_mover_loop_03.wav
+	sound/movers/alphalabs4/plat_mover_loop_04.wav
+	sound/movers/alphalabs4/plat_mover_loop_05.wav
+	sound/movers/alphalabs4/plat_mover_loop_06.wav
+}
+
+al4_slide_3s {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/movers/alphalabs4/slide_out_3s_01.wav
+	sound/movers/alphalabs4/slide_out_3s_02.wav
+}
+
+bridge_up_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/bridge_up_1s.wav
+}
+
+bridge_down_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/bridge_up_1s.wav
+}
+
+fragchamber_active {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/fragchamber_active.wav
+}
+
+chamber_core_down_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/core_movement_5s.wav
+}
+
+chamber_core_up_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/core_movement_3s.wav
+}
+
+chamber_rods_down_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/rods_down_4s.wav
+}
+
+chamber_rods_up_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/rods_up_3s.wav
+}
+
+chamber_sockets_out_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/socket_movement_2s.wav
+}
+
+chamber_sockets_in_speaker {
+	minDistance	7
+	maxDistance	20
+	volume		3
+
+	sound/levels/alphalabs4/socket_movement_2s.wav
+}
+
+rotor_1s {
+	minDistance	10
+	maxDistance	35
+	volume		3
+	no_dups
+
+	sound/movers/alphalabs4/rotor_1s_01.wav
+	sound/movers/alphalabs4/rotor_1s_02.wav
+	sound/movers/alphalabs4/rotor_1s_03.wav
+	sound/movers/alphalabs4/rotor_1s_04.wav
+}
+
+mach_1_5s {
+	minDistance	2
+	maxDistance	25
+	volume		3
+	no_dups
+
+	sound/movers/delta2b/mach_1_5s_01.wav
+	sound/movers/delta2b/mach_1_5s_02.wav
+	sound/movers/delta2b/mach_1_5s_03.wav
+	sound/movers/delta2b/mach_1_5s_04.wav
+	sound/movers/delta2b/mach_1_5s_05.wav
+}
+
+mach_1s {
+	minDistance	10
+	maxDistance	35
+	volume		3
+	no_dups
+	
+	sound/movers/alphalabs4/mach_1s_01.wav
+	sound/movers/alphalabs4/mach_1s_02.wav	
+	sound/movers/alphalabs4/mach_1s_03.wav
+	sound/movers/alphalabs4/mach_1s_04.wav
+	sound/movers/alphalabs4/mach_1s_05.wav
+	sound/movers/alphalabs4/mach_1s_06.wav
+	sound/movers/alphalabs4/mach_1s_07.wav
+}
+
+al4_openslats_2s {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/movers/alphalabs4/support_2s_03.wav
+}
+
+al4_support_05s {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	no_dups
+
+	sound/movers/alphalabs4/support_05s_01.wav
+	sound/movers/alphalabs4/support_05s_02.wav
+	sound/movers/alphalabs4/support_05s_03.wav
+	sound/movers/alphalabs4/support_05s_04.wav
+	sound/movers/alphalabs4/support_05s_05.wav
+	sound/movers/alphalabs4/support_05s_06.wav
+	sound/movers/alphalabs4/support_05s_07.wav
+	sound/movers/alphalabs4/support_05s_08.wav
+}
+
+al4_welder_armrot_1s {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	no_dups
+
+	sound/movers/alphalabs4/arm_rot_1s_01.wav
+	sound/movers/alphalabs4/arm_rot_1s_02.wav
+	sound/movers/alphalabs4/arm_rot_1s_03.wav
+	sound/movers/alphalabs4/arm_rot_1s_04.wav
+}
+
+mcu_support_2s {
+	minDistance	1
+	maxDistance	25
+	volume		-2
+	no_dups
+	
+	sound/movers/alphalabs4/support_2s_01.wav
+	sound/movers/alphalabs4/support_2s_02.wav
+	sound/movers/alphalabs4/support_2s_03.wav
+	sound/movers/alphalabs4/support_2s_04.wav
+}
+
+
+al4_support_2s {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/movers/alphalabs4/support_2s_01.wav
+	sound/movers/alphalabs4/support_2s_02.wav
+	sound/movers/alphalabs4/support_2s_03.wav
+	sound/movers/alphalabs4/support_2s_04.wav
+}
+
+al4_welding_2s {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/movers/alphalabs4/welding_2s_01.wav
+	sound/movers/alphalabs4/welding_2s_02.wav
+	sound/movers/alphalabs4/welding_2s_03.wav
+}
+
+al4_conveyor_2s {
+	minDistance	5
+	maxDistance	20
+	volume		-2
+	no_dups
+	
+	sound/movers/alphalabs4/conveyor_2s_01.wav
+	sound/movers/alphalabs4/conveyor_2s_02.wav
+	sound/movers/alphalabs4/conveyor_2s_03.wav
+	sound/movers/alphalabs4/conveyor_2s_04.wav
+}
+
+al4_conveyor_2_point5s {
+	minDistance	5
+	maxDistance	20
+	volume		-2
+	no_dups
+	
+	sound/movers/alphalabs4/conveyor_2_point5_01.wav
+	sound/movers/alphalabs4/conveyor_2_point5_02.wav
+	sound/movers/alphalabs4/conveyor_2_point5_03.wav
+	sound/movers/alphalabs4/conveyor_2_point5_04.wav
+}
+
+al4_conveyor_1_point5s {
+	minDistance	5
+	maxDistance	20
+	volume		-2
+	no_dups
+	
+	sound/movers/alphalabs4/conveyor_1_point5_01.wav
+	sound/movers/alphalabs4/conveyor_1_point5_02.wav
+	sound/movers/alphalabs4/conveyor_1_point5_03.wav
+	sound/movers/alphalabs4/conveyor_1_point5_04.wav
+}
+
+al4_rotbridge_tech {
+// 5 seconds
+	minDistance	10
+	maxDistance	35
+	unclamped
+	volume		3
+	no_dups
+
+	sound/movers/alphalabs4/rotbridge_tech_5s_01.wav
+	sound/movers/alphalabs4/rotbridge_tech_5s_02.wav
+	sound/movers/alphalabs4/rotbridge_tech_5s_03.wav
+	sound/machinery/movers/1shot_movement_5seconds.wav
+}
+
+al4_paddles {
+	minDistance	5
+	maxDistance	35
+	unclamped
+	volume		3
+	no_dups
+
+	sound/movers/alphalabs4/paddle_01.wav
+	sound/movers/alphalabs4/paddle_02.wav
+	sound/movers/alphalabs4/paddle_03.wav
+	sound/movers/alphalabs4/paddle_04.wav
+	sound/movers/alphalabs4/paddle_05.wav
+	sound/movers/alphalabs4/paddle_06.wav
+}
+
+al4_spinner_2second {
+	minDistance	5	
+	maxDistance	40
+	volume		-2
+	no_dups
+
+	//sound/movers/alphalabs4/spinner_2s_01.wav
+	sound/movers/alphalabs4/spinner_2s_02.wav
+	sound/movers/alphalabs4/spinner_2s_03.wav
+	sound/movers/alphalabs4/spinner_2s_04.wav
+	sound/movers/alphalabs4/spinner_2s_05.wav
+	sound/movers/alphalabs4/spinner_2s_06.wav
+	sound/movers/alphalabs4/spinner_2s_07.wav
+}
+
+al4_cushions {
+	minDistance	3
+	maxDistance	35
+	unclamped
+	volume		7
+	no_dups
+	
+	sound/movers/alphalabs4/cusion_impact_01.wav
+	sound/movers/alphalabs4/cusion_impact_02.wav
+	sound/movers/alphalabs4/cusion_impact_03.wav
+	sound/movers/alphalabs4/cusion_impact_04.wav
+	sound/movers/alphalabs4/cusion_impact_05.wav
+}
+
+al4_pounder_1second {
+	minDistance	3
+	maxDistance	35
+	unclamped
+	volume		5
+	no_dups
+	
+	sound/movers/alphalabs4/pounder_1second_01.wav
+	sound/movers/alphalabs4/pounder_1second_02.wav
+	sound/movers/alphalabs4/pounder_1second_03.wav
+	sound/movers/alphalabs4/pounder_1second_04.wav
+	sound/movers/alphalabs4/pounder_1second_05.wav
+}
+
+al4_pounder_2second {
+	minDistance	3
+	maxDistance	35
+	unclamped
+	volume		5
+	no_dups
+	
+	sound/movers/alphalabs4/pounder_2second_01.wav
+	sound/movers/alphalabs4/pounder_2second_02.wav
+	sound/movers/alphalabs4/pounder_2second_03.wav
+	sound/movers/alphalabs4/pounder_2second_04.wav
+}
+
+al4_pounder_point2seconds {
+	minDistance	3
+	maxDistance	35
+	unclamped
+	volume		5
+	no_dups
+
+	sound/movers/alphalabs4/pounder_outside_point2seconds_01.wav	
+	sound/movers/alphalabs4/pounder_outside_point2seconds_02.wav
+	sound/movers/alphalabs4/pounder_outside_point2seconds_03.wav
+	sound/movers/alphalabs4/pounder_outside_point2seconds_04.wav
+	sound/movers/alphalabs4/pounder_outside_point2seconds_05.wav
+}
+
+sact1_pump_1s {
+	volume	0
+	sound/xian/machinery/pistons/pump_1s.wav
+}
+
+sact1_pump_05s {
+	volume	0
+	sound/xian/machinery/pistons/pump_0.5s.wav
+}
+
+sact1_vent_1s {
+	volume	-5
+	sound/xian/machinery/mach_01_1s.wav
+}
+
+sact1_vent_05s_open {
+	volume	-9
+	sound/xian/machinery/05s_mach_05.wav
+}
+
+sact1_vent_05s_close {
+	volume	-9
+	sound/xian/machinery/05s_mach_06.wav
+}
+
+
+movement_5seconds
+{
+
+//	0:05.000
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+
+	sound/machinery/movers/1shot_movement_5seconds.wav
+}
+
+
+
+loop_airpump_01
+{
+
+//	0:06.832
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+	looping
+
+	sound/machinery/machines/loop_airpump_01.wav
+}
+
+activate_airpump_01
+{
+
+//	0:11.786
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+
+	sound/machinery/machines/1shot_airpump_01_activate.wav
+}
+
+loop_airpump_02
+{
+
+//	0:22.015
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+	looping
+
+	sound/machinery/machines/loop_airpump_02.wav
+
+}
+
+activate_airpump_02
+{
+
+//	0:13.545
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+	looping
+	leadin
+	sound/machinery/machines/1shot_airpump_02_activate.wav
+	sound/machinery/machines/loop_airpump_02.wav
+}
+
+gear_01
+{
+
+// 	0:01.444
+
+	minDistance	3
+	maxDistance	9
+	volume		0.5
+
+	sound/machinery/gears/1shot_gear_01.wav
+}
+
+loop_gear_01
+{
+
+// 	0:01.576
+
+	minDistance	2
+	maxDistance	7
+	volume		0.5
+	looping
+
+	sound/machinery/gears/loop_gear_01.wav
+}
+
+
+
+
+mover_02
+{
+	minDistance	3
+	maxDistance	9
+	looping
+	volume		0.5
+
+	sound/machinery/loop_mover_02.wav
+}
+
+mover_03
+{
+	minDistance	3
+	maxDistance	9
+	looping
+	volume		0.5
+
+	sound/machinery/loop_mover_03.wav
+}
+
+machinery_07
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/machines/loop_machinery_07.wav
+}
+
+machinery_09
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/machines/loop_machinery_09.wav
+}
+
+machinery_10
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/machines/loop_machinery_10.wav
+}
+
+machinery_11
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/machines/loop_machinery_11.wav
+}
+
+airflow_01
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_01.wav
+}
+
+
+
+airflow_02
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_02.wav
+}
+
+
+airflow_03
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_03.wav
+}
+
+airflow_04
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_04.wav
+}
+
+airflow_05
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_05.wav
+}
+
+airflow_06
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_06.wav
+}
+
+airflow_07
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/airflow/loop_airflow_07.wav
+}
+
+
+drone_01
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/machinery/drones/loop_drone_01.wav
+}
+
+airlock_01
+{
+	minDistance	3
+	maxDistance	9
+	volume		0.5
+
+	sound/machinery/airflow/1shot_airlock_01.wav
+}
+
+
+loop_movement_01
+{
+	description	"Annoying, high-pitched sound used while attached to energy bolts that move"
+	minDistance	2
+	maxDistance	15
+	volume		0.5
+	looping
+
+	sound/ambient/loop_movement_01.wav
+}
+
+sentrygun_loop {
+	minDistance	1
+	maxDistance	10
+	volume		-4
+	unclamped
+	looping
+	
+	sound/movers/alphalabs4/plat_mover_loop_06.wav
+}
+
+sentrygun_end {
+	minDistance	1
+	maxDistance	10
+	volume		-15
+	unclamped
+	//sound/movers/gears/servo_12.wav
+	sound/machinery/machines/loops_05s/singles/single_machinery_05s_01.wav
+}

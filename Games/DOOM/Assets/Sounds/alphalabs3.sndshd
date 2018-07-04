@@ -1,0 +1,123 @@
+frag_scientist_trigger {
+
+		minDistance	10	
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger.wav
+
+}
+frag_scientist_trigger2 {
+
+		minDistance	10
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger2.wav
+
+}
+frag_scientist_trigger3 {
+
+		minDistance	10
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger3.wav
+
+}
+frag_scientist_trigger4 {
+
+		minDistance	10
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger4.wav
+
+}
+frag_scientist_trigger5 {
+
+		minDistance	10
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger5.wav
+
+}
+frag_scientist_trigger6 {
+
+		minDistance	10
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger6.wav
+	
+}
+frag_scientist_trigger10 {
+		// Thanks for getting me out of there...
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_trigger10.wav
+
+}
+frag_scientist_trigger11 {
+		// I don't know what's going on here...
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_trigger11.wav
+
+}
+frag_scientist_trigger12 {
+		// Try to get an uplink...
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_trigger12.wav
+
+}
+frag_scientist_trigger13 {
+
+		minDistance	1
+		maxDistance	25
+		volume		0
+
+		sound/vo/alpha_labs3/frag_scientist_trigger13.wav
+
+}
+frag_scientist_primary {
+		// I'm going to stay here
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_primary.wav
+
+}
+frag_scientist_secondary {
+		// I need to stay here
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_secondary.wav
+
+}
+frag_scientist_secondary2 {
+		// I really shouldn't leave
+		minDistance	8
+		maxDistance	25
+		volume		2
+		unclamped
+
+		sound/vo/alpha_labs3/frag_scientist_secondary2.wav
+
+}

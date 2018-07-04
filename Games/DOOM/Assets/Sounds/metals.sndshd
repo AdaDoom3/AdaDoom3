@@ -1,0 +1,119 @@
+emetal_impacts {
+	minDistance	5
+	maxDistance	45
+	volume		0
+	no_dups
+	
+	sound/impact/ambient_impacts/emetal_01.wav
+	sound/impact/ambient_impacts/emetal_02.wav
+	sound/impact/ambient_impacts/emetal_03.wav
+	sound/impact/ambient_impacts/emetal_04.wav
+	sound/impact/ambient_impacts/emetal_05.wav
+}
+
+shaky_metal_bangs {
+	minDistance	5
+	maxDistance	45
+	volume		0
+	no_dups
+	
+	sound/impact/shaky_metal_bangs/mbang_01.wav
+	sound/impact/shaky_metal_bangs/mbang_02.wav
+	sound/impact/shaky_metal_bangs/mbang_03.wav
+	sound/impact/shaky_metal_bangs/mbang_04.wav
+	sound/impact/shaky_metal_bangs/mbang_05.wav
+}
+
+ambient_metal_stresses {
+	minDistance	15
+	maxDistance	30
+	volume		-3
+	no_dups
+
+
+	sound/xian/metals/long_ambient_stresses/long_ambient_stress_02.wav
+	sound/xian/metals/long_ambient_stresses/long_ambient_stress_03.wav
+	sound/xian/metals/long_ambient_stresses/long_ambient_stress_05.wav
+	sound/xian/metals/long_ambient_stresses/long_ambient_stress_06.wav
+
+	//sound/xian/metals/long_ambient_stresses/long_ambient_stress_01.wav
+	//sound/xian/metals/long_ambient_stresses/long_ambient_stress_04.wav
+	//sound/xian/metals/long_ambient_stresses/long_ambient_stress_07.wav
+}
+
+clangs {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+	looping
+	
+	sound/ed/sfx/creaks/creaky_clangs.wav
+
+}
+
+stresses {
+
+	minDistance	1
+	maxDistance	10
+	volume		-6
+	looping
+	
+	sound/ed/sfx/creaks/stress3.wav
+	sound/ed/sfx/creaks/stress4.wav
+	sound/ed/sfx/creaks/stress5.wav
+	sound/ed/sfx/creaks/stress6.wav
+
+	//sound/ed/sfx/creaks/stress1.wav
+	//sound/ed/sfx/creaks/stress2.wav
+	//sound/ed/sfx/creaks/stress7.wav
+	//sound/ed/sfx/creaks/stress8.wav
+}
+
+xcreaks {
+	minDistance	15
+	maxDistance	30
+	volume		-3
+	no_dups
+	
+	
+	sound/xian/metals/creaks/creak_02.wav
+	sound/xian/metals/creaks/creak_05.wav
+	sound/xian/metals/creaks/creak_08.wav
+	sound/xian/metals/creaks/creak_10.wav
+	sound/xian/metals/creaks/creak_11.wav
+	sound/xian/metals/creaks/creak_13.wav
+	sound/xian/metals/creaks/creak_14.wav
+	sound/xian/metals/creaks/creak_15.wav
+
+	//sound/xian/metals/creaks/creak_01.wav
+	//sound/xian/metals/creaks/creak_03.wav
+	//sound/xian/metals/creaks/creak_04.wav
+	//sound/xian/metals/creaks/creak_06.wav
+	//sound/xian/metals/creaks/creak_07.wav
+	//sound/xian/metals/creaks/creak_09.wav
+	//sound/xian/metals/creaks/creak_12.wav
+	//sound/xian/metals/creaks/creak_12a.wav
+
+}
+
+xstress {
+	minDistance	15
+	maxDistance	30
+	volume		-3
+	no_dups
+	
+	
+	sound/xian/metals/stress/stress_03.wav
+	sound/xian/metals/stress/stress_04.wav
+	sound/xian/metals/stress/stress_07.wav
+	sound/xian/metals/stress/stress_08.wav
+	sound/xian/metals/stress/stress_09.wav
+	
+	//sound/xian/metals/stress/stress_01.wav
+	//sound/xian/metals/stress/stress_02.wav
+	//sound/xian/metals/stress/stress_05.wav
+	//sound/xian/metals/stress/stress_06.wav
+	//sound/xian/metals/stress/stress_10.wav
+	//sound/xian/metals/stress/stress_11.wav
+	//sound/xian/metals/stress/stress_12.wav
+}

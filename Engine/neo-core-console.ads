@@ -136,6 +136,8 @@ package Neo.Core.Console is
     Settable : Bool := True;
   package CVar_Str is
       function Get return Str;
+      function Get return Str_Unbound;
       procedure Set (Val : Str);
+      procedure Set (Val : Str_Unbound);
     end;
 end;

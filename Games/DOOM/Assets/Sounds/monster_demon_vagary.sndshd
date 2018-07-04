@@ -1,0 +1,296 @@
+vag_caverns_scream {
+	minDistance	10
+	maxDistance	100
+	volume		0
+	unclamped
+	shakes		0.2
+	
+	sound/monsters/vagary/caverns_scream.wav
+}
+
+cavcin_vag_noise1 {
+	minDistance	10
+	maxDistance	80
+	volume		2
+	unclamped
+	
+	sound/monsters/vagary/stand.wav
+}
+
+cavcin_vag_noise2 {
+	minDistance	10
+	maxDistance	80
+	volume		2
+	unclamped
+	
+	sound/monsters/vagary/wake_solo.wav
+}
+
+
+cavcin_vag_sight {
+	minDistance	5
+	maxDistance	60
+	volume		0
+	
+	sound/monsters/vagary/range_attack.wav
+	sound/monsters/vagary/stand.wav
+	sound/monsters/vagary/attack1.wav
+}
+
+
+monster_demon_vagary_step {
+
+	minDistance	5
+	maxDistance	35
+	volume		-5
+	
+	sound/monsters/vagary/footstep1.wav
+	sound/monsters/vagary/footstep2.wav
+	sound/monsters/vagary/footstep3.wav
+	sound/monsters/vagary/footstep4.wav
+	sound/monsters/vagary/footstep5.wav
+	sound/monsters/vagary/footstep6.wav
+	sound/monsters/vagary/footstep7.wav
+	sound/monsters/vagary/footstep8.wav
+}
+	
+monster_demon_vagary_attackspecial {
+
+	minDistance	5
+	maxDistance	20
+	volume		7.5
+
+//	sound/ed/vagary/special/special1.wav
+	sound/ed/vagary/special/special2.wav
+
+}
+
+monster_boss_vagary_pain {
+	minDistance	5
+	maxDistance	30
+	volume		6
+	unclamped
+	no_dups
+
+	sound/monsters/vagary/pain.wav
+	sound/monsters/vagary/pain_head.wav
+	sound/monsters/vagary/pain_right_arm.wav
+	sound/monsters/vagary/pain_left_arm.wav
+}
+
+monster_boss_vagary_pain_head {
+	minDistance	5
+	maxDistance	30
+	volume		0
+
+	sound/monsters/vagary/pain_head.wav
+	sound/monsters/vagary/pain_head_no_vo.wav
+	sound/monsters/vagary/pain_head_solo.wav
+	
+}
+
+monster_boss_vagary_pain_right_arm {
+	minDistance	5
+	maxDistance	30
+	volume		0
+
+	sound/monsters/vagary/pain_right_arm.wav
+	sound/monsters/vagary/pain_right_arm_no_vo.wav
+	sound/monsters/vagary/pain_right_arm_solo.wav
+}
+
+monster_boss_vagary_pain_left_arm {
+	minDistance	5
+	maxDistance	30
+	volume		0
+
+	sound/monsters/vagary/pain_left_arm.wav
+	sound/monsters/vagary/pain_left_arm_no_vo.wav
+	sound/monsters/vagary/pain_left_arm_solo.wav
+}
+
+monster_boss_vagary_range_attack1 {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/range_attack.wav
+	sound/monsters/vagary/range_attack_no_vo.wav
+	sound/monsters/vagary/range_attack_solo.wav
+}
+
+monster_boss_vagary_attack1 {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/attack1.wav
+	//sound/monsters/vagary/attack1_no_vo.wav
+	//sound/monsters/vagary/attack1_no_vo_swsh.wav
+	//sound/monsters/vagary/attack1_solo.wav
+}
+
+monster_boss_vagary_attack2 {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/attack2.wav
+}
+
+monster_boss_vagary_attack3 {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/attack3.wav
+}
+
+
+monster_boss_vagary_retreat {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/retreat.wav
+
+}
+
+monster_boss_vagary_stand {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	//sound/monsters/vagary/stand.wav
+}
+
+monster_boss_vagary_wake {
+	minDistance	5
+	maxDistance	35
+	volume		0
+	
+	sound/monsters/vagary/wake.wav
+	sound/monsters/vagary/wake_solo.wav
+}
+
+monster_boss_vagary_death {
+	minDistance	5
+	maxDistance	40
+	volume		4
+	unclamped
+
+	sound/monsters/vagary/death.wav
+}
+
+monster_boss_vagary_evade_left {
+	minDistance	5
+	maxDistance	35
+	volume		0
+
+	sound/monsters/vagary/evade_left.wav
+}
+
+monster_boss_vagary_evade_right {
+	minDistance	5
+	maxDistance	35
+	volume		0
+
+	sound/monsters/vagary/evade_right.wav
+}
+
+
+monster_boss_vagary_idle {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/monsters/vagary/idle.wav
+	sound/monsters/vagary/idle2.wav
+
+}
+
+monster_boss_vagary_sight {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/monsters/vagary/range_attack.wav
+	sound/monsters/vagary/stand.wav
+	sound/monsters/vagary/attack1.wav
+}
+
+//--------------------------------------------------------
+
+monster_demon_vagary_pain {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+	
+	sound/ed/vagary/pain/pain1.wav
+	sound/ed/vagary/pain/pain2.wav
+
+}
+
+monster_demon_vagary_attackmissile {
+
+	minDistance	5
+	maxDistance	20
+	volume		0
+
+	sound/ed/vagary/missile/missile1.wav
+	sound/ed/vagary/missile/missile2.wav
+
+}
+
+monster_boss_vagary_chatter_combat {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/monsters/vagary/chatter_combat.wav
+	sound/monsters/vagary/chatter_combat2.wav
+	sound/monsters/vagary/chatter_combat3.wav
+
+}
+
+monster_boss_vagary_pickup {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/monsters/vagary/pickup.wav
+
+}
+
+monster_demon_vagary_groan {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/monsters/vagary/evade_right_solo.wav
+
+}
+
+monster_demon_vagary_sigh {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/monsters/vagary/idle_solo.wav
+
+}
+
+monster_demon_vagary_sigh2 {
+
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/monsters/vagary/evade_left_solo.wav
+
+}

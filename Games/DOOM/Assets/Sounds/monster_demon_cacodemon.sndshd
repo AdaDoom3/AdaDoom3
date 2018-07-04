@@ -1,0 +1,150 @@
+
+caco_projectile {
+	minDistance	3
+	maxDistance	45
+	volume		0
+	looping
+	
+	sound/monsters/cacodemon/fireball_travel_loop.wav
+}
+
+caco_projectile_impact {
+	minDistance	5
+	maxDistance	45
+	volume		0
+	no_dups
+	shakes		0.1
+	
+	sound/monsters/cacodemon/pimpact_05.wav
+	sound/monsters/cacodemon/pimpact_01.wav
+	sound/monsters/cacodemon/pimpact_02.wav
+	sound/monsters/cacodemon/pimpact_03.wav
+	sound/monsters/cacodemon/pimpact_04.wav
+}
+
+monster_demon_cacodemon_sight
+{
+	minDistance	12
+	maxDistance	45
+	volume		6
+	no_dups
+
+	sound/ed/caco/caco_sight3.wav
+	sound/ed/caco/caco_sight4.wav
+	sound/ed/caco/caco_sight5.wav
+	sound/ed/caco/caco_sight6.wav
+	}
+
+monster_demon_cacodemon_sight2
+{
+	minDistance	12
+	maxDistance	45
+	volume		6
+	no_dups
+
+	sound/ed/caco/caco_sight2_1.wav
+	sound/ed/caco/caco_sight2_2.wav
+	sound/ed/caco/caco_sight2_3.wav
+	sound/ed/caco/caco_sight2_4.wav
+	}
+
+
+monster_demon_cacodemon_die
+{
+	minDistance	12
+	maxDistance	45
+	volume		12
+
+	sound/ed/caco/caco_death1.wav
+	sound/ed/caco/caco_death2.wav
+	sound/ed/caco/caco_death3.wav
+	sound/ed/caco/caco_death4.wav
+	sound/ed/caco/caco_death5.wav
+	sound/ed/caco/caco_death6.wav
+}
+
+monster_demon_cacodemon_attackmissile
+{
+	minDistance	5
+	maxDistance	45
+	volume		2
+	no_dups
+
+	//sound/originaldoom/16bit/FIRSHT.WAV
+	//sound/monsters/imp/fireball_create_02.wav
+	sound/monsters/cacodemon/fire_01.wav
+	sound/monsters/cacodemon/fire_02.wav
+	sound/monsters/cacodemon/fire_03.wav
+	sound/monsters/cacodemon/fire_04.wav
+}
+
+monster_demon_cacodemon_chatter
+{
+	minDistance	12
+	maxDistance	45
+	volume		2
+	no_dups
+
+
+	sound/monsters/cacodemon/caco_chatter1.wav
+	sound/monsters/cacodemon/caco_chatter2.wav
+	sound/monsters/cacodemon/caco_chatter3.wav
+	sound/monsters/cacodemon/caco_chatter4.wav
+	sound/monsters/cacodemon/caco_chatter5.wav
+	sound/monsters/cacodemon/caco_chatter6.wav
+}
+
+monster_demon_cacodemon_walk {
+	minDistance	1
+	maxDistance	35
+	volume		0
+	no_dups
+	unclamped
+	looping
+
+	//sound/monsters/cacodemon/caco_walk.wav
+	
+	//sound/monsters/cacodemon/flight_01.wav
+	//sound/monsters/cacodemon/flight_04.wav
+	//sound/monsters/cacodemon/flight_05.wav
+	//sound/monsters/cacodemon/flight_06.wav
+	sound/monsters/cacodemon/flight_08.wav
+}
+
+monster_demon_cacodemon_melee
+
+{
+	minDistance	12
+	maxDistance	35
+	volume		7.75
+	no_dups
+	
+	sound/ed/caco/caco_attack1.wav
+	sound/ed/caco/caco_attack2.wav
+	sound/ed/caco/caco_attack3.wav
+
+}
+
+monster_demon_cacodemon_pain
+
+{	
+	minDistance	12
+	maxDistance	45
+	volume		0
+	no_dups
+	sound/ed/caco/caco_pain1.wav
+	sound/ed/caco/caco_pain2.wav
+	sound/ed/caco/caco_pain3.wav
+	sound/ed/caco/caco_pain4.wav
+	sound/ed/caco/caco_pain5.wav
+
+}
+
+monster_demon_cacodemon_burn
+{
+	minDistance	12
+	maxDistance	35
+	volume		-3
+
+	sound/ed/caco/caco_burn.wav
+}

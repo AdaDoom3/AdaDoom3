@@ -1,0 +1,128 @@
+
+end_ship_flyby {
+	minDistance	50
+	maxDistance	100
+	volume		0
+	
+	sound/cinematics/mars_city1/ship_flyby.wav
+}
+
+end_radio1 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/01_tc.wav
+}
+
+end_radio2 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/02_m1.wav
+}
+
+end_radio3 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/03_tc.wav
+}
+
+end_radio4 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/04_m1.wav
+}
+
+end_radio5 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/05_m2.wav
+}
+
+end_radio6 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/06_m1.wav
+}
+
+end_radio7 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/07_m2.wav
+}
+
+end_radio8 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/08_m1.wav
+}
+
+end_radio9 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/09_m1.wav
+}
+
+end_radio10 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/10_m1.wav
+}
+
+end_radio11 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/11_m1.wav
+}
+
+end_radio12 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/12_m1.wav
+}
+
+end_radio13 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/13_m1.wav
+}
+
+end_radio14 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/14_tc.wav
+}
+
+end_radio15 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/15_m1.wav
+}
+
+end_radio16 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/16_tc.wav
+}
+
+end_radio17 {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/17_m1.wav
+}
+
+end_edit {
+	minDistance	5
+	maxDistance	15
+	sound/vo/end/end_edit.wav
+}
+
+end_vidin {
+	minDistance	5
+	maxDistance	15
+	sound/misc/video_in.wav
+}
+
+end_vidout {
+	minDistance	5
+	maxDistance	15
+	sound/misc/video_out.wav
+}

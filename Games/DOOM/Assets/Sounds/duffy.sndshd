@@ -1,0 +1,87 @@
+
+
+test_radiochatter {
+	volume 5
+	sound/vo/marscity/marine2_sitting_1_2.wav	
+}
+
+earthquake {
+	minDistance	3
+	maxDistance	24
+	volume		7
+	shakes	0.175	
+	no_occlusion
+	sound/ed/earthquake/rubble7.wav
+	sound/ed/earthquake/rubble9_basso.wav
+
+}
+
+
+earthquake_small {
+	minDistance	3
+	maxDistance	24
+	volume		5
+	shakes	0.175
+	no_occlusion
+	sound/ed/earthquake/rubble5.wav
+	sound/ed/earthquake/rubble3.wav
+
+}
+
+
+duffysparky1 {
+
+	minDistance	4
+	maxDistance	8
+	volume 		10
+
+	sound/t_environment/loop_hum_spark.wav
+}
+
+
+sound_weapon_acquire {
+	sound/ed/sfx/multiplayer/weapon_pickup.wav
+}
+
+sound_weapon_respawn {
+	sound/ed/sfx/multiplayer/weapon_respawn.wav
+}
+
+sound_item_acquire {
+	sound/ed/sfx/multiplayer/item_pickup.wav
+}
+
+sound_item_respawn {
+	sound/ed/sfx/multiplayer/item_respawn.wav
+}
+
+sound_berserk_respawn {
+	sound/ed/sfx/multiplayer/item_respawn.wav
+}
+
+sound_shard_acquire {
+	sound/ed/sfx/multiplayer/shard_pickup.wav
+}
+
+sound_vest_acquire {
+	sound/ed/sfx/multiplayer/vest_pickup.wav
+}
+
+sound_berserk_impact {
+	sound/ed/sfx/multiplayer/berserk_punch6.wav
+	sound/ed/sfx/multiplayer/berserk_punch5.wav
+}
+
+sound_berserk_pickup {
+	volume	6
+	sound/ed/grumblies/attack1.wav
+	sound/ed/grumblies/attack2.wav
+	sound/ed/grumblies/attack3.wav
+	sound/ed/grumblies/attack4.wav
+	sound/ed/grumblies/attack5.wav
+	sound/ed/grumblies/attack6.wav
+	sound/ed/grumblies/attack7.wav
+	sound/ed/grumblies/attack8.wav
+
+}
+	

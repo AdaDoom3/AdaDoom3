@@ -1,0 +1,1514 @@
+entrance_scanner_loop {
+	minDistance	1
+	maxDistance	15
+	volume		-10
+	looping
+	
+	sound/levels/mars_city1/entrance_scanner.wav
+}
+
+marine_excuseme {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	
+	sound/vo/marscity/marine_excuseme.wav
+}
+
+ship_liftoff {
+	minDistance	20
+	maxDistance	100
+	volume		1
+	unclamped
+	shakes		0.07
+		
+	sound/cinematics/mars_city1/ship_liftoff.wav
+	//sound/electronics/1shot_blip_03.wav
+}
+
+littledroid_movement {
+	minDistance	1
+	maxDistance	8
+	volume		-9
+	looping
+	
+	sound/movers/mc_underground/mover/mach_loop.wav
+}
+
+mc1_scanner_rot1s {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+	
+	sound/levels/mars_city1/scanner_rot1s.wav
+}
+
+mc1_scanner_3s_movement {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/levels/mars_city1/scanner_3s_movement.wav
+}
+
+//
+//Global Computer Voice Anncs
+//
+
+mars_city1_annc_02 {
+	description "welcome to mars"
+	onDemand	
+	sound/vo/marscity/comp_announce2.wav
+}
+
+mars_city1_annc_03 {
+	description "shuttle tango ready for departure"
+	onDemand	
+	sound/vo/marscity/comp_announce3.wav
+}
+
+mars_city1_annc_04 {
+	description "mars city is smoke free"
+	onDemand	
+	sound/vo/marscity/comp_announce4.wav
+}
+
+mars_city1_annc_05 {
+	description "work safe month"
+	onDemand	
+	sound/vo/marscity/comp_announce5.wav
+}
+
+mars_city1_annc_06 {
+	description "dir banks please report"
+	onDemand	
+	sound/vo/marscity/comp_announce6.wav
+}
+
+mars_city1_annc_07 {
+	description "volun at delta - long file"
+	onDemand	
+	sound/vo/marscity/comp_announce7.wav
+}
+
+mars_city1_annc_08 {
+	description "dr bradick - please report"
+	onDemand	
+	sound/vo/marscity/comp_announce8.wav
+}
+
+mars_city1_annc_10 {
+	description "medical facilites"
+	onDemand	
+	sound/vo/marscity/comp_announce10.wav
+}
+
+mars_city1_annc_11 {
+	description "free pysc evauls"
+	onDemand	
+	sound/vo/mars_city2/comp_uac_psyc.wav
+}
+
+
+//
+//END Computer VO
+
+
+mc_ship_flyby {
+	minDistance	50
+	maxDistance	100
+	volume		0
+	
+	sound/cinematics/mars_city1/ship_flyby.wav
+}
+
+mc_ship_flyby2 {
+	minDistance	50
+	maxDistance	100
+	volume		0
+	
+	sound/cinematics/mars_city1/ship_flyby2.wav
+}
+
+
+mc_ship_reentry {
+	minDistance	50
+	maxDistance	100
+	volume		0
+	
+	sound/cinematics/mars_city1/ship_reentry.wav
+}
+
+
+marscity_sec_hangar_trigger {
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/sec_hangar_trigger.wav
+}
+
+marscity_sec_hangar_primary {
+	minDistance	4
+	maxDistance	15
+	sound/vo/marscity/sec_hangar_primary.wav
+}
+
+marscity_sec_hangar_secondary1 {
+	minDistance	4
+	maxDistance	15
+	sound/vo/marscity/sec_hangar_secondary_1.wav
+}
+
+marscity_sec_hangar_secondary2 {
+	minDistance	4
+	maxDistance	15
+	sound/vo/marscity/sec_hangar_secondary_2.wav
+}
+
+marscity_sec_hangar_surprise {
+	minDistance	4
+	maxDistance	15
+	sound/vo/marscity/sec_hangar_hey.wav
+}
+
+marscity_sci_monitor_primary {
+	minDistance	2
+	maxDistance	15
+	sound/vo/marscity/scientist_monitor_1.wav
+}
+
+marscity_sci_monitor_secondary1 {
+	minDistance	2
+	maxDistance	15
+	sound/vo/marscity/scientist_monitor_2.wav
+}
+
+marscity_sci_monitor_secondary2 {
+	minDistance	2
+	maxDistance	15
+	sound/vo/marscity/scientist_monitor_3.wav
+}
+
+marscity_sci_monitor_surprise {
+	minDistance	2
+	maxDistance	15
+	sound/vo/marscity/marine5_hq4.wav.wav
+}
+
+// Hospital stuff
+
+marscity_sci_hospital_1 {
+	minDistance	1
+	maxDistance	20
+	volume		-2
+	sound/vo/marscity/scientist_hospital_1.wav
+}
+
+marscity_sci_hospital_2 {
+	minDistance	1
+	maxDistance	20
+	volume		-2
+	sound/vo/marscity/scientist_hospital_2.wav
+}
+
+marscity_sci_hospital_3 {
+	minDistance	1
+	maxDistance	20
+	volume		-2
+	sound/vo/marscity/scientist_hospital_3.wav
+}
+
+marscity_guard_hospital_1 {
+	minDistance	1
+	maxDistance	45
+	volume		-2
+	sound/vo/marscity/guard_hospital_1.wav
+}
+
+marscity_guard_hospital_2 {
+	minDistance	1
+	maxDistance	20
+	volume		-2
+	sound/vo/marscity/guard_hospital_2.wav
+}
+
+marscity_injured_hospital_1 {
+	minDistance	1
+	maxDistance	20
+	volume		-2
+	sound/vo/marscity/maint_hospital_1.wav
+}
+
+// End Hospital stuff
+
+marscity_cin_marine1_1 {
+	minDistance	10
+	maxDistance	15
+	sound/vo/marscity/cin_marine1_1.wav
+}
+
+marscity_cin_marine1_2 {
+	minDistance	10
+	maxDistance	15
+	sound/vo/marscity/cin_marine1_2.wav
+}
+
+marscity_cin_bertruger1_1 {
+	minDistance	10
+	maxDistance	15
+	volume	4.5
+	sound/vo/marscity/cin_betruger1_1.wav
+}
+
+marscity_cin_swann1_1 {
+	volume	0
+	global
+	unclamped
+	sound/vo/marscity/cin_swann1_1.wav
+}
+
+marscity_cin_swann1_2 {
+	volume	0
+	global
+	unclamped
+	sound/vo/marscity/cin_swann1_2.wav
+}
+
+marscity_cin_swann1_3 {
+	volume	2
+	minDistance	20
+	maxDistance	1500
+	unclamped
+	sound/vo/marscity/cin_swann1_3.wav
+} 
+
+marscity_cin_campbell1_1 {
+	volume	0
+	global
+	unclamped
+	sound/vo/marscity/cin_campbell1_1.wav
+}
+
+marscity_cin_campbell1_2 {
+	volume	2
+	minDistance	20
+	maxDistance	150
+	unclamped
+	sound/vo/marscity/cin_campbell1_2.wav
+}
+
+marscity_cin_campbell1_3 {
+	volume	2
+	minDistance	20
+	maxDistance	150
+	unclamped
+	sound/vo/marscity/cin_campbell1_3.wav
+}
+
+// Start dude sitting in char @ start of map
+
+marscity_civilian1_trigger {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/vo/marscity/civ1_1.wav
+}
+
+marscity_civilian1_primary {
+	minDistance	5
+	maxDistance	25
+	volume	0
+	sound/vo/marscity/civ1_2.wav
+}
+
+marscity_civilian1_secondary1 {
+	minDistance	5
+	maxDistance	25
+	volume	0
+	sound/vo/marscity/civ1_3.wav
+}
+
+marscity_civilian1_secondary2 {
+	minDistance	5
+	maxDistance	25
+	volume	0
+	sound/vo/marscity/civ1_4.wav
+}
+
+marscity_civilian1_surprise {
+	minDistance	5
+	maxDistance	25
+	volume	0
+	sound/vo/marscity/civ1_5.wav
+}
+
+// End dude sitting in chair at start
+
+marscity_security1_convo1 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/guard2_1.wav
+}
+
+marscity_security1_convo2 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/guard2_2.wav
+}
+
+marscity_security1_convo3 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/guard2_3.wav
+}
+
+marscity_security2_convo1 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/guard3_1.wav
+}
+
+marscity_security2_convo2 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/guard3_2.wav
+}
+
+marscity_maint1_blocked {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/vo/marscity/maint1_1a.wav
+	sound/vo/marscity/maint1_1b.wav
+	sound/vo/marscity/maint1_1c.wav
+	sound/vo/marscity/maint1_1d.wav
+}
+
+
+marscity_maint1_primary {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/maint1_2.wav
+}
+
+marscity_maint1_secondary1 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/vo/marscity/maint1_3.wav
+}
+
+marscity_maint1_secondary2 {
+	volume	0
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/vo/marscity/maint1_4.wav
+}
+
+marscity_maint_tech_hallway_primary {
+	minDistance	5
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway1.wav
+}
+
+marscity_maint_tech_hallway_secondary1 {
+	minDistance	5
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway2.wav
+}
+
+marscity_maint_tech_hallway_secondary2 {
+	minDistance	5
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway3.wav
+}
+
+marscity_maint_tech_hallway_excuse {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway_excuse.wav
+}
+
+marscity_maint_tech_hallway_surprise {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway4.wav
+}
+
+marscity_maint_tech_hallway_idle1 {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway_idle1.wav
+}
+
+marscity_maint_tech_hallway_idle2 {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/maint_tech_hallway_idle2.wav
+}
+
+marscity_security_guard_admin_trigger {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/security_guard_admin_1.wav
+}
+
+marscity_security_guard_admin_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/security_guard_admin_2.wav
+}
+
+marscity_security_guard_admin_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/security_guard_admin_3.wav
+}
+
+marscity_security_guard_admin_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/security_guard_admin_4.wav
+}
+
+marscity_security_guard_admin_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/security_guard_admin_5.wav
+}
+
+// Speech
+
+
+marscity_speech_swann1 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_swann_1.wav
+}
+
+marscity_speech_swann2 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_swann_2.wav
+}
+
+marscity_speech_swann3 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_swann_3.wav
+}
+
+marscity_speech_swann4 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_swann_4.wav
+}
+
+marscity_speech_swann5 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_swann_5.wav
+}
+
+marscity_speech_bertruger1 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_bertruger_1.wav
+}
+
+marscity_speech_bertruger2 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_bertruger_2.wav
+}
+
+marscity_speech_bertruger3 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_bertruger_3.wav
+}
+
+marscity_speech_bertruger4 {
+	volume	-2
+	global
+	sound/vo/marscity/speech_bertruger_4.wav
+}
+
+
+///
+
+
+marscity_marine_bathroom_primary {
+	minDistance	2
+	maxDistance	15
+	volume 3
+	sound/vo/marscity/marine_bathroom_1.wav
+}
+
+marscity_marine_bathroom_secondary1 {
+	minDistance	2
+	maxDistance	15
+	volume 3
+	sound/vo/marscity/marine_bathroom_2.wav
+}
+
+marscity_marine_bathroom_secondary2 {
+	minDistance	2
+	maxDistance	15
+	volume 3
+	sound/vo/marscity/marine_bathroom_3.wav
+}
+
+marscity_marine_bathroom_excuseme {
+	minDistance	2
+	maxDistance	15
+	volume 3
+	sound/vo/marscity/marine_bathroom_4.wav
+}
+
+marscity_marine_bathroom_surprise {
+	minDistance	2
+	maxDistance	15
+	volume 10
+	sound/vo/marscity/marine_bathroom_5.wav
+}
+
+marscity_kitchen_maint_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/maint_kitchen_1.wav
+}
+
+marscity_kitchen_maint_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/maint_kitchen_2.wav
+}
+
+marscity_kitchen_maint_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/maint_kitchen_3.wav
+}
+
+marscity_kitchen_maint_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/maint_kitchen_4.wav
+}
+
+marscity_marine1_sitting_1_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_sitting_1_1.wav
+}
+
+marscity_marine1_sitting_1_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_2.wav
+}
+
+marscity_marine1_sitting_1_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_3.wav
+}
+
+marscity_marine1_sitting_1_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_10.wav
+}
+
+marscity_marine2_sitting_1_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_1.wav
+}
+
+marscity_marine2_sitting_1_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_2.wav
+}
+
+marscity_marine2_sitting_1_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_3.wav
+}
+
+marscity_marine2_sitting_1_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_10.wav
+}
+
+marscity_marine1_sitting_1_convo1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_4.wav
+}
+	
+marscity_marine1_sitting_1_convo2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_5.wav
+}
+
+marscity_marine1_sitting_1_convo3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine1_sitting_1_6.wav
+}
+
+marscity_marine2_sitting_1_convo1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_4.wav
+}
+
+marscity_marine2_sitting_1_convo2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_5.wav
+}
+
+marscity_marine2_sitting_1_convo3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_sitting_1_6.wav
+}
+
+marscity_kitchen_civilian_mean_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/civ_kitchen_1_1.wav
+}
+
+marscity_kitchen_civilian_mean_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/civ_kitchen_1_2.wav
+}
+
+marscity_kitchen_civilian_mean_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/civ_kitchen_1_3.wav
+}
+
+marscity_hallway_maint_1_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_9.wav
+}
+
+marscity_hallway_maint_1_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_10.wav
+}
+
+marscity_hallway_maint_1_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_11.wav
+}
+
+marscity_hallway_maint_1_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_14.wav
+}
+
+marscity_hallway_maint_1_convo1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_1.wav
+}
+
+marscity_hallway_maint_1_convo2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_2.wav
+}
+
+marscity_hallway_maint_1_convo3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_3.wav
+}
+
+marscity_hallway_maint_1_convo4 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_4.wav
+}
+
+marscity_hallway_maint_1_convo5 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_5.wav
+}
+
+marscity_hallway_maint_1_convo2_1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_6.wav
+}
+
+marscity_hallway_maint_1_convo2_2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_7.wav
+}
+
+marscity_hallway_maint_1_convo2_3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_8.wav
+}
+
+marscity_hallway_maint_1_idle1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_12_idle.wav
+}
+
+marscity_hallway_maint_1_idle2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_1_13_idle.wav
+}
+
+marscity_hallway_maint_2_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_8.wav
+}
+
+marscity_hallway_maint_2_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_9.wav
+}
+
+marscity_hallway_maint_2_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_10.wav
+}
+
+marscity_hallway_maint_2_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_11.wav
+}
+
+marscity_hallway_maint_2_convo1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_1.wav
+}
+
+marscity_hallway_maint_2_convo2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_2.wav
+}
+
+marscity_hallway_maint_2_convo3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_3.wav
+}
+
+marscity_hallway_maint_2_convo4 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_4.wav
+}
+
+marscity_hallway_maint_2_convo2_1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_5.wav
+}
+
+marscity_hallway_maint_2_convo2_2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_6.wav
+}
+
+marscity_hallway_maint_2_convo2_3 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_2_7.wav
+}
+
+marscity_hallway_maint_3_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_3_1.wav
+}
+
+marscity_hallway_maint_3_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_3_2.wav
+}
+
+marscity_hallway_maint_3_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_3_3.wav
+}
+
+marscity_hallway_maint_3_idle {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/hallway_maint_3_4.wav
+	sound/vo/marscity/hallway_maint_3_5.wav
+	sound/vo/marscity/hallway_maint_3_6.wav	
+}
+
+marscity_hallway_maint_4_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_4_1.wav
+}
+
+marscity_hallway_maint_4_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_4_2.wav
+}
+
+marscity_hallway_maint_4_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/hallway_maint_4_3.wav
+}
+
+marscity_marine_computer1 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_1.wav
+}
+
+marscity_marine_computer2 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_2.wav
+}
+
+marscity_marine_computer3 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_3.wav
+}
+
+marscity_marine_computer4 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_4.wav
+}
+
+marscity_marine_computer5 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_5.wav
+}
+
+marscity_marine_computer6 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_6.wav
+}
+
+marscity_marine_computer7 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_7.wav
+}
+
+marscity_marine_computer8 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_8.wav
+}
+
+marscity_marine_computer9 {
+	minDistance	5
+	maxDistance	15
+	volume		0	
+	sound/vo/marscity/computer_marine_9.wav
+}
+
+// Receptionist speech
+
+marscity_receptionist_trigger_1 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_1.wav
+}
+
+marscity_receptionist_trigger_2 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_2.wav
+}
+
+marscity_receptionist_trigger_3 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_3.wav
+}
+
+marscity_receptionist_trigger_4 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_4.wav
+}
+
+marscity_receptionist_trigger_5 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_5.wav
+}
+
+marscity_receptionist_trigger_6 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_6.wav
+}
+
+marscity_receptionist_trigger_7 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_7.wav
+}
+
+marscity_receptionist_trigger_8 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_8.wav
+}
+
+marscity_receptionist_trigger_9 {
+	global	
+	volume	-2
+	sound/vo/marscity/receptionist_trigger_9.wav
+}
+
+// 
+
+marscity_receptionist_primary {
+	minDistance	1
+	maxDistance	35
+	unclamped
+	volume		1
+	sound/vo/marscity/receptionist_primary.wav
+}
+
+marscity_receptionist_secondary1 {
+	minDistance	1
+	maxDistance	35
+	unclamped
+	volume		1
+	sound/vo/marscity/receptionist_secondary_1.wav
+}
+
+marscity_receptionist_secondary2 {
+	minDistance	1
+	maxDistance	35
+	unclamped
+	volume		1
+	sound/vo/marscity/receptionist_secondary_2.wav
+}
+
+marscity_receptionist_secondary3 {
+	minDistance	1
+	maxDistance	35
+	unclamped
+	volume		1
+	sound/vo/marscity/receptionist_secondary_3.wav
+}
+
+marscity_receptionist_surprise {
+	minDistance	1
+	maxDistance	35
+	unclamped
+	volume		1
+	sound/vo/marscity/receptionist_alt.wav
+}
+
+marscity_cin_sarge_gui {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/ed/marscity/sarge_gui.wav
+}
+
+marscity_cin_sarge1 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine1.wav
+}
+
+marscity_cin_sarge2 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine2.wav
+}
+
+marscity_cin_sarge3 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine3.wav
+}
+
+marscity_cin_sarge4 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine4.wav
+}
+
+marscity_cin_sarge5 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine5.wav
+}
+
+marscity_cin_sarge6 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine6.wav
+}
+
+marscity_cin_sarge7 {
+	minDistance	5
+	maxDistance	15
+	volume		6
+	sound/vo/marscity/sarge_cine7.wav
+}
+
+marscity_sec_checkin_welcome {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_01.wav
+}
+
+marscity_sec_checkin_need {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_02.wav
+}
+
+marscity_sec_checkin_hold {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_03.wav
+}
+
+marscity_sec_checkin_waisting {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_04.wav
+}
+
+marscity_sec_checkin_letmeget {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_05.wav
+}
+
+marscity_sec_checkin_cleared {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	sound/vo/marscity/security_checkpoint_06.wav
+}
+
+marscity_marine1_ver1_hq_trigger {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_1_ver1.wav
+}
+
+marscity_marine1_ver1_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_2_ver1.wav
+}
+
+marscity_marine1_ver1_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_3_ver1.wav
+}
+
+marscity_marine1_ver1_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_4_ver1.wav
+}
+
+marscity_marine1_ver1_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_hey.wav
+}
+
+marscity_marine1_ver2_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_1_ver2.wav
+}
+
+marscity_marine1_ver2_hq_secondary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine1_hq_2_ver2.wav
+}
+
+marscity_marine2_hq_primary {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_hq_1.wav
+}
+
+marscity_marine2_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_hq_2.wav
+}
+
+marscity_marine2_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_hq_3.wav
+}
+
+marscity_marine2_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_hq_pain.wav
+}
+
+marscity_marine2_hq_idle {
+	minDistance	3
+	maxDistance	15
+	volume		0
+	sound/vo/marscity/marine2_hq_idle.wav
+}
+
+marscity_marine3_hq_respond {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine3_hq_yes_sir.wav
+}
+
+marscity_marine3_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine3_hq_1.wav
+}
+
+marscity_marine3_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine3_hq_2.wav
+}
+
+marscity_marine3_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine3_hq_3.wav
+}
+
+marscity_marine3_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine3_hq_4.wav
+}
+
+marscity_marine4_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine4_hq_1.wav
+}
+
+marscity_marine4_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine4_hq_2.wav
+}
+
+marscity_marine4_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine4_hq_3.wav
+}
+
+marscity_marine4_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine4_hq_4.wav
+}
+
+marscity_marine5_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine5_hq_1.wav
+}
+
+marscity_marine5_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine5_hq_2.wav
+}
+
+marscity_marine5_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine5_hq_3.wav
+}
+
+marscity_marine5_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine5_hq_4.wav
+}
+
+marscity_marine6_hq_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine6_hq_1.wav
+}
+
+marscity_marine6_hq_secondary1 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine6_hq_2.wav
+}
+
+marscity_marine6_hq_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine6_hq_3.wav
+}
+
+marscity_marine6_hq_surprise {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/marine5_hq_4.wav
+}
+
+marscity_sarge_primary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/sarge_1.wav
+}
+
+marscity_sarge_secondary {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/sarge_2.wav
+}
+
+marscity_sarge_secondary2 {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/sarge_3.wav
+}
+
+marscity_sarge_cough {
+	minDistance	3
+	maxDistance	15
+	sound/vo/marscity/sarge_cough.wav
+}
+
+marscity_sci_team_request {
+	minDistance	5
+	maxDistance	15
+	sound/vo/marscity/sci_team_request.wav
+}
+
+marscity_reception_chair {
+
+	minDistance	5
+	maxDistance	17
+	volume	0
+
+	sound/ed/marscity/chair.wav
+
+}
+
+marscity_reception_type {
+
+	minDistance	5
+	maxDistance	17
+	volume	0
+
+	sound/ed/marscity/type.wav
+
+}
+
+marscity_reception_duffle {
+
+	minDistance	5
+	maxDistance	17
+	volume	0
+
+	sound/ed/marscity/duffle.wav
+
+}
+
+marscity_rocketintro_cutscene {
+	
+	minDistance	10
+	maxDistance	30
+	volume	-3
+	global
+
+	sound/ed/marscity/rocket_cutscene.wav
+}
+
+marscity_rocketintro_cutscene2 {
+	
+	minDistance	10
+	maxDistance	30
+	volume	6
+	global
+
+	sound/ed/marscity/rocket_cutscene2.wav
+}
+
+marscity_rocketintro_vo {
+
+	minDistance	30
+	maxDistance	30
+	volume	6
+	global
+	unclamped
+	
+	sound/ed/marscity/vo_intro_cutscene.wav	
+}
+
+marscity_ipn_news_vo {
+	minDistance	5
+	maxDistance	15
+	sound/vo/video/video_ipn_news.wav
+}
+
+marscity_music_intro_cutscene {
+	global
+	volume	-2
+
+	sound/ed/marscity/music_intro_cutscene.wav
+
+}
+
+marscity_gui_intro_cutscene {
+	global
+	volume	0
+
+	sound/ed/marscity/gui_intro_cutscene.wav
+
+}

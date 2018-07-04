@@ -1,0 +1,196 @@
+// Paper cutter machine
+
+al1_pc_up {
+	minDistance	2
+	maxDistance	15
+	volume		-3
+	
+	sound/levels/alphalabs1/papercutter/al1_pc_up.wav
+}
+
+al1_pc_bolt {
+	minDistance	2
+	maxDistance	15
+	volume		-3
+	
+	sound/levels/alphalabs1/papercutter/al1_pc_bolt.wav
+}
+
+al1_pc_down {
+	minDistance	2
+	maxDistance	15
+	volume		-3
+	
+	sound/levels/alphalabs1/papercutter/al1_pc_down.wav
+}
+
+//computer voices
+
+al1_com04 {
+	description "safety"
+	onDemand
+	sound/vo/alpha_labs1/com04_safety.wav
+}
+
+//
+
+
+alphalabs1_labcoat_trigger {
+
+	volume	2
+	unclamped
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	sound/vo/alpha_labs1/maint_hyrdocon_trigger.wav
+
+}
+
+alphalabs1_labcoat_trigger2 {
+
+	volume	2
+	unclamped
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	sound/vo/alpha_labs1/maint_hyrdocon_trigger2.wav
+
+}
+
+alphalabs1_labcoat_primary {
+
+	volume	2
+	unclamped
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	sound/vo/alpha_labs1/maint_hyrdocon_primary.wav
+
+}
+
+alphalabs1_labcoat_secondary {
+
+	volume	2
+	omnidirectional
+	minDistance	5
+	maxDistance	25
+	unclamped
+	
+	sound/vo/alpha_labs1/maint_hyrdocon_secondary.wav
+}
+
+alphalabs1_labcoat_secondary2 {
+
+	volume	2
+	unclamped
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	sound/vo/alpha_labs1/maint_hyrdocon_secondary2.wav
+}
+
+
+hydrocon_main_speaker_up {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_main_speaker_up.wav
+
+}
+
+hydrocon_emitter_speaker {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_emitter_speaker.wav
+
+}
+
+hydrocon_ring_speaker_down {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_ring_speaker_down.wav
+
+}
+
+hydrocon_main_speaker_down {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_main_speaker_down.wav
+
+}
+
+hydrocon_nipplemain_speaker_down {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_nipplemain_speaker_down.wav
+
+}
+
+hydrocon_nipplemain_speaker_up {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_nipplemain_speaker_up.wav
+
+}
+
+hydrocon_nipple_speaker_down {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_nipple_speaker_down.wav
+
+}
+
+hydrocon_ring_speaker_up {
+
+	minDistance	2
+	maxDistance	11
+	volume		-1
+	sound/ed/alpha1/hydrocon1_ring_speaker_up.wav
+
+}
+
+
+alphalabs1_magintro_gasp {
+
+	volume	4
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	sound/ed/alpha1/maggot_guy_scream3_gasps.wav
+
+}
+
+alphalabs1_magintro_scream {
+
+	volume	4
+	minDistance	5
+	maxDistance	25
+	omnidirectional
+	shakes		0.1
+	sound/ed/alpha1/maggot_guy_scream3_scream.wav
+
+}
+
+alphalabs1_magintro_music {
+
+	minDistance	30	
+	maxDistance	30
+	omnidirectional
+	volume	0
+
+	sound/ed/music/alpha1/alpha1_magintro_music1.wav
+
+}

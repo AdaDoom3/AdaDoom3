@@ -1,0 +1,23 @@
+
+// CAMPBELL..
+
+
+//							SWANN
+
+cpu_campbell_hunt {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		3
+
+	sound/vo/cpu/campbell_intro.wav
+}
+
+cpu_campbell_death {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		3
+
+	sound/vo/cpu/campbell_death.wav
+}

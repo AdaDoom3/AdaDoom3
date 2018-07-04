@@ -1,0 +1,246 @@
+monster_zombie_fat_swipe {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/ed/zombie/zombie_whoosh1.wav
+	sound/ed/zombie/zombie_whoosh2.wav
+	sound/ed/zombie/zombie_whoosh3.wav
+//	sound/ed/zombie/zombie_whoosh4.wav
+//	sound/ed/zombie/zombie_whoosh5.wav
+
+}
+
+
+monster_zombie_fat_sight1 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight1.wav	
+	
+}
+
+monster_zombie_fat_sight2 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight2.wav
+	
+}
+
+monster_zombie_fat_sight3 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight3.wav
+	
+}
+
+monster_zombie_fat_sight4 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight4.wav
+	
+}
+
+monster_zombie_fat_sight5 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight5.wav
+	
+}
+
+monster_zombie_fat_sight6 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight6.wav
+	
+}
+
+monster_zombie_fat_sight7 {
+
+	minDistance	2
+	maxDistance	45
+	volume		0
+
+	sound/ed/zombie2/zombie_sight7.wav
+	
+}
+
+monster_zombie_fat_footstep {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	sound/ed/zombie2/step1.wav
+	sound/ed/zombie2/step2.wav
+	sound/ed/zombie2/step3.wav
+	sound/ed/zombie2/step4.wav
+//	sound/ed/zombie2/step5.wav
+//	sound/ed/zombie2/step6.wav
+//	sound/ed/zombie2/step7.wav
+//	sound/ed/zombie2/step8.wav
+
+}
+
+
+monster_zombie_fat_chatter {
+
+	minDistance	1
+	maxDistance	25
+	volume		-8
+
+	sound/ed/zombie2/zombie_idle1.wav
+	sound/ed/zombie2/zombie_idle2.wav
+	sound/ed/zombie2/zombie_idle3.wav
+	sound/ed/zombie2/zombie_idle4.wav
+//	sound/ed/zombie2/zombie_idle5.wav
+
+}
+
+monster_zombie_fat_chatter_combat {
+	minDistance	1
+	maxDistance	25
+	volume		-4
+
+	sound/ed/zombie2/zombie_attack1.wav
+	sound/ed/zombie2/zombie_attack2.wav
+	sound/ed/zombie2/zombie_attack3.wav
+//	sound/ed/zombie2/zombie_attack4.wav
+//	sound/ed/zombie2/zombie_attack5.wav
+//	sound/ed/zombie2/zombie_attack6.wav
+
+}
+
+monster_zombie_fat_pain {
+
+	minDistance	4
+	maxDistance	30
+	volume		2
+
+	sound/ed/zombie2/zombie_pain1.wav
+	sound/ed/zombie2/zombie_pain2.wav
+	sound/ed/zombie2/zombie_pain3.wav
+//	sound/ed/zombie2/zombie_pain4.wav
+//	sound/ed/zombie2/zombie_pain5.wav
+//	sound/ed/zombie2/zombie_pain6.wav
+}
+
+monster_zombie_fat_attackmelee_1 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+	
+}
+
+monster_zombie_fat_attackmelee_2 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+}
+
+monster_zombie_fat_attackmelee_3 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+}
+
+monster_zombie_fat_melee_hit {
+	minDistance	1
+	maxDistance	25
+	volume		10
+		
+	sound/xian/monsters/imp/melee/hit_01.wav
+}
+
+monster_zombie_fat_melee_miss {
+
+	minDistance	1
+	maxDistance	25
+	volume		10
+
+	sound/xian/monsters/imp/melee/miss_01.wav
+}
+
+monster_zombie_fat_death {
+
+	minDistance	1
+	maxDistance	25
+	volume		2
+
+
+}
+
+monster_zombie_fat_death_back {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+	sound/ed/zombie2/zombie_death1.wav
+	sound/ed/zombie2/zombie_death2.wav
+	sound/ed/zombie2/zombie_death3.wav
+	sound/ed/zombie2/zombie_death4.wav
+//	sound/ed/zombie2/zombie_death5.wav
+//	sound/ed/zombie2/zombie_death6.wav
+
+}
+
+monster_zombie_fat_thud {
+	minDistance	1
+	maxDistance	25
+	volume		6
+
+}
+
+monster_zombie_fat_slap {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/xian/monsters/imp/melee/hit_01.wav
+}
+
+monster_zombie_fat_wrench {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/ed/sfx/wrench_impact1.wav
+	sound/ed/sfx/wrench_impact2.wav
+
+}
+
+
+
+
+zombie_mmboy {
+	minDistance	1
+	maxDistance	10
+	volume		-4
+	no_dups
+	
+	sound/monsters/zombie_misc/mmboy_01.wav
+	sound/monsters/zombie_misc/mmboy_02.wav
+	sound/monsters/zombie_misc/mmboy_03.wav
+	sound/monsters/zombie_misc/mmboy_04.wav
+}

@@ -1,0 +1,563 @@
+swann_screen_off {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/xian/actions/main_screen_turn_off.wav
+}
+
+campbell_fs {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/cinematics/cpu/campbell_fs1.wav
+	sound/cinematics/cpu/campbell_fs2.wav
+	sound/cinematics/cpu/campbell_fs3.wav
+	sound/cinematics/cpu/campbell_fs4.wav
+	sound/cinematics/cpu/campbell_fs5.wav
+}
+
+jacob {
+	minDistance	5
+	maxDistance 35
+	volume		0
+	no_dups
+	
+	sound/ambient/electrical/jacob_01d.wav
+	sound/ambient/electrical/jacob_02d.wav
+	sound/ambient/electrical/jacob_03d.wav
+	sound/ambient/electrical/jacob_04d.wav
+}
+
+zombie_attack_1 {
+	minDistance	2
+	maxDistance	20
+	
+	volume		0
+	
+	sound/ed/zombie/zombie_attack1.wav
+}
+
+zombie_attack_4 {
+	minDistance	2
+	maxDistance	20
+	
+	volume		0
+	
+	sound/ed/zombie/zombie_attack4.wav
+}
+
+zombie_attack_5 {
+	minDistance	2
+	maxDistance	20
+	
+	volume		0
+	
+	sound/ed/zombie/zombie_attack5.wav
+}
+
+
+
+sizzle {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/ambient/burning/1shot_sizzle_01.wav
+	sound/ambient/burning/1shot_sizzle_02.wav
+	sound/ambient/burning/1shot_sizzle_03.wav 
+}
+
+generic_npc_death {
+	minDistance	1
+	maxDistance	20
+	volume		-3
+	
+	sound/vo/_generic/npc_death_01.wav
+	sound/vo/_generic/npc_death_02.wav
+	sound/vo/_generic/npc_death_03.wav
+	sound/vo/_generic/npc_death_04.wav
+	sound/vo/_generic/npc_death_05.wav
+}
+
+typing {
+	minDistance	1
+	maxDistance	10
+	volume		-15
+	no_dups
+	
+	sound/cinematics/mars_city1/typing/keyhit_01.wav
+	sound/cinematics/mars_city1/typing/keyhit_02.wav
+	sound/cinematics/mars_city1/typing/keyhit_03.wav
+	sound/cinematics/mars_city1/typing/keyhit_04.wav
+	sound/cinematics/mars_city1/typing/keyhit_05.wav
+	sound/cinematics/mars_city1/typing/keyhit_06.wav
+}
+
+
+plastic_jar_impact {
+	minDistance	1
+	maxDistance	20
+	volume		0
+	no_dups
+	
+	sound/impact/plastic/pjar_01.wav
+	sound/impact/plastic/pjar_02.wav
+	sound/impact/plastic/pjar_03.wav
+	sound/impact/plastic/pjar_04.wav
+	sound/impact/plastic/pjar_05.wav
+}
+
+stair_impacts {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/impact/stairs/simpact_01.wav
+	sound/impact/stairs/simpact_02.wav
+	sound/impact/stairs/simpact_03.wav
+	sound/impact/stairs/simpact_04.wav
+}
+
+mcu_imp_stinger {
+	minDistance	5
+	maxDistance	30
+	omnidirectional
+	volume		0
+	
+	sound/xian/seq_suspense/stingers/stinger_01.wav
+}
+
+mcu_zfat_fleshrip {
+	minDistance	1
+	maxDistance	25
+	volume		-10
+	no_dups
+	sound/cinematics/mc_underground/flesh_01.wav
+	sound/cinematics/mc_underground/flesh_02.wav
+	sound/cinematics/mc_underground/flesh_03.wav
+	sound/cinematics/mc_underground/flesh_04.wav
+}
+
+mcu_zfat_bodydrag_01 {
+	minDistance	1
+	maxDistance	25
+	volume		-7
+
+	sound/cinematics/mc_underground/body_drag_01.wav
+}
+
+mcu_zfat_bodydrag_02 {
+	minDistance	1
+	maxDistance	25
+	volume		-7
+
+	sound/cinematics/mc_underground/body_drag_02.wav
+}
+
+mcu_zfat_bodydrag_03 {
+	minDistance	1
+	maxDistance	25
+	volume		-7
+
+	sound/cinematics/mc_underground/body_drag_03.wav
+}
+
+d2a_fat_hit_glass {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	shakes		0.05
+	unclamped
+	
+	sound/cinematics/mars_city2/imp_hit_glass.wav
+}
+
+
+mc2_imp_hit_glass {
+	minDistance	5
+	maxDistance	15
+	volume		10
+	shakes		0.9
+	unclamped
+	
+	sound/cinematics/mars_city2/imp_hit_glass.wav
+}
+
+imp_fleshrip {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	no_dups
+	
+	sound/impact/imp_claw/claw_01.wav
+	sound/impact/imp_claw/claw_02.wav
+	sound/impact/imp_claw/claw_03.wav
+}
+
+steelswing_01 {
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/swing_01.wav
+}
+
+steelswing_02 {
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/swing_02.wav
+}
+
+steelswing_03 {
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/swing_03.wav
+}
+
+steelswing_04 {
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/swing_04.wav
+}
+
+steelswing_05 {	
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/swing_05.wav
+}
+
+wiresnap {
+	minDistance	10
+	maxDistance	45
+	volume		0
+	
+	sound/xian/actions/metalswing/metal_snap_01.wav
+}
+
+steel_clang {
+	minDistance	1
+	maxDistance	45
+	volume		0
+	
+	sound/impact/steel/clang_01.wav
+	sound/impact/steel/clang_02.wav
+	sound/impact/steel/clang_03.wav
+	sound/impact/steel/clang_04.wav
+	sound/impact/steel/clang_05.wav
+}
+
+npc_death {
+	minDistance	2
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/monsters/npcs/death_01.wav
+	sound/monsters/npcs/death_02.wav
+	sound/monsters/npcs/death_04.wav
+	sound/monsters/npcs/death_05.wav
+	//sound/monsters/npcs/death_03.wav
+}
+
+npc_pain {
+	minDistance	2
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/monsters/npcs/pain_01.wav
+	sound/monsters/npcs/pain_02.wav
+	sound/monsters/npcs/pain_03.wav
+	sound/monsters/npcs/pain_04.wav
+	//sound/monsters/npcs/pain_05.wav
+	sound/monsters/npcs/pain_06.wav
+}
+
+broken_plat_2_5s {
+	minDistance	4
+	maxDistance	25
+	volume		0
+	
+	sound/xian/actions/2_5s_broken_elevator.wav
+}
+
+platbreak_01 {
+	minDistance	4
+	maxDistance	25
+	volume		0
+	
+	sound/xian/actions/breaking_metals/break_01.wav
+}
+
+platbreak_02 {
+	minDistance	4
+	maxDistance	25
+	volume		0
+	
+	sound/xian/actions/breaking_metals/break_02.wav
+}
+
+platbreak_03 {
+	minDistance	4
+	maxDistance	25
+	volume		0
+	
+	sound/xian/actions/breaking_metals/break_03.wav
+}
+
+
+stabs {
+	minDistance	5
+	maxDistance	35
+	volume		0
+	no_dups
+	
+	sound/levels/alphalabs2/ee/stab_01.wav
+	sound/levels/alphalabs2/ee/stab_02.wav
+	sound/levels/alphalabs2/ee/stab_03.wav
+	sound/levels/alphalabs2/ee/stab_04.wav
+	sound/levels/alphalabs2/ee/stab_05.wav
+}
+
+cough {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/xian/foley_sessions/coughs/cough_01.wav
+	sound/xian/foley_sessions/coughs/cough_02.wav
+	sound/xian/foley_sessions/coughs/cough_03.wav
+	sound/xian/foley_sessions/coughs/cough_05.wav
+	//sound/xian/foley_sessions/coughs/cough_07.wav
+	//sound/xian/foley_sessions/coughs/cough_08.wav
+	//sound/xian/foley_sessions/coughs/cough_09.wav
+	//sound/xian/foley_sessions/coughs/cough_10.wav
+	//sound/xian/foley_sessions/coughs/cough_11.wav
+}
+
+ladder_4s {
+	minDistance	2
+	maxDistance	25
+	volume		-2
+	
+	sound/movers/ladders/up_4seconds.wav
+}
+
+dc5_panel_1s {
+	minDistance	1
+	maxDistance	10
+	volume		-3
+	
+	sound/movers/delta3/gui_panel_1s.wav
+}
+
+dc5_panel_1_5s {
+	minDistance	1
+	maxDistance	10
+	volume		-3
+	
+	sound/movers/delta3/gui_panel_1_5s.wav
+}
+
+
+rec1_bridge_fall {
+	minDistance	10	
+	maxDistance	50
+	volume		0
+	
+	sound/levels/recycling2/bridge_crash.wav
+}
+
+npc_sounds_footstep {
+
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/ed/player/steps/step01.wav
+	sound/ed/player/steps/step03.wav
+	sound/ed/player/steps/step05.wav
+	sound/ed/player/steps/step07.wav
+	sound/ed/player/steps/step09.wav
+	sound/ed/player/steps/step11.wav
+	sound/ed/player/steps/step13.wav
+}
+
+
+storagecabinet_open {
+	minDistance	1
+	maxDistance	10
+	volume		0
+	
+	sound/xian/actions/storage_cabinet/open_cabinet.wav
+}
+
+stone_movement_loop {
+	minDistance	1
+	maxDistance	25
+	volume		2
+	unclamped
+	looping
+	shakes		0.1
+	
+	sound/levels/caverns2/stone_movement_loop.wav
+}
+
+stone_movement_end {
+	minDistance	1
+	maxDistance	25
+	volume		5
+	unclamped
+	shakes		0.2
+	
+	sound/levels/caverns2/stone_movement_end.wav
+}
+
+metal_door_slam2 {
+	minDistance	1
+	maxDistance	30
+	volume		8
+	shakes		0.1
+	
+	sound/impact/metal_doors/slam_08_boomy.wav
+}
+
+
+metal_door_slam {
+	minDistance	1
+	maxDistance	30
+	volume		4
+	shakes		0.1
+	
+	sound/impact/metal_doors/slam_01.wav
+	sound/impact/metal_doors/slam_02.wav
+	sound/impact/metal_doors/slam_03.wav
+	sound/impact/metal_doors/slam_04.wav
+}
+
+rumbler {
+	description "Deep, bassy rumblings. Use as an alternate for earthquakes"
+	minDistance	3
+	maxDistance	25
+	global
+	volume		2
+	unclamped
+	shakes	0.3	
+	no_occlusion
+	
+	sound/xian/foley/rumbles/rumble_10s_01.wav
+	sound/xian/foley/rumbles/rumbler_03.wav
+	sound/xian/foley/rumbles/rumbler_04.wav
+
+}
+
+
+metalcrash_01 {
+	minDistance	8	
+	maxDistance	35
+	volume	13
+
+	//sound/impact/crash/crash_01.wav
+	sound/impact/crash/crash_02.wav
+
+}
+
+glasscrash_01 {
+	minDistance	4
+	maxDistance	20
+	volume	6
+
+	sound/impact/crash/glasscrash_01.wav
+	sound/impact/crash/glasscrash_02.wav
+	sound/impact/crash/glasscrash_03.wav
+	sound/impact/crash/glasscrash_04.wav
+}
+
+
+sound_giblets {
+	minDistance	1
+	maxDistance	25
+	volume	-1
+	
+
+	sound/xian/gibs/juicy_01.wav
+	sound/xian/gibs/juicy_02.wav
+	sound/xian/gibs/juicy_03.wav
+	sound/xian/gibs/juicy_04.wav
+	sound/xian/gibs/juicy_05.wav
+	sound/xian/gibs/gib_11.wav
+}
+
+mcu_crane_movement {
+	minDistance	10
+	maxDistance	50
+	volume		-2
+	shakes		0.05
+	
+	sound/levels/mc_underground/crane_movement.wav
+}
+
+elevator_24seconds {
+
+	description 	"Elevator start/stop and movement sound for 24 seconds"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0
+
+	sound/movers/1shot_lift_24seconds.wav	
+}
+
+entrance_elevator {
+	minDistance	5
+	maxDistance	15
+	shakes		0.1
+	
+	volume		2
+	
+	sound/levels/delta3/entrance_elevator.wav
+}
+
+teleport_in {
+	description		"Evil, demonic, crackling energy teleport sound -Xian"
+
+	minDistance	1
+	maxDistance	25
+	omnidirectional
+	stereo_omni
+	volume		3
+
+	sound/ed/teleporter/monster_teleport_in.wav
+}
+
+gas_zombie {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/misc/1shot_nosound_2.wav
+	sound/monsters/zombie_misc/mmboy_01.wav
+	sound/misc/1shot_nosound_3.wav
+	sound/monsters/zombie_misc/mmboy_02.wav
+	//sound/misc/1shot_nosound_4.wav
+	//sound/monsters/zombie_misc/mmboy_03.wav
+	//sound/misc/1shot_nosound_5.wav
+	//sound/monsters/zombie_misc/mmboy_04.wav
+}

@@ -1,0 +1,68 @@
+invisibility_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	sound/items/invisiblity_pickup.wav			
+}
+
+videocd_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/items/vcd_pickup.wav
+}
+
+pack_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/items/backpack_pickup.wav
+}
+
+berserker_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	sound/items/berserker_pickup.wav
+
+}
+
+megasphere_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		2
+	unclamped
+	omnidirectional
+	sound/items/megasphere_pickup.wav
+}
+
+flashlight_pickup {
+	minDistance	5
+	maxDistance	25
+	volume		8
+	unclamped
+	
+	sound/items/flashlight_pickup.wav
+}
+
+air_cannister_pickup {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/items/air_cannister/pickup_01.wav
+	sound/items/air_cannister/pickup_02.wav
+	sound/items/air_cannister/pickup_03.wav
+}
+
+pickup_adrenaline {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/items/pickup_adrenaline.wav
+}

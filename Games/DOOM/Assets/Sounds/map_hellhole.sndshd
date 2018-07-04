@@ -1,0 +1,166 @@
+
+
+hh_music_credits {
+	global
+	
+	sound/ed/hellhole/music_credits.wav
+}
+
+hh_music_betrugerhead {
+	global
+	
+	sound/ed/hellhole/music_bertrugerhead.wav
+}
+
+hh_music_cyberdeath {
+	global
+	
+	sound/ed/hellhole/music_cyberdeath.wav
+}
+
+hh_music_rescue {
+	global
+	
+	sound/ed/hellhole/music_startrescue.wav
+}
+
+hh_sfx_betrugerhead {
+	global
+	
+	sound/ed/hellhole/sfx_bertrugerhead.wav
+}
+
+hh_sfx_dragonscream {
+	global
+	
+	sound/ed/hellhole/sfx_dragon_scream.wav
+}
+
+hh_sfx_cyberdeath {
+	global
+	
+	sound/ed/hellhole/sfx_cyberdeath.wav
+}
+
+hh_sfx_rescue {
+	global
+	
+	sound/ed/hellhole/sfx_startrescue.wav
+}
+
+hh_moaner {
+	minDistance	2
+	maxDistance	30
+	volume		3
+	unclamped
+	no_dups
+	
+	sound/levels/hellhole/moaner_01.wav
+	sound/levels/hellhole/moaner_02.wav
+	sound/levels/hellhole/moaner_03.wav
+	sound/levels/hellhole/moaner_04.wav
+}
+
+cyberdemon_death_music {
+
+	volume	6
+	global
+	// unclamped
+	sound/ed/hellhole/cyberdemon_death_music.wav
+
+}
+
+
+cyberdemon_death_sfx {
+
+	volume	6
+	global
+	unclamped
+	sound/ed/hellhole/cyberdemon_death_sfx.wav
+
+}
+
+
+cyberdemon_intro_music {
+
+	volume	2
+	global
+	unclamped
+	sound/ed/hellhole/cyberdemon_intro_music.wav
+
+}
+
+
+cyberdemon_intro_sfx {
+
+	volume	1
+	global
+	unclamped
+	sound/ed/hellhole/cyberdemon_intro_sfx.wav
+
+}
+
+hh_rockride_8s {
+	minDistance	50	
+	maxDistance	100
+	volume		1
+	unclamped
+	no_occlusion
+	shakes		0.1
+	
+	sound/levels/hellhole/rockride.wav
+}
+
+hh_rockslide_01 {
+	minDistance	20
+	maxDistance	60
+	volume		6
+	unclamped
+	shakes		0.2
+
+	sound/levels/hellhole/rockslide_01.wav
+}
+
+hh_door_movement_1 {
+	minDistance	10
+	maxDistance	30
+	volume		3
+	unclamped
+	no_occlusion
+	shakes		0.1
+	
+	sound/levels/hellhole/door_movement_1.wav
+}
+
+hh_door_movement_2 {
+	minDistance	10
+	maxDistance	30
+	volume		3
+	unclamped
+	no_occlusion
+	shakes		0.1
+	
+	sound/levels/hellhole/door_movement_2.wav
+}
+
+hh_door_movement_3s {
+	minDistance	10
+	maxDistance	30
+	volume		2
+	unclamped
+	no_occlusion
+	shakes		0.1
+	
+	sound/levels/hellhole/door_movement_3s.wav
+}
+
+hh_door_movement_5s {
+	minDistance	10
+	maxDistance	30
+	volume		2
+	unclamped
+	no_occlusion
+	shakes		0.1
+	
+	sound/levels/hellhole/door_movement_5s.wav
+}

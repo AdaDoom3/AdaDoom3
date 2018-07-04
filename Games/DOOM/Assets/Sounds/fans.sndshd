@@ -1,0 +1,39 @@
+//
+//
+// game sounds
+//
+//
+
+
+loop_fan_1 {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/machinery/fans/loop_fan_01.wav
+}
+
+loop_fan_3 {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/machinery/fans/loop_fan_03.wav
+}
+
+
+loop_fan_6 {
+	minDistance 1
+	maxDistance 10
+	looping
+	volume 0.5
+	sound/machinery/fans/loop_fan_06.wav
+}
+
+loop_vent_1 {
+	minDistance 1
+	maxDistance 6
+	volume 0.2
+	looping
+	sound/ambient/loop_vent_02.wav
+}

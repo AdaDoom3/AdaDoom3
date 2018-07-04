@@ -1,0 +1,340 @@
+bones_fall {
+	minDistance	2
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/impact/bones/bones_01.wav
+	sound/impact/bones/bones_02.wav
+}
+
+cpu_impact {
+	minDistance	3
+	maxDistance	35
+	volume		0
+	no_dups
+	
+	sound/impact/solid/simpact_01.wav
+	sound/impact/solid/simpact_02.wav
+	sound/impact/solid/simpact_03.wav
+
+}
+
+solid_impact {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	no_dups
+	
+	sound/impact/solid/impact_01.wav
+	sound/impact/solid/impact_02.wav
+	sound/impact/solid/impact_03.wav
+}
+
+al3_crane_updown_loop {
+	minDistance	1
+	maxDistance	15
+	volume		-10
+	looping
+	
+	sound/movers/alphalabs3/crane_updown_loop.wav
+}
+
+al3_crane_updown_end {
+	minDistance	1
+	maxDistance	15
+	volume		-10
+	
+	sound/movers/alphalabs3/crane_updown_end.wav
+}
+
+al3_crane_loop {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	looping
+	
+	sound/movers/alphalabs3/crane_loop.wav
+}
+
+al3_crane_end {
+	minDistance	2
+	maxDistance	20
+	volume		0
+	
+	sound/movers/alphalabs3/crane_end.wav
+}
+
+al3_crane_fingers_open {
+	minDistance	1
+	maxDistance	15
+	volume		-8
+	
+	sound/movers/alphalabs3/crane_fingers_open.wav
+}
+
+al3_crane_fingers_close {
+	minDistance	1
+	maxDistance	15
+	volume		-8
+	
+	sound/movers/alphalabs3/crane_fingers_close.wav
+}
+
+
+al3_trash_open {
+	minDistance	2
+	maxDistance	20
+	volume		-3
+	
+	sound/movers/enpro/mech_1s_08a.wav
+}
+
+al3_trash_close {
+	minDistance	2
+	maxDistance	20
+	volume		-3
+	
+	sound/movers/enpro/mech_1s_09a.wav
+}
+
+tray_impact {
+	minDistance	1
+	maxDistance	15
+	volume		-4
+	no_dups
+
+	sound/impact/trays/tray_01.wav
+	sound/impact/trays/tray_02.wav
+	sound/impact/trays/tray_03.wav
+}
+
+book_impact {
+	minDistance	1
+	maxDistance	15
+	volume		-4
+	no_dups
+
+	sound/impact/books/book_01.wav
+	sound/impact/books/book_02.wav
+	sound/impact/books/book_03.wav
+	sound/impact/books/book_04.wav
+	sound/impact/books/book_05.wav
+	sound/impact/books/book_06.wav
+}
+
+burger_impact {
+	minDistance	1
+	maxDistance	15
+	volume		-4
+	no_dups
+	
+	sound/impact/burger/burger_01.wav
+	sound/impact/burger/burger_02.wav
+	sound/impact/burger/burger_03.wav
+	sound/impact/burger/burger_04.wav
+}
+
+paper_impact {
+	minDistance	1
+	maxDistance	15
+	volume		-8
+	no_dups
+	
+	sound/impact/paper/paper_01.wav
+	sound/impact/paper/paper_02.wav
+	sound/impact/paper/paper_03.wav
+	sound/impact/paper/paper_04.wav
+}
+
+stone_impact {
+	minDistance	1
+	maxDistance	25
+	volume		-3
+	no_dups
+
+	sound/impact/stone/simpact_01.wav
+	sound/impact/stone/simpact_02.wav
+	sound/impact/stone/simpact_03.wav
+	sound/impact/stone/simpact_04.wav
+	sound/impact/stone/simpact_05.wav
+}
+
+smallbox {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+
+	sound/xian/foley_sessions/boxes/psb_01.wav
+	sound/xian/foley_sessions/boxes/psb_02.wav
+	sound/xian/foley_sessions/boxes/psb_04.wav
+	sound/xian/foley_sessions/boxes/psb_07.wav
+	sound/xian/foley_sessions/boxes/boxpunch_01.wav
+}
+
+ceiling_tiles {
+	minDistance	1
+	maxDistance	15
+	volume		3
+	no_dups
+
+	sound/ed/sfx/ceiling_tiles/tile1.wav
+	sound/ed/sfx/ceiling_tiles/tile2.wav
+	sound/ed/sfx/ceiling_tiles/tile3.wav
+	sound/ed/sfx/ceiling_tiles/tile4.wav
+	sound/ed/sfx/ceiling_tiles/tile5.wav
+}
+
+tincan {
+	minDistance	1
+	maxDistance	15
+	volume		3
+	no_dups
+	
+	sound/xian/impact/tincan/impact_01.wav
+	sound/xian/impact/tincan/impact_02.wav
+	sound/xian/impact/tincan/impact_04.wav
+	sound/xian/impact/tincan/impact_05.wav
+
+}
+
+hollow_plastic {
+	minDistance	1
+	maxDistance	15
+	volume		3
+	no_dups
+	
+	sound/xian/foley_sessions/plastic_garbage_can/impact_27.wav
+	sound/xian/foley_sessions/plastic_garbage_can/impact_26.wav
+	sound/xian/foley_sessions/plastic_garbage_can/impact_21.wav
+	sound/xian/foley_sessions/plastic_garbage_can/impact_18.wav
+	sound/xian/foley_sessions/plastic_garbage_can/impact_16.wav
+}
+
+small_plastic {
+	minDistance	1
+	maxDistance 15
+	volume		3
+	no_dups
+	
+	sound/xian/foley_sessions/plastics_small/impact_held_01.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_02.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_03.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_04.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_05.wav
+}
+
+large_plastic {
+	minDistance	1
+	maxDistance	15
+	volume		3
+	no_dups
+	
+	sound/xian/foley_sessions/plastics_large/impact_held_02.wav
+	sound/xian/foley_sessions/plastics_large/impact_held_03.wav
+	sound/xian/foley_sessions/plastics_large/impact_held_04.wav
+	sound/xian/foley_sessions/plastics_large/impact_held_05.wav
+}
+
+stone_movement {
+	minDistance	1
+	maxDistance	15
+	volume		6
+	playonce
+	no_dups
+
+	sound/impact/stone/smove_01.wav
+	sound/impact/stone/smove_02.wav
+	sound/impact/stone/smove_03.wav
+	sound/impact/stone/smove_04.wav
+	sound/impact/stone/smove_05.wav
+}
+
+smallpanel_impact {
+	minDistance 1
+	maxDistance 15
+	volume		6
+	playonce
+	no_dups
+
+	sound/impact/small_metal_panel/small_metal_panel_1.wav
+	sound/impact/small_metal_panel/small_metal_panel_2.wav
+	sound/impact/small_metal_panel/small_metal_panel_3.wav
+	sound/impact/small_metal_panel/small_metal_panel_4.wav
+}
+
+box_impact {
+	minDistance 1
+	maxDistance 15
+	volume		6
+	playonce
+	no_dups
+
+	sound/xian/foley_sessions/boxes/psb_01.wav
+	sound/xian/foley_sessions/boxes/psb_02.wav
+	sound/xian/foley_sessions/boxes/psb_04.wav
+	sound/xian/foley_sessions/boxes/psb_07.wav
+	sound/xian/foley_sessions/boxes/boxpunch_01.wav
+}
+
+ragdoll_impact {
+	minDistance 2
+	maxDistance 20
+	no_dups
+
+	sound/monsters/imp/1shot_thud_05.wav
+	sound/monsters/imp/1shot_thud_06.wav
+	sound/monsters/imp/1shot_thud_04.wav
+	sound/monsters/imp/1shot_thud_03.wav
+}
+
+table_impact {
+	minDistance 1
+	maxDistance 15
+	volume		15
+	playonce
+	no_dups
+}
+
+metal_barrel_impact {
+	minDistance 1
+	maxDistance 15
+	volume		6
+	playonce
+	no_dups
+
+	sound/ed/sfx/barrel1.wav
+	sound/ed/sfx/barrel2.wav
+	sound/ed/sfx/barrel3.wav
+	sound/ed/sfx/barrel4.wav
+	sound/ed/sfx/barrel5.wav
+}
+
+barrel_impact {
+	minDistance 1
+	maxDistance 15
+	volume		6
+	playonce
+	no_dups
+
+	sound/impact/small_metal_panel/small_metal_panel_1.wav
+	sound/impact/small_metal_panel/small_metal_panel_2.wav
+	sound/impact/small_metal_panel/small_metal_panel_3.wav
+	sound/impact/small_metal_panel/small_metal_panel_4.wav
+}
+
+bodyparts {
+	minDistance 1
+	maxDistance 25
+	unclamped
+	volume		0
+	no_dups
+
+	sound/impact/guts/guts_01.wav
+	sound/impact/guts/guts_02.wav
+	sound/impact/guts/guts_03.wav
+	sound/impact/guts/guts_04.wav
+	sound/impact/guts/guts_05.wav
+}
+

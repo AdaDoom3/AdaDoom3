@@ -74,15 +74,15 @@ separate (Neo.Data.Model) package body Wavefront is
       while not At_EOF loop
 
         -- Load Vertices
-        while Peek = "v" loop Skip; Surface.Vertices.Append ((Point => (Next, Next, Next), others => <>)); end loop;
+        while Peek = "v" loop Skip; Surface.Vertices.Append ((Point => Next, others => <>)); end loop;
         Assert (Surface.Vertices.Length > 0);
 
         -- Load vertex normals
-        while Peek = "vn" loop Skip; Normals.Append ((Next, Next, Next)); end loop;
+        while Peek = "vn" loop Skip; Normals.Append (Next); end loop;
         Assert (Normals.Length > 0);
 
         -- Load vertex texture coordinates
-        while Peek = "vt" loop Skip; Texture.Append ((Next, Next)); Skip; end loop; -- Skip the weight
+        while Peek = "vt" loop Skip; Texture.Append (Next); Skip; end loop; -- Skip the weight
         Assert (Texture.Length > 0);
         
         -- Load material

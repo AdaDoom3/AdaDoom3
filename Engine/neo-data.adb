@@ -292,6 +292,65 @@ package body Neo.Data is
     function Next return Int_Unsigned    is (Int_Unsigned    (Next_Internal));
     function Next return Int_64          is (Int_64          (Next_Internal));
     function Next return Int_64_Unsigned is (Int_64_Unsigned (Next_Internal));
+    
+    -- Higher order types - we avoid using aggregates here due to ARM 4.3.1 (19) "evaluations occur in an arbitrary order"
+    function Next return Point_2D is 
+      Result : Point_2D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        return Result;
+      end;
+    function Next return Point_3D is 
+      Result : Point_3D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        Result.Z := Next;
+        return Result;
+      end;
+    function Next return Point_4D is 
+      Result : Point_4D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        Result.Z := Next;
+        Result.W := Next;
+        return Result;
+      end;
+    function Next return Vector_2D is 
+      Result : Vector_2D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        return Result;
+      end;
+    function Next return Vector_3D is 
+      Result : Vector_3D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        Result.Z := Next;
+        return Result;
+      end;
+    function Next return Vector_4D is 
+      Result : Vector_4D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        Result.Z := Next;
+        Result.W := Next;
+        return Result;
+      end;
+    function Next return Plane_4D is 
+      Result : Plane_4D;
+      begin
+        Result.X := Next;
+        Result.Y := Next;
+        Result.Z := Next;
+        Result.W := Next;
+        return Result;
+      end;
 
     -- Next string
     function Next_Line return Str_Unbound is
@@ -333,31 +392,5 @@ package body Neo.Data is
         end loop;
         raise Invalid;
       end;
-      
-    -- The cost of convenience
-    function Next_Then_Assert (Text       : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Str_Unbound     is R : Str_Unbound     := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Real            is R : Real            := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Real            is R : Real            := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Real            is R : Real            := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Real_64         is R : Real_64         := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Real_64         is R : Real_64         := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Real_64         is R : Real_64         := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Byte            is R : Byte            := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Byte            is R : Byte            := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Byte            is R : Byte            := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Int             is R : Int             := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Int             is R : Int             := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Int             is R : Int             := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Int_Unsigned    is R : Int_Unsigned    := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Int_64          is R : Int_64          := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Int_64          is R : Int_64          := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Int_64          is R : Int_64          := Next; begin Assert (T1, T2, T3); return R; end;
-    function Next_Then_Assert (Text       : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (Text);       return R; end;
-    function Next_Then_Assert (T1, T2     : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (T1, T2);     return R; end;
-    function Next_Then_Assert (T1, T2, T3 : Str) return Int_64_Unsigned is R : Int_64_Unsigned := Next; begin Assert (T1, T2, T3); return R; end;
   end;
 end;

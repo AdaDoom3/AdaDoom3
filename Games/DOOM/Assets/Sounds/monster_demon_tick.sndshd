@@ -1,0 +1,134 @@
+monster_demon_tick_chatter {
+
+	minDistance	1
+	maxDistance	25
+	volume	-4
+
+	sound/ed/tick/chirp1.wav
+	sound/ed/tick/chirp2.wav
+	sound/ed/tick/chirp3.wav
+	sound/ed/tick/chirp4.wav
+	sound/ed/tick/chirp5.wav
+	sound/ed/tick/chirp6.wav
+
+}
+
+monster_demon_tick_chatter_combat {
+
+	minDistance	1
+	maxDistance	25
+	volume	-4
+
+	sound/ed/tick/chirp1.wav
+	sound/ed/tick/chirp2.wav
+	sound/ed/tick/chirp3.wav
+	sound/ed/tick/chirp4.wav
+	sound/ed/tick/chirp5.wav
+	sound/ed/tick/chirp6.wav
+}
+
+monster_demon_tick_footstep {
+
+	minDistance	1
+	maxDistance	25
+	volume		-9
+	
+	sound/ed/tick/tick_walk1.wav
+	sound/ed/tick/tick_walk2.wav
+	sound/ed/tick/tick_walk3.wav
+	sound/ed/tick/tick_walk4.wav
+	sound/ed/tick/tick_walk5.wav
+	sound/ed/tick/tick_walk6.wav
+
+}
+
+monster_demon_tick_sight {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/ed/tick/tick_sight1.wav
+	sound/ed/tick/tick_sight2.wav
+	sound/ed/tick/tick_sight3.wav
+
+}
+
+monster_demon_tick_melee {
+
+	minDistance	1
+	maxDistance	25
+	sound/ed/tick/
+
+}
+
+monster_demon_tick_pain {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/ed/tick/tick_pain1.wav
+	sound/ed/tick/tick_pain2.wav
+	sound/ed/tick/tick_pain3.wav
+	sound/ed/tick/tick_pain4.wav
+
+}
+
+monster_demon_tick_death {
+
+	minDistance	1
+	maxDistance	25
+	volume		3
+
+	sound/ed/tick/tick_death1.wav
+	sound/ed/tick/tick_death2.wav
+	sound/ed/tick/tick_death3.wav
+
+}
+
+monster_demon_tick_chomp {
+
+	minDistance	1
+	maxDistance	25
+	
+	// sound/ed/tick/
+
+}
+
+monster_demon_tick_burn {
+
+	minDistance	1
+	maxDistance	25
+	volume	-3	
+
+	sound/ed/tick/tick_burn.wav
+
+}
+
+monster_demon_tick_chirp {
+
+	minDistance	1
+	maxDistance	25
+	volume		-4
+
+	sound/ed/tick/chirp1.wav
+	sound/ed/tick/chirp2.wav
+	sound/ed/tick/chirp3.wav
+	sound/ed/tick/chirp4.wav
+	sound/ed/tick/chirp5.wav
+
+}
+	
+monster_demon_tick_evade {
+	
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/ed/tick/chirp3.wav
+	sound/ed/tick/chirp4.wav
+	sound/ed/tick/chirp6.wav
+
+}
+

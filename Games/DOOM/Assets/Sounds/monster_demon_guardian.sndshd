@@ -1,0 +1,191 @@
+guardian_sight {
+	global
+	unclamped
+	volume 4
+	shakes 0.1
+	
+	sound/ed/guardian/guardian_sight.wav
+}
+
+guardian_sight2 {
+	global
+	unclamped
+	volume	4
+	shakes	0.1
+	
+	sound/ed/guardian/guardian_sight2.wav
+
+}
+
+monster_guardian_fireball_flight {
+
+	minDistance	1
+	maxDistance	20
+	volume		0
+	looping
+	
+	sound/monsters/imp/fireball_flight_03.wav
+	sound/monsters/imp/fireball_flight_04.wav
+
+	//sound/monsters/imp/fireball_flight.wav
+	//sound/monsters/imp/fireball_flight_02.wav
+
+
+}
+
+
+monster_demon_guardian_sight {
+
+	minDistance	15
+	maxDistance	70
+	volume	6
+	unclamped
+	
+	shakes	0.3
+
+	sound/ed/guardian/sight1_1.wav
+	sound/ed/guardian/sight2_1.wav
+	sound/ed/guardian/sight3_1.wav
+
+}
+
+monster_demon_guardian_chatter {
+
+	minDistance	15
+	maxDistance	70
+	volume	4
+	unclamped
+
+	sound/ed/guardian/chatter1.wav
+	sound/ed/guardian/chatter2.wav
+	sound/ed/guardian/chatter3.wav
+
+}
+
+monster_demon_guardian_chatter_combat {
+
+	minDistance	15
+	maxDistance	70
+	volume	4
+	unclamped
+
+	sound/ed/guardian/chatter_combat1.wav
+	sound/ed/guardian/chatter_combat2.wav
+	sound/ed/guardian/chatter_combat3.wav
+
+}
+
+monster_demon_guardian_pain {
+
+	minDistance	15
+	maxDistance	70
+	volume	4
+	unclamped
+
+	sound/ed/guardian/pain1.wav
+	sound/ed/guardian/pain2.wav
+	sound/ed/guardian/pain3.wav
+
+}
+
+monster_demon_guardian_die {
+
+	minDistance	15
+	maxDistance	45
+	volume	6
+	unclamped
+
+	shakes	0.3
+
+	sound/ed/guardian/guardian_death.wav
+
+}
+
+monster_demon_guardian_footstep {
+	
+	minDistance	15
+	maxDistance	70
+	volume	2
+	unclamped
+
+	shakes	0.1
+
+	sound/ed/guardian/step1.wav
+	sound/ed/guardian/step2.wav
+	sound/ed/guardian/step3.wav
+	sound/ed/guardian/step4.wav
+}
+
+monster_demon_guardian_attack {
+
+	minDistance	15
+	maxDistance	70
+	volume	6
+	unclamped
+	
+	shakes	0.1
+
+	sound/ed/guardian/impact.wav
+
+}
+
+monster_demon_guardian_spawn {
+
+	minDistance	15
+	maxDistance	70
+	volume	3
+
+	sound/ed/guardian/spawn.wav
+
+}
+
+monster_demon_guardian_death_impact {
+
+	minDistance	15
+	maxDistance	45
+	volume	5
+	unclamped
+	
+	shakes	0.5	
+
+	sound/ed/guardian/guardian_death_impact.wav
+}
+
+monster_demon_guardian_rocksmash {
+	global
+	unclamped
+	volume 5
+	
+	sound/ed/guardian/rocksmash.wav
+}
+
+monster_boss_guardian_seeker_sight	{
+	minDistance	5
+	maxDistance	100
+	volume	1
+
+	sound/ed/guardian/seeker1.wav
+	sound/ed/guardian/seeker2.wav
+	sound/ed/guardian/seeker3.wav
+	sound/ed/guardian/seeker4.wav
+
+}
+
+monster_boss_guardian_seeker_die	{
+	minDistance	5
+	maxDistance	100
+	volume		4.5
+
+	sound/ed/guardian/seeker_die1.wav
+	sound/ed/guardian/seeker_die2.wav
+	sound/ed/guardian/seeker_die3.wav
+
+}
+
+guardian_fire_flareup {
+	global
+	unclamped
+	volume	3
+	
+	sound/ed/guardian/guardian_fire_flare_up.wav
+}

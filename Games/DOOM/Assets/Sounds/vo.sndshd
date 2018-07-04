@@ -1,0 +1,153 @@
+vo_mfs_compressor {
+	minDistance	4
+	maxDistance	30
+	volume		-6
+
+	sound/vo/mfs_compressor.wav
+}
+
+vo_hydrocon {
+	minDistance	4
+	maxDistance	30
+	volume		-6
+
+	sound/vo/hydrocon.wav
+}
+
+
+
+vo_mc_kitchen_scientist1_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/scientist1_01.wav
+}
+
+vo_mc_kitchen_scientist1_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/scientist1_02.wav
+}
+
+vo_mc_kitchen_scientist2_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/scientist2_01.wav
+}
+
+vo_mc_kitchen_scientist2_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	ordered
+	sound/vo/marscity/scientist2_02.wav
+	sound/vo/marscity/scientist2_03.wav
+}
+
+vo_mc_kitchen_civilian1_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/civilian1_01.wav
+}
+
+vo_mc_kitchen_civilian1_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	ordered
+	sound/vo/marscity/civilian1_02.wav
+	sound/vo/marscity/civilian1_03.wav
+}
+
+vo_mc_kitchen_marine1_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/marine1_01.wav
+}
+
+vo_mc_kitchen_marine1_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	ordered
+	sound/vo/marscity/marine1_02.wav
+	sound/vo/marscity/marine1_03.wav
+}
+
+vo_mc_kitchen_marine2_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/vo/marscity/marine2_01.wav
+}
+
+vo_mc_kitchen_marine2_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	ordered
+	sound/vo/marscity/marine2_02.wav
+	sound/vo/marscity/marine2_03.wav
+}
+
+vo_mc_kitchen_marine1_convo1_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine1_04.wav
+}
+
+vo_mc_kitchen_marine2_convo1_01 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine2_04.wav
+}
+
+vo_mc_kitchen_marine1_convo1_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine1_05.wav
+}
+
+vo_mc_kitchen_marine2_convo1_02 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine2_05.wav
+}
+
+vo_mc_kitchen_marine1_convo1_06 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine1_06.wav
+}
+
+vo_mc_kitchen_marine2_convo1_06 {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+	sound/vo/marscity/marine2_06.wav
+}

@@ -1,0 +1,46 @@
+wet_footsteps {
+	minDistance	3
+	maxDistance	20
+	volume		3
+	no_dups
+	
+	sound/xian/footsteps/wet/wet_01.wav
+	sound/xian/footsteps/wet/wet_02.wav
+	sound/xian/footsteps/wet/wet_03.wav
+	sound/xian/footsteps/wet/wet_04.wav
+	sound/xian/footsteps/wet/wet_05.wav
+	sound/xian/footsteps/wet/wet_06.wav
+	sound/xian/footsteps/wet/wet_07.wav
+	sound/xian/footsteps/wet/wet_08.wav
+	sound/xian/footsteps/wet/wet_09.wav
+	sound/xian/footsteps/wet/wet_10.wav
+	sound/xian/footsteps/wet/wet_11.wav
+	sound/xian/footsteps/wet/wet_12.wav
+	sound/xian/footsteps/wet/wet_13.wav
+}
+
+ambient_bangs_01 {
+	minDistance	10
+	maxDistance	30
+	volume		2
+	no_dups
+	
+	sound/xian/creepy/metal_impacts/bang_01.wav
+	sound/xian/creepy/metal_impacts/bang_02.wav
+	sound/xian/creepy/metal_impacts/bang_03.wav
+	sound/xian/creepy/metal_impacts/bang_04.wav
+}
+
+ambient_clicky {
+	minDistance	10
+	maxDistance	30
+	volume		2
+	no_dups
+	
+	sound/xian/creepy/metal_impacts/clicky_01.wav
+	sound/xian/creepy/metal_impacts/clicky_02.wav
+	sound/xian/creepy/metal_impacts/clicky_03.wav
+	sound/xian/creepy/metal_impacts/clicky_04.wav
+	sound/xian/creepy/metal_impacts/clicky_05.wav
+	sound/xian/creepy/metal_impacts/clicky_06.wav
+}

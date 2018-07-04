@@ -1,0 +1,62 @@
+mc2_airlock_ladder {
+
+	minDistance	5
+	maxDistance	20
+	sound/ed/sfx/ladder_2s.wav
+
+}
+
+marscity2_sarge_briefing {
+	minDistance	5
+	maxDistance	20
+	sound/vo/mars_city2/sarge_mission_brief.wav
+}
+
+marscity2_ceiling_trigger {
+	minDistance	5
+	maxDistance	35
+	unclamped
+	volume 1
+	
+	sound/vo/mars_city2/02_ceilingguy_trigger.wav
+}
+
+marscity2_ceiling_primary {
+	minDistance	5
+	maxDistance	35
+	unclamped
+	volume 1
+	
+	sound/vo/mars_city2/03_ceilingguy_primary.wav
+}
+
+marscity2_ceiling_secondary1 {
+	minDistance	5
+	maxDistance	35
+	unclamped
+	volume 1
+	
+	sound/vo/mars_city2/04_ceilingguy_secondary.wav
+}
+
+marscity2_ceiling_secondary2 {
+	minDistance	5
+	maxDistance	35
+	unclamped
+	volume 1
+	
+	sound/vo/mars_city2/05_ceilingguy_secondary.wav
+}
+
+marscity2_comp_vidconnect_req{
+	minDistance	5
+	maxDistance	20
+	
+	sound/vo/mars_city2/com_video_request.wav
+}
+
+marscity2_comp_vidconnect_est{
+	minDistance	5
+	maxDistance	15
+	sound/vo/mars_city2/comp_connection_est.wav
+}

@@ -130,6 +130,13 @@ package Neo.Data is
       function Next return Int_Unsigned;
       function Next return Int_64;
       function Next return Int_64_Unsigned;
+      function Next return Point_2D;
+      function Next return Point_3D;
+      function Next return Point_4D;
+      function Next return Vector_2D;
+      function Next return Vector_3D;
+      function Next return Vector_4D;
+      function Next return Plane_4D;
 
       -- Check ahead without advancing
       function Peek_U return Str_Unbound; -- Name should be "Peek"
@@ -168,35 +175,6 @@ package Neo.Data is
       procedure Assert (T1, T2, T3         : Str);
       procedure Assert (T1, T2, T3, T4     : Str);
       procedure Assert (T1, T2, T3, T4, T5 : Str);
-      
-      -- Combination Next and Assert for convenience
-      function Next_Then_Assert (Text       : Str) return Str_Unbound;
-      function Next_Then_Assert (T1, T2     : Str) return Str_Unbound;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Str_Unbound;
-      function Next_Then_Assert (Text       : Str) return Str is (S (Next_Then_Assert (Text)));
-      function Next_Then_Assert (T1, T2     : Str) return Str is (S (Next_Then_Assert (T1, T2)));
-      function Next_Then_Assert (T1, T2, T3 : Str) return Str is (S (Next_Then_Assert (T1, T2, T3)));
-      function Next_Then_Assert (Text       : Str) return Real;
-      function Next_Then_Assert (T1, T2     : Str) return Real;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Real;
-      function Next_Then_Assert (Text       : Str) return Real_64;
-      function Next_Then_Assert (T1, T2     : Str) return Real_64;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Real_64;
-      function Next_Then_Assert (Text       : Str) return Byte;
-      function Next_Then_Assert (T1, T2     : Str) return Byte;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Byte;
-      function Next_Then_Assert (Text       : Str) return Int;
-      function Next_Then_Assert (T1, T2     : Str) return Int;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Int;
-      function Next_Then_Assert (Text       : Str) return Int_Unsigned;
-      function Next_Then_Assert (T1, T2     : Str) return Int_Unsigned;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Int_Unsigned;
-      function Next_Then_Assert (Text       : Str) return Int_64;
-      function Next_Then_Assert (T1, T2     : Str) return Int_64;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Int_64;
-      function Next_Then_Assert (Text       : Str) return Int_64_Unsigned;
-      function Next_Then_Assert (T1, T2     : Str) return Int_64_Unsigned;
-      function Next_Then_Assert (T1, T2, T3 : Str) return Int_64_Unsigned;
     end;
 end;
 

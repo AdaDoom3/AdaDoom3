@@ -1,0 +1,9 @@
+zombie_sight_hack {
+
+	volume	0
+	minDistance	3
+	maxDistance	15
+
+	sound/ed/zombie/zombie_sight2.wav
+
+}

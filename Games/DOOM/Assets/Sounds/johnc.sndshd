@@ -1,0 +1,17 @@
+test_multiLoop {
+	looping
+	sound/test/snd0.wav
+	sound/test/snd1.wav
+	sound/test/snd2.wav
+}
+
+test_ondemand {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+	onDemand
+	
+	sound/vo/marscity/scientist1_01.wav
+}
+
+

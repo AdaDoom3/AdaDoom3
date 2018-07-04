@@ -1,0 +1,21 @@
+temp_haunting_vo
+{
+	minDistance 10
+	maxDistance 40
+	sound/spookysounds/haunting_vo.wav
+}
+
+
+temp_hellknight_roar
+{
+	minDistance 5
+	maxDistance 20
+	sound/t_environment/temp_roar.wav
+}
+
+temp_hellknight_foot
+{
+	minDistance 5
+	maxDistance 20
+	sound/t_environment/temp_foot.wav
+}

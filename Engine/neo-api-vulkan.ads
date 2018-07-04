@@ -64,6 +64,7 @@ package Neo.API.Vulkan is
   -- VkPipelineBindPoint                     Int_Unsigned_C
   -- VkSubpassContents                       Int_Unsigned_C
   -- VkFlags                                 Int_Unsigned_C
+  -- VkDescriptorPoolResetFlags              Int_Unsigned_C
   -- VkPipelineCreateFlags                   Int_Unsigned_C
   -- VkPipelineShaderStageCreateFlags        Int_Unsigned_C
   -- VkPipelineVertexInputStateCreateFlags   Int_Unsigned_C
@@ -108,7 +109,6 @@ package Neo.API.Vulkan is
   -- VkSamplerAddressMode                    Int_Unsigned_C
   -- VkSamplerMipmapMode                     Int_Unsigned_C
   -- VkFenceCreateFlags                      Int_Unsigned_C
-  -- VkDescriptorSetLayout                   Ptr
   -- VkSampler                               Ptr
   -- VkFence                                 Ptr
   -- VkDeviceMemory                          Ptr
@@ -123,7 +123,6 @@ package Neo.API.Vulkan is
   -- VkPhysicalDeviceType                    Ptr
   -- VkCommandPool                           Ptr
   -- VkCommandBuffer                         Ptr
-  -- VkPhysicalDeviceType                    Ptr
   -- VkPipelineLayout                        Ptr
   -- VkBuffer                                Ptr
   -- VkPipeline                              Ptr
@@ -131,6 +130,7 @@ package Neo.API.Vulkan is
   -- VkShaderModule                          Ptr
   -- VkDescriptorPool                        Ptr
   -- VkDescriptorSet                         Ptr
+  -- VkDescriptorSetLayout                   Ptr
   -- VkBufferView                            Ptr
   -- VkImageView                             Ptr
   -- VkPipelineCache                         Ptr
@@ -2408,6 +2408,15 @@ package Neo.API.Vulkan is
                                                         with Convention => C;
   function To_Ptr_vkDestroyDescriptorPool is new Unchecked_Conversion (Ptr, Ptr_vkDestroyDescriptorPool);
   vkDestroyDescriptorPool : Ptr_vkDestroyDescriptorPool := null;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/vkResetDescriptorPool.html
+  type Ptr_vkResetDescriptorPool is access function (device         : Ptr;            -- VkDevice
+                                                     descriptorPool : Ptr;            -- VkDescriptorPool
+                                                     flags          : Int_Unsigned_C) -- VkDescriptorPoolResetFlags
+                                                     return Int_Unsigned_C            -- VkResult
+                                                     with Convention => C;
+  function To_Ptr_vkResetDescriptorPool is new Unchecked_Conversion (Ptr, Ptr_vkResetDescriptorPool);
+  vkResetDescriptorPool : Ptr_vkResetDescriptorPool := null;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkDestroyDescriptorSetLayout.html
   type Ptr_vkDestroyDescriptorSetLayout is access procedure (device              : Ptr;                       -- VkDevice

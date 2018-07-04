@@ -1,0 +1,334 @@
+
+
+monster_demon_pinky_attackmissile {
+
+}
+
+monster_demon_pinky_melee_hit {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+	
+	sound/xian/monsters/imp/melee/hit_01.wav
+}
+
+monster_demon_pinky_melee_miss {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+	sound/xian/monsters/imp/melee/miss_01.wav
+}
+
+pinky_hand {
+	minDistance	2
+	maxDistance	15
+	volume		-2
+	
+	sound/monsters/zombie_morgue/fs_01.wav
+	sound/monsters/zombie_morgue/fs_02.wav
+	sound/monsters/zombie_morgue/fs_03.wav
+	sound/monsters/zombie_morgue/fs_04.wav
+	sound/monsters/zombie_morgue/fs_05.wav
+}
+
+
+monster_demon_pinky_hand {
+
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	sound/ed/pinky/fleshstep_test11.wav
+	sound/ed/pinky/fleshstep_test12.wav
+	sound/ed/pinky/fleshstep_test13.wav
+	sound/ed/pinky/fleshstep_test14.wav
+	sound/ed/pinky/fleshstep_test15.wav
+
+}
+
+admin_monster_demon_pinky_hand {
+
+	minDistance	10
+	maxDistance	25
+	volume		3
+	no_occlusion
+	no_dups
+
+	sound/ed/pinky/fleshstep_test11.wav
+	sound/ed/pinky/fleshstep_test12.wav
+	sound/ed/pinky/fleshstep_test13.wav
+	sound/ed/pinky/fleshstep_test14.wav
+	sound/ed/pinky/fleshstep_test15.wav
+
+	
+
+}
+
+monster_demon_pinky_gear {
+
+	minDistance	1
+	maxDistance	25
+	volume		-20
+
+}
+
+monster_demon_pinky_foot {
+
+	minDistance	3
+	maxDistance	35
+	volume		3
+	unclamped
+
+	sound/ed/pinky/metalstep_test21.wav
+	sound/ed/pinky/metalstep_test22.wav
+	sound/ed/pinky/metalstep_test23.wav
+	sound/ed/pinky/metalstep_test24.wav
+	sound/ed/pinky/metalstep_test25.wav
+
+}
+
+admin_monster_demon_pinky_foot {
+
+	minDistance	10
+	maxDistance	25
+	volume		-3
+	no_occlusion
+	no_dups
+
+	sound/ed/pinky/metalstep_test21.wav
+	sound/ed/pinky/metalstep_test22.wav
+	sound/ed/pinky/metalstep_test23.wav
+	sound/ed/pinky/metalstep_test24.wav
+	sound/ed/pinky/metalstep_test25.wav
+	
+
+}
+
+monster_demon_pinky_idle {
+
+	description		"servos for pinky's ass only"
+	minDistance	1
+	maxDistance	25
+	volume		-6
+
+	sound/ed/pinky3/idle_test1.wav
+	sound/ed/pinky3/idle_test2.wav
+	sound/ed/pinky3/idle_test3.wav
+	sound/ed/pinky3/idle_test4.wav	
+
+}
+
+monster_demon_pinky_sight1 {
+
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	shakes		0.3
+
+	sound/ed/pinky3/sight_test21.wav
+	sound/ed/pinky3/sight_test22.wav
+	sound/ed/pinky3/sight_test23.wav
+	
+}
+
+
+admin_monster_demon_pinky_sight1 {
+
+	minDistance	10
+	maxDistance	25
+	volume		2
+	shakes		0.17
+	no_occlusion
+	no_dups
+
+
+	sound/ed/pinky3/sight_test21.wav
+	sound/ed/pinky3/sight_test22.wav
+	sound/ed/pinky3/sight_test23.wav
+	
+}
+monster_demon_pinky_sight2 {
+
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	shakes		0.3
+
+	sound/ed/pinky3/sight2_test1.wav
+	sound/ed/pinky3/sight2_test2.wav
+	sound/ed/pinky3/sight2_test3.wav
+	
+}
+
+admin_monster_demon_pinky_sight2 {
+
+	minDistance	10
+	maxDistance	25
+	volume		2
+	shakes		0.17
+	no_occlusion
+	no_dups
+
+
+	sound/ed/pinky3/sight2_test1.wav
+	sound/ed/pinky3/sight2_test2.wav
+	sound/ed/pinky3/sight2_test3.wav
+	
+}
+
+monster_demon_pinky_sight3 {
+
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+	shakes		0.3
+
+	sound/ed/pinky3/sight3_test1.wav
+	sound/ed/pinky3/sight3_test2.wav
+	sound/ed/pinky3/sight3_test3.wav
+	sound/ed/pinky3/sight3_test4.wav
+
+}
+
+monster_demon_pinky_chatter {
+
+	minDistance	1
+	maxDistance	35
+	volume		0
+	shakes		0
+
+	sound/ed/pinky3/idle_test1.wav
+	sound/ed/pinky3/idle_test2.wav
+	sound/ed/pinky3/idle_test3.wav
+	sound/ed/pinky3/idle_test4.wav
+	sound/ed/pinky3/idle_test1.wav
+	sound/ed/pinky3/idle_test2.wav
+
+}
+
+monster_demon_pinky_chatter_combat {
+
+	minDistance	1
+	maxDistance	45
+	volume		3
+	unclamped
+	shakes		0.1
+	no_dups
+
+	sound/ed/pinky3/sight2_test1.wav
+	sound/ed/pinky3/sight2_test2.wav
+	sound/ed/pinky3/sight2_test3.wav
+
+}
+
+monster_demon_pinky_chatter_combat2 {
+
+	minDistance	1
+	maxDistance	45
+	volume		3
+	shakes		0.1
+	no_dups
+
+	sound/ed/pinky3/sight2_test1.wav
+	sound/ed/pinky3/sight2_test2.wav
+	sound/ed/pinky3/sight2_test3.wav
+}
+
+
+monster_demon_pinky_pain {
+
+	minDistance	1
+	maxDistance	45
+	volume		3
+	unclamped
+	shakes		0
+	no_dups
+
+	sound/ed/pinky/pain_test1.wav
+	sound/ed/pinky/pain_test2.wav
+	sound/ed/pinky/pain_test3.wav
+	sound/ed/pinky/pain_test4.wav
+	sound/ed/pinky/pain_test5.wav
+	sound/ed/pinky/pain_test6.wav
+	sound/ed/pinky/pain_test7.wav
+
+
+
+}
+
+monster_demon_pinky_attackmelee_1 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+	shakes		0
+
+	sound/ed/pinky/melee_test1.wav
+	sound/ed/pinky/melee_test2.wav
+	sound/ed/pinky/melee_test3.wav
+	sound/ed/pinky/melee_test4.wav
+
+}
+
+monster_demon_pinky_attackmelee_4 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+
+}
+
+monster_demon_pinky_attackmelee_5 {
+
+	minDistance	1
+	maxDistance	25
+	volume		4
+
+}
+
+
+monster_demon_pinky_die {
+
+	minDistance	1
+	maxDistance	45
+	volume		4
+	unclamped
+
+	sound/ed/pinky3/death_test1.wav
+	sound/ed/pinky3/death_test2.wav
+	sound/ed/pinky3/death_test3.wav
+	sound/ed/pinky3/death_test4.wav
+	sound/ed/pinky3/death_test5.wav
+}
+
+monster_demon_pinky_thud {
+
+	minDistance	1
+	maxDistance	25
+	volume		8
+
+	
+
+}
+
+monster_demon_pinky_breath {
+
+	minDistance	1
+	maxDistance	25
+	volume		-6
+
+	sound/ed/pinky3/idle_test1.wav
+	sound/ed/pinky3/idle_test2.wav
+	sound/ed/pinky3/idle_test3.wav
+	sound/ed/pinky3/idle_test4.wav
+	sound/ed/pinky3/idle_test1.wav
+	sound/ed/pinky3/idle_test2.wav
+
+}

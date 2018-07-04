@@ -39,6 +39,7 @@ package body Neo is
         declare
         Traces        : Tracebacks_Array (1..128);
         Result        : Str_8_Unbound := NULL_STR_8_UNBOUND;
+        Head_Index    : Int           := 0;
         Chain_Length  : Natural       := 0;
         Hit_At, In_At : Boolean       := False;
         begin
@@ -57,9 +58,11 @@ package body Neo is
           end loop;
           
           -- Trim irrelevant bits
-          Head (Result, Index (Result, "b__main") - EOL_8'Length);
           Tail (Result, Length (Result) - Index (Result, "neo.adb:"));
           Tail (Result, Length (Result) - Index (Result, EOL_8) - 1);
+          Head_Index := Index (Result, "b__main");
+          if Head_Index = 0 then Head_Index := Index (Result, "at ???"); end if;
+          Head (Result, Head_Index - EOL_8'Length);
           
           -- Propagate the exception with the trimmed stack trace as its message
           raise Program_Error with To_Str_8 (Result);
@@ -88,7 +91,30 @@ package body Neo is
       procedure Increment                is begin Count := Count + 1;      end;
       procedure Decrement                is begin Count := Count - 1;      end;
     end;
-
+    
+  ----------
+  -- Safe --
+  ----------
+  
+  package body Safe is
+      protected body T is
+          function Get  return Safe_T  is (Data);
+          procedure Set (Val : Safe_T) is begin Data := Val; end;
+        end;
+    end;    
+  package body Safe_Discrete is
+      protected body T is
+          function Get  return Safe_T  is (Data);
+          procedure Set (Val : Safe_T) is begin Data := Val; end;
+        end;
+    end;
+  package body Safe_Digits is
+      protected body T is
+          function Get  return Safe_T  is (Data);
+          procedure Set (Val : Safe_T) is begin Data := Val; end;
+        end;
+    end;
+    
   ------------
   -- Timing --
   ------------
@@ -154,9 +180,9 @@ package body Neo is
       return S (Buffer);
     end;          
   function To_Str_8 (Item : Ptr_Char_8_C) return Str_8 is 
-    Length : Int                := 0;
-    Buffer : Str_8_Unbound      := NULL_STR_8_UNBOUND;
-    Temp   : Ptr_Char_8_C := Item;
+    Length : Int           := 0;
+    Buffer : Str_8_Unbound := NULL_STR_8_UNBOUND;
+    Temp   : Ptr_Char_8_C  := Item;
     begin
       while Temp.all /= NULL_CHAR_8_C loop
         Length := Length + 1;

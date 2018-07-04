@@ -1,0 +1,86 @@
+// This is the sound shader for all the videos
+
+video_epd {
+	onDemand
+	sound/vo/video/epd.wav
+}
+
+video_mfs {
+	onDemand
+	sound/vo/video/mfs.wav
+}
+
+video_hydrocon {
+	onDemand
+	sound/vo/video/hydrocon.wav
+}
+
+video_uacwelcome {
+	onDemand
+	sound/vo/video/video_uac_welcome.wav
+}
+
+video_alphalabs_intro {
+	onDemand
+	sound/vo/video/video_alphalabs_intro.wav
+}
+
+video_ancient_civ {
+	onDemand
+	sound/vo/video/video_ancient_civ.wav
+}
+
+video_bfg {
+	onDemand
+	sound/vo/video/video_bfg.wav
+}
+
+video_chaingun {
+	onDemand
+	sound/vo/video/video_chaingun.wav
+}
+
+video_plasmagun {
+	onDemand
+	sound/vo/video/video_plasmagun.wav
+}
+
+video_delta2_medical {
+	onDemand
+	sound/vo/video/video_delta2_medical.wav
+}
+
+video_ian_report {
+	onDemand
+	sound/vo/video/video_ian_report.wav
+}
+
+video_ipn_news {
+	onDemand
+	sound/vo/video/video_ipn_news.wav
+}
+
+video_marine_sops {
+	onDemand
+	sound/vo/video/video_marine_sops.wav
+}
+
+video_demon_museum {
+	onDemand
+	sound/vo/video/video_demon_museum.wav
+}
+
+video_recycling {
+	onDemand
+	sound/vo/video/video_recycling.wav
+}
+
+video_tablets {
+	onDemand
+	sound/vo/video/video_tablets.wav
+}
+
+video_soulcube {
+	onDemand
+	sound/vo/video/video_soulcube.wav
+}

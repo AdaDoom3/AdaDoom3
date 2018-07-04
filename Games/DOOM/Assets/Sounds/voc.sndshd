@@ -1,0 +1,10 @@
+vents_active
+{
+//	0:4.770
+
+	minDistance	3
+	maxDistance	9
+	volume		1
+
+	sound/voc/vents_active.wav
+}

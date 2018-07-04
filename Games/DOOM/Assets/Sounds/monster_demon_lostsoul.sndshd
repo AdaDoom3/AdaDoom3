@@ -1,0 +1,125 @@
+monster_demon_lostsoul_charge {
+	minDistance	1
+	maxDistance	35
+	volume		3
+	unclamped
+	looping
+	no_dups
+
+	//sound/ed/lostsoul/new/charge1.wav
+	
+	sound/monsters/lost_soul/charge_01.wav
+	sound/monsters/lost_soul/charge_02.wav
+	sound/monsters/lost_soul/charge_03.wav
+}
+
+monster_demon_lostsoul_ambient {
+	minDistance	1
+	maxDistance	35
+	volume		-10
+	looping
+	
+	sound/monsters/lost_soul/idle_02.wav
+	sound/monsters/lost_soul/idle_01.wav
+}
+
+monster_demon_lostsoul_chatter {
+
+	minDistance	1
+	maxDistance	25
+	volume	-9
+	no_dups
+	
+	sound/monsters/lost_soul/chatter_01.wav
+	sound/monsters/lost_soul/chatter_02.wav
+	sound/monsters/lost_soul/chatter_03.wav
+}
+
+monster_demon_lostsoul_chatter_combat {
+
+	minDistance	1
+	maxDistance	25
+	volume	0
+	no_dups
+
+	sound/monsters/lost_soul/chatter_01.wav
+	sound/monsters/lost_soul/chatter_02.wav
+	sound/monsters/lost_soul/chatter_03.wav
+
+
+}
+
+monster_demon_lostsoul_sight {
+
+	minDistance	1
+	maxDistance	35
+	volume	3
+	no_dups
+
+	sound/monsters/lost_soul/sight/sight_01.wav
+	sound/monsters/lost_soul/sight/sight_02.wav
+	sound/monsters/lost_soul/sight/sight_03.wav
+	sound/monsters/lost_soul/sight/sight_04.wav
+
+/*	sound/ed/lostsoul/new/rev_scream_gravel41_short.wav
+	sound/ed/lostsoul/new/rev_scream_gravel42_short.wav
+	sound/ed/lostsoul/new/rev_scream_gravel51_short.wav
+	sound/ed/lostsoul/new/rev_scream_gravel52_short.wav
+*/
+}
+
+monster_demon_lostsoul_chomp {
+
+	minDistance	1
+	maxDistance	25
+	volume	-2
+	no_dups
+
+	sound/monsters/lost_soul/attack_01.wav
+	sound/monsters/lost_soul/attack_02.wav
+	
+	/*
+	sound/ed/lostsoul/chomp11.wav
+	sound/ed/lostsoul/chomp21.wav
+	sound/ed/lostsoul/chomp31.wav
+	sound/ed/lostsoul/chomp41.wav
+	sound/ed/lostsoul/chomp51.wav
+	sound/ed/lostsoul/chomp61.wav
+	*/
+	
+}
+
+monster_demon_lostsoul_death {
+
+	minDistance	1
+	maxDistance	35
+	volume	2
+	unclamped
+	
+	sound/monsters/lost_soul/death_03.wav
+	sound/monsters/lost_soul/death_01.wav
+	sound/monsters/lost_soul/death_04.wav
+	sound/monsters/lost_soul/death_02.wav
+
+/*	sound/ed/lostsoul/new/rev_scream_gravel1.wav
+	sound/ed/lostsoul/new/rev_scream_gravel3.wav
+*/
+}
+
+monster_demon_lostsoul_pain	{
+
+	minDistance	1
+	maxDistance	35
+	volume	4
+	unclamped
+
+	sound/monsters/lost_soul/pain_01.wav
+	sound/monsters/lost_soul/pain_02.wav
+
+//	sound/xian/monsters/lostsoul/pain_01.wav
+//	sound/xian/monsters/lostsoul/pain_02.wav
+//	sound/ed/lostsoul/pain1.wav
+//	sound/ed/lostsoul/pain2.wav
+//	sound/ed/lostsoul/pain3.wav
+	
+}

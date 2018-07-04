@@ -1,0 +1,493 @@
+e3_betruger_answer {
+	minDistance	10
+	maxDistance	30
+	volume		0
+	no_occlusion
+	sound/e3/phone_answer2.wav
+}
+
+e3_phone_ring {
+	minDistance	10
+	maxDistance	30
+	volume		0
+	no_occlusion
+	sound/e3/phone_ring.wav
+
+}
+
+e3_glasscrunch {
+	minDistance	5
+	maxDistance	15
+	volume		0
+
+	sound/e3/glasscrunch_01.wav
+}
+
+idlogo_background {
+	minDistance	5
+	maxDistance	30
+	volume		1
+	
+	omnidirectional
+	looping
+
+	sound/e3/loop_idlogo_background.wav
+}
+
+//***
+// Bathroom scene stuff below...
+//***
+
+pinkyhand {
+
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_barefoot_01.wav
+	sound/e3/1shot_barefoot_02.wav
+}
+
+pinkyfoot {
+
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalfoot_01.wav
+	sound/e3/1shot_metalfoot_02.wav
+	sound/e3/1shot_metalfoot_03.wav
+}
+
+pinkygear {
+
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_gear_01.wav
+	sound/e3/1shot_gear_02.wav
+	sound/e3/1shot_gear_03.wav
+	sound/e3/1shot_gear_04.wav
+	sound/e3/1shot_gear_05.wav
+	sound/e3/1shot_gear_06.wav
+	sound/e3/1shot_gear_07.wav
+	sound/e3/1shot_gear_08.wav
+}
+
+growl1 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_growl_01.wav
+}
+
+growl2 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_growl_02.wav
+}
+
+growl3 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_growl_03.wav
+}
+
+growl4 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_growl_04.wav
+}
+growl5 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_growl_05.wav
+}
+
+pinkybite_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_chomp_01.wav
+}
+
+pinkybite_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_chomp_02.wav
+}
+
+pinkybite_03 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_chomp_03.wav
+}
+
+pinkybite_04 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_chomp_04.wav
+}
+
+pinkychew_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_chew_01.wav
+}
+
+pinkyswallow_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_swallow_01.wav
+}
+
+pinkyswallow_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_swallow_02.wav
+}
+
+pinkyswallow_03 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_swallow_03.wav
+}
+
+
+
+pinkytear_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_fleshrip_01.wav
+}
+
+pinkytear_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_fleshrip_02.wav
+}
+
+pinkytear_03 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_fleshrip_03.wav
+}
+
+pinkytear_04 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_fleshrip_04.wav
+}
+
+pinkytear_05 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_fleshrip_05.wav
+}
+
+
+pinkysnort1 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_snort_02.wav
+}
+
+pinkyscrape1 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_scrape_01.wav
+
+
+}
+
+flesh_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_flesh_01.wav
+}
+
+flesh_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_flesh_02.wav
+}
+
+flesh_03 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_flesh_03.wav
+}
+
+// Fred's Pipe Scene Stuff
+
+e3_metalbash_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalbash_06.wav
+}
+
+e3_metalbash_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalbash_07.wav
+}
+
+e3_metalbounce_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalbounce_01a.wav
+}
+
+e3_metalbounce_02 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalbounce_01c.wav
+}
+
+e3_metalstress_01 {
+	minDistance	2
+	maxDistance	35
+	volume		0
+
+	sound/e3/1shot_metalstress_01.wav
+}
+
+// Matt's machine stuff in E3_2
+
+e3_wheel_xycon {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_xycon.wav
+}
+
+e3_wheel_xycon_reverse {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_xycon_reverse.wav
+}
+
+e3_wheel_bigex {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_bigexe1.wav
+}
+
+e3_wheel_smex {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_smex.wav
+}
+
+e3_wheel_fingers {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_fingers.wav
+}
+
+e3_wheel_fingers_reverse {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_fingers_reverse.wav
+}
+
+e3_wheel_spin {
+	minDistance	1
+	maxDistance	8
+	volume		0
+	sound/e3/matt/wheel_spin.wav
+}
+
+// Lobby Cinematic
+
+e3_security1_line1 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/security_1/RJ_security1_line1.wav
+}
+
+e3_security1_line1a {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/security_1/RJ_security1_line1a.wav
+}
+
+
+e3_security2_line1 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/security_2/AC_security2.wav
+}
+
+e3_security1_line2 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/security_1/RJ_security1_line4.wav
+}
+
+e3_security1_line3 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/security_1/RJ_security1_line5.wav
+}
+
+e3_scientist1_line1 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/scientist_1/RJ_scientist_line1.wav
+}
+
+e3_scientist1_line2 {
+	minDistance	5
+	maxDistance	20
+	volume		6
+	no_occlusion
+	sound/Voices/scientist_1/RJ_scientist_line2.wav
+}
+
+e3_betruger_line1 {
+	minDistance	2
+	maxDistance	50
+	volume		6
+	no_occlusion
+	sound/Voices/worry_02_trsnts2.wav
+}
+
+
+e3_voiceover_line1 {
+	minDistance	5
+	maxDistance	20
+	volume		-10
+	global
+	no_occlusion
+
+	mask_center
+
+	sound/Voices/voiceover/RJ_VO_line2.wav
+}
+
+e3_voiceover_line2 {
+	minDistance	5
+	maxDistance	20
+	volume		-10
+	global
+	no_occlusion
+
+	mask_center
+
+	sound/Voices/voiceover/RJ_VO_line7.wav
+}
+
+e3_voiceover_line3 {
+	minDistance	5
+	maxDistance	20
+	volume		-10
+	global
+	no_occlusion
+
+	mask_center
+
+	sound/Voices/voiceover/RJ_VO_line10.wav
+}
+
+
+// Obligatory Poopie Humor Placeholder Sound
+/*
+nosound {
+	minDistance	2
+	maxDistance	35
+	volume		5
+
+	sound/misc/1shot_nosound_1.wav
+	sound/misc/1shot_nosound_2.wav
+	sound/misc/1shot_nosound_3.wav
+	sound/misc/1shot_nosound_4.wav
+	sound/misc/1shot_nosound_5.wav
+	sound/misc/1shot_nosound_6.wav
+	sound/misc/1shot_nosound_7.wav
+}
+
+somesound {
+	minDistance	2
+	maxDistance	35
+	volume		5
+
+	sound/misc/1shot_nosound_1.wav
+	sound/misc/1shot_nosound_2.wav
+	sound/misc/1shot_nosound_3.wav
+	sound/misc/1shot_nosound_4.wav
+	sound/misc/1shot_nosound_5.wav
+	sound/misc/1shot_nosound_6.wav
+	sound/misc/1shot_nosound_7.wav
+}
+*/

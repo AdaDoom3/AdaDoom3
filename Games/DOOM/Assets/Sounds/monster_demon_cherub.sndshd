@@ -1,0 +1,106 @@
+monster_demon_cherub_sight {
+	minDistance	1
+	maxDistance	35
+	volume		0
+	
+	sound/xian/monsters/cherub/sight_01.wav
+	sound/xian/monsters/cherub/sight_02.wav
+	sound/xian/monsters/cherub/sight_03.wav
+
+}
+
+monster_demon_cherub_attack {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	
+	sound/xian/monsters/cherub/attack_01.wav
+	sound/xian/monsters/cherub/voc_02.wav
+	sound/xian/monsters/cherub/voc_01.wav
+}
+
+monster_demon_cherub_pain {
+	minDistance	4
+	maxDistance	35
+	volume		5
+	
+	sound/xian/monsters/cherub/pain_01a.wav
+	sound/xian/monsters/cherub/pain_02a.wav
+	sound/xian/monsters/cherub/pain_03a.wav
+	sound/xian/monsters/cherub/pain_04a.wav
+	
+	//sound/xian/monsters/cherub/pain_01.wav
+	//sound/xian/monsters/cherub/pain_02.wav
+	//sound/xian/monsters/cherub/pain_03.wav
+	//sound/xian/monsters/cherub/voc_03.wav
+}
+
+monster_demon_cherub_death {
+	minDistance	4
+	maxDistance	35
+	volume		5
+	
+	sound/xian/monsters/cherub/death_01.wav
+	sound/xian/monsters/cherub/death_02.wav
+}
+
+monster_demon_cherub_chatter {
+	minDistance	1
+	maxDistance	35
+	volume		0
+	
+	sound/xian/monsters/cherub/idle_01.wav
+	sound/xian/monsters/cherub/idle_02.wav
+	sound/xian/monsters/cherub/idle_03.wav
+
+}
+
+monster_demon_cherub_chatter_combat {
+	minDistance	1
+	maxDistance	35 
+	volume		0
+
+	sound/xian/monsters/cherub/idle_01.wav
+	sound/xian/monsters/cherub/idle_02.wav
+	sound/xian/monsters/cherub/idle_03.wav
+	sound/xian/monsters/cherub/chatter_combat_01.wav
+	sound/xian/monsters/cherub/chatter_combat_02.wav
+	sound/xian/monsters/cherub/sight_02.wav
+}
+
+monster_demon_cherub_step {
+		
+	minDistance	1
+	maxDistance	25
+	volume	-19	
+
+	sound/ed/cherub/step1.wav
+	sound/ed/cherub/step2.wav
+	sound/ed/cherub/step3.wav
+	sound/ed/cherub/step4.wav
+
+}
+
+monster_demon_cherub_flutter {
+	minDistance	3
+	maxDistance	25
+	volume		8
+
+	sound/xian/monsters/cherub/flutter_01.wav
+	sound/xian/monsters/cherub/flutter_02.wav
+
+}
+
+monster_demon_cherub_ambient {
+	minDistance	1
+	maxDistance	25
+	volume		-3
+	looping
+	
+	sound/xian/monsters/cherub/flies_01.wav
+	sound/xian/monsters/cherub/flies_02.wav
+}
+
+monster_demon_cherub_fly {
+
+}

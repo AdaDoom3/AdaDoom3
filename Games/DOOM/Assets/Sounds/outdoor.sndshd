@@ -1,0 +1,29 @@
+wind_01
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/outdoors/wind/loop_wind_01.wav
+}
+
+wind_02
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/outdoors/wind/loop_wind_02.wav
+}
+
+wind_03
+{
+	minDistance	3
+	maxDistance	7
+	looping
+	volume		0.5
+
+	sound/outdoors/wind/loop_wind_03.wav
+}

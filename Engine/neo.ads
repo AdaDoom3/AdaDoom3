@@ -353,6 +353,46 @@ package Neo is
     private
       Count : Int := 0;
     end;
+    
+  ----------
+  -- Safe --
+  ----------
+  
+  generic
+    type Safe_T is private;
+    Initial : Safe_T;
+  package Safe is
+      protected type T is
+          function Get return Safe_T;
+          procedure Set (Val : Safe_T);
+        private
+          Data : Safe_T := Initial;
+        end;
+    end;    
+  
+  generic
+    type Safe_T is (<>);
+    Initial : Safe_T;
+  package Safe_Discrete is
+      protected type T with Lock_Free is
+          function Get return Safe_T;
+          procedure Set (Val : Safe_T);
+        private
+          Data : Safe_T := Initial;
+        end;
+    end;
+  
+  generic
+    type Safe_T is digits <>;
+    Initial : Safe_T;
+  package Safe_Digits is
+      protected type T with Lock_Free is
+          function Get return Safe_T;
+          procedure Set (Val : Safe_T);
+        private
+          Data : Safe_T := Initial;
+        end;
+    end;
 
   -----------
   -- Timer --

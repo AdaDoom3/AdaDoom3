@@ -1,0 +1,148 @@
+game_over {
+	volume	3
+	sound/ed/sfx/multiplayer/game_over/game_over.wav
+	//sound/ed/sfx/multiplayer/game_over/game_over_guitars.wav
+}
+
+
+laser_sat_rampup_speaker {
+
+	minDistance	3
+	maxDistance	24
+	volume		4.5
+	no_occlusion
+	sound/ed/sfx/multiplayer/laser_sat_rampup_speaker.wav
+
+}
+
+lasermechanical_move_fire_speaker {
+
+	minDistance	3
+	maxDistance	20
+	volume		1.5
+	no_occlusion
+	sound/ed/sfx/multiplayer/lasermechanical_move_fire_speaker.wav
+
+}
+
+laserbeam_on_speaker {
+
+	minDistance	3
+	maxDistance	24
+	volume		12
+	shakes	0.175	
+	no_occlusion
+	sound/ed/sfx/multiplayer/laserbeam_on_speaker2.wav
+
+}
+
+laser_spec_pulses_speaker {
+
+	minDistance	6
+	maxDistance	24
+	volume		14
+	no_occlusion
+	sound/ed/sfx/multiplayer/laser_spec_pulses_speaker.wav
+
+}
+
+laser_rampdown_speaker {
+
+	minDistance	3
+	maxDistance	24
+	volume	12
+	no_occlusion
+	sound/ed/sfx/multiplayer/laser_rampdown_speaker.wav
+
+}
+
+lasermechanical_move_relax_speaker  {
+
+	minDistance	3
+	maxDistance	20
+	volume		1.5
+	no_occlusion
+	sound/ed/sfx/multiplayer/lasermechanical_move_relax_speaker.wav
+
+}
+
+snail2_shells_open_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9				
+
+	sound/ed/sfx/multiplayer/snail2_shells_open_speaker.wav
+
+}
+
+snail2_shells_close_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		7.5
+
+	sound/ed/sfx/multiplayer/snail2_shells_close_speaker.wav
+
+}
+
+snail2_pole1_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole1_speaker.wav
+
+}
+
+snail2_pole1guts_up_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole1guts_up_speaker.wav
+
+}
+
+snail2_pole1guts_down_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole1guts_down_speaker.wav
+
+}
+
+snail2_pole2_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole2_speaker.wav
+
+}
+
+snail2_pole2guts_up_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole2guts_up_speaker.wav
+
+}
+
+snail2_pole2guts_down_speaker {
+
+	minDistance	1
+	maxDistance	15
+	volume		9
+
+	sound/ed/sfx/multiplayer/snail2_pole2guts_down_speaker.wav
+	
+
+}

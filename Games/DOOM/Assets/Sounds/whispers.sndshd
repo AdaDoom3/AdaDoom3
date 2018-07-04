@@ -1,0 +1,24 @@
+
+whispers_01
+{
+	minDistance	10
+	maxDistance	30
+	volume		1
+
+	sound/xian/unsettling/1shot_clutter_01.wav
+	sound/xian/unsettling/1shot_clutter_02.wav
+	sound/xian/unsettling/1shot_clutter_03.wav
+	sound/xian/unsettling/1shot_clutter_04.wav
+}
+
+whispers_02
+{
+	minDistance	10
+	maxDistance	30
+	volume		1
+
+	sound/xian/unsettling/1shot_clutter_01.wav
+	sound/xian/unsettling/1shot_clutter_02.wav
+	sound/xian/unsettling/1shot_clutter_03.wav
+	sound/xian/unsettling/1shot_clutter_04.wav
+}

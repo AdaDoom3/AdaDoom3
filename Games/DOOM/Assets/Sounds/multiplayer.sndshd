@@ -1,0 +1,247 @@
+voc_are_you_serious {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_are_you_serious.wav
+}
+
+voc_attack_now {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_attack_now.wav
+}
+
+voc_bullshit {
+	minDistance 2
+	maxDistance	15
+	volume	0
+	
+	sound/mp/voc_bullshit.wav
+}
+
+voc_cancel_that {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_cancel_that.wav
+}
+
+voc_cover_me {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_cover_me.wav
+}
+
+voc_die_already {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_die_already.wav
+}
+
+voc_enemy_has_powerup {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_enemy_has_powerup.wav
+}
+
+voc_enemy_spotted {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_enemy_spotted.wav
+}
+
+voc_grab_the_armor {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_grab_the_armor.wav
+}
+
+voc_great_game {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_great_game.wav
+}
+
+voc_hack {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_hack.wav
+}
+
+voc_i_have_extra_weapon {
+	minDistance 2
+	maxDistance	15
+	volume	0
+	
+	sound/mp/voc_i_have_extra_weapon.wav
+}
+
+voc_i_have_the_armor {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_i_have_the_armor.wav
+}
+
+voc_i_have_the_powerup {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_i_have_the_powerup.wav
+}
+
+voc_i_need_a_weapon {
+	minDistance 2
+	maxDistance	15
+	volume	0
+	
+	sound/mp/voc_i_need_a_weapon.wav
+}
+
+voc_i_need_health {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_i_need_health.wav
+}
+
+voc_ill_take_that {
+	minDistance 2
+	maxDistance	15
+	volume	0
+	
+	sound/mp/voc_ill_take_that.wav
+}
+
+voc_im_armed_and_ready {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_im_armed_and_ready.wav
+}
+
+voc_im_not_ready {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_im_not_ready.wav
+}
+
+voc_im_taking_fire {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_im_taking_fire.wav
+}
+
+voc_item_available {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_item_available.wav
+}
+
+voc_movein {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_movein.wav
+}
+
+voc_negative {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_negative.wav
+}
+
+voc_no_way {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_no_way.wav
+}
+
+voc_on_my_way {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_on_my_way.wav
+}
+
+voc_overhere {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_overhere.wav
+}
+
+voc_prepare_for_attack {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_prepare_for_attack.wav
+}
+
+voc_pull_back {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_pull_back.wav
+}
+
+voc_roger {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_roger.wav
+}
+
+voc_that_sucked {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_that_sucked.wav
+}
+
+voc_yeah_right {
+	minDistance 2
+	maxDistance	15
+	volume	0
+
+	sound/mp/voc_yeah_right.wav
+}

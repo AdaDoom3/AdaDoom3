@@ -1,0 +1,444 @@
+player_takehealth {
+	minDistance	1
+	maxDistance	15
+	volume		-2
+	omnidirectional
+	
+	sound/player/st_takehealth.wav
+}
+
+player_climb_ladder {
+	minDistance	1
+	maxDistance	20
+	volume		-4
+	no_dups
+	
+	sound/player/ladder/step_ladder_01.wav
+	sound/player/ladder/step_ladder_02.wav
+	sound/player/ladder/step_ladder_03.wav
+	sound/player/ladder/step_ladder_04.wav
+	sound/player/ladder/step_ladder_05.wav
+}
+
+player_cough {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+
+	sound/player/coughs/cough_01.wav
+	sound/player/coughs/cough_02.wav
+	sound/player/coughs/cough_03.wav
+	sound/player/coughs/cough_04.wav
+}
+
+//
+//
+// sounds for the player
+//
+//
+
+player_sounds_teleport {
+	sound/ed/sfx/multiplayer/teleport_tube.wav
+	looping	
+	volume 0
+	
+}
+
+player_sounds_teleportStart {
+	minDistance	1
+	maxDistance	20
+	soundClass 1
+	shakes 0.1
+	sound/ed/teleporter/tele_start.wav
+	volume 20
+}
+
+player_sounds_teleportExit {
+	minDistance	5
+	maxDistance	30
+	sound/ed/sfx/multiplayer/teleport_out.wav
+	volume 0
+}
+
+player_sounds_hitFlesh {
+	minDistance	1
+	maxDistance	35
+	volume		0
+	no_dups
+
+	sound/weapons/impacts/bullet_flesh/fleshimpact_04.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_02.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_01.wav
+}
+
+player_sounds_noAir {
+	minDistance	1
+	maxDistance	35
+	volume		-4
+	looping
+	//sound/ed/player/player_adrenaline1.wav
+	sound/player/rebreather/player_rebreather.wav
+}
+
+
+player_sounds_airGasp {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	unclamped
+
+	sound/player/gasps/gasp_04.wav
+	sound/player/gasps/gasp_05.wav
+	sound/player/gasps/gasp_06.wav
+	sound/player/gasps/gasp_07.wav
+	
+	//sound/weapons/impacts/bullet_flesh/fleshimpact_04.wav
+	//sound/weapons/impacts/bullet_flesh/fleshimpact_02.wav
+	//sound/weapons/impacts/bullet_flesh/fleshimpact_01.wav
+}
+
+
+player_sounds_teleport_enter {
+	sound/ed/sfx/multiplayer/teleport_in.wav
+	minDistance 5
+	maxDistance	30
+	volume 0
+}
+
+player_sounds_teleport_exit {
+	sound/ed/sfx/multiplayer/teleport_out.wav
+	minDistance 5
+	maxDistance	30
+
+	volume 0
+}
+
+player_sounds_berserk {
+	sound/ed/sfx/multiplayer/3rd_person_berserk.wav
+	volume 3		// Was 8 -Xian
+}
+
+player_sounds_soulcube_ready {
+	sound/ambient/creep/1shot_creep_02.wav
+	volume 3		// Was 8 -Xian
+}
+
+
+player_sounds_berserk_third {
+	sound/ed/sfx/multiplayer/3rd_person_berserk.wav
+	volume 8
+	minDistance	3
+	maxDistance	15
+}
+
+player_sounds_weapon_switch {
+	sound/ed/sfx/multiplayer/weapon_switch.wav
+}
+
+player_sounds_guienter {
+	volume		-5
+	//sound/electronics/beebs_and_blips/1shot_beep_02.wav
+	sound/ed/gui/twobeep_test1.wav
+}
+
+player_sounds_guiexit {
+	volume		-5
+	//sound/electronics/beebs_and_blips/1shot_beep_02.wav
+	sound/ed/gui/twobeep_test3.wav
+}
+
+player_sounds_hitArmor {
+	minDistance	5
+	maxDistance	25
+	volume		4
+	unclamped
+	
+	sound/xian/player/armor/hit_04.wav
+	sound/xian/player/armor/hit_05.wav
+	sound/xian/player/armor/hit_02.wav	
+
+}
+
+
+player_sounds_healthpulse {
+	volume -15
+	sound/xian/beeps/1s_beep_02.wav
+}
+
+player_sounds_heartbeat {
+	minDistance	5
+	maxDistance	20
+	volume		0
+
+	sound/player/heartbeat4.wav
+
+}
+
+player_sounds_heartbeat_dying {
+	minDistance	5
+	maxDistance	20
+	volume		0
+
+	sound/player/heartbeat_dying.wav
+}
+
+
+player_sounds_skipcinematic {
+	minDistance	10
+	maxDistance	10
+	volume		6
+
+	sound/guis/1shot_close.wav
+}
+
+player_sounds_objectiveup {
+	minDistance	10
+	maxDistance	10
+	volume		6
+
+	sound/guis/1shot_open.wav
+}
+
+player_sounds_objectivedown {
+	minDistance	10
+	maxDistance	10
+	volume		6
+
+	sound/guis/1shot_close.wav
+}
+
+player_sounds_thud  {
+	minDistance 2
+	maxDistance 15
+	volume 0
+	no_dups
+
+	sound/ed/player/player_land1.wav
+	sound/ed/player/player_land2.wav
+	sound/ed/player/player_land3.wav
+	sound/ed/player/player_land4.wav
+
+}
+
+player_elevator_sounds_footstep {
+	minDistance	1
+	maxDistance	30
+	volume		-1
+	no_dups
+
+	sound/ed/player/steps/step01.wav
+	sound/ed/player/steps/step02.wav
+	sound/ed/player/steps/step03.wav
+	sound/ed/player/steps/step10.wav
+}
+
+player_sounds_footstep {
+
+	minDistance	1
+	maxDistance	30
+	//volume		-5
+	volume		-1
+	no_dups
+	
+	sound/ed/player/steps/step01.wav
+	sound/ed/player/steps/step02.wav
+	sound/ed/player/steps/step03.wav
+	sound/ed/player/steps/step10.wav
+	
+}
+
+player_footstep_dirt {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/player/footsteps/dirt_01.wav
+	sound/player/footsteps/dirt_02.wav
+	sound/player/footsteps/dirt_03.wav
+	sound/player/footsteps/dirt_04.wav
+	sound/player/footsteps/dirt_05.wav
+}
+
+
+player_sounds_death {
+
+	minDistance 10
+	maxDistance 10
+	volume 2
+	plain
+
+//	sound/ed/player/player_death1.wav
+//	sound/ed/player/player_death10.wav
+//	sound/ed/player/player_death6.wav
+
+	sound/player/death/death_01.wav
+	sound/player/death/death_02.wav
+	sound/player/death/death_03.wav
+	sound/player/death/death_04.wav
+	
+}
+
+player_sounds_doublevision {
+	minDistance	10
+	maxDistance	10
+	volume		6
+	plain
+
+	sound/xian/player/dvision_01.wav
+	sound/xian/player/dvision_02.wav
+	sound/xian/player/dvision_03.wav
+}
+
+
+player_sounds_pain_small {
+
+	minDistance 10
+	maxDistance 10
+	volume 8
+	
+//	sound/xian/player/pain_small_01.wav
+//	sound/xian/player/pain_small_02.wav	
+//	sound/xian/player/pain_small_03.wav
+
+	sound/player/pain/smallpain_01.wav
+	sound/player/pain/smallpain_02.wav
+	sound/player/pain/smallpain_03.wav
+}
+
+player_sounds_pain_medium {
+
+	minDistance 10
+	maxDistance 10
+	volume 8
+
+//	sound/xian/player/pain_med_01.wav
+//	sound/xian/player/pain_med_02.wav
+//	sound/xian/player/pain_med_03.wav
+
+	sound/player/pain/medpain_01.wav
+	sound/player/pain/medpain_02.wav
+	sound/player/pain/medpain_03.wav
+
+}
+
+player_sounds_pain_big {
+
+	minDistance 10
+	maxDistance 10
+	volume 8
+
+	sound/player/pain/largepain_01.wav
+	sound/player/pain/largepain_02.wav
+//  sound/player/pain/largepain_04.wav
+//	sound/player/pain/largepain_03.wav
+
+//	sound/xian/player/pain_large_01.wav
+//	sound/xian/player/pain_large_02.wav
+//	sound/xian/player/pain_large_03.wav
+
+
+}
+
+player_sounds_pain_huge {
+
+	minDistance 10
+	maxDistance 10
+	volume 8
+	plain
+
+//	sound/xian/player/pain_large_01.wav
+//	sound/xian/player/pain_large_02.wav
+//	sound/xian/player/pain_large_03.wav
+//	sound/xian/player/pain_large_04.wav
+//	sound/xian/player/pain_large_05.wav
+
+	sound/xian/player/dvision_01.wav
+	sound/xian/player/dvision_02.wav
+	sound/xian/player/dvision_03.wav
+//	sound/xian/player/dvision_04.wav
+
+}
+
+player_sounds_jump {
+
+	minDistance 3
+	maxDistance 20
+	volume -5
+	
+
+	//sound/player/jump/jump_01.wav
+	
+	//sound/ed/player/player_jump1.wav
+	//sound/ed/player/player_jump5.wav
+	//sound/ed/player/player_jump3.wav
+	
+	sound/ed/player/jump3_alt.wav
+	
+	//sound/ed/player/player_jump4.wav
+	//sound/ed/player/player_jump2.wav
+	//sound/ed/player/player_jump6.wav
+}
+
+player_sounds_jump_small {
+
+	minDistance 3
+	maxDistance 20
+	volume -5
+		
+	sound/ed/player/jump1_alt3.wav
+	
+}
+
+player_sounds_land {
+
+	minDistance 3
+	maxDistance 20
+	no_dups
+	volume 2
+	unclamped
+
+	sound/player/jump/land_med_01.wav
+	sound/player/jump/land_med_02.wav
+	sound/player/jump/land_med_03.wav
+	
+	//sound/ed/player/player_land1.wav
+	//sound/ed/player/player_land2.wav
+	//sound/ed/player/player_land3.wav
+
+}
+
+player_sounds_fall {
+
+	minDistance 3
+	maxDistance 25
+	no_dups
+	volume 2
+	unclamped
+	
+	sound/player/jump/land_large_01.wav
+	sound/player/jump/land_large_02.wav
+	sound/player/jump/land_large_03.wav
+
+//	sound/ed/player/player_land1.wav
+//	sound/ed/player/player_land2.wav
+//	sound/ed/player/player_land3.wav
+
+}
+
+player_sounds_fastlanding {
+	// Standard landing sound where the player does not take pain
+	minDistance	2
+	maxDistance	15
+	volume		-7
+	no_dups
+	
+//	sound/ed/player/player_fastlanding_01.wav
+//	sound/ed/player/player_fastlanding_03.wav
+//	sound/ed/player/player_fastlanding_04.wav
+
+	sound/player/jump/land_small_01.wav
+	sound/player/jump/land_small_02.wav
+	sound/player/jump/land_small_03.wav
+}

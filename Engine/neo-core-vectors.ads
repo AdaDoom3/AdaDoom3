@@ -43,6 +43,7 @@ Pragma Warnings (On);
       procedure Set     (Val : Unsafe_Array);
       procedure Next    (Pos : in out Cursor);
       procedure Replace (Pos :        Cursor; Item : Vec_T);
+      procedure Replace (Pos : Positive;      Item : Vec_T);
       procedure Append                       (Item : Vec_T; Count : Positive := 1);
       procedure Prepend                      (Item : Vec_T; Count : Positive := 1);
       procedure Insert  (Before : Positive;   Item : Vec_T; Count : Positive := 1);

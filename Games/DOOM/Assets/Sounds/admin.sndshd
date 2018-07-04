@@ -1,0 +1,522 @@
+bfgcase_unlock {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/cinematics/admin/case_unlock.wav
+}
+
+//SHATTER FOR PINKY ANIM
+admin_impdoor_impact0 {
+
+	volume	12
+	no_dups
+	minDistance	35
+	maxDistance	35
+	shakes		0.05
+	unclamped
+
+	sound/ed/admin/bang0_1.wav
+	sound/ed/admin/bang0_2.wav
+	sound/ed/admin/bang0_3.wav
+	sound/ed/admin/bang0_4.wav
+	sound/ed/admin/bang0_5.wav
+	sound/ed/admin/bang0_6.wav
+
+}
+
+admin_light_break {
+	
+	minDistance	5
+	maxDistance	20
+	volume		6
+
+	sound/ed/admin/light_break.wav
+
+}
+
+admin_monster_demon_pinky_thud {
+
+	minDistance	5
+	maxDistance	20
+	volume		10
+	shakes		0.1
+
+	sound/ed/admin/pinky_thud.wav
+
+}
+
+//Matt pinky
+
+admin_monster_demon_pinky_creak_small {
+
+	minDistance	10
+	maxDistance	25
+	volume		3
+	no_occlusion
+
+	sound/ed/admin/creak_small.wav
+}
+
+admin_monster_demon_pinky_creak_big {
+
+	minDistance	10
+	maxDistance	25
+	volume		3
+	no_occlusion
+
+	sound/ed/admin/creak_big.wav
+}
+
+admin_glass_shatter {
+
+	minDistance	5
+	maxDistance	15
+
+	volume		0
+
+	sound/xian/levels/admin/glass_shatter_01.wav
+
+}
+
+
+// OVERHEARD CONVERSATION THRU VENTILATION SHAFT...
+
+
+//							SWANN
+
+admin_swann_i_dont_think {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		3
+
+	sound/vo/admin/01_i_dont_think.wav
+}
+
+//							BETRUGER
+
+admin_betruger_no_i_understand {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		3
+
+	sound/vo/admin/02_no_i_understand.wav
+}
+
+//   						SWANN
+
+admin_swann_im_telling_you {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	global
+	volume		0
+
+	sound/vo/admin/03_im_telling_you3.wav
+}
+
+//  						BETRUGER
+
+admin_betruger_operation_is_that {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/04_operation_is_that.wav
+}
+
+//  						SWANN
+
+admin_swann_the_situation {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/05_the_situation.wav
+}
+
+// 							BETRUGER
+
+admin_betruger_its_not_out_of_control {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/06_its_not_out_of_control.wav
+
+}
+
+// 							SWANN
+
+admin_swann_yes_bertruger {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/07_yes_betruger.wav
+}
+
+admin_swann_i_understand {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/08_I_understand.wav
+}
+
+//						CAMPBELL
+
+admin_campbell_planb {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/admin/09_planb.wav
+}
+
+
+//COMPUTER ACCESS
+
+
+admin_swann_it_isnt_working {
+	minDistance	2
+	maxDistance	30
+	volume		0
+
+	sound/vo/admin/swann_networkroom1.wav
+
+}
+
+
+admin_campbell_then_i_suggest {
+	minDistance	2
+	maxDistance	30
+	volume		0
+
+	sound/vo/admin/camp01.wav
+
+}
+
+// WOUNDED MARINE
+
+
+admin_marine_dont_stop {
+	minDistance	10
+	maxDistance	50
+	volume		10
+
+	sound/vo/admin/wounded_01.wav
+
+}
+
+admin_marine_there_are {
+	minDistance	10
+	maxDistance	50
+	volume		10
+
+	sound/vo/admin/wounded_02.wav
+
+}
+
+admin_marine_death {
+	minDistance	10
+	maxDistance	50
+	volume		10
+
+	sound/vo/admin/wounded_03.wav
+
+}
+
+// IMPS SMASHING THROUGH LOBBY DOORS
+
+admin_impdoor_impact {
+
+	volume	10.5
+	no_dups
+	minDistance	35
+	maxDistance	35
+
+	sound/ed/admin_impdoors/bang1.wav
+	sound/ed/admin_impdoors/bang2.wav
+	sound/ed/admin_impdoors/bang3.wav
+	sound/ed/admin_impdoors/bang4.wav
+	sound/ed/admin_impdoors/bang5.wav
+	sound/ed/admin_impdoors/bang6.wav
+
+}
+
+admin_impdoor_impact2 {
+
+	volume	6
+	no_dups
+	minDistance	35
+	maxDistance	35
+
+	sound/ed/admin_impdoors/bang1.wav
+	sound/ed/admin_impdoors/bang2.wav
+	sound/ed/admin_impdoors/bang3.wav
+	sound/ed/admin_impdoors/bang4.wav
+	sound/ed/admin_impdoors/bang5.wav
+	sound/ed/admin_impdoors/bang6.wav
+
+}
+
+admin_impdoor_impact3 {
+
+	volume	12
+	plain
+	no_dups
+	minDistance	35
+	maxDistance	35
+
+	sound/ed/admin_impdoors/bang1.wav
+	sound/ed/admin_impdoors/bang2.wav
+	sound/ed/admin_impdoors/bang3.wav
+	sound/ed/admin_impdoors/bang4.wav
+	sound/ed/admin_impdoors/bang5.wav
+	sound/ed/admin_impdoors/bang6.wav
+
+}
+
+
+admin_impdoor_creak {
+
+	volume	6
+	no_dups
+	minDistance	35
+	maxDistance	35
+
+	sound/ed/admin_impdoors/creak1.wav
+	sound/ed/admin_impdoors/creak2.wav
+
+}
+
+admin_impdoor_doorfallimpact {
+
+	volume	9
+	no_dups
+	minDistance	35
+	maxDistance	35
+	
+	sound/ed/admin_impdoors/doorfallimpact1.wav	
+	sound/ed/admin_impdoors/doorfallimpact2.wav
+
+}
+
+// 	MACHINE IN INACCESSIBLE ROOM
+
+speaker_archiver_staging {
+
+	minDistance	3
+	maxDistance	15
+	volume	6			
+
+	sound/ed/admin/pfft.wav
+
+}
+
+speaker_archiver_loading1 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+
+	sound/ed/admin/yyy.wav
+
+}
+
+speaker_archiver_loading2 {
+
+	minDistance	3
+	maxDistance	15
+	volume	0
+
+	sound/ed/admin/sklonk.wav
+
+
+}
+
+speaker_archiver_depository1_1 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+
+	sound/ed/admin/zzz.wav
+
+
+
+}
+
+speaker_archiver_depository1_2 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+	
+	sound/ed/admin/yyy.wav
+
+}
+
+speaker_archiver_depository1_3 {
+
+	minDistance	3
+	maxDistance	15
+	volume	0
+
+	sound/ed/admin/sklonk.wav
+
+}
+
+speaker_archiver_dump1_1 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+
+	sound/ed/admin/zzz.wav
+
+}
+
+speaker_archiver_dump1_2 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+	
+	sound/ed/admin/yyy.wav
+
+}
+
+speaker_archiver_dump1_3 {
+
+	minDistance	3
+	maxDistance	15
+	volume	9
+
+	sound/ed/admin/buh_tiss.wav
+
+}
+
+speaker_archiver_dump2_1 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-1.5
+
+	sound/ed/admin/zzz.wav
+
+
+
+}
+
+speaker_archiver_dump2_2 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-4.5
+
+	sound/ed/admin/yyy.wav
+
+}
+
+speaker_archiver_dump2_3 {
+
+	minDistance	3
+	maxDistance	15
+	volume	9
+
+	sound/ed/admin/buh_tiss.wav
+
+}
+
+speaker_archiver_arm1_short {
+
+	minDistance	3
+	maxDistance	15
+	volume	6
+
+	sound/ed/admin/arm_1s.wav
+
+}
+
+speaker_archiver_arm2_short {
+
+	minDistance	3
+	maxDistance	15
+	volume	6
+
+	sound/ed/admin/arm_.5s.wav
+
+}
+
+speaker_archiver_arm1_long {
+
+	minDistance	3
+	maxDistance	15
+	volume	6
+
+	sound/ed/admin/arm_1.5s.wav
+
+}
+
+speaker_archiver_arm2_long {
+
+	minDistance	3
+	maxDistance	15
+	volume	6
+
+	sound/ed/admin/arm_1.5s_2.wav
+
+}
+
+speaker_archiver_arm2_longer {
+
+	minDistance	3
+	maxDistance	15
+	volume	6
+
+	sound/ed/admin/arm_2s.wav
+
+}
+
+speaker_archiver_depository2_1 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-4.5
+		
+	sound/ed/admin/zzz.wav
+
+
+}
+
+speaker_archiver_depository2_2 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-4.5
+
+	sound/ed/admin/yyy.wav
+
+}
+
+speaker_archiver_depository2_3 {
+
+	minDistance	3
+	maxDistance	15
+	volume	-3
+
+	sound/ed/admin/sklonk.wav
+
+}
+
+

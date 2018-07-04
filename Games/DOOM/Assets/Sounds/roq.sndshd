@@ -1,0 +1,8 @@
+lab_speech_atommachine {
+	minDistance 1
+	maxDistance 10
+	looping
+	//volume 0.8			// this is screwy  -- I'll fix it. graeme
+	sound/voc/lab_speech_atommachine_new_22k.wav
+}
+

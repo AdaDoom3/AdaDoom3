@@ -1,0 +1,250 @@
+
+loop_airtunnel_01 {
+	minDistance 2
+	maxDistance 15
+	volume 0.6
+	looping
+	sound/ambient/rooms/loop_airtunnel_01.wav
+}
+
+//***
+// More airy type ambience for rooms
+//***
+
+loop_ambientroom_01 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_01.wav
+}
+
+loop_ambientroom_02 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_02.wav		
+}
+
+loop_ambientroom_03 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_03.wav		
+}
+
+loop_ambientroom_04 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_04.wav		
+}
+
+loop_ambientroom_05 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_05.wav		
+}
+
+loop_ambientroom_06 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_06.wav		
+}
+
+loop_ambientroom_07 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_07.wav		
+}
+
+loop_ambientroom_08 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_08.wav		
+}
+
+loop_ambientroom_09 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_09.wav		
+}
+
+loop_ambientroom_10 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_10.wav		
+}
+
+loop_ambientroom_11 {
+	minDistance 4
+	maxDistance 20
+	looping
+	sound/ambient/rooms/loop_ambientroom_11.wav		
+}
+
+//***
+// More mechanical type ambience for rooms
+//***
+
+loop_machineroom_01 {
+	minDistance 1
+	maxDistance 10
+	looping
+	sound/ambient/rooms/loop_machineroom_01.wav
+}
+
+loop_machineroom_09
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_09.wav
+}
+
+loop_machineroom_10
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_10.wav
+}
+
+
+loop_machineroom_13
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_13.wav
+}
+
+loop_machineroom_15
+{	
+	minDistance 	5
+	maxDistance 	20
+	looping
+	volume 		0
+
+	sound/ambient/rooms/loop_machineroom_15.wav
+}
+
+
+
+loop_machineroom_16
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_16.wav
+}
+
+loop_machineroom_17
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_17.wav
+}
+
+
+loop_machineroom_18 
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_18.wav
+}
+
+loop_machineroom_21
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_21.wav
+}
+
+loop_machineroom_22
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_22.wav
+}
+
+loop_machineroom_23
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume 0
+	sound/ambient/rooms/loop_machineroom_23.wav
+}
+
+loop_machineroom_24
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_24.wav
+}
+
+loop_machineroom_25
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_25.wav
+}
+
+loop_machineroom_26
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_26.wav
+}
+
+loop_machineroom_27
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_27.wav
+}
+
+loop_machineroom_28
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_28.wav
+}
+
+loop_machineroom_29
+{
+	minDistance 5
+	maxDistance 20
+	looping
+	volume		0
+	sound/ambient/rooms/loop_machineroom_29.wav
+}
+

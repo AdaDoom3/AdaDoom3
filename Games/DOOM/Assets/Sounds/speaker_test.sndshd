@@ -1,0 +1,23 @@
+speaker_test {
+
+	minDistance	10
+	maxDistance	10
+	volume		0
+	no_occlusion
+	omnidirectional
+	global
+	plain
+
+	if (speakers == 2)
+		sound/ed/surround/speaker_test_stereo.wav
+
+	if (speakers == 6)
+		five_dot_one
+		sound/ed/surround/speaker_test_l.wav
+		sound/ed/surround/speaker_test_r.wav
+		sound/ed/surround/speaker_test_c.wav
+		sound/ed/surround/speaker_test_lfe.wav
+		sound/ed/surround/speaker_test_ls.wav
+		sound/ed/surround/speaker_test_rs.wav
+
+}

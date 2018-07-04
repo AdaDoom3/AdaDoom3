@@ -1,0 +1,37 @@
+
+monster_demon_bruiser_sight
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/bruiser/sight_01.wav
+}
+
+monster_demon_bruiser_pain
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/bruiser/pain_01.wav
+}
+
+monster_demon_bruiser_die
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/bruiser/death_01.wav
+}
+
+monster_demon_bruiser_attackmissile
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/bruiser/fire_01.wav
+}
+

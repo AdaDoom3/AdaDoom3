@@ -1,0 +1,67 @@
+
+sargevo_berger {
+
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	sound/fred/video/gregg_berger.wav
+
+}
+
+sargevo_ross {
+
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	sound/fred/video/neil_ross.wav
+
+}
+
+sargevo_blum {
+
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/fred/video/steve_blum.wav
+}
+
+sargevo_albrecht {
+
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/fred/video/grant_albrecht.wav
+}
+
+campbellvo_chanley {
+	
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/fred/video/campbell_chanley.wav
+}
+
+swannvo_dennis {
+	
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/fred/video/swann_dennis.wav
+}
+
+betrugervo_clarke {
+	
+	volume	-9
+	minDistance	5
+	maxDistance	15
+	ordered
+	sound/fred/video/betruger_clarke.wav
+}
+
+
+
+

@@ -1,0 +1,10 @@
+ alpha4_vagary_intro_music {
+
+	minDistance	10
+	maxDistance	30
+	no_occlusion
+	global
+	volume	4
+	sound/ed/music/alpha4/vagary_intro_cutscene.wav
+
+}

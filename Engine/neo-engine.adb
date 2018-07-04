@@ -13,8 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Neo.Engine.CVars;    use Neo.Engine.CVars;
-with Neo.Engine.Commands; use Neo.Engine.Commands;
+with Neo.World.CVars; use Neo.World.CVars;
 
 package body Neo.Engine is
  
@@ -97,7 +96,6 @@ package body Neo.Engine is
   -----------------
 
   function OS_Info return OS_Info_State renames System.OS_Info;
-  function Asset_Path return Str is (S (System.OS_Info.Path) & PATH_ASSETS);
   
   ---------------
   -- Clipboard --
@@ -177,11 +175,11 @@ pragma Warnings (On);
     File        : Ada.Streams.Stream_IO.File_Type;
     File_Stream : Ada.Streams.Stream_IO.Stream_Access;
     begin
-      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.Path) & S & PATH_LOGS & S) & Path);
+      Ada.Streams.Stream_IO.Create (File, Out_File, To_Str_8 (S (OS_Info.App_Path) & S & PATH_LOGS & S) & Path);
       File_Stream := Ada.Streams.Stream_IO.Stream (File);
       for Element of Log loop Char'Write (File_Stream, Element); end loop;
       Ada.Streams.Stream_IO.Close (File);
-      System.Open_Text (To_Str (OS_Info.Path) & S & PATH_LOGS & S & To_Str (Path));
+      System.Open_Text (To_Str (OS_Info.App_Path) & S & PATH_LOGS & S & To_Str (Path));
     end;
 
   -- Display a message-box prompt, if this fails we have serious problems

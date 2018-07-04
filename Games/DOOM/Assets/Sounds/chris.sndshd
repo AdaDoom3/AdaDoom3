@@ -1,0 +1,8 @@
+tim_sound1 {
+	plain
+	no_occlusion
+	looping
+
+	sound/chris/ogg/cpu1/tim_sound.ogg
+
+}

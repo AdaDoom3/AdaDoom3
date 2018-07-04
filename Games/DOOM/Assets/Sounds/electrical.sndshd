@@ -1,0 +1,90 @@
+
+one_shot_electrical_switch_heavy_1{
+	minDistance	5
+	maxDistance	20
+	sound/t_environment/heavy_switch6.wav
+}
+
+electrical_sparks {
+	minDistance	1
+	maxDistance	10
+	volume		-6
+
+	sound/xian/electricity/sparks/spark_01.wav
+	sound/xian/electricity/sparks/spark_02.wav
+	sound/xian/electricity/sparks/spark_03.wav
+	sound/xian/electricity/sparks/spark_04.wav
+	sound/xian/electricity/sparks/spark_08.wav
+
+	//sound/xian/electricity/sparks/spark_05.wav
+	//sound/xian/electricity/sparks/spark_06.wav
+	//sound/xian/electricity/sparks/spark_07.wav
+	//sound/xian/electricity/sparks/spark_09.wav
+	//sound/xian/electricity/sparks/spark_10.wav
+	//sound/xian/electricity/sparks/spark_11.wav
+}
+
+teleporter_01
+{
+	minDistance	4
+	maxDistance	15
+	volume 		1
+
+	sound/electronics/1shot_teleporter_01.wav
+}
+
+loop_hums_01 {
+	minDistance 	1
+	maxDistance 	7
+	looping
+	volume 0.5
+
+	sound/ambient/electrical/loop_hum_01.wav
+	sound/ambient/electrical/loop_hum_02.wav
+	sound/ambient/electrical/loop_hum_03.wav
+}
+
+
+
+
+
+loop_hum_01 {
+	minDistance 1
+	maxDistance 5
+	looping
+	volume 0.5
+	sound/ambient/electrical/loop_hum_01.wav
+}
+
+loop_hum_02 {
+	minDistance 1
+	maxDistance 5
+	looping
+	volume 0.5
+	sound/ambient/electrical/loop_hum_02.wav
+}
+
+loop_hum_03 {
+	minDistance 1
+	maxDistance 5
+	looping
+	volume 0.5
+	sound/ambient/electrical/loop_hum_03.wav
+}
+
+loop_hum_04 {
+	minDistance 1
+	maxDistance 5
+	looping
+	volume 0
+	sound/ambient/electrical/loop_hum_04.wav
+}
+
+
+switch_02
+{
+	minDistance	2
+	maxDistance	15
+	
+	sound/electronics/1shot_switch_02.wav
+}

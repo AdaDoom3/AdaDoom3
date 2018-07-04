@@ -1,0 +1,92 @@
+// Changed default case from min 5 / max 20
+// Nov.13.2003 - Xian
+
+monster_teleport_in {
+	omnidirectional
+	minDistance	10
+	maxDistance	35
+	//stereo_omni
+	volume		2
+	sound/ed/teleporter/monster_teleport_in.wav
+
+}
+
+teleport_fade_out {
+	omnidirectional
+	minDistance	10
+	maxDistance	35
+	//stereo_omni
+	volume	-3	
+	sound/ed/teleporter/tele2_fadeout2.wav
+
+}
+
+teleport_upper_explosion {
+	omnidirectional
+	minDistance	10
+	maxDistance	35
+	//stereo_omni
+	volume	3
+	sound/ed/teleporter/tele2_upper_explosion2.wav
+
+}
+
+teleport_lightning {
+	omnidirectional
+	minDistance	10
+	maxDistance	35
+	stereo_omni
+	volume	1.5
+	sound/ed/teleporter/tele2_lightning2.wav
+
+}
+
+teleport_lower_explosion {
+	omnidirectional
+	minDistance	10
+	maxDistance	35
+	//stereo_omni
+	volume	3
+	sound/ed/teleporter/tele2_lower_explosion2.wav
+
+}
+
+teleport_full {
+	omnidirectional
+	//stereo_omni
+	minDistance	10
+	maxDistance	35
+	volume	2.5				
+	sound/ed/teleporter/tele2_full3_nochant.wav
+
+}
+
+teleport_full_1s {
+	omnidirectional
+	//stereo_omni
+	minDistance	10
+	maxDistance	35
+	volume	2.5
+	sound/ed/teleporter/tele2_full3_1s.wav
+
+}
+
+teleport_full_2s {
+	omnidirectional
+	//stereo_omni
+	minDistance	10
+	maxDistance	35
+	volume	2.5
+	sound/ed/teleporter/tele2_full3_2s.wav
+
+}
+
+teleport_full_3s {
+	omnidirectional
+	//stereo_omni
+	minDistance	10
+	maxDistance	35
+	volume	2.5
+	sound/ed/teleporter/tele2_full3_3s.wav
+
+}

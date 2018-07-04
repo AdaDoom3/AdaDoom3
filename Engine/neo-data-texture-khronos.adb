@@ -25,7 +25,18 @@ separate (Neo.Data.Texture) package body Khronos is
     --  http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
     type KTX_Header_State is record
         Id : Str_8 (1..12) := (others => NULL_CHAR_8);
-        Endianness, Kind, Image_Size, GL_Format, Internal_Format, Base_Format, Width, Height, Depth, Array_Length, Faces, Mipmaps,
+        Endianness,
+        Kind,   
+        Image_Size, 
+        GL_Format, 
+        Internal_Format, 
+        Base_Format,
+        Width,      
+        Height, 
+        Depth,     
+        Array_Length, 
+        Faces, 
+        Mipmaps, 
         Key_Value_Bytes : Int_Unsigned := 0;
       end record with Pack;
 

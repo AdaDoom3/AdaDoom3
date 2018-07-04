@@ -1,0 +1,201 @@
+combat_chatter {
+	minDistance	1
+	maxDistance	100
+	volume		0
+	minSamples  15
+	no_dups
+	
+	sound/vo/combat_chatter/deathscream_01.wav
+	sound/vo/combat_chatter/back_him_up.wav
+	sound/vo/combat_chatter/broke_into_the_perimeter.wav
+	sound/vo/combat_chatter/cover_the_flank.wav
+	sound/vo/combat_chatter/flankleft.wav
+	sound/vo/combat_chatter/get_away.wav
+	sound/vo/combat_chatter/go_ill_cover_you.wav
+	sound/vo/combat_chatter/gogogo.wav
+	sound/vo/combat_chatter/jesus_what_is_that.wav
+	sound/vo/combat_chatter/laydownsuppressingfire.wav
+	sound/vo/combat_chatter/move_move_move.wav
+	sound/vo/combat_chatter/oh_my_god.wav
+	sound/vo/combat_chatter/on_your_left.wav
+	sound/vo/combat_chatter/shit_theyre_everywhere.wav
+	sound/vo/combat_chatter/someone_talk_to_us.wav
+	sound/vo/combat_chatter/stay_down.wav
+	sound/vo/combat_chatter/tearing_the_shit_out_of_us.wav
+	sound/vo/combat_chatter/there_get_him.wav
+	sound/vo/combat_chatter/use_everything_youve_got.wav
+	sound/vo/combat_chatter/what_is_your_location.wav
+	sound/vo/combat_chatter/wheres_the_fucking_medic.wav
+}
+
+combat_weapons {
+	minDistance	1
+	maxDistance	100
+	volume		0
+	minSamples  13
+	no_dups
+
+	sound/xian/combat_chatter/weapons/machinegun_02.wav
+	sound/xian/combat_chatter/weapons/pistol_01.wav
+	sound/xian/combat_chatter/weapons/chaingun_01.wav
+	sound/xian/combat_chatter/weapons/shotgun_01.wav
+	sound/xian/combat_chatter/weapons/rocket_01.wav
+	sound/xian/combat_chatter/weapons/plasma_01.wav
+	sound/xian/combat_chatter/weapons/chaingun_02.wav
+	sound/xian/combat_chatter/weapons/chaingun_03.wav
+	sound/xian/combat_chatter/weapons/machinegun_01.wav
+	sound/xian/combat_chatter/weapons/pistol_02.wav
+	sound/xian/combat_chatter/weapons/plasma_02.wav
+	sound/xian/combat_chatter/weapons/rocket_02.wav
+	sound/xian/combat_chatter/weapons/shotgun_02.wav
+}
+
+combat_bfg_blasts {
+	minDistance	1
+	maxDistance	100
+	volume		0
+	no_dups
+	
+	sound/xian/combat_chatter/weapons/bfg_01.wav
+	sound/xian/combat_chatter/weapons/bfg_02.wav
+	sound/xian/combat_chatter/weapons/bfg_03.wav
+}
+
+combat_explosions {
+	minDistance	1
+	maxDistance	100
+	volume		0
+	no_dups
+	shakes		0.1
+	minSamples	11
+	
+	sound/xian/combat_chatter/explosions/exp_01.wav	
+	sound/xian/combat_chatter/explosions/exp_02.wav
+	sound/xian/combat_chatter/explosions/exp_03.wav
+	sound/xian/combat_chatter/explosions/exp_04.wav
+	sound/xian/combat_chatter/explosions/exp_05.wav
+	sound/xian/combat_chatter/explosions/exp_06.wav
+	sound/xian/combat_chatter/explosions/exp_07.wav
+	sound/xian/combat_chatter/explosions/exp_08.wav
+	sound/xian/combat_chatter/explosions/exp_09.wav
+	sound/xian/combat_chatter/explosions/exp_10.wav
+	sound/xian/combat_chatter/explosions/exp_11.wav
+}
+
+swinglight_01 {
+
+	minDistance	2
+	maxDistance	10
+	volume		0
+	looping
+
+	sound/movers/loop_swinglight_02.wav
+	//sound/movers/loop_swinglight_04.wav
+}
+
+
+//used in the e3_1 map
+swinglight_02 {
+
+	minDistance	2
+	maxDistance	10
+	volume		0
+	looping
+
+	sound/movers/loop_swinglight_02.wav
+	//sound/movers/loop_swinglight_04.wav
+
+}
+
+metal_hits_01 {
+
+	description 	"Ambient metallic thuds that are played off in the distance"
+
+	minDistance	20
+	maxDistance	50
+	volume		1
+
+	sound/ambient/metals/1shot_metalhit_02.wav
+	sound/ambient/metals/1shot_metalhit_03.wav
+	sound/ambient/metals/1shot_metalhit_04.wav
+	sound/ambient/metals/1shot_metalhit_05.wav
+	sound/ambient/metals/1shot_metalhit_06.wav
+	sound/ambient/metals/1shot_metalhit_07.wav
+}
+
+metal_stress_01 {
+
+	description 	"Ambient creaking metallic stress"
+
+	minDistance	20
+	maxDistance	50
+	volume		1
+
+	sound/ambient/metals/1shot_metalstress_01.wav
+	sound/ambient/metals/1shot_metalstress_02.wav
+	sound/ambient/metals/1shot_metalstress_03.wav
+	sound/ambient/metals/1shot_metalstress_04.wav
+}
+
+lynchmetal_hits {
+
+	description 	"Ambient metallic thuds and creaks"
+
+	minDistance	20
+	maxDistance	50
+	volume		1
+
+	sound/ambient/metals/1shot_lynchmetal_01.wav
+	sound/ambient/metals/1shot_lynchmetal_02.wav
+	sound/ambient/metals/1shot_lynchmetal_03.wav
+	sound/ambient/metals/1shot_lynchmetal_04.wav
+	sound/ambient/metals/1shot_lynchmetal_05.wav
+	sound/ambient/metals/1shot_lynchmetal_06.wav
+	sound/ambient/metals/1shot_lynchmetal_07.wav
+	sound/ambient/metals/1shot_lynchmetal_08.wav
+	sound/ambient/metals/1shot_lynchmetal_09.wav
+	sound/ambient/metals/1shot_lynchmetal_10.wav
+	sound/ambient/metals/1shot_lynchmetal_11.wav
+}
+
+motion_thuds_01 
+{
+
+	description 	"Ambient motion-esque type sounds played off in the distance"
+
+	minDistance	20
+	maxDistance	50
+	volume 		1
+
+	sound/ambient/thuds/1shot_thud_01.wav
+	sound/ambient/thuds/1shot_thud_02.wav
+	sound/ambient/thuds/1shot_thud_03.wav
+	sound/ambient/thuds/1shot_thud_04.wav
+}
+
+loop_thuds_01
+{
+	description 	"Short, reverberant ambient thuds"
+
+	minDistance	4
+	maxDistance	20
+	volume 		1
+	looping
+
+	sound/ambient/thuds/loop_thud_01.wav
+}
+
+
+steam_01
+{
+	minDistance	2
+	maxDistance	8
+	looping
+	volume		0.6
+
+	sound/ambient/steam/loop_steam_01.wav
+	sound/ambient/steam/loop_steam_02.wav
+	sound/ambient/steam/loop_steam_03.wav
+	sound/ambient/steam/loop_steam_05.wav
+	sound/ambient/steam/loop_steam_06.wav
+}

@@ -1,0 +1,82 @@
+s3_arm_back {
+	minDistance	3
+	maxDistance	25
+	volume		-9
+	
+	sound/movers/enpro/mech_1s_04a.wav
+}
+
+train_door_open {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/site3/train_door_open.wav
+}
+
+train_door_close {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/site3/train_door_close.wav
+}
+
+
+train_start {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/site3/train_start.wav
+}
+
+train_loop {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/levels/site3/train_loop.wav
+}
+
+train_stop {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/levels/site3/train_stop.wav
+}
+
+
+site3_sci_trigger {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	sound/vo/site3/01_trigger_sc1.wav
+}
+
+site3_sci_primary {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	sound/vo/site3/04_primary.wav
+}
+
+site3_sci_secondary1 {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	sound/vo/site3/05_secondary_sc1.wav
+}
+
+site3_sci_secondary2 {
+	minDistance	5
+	maxDistance	25
+	volume		1
+	unclamped
+	sound/vo/site3/06_secondary_sc1.wav
+}

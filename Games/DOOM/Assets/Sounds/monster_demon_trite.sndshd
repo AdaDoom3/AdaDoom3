@@ -1,0 +1,140 @@
+
+trite_deathsplat {
+	minDistance	5
+	maxDistance	25
+	volume		6
+	unclamped
+	
+	sound/monsters/trite/deathsplat_01.wav
+	//sound/monsters/trite/deathsplat_02.wav
+	//sound/monsters/trite/deathsplat_03.wav
+	sound/monsters/trite/deathsplat_04.wav
+}
+
+monster_demon_trite_melee {
+	minDistance	2
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/monsters/trite/attack11.wav
+	sound/monsters/trite/attack18.wav
+	sound/monsters/trite/attack13.wav
+	
+}
+
+monster_demon_trite_footstep {
+	minDistance	2
+	maxDistance	17
+	volume		-3	
+	no_dups
+	
+	sound/monsters/trite/trite_walk1.wav
+	sound/monsters/trite/trite_walk2.wav
+	sound/monsters/trite/trite_walk3.wav
+	sound/monsters/trite/trite_walk4.wav
+	
+}
+
+monster_demon_trite_sight {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	no_dups
+
+	sound/monsters/trite/sight11.wav
+	sound/monsters/trite/sight13.wav
+	sound/monsters/trite/sight15.wav
+
+}
+
+monster_demon_trite_chatter {
+	minDistance	2
+	maxDistance	25	
+	volume		-6	
+	no_dups
+
+	sound/monsters/trite/sight1.wav
+	sound/monsters/trite/sight3.wav
+	sound/monsters/trite/sight5.wav
+	sound/monsters/trite/pain8.wav
+	sound/monsters/trite/pain9.wav
+}
+
+
+monster_demon_trite_chatter_combat {
+	minDistance	2
+	maxDistance	25	
+	volume		-6	
+	no_dups
+
+	sound/monsters/trite/sight1.wav
+	sound/monsters/trite/sight3.wav
+	sound/monsters/trite/pain10.wav
+	sound/monsters/trite/pain11.wav
+	sound/monsters/trite/pain12.wav
+	sound/monsters/trite/pain13.wav
+
+}
+
+
+
+monster_demon_trite_chomp {
+	minDistance	2
+	maxDistance	15
+	volume		-12	
+	no_dups
+
+	sound/monsters/trite/chomp1.wav
+	sound/monsters/trite/chomp2.wav
+
+
+}
+
+monster_demon_trite_startdrop {
+	minDistance	2
+	maxDistance	25
+	volume		-3
+	looping
+	sound/monsters/trite/trite_startdrop1.wav
+	
+}
+
+monster_demon_trite_enddrop {
+	minDistance	2
+	maxDistance	25
+	volume		-3
+	sound/monsters/trite/trite_enddrop1.wav
+
+}
+
+monster_demon_trite_pain {
+	minDistance	2
+	maxDistance	35
+	volume		4
+	no_dups
+	sound/monsters/trite/pain21.wav
+	sound/monsters/trite/pain22.wav
+	sound/monsters/trite/pain23.wav
+
+}
+
+monster_demon_trite_death {
+	minDistance	2
+	maxDistance	35
+	volume		0
+	sound/monsters/trite/death21.wav
+	sound/monsters/trite/death22.wav
+	sound/monsters/trite/death23.wav
+
+}
+
+monster_demon_trite_burn {
+
+	minDistance	1
+	maxDistance	10
+	volume	-3	
+
+	sound/ed/tick/tick_burn2.wav
+
+}

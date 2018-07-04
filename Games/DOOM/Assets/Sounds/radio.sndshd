@@ -1,0 +1,275 @@
+//**************
+//Mars City Underground
+//**************
+
+//1st message to all units after invasion - all units fall back
+mc_under_sarge_radio1 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio1.wav	
+}
+
+//I repeat this is not a drill
+mc_under_sarge_radio4 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio4.wav	
+}
+
+//all units give sit reps
+mc_under_sarge_radio5 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio5.wav	
+}
+
+//all units fallback and give them hell
+mc_under_sarge_radio7 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio7.wav	
+}
+
+//Roger that fireteam 2 ... fall back to the nearest station...
+//5.028
+mc_under_sarge_radio8 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio8.wav	
+}
+
+//all units fallback and stock up if you are stuck
+mc_under_sarge_radio10 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio10.wav	
+}
+
+//before invasion, marine hurry it up down there
+mc_under_sarge_radio13 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio13.wav	
+}
+
+//
+mc_under_sarge_radio14 {
+	volume 5
+	sound/vo/mc_underground/sarge_radio14.wav	
+}
+
+//3.342sec
+sit_rep_marine_01 {
+	volume 5
+	sound/vo/mc_underground/sit_rep_marine_01.wav	
+}
+
+//2.923sec
+sit_rep_marine_02 {
+	volume 5
+	sound/vo/mc_underground/sit_rep_marine_02.wav	
+}
+
+//10.710sec
+sit_rep_marine_03 {
+	volume 5
+	sound/vo/mc_underground/sit_rep_marine_03.wav	
+}
+
+//1.993sec
+sit_rep_marine_04 {
+	volume 5
+	sound/vo/mc_underground/sit_rep_marine_04.wav	
+}
+
+//6.090sec
+marine_exit_01 {
+	volume 5
+	sound/vo/mc_underground/marine_exit_01.wav	
+}
+
+//7.795sec
+marine_exit_02 {
+	volume 5
+	sound/vo/mc_underground/marine_exit_02.wav	
+}
+
+
+
+
+//**************
+//Mars City 2
+//**************
+
+//all units Im stuck in delta goto marine HQ
+mc2_sarge_radio1 {
+	volume 5
+	sound/vo/mars_city2/sarge_radio1.wav	
+}
+
+
+//marine, reacg bravo team quickly
+mc2_sarge_radio2 {
+	volume 5
+	sound/vo/mars_city2/sarge_radio2.wav	
+}
+
+//it's ok wilson
+mc2_sarge_radio3 {
+	volume 5
+	sound/vo/mars_city2/sarge_radio3.wav	
+}
+
+//use the sentry bots
+mc2_sarge_radio4 {
+	volume 5
+	sound/vo/mars_city2/sarge_radio4.wav	
+}
+
+
+//wilson
+mc2_wilson_radio1 {
+	volume 5
+	sound/vo/mars_city2/wilson_radio1.wav	
+}
+
+
+//**************
+//Admin
+//**************
+//watch out for growth!!
+admin_sarge_radio1 {
+	volume 5
+	sound/vo/admin/sarge_radio01.wav	
+}
+
+//watch out for Swann
+admin_sarge_radio2 {
+	volume 5
+	sound/vo/admin/sarge_radio02.wav	
+}
+
+
+//**************
+//Alphalabs 1
+//**************
+
+//I've recieved a report that you have not reached bravo team yet
+alpha1_sarge_radio1 {
+	volume 5
+	sound/vo/alpha_labs1/sarge_radio1.wav	
+}
+
+//**************
+//Alphalabs 2
+//**************
+
+//Mystery Radio Message
+alpha2_mystery_radio_1 {
+	volume -5
+	sound/vo/alpha_labs2/mystery_radio_chatter_1.wav	
+}
+
+//Mystery Radio Message
+alpha2_mystery_radio_2 {
+	volume -5
+	sound/vo/alpha_labs2/mystery_radio_chatter_2.wav	
+}
+
+//Bravo team located you but can't get to you
+alpha2_sarge_radio1 {
+	volume 5
+	sound/vo/alpha_labs2/sarge_radio02.wav
+}
+
+//**************
+//Alphalabs 3
+//**************
+//pick up the pace
+alpha3_sarge_radio1 {
+	volume 5
+	sound/vo/alpha_labs3/sarge_radio1.wav	
+}
+
+//watch out for swann again
+alpha3_sarge_radio2 {
+	volume 5
+	sound/vo/alpha_labs3/sarge_radio2.wav	
+}
+
+//**************
+//Alphalabs 4
+//**************
+
+//I've found you, hurry up bravo team is in enpro
+alpha4_sarge_radio2 {
+	volume 5
+	sound/vo/alpha_labs4/sarge_radio2.wav	
+}
+
+//EFR puzzle
+alpha4_sarge_radio1 {
+	volume 5
+	sound/vo/alpha_labs4/sarge_radio1.wav	
+}
+
+//Broken up Sarge radi message
+alpha4_sarge_radio3 {
+	volume 5
+	sound/vo/alpha_labs4/sarge_radio3.wav	
+}
+
+//**************
+//Enpro
+//**************
+
+//Bravo team is down 17.5 seconds
+enpro_sarge_radio1 {
+	volume 8
+	sound/vo/enpro/sarge_radio1.wav	
+}
+
+//find the card
+enpro_sarge_radio2 {
+	volume 8
+	sound/vo/enpro/sarge_radio2.wav	
+}
+
+//**************
+//Comm1
+//**************
+
+//level opening tells player to send message
+comm_sarge_radio1 {
+	volume 5
+	sound/vo/comm/sarge_radio1.wav	
+}
+
+//tells player to use the secondary comm tower
+comm_sarge_complete_1 {
+	volume 5
+	sound/vo/comm/sarge_radio_complete_1.wav	
+}
+
+//message sent tells player to meet them in delta
+comm_sarge_radio10 {
+	volume 5
+	sound/vo/comm/sarge_radio10.wav	
+}
+
+//message not sent pissed off at player
+comm_sarge_radio14 {
+	volume 5
+	sound/vo/comm/sarge_radio14.wav	
+}
+
+//if player does not send message and is walking away
+comm_sarge_radio16 {
+	volume 5
+	sound/vo/comm/sarge_radio16.wav	
+}
+
+//messge recieved while in transit to 2nd comm tower
+comm_sarge_radio17 {
+	volume 5
+	sound/vo/comm/sarge_radio17.wav	
+}
+
+//delta was the source of the invasino
+comm_sarge_radio18 {
+	volume 5
+	sound/vo/comm/sarge_radio18.wav	
+}

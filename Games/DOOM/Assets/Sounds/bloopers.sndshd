@@ -1,0 +1,37 @@
+
+
+d4_hazmat_pooped {
+	minDistance	3
+	maxDistance	40
+	volume		10
+	global
+	
+	video/bloopers/pooped.wav
+}
+
+betruger_oops {
+	minDistance	3
+	maxDistance	40
+	volume		10
+	global
+	
+	video/bloopers/betbloop.wav
+}
+
+hazmat_monsters {
+	minDistance	3
+	maxDistance	40
+	volume		10
+	global
+	
+	video/bloopers/monsters.wav
+}
+
+blooper_window {
+	minDistance	3
+	maxDistance	40
+	volume		10
+	global
+	
+	video/bloopers/right.wav
+}

@@ -1,0 +1,1336 @@
+
+
+//
+// weapon sound shader definition file
+//
+
+soulcube_notready {
+	minDistance	5
+	maxDistance	25
+	volume		0
+	
+	sound/weapons/soulcube/notready.wav
+}
+
+soulcube_givehealth {
+	minDistance	5
+	maxDistance 25
+	volume		0
+	
+	sound/weapons/soulcube/recharge.wav
+}
+
+soulcube_idlespin {
+	minDistance	2
+	maxDistance	15
+	volume		-3
+	
+	sound/weapons/soulcube/present_spin.wav
+}
+
+soulcube_raise {
+	minDistance	5
+	maxDistance	20
+	volume		-3
+	
+	sound/weapons/soulcube/raise_01.wav
+	sound/weapons/soulcube/raise_02.wav
+}
+
+soulcube_putaway {
+	minDistance	5
+	maxDistance	20
+	volume		-3
+	
+	sound/weapons/soulcube/putaway_01.wav
+}
+
+soulcube_idle {
+	minDistance	5
+	maxDistance	20
+	volume		-20
+	looping
+	
+	sound/weapons/soulcube/idle_01.wav
+}
+
+soulcube_fire_start {
+	minDistance	5
+	maxDistance	20
+	volume		0
+	
+	sound/weapons/soulcube/fly_start_02.wav
+	sound/weapons/soulcube/fly_start_03.wav
+}
+
+soulcube_fire_loop {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	looping
+	
+	sound/weapons/soulcube/fly_loop_01.wav
+}
+
+soulcube_fire_end {
+	minDistance	5
+	maxDistance	20
+	volume		0
+	
+	sound/weapons/soulcube/fly_end_01.wav
+}
+
+soulcube_energize {
+	minDistance	5
+	maxDistance	35
+	volume		1
+	unclamped
+	
+	sound/weapons/soulcube/energize_01.wav
+
+}
+
+soulcube_shred {
+	minDistance	5
+	maxDistance	35
+	volume		0
+	
+	sound/weapons/soulcube/soulcube_shred.wav
+}
+
+flashlight_impact {
+	minDistance	3
+	maxDistance	30
+	volume		3
+	unclamped
+	no_dups
+	
+	sound/weapons/flashlight/impact_01.wav
+	sound/weapons/flashlight/impact_02.wav
+	sound/weapons/flashlight/impact_03.wav
+	sound/weapons/flashlight/impact_04.wav
+	sound/weapons/flashlight/impact_05.wav
+}
+
+fist_raise {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/weapons/fists/raise_fists_01.wav	
+}
+
+flashlight_raise {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/weapons/fists/raise_fists_01.wav	
+}
+
+pda_raise {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	// sound/weapons/fists/raise_fists_01.wav	
+	sound/ed/gui/pda_raise.wav
+}
+
+fist_impact_flesh {
+	minDistance	2
+	maxDistance	30
+	volume		0
+	no_dups
+
+	sound/weapons/fists/impact_03.wav
+	sound/weapons/fists/impact_02.wav
+	sound/weapons/fists/impact_04.wav
+
+}
+
+fist_impact {
+	minDistance	2
+	maxDistance	30
+	volume		0
+	no_dups
+	
+	sound/weapons/fists/default_punch_01.wav
+	sound/weapons/fists/default_punch_02.wav
+	sound/weapons/fists/default_punch_03.wav
+	sound/weapons/fists/default_punch_04.wav
+
+//	sound/weapons/fists/impact_03.wav
+//	sound/weapons/fists/impact_01.wav
+//	sound/weapons/fists/impact_02.wav
+//	sound/weapons/fists/impact_04.wav
+}
+
+fist_gorepunch {
+	minDistance	2
+	maxDistance	30
+	volume		0
+	no_dups
+
+	sound/weapons/fists/gorepunch_01.wav
+	sound/weapons/fists/gorepunch_02.wav
+	sound/weapons/fists/gorepunch_03.wav
+	sound/weapons/fists/gorepunch_04.wav
+//	sound/weapons/fists/gorepunch_05.wav
+//	sound/weapons/fists/gorepunch_06.wav
+//	sound/weapons/fists/gorepunch_07.wav
+//	sound/weapons/fists/gorepunch_08.wav
+}
+
+fist_whoosh {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	no_dups
+	
+	sound/xian/monsters/punch/whoosh_01.wav
+	sound/xian/monsters/punch/whoosh_02.wav
+	sound/xian/monsters/punch/whoosh_03.wav
+	sound/xian/monsters/punch/whoosh_04.wav
+//	sound/xian/monsters/punch/whoosh_05.wav
+//	sound/xian/monsters/punch/whoosh_06.wav
+//	sound/xian/monsters/punch/whoosh_07.wav
+//	sound/xian/monsters/punch/whoosh_08.wav
+}
+
+barrel_explosions {
+	minDistance	5
+	maxDistance	35
+	volume		4
+	unclamped	
+	
+	shakes		0.2
+	
+	sound/weapons/explosions/barexp_01a.wav
+	sound/weapons/explosions/explode_04.wav
+	sound/weapons/explosions/barexp_02a.wav
+	sound/weapons/explosions/barexp_03a.wav
+	
+//	sound/weapons/explosions/explode_01.wav
+//	sound/weapons/explosions/explode_05.wav
+//	sound/weapons/explosions/explode_06.wav
+//	sound/weapons/explosions/explode_07.wav
+//	sound/weapons/explosions/explode_09.wav
+
+}
+
+casings_small_concrete {
+	minDistance	1
+	maxDistance	15
+	volume		-3
+	
+	sound/weapons/casings/small_conc_01.wav
+	sound/weapons/casings/small_conc_02.wav
+	sound/weapons/casings/small_conc_03.wav
+}
+
+casings_small_linoleum {
+	minDistance	5
+	maxDistance	15
+	volume		3
+
+	sound/weapons/casings/small_lino_01.wav
+	sound/weapons/casings/small_lino_02.wav
+	sound/weapons/casings/small_lino_03.wav
+}
+
+casings_small_metal {
+	minDistance	1
+	maxDistance	15
+	volume		-12
+
+	sound/weapons/casings/small_metal_01.wav
+	sound/weapons/casings/small_metal_02.wav
+	sound/weapons/casings/small_metal_03.wav
+}
+
+casings_small_mix {
+	minDistance	1
+	maxDistance	15
+	volume		-6
+	sound/weapons/casings/small_metal_02.wav
+	sound/weapons/casings/small_lino_02.wav
+	sound/weapons/casings/small_conc_02.wav
+	sound/weapons/casings/small_single_conc_03.wav
+//	sound/weapons/casings/small_single_conc_04.wav
+	
+}
+
+casings_small_single_concrete {
+	minDistance	5
+	maxDistance	15
+	volume		3
+
+	sound/weapons/casings/small_single_conc_01.wav
+	sound/weapons/casings/small_single_conc_02.wav
+	sound/weapons/casings/small_single_conc_03.wav
+//	sound/weapons/casings/small_single_conc_04.wav
+}
+
+casings_shotgun {
+	minDistance	1
+	maxDistance	15
+	volume		-5
+	
+	sound/weapons/casings/shotgun_shell_01.wav
+	sound/weapons/casings/shotgun_shell_02.wav
+	sound/weapons/casings/shotgun_shell_03.wav
+//	sound/weapons/casings/shotgun_shell_04.wav
+//	sound/weapons/casings/shotgun_shell_05.wav
+}
+
+
+bullet_flight {
+	description "whine sounds for bullets as they miss the player"
+	
+	minDistance	5
+	maxDistance	15
+	no_dups	
+	volume		4
+	
+	sound/ed/sfx/whizzes/whiz1.wav
+	sound/ed/sfx/whizzes/whiz2.wav
+	sound/ed/sfx/whizzes/whiz3.wav
+	sound/ed/sfx/whizzes/whiz4.wav
+}
+
+
+bullet_ricochet {
+
+	description	"various richochet sounds, one will be played randomly"
+	
+	minDistance	1
+	maxDistance	25
+	volume		0
+	unclamped
+	no_dups
+	
+	//sound/weapons/impacts/bullet_metal/metalimpact_2_01.wav
+	//sound/weapons/impacts/bullet_metal/metalimpact_2_06.wav
+	//sound/weapons/impacts/bullet_metal/metalimpact_2_07.wav
+	sound/xian/weapons/ricochet/01n.wav
+	sound/xian/weapons/ricochet/02.wav
+	sound/xian/weapons/ricochet/03.wav
+	sound/xian/weapons/ricochet/04.wav
+}
+
+bullet_impact_metal {
+	minDistance	1
+	maxDistance	25
+	volume		-3
+
+	
+	sound/weapons/impacts/bullet_metal/metalimpact_02.wav
+	sound/weapons/impacts/bullet_metal/metalimpact_04.wav
+	sound/weapons/impacts/bullet_metal/metalimpact_05.wav
+}
+
+bullet_impact_stone {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/weapons/impacts/bullet_stone/stoneimpact_01.wav
+	sound/weapons/impacts/bullet_stone/stoneimpact_02.wav
+	sound/weapons/impacts/bullet_stone/stoneimpact_03.wav
+	sound/weapons/impacts/bullet_stone/stoneimpact_04.wav
+}
+
+bullet_impact_wood {
+	minDistance	2
+	maxDistance	25
+	volume		0
+	sound/weapons/impacts/bullet_wood/woodimpact_01.wav
+	sound/weapons/impacts/bullet_wood/woodimpact_02.wav
+	sound/weapons/impacts/bullet_wood/woodimpact_03.wav
+	sound/weapons/impacts/bullet_wood/woodimpact_04.wav
+}
+
+bullet_impact_cardboard {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+	sound/xian/foley_sessions/boxes/boxpunch_01.wav
+	sound/xian/foley_sessions/boxes/boxpunch_06.wav
+	sound/xian/foley_sessions/boxes/boxpunch_10.wav
+	sound/xian/foley_sessions/boxes/boxpunch_11.wav
+}
+
+bullet_impact_glass {
+	minDistance	3
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/ed/glass/bullet_glass_nobreak_impact1.wav
+	sound/ed/glass/bullet_glass_nobreak_impact2.wav
+	sound/ed/glass/bullet_glass_nobreak_impact3.wav
+	sound/ed/glass/bullet_glass_nobreak_impact4.wav
+}
+
+melee_impact_glass {
+	minDistance	3
+	maxDistance	25
+	volume		2
+	unclamped
+	
+	sound/ed/glass/bullet_glass_nobreak_impact2.wav
+}
+
+bullet_impact_liquid {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	sound/weapons/impacts/bullet_liquid/liquid_01.wav
+	sound/weapons/impacts/bullet_liquid/liquid_02.wav
+}
+
+bullet_impact_plastic {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/xian/foley_sessions/plastics_small/impact_held_05.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_06.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_08.wav
+	sound/xian/foley_sessions/plastics_small/impact_held_18.wav
+}
+
+bullet_impact_flesh {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/weapons/impacts/bullet_flesh/fleshimpact_04.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_05.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_07.wav
+	
+/*
+	sound/weapons/impacts/bullet_flesh/fleshimpact_01.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_02.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_03.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_06.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_08.wav	
+	sound/weapons/impacts/bullet_flesh/fleshimpact_09.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_10.wav
+*/
+}
+
+shotgun_impact_metal {
+	minDistance	1
+	maxDistance	20
+	volume		-5
+
+
+	sound/weapons/impacts/shotgun_metal/impact_02.wav
+	sound/weapons/impacts/shotgun_metal/impact_07.wav
+	sound/weapons/impacts/shotgun_metal/impact_08.wav
+	
+/*
+	sound/weapons/impacts/shotgun_metal/impact_03.wav
+	sound/weapons/impacts/shotgun_metal/impact_04.wav
+	sound/weapons/impacts/shotgun_metal/impact_05.wav
+	sound/weapons/impacts/shotgun_metal/impact_06.wav
+	sound/weapons/impacts/shotgun_metal/impact_01.wav
+*/
+
+}
+
+shotgun_impact_flesh {
+	minDistance	1
+	maxDistance	20
+	volume		0
+
+	sound/weapons/impacts/bullet_flesh/fleshimpact_04.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_05.wav
+	sound/weapons/impacts/bullet_flesh/fleshimpact_07.wav
+}
+
+
+player_chainsaw_startAttack {
+	minDistance	1
+	maxDistance	25	
+	volume		0
+	sound/ed/chainsaw/start_attack.wav
+
+}
+
+player_chainsaw_attack {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	looping
+	sound/ed/chainsaw/attack.wav
+}
+
+player_chainsaw_stopAttack {
+	minDistance	1
+	maxDistance	25	
+	volume		-2
+	sound/ed/chainsaw/stop_attack.wav
+}
+
+player_chainsaw_idle {
+	minDistance	5
+	maxDistance	25
+	volume		-3
+	looping
+	sound/ed/chainsaw/idle.wav
+}
+
+player_chainsaw_pull {
+	minDistance	1
+	maxDistance	25	
+	volume		3
+	sound/ed/chainsaw/pull.wav
+}
+
+player_chainsaw_pull_zip {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/ed/chainsaw/pull_zip.wav
+}
+
+player_chainsaw_release {
+	minDistance	1
+	maxDistance	25	
+	volume		0
+	sound/ed/chainsaw/dryrelease1.wav
+}
+
+player_chainsaw_putaway {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/ed/chainsaw/put_away.wav
+}
+
+player_chainsaw_hit_flesh {
+	minDistance	1
+	maxDistance	25
+	volume		4
+	unclamped
+	no_dups
+	
+	sound/weapons/chainsaw/hit_00.wav
+	sound/weapons/chainsaw/hit_01.wav
+	sound/weapons/chainsaw/hit_02.wav
+	sound/weapons/chainsaw/hit_03.wav
+	sound/weapons/chainsaw/hit_04.wav
+	sound/weapons/chainsaw/hit_05.wav
+	sound/weapons/chainsaw/hit_06.wav
+	sound/weapons/chainsaw/hit_07.wav
+	sound/weapons/chainsaw/hit_08.wav
+	sound/weapons/chainsaw/hit_09.wav
+}
+
+player_chainsaw_hit_metal {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	unclamped
+	no_dups
+
+	sound/weapons/chainsaw/hit_metal_01.wav
+	sound/weapons/chainsaw/hit_metal_02.wav
+	sound/weapons/chainsaw/hit_metal_03.wav
+	sound/weapons/chainsaw/hit_metal_04.wav
+}
+
+player_flare {
+}
+
+player_soulcube {
+}
+
+player_soulcube_fire {
+	volume 0
+	minDistance	1
+	maxDistance	25
+	sound/ed/teleporter/tele2_fadeout.wav
+}
+
+player_soulcube_kill {
+	volume 5
+	minDistance	1
+	maxDistance	30
+	sound/ed/teleporter/tele2_lightning2.wav
+}
+
+player_soulcube_fly {
+	volume 0
+	minDistance	1
+	maxDistance	30
+	sound/weapons/rocket/flight_01.wav
+}
+
+player_handgrenade_throw {
+
+	minDistance	1
+	maxDistance	25
+	volume		-5
+
+	sound/weapons/grenades/gren_throw_mix.wav
+
+}
+
+player_handgrenade_explode {
+
+	minDistance	1
+	maxDistance	25
+	volume		-5
+
+	sound/quake3/WGRNIMPD.wav
+}
+
+player_handgrenade_bounce {
+
+	minDistance	1
+	maxDistance	20
+	volume		-3
+
+	sound/xian/foley_sessions/metals_small/lowtink_01.wav
+	sound/xian/foley_sessions/metals_small/lowtink_02.wav
+	sound/xian/foley_sessions/metals_small/lowtink_03.wav
+}
+
+player_grenade_use {
+	minDistance	1
+	maxDistance	15
+	volume		0
+	
+	sound/weapons/grenades/gren_use.wav
+}
+
+player_bfg_raise {
+
+	minDistance	10
+	maxDistance	25
+	volume	0
+
+	sound/ed/bfg/bfg_raise.wav
+
+}
+
+player_bfg_idle {
+	
+	minDistance	2
+	maxDistance	25
+	volume	-15
+	looping
+
+	sound/ed/bfg/bfg_idle.wav
+
+}
+
+player_bfg_explode {
+
+	minDistance	10
+	maxDistance	45
+	volume	4
+	unclamped
+	shakes	0.5
+
+	sound/ed/bfg/bfg_explode1.wav
+
+}
+
+
+player_bfg_2explode {
+
+	minDistance	10
+	maxDistance	45
+	volume	4
+	unclamped
+	shakes	0.3
+
+	sound/ed/bfg/bfg_explode2.wav
+
+}
+
+player_bfg_3explode {
+
+	minDistance	10
+	maxDistance	45
+	volume	4
+	unclamped
+	shakes	0.5
+
+	sound/ed/bfg/bfg_explode3.wav
+
+}
+
+
+player_bfg_4explode	{
+
+	minDistance	10
+	maxDistance	45
+	volume	4
+	unclamped
+	shakes	0.8
+
+	sound/ed/bfg/bfg_explode4.wav
+
+}
+
+player_bfg_fire {
+	minDistance	10
+	maxDistance	30
+	volume		4.5
+	shakes		0.15
+
+	sound/ed/bfg/bfg_fire.wav
+}
+
+sabaoth_bfg_fire {
+	minDistance	10
+	maxDistance	70
+	volume		4
+	shakes		0.15
+	unclamped 
+	
+	sound/ed/bfg/bfg_fire.wav
+
+
+
+}
+
+player_bfg_firebegin {
+	minDistance	10
+	maxDistance	30
+	volume		6
+	shakes		0.1
+
+	sound/ed/bfg/bfg_firebegin.wav
+}
+
+player_bfg_fly {
+	minDistance	15
+	maxDistance	35
+	volume		-2
+	unclamped
+	
+	looping
+
+	sound/ed/bfg/bfg_fly.wav
+}
+
+player_bfg_arc {
+	minDistance	1
+	maxDistance	30
+	volume		0
+	looping
+	sound/xian/weapons/bfg/arc_1.wav
+	sound/xian/weapons/bfg/arc_3.wav
+	sound/xian/weapons/bfg/arc_4.wav
+
+	//sound/xian/weapons/bfg/arc_2.wav
+	//sound/xian/weapons/bfg/arc_5.wav
+}
+
+player_bfg_reload {
+
+	minDistance	10
+	maxDistance	30
+	volume	0
+
+	sound/ed/bfg/bfg_reload.wav
+
+}
+
+player_bfg_dryfire {
+
+	minDistance	10
+	maxDistance	30
+	volume	0
+
+	sound/ed/bfg/bfg_dryfire.wav
+
+}
+
+player_pistol_raise  {
+	minDistance	10
+	maxDistance	30
+	volume		-1
+
+	sound/xian/weapons/pistol/up_01.wav
+}
+
+player_pistol_raise_01 {
+	minDistance	10
+	maxDistance	30
+	volume		1
+
+	//sound/xian/weapons/pistol/up_02.wav
+	sound/weapons/pistol/pistol_use_01.wav
+
+}
+
+monster_pistol_fire {
+	minDistance	5
+	maxDistance	30
+	volume		0
+	
+	sound/weapons/pistol/fire/pfire_01.wav
+	sound/weapons/pistol/fire/pfire_02.wav
+	sound/weapons/pistol/fire/pfire_03.wav
+
+/*
+	sound/weapons/pistol/fire/pfire_04.wav
+	sound/weapons/pistol/fire/pfire_05.wav
+	sound/weapons/pistol/fire/pfire_06.wav
+	sound/weapons/pistol/fire/pfire_07.wav
+	sound/weapons/pistol/fire/pfire_08.wav
+	sound/weapons/pistol/fire/pfire_09.wav
+*/
+
+}
+
+player_pistol_fire {
+	minDistance	10
+	maxDistance	30
+	volume		13
+
+	sound/weapons/pistol/pistol_shot_02a.wav
+	sound/weapons/pistol/pistol_shot_03a.wav
+	sound/weapons/pistol/pistol_shot_04a.wav
+	sound/weapons/pistol/pistol_shot_05a.wav
+}
+
+player_pistol_reload {
+	minDistance	10
+	maxDistance	30
+	volume		4.5
+	
+	sound/weapons/pistol/pistol_reload_01.wav
+}
+
+player_pistol_empty {
+	minDistance	10
+	maxDistance	30
+	volume		6
+	sound/weapons/pistol/dryfire/pdf_01.wav
+	sound/weapons/pistol/dryfire/pdf_03.wav
+	sound/weapons/pistol/dryfire/pdf_04.wav
+	
+	//sound/weapons/pistol/dryfire/pdf_02.wav
+	//sound/weapons/pistol/dryfire/pdf_05.wav
+}
+
+player_pistol_putaway  {
+	minDistance	10
+	maxDistance	30
+	volume		-6
+
+}
+
+player_shotgun_raise  {
+	minDistance	10
+	maxDistance	30
+	volume		3
+
+	sound/weapons/shotgun/shotgun_use_01.wav
+
+}
+
+monster_shotgun_fire {
+	minDistance	2
+	maxDistance	30
+	volume		3
+	
+	sound/weapons/shotgun/fire/sgfire_01.wav
+	sound/weapons/shotgun/fire/sgfire_02.wav
+	sound/weapons/shotgun/fire/sgfire_03.wav
+}
+
+player_shotgun_fire {
+	minDistance	10
+	maxDistance	30
+	volume		9
+	no_dups
+
+	sound/weapons/shotgun/wetfire.wav
+	sound/weapons/shotgun/wetfire3.wav
+	sound/weapons/shotgun/wetfire5.wav
+
+	//sound/weapons/shotgun/wetfire2.wav
+	//sound/weapons/shotgun/wetfire4.wav
+	
+
+	//sound/weapons/shotgun/xfire_01.wav
+	//sound/weapons/shotgun/xfire_02.wav
+	//sound/weapons/shotgun/xfire_03.wav
+	//sound/weapons/shotgun/xfire_04.wav
+}
+
+player_shotgun_pump  {
+	minDistance	10
+	maxDistance	30
+	volume		0
+	
+	sound/weapons/shotgun/shotgun_cock_01.wav
+}
+
+
+//shotgun on its side
+player_shotgun_reload_start {
+	minDistance	10
+	maxDistance	30
+	volume		3
+
+	sound/weapons/shotgun/reload/sgreload_start_01.wav
+	sound/weapons/shotgun/reload/sgreload_start_02.wav
+	sound/weapons/shotgun/reload/sgreload_start_03.wav
+}
+
+
+//each shell being loaded
+player_shotgun_reload  {
+	minDistance	10
+	maxDistance	30
+	volume		2
+
+	sound/weapons/shotgun/reload/sgreload_addshell_01.wav
+	sound/weapons/shotgun/reload/sgreload_addshell_02.wav
+	sound/weapons/shotgun/reload/sgreload_addshell_03.wav
+	sound/weapons/shotgun/reload/sgreload_addshell_04.wav
+
+}
+
+//the last cocking sound
+player_shotgun_reload_end  {
+	minDistance	10
+	maxDistance	30
+	volume		-4
+
+	sound/weapons/shotgun/shotgun_end_reload.wav
+
+
+}
+
+player_shotgun_empty  {
+	minDistance	10
+	maxDistance	30
+	volume		5
+
+	sound/weapons/shotgun/dryfire_01.wav
+	sound/weapons/shotgun/dryfire_02.wav
+	sound/weapons/shotgun/dryfire_03.wav
+	//sound/weapons/shotgun/dryfire_04.wav
+	//sound/weapons/shotgun/dryfire_05.wav
+	//sound/weapons/shotgun/dryfire_06.wav
+	
+}
+
+player_shotgun_putaway  {
+	minDistance	10
+	maxDistance	30
+	volume		-6
+
+}
+
+player_machinegun_raise  {
+	minDistance	10
+	maxDistance	30
+	volume	0
+
+	sound/weapons/machinegun/mg_use_01.wav
+}
+
+monster_turret_fire {
+	minDistance	2
+	maxDistance	70
+	
+	volume		0
+		
+	sound/ed/machinegun/fire1e.wav
+	sound/ed/machinegun/fire2e.wav
+	sound/ed/machinegun/fire3e.wav
+	//sound/ed/machinegun/fire4e.wav
+}
+
+
+monster_machinegun_fire {
+	minDistance	2
+	maxDistance	30
+	volume		3
+	
+	sound/ed/machinegun/fire1e.wav
+	sound/ed/machinegun/fire2e.wav
+	sound/ed/machinegun/fire3e.wav
+	//sound/ed/machinegun/fire4e.wav
+}
+
+player_machinegun_mech {
+	minDistance	5
+	maxDistance	30
+	volume	4
+
+	sound/weapons/machinegun/mg_mech_01.wav
+	sound/weapons/machinegun/mg_mech_02.wav
+	sound/weapons/machinegun/mg_mech_03.wav
+	//sound/weapons/machinegun/mg_mech_04.wav
+}
+
+player_machinegun_fire {
+	minDistance	5
+	maxDistance	30
+	volume	14
+
+	sound/dane/Machine_Gun_Shot_V2/MACHGUN_SHOT_1v2.wav
+	sound/dane/Machine_Gun_Shot_V2/MACHGUN_SHOT_2v2.wav
+	sound/dane/Machine_Gun_Shot_V2/MACHGUN_SHOT_3v2.wav
+	sound/dane/Machine_Gun_Shot_V2/MACHGUN_SHOT_4v2.wav
+	sound/dane/Machine_Gun_Shot_V2/MACHGUN_SHOT_5v2.wav
+	
+}
+
+player_machinegun_empty  {
+	minDistance	10
+	maxDistance	30
+	volume		0
+	sound/weapons/machinegun/dryfire/mgdf_01.wav
+	sound/weapons/machinegun/dryfire/mgdf_02.wav
+	sound/weapons/machinegun/dryfire/mgdf_03.wav
+
+}
+
+player_machinegun_reload {
+	minDistance	10
+	maxDistance	30
+	volume		2.5
+//	sound/weapons/machinegun/reload/mgreload_01.wav
+	sound/weapons/machinegun/mg_reload_01.wav
+
+}
+
+player_machinegun_putaway  {
+	minDistance	10
+	maxDistance	30
+	volume		-6
+
+	sound/weapons/machinegun/mg_use_01.wav
+
+}
+
+player_machinegun_lowammo  {
+	minDistance	10
+	maxDistance	30
+	volume	 	12
+	private
+	
+	sound/weapons/machinegun/lowammo3.wav
+}
+
+player_plasmagun {
+}
+
+
+player_plasma_idle {
+	minDistance	1
+	maxDistance	15
+	volume		-26
+	looping
+	
+	sound/weapons/plasmagun/plasma_idle_01.wav
+}
+
+player_plasma_raise {
+	minDistance	5
+	maxDistance	15
+	volume		-1
+	
+	sound/weapons/plasmagun/plasma_use_01.wav
+}
+
+player_plasma_putaway {
+	minDistance	5
+	maxDistance	15
+	volume		-6
+	
+	sound/weapons/plasmagun/plasma_use_01.wav
+}
+
+plasma_reload {
+
+	minDistance	1
+	maxDistance	30
+	volume	1
+
+	//sound/ed/plasma/plasma_reload.wav
+	sound/weapons/plasmagun/plasma_reload_01.wav
+
+}
+
+plasma_fire {
+	minDistance	3
+	maxDistance	30
+	volume 5
+
+	sound/ed/plasma/2plasma_fire1.wav
+	sound/ed/plasma/2plasma_fire3.wav
+	sound/ed/plasma/2plasma_fire6.wav
+
+//	sound/ed/plasma/2plasma_fire2.wav
+//	sound/ed/plasma/2plasma_fire4.wav
+//	sound/ed/plasma/2plasma_fire5.wav
+	
+
+//	sound/ed/plasma/plasma_fire11.wav
+//	sound/ed/plasma/plasma_fire12.wav
+//	sound/ed/plasma/plasma_fire13.wav
+	
+//	sound/ed/plasma/plasma_fire1.wav
+//	sound/ed/plasma/plasma_fire2.wav
+//	sound/ed/plasma/plasma_fire3.wav
+
+
+//	sound/weapons/plasmagun/xfire_02.wav
+}
+
+plasma_dryfire {
+
+	minDistance	1
+	maxDistance	30
+	volume		3
+
+	sound/ed/plasma/plasma_dryfire.wav
+
+}
+
+plasma_impact {
+	minDistance	1
+	maxDistance	25
+	volume		3
+
+	sound/ed/plasma/plasma_impact1.wav
+	sound/ed/plasma/plasma_impact2.wav
+	sound/ed/plasma/plasma_impact3.wav
+}
+
+plasma_flight {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	looping
+
+	sound/weapons/plasmagun/flight_01.wav
+
+}
+
+rocket_flight {
+	minDistance	5
+	maxDistance	25
+	volume		7
+	looping
+	unclamped
+	shakes	0.1
+
+	sound/dane/ROCKET_LAUNCHER/ROCKETLAUNCH_BY_LOOP.wav
+
+//	sound/ed/rocketlauncher/flight1.wav
+//	sound/weapons/rocket/flight_01.wav
+//	sound/weapons/rocket/flight_02.wav
+}
+
+rocket_impact {
+	minDistance	10
+	maxDistance	65
+	volume		1
+	shakes		0.1
+	unclamped
+
+	sound/weapons/explosions/explode_01.wav
+	sound/weapons/explosions/explode_05.wav
+	sound/weapons/explosions/explode_06.wav
+	sound/weapons/explosions/explode_07.wav
+	sound/weapons/explosions/explode_09.wav
+	
+//	sound/ed/rocketlauncher/explode1.wav
+//	sound/ed/rocketlauncher/explode2.wav
+//	sound/ed/rocketlauncher/explode3.wav
+//	sound/ed/rocketlauncher/explode4.wav
+//	sound/ed/rocketlauncher/explode5.wav
+
+//	sound/weapons/rocket/impact_01.wav
+//	sound/weapons/rocket/impact_02.wav
+
+}
+
+player_rocketlauncher_raise {
+	minDistance	2
+	maxDistance	15
+	volume		0
+	
+	sound/weapons/rocket/raise.wav
+}
+
+player_rocketlauncher_fire {
+	minDistance	5			
+	maxDistance	30
+	volume		1
+	no_dups
+	
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_1.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_2.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_3.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_4.wav
+
+//	sound/weapons/rocket/fire_01.wav
+}
+
+player_rocketlauncher_reload {
+
+	minDistance	4
+	maxDistance	30
+	volume		1
+		
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_RELOAD.ST.wav
+
+//	sound/ed/rocketlauncher/reload.wav
+
+}
+
+player_rocketlauncher_dryfire {
+
+	minDistance	1
+	maxDistance	10
+	volume		3
+
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_DRY FIRE.wav
+
+//	sound/ed/rocketlauncher/dryfire.wav
+
+}
+
+/* -------------------------------------
+
+		START :: CHAINGUN 
+
+   ------------------------------------- */
+
+player_chaingun_acquire {
+	minDistance	5
+	maxDistance	30
+	volume	15
+	
+	sound/weapons/chaingun/cg_use_01.wav
+}
+
+player_chaingun_windup {
+	minDistance	5
+	maxDistance	30
+	volume	10
+	
+	sound/weapons/chaingun/cg_windup_mix_01.wav
+}
+
+player_chaingun_winddown {
+	minDistance	5
+	maxDistance	30
+	volume	10
+	
+	sound/weapons/chaingun/cg_winddown_mix_01.wav
+}
+
+player_chaingun_lowammo {
+	minDistance	10
+	maxDistance	30
+	volume	 	12
+	sound/weapons/chaingung/lowammo.wav
+}
+
+
+player_chaingun_fire {
+	minDistance	5
+	maxDistance	30
+	volume	3
+	unclamped
+
+	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_1v3.wav
+	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_2v3.wav
+	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_3v3.wav
+	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_4v3.wav
+//	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_5v3.wav
+//	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_6v3.wav
+//	sound/dane/Chain_Gun_Shot_V3/CHAINGUN_SHOT_7v3.wav
+
+}
+
+player_chaingun_motorloop {
+	minDistance	5
+	maxDistance	30
+	volume	10
+	unclamped
+	looping
+	sound/weapons/chaingun/cg_motor_loop_01.wav
+}
+
+player_chaingun_reload {
+	minDistance	5
+	maxDistance	30
+	volume	15
+	sound/weapons/chaingun/cg_reload_twist_01.wav
+
+}
+
+/* -------------------------------------
+
+		END :: CHAINGUN 
+
+   ------------------------------------- */
+
+
+
+// monster weapons
+
+zombie_chaingun_fire {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+}
+
+zombie_chaingun_winddown {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+
+}
+
+zombie_chaingun_windup {
+	minDistance	1
+	maxDistance	10
+	volume		-5
+	//sound/weapons/cgun/1shot_winddown.wav
+}
+
+player_rocket_explode {
+	minDistance	10
+	maxDistance	40
+	volume		4
+	shakes		1 // 0.25
+
+	sound/ed/rocketlauncher/explode1.wav
+	sound/ed/rocketlauncher/explode2.wav
+	sound/ed/rocketlauncher/explode3.wav
+	sound/ed/rocketlauncher/explode4.wav
+	sound/ed/rocketlauncher/explode5.wav
+
+}
+
+rev_rockets {
+}
+
+player_rocket {
+
+}
+

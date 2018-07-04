@@ -1,0 +1,66 @@
+klaxxon {
+
+	minDistance	10
+	maxDistance	30	
+	volume		9
+	looping
+	no_occlusion
+
+	sound/ed/sfx/klaxxon/klaxxon1.wav
+
+}
+
+teleport_shoulder_operate {
+
+	minDistance	10
+	maxDistance	30
+	volume		20
+	
+	sound/ed/sfx/teleporter/tele_shoulder.wav
+
+}
+
+teleport_arm_operate {
+
+	minDistance	10
+	maxDistance	30
+	volume		20
+	
+	sound/ed/sfx/teleporter/tele_arm.wav
+
+}
+
+teleport_machine_poweron {
+
+	minDistance	10
+	maxDistance	30
+	volume		30
+
+	sound/ed/sfx/teleporter/tele_on.wav
+
+}
+
+teleport_machine_idle {
+
+	minDistance	10
+	maxDistance	30
+	volume		10
+	//looping
+
+	sound/ed/sfx/teleporter/tele_idle.wav
+
+}
+
+bridge_explosion {
+	minDistance	3
+	maxDistance	40
+	volume		12
+	shakes		1
+	
+	sound/ed/rocketlauncher/explode1.wav
+	sound/ed/rocketlauncher/explode2.wav
+	sound/ed/rocketlauncher/explode3.wav
+	sound/ed/rocketlauncher/explode4.wav
+	sound/ed/rocketlauncher/explode5.wav
+
+}

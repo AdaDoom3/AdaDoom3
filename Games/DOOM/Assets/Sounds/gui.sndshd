@@ -1,0 +1,178 @@
+guisounds_admin_error {
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/admin_error.wav
+
+}
+
+guisounds_menu {
+	volume	-5
+	onDemand
+	sound/musical/d3theme.wav
+	//sound/ed/music/guisounds_menu.wav
+}
+
+
+guisounds_menuingame {
+	volume	-5
+	looping
+	onDemand
+	
+	sound/ed/music/guisounds_menu.wav
+	
+	//sound/xian/music/menu_ambience_01.wav
+	//sound/xian/music/menu_ambience_01.wav
+	//sound/musical/d3theme.wav
+	//sound/ed/music/guisounds_menu.wav
+
+}
+
+guisounds_menuroq  {
+
+	volume	-5
+	onDemand
+	looping
+
+	//sound/ed/music/guisounds_menu.wav
+	//sound/xian/music/menu_ambience_01.wav
+	sound/musical/d3theme.wav
+
+}
+
+
+guikick {
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		2
+	unclamped
+
+	sound/impact/flesh/slap_02.wav
+}
+
+guiroq {
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0.8
+
+	sound/voc/lab_speech_atommachine.wav
+}
+
+guisounds_action
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/beep1.wav
+	//sound/patd/beep1.wav
+	//sound/guis/1shot_action.wav
+}
+
+guisounds_click
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/twobeep_test1.wav
+	//sound/patd/click1.wav
+	//sound/guis/1shot_click.wav
+}
+
+guisounds_close
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		0
+
+	sound/ed/gui/disconnect1.wav
+	//sound/patd/disconnect1.wav
+	//sound/guis/1shot_close.wav
+}
+
+guisounds_error
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		1
+
+	//sound/guis/1shot_error.wav
+	sound/ed/gui/error.wav
+}
+
+guisounds_open
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		1
+
+	sound/guis/1shot_open.wav
+}
+
+guisounds_warning
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		1
+
+	// sound/guis/1shot_warning.wav
+	sound/ed/gui/warning.wav
+}
+
+guisounds_pressurize
+{
+
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	15
+	volume 		-1
+
+	sound/machinery/airflow/1shot_airlock_01.wav
+}
+
+guisounds_roq
+{
+	description 	"Gui Audio"
+
+	minDistance	4
+	maxDistance	8
+	volume 		0.8
+
+	sound/voc/lab_speech_atommachine.wav
+}
+
+objective_screen
+{
+	description	"Short blip used for bringing up the objective screen"
+
+	minDistance	4
+	maxDistance	15
+	volume		1
+
+	sound/guis/1shot_objective_activate.wav
+}

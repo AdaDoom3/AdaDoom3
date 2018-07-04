@@ -1,0 +1,206 @@
+revcin_fire {
+	minDistance	5
+	maxDistance	30
+	global
+	volume		0
+	
+	sound/cinematics/recycling1/revenant_rocket_fire.wav
+}
+
+revcin_yell1 {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	global
+	unclamped
+	
+	sound/cinematics/recycling1/revenant_1.wav
+}
+
+revcin_yell2 {
+	minDistance	5
+	maxDistance	35
+	volume		3
+	global
+	unclamped
+	
+	sound/cinematics/recycling1/revenant_2.wav
+}
+
+rec1_angryfire {
+	minDistance	3
+	maxDistance	30
+	volume		0
+	looping
+	
+	sound/levels/recycling1/loop_angryfire.wav
+}
+
+// --------------------------------
+
+monster_demon_revenant_rocket_tone {
+	minDistance	1
+	maxDistance	30
+	volume		-5
+	
+	sound/xian/alarms_buzzers/alarm_02.wav
+}
+
+monster_demon_revenant_sight
+{
+	minDistance	1
+	maxDistance	45
+	volume		12
+
+	sound/ed/revenant/sight1_1_alt1.wav
+	sound/ed/revenant/sight1_2_alt1.wav
+
+}
+
+monster_demon_revenant_sight2
+{
+	minDistance	1
+	maxDistance	45
+	volume		12
+
+
+	sound/ed/revenant/sight2_1_alt1.wav
+	sound/ed/revenant/sight2_2_alt1.wav
+
+}
+	
+monster_demon_revenant_pain
+{
+	minDistance	1
+	maxDistance	45
+	volume		12
+
+	sound/ed/revenant/pain1_alt1.wav
+	sound/ed/revenant/pain2_alt1.wav
+	sound/ed/revenant/pain3_alt1.wav
+	//sound/ed/revenant/pain4.wav
+
+}
+
+monster_demon_revenant_die
+{
+	minDistance	1
+	maxDistance	35
+	volume		20
+
+	sound/ed/revenant/die1_alt1.wav
+	sound/ed/revenant/die2_alt1.wav
+	sound/ed/revenant/die3_alt1.wav
+}
+
+monster_demon_revenant_attackmissile
+{
+	minDistance	1
+	maxDistance	35
+	volume		3
+	unclamped
+	no_dups
+
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_1.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_2.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_3.wav
+	sound/dane/ROCKET_LAUNCHER/ROCKET_LAUNCHER_BLAST_4.wav
+
+}
+	
+monster_demon_revenant_attackmelee
+{
+	minDistance	5
+	maxDistance	35
+	volume		12
+	no_dups
+
+	sound/ed/revenant/melee1.wav
+	sound/ed/revenant/melee2.wav
+	sound/ed/revenant/melee3.wav
+	sound/ed/revenant/melee4.wav
+	sound/ed/revenant/melee5.wav
+	
+}
+
+monster_demon_revenant_melee_impact
+{
+	minDistance	2
+	maxDistance	35
+	volume		2
+	no_dups
+
+}
+
+monster_demon_revenant_melee_miss
+{
+	minDistance	2
+	maxDistance	35
+	volume		6
+
+}
+
+monster_demon_revenant_chatter
+{
+	minDistance	1
+	maxDistance	35
+	volume		6
+
+	sound/ed/revenant/chatter1.wav
+	sound/ed/revenant/chatter2.wav
+	sound/ed/revenant/chatter3.wav
+	sound/ed/revenant/chatter4.wav
+
+}
+
+monster_demon_revenant_chatter_combat {
+	minDistance	1
+	maxDistance	35
+	volume		6
+
+	sound/ed/revenant/chatter_combat1.wav
+	sound/ed/revenant/chatter_combat2.wav
+	sound/ed/revenant/chatter_combat3.wav
+
+}
+
+monster_demon_revenant_rocket_flight {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	looping
+	
+	sound/ed/rocketlauncher/flight1.wav
+	
+}
+
+monster_demon_revenant_rocket_explode {
+	minDistance	1
+	maxDistance	30
+	volume		-3
+	
+	sound/xian/foley/explosions/explode_01.wav
+}
+
+monster_demon_revenant_footstep
+{
+	minDistance	1
+	maxDistance	35
+	volume		-3
+
+	sound/ed/revenant/step1.wav
+	sound/ed/revenant/step2.wav
+	sound/ed/revenant/step3.wav
+	sound/ed/revenant/step4.wav
+}
+
+monster_demon_revenant_burn {
+
+	minDistance	6
+	maxDistance	20
+	volume	6
+
+	sound/ed/revenant/burn.wav
+}
+

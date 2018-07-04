@@ -1,0 +1,358 @@
+////////////////////////
+// D3MP SOUND SHADERS //
+////////////////////////
+
+
+////////////////////
+// GENERAL SOUNDS //
+////////////////////
+
+sound_powerup_berserk {
+
+	volume -5
+
+	looping
+	leadin
+	sound/levels/berserk_spawn.wav
+	sound/levels/berserk.wav
+}
+
+
+///////////
+// D3DM1 //
+///////////
+
+
+///////////
+// D3DM2 //
+///////////
+
+d3dm2_ambience {
+
+	global
+	looping
+
+	sound/ambient/loop_machineroom_01.wav
+}
+
+
+///////////
+// D3DM3 //
+///////////
+
+fragchamber_bridge_start {
+
+	sound/levels/fragchamber/bridge_start.wav
+}
+
+fragchamber_bridge_stop {
+
+	sound/levels/fragchamber/bridge_stop.wav
+}
+
+fragchamber_rod_start {
+
+	sound/levels/fragchamber/rod_start.wav
+}
+
+fragchamber_rod_stop {
+
+	sound/levels/fragchamber/rod_stop.wav
+}
+
+fragchamber_core_start {
+
+	sound/levels/fragchamber/core_start.wav
+}
+
+fragchamber_core_stop {
+
+	shakes 0.03
+
+	sound/levels/fragchamber/core_stop.wav
+}
+
+fragchamber_core_shake {
+
+	shakes 0.2
+
+	sound/levels/fragchamber/core_stop.wav
+}
+
+fragchamber_socket_start {
+
+	sound/levels/fragchamber/socket_start.wav
+}
+
+fragchamber_socket_stop {
+
+	sound/levels/fragchamber/socket_stop.wav
+}
+
+fragchamber_ambience {
+
+	global
+	looping
+
+	sound/ambient/loop_machineroom_09.wav
+}
+
+fragchamber_sound_berserk {
+
+	volume -12
+
+	looping
+
+	sound/levels/berserk.wav
+}
+
+fragchamber_sound_berserk_spawn {
+
+	volume 15
+
+	//shakes 0.08
+
+	sound/levels/fragchamber/berserk_spawn.wav
+}
+
+fragchamber_klaxon {
+
+	sound/levels/fragchamber/klaxon.wav
+}
+
+fragchamber_lights_hum {
+
+	looping
+
+	sound/lights/loop_hum_01.wav
+}
+
+fragchamber_lights_flicker {
+
+	looping
+
+	sound/lights/loop_broken_10.wav
+}
+
+fragchamber_generator_run {
+
+	volume 10
+
+	shakes 0.03
+
+	looping
+	leadin	sound/levels/fragchamber/generator_start.wav
+	sound/levels/fragchamber/generator_loop.wav
+}
+
+fragchamber_generator_stop {
+
+	volume 10
+
+	shakes 0.04
+
+	sound/levels/fragchamber/generator_stop.wav
+}
+
+fragchamber_generator_spin {
+
+	volume 6
+
+	sound/levels/fragchamber/generator_spin.wav
+}
+
+fragchamber_generator_spin_stop {
+
+	volume 6
+
+	sound/levels/fragchamber/generator_spin_stop.wav
+}
+
+fragchamber_generator_steam {
+
+	volume -6
+
+	looping
+
+	sound/ambient/steam/loop_steam_06.wav
+}
+
+fragchamber_suck_out {
+
+	volume -3
+
+	sound/levels/fragchamber/suck_out.wav
+}
+
+fragchamber_suck_in {
+
+	volume -3
+
+	sound/levels/fragchamber/suck_in.wav
+}
+
+fragchamber_secret_steam_01 {
+
+	volume -6
+
+	looping
+
+	sound/ambient/steam/loop_steam_04.wav
+}
+
+fragchamber_secret_steam_02 {
+
+	volume -6
+
+	looping
+
+	sound/ambient/steam/loop_steam_05.wav
+}
+
+fragchamber_pressure_01 {
+
+	volume -10
+
+	looping
+
+	sound/levels/fragchamber/pressure_01.wav
+
+}
+
+fragchamber_pressure_02 {
+
+	volume -10
+
+	looping
+
+	sound/levels/fragchamber/pressure_02.wav
+
+}
+
+
+///////////
+// D3DM4 //
+///////////
+
+theedge2_howitzer_down {
+
+	volume 10
+	maxDistance 15
+	shakes 0.05
+
+	sound/levels/theedge2/howitzer_hit.wav
+}
+
+theedge2_howitzer_up {
+
+	volume -10
+
+	sound/levels/theedge2/howitzer_up.wav
+}
+
+theedge2_howitzer_steam {
+
+	volume 6
+
+	sound/levels/theedge2/howitzer_steam.wav
+}
+
+theedge2_howitzer_catch {
+
+	volume -6
+
+	sound/levels/theedge2/howitzer_catch.wav
+}
+
+theedge2_piston {
+
+	volume 0
+
+	sound/levels/theedge2/piston.wav
+}
+
+theedge2_ambience {
+
+	volume -20
+	global
+	looping
+
+	sound/ambient/loop_machineroom_09.wav
+}
+
+theedge2_berserk {
+
+	volume -20
+	looping
+
+	sound/levels/berserk.wav
+}
+
+theedge2_waterdrops {
+
+	sound/ambient/water/1shot_drip_01.wav
+	sound/ambient/water/1shot_drip_02.wav
+	sound/ambient/water/1shot_drip_03.wav
+}
+
+theedge2_steamblasts {
+
+	sound/ambient/steam/1shot_steamblast_01.wav
+	sound/ambient/steam/1shot_steamblast_02.wav
+	sound/ambient/steam/1shot_steamblast_03.wav
+	sound/ambient/steam/1shot_steamblast_04.wav
+}
+
+theedge2_rubble {
+
+	shakes 0.2
+
+	sound/ed/earthquake/rubble1.wav
+	sound/ed/earthquake/rubble2.wav
+	sound/ed/earthquake/rubble3.wav
+	sound/ed/earthquake/rubble4.wav
+	sound/ed/earthquake/rubble5.wav
+	sound/ed/earthquake/rubble6.wav
+	sound/ed/earthquake/rubble7.wav
+}
+
+
+///////////
+// D3DM5 //
+///////////
+
+d3dm5_generator_on {
+
+	looping
+	leadin
+	sound/levels/d3dm5/gen_on.wav
+	sound/levels/d3dm5/gen_loop.wav
+}
+
+d3dm5_generator_off {
+
+	sound/levels/d3dm5/gen_off.wav
+}
+
+d3dm5_waterdrops {
+
+	sound/ambient/water/1shot_drip_01.wav
+	sound/ambient/water/1shot_drip_02.wav
+	sound/ambient/water/1shot_drip_03.wav
+}
+
+d3dm5_shutter {
+
+	volume -10
+
+	maxDistance 20
+
+	sound/levels/d3dm5/shutters.wav
+}
+
+d3dm5_wind {
+
+	looping
+	sound/outdoors/wind/tonal_wind_01.wav
+	sound/outdoors/wind/tonal_wind_02.wav
+}

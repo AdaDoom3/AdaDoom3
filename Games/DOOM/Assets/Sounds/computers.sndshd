@@ -1,0 +1,54 @@
+computers_01
+{
+	minDistance	2
+	maxDistance	8
+	looping
+	volume 		0.8
+
+	sound/electronics/computers/loop_computers_01.wav
+}
+
+computers_02 {
+
+	minDistance	0
+	maxDistance	7
+	looping
+	volume		-3
+	
+	sound/ed/computers/computer0.wav
+	sound/ed/computers/computer1.wav
+	sound/ed/computers/computer2.wav
+	sound/ed/computers/computer3.wav
+	sound/ed/computers/computer4.wav
+	sound/ed/computers/computer5.wav
+
+}
+
+computers_03 {
+
+	minDistance	0
+	maxDistance	7
+	looping
+	volume		-3
+	
+	sound/ed/computers/computer10.wav
+	sound/ed/computers/computer11.wav
+	sound/ed/computers/computer12.wav
+	sound/ed/computers/computer13.wav
+	sound/ed/computers/computer14.wav
+	sound/ed/computers/computer15.wav
+
+}
+
+computers_04 {
+	minDistance	0
+	maxDistance	7
+	looping
+	volume		-3
+	sound/ed/computers/computer20.wav
+	sound/ed/computers/computer21.wav
+	sound/ed/computers/computer22.wav
+	sound/ed/computers/computer23.wav
+	sound/ed/computers/computer24.wav
+
+}

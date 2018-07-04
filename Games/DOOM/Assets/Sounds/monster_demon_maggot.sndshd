@@ -1,0 +1,248 @@
+//temp skitter sound
+monster_demon_maggot_skitter {
+
+	minDistance	5
+	maxDistance	15
+	sound/ed/maggot/skitter.wav
+}
+
+monster_demon_maggot_evade_left {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/monsters/maggot/evade_left.wav
+	sound/monsters/maggot/evade_left_novoc.wav
+	sound/monsters/maggot/evade_left_solo.wav
+}
+
+monster_demon_maggot_evade_right {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/monsters/maggot/evade_right.wav
+	sound/monsters/maggot/evade_right_novoc.wav
+	sound/monsters/maggot/evade_right_solo.wav
+}
+
+monster_demon_maggot_attack1 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/monsters/maggot/attack_01.wav
+	sound/monsters/maggot/attack_01_novoc.wav
+	sound/monsters/maggot/attack_01_solo.wav
+	sound/monsters/maggot/attack_01_swish.wav
+}
+
+monster_demon_maggot_attack3 {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	no_dups
+	
+	sound/monsters/maggot/attack_03.wav
+	sound/monsters/maggot/attack_03_novoc.wav
+	sound/monsters/maggot/attack_03_solo.wav
+	sound/monsters/maggot/attack_03_swish.wav
+}
+
+monster_demon_maggot_attack4 {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+	no_dups
+	
+	sound/monsters/maggot/attack_04.wav
+	sound/monsters/maggot/attack_04_novoc.wav
+	sound/monsters/maggot/attack_04_solo.wav
+	sound/monsters/maggot/attack_04_swish.wav
+}
+
+
+monster_demon_maggot_footstep {
+
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/monsters/maggot/fs_01.wav
+	sound/monsters/maggot/fs_02.wav
+	sound/monsters/maggot/fs_03.wav
+	sound/monsters/maggot/fs_04.wav
+
+/*
+	sound/ed/maggot/step1.wav
+	sound/ed/maggot/step2.wav
+	sound/ed/maggot/step3.wav
+	sound/ed/maggot/step4.wav
+	sound/ed/maggot/step5.wav
+	sound/ed/maggot/step6.wav
+	sound/ed/maggot/step7.wav
+	sound/ed/maggot/step8.wav
+*/
+}
+
+monster_demon_maggot_footstep_hoof {
+	minDistance	1
+	maxDistance	25
+	volume		0
+
+	sound/monsters/maggot/fs_05.wav
+}
+
+monster_demon_maggot_chatter {
+
+	minDistance	1
+	maxDistance	15
+	volume		3
+
+	sound/ed/maggot2/hiss1.wav
+	sound/ed/maggot2/hiss1h2.wav
+	sound/ed/maggot2/hiss2.wav
+	sound/ed/maggot2/hiss2h2.wav
+	sound/ed/maggot2/hiss3.wav
+	sound/ed/maggot2/hiss3h2.wav
+	sound/ed/maggot2/hiss4.wav
+	sound/ed/maggot2/hiss4h2.wav
+	sound/ed/maggot2/hiss5.wav
+	sound/ed/maggot2/hiss6.wav
+	
+}
+
+monster_demon_maggot_idle {
+
+	minDistance	1
+	maxDistance	15
+	volume		4
+
+
+	sound/monsters/maggot/idle_01.wav
+	sound/monsters/maggot/idle_02.wav
+	sound/monsters/maggot/idle_03.wav
+	sound/monsters/maggot/idle_04.wav
+
+/*
+	sound/ed/maggot2/hiss1.wav
+	sound/ed/maggot2/hiss2.wav
+	sound/ed/maggot2/hiss3.wav
+	sound/ed/maggot2/hiss4.wav
+	sound/ed/maggot2/hiss5.wav	
+	sound/ed/maggot2/hiss6.wav
+*/
+
+}
+
+monster_demon_maggot_idle2 {
+
+	minDistance	1
+	maxDistance	15
+	volume		4
+
+	sound/ed/maggot2/hiss1h2.wav
+	sound/ed/maggot2/hiss2h2.wav
+	sound/ed/maggot2/hiss3h2.wav
+	sound/ed/maggot2/hiss4h2.wav
+
+}
+
+monster_demon_maggot_sight
+{
+	minDistance	1
+	maxDistance	20
+	volume		6
+
+	sound/monsters/maggot/sight/sight_01.wav
+	sound/monsters/maggot/sight/sight_02.wav
+	sound/monsters/maggot/sight/sight_03.wav
+	sound/monsters/maggot/sight/sight_04.wav
+	sound/monsters/maggot/sight/sight_05.wav
+
+/*	sound/ed/maggot2/sight1.wav
+	sound/ed/maggot2/sight2.wav
+	sound/ed/maggot2/sight3.wav
+*/
+
+}
+
+monster_demon_maggot_die
+{
+	minDistance	1
+	maxDistance	35
+	volume		0
+
+/*	sound/ed/maggot2/die1.wav
+	sound/ed/maggot2/die2.wav
+	sound/ed/maggot2/die3.wav
+*/
+	sound/monsters/maggot/death/death_01.wav
+	sound/monsters/maggot/death/death_02.wav
+	sound/monsters/maggot/death/death_03.wav
+	sound/monsters/maggot/death/death_04.wav
+	
+}
+
+monster_demon_maggot_melee
+{
+	minDistance	1
+	maxDistance	15
+	volume		6
+
+	sound/ed/maggot2/melee1.wav
+	sound/ed/maggot2/melee2.wav
+	sound/ed/maggot2/melee3.wav
+	sound/ed/maggot2/melee4.wav
+	sound/ed/maggot2/melee5.wav
+
+}
+
+monster_demon_maggot_melee2
+{
+	minDistance	1
+	maxDistance	15
+	volume		6
+
+	sound/ed/maggot2/melee1h2.wav
+	sound/ed/maggot2/melee2h2.wav
+	sound/ed/maggot2/melee3h2.wav
+	sound/ed/maggot2/melee4h2.wav
+	sound/ed/maggot2/melee5h2.wav
+
+}
+
+monster_demon_maggot_pain
+{
+	minDistance	1
+	maxDistance	35
+	volume		0
+	no_dups
+
+	sound/monsters/maggot/pain/pain_01.wav
+	sound/monsters/maggot/pain/pain_02.wav
+	sound/monsters/maggot/pain/pain_03.wav
+	sound/monsters/maggot/pain/pain_04.wav
+	sound/monsters/maggot/pain/pain_05.wav
+	sound/monsters/maggot/pain/pain_06.wav
+
+/*	sound/ed/maggot2/pain1.wav
+	sound/ed/maggot2/pain2.wav
+	sound/ed/maggot2/pain3.wav
+*/
+}
+
+maggot_skitter {
+
+	minDistance	1
+	maxDistance	10
+	volume	-9
+	no_occlusion
+	
+	sound/ed/caverns2/bugscamper.wav
+
+}

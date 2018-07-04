@@ -36,35 +36,43 @@ package Neo.Engine is
   -- Assets --
   ------------
   
-  function Asset_Path return Str;
-  
-  -- Asset and configuration paths
-  PATH_LOGS            : constant Str := "Logs"   & S;
-  PATH_ASSETS          : constant Str := "Assets" & S;
-  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
-  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
-  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
-  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
-  
-  Meshes     : Hashed_Mesh.Safe_Map;
-  Animations : Hashed_Animation.Safe_Map;
-  --Materials : Hashed_Material. := ;
+  --Maps        : Hashed_Map.Safe_Map;
+  Meshes      : Hashed_Mesh.Safe_Map;
+  Cameras     : Hashed_Camera.Safe_Map;
+  Materials   : Hashed_Material.Safe_Map;
+  Animations  : Hashed_Animation.Safe_Map;
+  --Sound_Clips : Hashed_Sound_Clip.Safe_Map;
   
   -----------------
   -- Information --
   -----------------
   
+  -- Asset and configuration paths
+  PATH_LOGS            : constant Str := "Logs"        & S;
+  PATH_ASSETS          : constant Str := "Assets"      & S;
+  PATH_DEFINITIONS     : constant Str := "Definitions" & S;
+  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
+  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
+  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
+  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
+  PATH_CAMERAS         : constant Str := PATH_ASSETS & "Cameras"  & S;
+  PATH_MAPS            : constant Str := PATH_ASSETS & "Maps"     & S;
+  PATH_MODELS          : constant Str := PATH_ASSETS & "Models"   & S;
+  PATH_SHADERS         : constant Str := PATH_ASSETS & "Shaders"  & S;
+  PATH_SOUNDS          : constant Str := PATH_ASSETS & "Sounds"   & S;
+  PATH_TEXTURES        : constant Str := PATH_ASSETS & "Textures" & S;
+    
   type OS_Info_State is record
       Size_Memory : Int_64_Unsigned := 0; -- In bytes
-      Path        : Str_Unbound     := NULL_STR_UNBOUND;
+      App_Path    : Str_Unbound     := NULL_STR_UNBOUND;
       App_Name    : Str_Unbound     := NULL_STR_UNBOUND;
       Version     : Str_Unbound     := NULL_STR_UNBOUND;
       Username    : Str_Unbound     := NULL_STR_UNBOUND;
       Bit_Size    : Positive        := 1;
     end record;
-  function OS_Info return OS_Info_State;  
-  
+  function OS_Info return OS_Info_State;
+ 
   ---------------
   -- Clipboard --
   ---------------

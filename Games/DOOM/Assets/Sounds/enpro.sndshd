@@ -1,0 +1,406 @@
+enpro_cin_wraithnoise {
+	minDistance	1
+	maxDistance	50
+	volume		0
+	
+	sound/monsters/wraith/attack1_solo.wav
+}
+
+enpro_cin_lsflight {
+	minDistance	5
+	maxDistance	25
+	volume		5
+	unclamped
+	
+	sound/monsters/lost_soul/idle_02.wav
+}
+
+enpro_sfx_gunfire {
+	global
+	
+	sound/ed/enpro/sfx_gunfire.wav
+}
+
+enpro_sfx_imps {
+	global
+	
+	sound/ed/enpro/sfx_imps.wav
+}
+
+enpro_wounded_music {
+
+	volume	12
+	global
+
+	sound/ed/enpro/wounded_music.wav
+
+}
+
+enpro_coolantrod_music {
+
+	volume	6
+	global
+
+	sound/ed/enpro/coolantrod_music.wav
+
+}
+
+enpro_coolantrod {
+
+	volume	3
+	global
+
+	sound/ed/enpro/coolantrod.wav
+
+}
+
+enpro_lostsoul {
+
+	volume	3
+	global
+	sound/ed/enpro/lostsoul_intro.wav
+
+}
+
+enpro_intro_guns {
+
+	volume	9
+	global
+	sound/ed/enpro/intro_guns_v2.wav
+
+}
+
+
+enpro_intro_imps {
+
+	volume	9
+	global
+	sound/ed/enpro/intro_imps.wav
+
+}
+
+enpro_intro {
+
+	volume	15
+	global
+
+	sound/ed/enpro/intro.wav
+
+}
+
+enpro_spinerip {
+	minDistance	10
+	maxDistance	25
+	volume		8
+	unclamped
+	
+	sound/cinematics/enpro/spinerip.wav
+}
+
+enpro_leatherface {
+	minDistance	10
+	maxDistance	25
+	volume		8
+	unclamped
+	
+	sound/cinematics/enpro/leatherface.wav
+}
+
+enpro_chair {
+	minDistance	1
+	maxDistance	25
+	volume		0
+	
+	sound/cinematics/enpro/chair_roll_fall.wav
+}
+
+enpro_slow_whoosh {
+	minDistance	30
+	maxDistance	50
+	omnidirectional
+	volume		3
+	unclamped
+	
+	sound/cinematics/enpro/slow_whoosh.wav
+}
+
+// MARINE BATTLE
+
+enpro_move_in {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/01_move_in.wav
+}
+
+enpro_give_status {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/02_give_status.wav
+}
+
+enpro_hallway_clear {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/03_hallway_clear.wav
+}
+
+enpro_points_clear {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/04_points_clear.wav
+}
+
+enpro_nothing_here {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/05_nothing_here.wav
+}
+
+enpro_quiet {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/06_quiet.wav
+}
+
+enpro_in_walls {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/07_shit_in_walls.wav
+}
+
+enpro_moving_in {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/08_moving_in.wav
+}
+
+
+enpro_dont_see {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/09_dont_see_em.wav
+}
+
+enpro_pain {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/10_pain_sound.wav
+}
+
+enpro_man_down {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/11_man_down.wav
+}
+
+enpro_johnny {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/12_johnny.wav
+}
+
+enpro_moving_right {
+	minDistance	5
+	maxDistance	30	
+	no_occlusion
+	volume		3
+
+	sound/vo/enpro/13_moving_right.wav
+}
+
+enpro_watch_yourself {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/14_watch_yourself.wav
+}
+
+enpro_what_the_hell {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/15_what_the_hell.wav
+}
+
+enpro_fire_fire {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/16_fire_fire.wav
+}
+
+enpro_son_of_a {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/17_son_of_bitch.wav
+}
+
+enpro_swinging_left {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/18_swinging_left.wav
+}
+
+enpro_im_down {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		0
+
+	sound/vo/enpro/19_im_down_pain.wav
+}
+
+
+// ESCAPE CINEMATIC...
+
+
+//							SWANN
+
+enpro_do_u_see {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/swann_cine1_2.wav
+}
+
+//   						CAMPBELL
+
+enpro_no_sir {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/campbell_cine1_1.wav
+}
+
+//  						SWANN
+
+enpro_ok_lets_get_to {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+	
+	sound/vo/enpro/swann_cine1_5.wav
+}
+
+//   						CAMPBELL
+
+enpro_yes_sir {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/campbell_cine1_2.wav
+}
+
+// WOUNDED MARINE CINEMATIC...
+
+//   						CAMPBELL
+
+enpro_wounded_marine1 {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/marine_wounded1.wav
+}
+
+enpro_wounded_marine2 {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/marine_wounded2.wav
+
+}
+
+enpro_wounded_marine3 {
+	minDistance	5
+	maxDistance	35
+	no_occlusion
+	volume		2
+	unclamped
+
+	sound/vo/enpro/marine_wounded3.wav
+}
+
+// LOSTSOUL INTRO
+
+enpro_help_me {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/female17_tk4.wav
+}
+
+enpro_scream {
+	minDistance	5
+	maxDistance	20
+	no_occlusion
+	volume		15
+
+	sound/vo/enpro/female15.wav
+}

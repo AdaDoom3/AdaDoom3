@@ -1,0 +1,79 @@
+soundscape_01 
+{
+	minDistance	10
+	maxDistance	30
+	looping
+	omnidirectional
+	volume		1
+	sound/ambient/soundscape/loop_soundscape_01.wav
+}
+
+drones_01
+{
+	minDistance	10
+	maxDistance	20
+	looping
+	omnidirectional
+	volume 		0.5
+
+	sound/soundscape/loop_drones_01.wav
+}
+
+drones_02
+{
+	minDistance	10
+	maxDistance	20
+	looping
+	omnidirectional
+	volume 		0.5
+
+	sound/soundscape/loop_drones_02.wav
+}
+
+drones_03
+{
+	minDistance	10
+	maxDistance	20
+	looping
+	omnidirectional
+	volume 		0.5
+
+	sound/soundscape/loop_drones_03.wav
+}
+
+strings_01
+{
+	minDistance	10
+	maxDistance	20
+	volume 		0.5
+	omnidirectional
+
+	sound/soundscape/1shot_strings_01.wav
+}
+
+strings_02
+{
+	minDistance	10
+	maxDistance	20
+	volume 		0.5
+	omnidirectional
+	sound/soundscape/1shot_strings_02.wav
+}
+
+deep_01
+{
+	minDistance	10
+	maxDistance	30
+	omnidirectional
+	looping
+	sound/soundscape/loop_deep_01.wav
+}
+
+deep_02
+{
+	minDistance	10
+	maxDistance	30
+	omnidirectional
+	looping
+	sound/soundscape/loop_deep_02.wav
+}

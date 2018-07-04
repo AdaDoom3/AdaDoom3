@@ -1,0 +1,49 @@
+
+monster_zombie_scientist_sight
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/zombie_fat/chatter_02.wav
+}
+
+monster_zombie_scientist_chatter
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/zombie_fat/chatter_01.wav
+	sound/monsters/zombie_fat/chatter_02.wav
+}
+
+monster_zombie_scientist_pain
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/zombie_fat/pain_01.wav
+	sound/monsters/zombie_fat/pain_02.wav
+}
+
+monster_zombie_scientist_attackmelee
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/zombie_fat/attack_01.wav
+	sound/monsters/zombie_fat/attack_02.wav
+}
+
+monster_zombie_scientist_die
+{
+	minDistance	2
+	maxDistance	35
+	volume		1
+
+	sound/monsters/zombie_fat/death_01.wav
+	sound/monsters/zombie_fat/death_02.wav
+}

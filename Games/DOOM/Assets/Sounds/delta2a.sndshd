@@ -1,0 +1,246 @@
+d2a_tp_warmup {
+	global
+	sound/levels/delta2a/teleporter_warmup_10s.wav
+}
+
+delta2a_ending_sfx {
+	volume	1
+	unclamped
+	global
+
+	sound/ed/delta2a/ending_sfx.wav
+
+}
+
+d2a_machine_on {
+	minDistance	3
+	maxDistance	25
+	volume		0
+	looping
+	
+	leadin sound/xian/machinery/bigmachine_start_01.wav
+	sound/xian/machinery/bigmachine_loop_01.wav
+}
+
+delta2a_teleport_to_hell {
+	volume	0
+	global
+	sound/levels/delta2a/teleporter_end.wav
+}
+
+delta2a_steamblast {
+	minDistance		2
+	maxDistance		11
+
+	sound/LEVELS/delta2a/steam_vent_01.wav
+	sound/LEVELS/delta2a/steam_vent_02.wav
+}
+
+d2a_lift_up {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	sound/levels/delta2a/lift_up.wav
+}
+
+d2a_lift_down {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	sound/levels/delta2a/lift_down.wav
+}
+
+d2a_crane_head_3s {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	sound/levels/delta2a/head_3s_01.wav
+}
+
+d2a_crane_vert {
+	minDistance	2
+	maxDistance	25
+	volume		-9
+	
+	sound/levels/delta2a/body_vert_01.wav
+}
+
+d2a_crane_rot_5s {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	sound/levels/delta2a/body_rot_5.wav
+}
+
+d2a_crane_rot_3s {
+	minDistance	2
+	maxDistance	25
+	volume		-5
+	
+	sound/levels/delta2a/body_rot_3.wav
+}
+
+d2a_crane_hand {
+	minDistance	2
+	maxDistance	25
+	volume		-8
+
+	sound/levels/delta2a/hand_01.wav
+}
+
+d2a_crane_arm {
+	minDistance	2
+	maxDistance	25
+	volume		-8
+	
+	sound/levels/delta2a/arm_01.wav
+}
+
+d2a_crane_shoulder {
+	minDistance	2
+	maxDistance	25
+	volume		3	
+	unClamped
+	
+	sound/levels/delta2a/shoulder_1s_01.wav
+}
+
+d2a_crane_fingers_1 {
+	minDistance	2
+	maxDistance	25
+	volume		-8
+	
+	sound/levels/delta2a/fingers_1_5s_01.wav
+}
+
+d2a_crane_fingers_2 {
+	minDistance	2
+	maxDistance	25
+	volume		-8
+	
+	sound/levels/delta2a/fingers_1_5s_02.wav
+}
+
+
+// End machinery stuff
+
+delta2a_sci_wuh {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/01_ian_first.wav
+
+}
+
+delta2a_sci_thankgod {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/02_ian_first.wav
+
+}
+
+delta2a_sci_iwaspart {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/03_ian_first.wav
+
+}
+
+delta2a_sci_youhaveto {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/04_ian_first.wav
+
+}
+
+delta2a_sci_imgoin {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/05_ian_first.wav
+
+}
+
+delta2a_sci_imgonnastay {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/06_ian_first.wav
+
+}
+
+delta2a_sci_primary1 {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/ian_primary_first.wav
+
+}
+
+delta2a_sci_secondary1 {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/ian_secondary_first.wav
+
+}
+
+delta2a_sci_excellent {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/01_ian_second.wav
+
+}
+
+delta2a_sci_butbefore {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/02_ian_second.wav
+
+}
+
+delta2a_sci_itsajournal {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/03_ian_second.wav
+
+}
+
+delta2a_sci_primary2 {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/ian_primary_second.wav
+
+}
+
+delta2a_sci_secondary2 {
+
+	volume	9
+	minDistance	5
+	maxDistance	15
+	sound/vo/delta2a/ian_secondary_second.wav
+
+}

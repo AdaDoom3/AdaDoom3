@@ -1,0 +1,86 @@
+monster_zombie_chainsaw_attack1 {
+	minDistance	1
+	maxDistance	25
+	volume		3	
+	unclamped
+
+	sound/xian/monsters/zombie_chainsaw/chainsaw_attack_01.wav
+}
+
+monster_zombie_chainsaw_attack2 {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+
+	sound/xian/monsters/zombie_chainsaw/chainsaw_attack_02.wav
+
+}
+
+monster_zombie_chainsaw_attack3 {
+	minDistance	3
+	maxDistance	25
+	volume		5
+	unclamped
+
+	sound/xian/monsters/zombie_chainsaw/chainsaw_attack_03.wav
+
+}
+
+monster_zombie_chainsaw_attack4 {
+	minDistance	1
+	maxDistance	25
+	volume		3
+	unclamped
+	
+	sound/xian/monsters/zombie_chainsaw/chainsaw_attack_04.wav
+	looping
+}
+
+monster_zombie_chainsaw_idle {
+	minDistance	1
+	maxDistance	25
+	volume		-1
+	ordered
+
+	sound/xian/monsters/zombie_chainsaw/chainsaw_idle_01.wav
+	sound/xian/monsters/zombie_chainsaw/chainsaw_idle_02.wav
+}
+
+monster_zombie_chainsaw_pull {
+	minDistance	1
+	maxDistance	25	
+	volume		3
+	sound/ed/chainsaw/drypull1.wav
+	sound/ed/chainsaw/drypull2.wav
+	sound/ed/chainsaw/drypull3.wav
+	sound/ed/chainsaw/drypull4.wav
+	sound/ed/chainsaw/drypull5.wav
+	//sound/ed/chainsaw/drypull6.wav
+	//sound/ed/chainsaw/drypull7.wav
+	//sound/ed/chainsaw/drypull8.wav
+
+}
+
+monster_zombie_chainsaw_release {
+	minDistance	1
+	maxDistance	25	
+	volume		0
+	sound/ed/chainsaw/dryrelease1.wav
+	sound/ed/chainsaw/dryrelease2.wav
+	sound/ed/chainsaw/dryrelease3.wav
+	sound/ed/chainsaw/dryrelease4.wav
+	//sound/ed/chainsaw/dryrelease5.wav
+	//sound/ed/chainsaw/dryrelease6.wav
+	//sound/ed/chainsaw/dryrelease7.wav
+	//sound/ed/chainsaw/dryrelease8.wav
+}
+monster_zombie_chainsaw_dragfoot {
+
+	minDistance	1
+	maxDistance	10
+	volume		0
+	sound/ed/zombie/step7.wav
+	sound/ed/zombie/step8.wav
+
+}
