@@ -598,6 +598,7 @@ goto Combo_Not_Activated;
       end loop;
       System.Finalize_Input;
     end;
+  pragma Inline (Run_Input);
   
   -- Input task and external lifecycle routines
   package Input_Tasks is new Tasks (Run_Input);

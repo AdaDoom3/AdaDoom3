@@ -31,10 +31,18 @@ package Neo.Core.Vectors is
   function To_Unsafe_Array  (Item : Unsafe.Vector) return Unsafe_Array;
   procedure Free is new Unchecked_Deallocation (Unsafe_Array, Ptr_Unsafe_Array);
 
+  -- Pointer conversions
+  type Ptr_Unsafe_Vector is access all Unsafe.Vector;
+  function To_Ptr        is new Unchecked_Conversion (Ptr_Unsafe_Vector, Ptr);
+  function To_Ptr_Vector is new Unchecked_Conversion (Ptr, Ptr_Unsafe_Vector);
+
 -- warning: incompatible types in conversion
 pragma Warnings (Off);
-  function To_Ptr is new Unchecked_Conversion (Ptr_Unsafe_Array, Ptr); -- Just hack it
+  function To_Ptr          is new Unchecked_Conversion (Ptr_Unsafe_Array, Ptr); -- Just hack it
+  function To_Unsafe_Array is new Unchecked_Conversion (Ptr, Ptr_Unsafe_Array); -- Just hack it
 Pragma Warnings (On);
+
+  procedure Free is new Unchecked_Deallocation (Unsafe.Vector, Ptr_Unsafe_Vector);
 
   -- Wrapped type
   protected type Safe_Vector is

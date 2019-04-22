@@ -13,14 +13,14 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-with Ada.Containers.Indefinite_Multiway_Trees;
+with Ada.Containers.Multiway_Trees;
 
 generic
   type Tree_T is private;
 package Neo.Core.Trees is
 
   -- Base type
-  package Unsafe is new Ada.Containers.Indefinite_Multiway_Trees (Tree_T, "="); 
+  package Unsafe is new Ada.Containers.Multiway_Trees (Tree_T, "="); 
   subtype Cursor is Unsafe.Cursor;
   NO_ELEMENT : Cursor := Unsafe.NO_ELEMENT;
 

@@ -38,7 +38,7 @@ package body Neo.Core.Math is
     R0      : constant Vector_3D := Cross (B, C);
     R1      : constant Vector_3D := Cross (C, A);
     R2      : constant Vector_3D := Cross (A, B);
-    INV_DET : constant Real_64   := 1.0 / Dot (R2, C);
+    INV_DET : constant Real_32   := 1.0 / Dot (R2, C);
     begin
       return (R0.X * INV_DET, R0.Y * INV_DET, R0.Z * INV_DET,
               R1.X * INV_DET, R1.Y * INV_DET, R1.Z * INV_DET,
@@ -53,7 +53,7 @@ package body Neo.Core.Math is
     T       :          Vector_3D := Cross (C, D);
     U       :          Vector_3D := A * M.YW - B * M.XW;
     V       :          Vector_3D := C * M.WW - D * M.ZW;
-    INV_DET : constant Real_64   := 1.0 / (Dot (S, V) + Dot (T, U));
+    INV_DET : constant Real_32   := 1.0 / (Dot (S, V) + Dot (T, U));
     R0, R1, R2, R3 : Vector_3D;
     begin
       S  := S * INV_DET;
@@ -76,28 +76,28 @@ package body Neo.Core.Math is
 
   function Transform (Q : Quaternion_4D; V : Vector_3D) return Vector_3D is -- Listing 2.11
     B  : constant Vector_3D := To_Vector_3D (Q);
-    B2 : constant Real_64   := B.X ** 2 + B.Y ** 2 + B.Z ** 2;
+    B2 : constant Real_32   := B.X ** 2 + B.Y ** 2 + B.Z ** 2;
     begin
       return V * (Q.W ** 2 - B2) + B * (Dot (V, B) * 2.0) + Cross (B, V) * (Q.W * 2.0);
     end;
   function Rotation (Q : Quaternion_4D) return Matrix_3D is -- Listing 2.12
-    X2 : constant Real_64 := Q.X ** 2;
-    Y2 : constant Real_64 := Q.Y ** 2;
-    Z2 : constant Real_64 := Q.Z ** 2;
-    YX : constant Real_64 := Q.Y * Q.X;
-    ZX : constant Real_64 := Q.Z * Q.X;
-    ZY : constant Real_64 := Q.Z * Q.Y; 
-    XW : constant Real_64 := Q.X * Q.W;
-    YW : constant Real_64 := Q.Y * Q.W;
-    ZW : constant Real_64 := Q.Z * Q.W;
+    X2 : constant Real_32 := Q.X ** 2;
+    Y2 : constant Real_32 := Q.Y ** 2;
+    Z2 : constant Real_32 := Q.Z ** 2;
+    YX : constant Real_32 := Q.Y * Q.X;
+    ZX : constant Real_32 := Q.Z * Q.X;
+    ZY : constant Real_32 := Q.Z * Q.Y; 
+    XW : constant Real_32 := Q.X * Q.W;
+    YW : constant Real_32 := Q.Y * Q.W;
+    ZW : constant Real_32 := Q.Z * Q.W;
     begin
       return (1.0 - 2.0 * (Y2 + Z2), 2.0 * (YX - ZW), 2.0 * (ZX + YW),
               2.0 * (YX + ZW), 1.0 - 2.0 * (X2 + Z2), 2.0 * (ZY - XW),
               2.0 * (ZX - YW), 2.0 * (ZY + XW), 1.0 - 2.0 * (X2 + Y2));
     end;
   procedure Rotate (Q : in out Quaternion_4D; M : Matrix_3D) is -- Listing 2.13
-    Sum : constant Real_64 := M.XX + M.YY + M.ZZ;
-    F   : Real_64;
+    Sum : constant Real_32 := M.XX + M.YY + M.ZZ;
+    F   : Real_32;
     begin
       if Sum > 0.0 then
         Q.W := Sqrt (Sum + 1.0) * 0.5;
@@ -126,16 +126,16 @@ package body Neo.Core.Math is
       end if;
     end;
   function To_Quaternion_4D (V : Vector_3D) return Quaternion_4D is
-    SR   : constant Real_64 := Sin (V.X * 0.5);
-    CR   : constant Real_64 := Cos (V.X * 0.5);
-    SP   : constant Real_64 := Sin (V.Y * 0.5);
-    CP   : constant Real_64 := Cos (V.Y * 0.5);
-    SY   : constant Real_64 := Sin (V.Z * 0.5);
-    CY   : constant Real_64 := Cos (V.Z * 0.5);
-    CPCY : constant Real_64 := CP * CY;
-    SPCY : constant Real_64 := SP * CY;
-    CPSY : constant Real_64 := CP * SY;
-    SPSY : constant Real_64 := SP * SY;
+    SR   : constant Real_32 := Sin (V.X * 0.5);
+    CR   : constant Real_32 := Cos (V.X * 0.5);
+    SP   : constant Real_32 := Sin (V.Y * 0.5);
+    CP   : constant Real_32 := Cos (V.Y * 0.5);
+    SY   : constant Real_32 := Sin (V.Z * 0.5);
+    CY   : constant Real_32 := Cos (V.Z * 0.5);
+    CPCY : constant Real_32 := CP * CY;
+    SPCY : constant Real_32 := SP * CY;
+    CPSY : constant Real_32 := CP * SY;
+    SPSY : constant Real_32 := SP * SY;
     begin
       return Normal ((SR * CPCY - CR * SPSY,
                       CR * SPCY + SR * CPSY,
@@ -162,7 +162,7 @@ package body Neo.Core.Math is
     D       : constant Vector_3D := Get_Transform_4D_W (H);
     S       :          Vector_3D := Cross (A, B);
     T       :          Vector_3D := Cross (C, D);
-    INV_DET : constant Real_64   := 1.0 / Dot (S, C);
+    INV_DET : constant Real_32   := 1.0 / Dot (S, C);
     V       : constant Vector_3D := C * INV_DET;
     R0      : constant Vector_3D := Cross (B, V);
     R1      : constant Vector_3D := Cross (V, A);
@@ -175,22 +175,22 @@ package body Neo.Core.Math is
     end;
 
   -- Rotations
-  function Rotate (Angle : Real_64; Kind : Dimension_Kind) return Matrix_3D is -- Listing 2.1
-    C : constant Real_64 := Cos (Angle);
-    S : constant Real_64 := Sin (Angle);
+  function Rotate (Angle : Real_32; Kind : Dimension_Kind) return Matrix_3D is -- Listing 2.1
+    C : constant Real_32 := Cos (Angle);
+    S : constant Real_32 := Sin (Angle);
     begin
       return (case Kind is
                 when X_Dimension => (1.0, 0.0, 0.0, 0.0, C, -S, 0.0, S, C),
                 when Y_Dimension => (C, 0.0, S, 0.0, 1.0, 0.0, -S, 0.0, C),
                 when Z_Dimension => (C,-S, 0.0, S, C, 0.0, 0.0, 0.0, 1.0)); 
     end;
-  function Rotate (Angle : Real_64; Axis : Vector_3D) return Matrix_3D is -- Listing 2.2
-    C  : constant Real_64   := Cos (Angle);
-    S  : constant Real_64   := Sin (Angle);
+  function Rotate (Angle : Real_32; Axis : Vector_3D) return Matrix_3D is -- Listing 2.2
+    C  : constant Real_32   := Cos (Angle);
+    S  : constant Real_32   := Sin (Angle);
     V  : constant Vector_3D := Axis * (1.0 - C);
-    YX : constant Real_64   := Axis.Y * Axis.X;
-    ZX : constant Real_64   := Axis.Z * Axis.X;
-    ZY : constant Real_64   := Axis.Z * Axis.Y;
+    YX : constant Real_32   := Axis.Y * Axis.X;
+    ZX : constant Real_32   := Axis.Z * Axis.X;
+    ZY : constant Real_32   := Axis.Z * Axis.Y;
     begin
       return (C + V.X * Axis.X, YX - S * Axis.Z, ZX + S * Axis.Y,
               YX + S * Axis.X, C + V.Y + Axis.Y, ZY - S * Axis.X,
@@ -200,9 +200,9 @@ package body Neo.Core.Math is
   -- Reflections
   function Reflect (A : Vector_3D) return Matrix_3D is -- Listing 2.3
     V  : constant Vector_3D := A * (-2.0);
-    YX : constant Real_64   := V.X * A.Y;
-    ZX : constant Real_64   := V.X * A.Z;
-    ZY : constant Real_64   := V.Y * A.Z;
+    YX : constant Real_32   := V.X * A.Y;
+    ZX : constant Real_32   := V.X * A.Z;
+    ZY : constant Real_32   := V.Y * A.Z;
     begin
       return (V.X * A.X + 1.0, YX, ZX,
               YX, V.Y * A.Y + 1.0, ZY,
@@ -210,9 +210,9 @@ package body Neo.Core.Math is
     end;
   function Reflect (F : Plane_4D) return Transform_4D is -- !!!
     V  : constant Vector_3D := Normal (F) * (-2.0);
-    YX : constant Real_64   := V.X * F.Y;
-    ZX : constant Real_64   := V.X * F.Z;
-    ZY : constant Real_64   := V.Y * F.Z;
+    YX : constant Real_32   := V.X * F.Y;
+    ZX : constant Real_32   := V.X * F.Z;
+    ZY : constant Real_32   := V.Y * F.Z;
     begin
       return (V.X * F.X + 1.0, YX, ZX, V.X * F.W,
               YX, V.Y * F.Y + 1.0, ZY, V.Y * F.W,
@@ -220,18 +220,18 @@ package body Neo.Core.Math is
     end;
 
   -- Scalers
-  function Scale (SX, SY, SZ : Real_64) return Matrix_3D is -- Listing 2.5
+  function Scale (SX, SY, SZ : Real_32) return Matrix_3D is -- Listing 2.5
     begin
       return (SX, 0.0, 0.0,
               0.0, SY, 0.0,
               0.0, 0.0, SZ);
     end;
-  function Scale (S : Real_64; A : Vector_3D) return Matrix_3D is -- Listing 2.6
-    S2 : constant Real_64   := S - 1.0;
+  function Scale (S : Real_32; A : Vector_3D) return Matrix_3D is -- Listing 2.6
+    S2 : constant Real_32   := S - 1.0;
     V  : constant Vector_3D := (A.X - S, A.Y - S, A.Z - S);
-    YX : constant Real_64   := V.X * A.Y;
-    ZX : constant Real_64   := V.X * A.Z;
-    ZY : constant Real_64   := V.Y * A.Z;
+    YX : constant Real_32   := V.X * A.Y;
+    ZX : constant Real_32   := V.X * A.Z;
+    ZY : constant Real_32   := V.Y * A.Z;
     begin
       return (V.X * A.X + 1.0, YX, ZX,
               YX, V.Y * A.Y + 1.0, ZY,
@@ -241,9 +241,9 @@ package body Neo.Core.Math is
   -- Involution
   function Involution (A : Vector_3D) return Matrix_3D is -- Listing 2.4
     V  : constant Vector_3D := A * 2.0;
-    YX : constant Real_64   := V.X * A.Y;
-    ZX : constant Real_64   := V.X * A.Z;
-    ZY : constant Real_64   := V.Y * A.Z;
+    YX : constant Real_32   := V.X * A.Y;
+    ZX : constant Real_32   := V.X * A.Z;
+    ZY : constant Real_32   := V.Y * A.Z;
     begin
       return (V.X * A.X - 1.0, YX, ZX,
               YX, V.Y * A.Y - 1.0, ZY,
@@ -251,7 +251,7 @@ package body Neo.Core.Math is
     end;
 
   -- Skew
-  function Skew (Angle : Real_64; A, B : Vector_3D) return Matrix_3D is -- Listing 2.7    
+  function Skew (Angle : Real_32; A, B : Vector_3D) return Matrix_3D is -- Listing 2.7    
     V : constant Vector_3D := A * Tan (Angle);
     begin
       return (V.X * B.X + 1.0, V.X * B.Y, V.X * B.Z,

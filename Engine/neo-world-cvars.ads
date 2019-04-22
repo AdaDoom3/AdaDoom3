@@ -19,7 +19,7 @@ package Neo.World.CVars is
 
   -- Rendering
   CVAR_R : constant Str := "r_";
-  package Rendering          is new CVar (CVAR_R & "rendering",   "Rendering backend",              Rendering_Kind, Doom3_Rendering);
+  package Rendering          is new CVar (CVAR_R & "rendering",   "Rendering backend",              Rendering_Kind, FGED2_Rendering);
   package Max_GPU_Memory     is new CVar (CVAR_R & "maxgpumb",    "GPU local memory in MB",         Int_Ptr,        128);
   package Max_Visible_Memory is new CVar (CVAR_R & "maxhostmb",   "CPU visible memory in MB",       Int_Ptr,        64);
   package Max_Upload_Buffer  is new CVar (CVAR_R & "maxuploadmb", "GPU upload buffer size in MB",   Int_Ptr,        64);

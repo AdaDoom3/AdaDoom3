@@ -22,8 +22,11 @@ package Neo.Core.Strings is
   -- Split --
   -----------
 
-  function Split_Vec (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe.Vector;
-  function Split (Item : Str; On : Str := " ") return Array_Str_Unbound is (Vector_Str_16_Unbound.To_Unsafe_Array (Split_Vec (Item, On)));
+  function Split_Vec (Item : Str; On : Str) return Vector_Str_16_Unbound.Unsafe.Vector;
+  function Split     (Item : Str; On : Str) return Array_Str_Unbound is (Vector_Str_16_Unbound.To_Unsafe_Array (Split_Vec (Item, On)));
+
+  function Split_Vec_On_Whitespace (Item : Str) return Vector_Str_16_Unbound.Unsafe.Vector;
+  function Split_On_Whitespace     (Item : Str) return Array_Str_Unbound is (Vector_Str_16_Unbound.To_Unsafe_Array (Split_Vec_On_Whitespace (Item)));
 
   -------------
   -- Replace --
@@ -32,6 +35,12 @@ package Neo.Core.Strings is
   function Replace (Item : Str_Unbound; From : Str; To : Str) return Str_Unbound;
   function Replace (Item : Str;         From : Str; To : Str) return Str is (S (Replace (U (Item), From, To)));
   procedure Replace (Item : in out Str_Unbound; From : Str; To : Str);
+
+  ----------
+  -- Trim --
+  ----------
+
+  procedure Trim (Item : in out Str_Unbound);
 
   ------------------------
   -- Number Conversions --

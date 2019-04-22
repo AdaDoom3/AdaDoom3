@@ -15,7 +15,7 @@
 
 with Neo.Engine;           use Neo.Engine;
 with Neo.Data;             use Neo.Data;
-with Neo.Data.Model;       use Neo.Data.Model;
+with Neo.Data.Game;        use Neo.Data.Game;
 with Neo.Data.Texture;     use Neo.Data.Texture;
 with Neo.Core;             use Neo.Core;
 with Neo.Core.Math;        use Neo.Core.Math;

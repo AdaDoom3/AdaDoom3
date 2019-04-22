@@ -502,7 +502,7 @@ separate (Neo.Engine) package body System is
         Ignore (DispatchMessageW (Message'Unchecked_Access));
         if Message.message = WM_QUIT or Close_Game then return False; end if;
       end loop;
-      return True;
+      return not Close_Game;
     end;
 
   -- Kill the game window
@@ -603,7 +603,7 @@ separate (Neo.Engine) package body System is
         end if;
       end loop;
 
-      -- Put the game into the foreground (the extra windows are now its slaves)
+      -- Put the game into the foreground (the extra windows are now its slaves!)
       Ignore (ShowWindow (Game_Window, SW_SHOWNORMAL));
       Assert (UpdateWindow (Game_Window));
     end;
@@ -623,7 +623,7 @@ separate (Neo.Engine) package body System is
   -----------
 
   -- Map from VKeys to Key_Kind: https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
-  VK_MAP : constant array (VK_LBUTTON..VK_OEM_CLEAR) of Key_Kind :=( -- We don't care about are mouse "keys"
+  VK_MAP : constant array (VK_LBUTTON..VK_OEM_CLEAR) of Key_Kind :=( -- We don't care about mouse "keys"
     Null_Key,          Null_Key,            Cancel_Key,        Null_Key,          Null_Key,         Null_Key,         Null_Key,
     Backspace_Key,     Tab_Key,             Null_Key,          Null_Key,          Clear_Key,        Enter_Key,        Null_Key,
     Null_Key,          Shift_Key,           Ctrl_Key,          Alt_Key,           Pause_Break_Key,  Capital_Lock_Key, Kana_Key,
@@ -737,7 +737,8 @@ separate (Neo.Engine) package body System is
           end if;
           Devices.Next (Current_Device);
         end loop;
-        delay 0.01; -- Give the XBox 360 controllers time to respond
+        
+        delay 0.01; -- Give the XBox 360 controllers time to respond ???
 
         -- Query the XInput API for Xbox 360 controllers and add them to our device list
         for I in Gamepads'Range loop
@@ -933,7 +934,7 @@ separate (Neo.Engine) package body System is
           if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real_64 (State.Gamepad.bRightTrigger) / Real_64 (Int_8_Unsigned_C'Last) * 100.0); end if;
           Gamepads (I) := State.Gamepad;
         end if;
-      end loop; exception when others => null; end; -- Random crashes ???
+      end loop; exception when others => Line ("Xbox Controller has performed an illegal operation!"); end; -- Random crashes ???
       return True;
     end;
 end;

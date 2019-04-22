@@ -13,7 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
--- Custom binding to the OpenAL Soft API: https://web.archive.org/web/20160409112902/http://www.openal.org/documentation/openal-1.1-specification.pdf
+-- Custom binding to the OpenAL Soft API:
+--   https://web.archive.org/web/20160409112902/http://www.openal.org/documentation/openal-1.1-specification.pdf
 package Neo.API.OpenAL is
 
   -----------
@@ -167,7 +168,7 @@ package Neo.API.OpenAL is
   ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER : constant Int_Unsigned_C := 16#0000_311#; -- 0000
   ALC_CAPTURE_SAMPLES                  : constant Int_Unsigned_C := 16#0000_312#; -- 0000
 
-  -- 
+  --
   AL_LOKI_IMA_ADPCM_format     : constant Int_Unsigned_C := 1
   AL_FORMAT_IMA_ADPCM_MONO16_EXT      : constant Int_Unsigned_C :=      10000
   AL_FORMAT_IMA_ADPCM_STEREO16_EXT    : constant Int_Unsigned_C :=      10001
@@ -281,7 +282,7 @@ package Neo.API.OpenAL is
   ALC_FORMAT_CHANNELS_SOFT : constant Int_Unsigned_C :=                 1990
   ALC_FORMAT_TYPE_SOFT     : constant Int_Unsigned_C :=                 1991
 
-  -- Sample types 
+  -- Sample types
   ALC_BYTE_SOFT           : constant Int_Unsigned_C :=                  1400
   ALC_UNSIGNED_BYTE_SOFT : constant Int_Unsigned_C :=                   1401
   ALC_SHORT_SOFT         : constant Int_Unsigned_C :=                   1402
@@ -290,7 +291,7 @@ package Neo.API.OpenAL is
   ALC_UNSIGNED_INT_SOFT  : constant Int_Unsigned_C :=                   1405
   ALC_FLOAT_SOFT         : constant Int_Unsigned_C :=                   1406
 
-  -- Channel configurations 
+  -- Channel configurations
   ALC_MONO_SOFT         : constant Int_Unsigned_C :=                    1500
   ALC_STEREO_SOFT       : constant Int_Unsigned_C :=                    1501
   ALC_QUAD_SOFT        : constant Int_Unsigned_C :=                     1503
@@ -332,7 +333,7 @@ typedef uint64_t ALuint64SOFT;
 
   -- Effect properties
 
-  -- Reverb effect parameters 
+  -- Reverb effect parameters
   AL_REVERB_DENSITY                        0001
   AL_REVERB_DIFFUSION                      0002
   AL_REVERB_GAIN                           0003
@@ -347,7 +348,7 @@ typedef uint64_t ALuint64SOFT;
   AL_REVERB_ROOM_ROLLOFF_FACTOR            000C
   AL_REVERB_DECAY_HFLIMIT                  000D
 
-  -- EAX Reverb effect parameters 
+  -- EAX Reverb effect parameters
   AL_EAXREVERB_DENSITY                     0001
   AL_EAXREVERB_DIFFUSION                   0002
   AL_EAXREVERB_GAIN                        0003
@@ -372,7 +373,7 @@ typedef uint64_t ALuint64SOFT;
   AL_EAXREVERB_ROOM_ROLLOFF_FACTOR         0016
   AL_EAXREVERB_DECAY_HFLIMIT               0017
 
-  -- Chorus effect parameters 
+  -- Chorus effect parameters
   AL_CHORUS_WAVEFORM                       0001
   AL_CHORUS_PHASE                          0002
   AL_CHORUS_RATE                           0003
@@ -380,21 +381,21 @@ typedef uint64_t ALuint64SOFT;
   AL_CHORUS_FEEDBACK                       0005
   AL_CHORUS_DELAY                          0006
 
-  -- Distortion effect parameters 
+  -- Distortion effect parameters
   AL_DISTORTION_EDGE                       0001
   AL_DISTORTION_GAIN                       0002
   AL_DISTORTION_LOWPASS_CUTOFF             0003
   AL_DISTORTION_EQCENTER                   0004
   AL_DISTORTION_EQBANDWIDTH                0005
 
-  -- Echo effect parameters 
+  -- Echo effect parameters
   AL_ECHO_DELAY                            0001
   AL_ECHO_LRDELAY                          0002
   AL_ECHO_DAMPING                          0003
   AL_ECHO_FEEDBACK                         0004
   AL_ECHO_SPREAD                           0005
 
-  -- Flanger effect parameters 
+  -- Flanger effect parameters
   AL_FLANGER_WAVEFORM                      0001
   AL_FLANGER_PHASE                         0002
   AL_FLANGER_RATE                          0003
@@ -402,12 +403,12 @@ typedef uint64_t ALuint64SOFT;
   AL_FLANGER_FEEDBACK                      0005
   AL_FLANGER_DELAY                         0006
 
-  -- Frequency shifter effect parameters 
+  -- Frequency shifter effect parameters
   AL_FREQUENCY_SHIFTER_FREQUENCY           0001
   AL_FREQUENCY_SHIFTER_LEFT_DIRECTION      0002
   AL_FREQUENCY_SHIFTER_RIGHT_DIRECTION     0003
 
-  -- Vocal morpher effect parameters 
+  -- Vocal morpher effect parameters
   AL_VOCAL_MORPHER_PHONEMEA               : constant Int_Unsigned_C := 0001
   AL_VOCAL_MORPHER_PHONEMEA_COARSE_TUNING : constant Int_Unsigned_C := 0002
   AL_VOCAL_MORPHER_PHONEMEB              : constant Int_Unsigned_C :=  0003
@@ -415,25 +416,25 @@ typedef uint64_t ALuint64SOFT;
   AL_VOCAL_MORPHER_WAVEFORM               : constant Int_Unsigned_C := 0005
   AL_VOCAL_MORPHER_RATE                   : constant Int_Unsigned_C := 0006
 
-  -- Pitchshifter effect parameters 
+  -- Pitchshifter effect parameters
   AL_PITCH_SHIFTER_COARSE_TUNE          : constant Int_Unsigned_C :=   0001
   AL_PITCH_SHIFTER_FINE_TUNE           : constant Int_Unsigned_C :=    0002
 
-  -- Ringmodulator effect parameters 
+  -- Ringmodulator effect parameters
   AL_RING_MODULATOR_FREQUENCY          : constant Int_Unsigned_C :=    0001
   AL_RING_MODULATOR_HIGHPASS_CUTOFF    : constant Int_Unsigned_C :=    0002
   AL_RING_MODULATOR_WAVEFORM           : constant Int_Unsigned_C :=    0003
 
-  -- Autowah effect parameters 
+  -- Autowah effect parameters
   AL_AUTOWAH_ATTACK_TIME              : constant Int_Unsigned_C :=     0001
   AL_AUTOWAH_RELEASE_TIME            : constant Int_Unsigned_C :=      0002
   AL_AUTOWAH_RESONANCE               : constant Int_Unsigned_C :=      0003
   AL_AUTOWAH_PEAK_GAIN              : constant Int_Unsigned_C :=       0004
 
-  -- Compressor effect parameters 
+  -- Compressor effect parameters
   AL_COMPRESSOR_ONOFF               : constant Int_Unsigned_C :=       0001
 
-  -- Equalizer effect parameters 
+  -- Equalizer effect parameters
   AL_EQUALIZER_LOW_GAIN            : constant Int_Unsigned_C :=        0001
   AL_EQUALIZER_LOW_CUTOFF          : constant Int_Unsigned_C :=        0002
   AL_EQUALIZER_MID1_GAIN           : constant Int_Unsigned_C :=        0003
@@ -445,12 +446,12 @@ typedef uint64_t ALuint64SOFT;
   AL_EQUALIZER_HIGH_GAIN           : constant Int_Unsigned_C :=        0009
   AL_EQUALIZER_HIGH_CUTOFF         : constant Int_Unsigned_C :=        000A
 
-  -- Effect type 
+  -- Effect type
   AL_EFFECT_FIRST_PARAMETER        : constant Int_Unsigned_C :=        0000
   AL_EFFECT_LAST_PARAMETER         : constant Int_Unsigned_C :=        0x8000
   AL_EFFECT_TYPE                   : constant Int_Unsigned_C :=        0x8001
 
-  -- Effect types, used with the AL_EFFECT_TYPE property 
+  -- Effect types, used with the AL_EFFECT_TYPE property
   AL_EFFECT_NULL                     : constant Int_Unsigned_C :=      0000
   AL_EFFECT_REVERB                   : constant Int_Unsigned_C :=      0001
   AL_EFFECT_CHORUS                   : constant Int_Unsigned_C :=      0002
@@ -477,25 +478,25 @@ typedef uint64_t ALuint64SOFT;
 
   -- Filter properties
 
-  -- Lowpass filter parameters 
+  -- Lowpass filter parameters
   AL_LOWPASS_GAIN                        : constant Int_Unsigned_C :=  0001
   AL_LOWPASS_GAINHF                      : constant Int_Unsigned_C :=  0002
 
-  -- Highpass filter parameters 
+  -- Highpass filter parameters
   AL_HIGHPASS_GAIN                      : constant Int_Unsigned_C :=   0001
   AL_HIGHPASS_GAINLF                    : constant Int_Unsigned_C :=   0002
 
-  -- Bandpass filter parameters 
+  -- Bandpass filter parameters
   AL_BANDPASS_GAIN                      : constant Int_Unsigned_C :=   0001
   AL_BANDPASS_GAINLF                    : constant Int_Unsigned_C :=   0002
   AL_BANDPASS_GAINHF                    : constant Int_Unsigned_C :=   0003
 
-  -- Filter type 
+  -- Filter type
   AL_FILTER_FIRST_PARAMETER             : constant Int_Unsigned_C :=   0000
   AL_FILTER_LAST_PARAMETER              : constant Int_Unsigned_C :=   0x8000
   AL_FILTER_TYPE                        : constant Int_Unsigned_C :=   0x8001
 
-  -- Filter types, used with the AL_FILTER_TYPE property 
+  -- Filter types, used with the AL_FILTER_TYPE property
   AL_FILTER_NULL                       : constant Int_Unsigned_C :=    0000
   AL_FILTER_LOWPASS                    : constant Int_Unsigned_C :=    0001
   AL_FILTER_HIGHPASS                   : constant Int_Unsigned_C :=    0002
@@ -503,7 +504,7 @@ typedef uint64_t ALuint64SOFT;
 
   -- Filter ranges and defaults
 
-  -- Lowpass filter 
+  -- Lowpass filter
   AL_LOWPASS_MIN_GAIN                      (0.0)
   AL_LOWPASS_MAX_GAIN                      (1.0)
   AL_LOWPASS_DEFAULT_GAIN                  (1.0)
@@ -512,7 +513,7 @@ typedef uint64_t ALuint64SOFT;
   AL_LOWPASS_MAX_GAINHF                    (1.0)
   AL_LOWPASS_DEFAULT_GAINHF                (1.0)
 
-  -- Highpass filter 
+  -- Highpass filter
   AL_HIGHPASS_MIN_GAIN                     (0.0)
   AL_HIGHPASS_MAX_GAIN                     (1.0)
   AL_HIGHPASS_DEFAULT_GAIN                 (1.0)
@@ -521,7 +522,7 @@ typedef uint64_t ALuint64SOFT;
   AL_HIGHPASS_MAX_GAINLF                   (1.0)
   AL_HIGHPASS_DEFAULT_GAINLF               (1.0)
 
-  -- Bandpass filter 
+  -- Bandpass filter
   AL_BANDPASS_MIN_GAIN                     (0.0)
   AL_BANDPASS_MAX_GAIN                     (1.0)
   AL_BANDPASS_DEFAULT_GAIN                 (1.0)
@@ -537,7 +538,7 @@ typedef uint64_t ALuint64SOFT;
 
   -- Effect parameter ranges and defaults
 
-  -- Standard reverb effect 
+  -- Standard reverb effect
   AL_REVERB_MIN_DENSITY                    (0.0)
   AL_REVERB_MAX_DENSITY                    (1.0)
   AL_REVERB_DEFAULT_DENSITY                (1.0)
@@ -590,7 +591,7 @@ typedef uint64_t ALuint64SOFT;
   AL_REVERB_MAX_DECAY_HFLIMIT              AL_TRUE
   AL_REVERB_DEFAULT_DECAY_HFLIMIT          AL_TRUE
 
-  -- EAX reverb effect 
+  -- EAX reverb effect
   AL_EAXREVERB_MIN_DENSITY                 (0.0)
   AL_EAXREVERB_MAX_DENSITY                 (1.0)
   AL_EAXREVERB_DEFAULT_DENSITY             (1.0)
@@ -679,7 +680,7 @@ typedef uint64_t ALuint64SOFT;
   AL_EAXREVERB_MAX_DECAY_HFLIMIT          : constant Int_Unsigned_C := AL_TRUE
   AL_EAXREVERB_DEFAULT_DECAY_HFLIMIT     : constant Int_Unsigned_C :=  AL_TRUE
 
-  -- Chorus effect 
+  -- Chorus effect
   AL_CHORUS_WAVEFORM_SINUSOID           : constant Int_Unsigned_C :=   (0)
   AL_CHORUS_WAVEFORM_TRIANGLE           : constant Int_Unsigned_C :=   (1)
 
@@ -707,7 +708,7 @@ typedef uint64_t ALuint64SOFT;
   AL_CHORUS_MAX_DELAY                      (0.016f)
   AL_CHORUS_DEFAULT_DELAY                  (0.016f)
 
-  -- Distortion effect 
+  -- Distortion effect
   AL_DISTORTION_MIN_EDGE                   (0.0)
   AL_DISTORTION_MAX_EDGE                   (1.0)
   AL_DISTORTION_DEFAULT_EDGE               (0.2f)
@@ -728,7 +729,7 @@ typedef uint64_t ALuint64SOFT;
   AL_DISTORTION_MAX_EQBANDWIDTH            (24000.0)
   AL_DISTORTION_DEFAULT_EQBANDWIDTH        (3600.0)
 
-  -- Echo effect 
+  -- Echo effect
   AL_ECHO_MIN_DELAY                        (0.0)
   AL_ECHO_MAX_DELAY                        (0.207f)
   AL_ECHO_DEFAULT_DELAY                    (0.1f)
@@ -749,7 +750,7 @@ typedef uint64_t ALuint64SOFT;
   AL_ECHO_MAX_SPREAD                       (1.0)
   AL_ECHO_DEFAULT_SPREAD                   (-1.0)
 
-  -- Flanger effect 
+  -- Flanger effect
   AL_FLANGER_WAVEFORM_SINUSOID             (0)
   AL_FLANGER_WAVEFORM_TRIANGLE             (1)
 
@@ -777,7 +778,7 @@ typedef uint64_t ALuint64SOFT;
   AL_FLANGER_MAX_DELAY                     (0.004f)
   AL_FLANGER_DEFAULT_DELAY                 (0.002f)
 
-  -- Frequency shifter effect 
+  -- Frequency shifter effect
   AL_FREQUENCY_SHIFTER_MIN_FREQUENCY       (0.0)
   AL_FREQUENCY_SHIFTER_MAX_FREQUENCY       (24000.0)
   AL_FREQUENCY_SHIFTER_DEFAULT_FREQUENCY   (0.0)
@@ -794,7 +795,7 @@ typedef uint64_t ALuint64SOFT;
   AL_FREQUENCY_SHIFTER_MAX_RIGHT_DIRECTION : constant Int_Unsigned_C := (2)
   AL_FREQUENCY_SHIFTER_DEFAULT_RIGHT_DIRECTION : constant Int_Unsigned_C := (0)
 
-  -- Vocal morpher effect 
+  -- Vocal morpher effect
   AL_VOCAL_MORPHER_MIN_PHONEMEA       : constant Int_Unsigned_C :=     (0)
   AL_VOCAL_MORPHER_MAX_PHONEMEA       : constant Int_Unsigned_C :=     (29)
   AL_VOCAL_MORPHER_DEFAULT_PHONEMEA   : constant Int_Unsigned_C :=     (0)
@@ -854,7 +855,7 @@ typedef uint64_t ALuint64SOFT;
   AL_VOCAL_MORPHER_MAX_RATE                (10.0)
   AL_VOCAL_MORPHER_DEFAULT_RATE            (1.41f)
 
-  -- Pitch shifter effect 
+  -- Pitch shifter effect
   AL_PITCH_SHIFTER_MIN_COARSE_TUNE       : constant Int_Unsigned_C :=  (-12)
   AL_PITCH_SHIFTER_MAX_COARSE_TUNE       : constant Int_Unsigned_C :=  (12)
   AL_PITCH_SHIFTER_DEFAULT_COARSE_TUNE   : constant Int_Unsigned_C :=  (12)
@@ -863,7 +864,7 @@ typedef uint64_t ALuint64SOFT;
   AL_PITCH_SHIFTER_MAX_FINE_TUNE         : constant Int_Unsigned_C :=  (50)
   AL_PITCH_SHIFTER_DEFAULT_FINE_TUNE     : constant Int_Unsigned_C :=  (0)
 
-  -- Ring modulator effect 
+  -- Ring modulator effect
   AL_RING_MODULATOR_MIN_FREQUENCY          (0.0)
   AL_RING_MODULATOR_MAX_FREQUENCY          (8000.0)
   AL_RING_MODULATOR_DEFAULT_FREQUENCY      (440.0)
@@ -880,7 +881,7 @@ typedef uint64_t ALuint64SOFT;
   AL_RING_MODULATOR_MAX_WAVEFORM         : constant Int_Unsigned_C :=  (2)
   AL_RING_MODULATOR_DEFAULT_WAVEFORM     : constant Int_Unsigned_C :=  (0)
 
-  -- Autowah effect 
+  -- Autowah effect
   AL_AUTOWAH_MIN_ATTACK_TIME               (0.0001f)
   AL_AUTOWAH_MAX_ATTACK_TIME               (1.0)
   AL_AUTOWAH_DEFAULT_ATTACK_TIME           (0.06f)
@@ -897,12 +898,12 @@ typedef uint64_t ALuint64SOFT;
   AL_AUTOWAH_MAX_PEAK_GAIN                 (31621.0)
   AL_AUTOWAH_DEFAULT_PEAK_GAIN             (11.22f)
 
-  -- Compressor effect 
+  -- Compressor effect
   AL_COMPRESSOR_MIN_ONOFF                : constant Int_Unsigned_C :=  (0)
   AL_COMPRESSOR_MAX_ONOFF                : constant Int_Unsigned_C :=  (1)
   AL_COMPRESSOR_DEFAULT_ONOFF            : constant Int_Unsigned_C :=  (1)
 
-  -- Equalizer effect 
+  -- Equalizer effect
   AL_EQUALIZER_MIN_LOW_GAIN                (0.126f)
   AL_EQUALIZER_MAX_LOW_GAIN                (7.943f)
   AL_EQUALIZER_DEFAULT_LOW_GAIN            (1.0)
@@ -1043,7 +1044,7 @@ typedef uint64_t ALuint64SOFT;
   EFX_REVERB_PRESET_CASTLE_COURTYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.420, 0.3162, 0.4467, 0.1995, 2.130, 0.610, 0.230, 0.2239, 0.160, (0.0, 0.0, 0.0), 0.7079, 0.0360, (0.0, 0.0, 0.0), 0.250, 0.370, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 0)
   EFX_REVERB_PRESET_CASTLE_ALCOVE : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.890, 0.3162, 0.5012, 0.100, 1.640, 0.870, 0.310, 1.0000, 0.0070, (0.0, 0.0, 0.0), 1.4125, 0.0340, (0.0, 0.0, 0.0), 0.1380, 0.080, 0.250, 0.0, 0.9943, 5168.6001, 139.500, 0.0, 1)
 
-  -- Factory Presets 
+  -- Factory Presets
   EFX_REVERB_PRESET_FACTORY_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.820, 0.3162, 0.7943, 0.5012, 1.720, 0.650, 1.310, 0.7079, 0.010, (0.0, 0.0, 0.0), 1.7783, 0.0240, (0.0, 0.0, 0.0), 0.1190, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
   EFX_REVERB_PRESET_FACTORY_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.640, 0.2512, 0.7943, 0.5012, 2.530, 0.650, 1.310, 1.0000, 0.010, (0.0, 0.0, 0.0), 1.2589, 0.0380, (0.0, 0.0, 0.0), 0.1350, 0.230, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
   EFX_REVERB_PRESET_FACTORY_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (0.4287, 0.820, 0.2512, 0.7943, 0.5012, 2.760, 0.650, 1.310, 0.2818, 0.0220, (0.0, 0.0, 0.0), 1.4125, 0.0230, (0.0, 0.0, 0.0), 0.1740, 0.070, 0.250, 0.0, 0.9943, 3762.6001, 362.500, 0.0, 1)
@@ -1075,7 +1076,7 @@ typedef uint64_t ALuint64SOFT;
   EFX_REVERB_PRESET_SPACESTATION_CUPBOARD : constant EFXEAXREVERBPROPERTIES := (0.1715, 0.560, 0.3162, 0.7079, 0.8913, 0.790, 0.810, 0.550, 1.4125, 0.0070, (0.0, 0.0, 0.0), 1.7783, 0.0180, (0.0, 0.0, 0.0), 0.1810, 0.310, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
   EFX_REVERB_PRESET_SPACESTATION_ALCOVE : constant EFXEAXREVERBPROPERTIES := (0.2109, 0.780, 0.3162, 0.7079, 0.8913, 1.160, 0.810, 0.550, 1.4125, 0.0070, (0.0, 0.0, 0.0), 1.0000, 0.0180, (0.0, 0.0, 0.0), 0.1920, 0.210, 0.250, 0.0, 0.9943, 3316.1001, 458.200, 0.0, 1)
 
-  -- Wooden Galleon Presets 
+  -- Wooden Galleon Presets
   EFX_REVERB_PRESET_WOODEN_SMALLROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1122, 0.3162, 0.790, 0.320, 0.870, 1.0000, 0.0320, (0.0, 0.0, 0.0), 0.8913, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
   EFX_REVERB_PRESET_WOODEN_SHORTPASSAGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.1259, 0.3162, 1.750, 0.500, 0.870, 0.8913, 0.0120, (0.0, 0.0, 0.0), 0.6310, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
   EFX_REVERB_PRESET_WOODEN_MEDIUMROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.100, 0.2818, 1.470, 0.420, 0.820, 0.8913, 0.0490, (0.0, 0.0, 0.0), 0.8913, 0.0290, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 4705.0, 99.600, 0.0, 1)
@@ -1110,7 +1111,7 @@ typedef uint64_t ALuint64SOFT;
   EFX_REVERB_PRESET_PIPE_LARGE : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 0.3548, 0.2239, 8.450, 0.100, 0.100, 0.3981, 0.0460, (0.0, 0.0, 0.0), 1.5849, 0.0320, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 1)
   EFX_REVERB_PRESET_PIPE_RESONANT : constant EFXEAXREVERBPROPERTIES := (0.1373, 0.910, 0.3162, 0.4467, 0.2818, 6.810, 0.180, 0.100, 0.7079, 0.010, (0.0, 0.0, 0.0), 1.0000, 0.0220, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 2854.3999, 20.0, 0.0, 0)
 
-  -- Outdoors Presets 
+  -- Outdoors Presets
   EFX_REVERB_PRESET_OUTDOORS_BACKYARD : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.450, 0.3162, 0.2512, 0.5012, 1.120, 0.340, 0.460, 0.4467, 0.0690, (0.0, 0.0, -0.0), 0.7079, 0.0230, (0.0, 0.0, 0.0), 0.2180, 0.340, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
   EFX_REVERB_PRESET_OUTDOORS_ROLLINGPLAINS : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.0, 0.3162, 0.0112, 0.6310, 2.130, 0.210, 0.460, 0.1778, 0.300, (0.0, 0.0, -0.0), 0.4467, 0.0190, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
   EFX_REVERB_PRESET_OUTDOORS_DEEPCANYON : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.740, 0.3162, 0.1778, 0.6310, 3.890, 0.210, 0.460, 0.3162, 0.2230, (0.0, 0.0, -0.0), 0.3548, 0.0190, (0.0, 0.0, 0.0), 0.250, 1.0000, 0.250, 0.0, 0.9943, 4399.1001, 242.900, 0.0, 0)
@@ -1132,7 +1133,7 @@ typedef uint64_t ALuint64SOFT;
   EFX_REVERB_PRESET_DRIVING_EMPTYGRANDSTAND : constant EFXEAXREVERBPROPERTIES := (1.0000, 1.0000, 0.3162, 1.0000, 0.7943, 4.620, 1.750, 1.400, 0.2082, 0.090, (0.0, 0.0, 0.0), 0.2512, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.0, 0.9943, 10420.2002, 250.0, 0.0, 0)
   EFX_REVERB_PRESET_DRIVING_TUNNEL          : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.810, 0.3162, 0.3981, 0.8913, 3.420, 0.940, 1.310, 0.7079, 0.0510, (0.0, 0.0, 0.0), 0.7079, 0.0470, (0.0, 0.0, 0.0), 0.2140, 0.050, 0.250, 0.0, 0.9943, 5000.0, 155.300, 0.0, 1)
 
-  -- City Presets 
+  -- City Presets
   EFX_REVERB_PRESET_CITY_STREETS   : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.780, 0.3162, 0.7079, 0.8913, 1.790, 1.120, 0.910, 0.2818, 0.0460, (0.0, 0.0, 0.0), 0.1995, 0.0280, (0.0, 0.0, 0.0), 0.250, 0.200, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
   EFX_REVERB_PRESET_CITY_SUBWAY    : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.740, 0.3162, 0.7079, 0.8913, 3.010, 1.230, 0.910, 0.7079, 0.0460, (0.0, 0.0, 0.0), 1.2589, 0.0280, (0.0, 0.0, 0.0), 0.1250, 0.210, 0.250, 0.0, 0.9943, 5000.0, 250.0, 0.0, 1)
   EFX_REVERB_PRESET_CITY_MUSEUM    : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.1778, 0.1778, 3.280, 1.400, 0.570, 0.2512, 0.0390, (0.0, 0.0, -0.0), 0.8913, 0.0340, (0.0, 0.0, 0.0), 0.130, 0.170, 0.250, 0.0, 0.9943, 2854.3999, 107.500, 0.0, 0)
@@ -1140,7 +1141,7 @@ typedef uint64_t ALuint64SOFT;
   EFX_REVERB_PRESET_CITY_UNDERPASS : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.820, 0.3162, 0.4467, 0.8913, 3.570, 1.120, 0.910, 0.3981, 0.0590, (0.0, 0.0, 0.0), 0.8913, 0.0370, (0.0, 0.0, 0.0), 0.250, 0.140, 0.250, 0.0, 0.9920, 5000.0, 250.0, 0.0, 1)
   EFX_REVERB_PRESET_CITY_ABANDONED : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.690, 0.3162, 0.7943, 0.8913, 3.280, 1.170, 0.910, 0.4467, 0.0440, (0.0, 0.0, 0.0), 0.2818, 0.0240, (0.0, 0.0, 0.0), 0.250, 0.200, 0.250, 0.0, 0.9966, 5000.0, 250.0, 0.0, 1)
 
-  -- Misc. Presets 
+  -- Misc. Presets
   EFX_REVERB_PRESET_DUSTYROOM      : constant EFXEAXREVERBPROPERTIES := (0.3645, 0.560, 0.3162, 0.7943, 0.7079, 1.790, 0.380, 0.210, 0.5012, 0.0020, (0.0, 0.0, 0.0), 1.2589, 0.0060, (0.0, 0.0, 0.0), 0.2020, 0.050, 0.250, 0.0, 0.9886, 13046.0, 163.300, 0.0, 1)
   EFX_REVERB_PRESET_CHAPEL         : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.840, 0.3162, 0.5623, 1.0000, 4.620, 0.640, 1.230, 0.4467, 0.0320, (0.0, 0.0, 0.0), 0.7943, 0.0490, (0.0, 0.0, 0.0), 0.250, 0.0, 0.250, 0.110, 0.9943, 5000.0, 250.0, 0.0, 1)
   EFX_REVERB_PRESET_SMALLWATERROOM : constant EFXEAXREVERBPROPERTIES := (1.0000, 0.700, 0.3162, 0.4477, 1.0000, 1.510, 1.250, 1.140, 0.8913, 0.0200, (0.0, 0.0, 0.0), 1.4125, 0.0300, (0.0, 0.0, 0.0), 0.1790, 0.150, 0.8950, 0.190, 0.9920, 5000.0, 250.0, 0.0, 0)
@@ -1151,459 +1152,459 @@ typedef uint64_t ALuint64SOFT;
 
   -- 2.7. AL Errors
   function alGetError return Int_Unsigned_C -- ALenum
-                      with Import => True, Convention => StdCall, External_Name => "alGetError"; 
+                      with Import => True, Convention => StdCall, External_Name => "alGetError";
 
   -- 2.8. Controlling AL Execution
   procedure alEnable (target : Int_Unsigned_C) -- ALenum
-                      with Import => True, Convention => StdCall, External_Name => "alEnable"; 
+                      with Import => True, Convention => StdCall, External_Name => "alEnable";
 
   -- 2.8. Controlling AL Execution
   procedure alDisable (target : Int_Unsigned_C) -- ALenum
-                       with Import => True, Convention => StdCall, External_Name => "alDisable"; 
+                       with Import => True, Convention => StdCall, External_Name => "alDisable";
 
   -- 2.8. Controlling AL Execution
   function alIsEnabled (target : Int_Unsigned_C) -- ALenum
                         return Int_8_Unsigned_C     -- ALboolean
-                        with Import => True, Convention => StdCall, External_Name => "alIsEnabled"; 
+                        with Import => True, Convention => StdCall, External_Name => "alIsEnabled";
 
   -- 2.12. Requesting Object Names
   procedure alGenBuffers (n       : Int_Size_C;                  -- ALsizei
                           buffers : Ptr_Array_Int_32_Unsigned_C) -- ALuint*
-                          with Import => True, Convention => StdCall, External_Name => "alGenBuffers"; 
+                          with Import => True, Convention => StdCall, External_Name => "alGenBuffers";
 
   -- 2.13. Releasing Object Names
   procedure alDeleteBuffers (n       : Int_Size_C;                  -- ALsizei
                              buffers : Ptr_Array_Int_32_Unsigned_C) -- ALuint*
-                             with Import => True, Convention => StdCall, External_Name => "alDeleteBuffers"; 
+                             with Import => True, Convention => StdCall, External_Name => "alDeleteBuffers";
 
   -- 2.14. Validating an Object Name
-  function alIsBuffer (bid : Int_Unsigned_C) -- ALuint 
+  function alIsBuffer (bid : Int_Unsigned_C) -- ALuint
                        return Int_8_Unsigned_C  -- ALboolean
-                       with Import => True, Convention => StdCall, External_Name => "alIsBuffer"; 
+                       with Import => True, Convention => StdCall, External_Name => "alIsBuffer";
 
   -- 2.14. Validating an Object Name
   function alIsSource (sid : Int_Unsigned_C) -- ALuint
                        return Int_8_Unsigned_C  -- ALboolean
-                       with Import => True, Convention => StdCall, External_Name => "alIsSource"; 
+                       with Import => True, Convention => StdCall, External_Name => "alIsSource";
 
   -- 3.1.1. Simple Queries
   procedure alGetBooleanv (paramName : Int_Unsigned_C;           -- ALenum
                            dest      : Ptr_Array_Int_8_Unsigned_C)  -- ALboolean*
-                           with Import => True, Convention => StdCall, External_Name => "alGetBooleanv"; 
+                           with Import => True, Convention => StdCall, External_Name => "alGetBooleanv";
 
   -- 3.1.1. Simple Queries
   function alGetBoolean (paramName : Int_Unsigned_C) -- ALenum
                          return Int_8_Unsigned_C        -- ALboolean
-                         with Import => True, Convention => StdCall, External_Name => "alGetBoolean"; 
+                         with Import => True, Convention => StdCall, External_Name => "alGetBoolean";
 
   -- 3.1.1. Simple Queries
   procedure alGetIntegerv (paramName : Int_Unsigned_C;         -- ALenum
                            dest      : Ptr_Array_Int_32_Signed_C) -- ALint*
-                           with Import => True, Convention => StdCall, External_Name => "alGetIntegerv"; 
+                           with Import => True, Convention => StdCall, External_Name => "alGetIntegerv";
 
   -- 3.1.1. Simple Queries
   function alGetInteger (paramName : Int_Unsigned_C) -- ALenum
                          return Int_C                   -- ALint
-                         with Import => True, Convention => StdCall, External_Name => "alGetInteger"; 
+                         with Import => True, Convention => StdCall, External_Name => "alGetInteger";
 
   -- 3.1.1. Simple Queries
   procedure alGetFloatv (paramName : Int_Unsigned_C;   -- ALenum
                          dest      : Ptr_Array_Real_32_C) -- ALfloat*
-                         with Import => True, Convention => StdCall, External_Name => "alGetFloatv"; 
+                         with Import => True, Convention => StdCall, External_Name => "alGetFloatv";
 
   -- 3.1.1. Simple Queries
   function alGetFloat (paramName : Int_Unsigned_C) -- ALenum
                        return Real_32_C               -- ALfloat
-                       with Import => True, Convention => StdCall, External_Name => "alGetFloat"; 
+                       with Import => True, Convention => StdCall, External_Name => "alGetFloat";
 
   -- 3.1.1. Simple Queries
   procedure alGetDoublev (paramName : Int_Unsigned_C;   -- ALenum
                           dest      : Ptr_Array_Real_64_C) -- ALdouble*
-                          with Import => True, Convention => StdCall, External_Name => "alGetDoublev"; 
+                          with Import => True, Convention => StdCall, External_Name => "alGetDoublev";
 
   -- 3.1.1. Simple Queries
   function alGetDouble (paramName : Int_Unsigned_C) -- ALenum
                         return Real_64_C               -- ALdouble
-                        with Import => True, Convention => StdCall, External_Name => "alGetDouble"; 
+                        with Import => True, Convention => StdCall, External_Name => "alGetDouble";
 
   -- 3.4. Attenuation By Distance
-  procedure alDistanceModel (distanceModel : Int_Unsigned_C) -- ALenum 
-                             with Import => True, Convention => StdCall, External_Name => "alDistanceModel"; 
+  procedure alDistanceModel (distanceModel : Int_Unsigned_C) -- ALenum
+                             with Import => True, Convention => StdCall, External_Name => "alDistanceModel";
 
   -- 3.5.2. Velocity Dependent Doppler Effect
   procedure alDopplerFactor (Value : Real_32_C) -- ALfloat
-                             with Import => True, Convention => StdCall, External_Name => "alDopplerFactor";  
+                             with Import => True, Convention => StdCall, External_Name => "alDopplerFactor";
 
   -- 3.5.2. Velocity Dependent Doppler Effect
   procedure alSpeedOfSound (Value : Real_32_C) -- ALfloat
-                            with Import => True, Convention => StdCall, External_Name => "alSpeedOfSound"; 
+                            with Import => True, Convention => StdCall, External_Name => "alSpeedOfSound";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListenerf (param : Int_Unsigned_C; -- ALenum
                          Value : Real_32_C)         -- ALfloat
-                         with Import => True, Convention => StdCall, External_Name => "alListenerf"; 
+                         with Import => True, Convention => StdCall, External_Name => "alListenerf";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListener3f (param  : Int_Unsigned_C; -- ALenum
                           value1 : Real_32_C;         -- ALfloat
                           value2 : Real_32_C;         -- ALfloat
                           value3 : Real_32_C)         -- ALfloat
-                          with Import => True, Convention => StdCall, External_Name => "alListener3f"; 
+                          with Import => True, Convention => StdCall, External_Name => "alListener3f";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListeneri (param : Int_Unsigned_C; -- ALenum
-                         Value : Int_C)             -- ALint 
-                         with Import => True, Convention => StdCall, External_Name => "alListeneri"; 
+                         Value : Int_C)             -- ALint
+                         with Import => True, Convention => StdCall, External_Name => "alListeneri";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListenerfv (param  : Int_Unsigned_C; -- ALenum
                           value1 : Int_C;             -- ALint
                           value2 : Int_C;             -- ALint
-                          value3 : Int_C)             -- ALint 
-                          with Import => True, Convention => StdCall, External_Name => "alListener3i"; 
+                          value3 : Int_C)             -- ALint
+                          with Import => True, Convention => StdCall, External_Name => "alListener3i";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListenerfv (param  : Int_Unsigned_C;   -- ALenum
                           values : Ptr_Array_Real_32_C) -- ALfloat*
-                          with Import => True, Convention => StdCall, External_Name => "alListenerfv"; 
+                          with Import => True, Convention => StdCall, External_Name => "alListenerfv";
 
   -- 4.2.2. Changing Listener Attributes
   procedure alListeneriv (param  : Int_Unsigned_C;         -- ALenum
                           values : Ptr_Array_Int_32_Signed_C) -- ALint*
-                          with Import => True, Convention => StdCall, External_Name => "alListeneriv"; 
+                          with Import => True, Convention => StdCall, External_Name => "alListeneriv";
 
   -- 4.2.3. Querying Listener Attributes
-  procedure alGetListenerf (param : Int_Unsigned_C; -- ALenum 
-                            Value : Pointer) -- 
-                            with Import => True, Convention => StdCall, External_Name => "alGetListenerf"; 
+  procedure alGetListenerf (param : Int_Unsigned_C; -- ALenum
+                            Value : Pointer) --
+                            with Import => True, Convention => StdCall, External_Name => "alGetListenerf";
 
   -- 4.2.3. Querying Listener Attributes
   procedure alGetListener3f (param : Int_Unsigned_C; -- ALenum
-                             value1 : Pointer; -- 
-                             value2 : Pointer; -- 
-                             value3 : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alGetListener3f"; 
+                             value1 : Pointer; --
+                             value2 : Pointer; --
+                             value3 : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alGetListener3f";
 
   -- 4.2.3. Querying Listener Attributes
   procedure alGetListenerfv (param : Int_Unsigned_C; -- ALenum
-                             values : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alGetListenerfv"; 
+                             values : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alGetListenerfv";
 
   -- 4.2.3. Querying Listener Attributes
   procedure alGetListeneri (param : Int_Unsigned_C; -- ALenum
-                            Value : Pointer) -- 
-                            with Import => True, Convention => StdCall, External_Name => "alGetListeneri"; 
- 
+                            Value : Pointer) --
+                            with Import => True, Convention => StdCall, External_Name => "alGetListeneri";
+
   -- 4.2.3. Querying Listener Attributes
   procedure alGetListener3i (param  : Int_Unsigned_C; -- ALenum
-                             value1 : Pointer; -- 
-                             value2 : Pointer; -- 
-                             value3 : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alGetListener3i"; 
+                             value1 : Pointer; --
+                             value2 : Pointer; --
+                             value3 : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alGetListener3i";
 
   -- 4.2.3. Querying Listener Attributes
   procedure alGetListeneriv (param : Int_Unsigned_C; -- ALenum
-                             values : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alGetListeneriv"; 
+                             values : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alGetListeneriv";
 
   -- 4.3.1. Managing Source Names
   procedure alGenSources (n       : Int_Size_C; -- ALsizei
-                          sources : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGenSources"; 
+                          sources : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGenSources";
 
   -- 4.3.1. Managing Source Names
   procedure alDeleteSources (n       : Int_Size_C; -- ALsizei
-                             Sources : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alDeleteSources"; 
+                             Sources : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alDeleteSources";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcef (sid   : Int_Unsigned_C; -- ALuint 
+  procedure alSourcef (sid   : Int_Unsigned_C; -- ALuint
                        param : Int_Unsigned_C; -- ALenum
                        Value : Real_32_C)         -- ALfloat
-                       with Import => True, Convention => StdCall, External_Name => "alSourcef"; 
+                       with Import => True, Convention => StdCall, External_Name => "alSourcef";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSource3f (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alSource3f (sid    : Int_Unsigned_C; -- ALuint
                         param  : Int_Unsigned_C; -- ALenum
                         value1 : Real_32_C;         -- ALfloat
                         value2 : Real_32_C;         -- ALfloat
                         value3 : Real_32_C)         -- ALfloat
-                        with Import => True, Convention => StdCall, External_Name => "alSource3f"; 
+                        with Import => True, Convention => StdCall, External_Name => "alSource3f";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcei (sid   : Int_Unsigned_C; -- ALuint 
+  procedure alSourcei (sid   : Int_Unsigned_C; -- ALuint
                        param : Int_Unsigned_C; -- ALenum
-                       Value : Int_C)             -- ALint 
-                       with Import => True, Convention => StdCall, External_Name => "alSourcei"; 
+                       Value : Int_C)             -- ALint
+                       with Import => True, Convention => StdCall, External_Name => "alSourcei";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSource3i (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alSource3i (sid    : Int_Unsigned_C; -- ALuint
                         param  : Int_Unsigned_C; -- ALenum
                         value1 : Int_C; -- ALint
                         value2 : Int_C; -- ALint
-                        value3 : Int_C) -- ALint 
-                        with Import => True, Convention => StdCall, External_Name => "alSource3i"; 
+                        value3 : Int_C) -- ALint
+                        with Import => True, Convention => StdCall, External_Name => "alSource3i";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourcefv (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alSourcefv (sid    : Int_Unsigned_C; -- ALuint
                         param  : Int_Unsigned_C; -- ALenum
-                        values : Pointer) -- 
-                        with Import => True, Convention => StdCall, External_Name => "alSourcefv"; 
+                        values : Pointer) --
+                        with Import => True, Convention => StdCall, External_Name => "alSourcefv";
 
   -- 4.3.3. Changing Source Attributes
-  procedure alSourceiv (sid : Int_Unsigned_C; -- ALuint 
+  procedure alSourceiv (sid : Int_Unsigned_C; -- ALuint
                         param : Int_Unsigned_C; -- ALenum
-                        values : Pointer) -- 
-                        with Import => True, Convention => StdCall, External_Name => "alSourceiv"; 
+                        values : Pointer) --
+                        with Import => True, Convention => StdCall, External_Name => "alSourceiv";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcef (sid   : Int_Unsigned_C; -- ALuint 
+  procedure alGetSourcef (sid   : Int_Unsigned_C; -- ALuint
                           param : Int_Unsigned_C; -- ALenum
-                          value : Poin) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alGetSourcef"; 
+                          value : Poin) --
+                          with Import => True, Convention => StdCall, External_Name => "alGetSourcef";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSource3f (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alGetSource3f (sid    : Int_Unsigned_C; -- ALuint
                            param  : Int_Unsigned_C; -- ALenum
-                           value1 : Pointer; -- 
-                           value2 : Pointer; -- 
-                           value3 : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetSource3f"; 
+                           value1 : Pointer; --
+                           value2 : Pointer; --
+                           value3 : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetSource3f";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcefv (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alGetSourcefv (sid    : Int_Unsigned_C; -- ALuint
                            param  : Int_Unsigned_C; -- ALenum
-                           values : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetSourcefv"; 
+                           values : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetSourcefv";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourcei (sid   : Int_Unsigned_C; -- ALuint 
+  procedure alGetSourcei (sid   : Int_Unsigned_C; -- ALuint
                           param : Int_Unsigned_C; -- ALenum
-                          Value : Pointer) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alGetSourcei"; 
+                          Value : Pointer) --
+                          with Import => True, Convention => StdCall, External_Name => "alGetSourcei";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSource3i (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alGetSource3i (sid    : Int_Unsigned_C; -- ALuint
                            param  : Int_Unsigned_C; -- ALenum
-                           value1 : Pointer; -- 
-                           value2 : Pointer; -- 
-                           value3 : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetSource3i"; 
+                           value1 : Pointer; --
+                           value2 : Pointer; --
+                           value3 : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetSource3i";
 
   -- 4.3.4. Querying Source Attributes
-  procedure alGetSourceiv (sid    : Int_Unsigned_C; -- ALuint 
+  procedure alGetSourceiv (sid    : Int_Unsigned_C; -- ALuint
                            param  : Int_Unsigned_C; -- ALenum
-                           values : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetSourceiv"; 
+                           values : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetSourceiv";
 
   -- 4.3.5. Queuing Buffers with a Source
-  procedure alSourceQueueBuffers (sid        : Int_Unsigned_C; -- ALuint 
+  procedure alSourceQueueBuffers (sid        : Int_Unsigned_C; -- ALuint
                                   numEntries : Int_Size_C; -- ALsizei
-                                  bids       : Pointer) -- 
-                                  with Import => True, Convention => StdCall, External_Name => "alSourceQueueBuffers"; 
-  
+                                  bids       : Pointer) --
+                                  with Import => True, Convention => StdCall, External_Name => "alSourceQueueBuffers";
+
   -- 4.3.5. Queuing Buffers with a Source
-  procedure alSourceUnqueueBuffers (sid        : Int_Unsigned_C; -- ALuint 
+  procedure alSourceUnqueueBuffers (sid        : Int_Unsigned_C; -- ALuint
                                     numEntries : Int_Size_C; -- ALsizei
-                                    bids       : Pointer) -- 
-                                    with Import => True, Convention => StdCall, External_Name => "alSourceUnqueueBuffers"; 
+                                    bids       : Pointer) --
+                                    with Import => True, Convention => StdCall, External_Name => "alSourceUnqueueBuffers";
 
   -- 4.3.6. Managing Source Execution
   procedure alSourcePlayv (ns   : Int_Size_C; -- ALsizei
-                           sids : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alSourcePlayv"; 
+                           sids : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alSourcePlayv";
 
   -- 4.3.6. Managing Source Execution
-  procedure alSourcePlay (sid : UInt) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alSourcePlay"; 
+  procedure alSourcePlay (sid : UInt) --
+                          with Import => True, Convention => StdCall, External_Name => "alSourcePlay";
 
   -- 4.3.6. Managing Source Execution
   procedure alSourceStopv (ns   : Int_Size_C; -- ALsizei
-                           sids : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alSourceStopv"; 
+                           sids : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alSourceStopv";
 
   -- 4.3.6. Managing Source Execution
-  procedure alSourceStop (sid : UInt) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alSourceStop"; 
+  procedure alSourceStop (sid : UInt) --
+                          with Import => True, Convention => StdCall, External_Name => "alSourceStop";
 
   -- 4.3.6. Managing Source Execution
   procedure alSourceRewindv (ns   : Int_Size_C; -- ALsizei
-                             sids : Pointer) -- 
-                             with Import => True, Convention => StdCall, External_Name => "alSourceRewindv"; 
+                             sids : Pointer) --
+                             with Import => True, Convention => StdCall, External_Name => "alSourceRewindv";
 
   -- 4.3.6. Managing Source Execution
-  procedure alSourceRewind (sid : UInt) -- 
-                            with Import => True, Convention => StdCall, External_Name => "alSourceRewind"; 
+  procedure alSourceRewind (sid : UInt) --
+                            with Import => True, Convention => StdCall, External_Name => "alSourceRewind";
 
   -- 4.3.6. Managing Source Execution
   procedure alSourcePausev (ns : Int_Size_C; -- ALsizei
-                            SIds : Pointer) -- 
-                            with Import => True, Convention => StdCall, External_Name => "alSourcePausev"; 
+                            SIds : Pointer) --
+                            with Import => True, Convention => StdCall, External_Name => "alSourcePausev";
 
   -- 4.3.6. Managing Source Execution
-  procedure alSourcePause (sid : UInt) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alSourcePause"; 
+  procedure alSourcePause (sid : UInt) --
+                           with Import => True, Convention => StdCall, External_Name => "alSourcePause";
 
   -- 5.1. Buffer States
-  procedure alBufferData (bid    : Int_Unsigned_C; -- ALuint 
+  procedure alBufferData (bid    : Int_Unsigned_C; -- ALuint
                           format : Int_Unsigned_C; -- ALenum
                           data   : Ptr;               -- const ALvoid*
                           size   : Int_Size_C;        -- ALsizei
                           freq   : Int_Size_C)        -- ALsizei
-                          with Import => True, Convention => StdCall, External_Name => "alBufferData"; 
+                          with Import => True, Convention => StdCall, External_Name => "alBufferData";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferf (bid   : Int_Unsigned_C; -- ALuint 
+  procedure alBufferf (bid   : Int_Unsigned_C; -- ALuint
                        param : Int_Unsigned_C; -- ALenum
                        Value : Real_32_C)         -- ALfloat
-                       with Import => True, Convention => StdCall, External_Name => "alBufferf"; 
+                       with Import => True, Convention => StdCall, External_Name => "alBufferf";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBuffer3f (bid    : Int_Unsigned_C; -- ALuint 
+  procedure alBuffer3f (bid    : Int_Unsigned_C; -- ALuint
                         param  : Int_Unsigned_C; -- ALenum
                         value1 : Real_32_C;         -- ALfloat
                         value2 : Real_32_C;         -- ALfloat
                         value3 : Real_32_C)         -- ALfloat
-                        with Import => True, Convention => StdCall, External_Name => "alBuffer3f"; 
+                        with Import => True, Convention => StdCall, External_Name => "alBuffer3f";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferi (bid : Int_Unsigned_C; -- ALuint 
+  procedure alBufferi (bid : Int_Unsigned_C; -- ALuint
                        param : Int_Unsigned_C; -- ALenum
-                       Value : Int_C) -- ALint 
-                       with Import => True, Convention => StdCall, External_Name => "alBufferi"; 
+                       Value : Int_C) -- ALint
+                       with Import => True, Convention => StdCall, External_Name => "alBufferi";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBuffer3i (bid : Int_Unsigned_C; -- ALuint 
+  procedure alBuffer3i (bid : Int_Unsigned_C; -- ALuint
                         param : Int_Unsigned_C; -- ALenum
                         value1 : Int_C; -- ALint
                         value2 : Int_C; -- ALint
-                        value3 : Int_C) -- ALint 
-                        with Import => True, Convention => StdCall, External_Name => "alBuffer3i"; 
+                        value3 : Int_C) -- ALint
+                        with Import => True, Convention => StdCall, External_Name => "alBuffer3i";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferfv (bid : Int_Unsigned_C; -- ALuint 
+  procedure alBufferfv (bid : Int_Unsigned_C; -- ALuint
                         param : Int_Unsigned_C; -- ALenum
-                        values : Pointer) -- 
-                        with Import => True, Convention => StdCall, External_Name => "alBufferfv"; 
+                        values : Pointer) --
+                        with Import => True, Convention => StdCall, External_Name => "alBufferfv";
 
   -- 5.3.2. Changing Buffer Attributes
-  procedure alBufferiv (bid : Int_Unsigned_C; -- ALuint 
+  procedure alBufferiv (bid : Int_Unsigned_C; -- ALuint
                         param : Int_Unsigned_C; -- ALenum
-                        values : Pointer) -- 
-                        with Import => True, Convention => StdCall, External_Name => "alBufferiv"; 
+                        values : Pointer) --
+                        with Import => True, Convention => StdCall, External_Name => "alBufferiv";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferf (bid : Int_Unsigned_C; -- ALuint 
+  procedure alGetBufferf (bid : Int_Unsigned_C; -- ALuint
                           param : Int_Unsigned_C; -- ALenum
-                          Value : Pointer) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alGetBufferf"; 
+                          Value : Pointer) --
+                          with Import => True, Convention => StdCall, External_Name => "alGetBufferf";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBuffer3f (bid : Int_Unsigned_C; -- ALuint 
+  procedure alGetBuffer3f (bid : Int_Unsigned_C; -- ALuint
                            param : Int_Unsigned_C; -- ALenum
-                           value1 : Pointer; -- 
-                           value2 : Pointer; -- 
-                           value3 : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetBuffer3f"; 
+                           value1 : Pointer; --
+                           value2 : Pointer; --
+                           value3 : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetBuffer3f";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferfv (bid : Int_Unsigned_C; -- ALuint 
+  procedure alGetBufferfv (bid : Int_Unsigned_C; -- ALuint
                            param : Int_Unsigned_C; -- ALenum
                            values : Real_32_C) -- ALfloat
-                           with Import => True, Convention => StdCall, External_Name => "alGetBufferfv"; 
+                           with Import => True, Convention => StdCall, External_Name => "alGetBufferfv";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferi (bid : Int_Unsigned_C; -- ALuint 
+  procedure alGetBufferi (bid : Int_Unsigned_C; -- ALuint
                           param : Int_Unsigned_C; -- ALenum
-                          Value : Pointer) -- 
-                          with Import => True, Convention => StdCall, External_Name => "alGetBufferi"; 
+                          Value : Pointer) --
+                          with Import => True, Convention => StdCall, External_Name => "alGetBufferi";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBuffer3i (bid : Int_Unsigned_C; -- ALuint 
+  procedure alGetBuffer3i (bid : Int_Unsigned_C; -- ALuint
                            param : Int_Unsigned_C; -- ALenum
-                           value1 : Pointer; -- 
-                           value2 : Pointer; -- 
-                           value3 : Pointer) -- 
-                           with Import => True, Convention => StdCall, External_Name => "alGetBuffer3i"; 
+                           value1 : Pointer; --
+                           value2 : Pointer; --
+                           value3 : Pointer) --
+                           with Import => True, Convention => StdCall, External_Name => "alGetBuffer3i";
 
   -- 5.3.3. Querying Buffer Attributes
-  procedure alGetBufferiv (bid    : Int_Unsigned_C; -- ALuint 
+  procedure alGetBufferiv (bid    : Int_Unsigned_C; -- ALuint
                            param  : Int_Unsigned_C; -- ALCenum
                            values : Pointer) -- ALint*
-                           with Import => True, Convention => StdCall, External_Name => "alGetBufferiv"; 
+                           with Import => True, Convention => StdCall, External_Name => "alGetBufferiv";
 
   -- 6.1.1. Connecting to a Device
   function alcOpenDevice (devicename : String) -- ALCchar*
                           return Ptr -- ALCdevice*
-                          with Import => True, Convention => StdCall, External_Name => "alcOpenDevice"; 
+                          with Import => True, Convention => StdCall, External_Name => "alcOpenDevice";
 
   -- 6.1.2. Disconnecting from a Device
   function alcCloseDevice (device : Ptr)           -- ALCdevice*
                            return Int_8_Unsigned_C -- ALCboolean
-                           with Import => True, Convention => StdCall, External_Name => "alcCloseDevice"; 
-                           
+                           with Import => True, Convention => StdCall, External_Name => "alcCloseDevice";
+
   -- 6.2.2. Creating a Context
   function alcCreateContext (device   : Ptr; -- ALCdevice*
                              attrlist : Pointer) -- ALCint*
-                             return Ptr -- ALCcontext* 
-                             with Import => True, Convention => StdCall, External_Name => "alcCreateContext"; 
+                             return Ptr -- ALCcontext*
+                             with Import => True, Convention => StdCall, External_Name => "alcCreateContext";
 
   -- 6.2.3. Selecting a Context for Operation
-  function alcMakeContextCurrent (context : Ptr)          -- ALCcontext* 
+  function alcMakeContextCurrent (context : Ptr)          -- ALCcontext*
                                   return Int_8_Unsigned_C -- ALCboolean
-                                  with Import => True, Convention => StdCall, External_Name => "alcMakeContextCurrent"; 
+                                  with Import => True, Convention => StdCall, External_Name => "alcMakeContextCurrent";
 
   -- 6.2.4. Initiate Context Processing
-  procedure alcProcessContext (context : Ptr) -- ALCcontext* 
-                               with Import => True, Convention => StdCall, External_Name => "alcProcessContext"; 
+  procedure alcProcessContext (context : Ptr) -- ALCcontext*
+                               with Import => True, Convention => StdCall, External_Name => "alcProcessContext";
 
   -- 6.2.5. Suspend Context Processing
-  procedure alcSuspendContext (context : Ptr) -- ALCcontext* 
-                               with Import => True, Convention => StdCall, External_Name => "alcSuspendContext"; 
+  procedure alcSuspendContext (context : Ptr) -- ALCcontext*
+                               with Import => True, Convention => StdCall, External_Name => "alcSuspendContext";
 
   -- 6.2.6. Destroying a Context
-  procedure alcDestroyContext (context : Ptr) -- ALCcontext* 
-                               with Import => True, Convention => StdCall, External_Name => "alcDestroyContext"; 
+  procedure alcDestroyContext (context : Ptr) -- ALCcontext*
+                               with Import => True, Convention => StdCall, External_Name => "alcDestroyContext";
 
   -- 6.3.1. Query for Current Context
-  function alcGetCurrentContext return Ptr -- ALCcontext* 
-                                with Import => True, Convention => StdCall, External_Name => "alcGetCurrentContext"; 
+  function alcGetCurrentContext return Ptr -- ALCcontext*
+                                with Import => True, Convention => StdCall, External_Name => "alcGetCurrentContext";
 
   -- 6.3.2. Query for a Context's Device
-  function alcGetContextsDevice (context : Ptr) -- ALCcontext* 
+  function alcGetContextsDevice (context : Ptr) -- ALCcontext*
                                  return Ptr     -- ALCdevice*
-                                 with Import => True, Convention => StdCall, External_Name => "alcGetContextsDevice"; 
+                                 with Import => True, Convention => StdCall, External_Name => "alcGetContextsDevice";
 
   -- 6.3.6. Query for Error Conditions
   function alcGetError (device : Ptr)            -- ALCdevice*
                         return Int_Unsigned_C -- ALCenum
-                        with Import => True, Convention => StdCall, External_Name => "alcGetError"; 
+                        with Import => True, Convention => StdCall, External_Name => "alcGetError";
 
   -- 6.3.8. Integer Query
   procedure alcGetIntegerv (device : Ptr;                       -- ALCdevice*
                             param  : Int_Unsigned_C;         -- ALCenum
                             size   : Int_Size_C;                -- ALCsizei
                             data   : Ptr_Array_Int_32_Signed_C) -- ALCint*
-                            with Import => True, Convention => StdCall, External_Name => "alcGetIntegerv"; 
+                            with Import => True, Convention => StdCall, External_Name => "alcGetIntegerv";
 
   -- 6.4.2. Capture
   function alcCaptureCloseDevice (device : Ptr)           -- ALCdevice*
                                   return Int_8_Unsigned_C -- ALCboolean
-                                  with Import => True, Convention => StdCall, External_Name => "alcCaptureCloseDevice"; 
+                                  with Import => True, Convention => StdCall, External_Name => "alcCaptureCloseDevice";
 
   -- 6.4.2. Capture
   procedure alcCaptureStart (device : Ptr) -- ALCdevice*
-                             with Import => True, Convention => StdCall, External_Name => "alcCaptureStart"; 
+                             with Import => True, Convention => StdCall, External_Name => "alcCaptureStart";
 
   -- 6.4.2. Capture
   procedure alcCaptureStop (device : Ptr) -- ALCdevice*
-                            with Import => True, Convention => StdCall, External_Name => "alcCaptureStop"; 
+                            with Import => True, Convention => StdCall, External_Name => "alcCaptureStop";
 
   -- 6.4.2. Capture
   procedure alcCaptureSamples (device : Ptr;        -- ALCdevice*
                                bug    : Ptr;        -- ALCvoid*
-                               samps  : Int_Size_C) -- ALCsizei 
-                               with Import => True, Convention => StdCall, External_Name => "alcCaptureSamples"; 
+                               samps  : Int_Size_C) -- ALCsizei
+                               with Import => True, Convention => StdCall, External_Name => "alcCaptureSamples";
 
 typedef ALvoid (AL_APIENTRY*PFNALBUFFERDATASTATICPROC)(const ALint,ALenum,ALvoid*,ALsizei,ALsizei);
 

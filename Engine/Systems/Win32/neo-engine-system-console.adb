@@ -24,9 +24,9 @@ separate (Neo.Engine.System) package body Console is
   CONSOLE_BUTTONS : constant array (1..2) of Button_State := (("Save", Save_Log'Access), ("Send", Send_Log'Access));
   Buttons         : array (CONSOLE_BUTTONS'Range) of Ptr  := (others => NULL_PTR);
 
-  -- Timing 
+  -- Timing
   Last_Time : Time := Clock;
-  
+
   -- Text
   ERROR_REPORTING_URL : constant Str   := "http://www.google.com";
   LABEL_INPUT_ENTRY   : constant Str   := "Input";
@@ -57,7 +57,7 @@ separate (Neo.Engine.System) package body Console is
   Metrics       : aliased NONCLIENTMETRICS  := (others => <>);
   Rectangle     : aliased RECT              := (others => <>);
   Input_Buffer  : aliased Str_C (1..500000) := (others => NULL_CHAR_C); -- Buffer size is arbitrary !!!
-  
+
   -- Console output tracking
   Cutoff,
   Cutoff_Lines,
@@ -65,7 +65,7 @@ separate (Neo.Engine.System) package body Console is
   Current_Lines : Int_64_Unsigned := 0;
   Current_Input : Char            := NULL_CHAR;
   Current_Log   : Str_Unbound     := NULL_STR_UNBOUND;
-  
+
   -- Window, font, and icon pointers
   Output_Group_Box, Input_Group_Box,
   Font_Text_Box, Font_Buttons,
@@ -75,7 +75,7 @@ separate (Neo.Engine.System) package body Console is
   Icon : aliased Ptr := NULL_PTR;
 
   -- Sizing variables
-  Number_Of_Lines, 
+  Number_Of_Lines,
   Output_Box_Height, Output_Box_Width, Input_Box_Height,
   Text_Box_Font_Height, Text_Box_Font_Width,
   Start_Selection, End_Selection,
@@ -108,7 +108,7 @@ separate (Neo.Engine.System) package body Console is
     end;
 
   -- Create and set fonts for the output box
-  procedure Create_Fonts is 
+  procedure Create_Fonts is
     Font_Size : aliased Neo.API.Windows.SIZE := (others => <>);
     Some_BS   : aliased Str_C := To_Str_C ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
     begin
@@ -140,7 +140,7 @@ separate (Neo.Engine.System) package body Console is
       Ignore (SelectObject (Context, Font_Buttons));
       Assert (GetTextMetricsW (Context, Text_Metric'Unchecked_Access));
     end;
-    
+
   -- A single function for setting all GUI sizing globals
   procedure Set_Sizes is
     Minimum_Width,
@@ -218,7 +218,7 @@ separate (Neo.Engine.System) package body Console is
         end;
       begin
 
-        -- Find the newly created message-box window 
+        -- Find the newly created message-box window
         Assert (GetClassNameW  (Window, C (Class_Name),  Class_Name'Length));
         Ignore (GetWindowTextW (Window, C (Window_Text), Window_Text'Length));
         if nCode = HCBT_ACTIVATE and S (Class_Name) = S (DIALOG_CLASS) and S (Window_Text) = S (CONSOLE_NAME) then
@@ -352,15 +352,15 @@ separate (Neo.Engine.System) package body Console is
       when others => null; end case;
       return DefWindowProcW (hwnd, uMsg, wParam, lParam);
     end;
-  
+
   -- Execute the main loop
-  procedure Run is 
-    begin 
-    
+  procedure Run is
+    begin
+
       -- Load the context which is used globally
       Context := GetDC (GetDesktopWindow);
       Assert (Context);
-      
+
       -- Load the icon
       Icon := LoadImageW (hinst     => GetModuleHandleW (null), -- Loads the icon nicely for the Aero theme, but not on the "classic" theme
                           lpszName  => C (WIN32_PATH_ICON),
@@ -369,12 +369,12 @@ separate (Neo.Engine.System) package body Console is
                           cyDesired => 0,
                           fuLoad    => LR_LOADFROMFILE or LR_DEFAULTSIZE);
       if Icon = NULL_PTR then Icon := LoadIconW (GetModuleHandleW (null), IDI_APPLICATION); end if;
-    
+
       -- Set global font and size variables
       Get_Sizes_From_Message_Box;
-      Create_Fonts;      
+      Create_Fonts;
       Set_Sizes;
-      
+
       -- Create the main console window
       Class := (lpfnWndProc   => Console_Window_Proc'Address,
                 hInstance     => GetModuleHandleW (null),
@@ -398,7 +398,7 @@ separate (Neo.Engine.System) package body Console is
                                          dwExStyle    => 0,
                                          dwStyle      => WS_MINIMIZE or WS_SIZEBOX or WS_SYSMENU or WS_BORDER or WS_MAXIMIZEBOX or WS_MINIMIZEBOX);
       Assert (Console_Window);
-    
+
       -- Create the output box border
       Output_Group_Box := CreateWindowExW (lpClassName  => C (NAME_BUTTON),
                                            lpWindowName => null,
@@ -415,7 +415,7 @@ separate (Neo.Engine.System) package body Console is
       Assert (Output_Group_Box);
       Set_Font (Output_Group_Box, Font_Buttons);
       Set_Text (Output_Group_Box, Localize (LABEL_OUTPUT));
-    
+
       -- Create the output box
       Output_Box := CreateWindowExW (lpClassName  => C (NAME_EDIT),
                                      lpWindowName => null,
@@ -431,7 +431,7 @@ separate (Neo.Engine.System) package body Console is
                                      dwStyle      => WS_VSCROLL or WS_VISIBLE or WS_BORDER or ES_MULTILINE or ES_READONLY or WS_CHILD);
       Assert (Output_Box);
       Set_Font (Output_Box, Font_Text_Box);
-    
+
       -- Create the input box border
       Input_Group_Box := CreateWindowExW (lpClassName  => C (NAME_BUTTON),
                                           lpWindowName => null,
@@ -448,7 +448,7 @@ separate (Neo.Engine.System) package body Console is
       Assert (Input_Group_Box);
       Set_Font (Input_Group_Box, Font_Buttons);
       Set_Text (Input_Group_Box, LABEL_INPUT_ENTRY);
-    
+
       -- Create the input box
       Input_Box := CreateWindowExW (lpClassName  => C (NAME_EDIT),
                                     lpWindowName => null,
@@ -464,7 +464,7 @@ separate (Neo.Engine.System) package body Console is
                                     dwStyle      => WS_VISIBLE or WS_BORDER or ES_MULTILINE or WS_CHILD);
       Assert (Input_Box);
       Set_Font (Input_Box, Font_Text_Box);
-    
+
       -- Create the buttons
       for I in Buttons'Range loop
         Buttons (I) := CreateWindowExW (lpClassName  => C (NAME_BUTTON),
@@ -483,39 +483,39 @@ separate (Neo.Engine.System) package body Console is
         Set_Font (Buttons (I), Font_Buttons);
         Set_Text (Buttons (I), Localize (CONSOLE_BUTTONS (I).Message));
       end loop;
-    
+
       -- Force the console window into the foreground
       Ignore (ShowWindow (Console_Window, SW_SHOWMINIMIZED)); -- "The fact that this works is a major windows bug, good find!"
       Ignore (ShowWindow (Console_Window, SW_RESTORE));
       Assert (SetFocus (Input_Box));
-    
+
       -- Message and output update loop
       Outter: while not Close_Console loop
-    
+
         -- Pump the message loop
         while PeekMessageW (Message'Unchecked_Access, Console_Window, 0, 0, PM_REMOVE) /= 0 loop
-        
+
           -- Preprocess certain messages
           Do_Skip_Message := False;
           case Message.message is
-          
+
             -- End the console
             when WM_QUIT => exit Outter;
-    
+
             -- Scale mouse scrolling
             when WM_MOUSEWHEEL =>
               if GetFocus /= Output_Box then
-                for I in 1..Current_Lines / Int_64_Natural (SCROLL_FACTOR) loop 
+                for I in 1..Current_Lines / Int_64_Natural (SCROLL_FACTOR) loop
                    Ignore (SendMessageW (hWnd   => Output_Box,
-                                         Msg    => WM_VSCROLL, 
+                                         Msg    => WM_VSCROLL,
                                          lParam => 0,
-    
+
                                          -- Figure out the direction of the scroll
                                          wParam => (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Message.wParam)
                                                     and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0 then 1 else 0)));
                 end loop;
               end if;
-    
+
             -- Capture paste events (Ctrl + V) into the input box and change focus
             when WM_KEYDOWN =>
               if GetFocus = Output_Box then Assert (HideCaret (Output_Box)); end if;
@@ -527,19 +527,19 @@ separate (Neo.Engine.System) package body Console is
                 Input_Entry (Input_Entry & Paste);
                 Set_Text (Input_Box, Input_Entry);
               end if;
-    
+
             -- Deal with text input
             when WM_CHAR =>
               if Do_Process_Character then
                 Current_Input := Char'Val (Int (Message.wParam));
                 Do_Process_Character := False;
-    
+
                 -- Capture text input and put it in the entry box
                 if not Is_Control (Current_Input) then
                   Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Input_Buffer'Length), To_Int_Ptr (Input_Buffer'Address)));
                   Input_Entry (S (Input_Buffer) & Current_Input);
                   if GetFocus /= Input_Box then Set_Text (Input_Box, Input_Entry); end if;
-    
+
                 -- Handle a command submission
                 elsif Current_Input = To_Char_16 (ASCII.CR) then
                   Ignore (SendMessageW (Input_Box, WM_GETTEXT, Int_Ptr (Input_Buffer'Length), To_Int_Ptr (Input_Buffer'Address)));
@@ -547,73 +547,75 @@ separate (Neo.Engine.System) package body Console is
                   Submit;
                   Set_Text (Input_Box, NULL_STR);
                   Do_Skip_Message := True;
-                  
+
                 -- Handle backspace by removing the last character from the entry box
                 elsif Current_Input = To_Char_16 (ASCII.BS) and Input_Entry /= NULL_STR then
                   Input_Entry (Head (Input_Entry, Str (Input_Entry)'Length - 1));
                   if GetFocus /= Input_Box then Set_Text (Input_Box, Input_Entry); end if;
-    
+
                 -- Ignore tabs
                 elsif Current_Input = To_Char_16 (ASCII.HT) then Do_Skip_Message := True; end if;
               end if;
           when others => null; end case;
-          
+
           -- Update input entry from other tasks ???
-    
+
           -- Pass on the message if we need to
           if not Do_Skip_Message then
             Ignore (TranslateMessage (Message'Unchecked_Access));
             Ignore (DispatchMessageW (Message'Unchecked_Access));
           end if;
         end loop;
-        
+
         -- Hide the cursor in the output box
         if GetFocus = Output_Box then Ignore (HideCaret (Output_Box)); end if;
-    
+
         -- Handle new output
         if Lines /= Current_Lines then
-    
+
           -- Record the current selection, scrollbar position, and log snapshot
           Current_Log   := Log;
           Current_Lines := Lines;
           Current_Line  := Int_64_Unsigned (SendMessageW (Output_Box, EM_GETFIRSTVISIBLELINE, 0, 0));
+          begin -- This fails ???
           Is_At_Bottom  := Scrollbar_At_Bottom;
-          
+          exception when others => null; end;
+
           -- Prepare for repaint
           Ignore (SendMessageW (Output_Box, WM_SETREDRAW, 0, 0));
-          
+
           -- Save user selection
           Ignore (SendMessageW (Output_Box, EM_GETSEL, To_Int_Ptr (Start_Selection'Address), To_Int_Ptr (End_Selection'Address)));
           Start_Selection := Start_Selection - Int_C (Cutoff);
           End_Selection   := End_Selection   - Int_C (Cutoff);
-          
+
           -- Trim the log output if our buffer overflows
           if Length (Current_Log) > Input_Buffer'Length then -- This needs cleanup !!!
             Cutoff       := Int_64_Natural (Index (Current_Log, To_Str (ASCII.CR), Input_Buffer'Length) + 1);
             Cutoff_Lines := Int_64_Natural (Count (Head (Current_Log, Natural (Cutoff)), To_Str (ASCII.CR)));
             Current_Log  := Tail (Current_Log, Length (Current_Log) - Natural (Cutoff));
           end if;
-          
+
           -- Set output text and user selection
           Set_Text (Output_Box, S (Current_Log));
           Ignore (SendMessageW (Output_Box, EM_SETSEL, Int_Ptr (Start_Selection) + Int_Ptr (Cutoff), Int_Ptr (End_Selection) + Int_Ptr (Cutoff)));
-    
-          -- If the scroll bar was at the bottom, make sure it stays there          
+
+          -- If the scroll bar was at the bottom, make sure it stays there
           if Is_At_Bottom then
             Ignore (SendMessageW (Output_Box, WM_VSCROLL, SB_ENDSCROLL, 0));
             Current_Line := Int_64_Unsigned (SendMessageW (Output_Box, EM_GETFIRSTVISIBLELINE, 0, 0));
           else
             for I in 1..Current_Line - Cutoff_Lines loop Ignore (SendMessageW (Output_Box, WM_VSCROLL, SB_LINEDOWN, 0)); end loop;
           end if;
-     
+
           -- Repaint
           Assert (SendMessageW (Output_Box, WM_SETREDRAW, 1, 0));
         end if;
-        
+
         -- Give up some cycles
         delay WINDOW_POLLING_DURATION - (Clock - Last_Time); Last_Time := Clock;
       end loop Outter;
-      
+
       -- Hide the console window then kill it
       Ignore (ShowWindow (Console_Window, SW_HIDE));
       Ignore (DestroyWindow (Console_Window));

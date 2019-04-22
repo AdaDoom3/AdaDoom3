@@ -13,6 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+-- TODO: Optimize string stuff, perserve config comments, and localization
 package body Neo.Core.Console is
 
   --------
@@ -83,13 +84,15 @@ package body Neo.Core.Console is
 
   -- Internal data structures
   type Command_State is record
-      Save     : access function return Str := null;
+      Save     : access function return Str                  := null;
       Callback : access procedure (Args : Array_Str_Unbound) := null;
     end record;
   type CVar_State is record
-      Val : Str_Unbound := NULL_STR_UNBOUND; -- A cvar that goes out of scope is not forgotten
-      Get : access function return Str := null;
-      Set : access procedure (Val : Str) := null;
+      Settable : Bool                         := True;
+      Val      : Str_Unbound                  := NULL_STR_UNBOUND; -- A cvar that goes out of scope is not forgotten
+      Get_Val  : access function return Str   := null;
+      Get      : access function return Str   := null;
+      Set      : access procedure (Val : Str) := null;
    end record;
 
   -- Data types
@@ -114,15 +117,26 @@ package body Neo.Core.Console is
     with procedure Set (Val : Var_T);
     with function Get return Var_T;
     with procedure Handle_Set (Val : Str);
-    with function Handle_Get return Str;
+    with function Handle_Get     return Str;
+    with function Handle_Get_Val return Str;
     with function To_Str (Item : Var_T) return Str;
-  package CVar_Internal is end;
+  package CVar_Internal is
+    private
+      type Control_State is new Limited_Controlled with null record;
+      type Ptr_Control_State is access all Control_State;
+      procedure Finalize_Control (Item : in out Control_State);
+      Ptr_Controller : Ptr_Control_State := null;
+    end;
 
   package body CVar_Internal is
       Duplicate : Exception;
 
+      -- !!! Part of workaround
+      In_Finalize : Boolean := False;
+
       -- Accessors
-      function Informal_Handle_Get return Str is (Handle_Get);
+      function Informal_Handle_Get_Val return Str is (Handle_Get_Val);
+      function Informal_Handle_Get     return Str is (Handle_Get);
       procedure Informal_Handle_Set (Val : Str) is
         begin
           if not Settable then
@@ -133,28 +147,41 @@ package body Neo.Core.Console is
         end;
 
       -- Controller
-      type Control_State is new Limited_Controlled with null record;
-      procedure Finalize (Control : in out Control_State);
-      procedure Finalize (Control : in out Control_State) is
+      procedure Finalize_Control (Item : in out Control_State) is
+        procedure Free is new Unchecked_Deallocation (Control_State, Ptr_Control_State);
         begin
-          Line ("There is a finalization bug here, because this is never called!"); -- !!! ???
-          Line (To_Str (Get));
-          if Settable then CVars.Replace (Name, (Val => U (To_Str (Get)), Get => null, Set => null));
-          else CVars.Delete (Name); end if;
+
+          -- Stacks of hacks :(
+          if not In_Finalize then
+            if Settable then CVars.Replace (Name, (True, U (Handle_Get), null, null, null));
+            else CVars.Delete (Name); end if;
+
+            -- !!! Part of workaround
+            In_Finalize := True;
+            Free (Ptr_Controller);
+          end if;
         end;
-      Controller : Control_State;
+
+    -- Executable section
     begin
       if Commands.Has (Name) then
         if CVars.Get (Name).Set /= null or CVars.Get (Name).Get /= null then raise Duplicate; end if;
-        CVars.Replace (Name, (Val => CVars.Get (Name).Val,
-                              Get => Informal_Handle_Get'Unrestricted_Access,
-                              Set => Informal_Handle_Set'Unrestricted_Access));
+        CVars.Replace (Name, (Val      => CVars.Get (Name).Val,
+                              Get_Val  => Informal_Handle_Get_Val'Unrestricted_Access,
+                              Get      => Informal_Handle_Get'Unrestricted_Access,
+                              Set      => Informal_Handle_Set'Unrestricted_Access,
+                              Settable => Settable));
         Handle_Set (S (CVars.Get (Name).Val));
       else
-        CVars.Insert (Name, (Val => NULL_STR_UNBOUND,
-                             Get => Informal_Handle_Get'Unrestricted_Access,
-                             Set => Informal_Handle_Set'Unrestricted_Access));
+        CVars.Insert (Name, (Val      => NULL_STR_UNBOUND,
+                             Get_Val  => Informal_Handle_Get_Val'Unrestricted_Access,
+                             Get      => Informal_Handle_Get'Unrestricted_Access,
+                             Set      => Informal_Handle_Set'Unrestricted_Access,
+                             Settable => Settable));
       end if;
+
+      -- !!! Part of the workaround
+      Ptr_Controller := new Control_State;
     end;
 
   ----------
@@ -203,8 +230,9 @@ package body Neo.Core.Console is
           end loop;
         end;
 
-      -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, To_Str);
+      -- ???
+      function Handle_Get_Val return Str is (Safe_Var_T.Get'Wide_Image);
+      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, To_Str);
     end;
 
   ---------------
@@ -212,7 +240,8 @@ package body Neo.Core.Console is
   ---------------
 
   package body CVar_Real is
-      function To_Str is new Generic_To_Str_16_Real (Var_T);
+      function To_Str_X is new Generic_To_Str_16_Real (Var_T);
+      function To_Str (Val : Var_T) return Str renames To_Str_X;
 
       -- Internal data
       package Safe_Internal is new Safe_Digits (Var_T, Initial);
@@ -233,8 +262,9 @@ package body Neo.Core.Console is
           Line (Handle_Get);
         end;
 
-      -- Global registration
-      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, To_Str);
+      -- ???
+      function Handle_Get_Val return Str is (Safe_Var_T.Get'Wide_Image);
+      package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, To_Str);
     end;
 
   --------------
@@ -255,13 +285,15 @@ package body Neo.Core.Console is
 
       -- Commandline interaction
       function Handle_Get return Str is (Help & EOL & "Current value: " & Get);
+
 pragma Warnings (Off); -- warning: call to "Set" may occur before body is seen
       procedure Handle_Set (Val : Str) is begin Set (Val); end;
 pragma Warnings (On);
 
-      -- Global registration
+      -- ???
+      function Handle_Get_Val return Str is (S (Safe_Var_T.Get));
       package Internal is new
-        CVar_Internal (Name, Str_Unbound, Settable, Set, Get, Handle_Set, Handle_Get, S);
+        CVar_Internal (Name, Str_Unbound, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, S);
     end;
 
   -------------
@@ -286,8 +318,8 @@ pragma Warnings (On);
 
   -- Input entry parsing
   procedure Submit (Text : Str) is
-    Tokens : Array_Str_Unbound := Split (Text);
-    CMD    : constant Str := S (Tokens (1));
+    Tokens :          Array_Str_Unbound := Split_On_Whitespace (Text);
+    CMD    : constant Str               := S (Tokens (1));
     begin
       if Commands.Has (CMD) then Commands.Get (CMD).Callback.All (Tokens (2..Tokens'Length));
       elsif CVars.Has (CMD) then
@@ -295,7 +327,7 @@ pragma Warnings (On);
           if CVars.Get (CMD).Get /= null then Line (CVars.Get (CMD).Get.All); end if;
         elsif CVars.Get (CMD).Set /= null then CVars.Get (CMD).Set.All (S (Tokens (2))); end if;
       else raise Constraint_Error; end if;
-    exception when others => Line ("No such cvar or command!"); end;
+    exception when others => Line (Text); Line ("No such cvar or command!"); end;
   procedure Submit is
     begin
       if Input_Entry /= NULL_STR then
@@ -399,10 +431,12 @@ pragma Warnings (On);
   -- Configuration --
   -------------------
 
+  -- ???
   procedure Finalize_Configuration (Path : Str) is
     Data : Ada_IO.File_Type;
     begin
-      Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (Path)); -- Str_8 !!!
+      if Exists (To_Str_8 (Path)) then Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (Path)); -- Str_8 !!!
+      else Ada_IO.Create (Data, Ada_IO.Out_File, To_Str_8 (Path)); end if;
 
       -- Header
       Ada_IO.Put_Line (Data, "-- " & NAME_ID & " " & VERSION & " config: " & To_Str (Image (Get_Start_Time)));
@@ -411,7 +445,12 @@ pragma Warnings (On);
       Ada_IO.Put_Line (Data, "-- CVars");
 
       -- CVars NOTE: This fails due to finalization bug !!!
-      for I in CVars.Get.Iterate loop Ada_IO.Put_Line (Data, S (Key (I) & " " & Element (I).Val)); end loop;
+      for I in CVars.Get.Iterate loop
+        if Element (I).Settable then
+          Ada_IO.Put_Line (Data, S (Key (I)) & " " &
+            (if Element (I).Get_Val = null then S (Element (I).Val) else Element (I).Get_Val.all));
+        end if;
+      end loop;
 
       -- Commands
       for I in Commands.Get.Iterate loop
@@ -424,18 +463,27 @@ pragma Warnings (On);
       Ada_IO.Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
 
-  -- ??
+  -- ???
   procedure Initialize_Configuration (Path : Str) is
     Data : Ada_IO.File_Type;
     I    : Natural     := 0;
     Text : Str_Unbound := NULL_STR_UNBOUND;
     begin
+      if not Exists (To_Str_8 (Path)) then
+        Line ("No configuration found... using defaults");
+        return;
+      end if;
+
       Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
       while not Ada_IO.End_Of_File (Data) loop
         Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
-        I    := Index (Text, "--");
-        if I = 0 then Submit (S (Text));
-        elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+        Trim (Text);
+        if Length (Text) > 0 then
+          I := Index (Text, "--");
+          if I = 0 then Submit (S (Text));
+          elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+        end if;
       end loop;
-    exception when others => Line ("No configuration found... using defaults"); end;
+      Ada_IO.Close (Data);
+    end;
 end;

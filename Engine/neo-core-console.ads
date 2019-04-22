@@ -37,11 +37,11 @@ package Neo.Core.Console is
   -- IO --
   --------
   
-  function Lines                     return Int_64_Unsigned;
-  function Log                       return Str_Unbound;
-  function Log                       return Str is (S (Log));
-  function Input_Entry               return Str;
-  function Line_Size                 return Positive;
+  function Lines        return Int_64_Unsigned;
+  function Log          return Str_Unbound;
+  function Log          return Str is (S (Log));
+  function Input_Entry  return Str;
+  function Line_Size    return Positive;
   procedure Put         (Item : Str_Unbound);
   procedure Put         (Item : Char);                  
   procedure Put         (Item : Str);

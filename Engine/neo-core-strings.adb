@@ -13,6 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+-- TODO: This is all pure garbage - hacked together in 5 min or less
 package body Neo.Core.Strings is
 
   -----------
@@ -20,14 +21,51 @@ package body Neo.Core.Strings is
   -----------
 
   -- Could this be done cleanly without vectors ???
-  function Split_Vec (Item : Str; On : Str := " ") return Vector_Str_16_Unbound.Unsafe.Vector is
+  function Split_Vec (Item : Str; On : Str) return Vector_Str_16_Unbound.Unsafe.Vector is
     Result    : Vector_Str_16_Unbound.Unsafe.Vector; use Vector_Str_16_Unbound.Unsafe;
     TRIMMED   : constant Str     := Trim (Item, Both);
-    REMAINDER : constant Natural := Index (TRIMMED, On);
+    REMAINDER : constant Natural := Index (Item, On);
     begin
-      if REMAINDER = 0 then return Result & To_Str_Unbound (TRIMMED);
+      if REMAINDER = 0 then return Result & To_Str_Unbound (Item);
       else Result.Append (To_Str_Unbound (Trim (TRIMMED (TRIMMED'First..REMAINDER - 1), Both))); end if;
-      return Result & (Split_Vec (TRIMMED (REMAINDER..TRIMMED'Last), On));
+      return Result & (Split_Vec (TRIMMED (REMAINDER + 1..TRIMMED'Last), On));
+    end;
+
+  -- This is sh!t
+  function Split_Vec_On_Whitespace (Item : Str) return Vector_Str_16_Unbound.Unsafe.Vector is
+    package WL1 renames Ada.Characters.Wide_Latin_1;
+    Result    : Vector_Str_16_Unbound.Unsafe.Vector; use Vector_Str_16_Unbound.Unsafe;
+    WHITESPACE_CHARS : constant array (1..5) of Char := (' ', WL1.HT, WL1.LF, WL1.CR, WL1.VT);
+    TRIMMED   : constant Str     := Trim (Item, Both);
+    Current   :          Natural := Natural'Last;
+    Test      :          Natural := 0;
+    begin
+      for Char of WHITESPACE_CHARS loop
+        Test := Index (TRIMMED, To_Str (Char));
+        if Test /= 0 and Test < Current then Current := Test; end if;
+      end loop;
+      if Current = Natural'Last then return Result & To_Str_Unbound (TRIMMED);
+      else Result.Append (To_Str_Unbound (Trim (TRIMMED (TRIMMED'First..Current - 1), Both))); end if;
+      return Result & (Split_Vec_On_Whitespace (TRIMMED (Current + 1..TRIMMED'Last)));
+    end;
+
+  ----------
+  -- Trim --
+  ----------
+
+  procedure Trim (Item : in out Str_Unbound) is
+    package WL1 renames Ada.Characters.Wide_Latin_1;
+    I : Natural := 1;
+    begin
+      while I <= Length (Item) and then Element (Item, I) in ' ' | WL1.HT | WL1.LF | WL1.CR | WL1.VT loop
+        I := I + 1;
+      end loop;
+      if I /= 1 then Tail (Item, Length (Item) - I); end if;
+      I := Length (Item);
+      while I > 0 and then Element (Item, I) in ' ' | WL1.HT | WL1.LF | WL1.CR | WL1.VT loop
+        I := I - 1;
+      end loop;
+      if I /= Length (Item) then Head (Item, Length (Item) - I); end if;
     end;
 
   -------------

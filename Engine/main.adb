@@ -16,6 +16,7 @@
 with Is_Debugging;
 with System;                     use System;
 with Neo;                        use Neo;
+with Neo.Data.Game;              use Neo.Data.Game;
 with Neo.Core.Strings;           use Neo.Core.Strings;
 with Neo.Core.Console;           use Neo.Core.Console;
 with Neo.Engine;                 use Neo.Engine;
@@ -54,27 +55,27 @@ procedure Main is
     -- Process arguments
     for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop;
 
-    -- Load config and dump information
-    Initialize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG); -- Does not work due to finalization bug in GNAT !!!
-    Initialize_Localization  (S (OS_Info.App_Path) & PATH_LOCALE);
+    -- Dump info
     Line ("Started by " & OS_Info.Username & " on " & To_Str (Image (Get_Start_Time)));
     Line ("Game: " & OS_Info.App_Name & WORD_SIZE'Wide_Image & (if Is_Debugging then " w/ debugging" else NULL_STR));
     Line ("Engine: " & NAME_ID & " " & VERSION);
     Line ("Compiler: " & "GNAT " & To_Str (GNAT_Info.Version) & " for " & S (OS_Info.Version));
     Line ("CPU: " & Get_CPU.Vendor'Wide_Image & " w/ (" & Get_Extensions_Image (Get_CPU) & ")");
 
-    -- Initialize
-    Initialize_Windowing;
-    Set_Windowing_Mode;
-    Initialize_Drawing;
-    Initialize_Input;
-    Menu_Task.Initialize;
-
     -- Handle debugging
     if Is_Debugging then -- Linked directly to the "Debug" scenario variable
       --Use_Ada_Put;
       null;--Initialize_Console;
     end if; Initialize_Console;
+
+    -- Initialize
+    Initialize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
+    --Initialize_Localization  (S (OS_Info.App_Path) & PATH_LOCALE);
+    Initialize_Windowing;
+    Set_Windowing_Mode;
+    Initialize_Drawing;
+    Initialize_Input;
+    Menu_Task.Initialize;
 
     -- Set window interaction bindings
     Fullscreen.Bindings.Append   (Keyboard (F11_Key));
@@ -226,11 +227,11 @@ procedure Main is
     end;
 
     -- Finalize
-    Finalize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
-    Menu_Task.Finalize;
     Finalize_Drawing;
-    Finalize_Windowing;
+    Menu_Task.Finalize;
     Finalize_Input;
+    Finalize_Windowing;
+    Finalize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
   end;
 
 

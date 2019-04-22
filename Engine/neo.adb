@@ -75,8 +75,8 @@ package body Neo is
   ------------
 
   protected body Safe_Status is
-      function Occupied return Bool is (Status);
       procedure Occupied (Val : Bool) is begin Status := Val; end;
+      function Occupied return Bool is begin return Status; end;
     end;
 
   -------------
@@ -142,19 +142,47 @@ package body Neo is
 
   -- Character conversions
   function To_Char_8 (Item : Char_16) return Char_8 is
-    (if Char_16'Pos (Item) > Char_8'Pos (Char_8'Last) then CHAR_16_REPLACEMENT else Char_8'Val (Char_16'Pos (Item)));
+    (if Char_16'Pos (Item) > Char_8'Pos (Char_8'Last) then CHAR_REPLACEMENT else Char_8'Val (Char_16'Pos (Item)));
+  function To_Char_8 (Item : Char_32) return Char_8 is
+    (if Char_32'Pos (Item) > Char_8'Pos (Char_8'Last) then CHAR_REPLACEMENT else Char_8'Val (Char_32'Pos (Item)));
+  function To_Char_16 (Item : Char_32) return Char_16 is
+    (if Char_32'Pos (Item) > Char_16'Pos (Char_16'Last) then To_Char_16 (CHAR_REPLACEMENT) else Char_16'Val (Char_32'Pos (Item)));
 
   -- String conversions
-  function To_Str_16_C (Item : Str_8_C) return Str_16_C is
-    Result : Str_16_C (Item'First..Item'Length);
+  function To_Str_8 (Item : Str_32) return Str_8 is
+    Result : Str_8 (Item'Range);
     begin
-      for I in Item'Range loop Result (I) := Char_16_C'Val (Char_8_C'Pos (Item (I))); end loop;
+      for I in Item'Range loop Result (I) := To_Char_8 (Item (I)); end loop;
+      return Result;
+    end;
+  function To_Str_16 (Item : Str_32) return Str_16 is
+    Result : Str_16 (Item'Range);
+    begin
+      for I in Item'Range loop Result (I) := To_Char_16 (Item (I)); end loop;
+      return Result;
+    end;  
+  function To_Str_16_C (Item : Str_8_C) return Str_16_C is
+    Result : Str_16_C (Item'Range);
+    begin
+      for I in Item'Range loop Result (I) := To_Char_16_C (Item (I)); end loop;
+      return Result;
+    end;
+  function To_Str_32 (Item : Str_16) return Str_32 is
+    Result : Str_32 (Item'Range);
+    begin
+      for I in Item'Range loop Result (I) := To_Char_32 (Item (I)); end loop;
+      return Result;
+    end;
+  function To_Str_32 (Item : Str_8) return Str_32 is
+    Result : Str_32 (Item'Range);
+    begin
+      for I in Item'Range loop Result (I) := To_Char_32 (Item (I)); end loop;
       return Result;
     end;
   function To_Str_16 (Item : Str_8) return Str is
     Result : Str (Item'Range);
     begin
-      for I in Item'Range loop Result (I) := Char_16'Val (Char_8'Pos (Item (I))); end loop;
+      for I in Item'Range loop Result (I) := To_Char_16 (Item (I)); end loop;
       return Result;
     end;
   function To_Str_16 (Item : Str_16_C) return Str is
@@ -163,7 +191,7 @@ package body Neo is
     begin
       for I in Item'Range loop
         exit when Item (I) = NULL_CHAR_16_C;
-        Buffer := Buffer & Char_16'Val (Char_16_C'Pos (Item (Int_Size_C (I))));
+        Buffer := Buffer & To_Char_16 (Item (Int_Size_C (I)));
       end loop;
       return S (Buffer);
     end;

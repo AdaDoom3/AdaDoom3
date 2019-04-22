@@ -14,7 +14,7 @@
 --                                                                                                                                      --
 
 separate (Neo.Engine) package body CPU is
-  CPUID_Is_Not_Supported : Exception;
+  E : constant Str_8 := EOL_8; -- Abbreviation for convience
 
   ---------------
   -- Registers --
@@ -41,10 +41,10 @@ separate (Neo.Engine) package body CPU is
       Unused_B        : Int_16_Unsigned := 0;
       Tags            : Int_16_Unsigned := 0;
       Unused_C        : Int_16_Unsigned := 0;
-      Program_Counter : Int_Unsigned := 0;
+      Program_Counter : Int_Unsigned    := 0;
       CS_Selector     : Int_16_Unsigned := 0;
       Operation_Code  : Int_16_Unsigned := 0; -- Consists of 11 used + 5 unused bits
-      Data_Offset     : Int_Unsigned := 0;
+      Data_Offset     : Int_Unsigned    := 0;
       Data_Selector   : Int_16_Unsigned := 0;
       Unused_D        : Int_16_Unsigned := 0;
     end record with size => 28 * Byte'size;
@@ -175,13 +175,13 @@ separate (Neo.Engine) package body CPU is
           if Get_CPU.Has_Advanced_State_Operations then
             Asm (Volatile => True,
                  Inputs   => Ptr'Asm_Input (TO_EAX, Data_From_SIMD'Address),
-                 Template => ------------------------------------------
-                             " stmxcsr (%%eax)              " & EOL_8 &
-                             " movl    (%%eax),     %%ebx   " & EOL_8 &
-                             " and     $0xffffffc0, %%ebx   " & EOL_8 &
-                             " movl    %%ebx,       (%%eax) " & EOL_8 &
-                             " ldmxcsr (%%eax)              " & EOL_8);
-                             ------------------------------------------
+                 Template => --------------------------------------
+                             " stmxcsr (%%eax)              " & E &
+                             " movl    (%%eax),     %%ebx   " & E &
+                             " and     $0xffffffc0, %%ebx   " & E &
+                             " movl    %%ebx,       (%%eax) " & E &
+                             " ldmxcsr (%%eax)              " & E);
+                             --------------------------------------
           end if;
 
           -- Clear 6 exception bits plus stack fault
@@ -210,6 +210,7 @@ separate (Neo.Engine) package body CPU is
   -- Settings --
   --------------
 
+  -- ???
   procedure Set_Rounding (Val : Rounding_Kind) is
     Other_Data    : aliased Int_16_Unsigned := 0;
     Data          : aliased Int_Unsigned    := 0;
@@ -223,12 +224,12 @@ separate (Neo.Engine) package body CPU is
              Inputs   => (Ptr'Asm_Input (TO_EAX, Data'Address),
                           Int_Unsigned'Asm_Input (TO_ECX, Rounding_Mask)),
              Template => ------------------------------------------
-                         " stmxcsr (%%eax)              " & EOL_8 &
-                         " movl    (%%eax),     %%ebx   " & EOL_8 &
-                         " and     $0xffff9fff, %%ebx   " & EOL_8 &
-                         " or      %%cx,        %%bx    " & EOL_8 &
-                         " movl    %%ebx,       (%%eax) " & EOL_8 &
-                         " ldmxcsr (%%eax)              " & EOL_8);
+                         " stmxcsr (%%eax)              " & E &
+                         " movl    (%%eax),     %%ebx   " & E &
+                         " and     $0xffff9fff, %%ebx   " & E &
+                         " or      %%cx,        %%bx    " & E &
+                         " movl    %%ebx,       (%%eax) " & E &
+                         " ldmxcsr (%%eax)              " & E);
                          ------------------------------------------
       end if;
       Rounding_Mask := Shift_Right (Rounding_Mask, 3);
@@ -236,14 +237,16 @@ separate (Neo.Engine) package body CPU is
            Inputs   => (Ptr'Asm_Input (TO_EAX, Other_Data'Address),
                         Int_Unsigned'Asm_Input (TO_ECX, Rounding_Mask)),
            Template => -------------------------------------
-                       " fnstcw (%%eax)          " & EOL_8 &
-                       " movw   (%%eax), %%bx    " & EOL_8 &
-                       " and    $0xf3ff, %%bx    " & EOL_8 &
-                       " or     %%cx,    %%bx    " & EOL_8 &
-                       " movw   %%bx,    (%%eax) " & EOL_8 &
-                       " fldcw  (%%eax)          " & EOL_8);
+                       " fnstcw (%%eax)          " & E &
+                       " movw   (%%eax), %%bx    " & E &
+                       " and    $0xf3ff, %%bx    " & E &
+                       " or     %%cx,    %%bx    " & E &
+                       " movw   %%bx,    (%%eax) " & E &
+                       " fldcw  (%%eax)          " & E);
                        -------------------------------------
     end;
+
+  -- ???
   procedure Set_Precision (Val : Precision_Kind) is
     Blank_Memory : aliased Int_16_Unsigned := 0;
     begin
@@ -253,12 +256,12 @@ separate (Neo.Engine) package body CPU is
                                                                      when Double_Precision          => 16#0200#,
                                                                      when Double_Extended_Precision => 16#0300#))),
            Template => -------------------------------------
-                       " fnstcw (%%eax)          " & EOL_8 &
-                       " movw   (%%eax), %%bx    " & EOL_8 &
-                       " and    $0xfcff, %%bx    " & EOL_8 &
-                       " or     %%cx,    %%bx    " & EOL_8 &
-                       " movw   %%bx,    (%%eax) " & EOL_8 &
-                       " fldcw  (%%eax)          " & EOL_8);
+                       " fnstcw (%%eax)          " & E &
+                       " movw   (%%eax), %%bx    " & E &
+                       " and    $0xfcff, %%bx    " & E &
+                       " or     %%cx,    %%bx    " & E &
+                       " movw   %%bx,    (%%eax) " & E &
+                       " fldcw  (%%eax)          " & E);
                        -------------------------------------
     end;
 
@@ -274,35 +277,39 @@ separate (Neo.Engine) package body CPU is
            Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
            Outputs  => Int_Unsigned'Asm_Output (FROM_EAX, Result),
            Template => ----------------------------------------
-                       " fnstenv (%%eax)            " & EOL_8 &
-                       " movl    8 (%%eax),   %%eax " & EOL_8 &
-                       " xor     $0xffffffff, %%eax " & EOL_8 &
-                       " and     $0x0000ffff, %%eax " & EOL_8);
+                       " fnstenv (%%eax)            " & E &
+                       " movl    8 (%%eax),   %%eax " & E &
+                       " xor     $0xffffffff, %%eax " & E &
+                       " and     $0x0000ffff, %%eax " & E);
                        ----------------------------------------
       return Result = 0;
     end;
+
+  -- ???
   procedure Clear_Stack is
     Data : aliased x86_Environment_State := (others => <>);
     begin
       Asm (Volatile => True,
            Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
            Template => ------------------------------------------
-                       "   fnstenv (%%eax)            " & EOL_8 &
-                       "   movl    8 (%%eax),   %%eax " & EOL_8 &
-                       "   xor     $0xffffffff, %%eax " & EOL_8 &
-                       "   movl    $0x0000c000, %%edx " & EOL_8 &
+                       "   fnstenv (%%eax)            " & E &
+                       "   movl    8 (%%eax),   %%eax " & E &
+                       "   xor     $0xffffffff, %%eax " & E &
+                       "   movl    $0x0000c000, %%edx " & E &
                        ------------------------------------------
-                       " 1:                           " & EOL_8 &
-                       "   movl    %%eax,       %%ecx " & EOL_8 &
-                       "   and     %%ecx,       %%edx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
-                       "   fstp    %%st               " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   jmp     1b                 " & EOL_8 &
+                       " 1:                           " & E &
+                       "   movl    %%eax,       %%ecx " & E &
+                       "   and     %%ecx,       %%edx " & E &
+                       "   jz      1f                 " & E &
+                       "   fstp    %%st               " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   jmp     1b                 " & E &
                        ------------------------------------------
-                       " 1:                           " & EOL_8);
+                       " 1:                           " & E);
                        ------------------------------------------
     end;
+
+  -- ???
   procedure Put_Stack is
 
     -- Conversion functions to print numbers in different bases
@@ -322,22 +329,22 @@ separate (Neo.Engine) package body CPU is
                         Ptr'Asm_Input (TO_EDI, Stack (Stack'First)'Address)),
            Outputs  => Int_Unsigned'Asm_Output (FROM_EAX, Number_Of_Values),
            Template => ------------------------------------------
-                       "   movl    %%eax,       %%esi " & EOL_8 &
-                       "   fnstenv (%%esi)            " & EOL_8 &
-                       "   movl    8 (%%esi),   %%esi " & EOL_8 &
-                       "   xor     $0xffffffff, %%esi " & EOL_8 &
-                       "   movl    $0x0000c000, %%edx " & EOL_8 &
-                       "   xor     %%eax,       %%eax " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   movl    %%eax,       %%esi " & E &
+                       "   fnstenv (%%esi)            " & E &
+                       "   movl    8 (%%esi),   %%esi " & E &
+                       "   xor     $0xffffffff, %%esi " & E &
+                       "   movl    $0x0000c000, %%edx " & E &
+                       "   xor     %%eax,       %%eax " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fst     (%%edi)            " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fst     (%%edi)            " & E &
+                       "   inc     %%eax              " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
                        --
                        --   for I in 1..7 loop
@@ -355,66 +362,66 @@ separate (Neo.Engine) package body CPU is
                        -- 1:
                        --
                        ------------------------------------------
-                       "   fxch    %%st (1)           " & EOL_8 &
-                       "   fst     8 (%%edi)          " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (1)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (1)           " & E &
+                       "   fst     8 (%%edi)          " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (1)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (2)           " & EOL_8 &
-                       "   fst     16 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (2)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (2)           " & E &
+                       "   fst     16 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (2)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (3)           " & EOL_8 &
-                       "   fst     24 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (3)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (3)           " & E &
+                       "   fst     24 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (3)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (4)           " & EOL_8 &
-                       "   fst     32 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (4)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (4)           " & E &
+                       "   fst     32 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (4)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (5)           " & EOL_8 &
-                       "   fst     40 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (5)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (5)           " & E &
+                       "   fst     40 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (5)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (6)           " & EOL_8 &
-                       "   fst     48 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (6)           " & EOL_8 &
-                       "   shr     $2,          %%edx " & EOL_8 &
-                       "   movl    %%esi,       %%ecx " & EOL_8 &
-                       "   and     %%edx,       %%ecx " & EOL_8 &
-                       "   jz      1f                 " & EOL_8 &
+                       "   fxch    %%st (6)           " & E &
+                       "   fst     48 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (6)           " & E &
+                       "   shr     $2,          %%edx " & E &
+                       "   movl    %%esi,       %%ecx " & E &
+                       "   and     %%edx,       %%ecx " & E &
+                       "   jz      1f                 " & E &
                        ------------------------------------------
-                       "   fxch    %%st (7)           " & EOL_8 &
-                       "   fst     56 (%%edi)         " & EOL_8 &
-                       "   inc     %%eax              " & EOL_8 &
-                       "   fxch    %%st (7)           " & EOL_8 &
+                       "   fxch    %%st (7)           " & E &
+                       "   fst     56 (%%edi)         " & E &
+                       "   inc     %%eax              " & E &
+                       "   fxch    %%st (7)           " & E &
                        ------------------------------------------
-                       " 1:                           " & EOL_8);
+                       " 1:                           " & E);
                        ------------------------------------------
 
       -- Put the actual stack values
@@ -464,34 +471,33 @@ begin
         Asm (Volatile => True,
              Inputs   => Ptr'Asm_Input (TO_EAX, Save_Area (Save_Area'First)'Address),
              Outputs  => Int_Unsigned'Asm_Output (FROM_EBX, Data),
-             Template => --------------------------------------
-                         " fxsave (%%eax)           " & EOL_8 &
-                         " movl   28 (%%eax), %%ebx " & EOL_8);
-                         --------------------------------------
+             Template => ----------------------------------
+                         " fxsave (%%eax)           " & E &
+                         " movl   28 (%%eax), %%ebx " & E);
+                         ----------------------------------
 
         -- Test one of the things
         if (Data and 16#20#) /= 0 then
           Asm (Volatile => True,
                Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
-               Template => --------------------------------------
-                           " stmxcsr (%%eax)          " & EOL_8 &
-                           " movl    (%%eax), %%ebx   " & EOL_8 &
-                           " or      $0x40,   %%bx    " & EOL_8 &
-                           " movl    %%ebx,   (%%eax) " & EOL_8 &
-                           " ldmxcsr (%%eax)          " & EOL_8);
-                           --------------------------------------
+               Template => ----------------------------------
+                           " stmxcsr (%%eax)          " & E &
+                           " movl    (%%eax), %%ebx   " & E &
+                           " or      $0x40,   %%bx    " & E &
+                           " movl    %%ebx,   (%%eax) " & E &
+                           " ldmxcsr (%%eax)          " & E);
+                           ----------------------------------
         end if;
       end;
       Asm (Volatile => True,
            Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
-           Template =>
-             --------------------------------------
-             " stmxcsr (%%eax)          " & EOL_8 &
-             " movl    (%%eax), %%ebx   " & EOL_8 &
-             " or      $0x8000, %%ebx   " & EOL_8 &
-             " movl    %%ebx,   (%%eax) " & EOL_8 &
-             " ldmxcsr (%%eax)          " & EOL_8);
-             --------------------------------------
+           Template => ----------------------------------
+                       " stmxcsr (%%eax)          " & E &
+                       " movl    (%%eax), %%ebx   " & E &
+                       " or      $0x8000, %%ebx   " & E &
+                       " movl    %%ebx,   (%%eax) " & E &
+                       " ldmxcsr (%%eax)          " & E);
+                       ----------------------------------
     end if;
 
     -- ???
@@ -503,26 +509,26 @@ begin
         Asm (Volatile => True,
              Inputs   => (Ptr'Asm_Input (TO_EAX, Data'Address),
                           Int_Unsigned'Asm_Input (TO_ECX, EXCEPTION_MASK)),
-             Template => ------------------------------------------
-                         " stmxcsr (%%eax)              " & EOL_8 &
-                         " movl    (%%eax),     %%ebx   " & EOL_8 &
-                         " and     $0xffffe07f, %%ebx   " & EOL_8 &
-                         " or      %%ecx,       %%ebx   " & EOL_8 &
-                         " movl    %%ebx,       (%%eax) " & EOL_8 &
-                         " ldmxcsr (%%eax)              " & EOL_8);
-                         ------------------------------------------
+             Template => --------------------------------------
+                         " stmxcsr (%%eax)              " & E &
+                         " movl    (%%eax),     %%ebx   " & E &
+                         " and     $0xffffe07f, %%ebx   " & E &
+                         " or      %%ecx,       %%ebx   " & E &
+                         " movl    %%ebx,       (%%eax) " & E &
+                         " ldmxcsr (%%eax)              " & E);
+                         --------------------------------------
       end if;
       Asm (Volatile => True,
            Inputs   => (Ptr'Asm_Input (TO_EAX, Other_Data'Address),
                         Int_Unsigned'Asm_Input (TO_ECX, Shift_Right (EXCEPTION_MASK, 7))),
-           Template => -------------------------------------
-                       " fnstcw (%%eax)          " & EOL_8 &
-                       " movw   (%%eax), %%bx    " & EOL_8 &
-                       " and    $0xffc0, %%bx    " & EOL_8 &
-                       " or     %%cx,    %%bx    " & EOL_8 &
-                       " movw   %%bx,    (%%eax) " & EOL_8 &
-                       " fldcw  (%%eax)          " & EOL_8);
-                       -------------------------------------
+           Template => ---------------------------------
+                       " fnstcw (%%eax)          " & E &
+                       " movw   (%%eax), %%bx    " & E &
+                       " and    $0xffc0, %%bx    " & E &
+                       " or     %%cx,    %%bx    " & E &
+                       " movw   %%bx,    (%%eax) " & E &
+                       " fldcw  (%%eax)          " & E);
+                       ---------------------------------
     end;
   end;
 end;

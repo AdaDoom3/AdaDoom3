@@ -356,6 +356,7 @@ package Neo.API.Vulkan is
   VK_LAYER_LUNARG_CORE_VALIDATION_NAME        : aliased Str_8_C := "VK_LAYER_LUNARG_core_validation"; -- ???
   VK_LAYER_LUNARG_DEVICE_LIMITS_NAME          : aliased Str_8_C := "VK_LAYER_LUNARG_device_limits"; -- ???
   VK_LAYER_LUNARG_SWAPCHAIN_NAME              : aliased Str_8_C := "VK_LAYER_LUNARG_swapchain"; -- ???
+  VK_LAYER_LUNARG_STANDARD_VALIDATION         : aliased Str_8_C := "VK_LAYER_LUNARG_standard_validation"; -- ???
   VK_EXT_DEBUG_REPORT_EXTENSION_NAME          : aliased Str_8_C := "VK_EXT_debug_report";      -- ??? 
   VK_KHR_MAINTENANCE2_NAME                    : aliased Str_8_C := "VK_KHR_maintenance2";      -- ???
   VK_KHR_SWAPCHAIN_EXTENSION_NAME             : aliased Str_8_C := "VK_KHR_swapchain";         -- ???
@@ -876,6 +877,7 @@ package Neo.API.Vulkan is
   function VK_MAKE_VERSION (Val : Str) return Int_Unsigned_C;
     
   VK_API_VERSION_1_0 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 0, 0);
+  VK_API_VERSION_1_1 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 1, 3);
 
   ----------------
   -- Allocation --

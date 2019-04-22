@@ -11,13 +11,11 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
 --                                                                                                                                      --
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --    
+--                                                                                                                                      --
 
 with GNAT.Sockets;         use GNAT.Sockets;
 with Neo.API.Vulkan;       use Neo.API.Vulkan;
 with Neo.Data;             use Neo.Data;
-with Neo.Data.Model;       use Neo.Data.Model;
-with Neo.Data.Texture;     use Neo.Data.Texture;
 with Neo.Core;             use Neo.Core;
 with Neo.Core.Math;        use Neo.Core.Math;
 with Neo.Core.Console;     use Neo.Core.Console;
@@ -31,22 +29,11 @@ with Neo.Core.Vectors;
 
 -- Primary interface for the "Game" layer, see Games/.../Base/neo-engine-game.adb for more information
 package Neo.Engine is
-  
-  ------------
-  -- Assets --
-  ------------
-  
-  --Maps        : Hashed_Map.Safe_Map;
-  Meshes      : Hashed_Mesh.Safe_Map;
-  Cameras     : Hashed_Camera.Safe_Map;
-  Materials   : Hashed_Material.Safe_Map;
-  Animations  : Hashed_Animation.Safe_Map;
-  --Sound_Clips : Hashed_Sound_Clip.Safe_Map;
-  
+
   -----------------
   -- Information --
   -----------------
-  
+
   -- Asset and configuration paths
   PATH_LOGS            : constant Str := "Logs"        & S;
   PATH_ASSETS          : constant Str := "Assets"      & S;
@@ -62,7 +49,7 @@ package Neo.Engine is
   PATH_SHADERS         : constant Str := PATH_ASSETS & "Shaders"  & S;
   PATH_SOUNDS          : constant Str := PATH_ASSETS & "Sounds"   & S;
   PATH_TEXTURES        : constant Str := PATH_ASSETS & "Textures" & S;
-    
+
   type OS_Info_State is record
       Size_Memory : Int_64_Unsigned := 0; -- In bytes
       App_Path    : Str_Unbound     := NULL_STR_UNBOUND;
@@ -72,13 +59,13 @@ package Neo.Engine is
       Bit_Size    : Positive        := 1;
     end record;
   function OS_Info return OS_Info_State;
- 
+
   ---------------
   -- Clipboard --
   ---------------
 
   function Paste return Str;
-  procedure Copy (Item : Str); 
+  procedure Copy (Item : Str);
 
   -------------
   -- Tasking --
@@ -89,7 +76,9 @@ package Neo.Engine is
     with procedure Run;
   package Tasks is
       task type Task_Unsafe is
-          entry Initialize (Id : out Task_ID); end;
+          pragma Storage_Size (16#8000_0000#);
+          entry Initialize (Id : out Task_ID);
+        end;
       type Task_Unsafe_Ptr is access all Task_Unsafe;
       protected type Safe_Task is
           procedure Initialize;
@@ -100,7 +89,7 @@ package Neo.Engine is
           Current_Id   : Task_Id         := NULL_TASK_ID;
         end;
     end;
-    
+
   ------------
   -- Vulkan --
   ------------
@@ -110,17 +99,17 @@ package Neo.Engine is
   function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
   function Get_Vulkan_Subprogram (Name     : Str) return Ptr;
   function Get_Vulkan_Extension  return Ptr_Char_8_C;
-      
+
   --------------------
   -- Error Handling --
   --------------------
-  
+
   -- Colors used in the console GUI
   CONSOLE_BACKGROUND_COLOR : constant Color_State := COLOR_BLACK;
   CONSOLE_FOREGROUND_COLOR : constant Color_State := COLOR_CRIMSON;
 
   -- URL to go to when "sending" a log
-  CONSOLE_ERROR_REPORTING_URL : constant Str := "www.google.com";  
+  CONSOLE_ERROR_REPORTING_URL : constant Str := "www.google.com";
 
   type Icon_Kind    is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
   type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
@@ -130,66 +119,66 @@ package Neo.Engine is
 
   -- Lifecycle routines for the auxiliary OS console window
   procedure Initialize_Console;
-  procedure Finalize_Console;  
+  procedure Finalize_Console;
   function Running_Console return Bool;
 
-  -- 
+  -- ???
   procedure Save_Log;
   procedure Send_Log;
-  
+
   -- Generate debugging info for a given exception
   procedure Handle (Occurrence : Exception_Occurrence);
-  
+
   ---------------
   -- Windowing --
   ---------------
-  
+
   -- General delay amount to save cycles in between frames
   WINDOW_POLLING_DURATION : constant Duration := 1.0 / 300.0; -- Seconds per duration / Highest FPS rate possible
-  
+
   -- Enumerated types for cvar settings
   type Mode_Kind      is (Fullscreen_Mode, Multi_Monitor_Mode, Windowed_Mode);
   type Cursor_Kind    is (System_Cursor,   Inactive_Cursor,    Active_Cursor);
   type Activated_Kind is (Other_Activated, Click_Activated,    Other_Deactivated, Minimize_Deactivated);
   type Sampling_Kind  is (No_Sampling, x2_Sampling, x4_Sampling, x8_Sampling, x16_Sampling);
-  
+
   -- Window and desktop location information
   type Border_State is record Top, Bottom, Left, Right : Int := 0; end record;
   package Vector_Border is new Neo.Core.Vectors (Border_State);
-  
+
   -- Lifecycle
   function Update_Windowing return Bool; -- Set Activated and Mode cvars
   procedure Initialize_Windowing;
   procedure Finalize_Windowing;
   procedure Initialize_Multi_Monitor;
   procedure Finalize_Multi_Monitor;
-  
+
   -- Test if there is another instance of the game running
   function Only_Instance return Bool;
-  
+
   -- Window state modification
   procedure Minimize;
   procedure Maximize;
   procedure Restore;
-  procedure Resize (To : Border_State);  
+  procedure Resize (To : Border_State);
   function Get_Windows return Vector_Border.Unsafe_Array;
 
   -----------
   -- Input --
-  -----------  
+  -----------
 
   -- Input device descriptions
   type Stick_Kind   is (Left_Stick,          Right_Stick);
   type Trigger_Kind is (Left_Trigger,        Right_Trigger);
-  type Mouse_Kind   is (Left_Button,         Right_Button,        Middle_Button,     Aux_1_Button,          
-                        Aux_2_Button,        Wheel_Up_Button,     Wheel_Down_Button, Wheel_Left_Button,    
+  type Mouse_Kind   is (Left_Button,         Right_Button,        Middle_Button,     Aux_1_Button,
+                        Aux_2_Button,        Wheel_Up_Button,     Wheel_Down_Button, Wheel_Left_Button,
                         Wheel_Right_Button);
   type Device_Kind  is (Keyboard_Device,     Mouse_Device,        Gamepad_Device);
-  type Impulse_Kind is (Stick_Impulse,       Gamepad_Impulse,     Trigger_Impulse,   Text_Impulse,       
+  type Impulse_Kind is (Stick_Impulse,       Gamepad_Impulse,     Trigger_Impulse,   Text_Impulse,
                         Key_Impulse,         Cursor_Impulse,      Mouse_Impulse);
-  type Gamepad_Kind is (Y_Button,            B_Button,            A_Button,          X_Button,          
-                        Start_Button,        Back_Button,         System_Button,     Left_Bumper_Button, 
-                        Right_Bumper_Button, DPad_Up_Button,      DPad_Down_Button,  DPad_Left_Button,  
+  type Gamepad_Kind is (Y_Button,            B_Button,            A_Button,          X_Button,
+                        Start_Button,        Back_Button,         System_Button,     Left_Bumper_Button,
+                        Right_Bumper_Button, DPad_Up_Button,      DPad_Down_Button,  DPad_Left_Button,
                         DPad_Right_Button,   Left_Stick_Button,   Right_Stick_Button);
   type Key_Kind is     (Null_Key,            PA1_Key,             Alt_Key,           Shift_Key,
                         Escape_Key,          One_Key,             Two_Key,           Three_Key,
@@ -278,19 +267,19 @@ package Neo.Engine is
       end case;
     end record;
   package Ordered_Device is new Ordered (Int_Ptr, Device_State);
-  
+
   -- Mutexes for extra task safety
-  Input_Status      : Safe_Status;  
+  Input_Status      : Safe_Status;
   Cursor_Status     : Safe_Status;
   Game_Entry_Status : Safe_Status;
-  
+
   -- Lifecycle
   procedure Initialize_Input;
   procedure Finalize_Input;
-  
+
   -- Virbrate a player's set of gamepad devices
   procedure Vibrate (Hz_High, Hz_Low : Real_Percent; Player : Positive := 1);
-  
+
   -- Various cursor operations
   function Get_Cursor_Normalized return Cursor_State;
   function Get_Cursor            return Cursor_State;
@@ -350,7 +339,7 @@ package Neo.Engine is
   function Mouse                            (Combo : Natural := NO_COMBO; Player : Positive := 1) return Binding_State is ((Cursor_Impulse,  Player, Combo,                     others => <>));
 
   -- For convience to avoid common case statements in impulse callbacks... this needs more explaination...
-  type Impulse_Arg_State (Kind : Impulse_Kind := Key_Impulse) is record 
+  type Impulse_Arg_State (Kind : Impulse_Kind := Key_Impulse) is record
       Binding : Binding_State (Kind);
       case Kind is
         when Trigger_Impulse => Trigger : Real_Percent := 0.0;
@@ -366,7 +355,7 @@ package Neo.Engine is
   package Vector_Binding is new Vectors (Binding_State);
 
   -- Actual impulse package used to dispatch input callbacks
-  generic 
+  generic
     Name : Str;
     with procedure Callback (Args : Vector_Impulse_Arg.Unsafe_Array);
     Settable : Bool := False;
@@ -374,12 +363,12 @@ package Neo.Engine is
       Bindings : aliased Vector_Binding.Safe_Vector;
       procedure Enable;
       procedure Disable;
-    end;  
-  
+    end;
+
   ---------
   -- CPU --
   ---------
-  
+
   -- Floating point exceptions
   Denormalized_Operand : Exception;
   Invalid_Operation    : Exception;
@@ -388,9 +377,9 @@ package Neo.Engine is
   Divide_By_Zero       : Exception;
   Inexact_Result       : Exception;
   Stack_Fault          : Exception;
-  
+
   type Precision_Kind is (Single_Precision, Double_Precision, Double_Extended_Precision); for Precision_Kind use (24, 53, 64);
-  type Rounding_Kind  is (Up_Rounding, Down_Rounding, Nearest_Rounding, Truncate_Rounding);  
+  type Rounding_Kind  is (Up_Rounding, Down_Rounding, Nearest_Rounding, Truncate_Rounding);
   type Vendor_Kind    is (Unknown_Vendor,
                           Intel_Vendor,                  -- http://web.archive.org/web/20130402202112/http://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-2a-manual.pdf
                           Advanced_Micro_Devices_Vendor, -- http://web.archive.org/web/20130123012528/http://developer.amd.com/resources/documentation-articles/developer-guides-manuals/
@@ -446,17 +435,17 @@ package Neo.Engine is
         when Unknown_Vendor => null;
       end case;
     end record;
-    
+
   -- CPU Info
   function Get_CPU              return CPU_State;
   function Get_Extensions_Image (CPU : CPU_State) return Str;
-    
+
   -- Stack checking
   procedure Put_Stack;
   procedure Clear_Stack;
   procedure Check_Exceptions;
   function Is_Stack_Empty return Bool;
-  
+
   -- Settings
   procedure Set_Rounding  (Val : Rounding_Kind);
   procedure Set_Precision (Val : Precision_Kind);

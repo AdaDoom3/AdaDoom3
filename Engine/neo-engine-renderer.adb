@@ -152,7 +152,7 @@ package body Neo.Engine.Renderer is
         
         -- There has been a catastrophic failure...
         raise Program_Error;
-      end;      
+      end;
   
     -- Image index for presentation
     I           :         Int            := 1;
@@ -163,10 +163,14 @@ package body Neo.Engine.Renderer is
     Last_Collect_Time : Time := Clock;
     
     -- ???
+    Clear_Value               : aliased VkClearValue             := (color => (1.0, 0.1, 0.1, 1.0), others => <>);
     Command_Buffer_Begin_Info : aliased VkCommandBufferBeginInfo := (others => <>);  
     Render_Pass_Begin_Info    : aliased VkRenderPassBeginInfo    := (renderPass => Render_Pass,
                                                                      renderArea => (offset => (0, 0),
-                                                                                    extent => Surface_Extent), others => <>); 
+                                                                                    extent => Surface_Extent),
+                                                                                    
+      clearValueCount => 1,
+      pClearValues    => Clear_Value'Unchecked_Access, others => <>);
                                                                                     
     -- ??? 
     Present_Info : aliased VkPresentInfoKHR := (swapchainCount     => 1,
@@ -177,7 +181,7 @@ package body Neo.Engine.Renderer is
     -- Transition our swap image to present instead of having the renderpass do the transition to avoid additional image barriers
     Image_Memory_Barrier : aliased VkImageMemoryBarrier := (srcQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
                                                             dstQueueFamilyIndex => VK_QUEUE_FAMILY_IGNORED,
-                                                            oldLayout           => VK_IMAGE_LAYOUT_GENERAL,
+                                                            oldLayout           => VK_IMAGE_LAYOUT_UNDEFINED,
                                                             newLayout           => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                                             srcAccessMask       => VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
                                                             subresourceRange    => (aspectMask     => VK_IMAGE_ASPECT_COLOR_BIT,
@@ -220,7 +224,7 @@ package body Neo.Engine.Renderer is
         delay WINDOW_POLLING_DURATION - (Clock - Last_Frame_Time); Last_Frame_Time := Clock; 
          
         -- Wait for the frame's commands to finish execution the reinitialize it
-	vkAssert (vkWaitForFences       (Device, 1, Framebuffer (I).Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+        vkAssert (vkWaitForFences       (Device, 1, Framebuffer (I).Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
         vkAssert (vkResetFences         (Device, 1, Framebuffer (I).Fence'Unchecked_Access));
         vkAssert (vkResetDescriptorPool (Device, Descriptor_Pool, 0));  
         vkAssert (vkBeginCommandBuffer  (Framebuffer (I).Commands, Command_Buffer_Begin_Info'Unchecked_Access));
@@ -279,7 +283,7 @@ package body Neo.Engine.Renderer is
   ----------------
     
   -- ???
-  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Count_Type) is
+  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Positive) is
     Buffer_Info : aliased VkBufferCreateInfo := (size        => Int_64_Unsigned_C (Data_Size),
                                                  usage       => Usage_Bits or VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                                                  sharingMode => VK_SHARING_MODE_EXCLUSIVE, others => <>);
@@ -482,26 +486,29 @@ package body Neo.Engine.Renderer is
         -- Chunk pointers for dealing with each heap's chunk list
         Current, Previous, Next : Ptr_Allocation_State := null;
         
-        -- Start of Finalize_Buffers
-        begin    
+        -- ???
+        Heap : Heap_State;
         
+        -- Start of Finalize_Buffers
+        begin            
           -- !!! THE BELOW LOOP IS GARBAGE !!!
         
           -- Look for unreferenced images and add them to the garbage
-          while Has_Element (I) loop declare Buffered_Image : Buffer_State := Element (I); begin
-            if Force_Total_Finalization or Buffered_Image.References = 0 then
-              vkDestroyImage     (Device, Buffered_Image.Data,    null);
-              vkDestroyImageView (Device, Buffered_Image.View,    null);
-              vkDestroySampler   (Device, Buffered_Image.Sampler, null);
-              Buffered_Garbage.Append (Buffered_Image);
-              Buffered_Images.Delete (I);
-            end if;
-            Hashed_Buffer.Unsafe.Next (I);
-          end; end loop;
+--            while Has_Element (I) loop declare Buffered_Image : Buffer_State := Element (I); begin
+--              if Force_Total_Finalization or Buffered_Image.References = 0 then
+--                vkDestroyImage     (Device, Buffered_Image.Data,    null);
+--                vkDestroyImageView (Device, Buffered_Image.View,    null);
+--                vkDestroySampler   (Device, Buffered_Image.Sampler, null);
+--                Buffered_Garbage.Append (Buffered_Image);
+--                Buffered_Images.Delete (I);
+--              end if;
+--              Hashed_Buffer.Unsafe.Next (I);
+--            end; end loop;
           
           -- Take out the trash...
-          for Piece of Buffered_Garbage loop declare Heap : Heap_State := Element (Piece.Heap); begin   
-    
+          for Piece of Buffered_Garbage loop
+            Heap := Element (Piece.Heap);
+            
             -- Find the chunk corresponding to the Memory
             Current := Heap.First_Chunk;
             while Current /= null loop
@@ -536,8 +543,8 @@ package body Neo.Engine.Renderer is
                 exit;
               end if;
               Current := Current.Next;
-            end loop;          
-          end; end loop;
+            end loop;
+          end loop;
           Buffered_Garbage.Clear;
           
           -- Kill heaps with nothing left or if we are killing all the heaps during shutdown
@@ -545,9 +552,7 @@ package body Neo.Engine.Renderer is
             if Force_Total_Finalization or Heaps.Element (J).Allocated = 0 then
             
               -- Clear the GPU allocation
-              if Heaps.Element (J).Usage /= GPU_Usage then
-                vkUnmapMemory (Device, Heaps.Element (J).Device_Memory);
-              end if;
+              if Heaps.Element (J).Usage /= GPU_Usage then vkUnmapMemory (Device, Heaps.Element (J).Device_Memory); end if;
               vkFreeMemory (Device, Heaps.Element (J).Device_Memory, null);        
               
               -- Free its chunks
@@ -613,12 +618,12 @@ package body Neo.Engine.Renderer is
       procedure Finalize is
         begin
           vkAssert (vkWaitForFences (Device, 1, Staging_Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
-          vkUnmapMemory        (Device, Staging_Device_Memory);
-          vkFreeCommandBuffers (Device, Staging_Command_Pool, 1, Staging_Commands'Unchecked_Access);
-          vkDestroyCommandPool (Device, Staging_Command_Pool,  null); 
-          vkFreeMemory         (Device, Staging_Device_Memory, null);
-          vkDestroyFence       (Device, Staging_Fence,         null);
-          vkDestroyBuffer      (Device, Staging_Buffer,        null);
+          vkUnmapMemory             (Device, Staging_Device_Memory);
+          vkFreeCommandBuffers      (Device, Staging_Command_Pool, 1, Staging_Commands'Unchecked_Access);
+          vkDestroyCommandPool      (Device, Staging_Command_Pool,  null); 
+          vkFreeMemory              (Device, Staging_Device_Memory, null);
+          vkDestroyFence            (Device, Staging_Fence,         null);
+          vkDestroyBuffer           (Device, Staging_Buffer,        null);
         end;
         
       -- ???
@@ -673,7 +678,7 @@ package body Neo.Engine.Renderer is
 
   -- Create a lookup string for Buffered_Images which includes material settings in addition the image path
   function Get_Material_Info_Hash (Item : Material_State) return Str_Unbound is
-    (U (Model.Filter_Kind'Pos (Item.Filter)'Wide_Image & Clamp_Kind'Pos (Item.Clamp)'Wide_Image));
+    (NULL_STR_UNBOUND); -- (U (Model.Filter_Kind'Pos (Item.Filter)'Wide_Image & Clamp_Kind'Pos (Item.Clamp)'Wide_Image));
 
   -- Manage counters for Buffered_Material references
   procedure Add_Material_Reference    (Path : Str) is null;
@@ -686,84 +691,43 @@ package body Neo.Engine.Renderer is
     begin Buffered_Image.References := Buffered_Image.References - 1; Buffered_Images.Replace (Path, Buffered_Image); end;
   
   -- Add a 3D mesh to the GPU memory
-  procedure Buffer_Mesh (Path : Str) is    
-    Mesh            : Mesh_State := Meshes.Get (Path);
+  procedure Buffer_Mesh (Path : Str) is
+    Mesh            : Ptr_Mesh_State := Meshes.Get (Path);
     Buffered_Mesh   : Vector_Buffer_Surface.Unsafe.Vector;
-    Current_Surface : Buffer_Surface_State (Mesh.Is_Animated);
+    Current_Surface : Buffer_Surface_State (Mesh.Skeleton /= null);
     begin   
-      Assert (Meshes.Has (Path));
-    
-      -- When we have an animated mesh we have to add the weights
-      if Mesh.Is_Animated then
-        
-        -- ??
-        for I in Mesh.Animated_Surfaces.First_Index..Mesh.Animated_Surfaces.Last_Index loop
-        
-          -- Material
-          --Buffer_Material (S (Mesh.Animated_Surfaces.Element (I).Material));
-          --Add_Material_Reference (S (Mesh.Animated_Surfaces.Element (I).Material));
-    
-          -- Weight buffer
-          declare Data : Vector_Weight.Unsafe_Array := Vector_Weight.To_Unsafe_Array (Mesh.Animated_Surfaces.Element (I).Weights); begin
-            Initialize_Buffer (Buffer     => Current_Surface.Weights,
-                               Usage_Bits => VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                               Data       => Data (1)'Address,
-                               Data_Size  => (Data'Length * Weight_State'Object_Size) / Byte'Size,
-                               Count      => Mesh.Animated_Surfaces.Element (I).Weights.Length);
-          end;
-        
-          -- Index buffer    
-          declare Data : Vector_Int_32_Unsigned.Unsafe_Array := Vector_Int_32_Unsigned.To_Unsafe_Array (Mesh.Animated_Surfaces.Element (I).Indicies); begin
-            Initialize_Buffer (Buffer     => Current_Surface.Indicies,
-                               Usage_Bits => VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                               Data       => Data (1)'Address,
-                               Data_Size  => (Data'Length * Int_32_Unsigned'Object_Size) / Byte'Size,
-                               Count      => Mesh.Animated_Surfaces.Element (I).Indicies.Length);
-          end;
-          
-          -- Vertex buffer
-          declare Data : Vector_Animated_Vertex.Unsafe_Array := Vector_Animated_Vertex.To_Unsafe_Array (Mesh.Animated_Surfaces.Element (I).Vertices); begin
-            Initialize_Buffer (Buffer     => Current_Surface.Vertices,
-                               Usage_Bits => VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                               Data       => Data (1)'Address,
-                               Data_Size  => (Data'Length * Animated_Vertex_State'Object_Size) / Byte'Size,
-                               Count      => Mesh.Animated_Surfaces.Element (I).Vertices.Length);
-          end;
-          
-          Buffered_Mesh.Append (Current_Surface);
-        end loop;
-        
-      -- Non-animated mesh, so loop through the static surfaces
-      else      
-        for I in Mesh.Static_Surfaces.First_Index..Mesh.Static_Surfaces.Last_Index loop
-        
-          -- Material
-          --Buffer_Material (S (Mesh.Static_Surfaces.Element (I).Material));
-          --Add_Material_Reference (S (Mesh.Static_Surfaces.Element (I).Material));
-        
-          -- Index buffer    
-          declare Data : Vector_Int_32_Unsigned.Unsafe_Array := Vector_Int_32_Unsigned.To_Unsafe_Array (Mesh.Static_Surfaces.Element (I).Indicies); begin
-            Initialize_Buffer (Buffer     => Current_Surface.Indicies,
-                               Usage_Bits => VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                               Data       => Data (1)'Address,
-                               Data_Size  => (Data'Length * Int_32_Unsigned'Object_Size) / Byte'Size,
-                               Count      => Mesh.Static_Surfaces.Element (I).Indicies.Length);
-          end;
-          
-          -- Vertex buffer
-          declare Data : Vector_Static_Vertex.Unsafe_Array := Vector_Static_Vertex.To_Unsafe_Array (Mesh.Static_Surfaces.Element (I).Vertices); begin
-            Initialize_Buffer (Buffer     => Current_Surface.Vertices,
-                               Usage_Bits => VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                               Data       => Data (1)'Address,
-                               Data_Size  => (Data'Length * Static_Vertex_State'Object_Size) / Byte'Size,
-                               Count      => Mesh.Static_Surfaces.Element (I).Vertices.Length);
-          end;
-          
-          Buffered_Mesh.Append (Current_Surface);
-        end loop;
-      end if;
+      for Geometry of Mesh.Geometries loop
       
-      -- Add the result to the global buffered meshes
+        -- When we have an animated mesh we have to add the weights
+        if Mesh.Skeleton /= null then
+        
+          -- Weight buffer
+          null;
+        --  Initialize_Buffer (Buffer     => Current_Surface.Weights,
+        --                     Usage_Bits => VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        --                     Data       => Geometry.Bone_Weights (1)'Address,
+        --                     Data_Size  => (Data'Length * Weight_State'Object_Size) / Byte'Size,
+        --                     Count      => Geometry.Animated_Surfaces.Element (I).Weights.Length);
+        end if;  
+        
+  
+        -- Index buffer    
+        Initialize_Buffer (Buffer     => Current_Surface.Indicies,
+                           Usage_Bits => VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+                           Data       => Geometry.Indicies (1, 1)'Address,
+                           Data_Size  => Geometry.Indicies'Size / Byte'Size,
+                           Count      => Geometry.Index_Count);
+      
+        -- Vertex buffer
+        Initialize_Buffer (Buffer     => Current_Surface.Vertices,
+                           Usage_Bits => VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+                           Data       => Geometry.Verticies (1)'Address,
+                           Data_Size  => Geometry.Verticies'Size / Byte'Size,
+                           Count      => Geometry.Vertex_Count);
+        
+        -- Add the result to the global buffered meshes
+        Buffered_Mesh.Append (Current_Surface);
+      end loop;
       Buffered_Meshes.Insert (Path, Buffered_Mesh);
     end;
     
@@ -775,7 +739,7 @@ package body Neo.Engine.Renderer is
         Remove_Material_Reference (S (Surface.Material));        
         Safe_Allocation.Throw_Away (Surface.Vertices);
         Safe_Allocation.Throw_Away (Surface.Indicies);
-        if Surface.Is_Animated then Safe_Allocation.Throw_Away (Surface.Weights); end if;
+        --if Surface.Is_Animated then Safe_Allocation.Throw_Away (Surface.Weights); end if;
       end loop;    
       Buffered_Meshes.Delete (Path);
     end;
@@ -783,124 +747,127 @@ package body Neo.Engine.Renderer is
   -- Load a material's textures and mark it 
   procedure Buffer_Material (Path : Str) is
     begin
-
-      -- Sanity check
-      if Buffered_Materials.Has (Path) then return; end if;
-
-      -- Buffer the material and load all images associated with the material to the GPU
-      declare
-      Material :          Material_State    := Materials.Get (Path);
-      Hash     :          Str_Unbound       := Get_Material_Info_Hash (Material);
-      PATHS    : constant Array_Str_Unbound :=
-        (Material.Irradiance, Material.Specular, Material.Normal, Material.Displacement, Material.Metallic, Material.Roughness);
-      begin
-        for Path of PATHS loop
-        
-          -- Increment the count if it is loaded already
-          if Buffered_Images.Has (Path & Hash) then Add_Image_Reference (Path & Hash);
-          
-          -- Otherwise, buffer the image
-          else
-            declare
-            Image               :         Image_State           := Load (S (Path));
-            Buffered_Image      :         Buffer_State          := (Size => Image.Data'Size / Byte'Size, others => <>);
-            Image_View_Info     : aliased VkImageViewCreateInfo := (viewType         => VK_IMAGE_VIEW_TYPE_2D,
-                                                                    format           => Image.Internal_Format,
-                                                                    components       => (VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                                         VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                                         VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                                         VK_COMPONENT_SWIZZLE_IDENTITY),
-                                                                    subresourceRange => (aspectMask => VK_IMAGE_ASPECT_COLOR_BIT,
-                                                                                         levelCount => 1,
-                                                                                         layerCount => 1, others => <>), others => <>);
-            Sampler_Info : aliased VkSamplerCreateInfo := (maxAnisotropy    => 1.0,
-                                                           anisotropyEnable => VK_FALSE,
-                                                           compareEnable    => VK_FALSE,
-                                                           compareOp        => VK_COMPARE_OP_NEVER, others => <>);
-            Image_Info : aliased VkImageCreateInfo := (initialLayout => VK_IMAGE_LAYOUT_UNDEFINED,
-                                                       sharingMode   => VK_SHARING_MODE_EXCLUSIVE,
-                                                       tiling        => VK_IMAGE_TILING_OPTIMAL,
-                                                       imageType     => VK_IMAGE_TYPE_2D,
-                                                       format        => Image.Internal_Format,
-                                                       mipLevels     => Int_Unsigned_C (Image.Mipmaps),
-                                                       samples       => VK_SAMPLE_COUNT_1_BIT, -- Int_Unsigned_C (Samples.Get'Val)
-                                                       extent        => (Int_Unsigned_C (Image.Width), Int_Unsigned_C (Image.Height), 1),
-                                                       arrayLayers   => (if Image.Is_Cube_Map then 6 else 1),
-                                                       flags         => (if Image.Is_Cube_Map then VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT else 0),
-                                                       usage         => VK_IMAGE_USAGE_TRANSFER_DST_BIT, others => <>);
-            begin
-  
-              -- Sampler
-              case Material.Filter is
-                when Linear_Filter =>
-                  Sampler_Info.minFilter  := VK_FILTER_LINEAR;
-                  Sampler_Info.magFilter  := VK_FILTER_LINEAR;
-                  Sampler_Info.mipmapMode := VK_SAMPLER_MIPMAP_MODE_LINEAR;
-                when Nearest_Filter =>
-                  Sampler_Info.minFilter  := VK_FILTER_NEAREST;
-                  Sampler_Info.magFilter  := VK_FILTER_NEAREST;
-                  Sampler_Info.mipmapMode := VK_SAMPLER_MIPMAP_MODE_NEAREST;
-              end case;
-              case Material.Clamp is
-                when No_Clamp =>
-                  Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_REPEAT;
-                  Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_REPEAT;
-                  Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_REPEAT;
-                when Normal_Clamp =>
-                  Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-                  Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-                  Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-                when Zero_Alpha_Clamp =>
-                  Sampler_Info.borderColor  := VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
-                  Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-                  Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-                  Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-                when Zero_Clamp =>
-                  Sampler_Info.borderColor  := VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
-                  Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-                  Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-                  Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
-              end case;
-              vkAssert (vkCreateSampler (Device, Sampler_Info'Unchecked_Access, null, Buffered_Image.Sampler'Address)); 
-              
-              -- Buffer the image
-              vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, Buffered_Image.Data'Unchecked_Access));
-              Safe_Allocation.Allocate_Buffer (Buffered_Image);
-              vkAssert (vkBindImageMemory (Device, Buffered_Image.Data, Buffered_Image.Device_Memory, Buffered_Image.Offset));
-              Safe_Staging.Set_Buffer (Buffered_Image, Image.Data'Address, Image.Data'Size / Byte'Size);
-              Image_View_Info.image := Buffered_Image.Data;
-              vkAssert (vkCreateImageView (Device, Image_View_Info'Unchecked_Access, null, Buffered_Image.View'Address));
-  
-              -- Register the buffered image
-              Buffered_Images.Insert (Path & Hash, Buffered_Image);
-            end;
-          end if;
-        end loop;
-
-        -- Register the buffered material
-        Buffered_Materials.Insert (U (Path), Material); -- Set it to junk since we only care if it exists
-      end;
+      null;
+--        -- Sanity check
+--        if Buffered_Materials.Has (Path) then return; end if;
+--  
+--        -- Buffer the material and load all images associated with the material to the GPU
+--        declare
+--        Material :          Material_State    := Materials.Get (Path);
+--        Hash     :          Str_Unbound       := Get_Material_Info_Hash (Material);
+--        PATHS    : constant Array_Str_Unbound :=
+--          (Material.Irradiance, Material.Specular, Material.Normal, Material.Displacement, Material.Metallic, Material.Roughness);
+--        begin
+--          for Path of PATHS loop
+--          
+--            -- Increment the count if it is loaded already
+--            if Buffered_Images.Has (Path & Hash) then Add_Image_Reference (Path & Hash);
+--            
+--            -- Otherwise, buffer the image
+--            else
+--              --Load_Image (S (Path));
+--              declare
+--              Image               :         Image_State           := (others => <>);--Images;
+--              Buffered_Image      :         Buffer_State          := (Size => Image.Data'Size / Byte'Size, others => <>);
+--              Image_View_Info     : aliased VkImageViewCreateInfo := (viewType         => VK_IMAGE_VIEW_TYPE_2D,
+--                                                                      format           => Image.Internal_Format,
+--                                                                      components       => (VK_COMPONENT_SWIZZLE_IDENTITY,
+--                                                                                           VK_COMPONENT_SWIZZLE_IDENTITY,
+--                                                                                           VK_COMPONENT_SWIZZLE_IDENTITY,
+--                                                                                           VK_COMPONENT_SWIZZLE_IDENTITY),
+--                                                                      subresourceRange => (aspectMask => VK_IMAGE_ASPECT_COLOR_BIT,
+--                                                                                           levelCount => 1,
+--                                                                                           layerCount => 1, others => <>), others => <>);
+--              Sampler_Info : aliased VkSamplerCreateInfo := (maxAnisotropy    => 1.0,
+--                                                             anisotropyEnable => VK_FALSE,
+--                                                             compareEnable    => VK_FALSE,
+--                                                             compareOp        => VK_COMPARE_OP_NEVER, others => <>);
+--              Image_Info : aliased VkImageCreateInfo := (initialLayout => VK_IMAGE_LAYOUT_UNDEFINED,
+--                                                         sharingMode   => VK_SHARING_MODE_EXCLUSIVE,
+--                                                         tiling        => VK_IMAGE_TILING_OPTIMAL,
+--                                                         imageType     => VK_IMAGE_TYPE_2D,
+--                                                         format        => Image.Internal_Format,
+--                                                         mipLevels     => Int_Unsigned_C (Image.Mipmaps),
+--                                                         samples       => VK_SAMPLE_COUNT_1_BIT, -- Int_Unsigned_C (Samples.Get'Val)
+--                                                         extent        => (Int_Unsigned_C (Image.Width), Int_Unsigned_C (Image.Height), 1),
+--                                                         arrayLayers   => (if Image.Is_Cube_Map then 6 else 1),
+--                                                         flags         => (if Image.Is_Cube_Map then VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT else 0),
+--                                                         usage         => VK_IMAGE_USAGE_TRANSFER_DST_BIT, others => <>);
+--              begin
+--    
+--                -- Sampler
+--                case Material.Filter is
+--                  when Linear_Filter =>
+--                    Sampler_Info.minFilter  := VK_FILTER_LINEAR;
+--                    Sampler_Info.magFilter  := VK_FILTER_LINEAR;
+--                    Sampler_Info.mipmapMode := VK_SAMPLER_MIPMAP_MODE_LINEAR;
+--                  when Nearest_Filter =>
+--                    Sampler_Info.minFilter  := VK_FILTER_NEAREST;
+--                    Sampler_Info.magFilter  := VK_FILTER_NEAREST;
+--                    Sampler_Info.mipmapMode := VK_SAMPLER_MIPMAP_MODE_NEAREST;
+--                end case;
+--                case Material.Clamp is
+--                  when No_Clamp =>
+--                    Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_REPEAT;
+--                    Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_REPEAT;
+--                    Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_REPEAT;
+--                  when Normal_Clamp =>
+--                    Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+--                    Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+--                    Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+--                  when Zero_Alpha_Clamp =>
+--                    Sampler_Info.borderColor  := VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+--                    Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                    Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                    Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                  when Zero_Clamp =>
+--                    Sampler_Info.borderColor  := VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+--                    Sampler_Info.addressModeU := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                    Sampler_Info.addressModeV := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                    Sampler_Info.addressModeW := VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+--                end case;
+--                vkAssert (vkCreateSampler (Device, Sampler_Info'Unchecked_Access, null, Buffered_Image.Sampler'Address)); 
+--                
+--                -- Buffer the image
+--                vkAssert (vkCreateImage (Device, Image_Info'Unchecked_Access, null, Buffered_Image.Data'Unchecked_Access));
+--                Safe_Allocation.Allocate_Buffer (Buffered_Image);
+--                vkAssert (vkBindImageMemory (Device, Buffered_Image.Data, Buffered_Image.Device_Memory, Buffered_Image.Offset));
+--                Safe_Staging.Set_Buffer (Buffered_Image, Image.Data'Address, Image.Data'Size / Byte'Size);
+--                Image_View_Info.image := Buffered_Image.Data;
+--                vkAssert (vkCreateImageView (Device, Image_View_Info'Unchecked_Access, null, Buffered_Image.View'Address));
+--    
+--                -- Register the buffered image
+--                Buffered_Images.Insert (Path & Hash, Buffered_Image);
+--              end;
+--            end if;
+--          end loop;
+--  
+--          -- Register the buffered material
+--          Buffered_Materials.Insert (U (Path), Material); -- Set it to junk since we only care if it exists
+--        end;
     end;  
     
   -- Remove a material from the "buffered" map and decrement all of the references to buffered images so that they may be freed
   procedure Unbuffer_Material (Path : Str) is -- Depends on the material's domain and must be in sync with the Material_State type
-    Material : Material_State := Materials.Get (Path);
-    Hash     : Str_Unbound    := Get_Material_Info_Hash (Material);
     begin
-    
-      -- Make sure we can't unbuffer a material until all buffered surfaces using it get unbuffered first
-      --if Material_Reference.Length > 0 and then Is_Debugging then Line_Warn ("Unbuffering referenced material?"); end if; 
-    
-      case Material.Domain is
-        when others =>
-          if Material.Base_Color /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Base_Color & Hash); end if;
-          if Material.Irradiance /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Irradiance & Hash); end if;
-          if Material.Specular   /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Specular   & Hash); end if;
-          if Material.Normal     /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Normal     & Hash); end if;
-          if Material.Metallic   /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Metallic   & Hash); end if;
-          if Material.Roughness  /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Roughness  & Hash); end if;
-      end case;
-      Buffered_Materials.Delete (U (Path));
+      null;
+--      Material : Material_State := Materials.Get (Path);
+--      Hash     : Str_Unbound    := Get_Material_Info_Hash (Material);
+--      begin
+--      
+--        -- Make sure we can't unbuffer a material until all buffered surfaces using it get unbuffered first
+--        --if Material_Reference.Length > 0 and then Is_Debugging then Line_Warn ("Unbuffering referenced material?"); end if; 
+--      
+--        case Material.Domain is
+--          when others =>
+--            if Material.Base_Color /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Base_Color & Hash); end if;
+--            if Material.Irradiance /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Irradiance & Hash); end if;
+--            if Material.Specular   /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Specular   & Hash); end if;
+--            if Material.Normal     /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Normal     & Hash); end if;
+--            if Material.Metallic   /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Metallic   & Hash); end if;
+--            if Material.Roughness  /= NULL_STR_UNBOUND then Remove_Image_Reference (Material.Roughness  & Hash); end if;
+--        end case;
+--        Buffered_Materials.Delete (U (Path));
     end;      
     
   procedure Free_Unreferenced_Materials is
@@ -938,7 +905,7 @@ package body Neo.Engine.Renderer is
     
       -- Framebuffer
       for Frame of Framebuffer.all loop
-	vkAssert (vkWaitForFences (Device, 1, Frame.Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
+        vkAssert (vkWaitForFences (Device, 1, Frame.Fence'Unchecked_Access, VK_TRUE, Int_64_Unsigned_C'Last));
         vkDestroySemaphore   (Device, Frame.Acquire_Status,   null);
         vkDestroySemaphore   (Device, Frame.Render_Status,    null);  
         vkDestroyImageView   (Device, Frame.Image_View,       null);
@@ -997,7 +964,7 @@ package body Neo.Engine.Renderer is
     Viewport : aliased VkViewport := (x        => 0.0,
                                       y        => 0.0,
                                       minDepth => 0.0,
-                                      maxDepth => 10.0,
+                                      maxDepth => 1.0, -- 10.0,
                                       width    => Real_C (Swapchain_Info.imageExtent.width),
                                       height   => Real_C (Swapchain_Info.imageExtent.height), others => <>);
     Scissor : aliased VkRect2D := (offset => (0, 0), extent => Swapchain_Info.imageExtent, others => <>);
@@ -1031,29 +998,28 @@ package body Neo.Engine.Renderer is
     -- Subpass
     Depth_Reference       : aliased VkAttachmentReference      := (attachment => 1, layout => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, others => <>);
     Color_Reference       : aliased VkAttachmentReference      := (attachment => 0, layout => VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, others => <>);
-    Resolve_Reference     : aliased VkAttachmentReference      := (attachment => 0, layout => VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, others => <>);
     Subpasses_Description : aliased Array_VkSubpassDescription := (1 => (pipelineBindPoint       => VK_PIPELINE_BIND_POINT_GRAPHICS,
                                                                          colorAttachmentCount    => 1,
                                                                          pColorAttachments       => Color_Reference'Unchecked_Access,
-                                                                         pDepthStencilAttachment => Depth_Reference'Unchecked_Access, others  => <>));
+                                                                         pDepthStencilAttachment => null, others => <>)); -- Depth_Reference'Unchecked_Access, others  => <>));
                                             
     -- Render Pass
-    Attachments : aliased Array_VkAttachmentDescription := ((format         => Swapchain_Format.format,
+    Attachments : aliased Array_VkAttachmentDescription := (1 => (format         => Swapchain_Format.format,
                                                              samples        => VK_SAMPLE_COUNT_1_BIT,
-                                                             loadOp         => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                             loadOp         => VK_ATTACHMENT_LOAD_OP_CLEAR, -- VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                                              storeOp        => VK_ATTACHMENT_STORE_OP_STORE,
                                                              stencilLoadOp  => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                                              stencilStoreOp => VK_ATTACHMENT_STORE_OP_DONT_CARE,
                                                              initialLayout  => VK_IMAGE_LAYOUT_UNDEFINED,
-                                                             finalLayout    => VK_IMAGE_LAYOUT_GENERAL, others => <>),
-                                                            (format         => Depth_Format.format,
-                                                             samples        => VK_SAMPLE_COUNT_1_BIT,
-                                                             loadOp         => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                                             storeOp        => VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                                             stencilLoadOp  => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                                             stencilStoreOp => VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                                             initialLayout  => VK_IMAGE_LAYOUT_UNDEFINED,
-                                                             finalLayout    => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, others => <>));
+                                                             finalLayout    => VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, others => <>)); --VK_IMAGE_LAYOUT_GENERAL, others => <>)); --,
+                                                            --(format         => Depth_Format.format,
+                                                            -- samples        => VK_SAMPLE_COUNT_1_BIT,
+                                                            -- loadOp         => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                            -- storeOp        => VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                            -- stencilLoadOp  => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                            -- stencilStoreOp => VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                            -- initialLayout  => VK_IMAGE_LAYOUT_UNDEFINED,
+                                                            -- finalLayout    => VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, others => <>));
                                                            -- (format         => Swapchain_Format.format,
                                                            --  samples        => VK_SAMPLE_COUNT_1_BIT,
                                                            --  loadOp         => VK_ATTACHMENT_LOAD_OP_DONT_CARE,
@@ -1106,7 +1072,7 @@ package body Neo.Engine.Renderer is
       vkAssert (vkCreateImageView  (Device, Depth_Image_View_Info'Unchecked_Access, null, Depth_Image.View'Address));
   
       -- Framebuffer
-      Attachment_Data (2) := Depth_Image.View;
+      --Attachment_Data (2) := Depth_Image.View;
       for Frame of Framebuffer.all loop
         Attachment_Data (1) := Frame.Image_View;
         Frame_Buffer_Info := (renderPass      => Render_Pass,
@@ -1149,7 +1115,7 @@ package body Neo.Engine.Renderer is
       -- Uniforms
       for Uniform of Buffered_Uniforms loop Safe_Allocation.Throw_Away (Uniform); end loop;
 
-      -- Staging 
+      -- Staging
       Safe_Staging.Finalize;
 
       -- Framebuffer
@@ -1174,29 +1140,31 @@ package body Neo.Engine.Renderer is
    
   -- Main drawing routine
   procedure Draw (Data : Bottom_Level_State; Commands : in out Ptr; Surface_Sort : Surface_Sort_Array) is
+    Size_Junk : aliased Int_64_Unsigned_C := 0;
     Mesh                : Vector_Buffer_Surface.Unsafe.Vector := Buffered_Meshes.Get (Data.Mesh);
     Descriptor_Set      : aliased Ptr                         := NULL_PTR;
     Current_Pipeline    : aliased Ptr                         := NULL_PTR; 
     Set_Allocation_Info : aliased VkDescriptorSetAllocateInfo := (descriptorSetCount => 1,
                                                                   descriptorPool     => Descriptor_Pool, 
                                                                   pSetLayouts        => Pipeline.Shader.Descriptor_Set_Layout'Unchecked_Access, others => <>);
-    begin    
+    begin 
     
       -- Bind joints
       if Data.Is_Animated then
-        Debug_Assert (Data.Pose.Node_Count > 0);
-        declare
-        Joints : Vector_Joint.Unsafe_Array (1..Int (Data.Pose.Node_Count)) := (others => <>);
-        begin
-          Writes.Append ((Is_Image    => False,
-                          Buffer_Info => (buffer => Joint_Buffer.Data,
-                                          offset => Joint_Buffer.Offset,
-                                          rang   => Joint_Buffer.Size),
-                          Set         => (dstBinding      => JOINT_BUFFER_BINDING,
-                                          descriptorCount => 1,
-                                          descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, others => <>)));
-          Safe_Staging.Set_Buffer (Joint_Buffer, Joints (1)'Address, Joint_State'Object_Size * Joints'Length / Byte'Size);
-        end;
+        null;
+--          Debug_Assert (Data.Pose.Node_Count > 0);
+--          declare
+--          Joints : Vector_Joint.Unsafe_Array (1..Int (Data.Pose.Node_Count)) := (others => <>);
+--          begin
+--            Writes.Append ((Is_Image    => False,
+--                            Buffer_Info => (buffer => Joint_Buffer.Data,
+--                                            offset => Joint_Buffer.Offset,
+--                                            rang   => Joint_Buffer.Size),
+--                            Set         => (dstBinding      => JOINT_BUFFER_BINDING,
+--                                            descriptorCount => 1,
+--                                            descriptorType  => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, others => <>)));
+--            Safe_Staging.Set_Buffer (Joint_Buffer, Joints (1)'Address, Joint_State'Object_Size * Joints'Length / Byte'Size);
+--          end;
       end if;
       
       -- Draw surfaces of the mesh that match the desired visibility
@@ -1204,8 +1172,8 @@ package body Neo.Engine.Renderer is
       
         -- Fetch the material and create a hash we can use to stage buffered image components of the materials
         declare
-        Material : Material_State := Materials.Get (S (Surface.Material));--(Data.Materials_Map.Element (Surface.Material)));
-        Hash     : Str_Unbound    := Get_Material_Info_Hash (Material);
+        Material : Material_State;-- := Materials.Get (S (Surface.Material));--(Data.Materials_Map.Element (Surface.Material)));
+        Hash     : Str_Unbound;--    := Get_Material_Info_Hash (Material);
 
         -- Flag a meterial texture and setup a sampler
         procedure Stage_Image (Path        : Str_Unbound;
@@ -1219,10 +1187,10 @@ package body Neo.Engine.Renderer is
           
         -- Start of Draw's main loop
         begin
-          Debug_Assert (Data.Is_Animated = Surface.Is_Animated);
+          --Debug_Assert (Data.Is_Animated = Surface.Is_Animated);
           
           -- Optimize
-          if Surface_Sort (Material.Sort) then
+          if True then -- Surface_Sort (Material.Sort) then
           
             -- Optimize out searching through buffered pipelines if our previous one is a match
             if Previous_Pipeline.Val = Pipeline then
@@ -1240,19 +1208,32 @@ goto Have_Pipeline;
         
             -- Create a pipeline if one was not found
             declare
-            Viewport_Info       : aliased VkPipelineViewportStateCreateInfo      := (viewportCount => 1, scissorCount => 1, others => <>);
+            
+            -- Static viewport junk
+            Viewport : aliased VkViewport := 
+              (x        => 0.0,
+               y        => 0.0,
+               width    => Real_C (Surface_Details.minImageExtent.width),
+               height   => Real_C (Surface_Details.minImageExtent.height),
+               minDepth => 0.0,
+               maxDepth => 1.0);
+            Scissor : aliased VkRect2D := ((0, 0), (Surface_Details.minImageExtent.width, Surface_Details.minImageExtent.height));
+            Viewport_Info       : aliased VkPipelineViewportStateCreateInfo      := (viewportCount => 1,
+                                                                                     scissorCount  => 1,
+                                                                                     pViewports    => Viewport'Unchecked_Access,
+                                                                                     pScissors     => Scissor'Unchecked_Access,
+                                                                                     others => <>);
             Input_Assembly_Info : aliased VkPipelineInputAssemblyStateCreateInfo := (topology => VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, others => <>);                                                 
-            Multisample_Info    : aliased VkPipelineMultisampleStateCreateInfo   := (sampleShadingEnable  => VK_TRUE,
-                                                                                     minSampleShading     => 1.0,
-                                                                                     rasterizationSamples =>
-                                                                                       Int_Unsigned_C (Sampling_Kind'Pos (Sampling.Get)), others => <>);
+            Multisample_Info    : aliased VkPipelineMultisampleStateCreateInfo   := (sampleShadingEnable  => VK_FALSE,
+                                                                                     rasterizationSamples => VK_SAMPLE_COUNT_1_BIT, --rasterizationSamples => Image_Properties.sampleCounts,
+                                                                                     minSampleShading     => 0.0, -- 1.0,
+                                                                                     others => <>);
+                                                                                       --Int_Unsigned_C (Sampling_Kind'Pos (Sampling.Get)), others => <>);
                                                                                 
             -- Shader
             Vertex_Input_Attributes : aliased Vector_VkVertexInputAttributeDescription.Unsafe_Array :=
-              Vector_VkVertexInputAttributeDescription.To_Unsafe_Array (Pipeline.Shader.Vertex_Input_Attributes);
-            Vertex_Binding : aliased Array_VkVertexInputBindingDescription := (1 => (binding   => 0,
-                                                                                     stride    => Static_Vertex_State'Object_Size / Byte'Object_Size,
-                                                                                     inputRate => VK_VERTEX_INPUT_RATE_VERTEX));
+              Vector_VkVertexInputAttributeDescription.To_Unsafe_Array (Pipeline.Shader.Vertex_Attributes);
+            Vertex_Binding : aliased Array_VkVertexInputBindingDescription := (1 => Pipeline.Shader.Vertex_Binding);
             Vertex_Input_Info : aliased VkPipelineVertexInputStateCreateInfo :=
               (vertexBindingDescriptionCount   => Vertex_Binding'Length,
                pVertexBindingDescriptions      => Vertex_Binding (1)'Unchecked_Access,
@@ -1269,12 +1250,13 @@ goto Have_Pipeline;
                depthBiasEnable         => To_VkBool32 (Pipeline.Has_Polygon_Offset),
                lineWidth               => 1.0,
                frontFace               => Pipeline.Front_Face,
-               cullMode                => (case Pipeline.Cull_Mode is
-                                             when VK_CULL_MODE_BACK_BIT  => (if Pipeline.Has_Mirror_View then VK_CULL_MODE_FRONT_BIT
-                                                                             else VK_CULL_MODE_BACK_BIT),
-                                             when VK_CULL_MODE_FRONT_BIT => (if Pipeline.Has_Mirror_View then VK_CULL_MODE_BACK_BIT
-                                                                             else VK_CULL_MODE_FRONT_BIT),
-                                             when others                 => Pipeline.Cull_Mode), others => <>);
+               cullMode                => VK_CULL_MODE_NONE, others => <>);
+                                           --(case Pipeline.Cull_Mode is
+                                           --  when VK_CULL_MODE_BACK_BIT  => (if Pipeline.Has_Mirror_View then VK_CULL_MODE_FRONT_BIT
+                                           --                                  else VK_CULL_MODE_BACK_BIT),
+                                           --  when VK_CULL_MODE_FRONT_BIT => (if Pipeline.Has_Mirror_View then VK_CULL_MODE_BACK_BIT
+                                           --                                  else VK_CULL_MODE_FRONT_BIT),
+                                           --  when others                 => Pipeline.Cull_Mode), others => <>);
                                                                                 
             -- Depth stencil
             Depth_Stencil_Info : aliased VkPipelineDepthStencilStateCreateInfo :=
@@ -1336,11 +1318,11 @@ goto Have_Pipeline;
                                                                      pInputAssemblyState => Input_Assembly_Info'Unchecked_Access,
                                                                      pRasterizationState => Rasterizer_Info'Unchecked_Access,
                                                                      pMultisampleState   => Multisample_Info'Unchecked_Access,
-                                                                     pDepthStencilState  => Depth_Stencil_Info'Unchecked_Access,
+                                                                     pDepthStencilState  => null, -- Depth_Stencil_Info'Unchecked_Access,
                                                                      pColorBlendState    => Color_Blend_Info'Unchecked_Access,
                                                                      renderPass          => Render_Pass,
                                                                      layout              => Pipeline.Shader.Pipeline_Layout,
-                                                                     pDynamicState       => Dynamic_State_Info'Unchecked_Access,
+                                                                     pDynamicState       => null, -- Dynamic_State_Info'Unchecked_Access,
                                                                      pViewportState      => Viewport_Info'Unchecked_Access, others => <>);
             Pipeline_Layout_Info : aliased VkPipelineLayoutCreateInfo := (setLayoutCount => 1,
                                                                           pSetLayouts    => Set_Allocation_Info.pSetLayouts, others => <>);   
@@ -1362,59 +1344,59 @@ goto Have_Pipeline;
             vkCmdBindPipeline (Commands, VK_PIPELINE_BIND_POINT_GRAPHICS, Current_Pipeline);         
             
             -- Stage material
-            if Buffered_Materials.Has (Surface.Material) then raise Program_Error with "Unbuffered material encountered"; end if;
-            case Material.Domain is -- Must match Neo.Data.Model.Material_State
-              when Surface_Domain =>
-                Stage_Image (Material.Base_Color, Base_Color_Sampler.Set'Access, Enable_Base_Color.Set'Access);
-                Stage_Image (Material.Irradiance, Irradiance_Sampler.Set'Access, Enable_Irradiance.Set'Access);
-                Stage_Image (Material.Specular,   Specular_Sampler.Set'Access,   Enable_Specular.Set'Access);
-                Stage_Image (Material.Normal,     Normal_Sampler.Set'Access,     Enable_Normal.Set'Access);
-                Stage_Image (Material.Metallic,   Metallic_Sampler.Set'Access,   Enable_Metallic.Set'Access);
-                Stage_Image (Material.Roughness,  Roughness_Sampler.Set'Access,  Enable_Roughness.Set'Access);
-              when others => null;
-            end case;
+--              if Buffered_Materials.Has (Surface.Material) then raise Program_Error with "Unbuffered material encountered"; end if;
+--              case Material.Domain is -- Must match Neo.Data.Model.Material_State
+--                when Surface_Domain =>
+--                  Stage_Image (Material.Base_Color, Base_Color_Sampler.Set'Access, Enable_Base_Color.Set'Access);
+--                  Stage_Image (Material.Irradiance, Irradiance_Sampler.Set'Access, Enable_Irradiance.Set'Access);
+--                  Stage_Image (Material.Specular,   Specular_Sampler.Set'Access,   Enable_Specular.Set'Access);
+--                  Stage_Image (Material.Normal,     Normal_Sampler.Set'Access,     Enable_Normal.Set'Access);
+--                  Stage_Image (Material.Metallic,   Metallic_Sampler.Set'Access,   Enable_Metallic.Set'Access);
+--                  Stage_Image (Material.Roughness,  Roughness_Sampler.Set'Access,  Enable_Roughness.Set'Access);
+--                when others => null;
+--              end case;
             
             -- Bind writes linked with their appropriate additional structure (e.g. VkDescriptorBufferInfo or VkDescriptorImageInfo)
-            vkAssert (vkAllocateDescriptorSets (Device, Set_Allocation_Info'Unchecked_Access, Descriptor_Set'Unchecked_Access));
-            if Writes.Length > 0 then
-              declare
-              Writes_Internal  : Vector_Write_Descriptor.Unsafe_Array               := Vector_Write_Descriptor.To_Unsafe_Array (Writes);
-              Resulting_Writes : Array_VkWriteDescriptorSet (Writes_Internal'Range) := (others => <>);
-              begin     
-                for I in Writes_Internal'Range loop
-                  Resulting_Writes (I)        := Writes_Internal (I).Set;
-                  Resulting_Writes (I).dstSet := Descriptor_Set;
-                  if Writes_Internal (I).Is_Image then Resulting_Writes (I).pImageInfo := Writes_Internal (I).Image_Info'Address;
-                  else Resulting_Writes (I).pBufferInfo := Writes_Internal (I).Buffer_Info'Address; end if;
-                end loop;
-                vkUpdateDescriptorSets (Device, Resulting_Writes'Length, Resulting_Writes (1)'Unchecked_Access, 0, null);        
-              end;        
-            end if;
-            vkCmdBindDescriptorSets (commandBuffer      => Commands, 
-                                     pipelineBindPoint  => VK_PIPELINE_BIND_POINT_GRAPHICS, 
-                                     layout             => Pipeline.Shader.Pipeline_Layout,
-                                     firstSet           => 0,
-                                     descriptorSetCount => 1,
-                                     pDescriptorSets    => Descriptor_Set'Unchecked_Access, 
-                                     dynamicOffsetCount => 0,
-                                     pDynamicOffsets    => null);
+--              vkAssert (vkAllocateDescriptorSets (Device, Set_Allocation_Info'Unchecked_Access, Descriptor_Set'Unchecked_Access));
+--              if Writes.Length > 0 then
+--                declare
+--                Writes_Internal  : Vector_Write_Descriptor.Unsafe_Array               := Vector_Write_Descriptor.To_Unsafe_Array (Writes);
+--                Resulting_Writes : Array_VkWriteDescriptorSet (Writes_Internal'Range) := (others => <>);
+--                begin     
+--                  for I in Writes_Internal'Range loop
+--                    Resulting_Writes (I)        := Writes_Internal (I).Set;
+--                    Resulting_Writes (I).dstSet := Descriptor_Set;
+--                    if Writes_Internal (I).Is_Image then Resulting_Writes (I).pImageInfo := Writes_Internal (I).Image_Info'Address;
+--                    else Resulting_Writes (I).pBufferInfo := Writes_Internal (I).Buffer_Info'Address; end if;
+--                  end loop;
+--                  vkUpdateDescriptorSets (Device, Resulting_Writes'Length, Resulting_Writes (1)'Unchecked_Access, 0, null);        
+--                end;        
+--              end if;
+--              vkCmdBindDescriptorSets (commandBuffer      => Commands, 
+--                                       pipelineBindPoint  => VK_PIPELINE_BIND_POINT_GRAPHICS, 
+--                                       layout             => Pipeline.Shader.Pipeline_Layout,
+--                                       firstSet           => 0,
+--                                       descriptorSetCount => 1,
+--                                       pDescriptorSets    => Descriptor_Set'Unchecked_Access, 
+--                                       dynamicOffsetCount => 0,
+--                                       pDynamicOffsets    => null);
         
             -- Bind 3D data
             vkCmdBindVertexBuffers (commandBuffer => Commands,
                                     firstBinding  => 0,
                                     bindingCount  => 1,
                                     pBuffers      => Surface.Vertices.Data'Address,
-                                    pOffsets      => Surface.Vertices.Offset'Address);  
+                                    pOffsets      => Size_Junk'Address); --Surface.Vertices.Offset'Address);  
             vkCmdBindIndexBuffer   (commandBuffer => Commands,
-                                    buffer        => Surface.Indicies.Data'Address,
-                                    offset        => Surface.Indicies.Offset,
+                                    buffer        => Surface.Indicies.Data,
+                                    offset        => 0, -- Surface.Indicies.Offset,
                                     indexType     => VK_INDEX_TYPE_UINT32);
                                      
             -- Draw
             vkCmdDrawIndexed (Commands, Surface.Indicies.Count, 1, 0, 0, 0);
             
             -- Kill the current Descriptor_Set... does one really need to be allocated for every draw? Also, what is the overhead of freeing?
-            vkAssert (vkFreeDescriptorSets (Device, Descriptor_Pool, 1, Descriptor_Set'Unchecked_Access));
+            --vkAssert (vkFreeDescriptorSets (Device, Descriptor_Pool, 1, Descriptor_Set'Unchecked_Access));
             Writes.Clear;
           end if;
         end;
@@ -1464,7 +1446,7 @@ goto Have_Pipeline;
                                                          applicationVersion => VK_MAKE_VERSION (VERSION),
                                                          pEngineName        => C (Engine_Name),
                                                          engineVersion      => VK_MAKE_VERSION (VERSION),
-                                                         apiVersion         => VK_API_VERSION_1_0, others => <>);
+                                                         apiVersion         => VK_API_VERSION_1_1, others => <>);
     Instance_Info : aliased VkInstanceCreateInfo := (pApplicationInfo        => Application_Info'Unchecked_Access,
                                                      enabledExtensionCount   => Instance_Extensions'Length,
                                                      ppenabledExtensionNames => Instance_Extensions (1)'Address,
@@ -1485,15 +1467,16 @@ goto Have_Pipeline;
                                                  ppenabledExtensionNames => DEVICE_EXTENSIONS (1)'Address, others  => <>);
  
     -- Shaders
-    Layout_Bindings        :         Vector_VkDescriptorSetLayoutBinding.Unsafe.Vector;
-    Shader_Flags           :         Int_Unsigned_C                    := 0;
-    Shader_Path            :         Str_Unbound                       := NULL_STR_UNBOUND;
-    Shader                 :         Shader_State                      := (others => <>);
-    Shader_Module_Info     : aliased VkShaderModuleCreateInfo          := (others => <>);
-    Shader_Pipeline_Layout : aliased VkPipelineLayoutCreateInfo        := (setLayoutCount => 1, others => <>);
-    Layout_Binding_Info    : aliased VkDescriptorSetLayoutCreateInfo   := (others => <>);
-    Descriptor_Pool_Sizes  : aliased Array_VkDescriptorPoolSize (1..2) := (others => (others => <>));
-    Descriptor_Pool_Info   : aliased VkDescriptorPoolCreateInfo        := (poolSizeCount => Descriptor_Pool_Sizes'Length,
+    Layout_Bindings       :         Vector_VkDescriptorSetLayoutBinding.Unsafe.Vector;
+    Shader_Flags          :         Int_Unsigned_C                    := 0;
+    Shader_Path           :         Str_Unbound                       := NULL_STR_UNBOUND;
+    Shader                :         Shader_State                      := (others => <>);
+    Shader_Stage_Info     : aliased VkPipelineShaderStageCreateInfo   := (others => <>);
+    Shader_Module_Info    : aliased VkShaderModuleCreateInfo          := (others => <>);
+    Shader_Pipeline_Info  : aliased VkPipelineLayoutCreateInfo        := (setLayoutCount => 1, others => <>);
+    Layout_Binding_Info   : aliased VkDescriptorSetLayoutCreateInfo   := (others => <>);
+    Descriptor_Pool_Sizes : aliased Array_VkDescriptorPoolSize (1..2) := (others => (others => <>));
+    Descriptor_Pool_Info  : aliased VkDescriptorPoolCreateInfo        := (poolSizeCount => Descriptor_Pool_Sizes'Length,
                                                                            pPoolSizes    => Descriptor_Pool_Sizes (1)'Unchecked_Access, others => <>);
     
     -- Start of Initialize_Drawing
@@ -1699,7 +1682,7 @@ goto Have_Pipeline;
       end loop;
       
       -- Descriptor pool
-      Descriptor_Pool_Sizes := ((typ => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+      Descriptor_Pool_Sizes := ((typ             => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                  descriptorCount => Device_Properties.limits.maxUniformBufferRange, others => <>),
                                 (typ             => VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                  descriptorCount => Device_Properties.limits.maxDescriptorSetSampledImages, others => <>));
@@ -1710,6 +1693,24 @@ goto Have_Pipeline;
       for I in Shaders.Iterate loop
         Shader := Map_Shader.Unsafe.Element (I);
         
+        -- Position
+        Shader.Vertex_Attributes.Append ((format   => VK_FORMAT_R32G32B32_SFLOAT, 
+                                          location => 0,
+                                          offset   => 0, others => <>));
+                     
+        -- Normal
+        Shader.Vertex_Attributes.Append ((format   => VK_FORMAT_R32G32B32_SFLOAT, 
+                                          location => 1,
+                                          offset   => Vector_3D'Object_Size / Byte'Size, others => <>));
+                                                
+        -- Texture
+        Shader.Vertex_Attributes.Append ((format   => VK_FORMAT_R32G32_SFLOAT,    
+                                          location => 2,
+                                          offset   => Vector_3D'Object_Size / Byte'Size * 2, others => <>)); 
+                                          
+        -- Binding
+        Shader.Vertex_Binding := (binding => 0, stride => Vertex_State'Object_Size / Byte'Size, inputRate => VK_VERTEX_INPUT_RATE_VERTEX);
+                                
         -- A complete shader is made of multiple stages - each with their own SPIR-V program
         for Stage of Shader.Stages loop
           Shader_Flags := (case Stage.Kind is when Vertex_Stage      => VK_SHADER_STAGE_VERTEX_BIT,
@@ -1718,7 +1719,8 @@ goto Have_Pipeline;
                                               when Geometry_Stage    => VK_SHADER_STAGE_GEOMETRY_BIT);
         
           -- Build the shader's current stage path and verify it exists
-          Shader_Path := Map_Shader.Unsafe.Key (I) & "-" & To_Lower (Stage.Kind'Wide_Image) (1..4) & ".spv";          
+          Shader_Path := OS_Info.App_Path & U (PATH_SHADERS) & Map_Shader.Unsafe.Key (I) & "-" & To_Lower (Stage.Kind'Wide_Image) (1..4) & ".spv";          
+          Line (S (Shader_Path));
           if not Exists (To_Str_8 (S (Shader_Path))) then -- Str_8 !!!
             Line_Error ("Missing shader stage " & S (Shader_Path));
             raise Program_Error;
@@ -1751,39 +1753,46 @@ goto Have_Pipeline;
           
           -- Uniform descriptors
           for Uniform of Stage.Uniforms loop
-            Layout_Bindings.Append ((binding        => Buffered_Uniforms.Element (Uniform).Binding,
-                                     descriptorType => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-                                     stageFlags     => Shader_Flags, others => <>));
+            if Uniform /= NULL_STR_UNBOUND then
+              Layout_Bindings.Append ((binding        => Buffered_Uniforms.Element (Uniform).Binding,
+                                       descriptorType => VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                       stageFlags     => Shader_Flags, others => <>));
+            end if;
           end loop;
             
-          -- Load the stage's SPIR-V data and apply the descriptors
-          declare
-          Program                : aliased Array_Byte := Load_Padded (S (Shader_Path), Amount => 4);
-          Result_Layout_Bindings : aliased Array_VkDescriptorSetLayoutBinding :=
-            Vector_VkDescriptorSetLayoutBinding.To_Unsafe_Array (Layout_Bindings);
-          begin              
-            Layout_Binding_Info.bindingCount := Int_Unsigned_C (Result_Layout_Bindings'Length);
-            Layout_Binding_Info.pBindings    := Result_Layout_Bindings (1)'Unchecked_Access;
-            Shader_Module_Info               := (codeSize => Program'Length, pCode => Program'Address, others => <>);
+          -- Load the stage's SPIR-V data
+          declare Program : aliased Array_Byte := Load (S (Shader_Path), Padding => 4); begin
+            Shader_Module_Info := (codeSize => Program'Length, pCode => Program'Address, others => <>);
             vkAssert (vkCreateShaderModule (Device, Shader_Module_Info'Unchecked_Access, null, Stage.Program'Unchecked_Access));
-            vkAssert (vkCreateDescriptorSetLayout (device      => Device,
-                                                   pCreateInfo => Layout_Binding_Info'Unchecked_Access,
-                                                   pAllocator  => null,
-                                                   pSetLayout  => Shader.Descriptor_Set_Layout'Unchecked_Access));  
-            Shader.Stages_Info.Append ((stage => Shader_Flags, module => Stage.Program, pName  => C (Shader_Entry_Name), others => <>));
           exception when others => Line_Error ("Error loading shader " & S (Shader_Path)); raise Program_Error; end;
           
+          -- Load the descriptors
+          if Layout_Bindings.Length > 0 then
+            declare
+            Result_Layout_Bindings : aliased Array_VkDescriptorSetLayoutBinding :=
+              Vector_VkDescriptorSetLayoutBinding.To_Unsafe_Array (Layout_Bindings);
+            begin              
+              Layout_Binding_Info.bindingCount := Int_Unsigned_C (Result_Layout_Bindings'Length);
+              Layout_Binding_Info.pBindings    := Result_Layout_Bindings (1)'Unchecked_Access;
+              vkAssert (vkCreateDescriptorSetLayout (device      => Device,
+                                                     pCreateInfo => Layout_Binding_Info'Unchecked_Access,
+                                                     pAllocator  => null,
+                                                     pSetLayout  => Shader.Descriptor_Set_Layout'Unchecked_Access));  
+            end;
+          end if;
+          Shader.Stages_Info.Append ((stage => Shader_Flags, module => Stage.Program, pName => C (Shader_Entry_Name), others => <>));
+            
           -- Stage is set - clear the layouts
           Layout_Bindings.Clear;   
         end loop;
         
         -- Pipeline Layout
-        Shader_Pipeline_Layout.pSetLayouts := Shader.Descriptor_Set_Layout'Unchecked_Access;        
-        vkAssert (vkCreatePipelineLayout (Device, Shader_Pipeline_Layout'Unchecked_Access, null, Shader.Pipeline_Layout'Unchecked_Access));
+        Shader_Pipeline_Info.pSetLayouts := Shader.Descriptor_Set_Layout'Unchecked_Access;        
+        vkAssert (vkCreatePipelineLayout (Device, Shader_Pipeline_Info'Unchecked_Access, null, Shader.Pipeline_Layout'Unchecked_Access));
         Shaders.Replace_Element (I, Shader);
       end loop;       
       
       -- Kick off the second stage!
       Initialize_Framebuffer;
-    exception when others => Line_Error ("Vulkan driver not installed or up to date?"); raise Program_Error; end;
+    end; -- exception when others => Line_Error ("Vulkan driver not installed or up to date?"); raise Program_Error; end;
 end;

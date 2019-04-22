@@ -1,0 +1,21 @@
+-- Neo 0.1.0 config: 2019-04-22 15:27:29
+-- To restore default values simply delete this file.
+
+-- CVars
+w_mode WINDOWED_MODE
+d3_haze TRUE
+r_sampling NO_SAMPLING
+r_maxgpumb  128
+r_rendering FGED2_RENDERING
+w_narrowx  16
+w_narrowy  9
+d3_blur TRUE
+d3_bloom TRUE
+w_widex  4
+r_maxuploadmb  64
+w_widey  3
+r_maxhostmb  64
+w_height  591
+d3_tess TRUE
+d3_hdr TRUE
+w_width  1014

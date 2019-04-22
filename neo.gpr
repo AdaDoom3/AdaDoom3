@@ -57,21 +57,19 @@ project Neo is
   -- Types --
   -----------
 
-  type CPU_Option      is ("x86-64", "PPC");
-  type Bit_Size_Option is ("32", "64");
-  type Boolean_Option  is ("No", "Yes");
-  type Game_Option     is ("Neotek", "DOOM");
-  type System_Option   is ("Win32", "Linux", "Mac", "Android");
+  type CPU_Option     is ("x86-64", "PPC");
+  type Boolean_Option is ("No", "Yes");
+  type Game_Option    is ("Neotek", "DOOM");
+  type System_Option  is ("Win32", "Linux", "Mac", "Android");
 
   --------------
   -- Scenario --
   --------------
 
-  CPU      : CPU_Option      := External ("CPU", "x86-64");
-  SYSTEM   : System_Option   := External ("System", "Win32");
-  DEBUG    : Boolean_Option  := External ("Debug", "Yes");
-  GAME     : Game_Option     := External ("Game", "DOOM");
-  BIT_SIZE : Bit_Size_Option := External ("Bitsize", "64");
+  CPU    : CPU_Option     := External ("CPU", "x86-64");
+  SYSTEM : System_Option  := External ("System", "Win32");
+  DEBUG  : Boolean_Option := External ("Debug", "Yes");
+  GAME   : Game_Option    := External ("Game", "DOOM");
  
   --------------
   -- Settings --
@@ -85,9 +83,10 @@ project Neo is
   for Languages   use ("Ada");--, "C");                             -- Support both Ada and OpenGL Shader Language
   for Main        use ("main.adb");                                 -- Main entry point
   for Object_Dir  use "Object";                                     -- Trash folder
-  for Exec_Dir    use "Games/" & GAME & "/";                        -- Game distributable 
+  for Exec_Dir    use "Games/" & GAME;                              -- Game distributable 
   for Source_Dirs use ("Shaders/",                                  -- GLSL shaders
                        "Engine/", "Engine/Systems/" & OS_API,       -- Engine and system specific source
+                       "Engine/Runtime/",                           -- Runtime sources
                        "Engine/Assembly/" & CPU,                    -- CPU specific source
                        "Games/" & GAME & "/Base/**",                -- Game specific source
                        "Engine/Settings/Debugging-" & DEBUG & "/"); -- Give the source access to senario variable DEBUG
@@ -96,31 +95,29 @@ project Neo is
   -- Switches --
   --------------
 
-  Switch_Binder   := ("-E");                -- Store traceback in exceptions
-  Switch_Linker   := ("-fprofile-generate", -- Generate code coverage     
-                      "-mwindows");         -- Remove the command console
-  Switch_Compiler := ("-gnatE",             -- Enable dynamic generic elaboration checks
-                      "-gnatW8",            -- Enable wide-character unicode identifiers
-                      "-g");                -- Extend info in stack traces
-  Switch_Builder  := ("-j0",                -- Use all available threads for compilation
-                      "-k",                 -- Keep building as far as possible
-                      "-s");                -- Recompile if switches are changed
+  Switch_Binder   := ("-E");                 -- Store traceback in exceptions
+  Switch_Linker   := ("-Xlinker",            -- Setup for stack flag
+                      "--stack=0x80000000"); -- Set the stack size
+  Switch_Compiler := ("-gnatE",              -- Enable dynamic generic elaboration checks
+                      "-gnatW8",             -- Enable wide-character unicode identifiers
+                      "-m64",                -- Force 64 bit compilation
+                      "-g");                 -- Extend info in stack traces
+  Switch_Builder  := ("-j0",                 -- Use all available threads for compilation
+                      "-s");                 -- Recompile if switches are changed
   case DEBUG is
-    when "Yes" => Switch_Compiler := Switch_Compiler & ("-gnato",       -- Check overflow for numerics
-                                                        "-gnatf",       -- Show extra info in errors
-                                                        "-O0");         -- Avoid any optimization
-    when "No"  => Switch_Compiler := Switch_Compiler & ("-O3",          -- Optimize as much as possible
-                                                        "-gnatp",       -- Surpress all checks 
-                                                        "-ffast-math"); -- Force SIMD optmization
+    when "Yes" => Switch_Compiler := Switch_Compiler & ("-gnato",                      -- Check overflow for numerics
+                                                        "-gnatf");                     -- Show extra info in errors
+    when "No"  => Switch_Compiler := Switch_Compiler & ("-O3",                         -- Optimize as much as possible
+                                                        "-gnatp",                      -- Surpress all checks 
+                                                        "-gnatx",                      -- Surpress cross-reference data
+                                                        "-funsafe-math-optimizations", -- More like "fun safe"
+                                                        "-ffast-math");                -- Force SIMD optmization
   end case;
   case SYSTEM is
     when "Mac" | "Linux" | "Android" =>
     when "Win32" =>
-      case BIT_SIZE is
-        when "32" => null;
-        when "64" => Switch_Compiler := Switch_Compiler & ("-m64"); -- Try 64 bit compilation
-      end case;
-      Switch_Linker := Switch_Linker & (External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
+      Switch_Linker := Switch_Linker & ("-mwindows",                                        -- Remove the command console
+                                        External ("WinDir") & "\System32\comctl32.dll",     -- Common controls for visual styles
                                         External ("WinDir") & "\System32\setupapi.dll",     -- Device setup API for device recognition
                                         External ("WinDir") & "\System32\hid.dll",          -- Human interface device library for input
                                         External ("WinDir") & "\System32\gdi32.dll",        -- Graphics device interface for fonts
@@ -135,7 +132,7 @@ project Neo is
   package Linker   is for Default_Switches ("Ada") use Switch_Linker;   end Linker;
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
-                      for Executable ("main.adb")  use GAME & BIT_SIZE; end Builder;
+                      for Executable ("main.adb")  use GAME;            end Builder;
   --package Naming   is for Body_Suffix ("C++")      use (".glv", ".glf", ".glt");      -- GLSL code
   --                        Body_Suffix ("C")        use ".hta";          end Naming;   -- Javascript ActiveX HTA module
 

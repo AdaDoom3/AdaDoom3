@@ -31,6 +31,12 @@ package Neo.Core.Hashed is
   NO_ELEMENT : constant Cursor     := Unsafe.NO_ELEMENT;
   EMPTY_MAP  : constant Unsafe.Map := Unsafe.EMPTY_MAP;
 
+  -- Conversion
+  type Ptr_Unsafe_Map is access all Unsafe.Map;
+  function To_Ptr     is new Unchecked_Conversion (Ptr_Unsafe_Map, Ptr);
+  function To_Ptr_Map is new Unchecked_Conversion (Ptr, Ptr_Unsafe_Map);
+  procedure Free is new Unchecked_Deallocation (Unsafe.Map, Ptr_Unsafe_Map);
+
   -- Fetch a sorted list of keys
   function Keys (Val : Unsafe.Map) return Array_Str_Unbound;
 

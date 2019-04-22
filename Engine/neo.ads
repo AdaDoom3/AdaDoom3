@@ -14,49 +14,64 @@
 --                                                                                                                                      --
 
 with GNAT.Compiler_Version;
-with GNAT.Traceback.Symbolic;      use GNAT.Traceback.Symbolic;
-with GNAT.Traceback;               use GNAT.Traceback;
-with Interfaces;                   use Interfaces;
-with Interfaces.C;                 use Interfaces.C;
-with System;                       use System;
-with System.Machine_Code;          use System.Machine_Code;
-with Ada.Containers;               use Ada.Containers;
-with Ada.Directories;              use Ada.Directories;
-with Ada.Exceptions;               use Ada.Exceptions;
-with Ada.Finalization;             use Ada.Finalization;
-with Ada.Command_Line;             use Ada.Command_Line;
-with Ada.Calendar;                 use Ada.Calendar;
-with Ada.Calendar.Formatting;      use Ada.Calendar.Formatting;
-with Ada.Characters.Latin_1;       use Ada.Characters.Latin_1;
-with Ada.Characters.Handling;      use Ada.Characters.Handling;
-with Ada.Wide_Characters.Handling; use Ada.Wide_Characters.Handling;
-with Ada.Task_Identification;      use Ada.Task_Identification;
-with Ada.Strings;                  use Ada.Strings;
-with Ada.Strings.Fixed;            use Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;        use Ada.Strings.Unbounded;
-with Ada.Strings.Wide_Fixed;       use Ada.Strings.Wide_Fixed;
-with Ada.Strings.Wide_Unbounded;   use Ada.Strings.Wide_Unbounded;
-with Ada.Streams;                  use Ada.Streams;
-with Ada.Streams.Stream_IO;        
+with GNAT.Traceback.Symbolic;            use GNAT.Traceback.Symbolic;
+with GNAT.Traceback;                     use GNAT.Traceback;
+with Interfaces;                         use Interfaces;
+with Interfaces.C;                       use Interfaces.C;
+with System;                             use System;
+with System.Machine_Code;                use System.Machine_Code;
+with System.Multiprocessors;             use System.Multiprocessors;
+with System.Storage_Pools;               use System.Storage_Pools;
+with System.Storage_Elements;            use System.Storage_Elements;
+with Ada.Containers;                     use Ada.Containers;
+with Ada.Directories;                    use Ada.Directories;
+with Ada.Numerics;                       use Ada.Numerics;
+with Ada.Exceptions;                     use Ada.Exceptions;
+with Ada.Finalization;                   use Ada.Finalization;
+with Ada.Command_Line;                   use Ada.Command_Line;
+with Ada.Calendar;                       use Ada.Calendar;
+with Ada.Calendar.Formatting;            use Ada.Calendar.Formatting;
+with Ada.Characters.Latin_1;             use Ada.Characters.Latin_1;
+with Ada.Characters.Wide_Latin_1;
+with Ada.Characters.Wide_Wide_Latin_1;
+with Ada.Characters.Handling;            use Ada.Characters.Handling;
+with Ada.Wide_Characters.Handling;       use Ada.Wide_Characters.Handling;
+with Ada.Task_Identification;            use Ada.Task_Identification;
+pragma Warnings (Off);
+with Ada.Strings.Superbounded;           use Ada.Strings.Superbounded;
+with Ada.Strings.Wide_Superbounded;      use Ada.Strings.Wide_Superbounded;
+with Ada.Strings.Wide_Wide_Superbounded; use Ada.Strings.Wide_Wide_Superbounded;
+pragma Warnings (On);
+with Ada.Strings;                        use Ada.Strings;
+with Ada.Strings.Fixed;                  use Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;             use Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Wide_Fixed;        use Ada.Strings.Wide_Wide_Fixed;
+with Ada.Strings.Unbounded;              use Ada.Strings.Unbounded;
+with Ada.Strings.Wide_Unbounded;         use Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Wide_Wide_Unbounded;    use Ada.Strings.Wide_Wide_Unbounded;
+with Ada.Streams;                        use Ada.Streams;
+with Ada.Streams.Stream_IO;
 with Ada.Text_IO;
+with Ada.Direct_IO;
 with Ada.Wide_Text_IO;
-with Ada.Unchecked_Deallocation;   
+with Ada.Unchecked_Deallocation;
 with Ada.Unchecked_Conversion;
 with Is_Debugging;
 
 -- String constants and base data types
 package Neo is
-  
+
   -------------
   -- Renames --
   -------------
 
   package Ada_IO    renames Ada.Wide_Text_IO;
   package Stream_IO renames Ada.Streams.Stream_IO;
+  package Latin_32  renames Ada.Characters.Wide_Wide_Latin_1;
 
   generic procedure Unchecked_Deallocation renames Ada.Unchecked_Deallocation;
   generic function  Unchecked_Conversion   renames Ada.Unchecked_Conversion;
-  
+
   -----------
   -- Types --
   -----------
@@ -66,15 +81,21 @@ package Neo is
   subtype Char_8    is Character;
   subtype Char_16_C is WChar_T;
   subtype Char_16   is Wide_Character;
+  subtype Char_32   is Wide_Wide_Character;
 
   -- Strings
   subtype Str_8_C        is Char_Array;
   subtype Str_8          is String;
+  subtype Str_32_Unbound is Unbounded_Wide_Wide_String;
   subtype Str_16_Unbound is Unbounded_Wide_String;
   subtype Str_8_Unbound  is Unbounded_String;
   subtype Str_16_C       is WChar_Array;
   subtype Str_16         is Wide_String;
   subtype Str_C          is Str_16_C;
+  subtype Str_32         is Wide_Wide_String;
+  subtype Str_32_Super   is Wide_Wide_Superbounded.Super_String;
+  subtype Str_16_Super   is Wide_Superbounded.Super_String;
+  subtype Str_8_Super    is Superbounded.Super_String;
 
   -- Integers
   type Int_Ptr              is mod MEMORY_SIZE;
@@ -119,6 +140,7 @@ package Neo is
   subtype Real_32_Positive is Real_32 range 1.0..Real_32'Last;
   subtype Real_32_Percent  is Real_32 range 0.0..100.0;
   subtype Real_32_Degree   is Real_32 range 1.0..360.0;
+  subtype Real_16          is Short_Float;
 
   -- Stream types
   subtype Array_Stream is Stream_Element_Array;
@@ -130,6 +152,8 @@ package Neo is
   type Ptr_Str_8_C           is access all Str_8_C;
   type Ptr_Str_8             is access all Str_8;
   type Ptr_Str_16_C          is access all Str_16_C;
+  type Ptr_Int_32_Signed     is access all Int_32_Signed;
+  type Ptr_Int_32_Positive   is access all Int_32_Positive;
   type Ptr_Int_Ptr           is access all Int_Ptr;
   type Ptr_Int_64_Unsigned_C is access all Int_64_Unsigned_C;
   type Ptr_Int_32_Unsigned_C is access all Int_32_Unsigned_C;
@@ -196,7 +220,7 @@ package Neo is
   function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_Unsigned);
 
   -- Prerequisite string constants
-  CHAR_16_REPLACEMENT : constant Char_8         := '~';
+  CHAR_REPLACEMENT    : constant Char_8         := '~';
   NULL_CHAR_8         : constant Char_8         := ASCII.NUL;
   NULL_CHAR_8_C       : constant Char_8_C       := Interfaces.C.NUL;
   NULL_CHAR_16        : constant Char_16        := Char_16'Val   (Char_8'Pos   (NULL_CHAR_8));
@@ -205,6 +229,7 @@ package Neo is
   NULL_CHAR_C         : constant Char_16_C      := NULL_CHAR_16_C;
   NULL_STR_16         : constant Str_16         := "";
   NULL_STR            : constant Str_16         := NULL_STR_16;
+  NULL_STR_32_UNBOUND : constant Str_32_Unbound := NULL_UNBOUNDED_WIDE_WIDE_STRING;
   NULL_STR_16_UNBOUND : constant Str_16_Unbound := NULL_UNBOUNDED_WIDE_STRING;
   NULL_STR_UNBOUND    : constant Str_16_Unbound := NULL_STR_16_UNBOUND;
   NULL_STR_8          : constant Str_8          := "";
@@ -220,17 +245,33 @@ package Neo is
   generic
     type Num_T is digits <>;
   function Generic_To_Str_16_Real (Item : Num_T) return Str_16;
-  function To_Str_8               (Item : Str_16)              return Str_8          is (To_String (Item, CHAR_16_REPLACEMENT));
+  function To_Str_8               (Item : Str_16)              return Str_8          is (To_String (Item, CHAR_REPLACEMENT));
   function To_Str_8               (Item : Ptr_Char_8_C)        return Str_8;
+  function To_Str_8               (Item : Str_8_Super)         return Str_8          renames Super_To_String;
   function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
   function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound  renames To_Unbounded_String;
+  function To_Str_8_Super         (Item : Str_8; L : Natural)  return Str_8_Super    is (To_Super_String (Item, L));
+  function P                      (Item : Str_8; L : Natural)  return Str_8_Super    renames To_Str_8_Super;
   function To_Str_16              (Item : Str_16_Unbound)      return Str_16         renames To_Wide_String;
   function To_Str_16_Unbound      (Item : Str_16)              return Str_16_Unbound renames To_Unbounded_Wide_String;
+  function To_Str_32_Unbound      (Item : Str_32)              return Str_32_Unbound renames To_Unbounded_Wide_Wide_String;
   function To_Str_Unbound         (Item : Str_16)              return Str_16_Unbound renames To_Str_16_Unbound;
   function U                      (Item : Str_16)              return Str_16_Unbound renames To_Str_16_Unbound;
+  function W                      (Item : Str_32)              return Str_32_Unbound renames To_Str_32_Unbound;
+  function To_Str_8               (Item : Str_32)              return Str_8;
+  function To_Str_16              (Item : Str_32)              return Str_16;
   function To_Str_16              (Item : Str_8)               return Str_16;
   function To_Str_16              (Item : Str_16_C)            return Str_16;
   function To_Str_16              (Item : Ptr_Const_Char_16_C) return Str_16;
+  function To_Str_32              (Item : Str_8)               return Str_32;
+  function To_Str_32              (Item : Str_16)              return Str_32;
+  function To_Str_32_Unbound      (Item : Str_8)               return Str_32_Unbound is (To_Str_32_Unbound (To_Str_32 (Item)));
+  function To_Str_32_Unbound      (Item : Str_16)              return Str_32_Unbound is (To_Str_32_Unbound (To_Str_32 (Item)));
+  function To_Str_32              (Item : Str_32_Unbound)      return Str_32         renames To_Wide_Wide_String;
+  function To_Str_8               (Item : Str_32_Unbound)      return Str_8          is (To_Str_8 (To_Str_32 (Item)));
+  function To_Str_16              (Item : Str_32_Unbound)      return Str_16         is (To_Str_16 (To_Str_32 (Item)));
+  function To_Str_16_Super        (Item : Str_16)              return Str_16_Super   is (To_Super_String (Item, 260));
+  function P                      (Item : Str_16)              return Str_16_Super   renames To_Str_16_Super;
   function To_Str_8               (Item : Str_8_C)             return Str_8          is (To_Ada (Item, True));
   function To_Str_8_C             (Item : Str_8)               return Str_8_C        is (To_C   (Item, True));
   function To_Str_8_C             (Item : Str_16)              return Str_8_C        is (To_Str_8_C (To_Str_8 (Item)));
@@ -242,9 +283,11 @@ package Neo is
   function To_Str_16_Unbound      (Item : Str_8)               return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
   function To_Str_16_Unbound      (Item : Char_16)             return Str_16_Unbound is (To_Str_16_Unbound ("" & Item));
   function To_Str_16_Unbound      (Item : Str_8_C)             return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
+  function To_Str_16_Unbound      (Item : Str_8_Super)         return Str_16_Unbound is (To_Str_16_Unbound (Super_To_String (Item)));
   function To_Str_Unbound         (Item : Str_8_C)             return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_Unbound         (Item : Str_8)               return Str_16_Unbound renames To_Str_16_Unbound;
-  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;  
+  function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;
+  function To_Str_Unbound         (Item : Str_8_Super)         return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_16_C            (Item : Str_16)              return Str_16_C       is (To_C        (Item & NULL_CHAR_16));
   function To_Str_16_C            (Item : Str_16_Unbound)      return Str_16_C       is (To_Str_16_C (To_Str_16 (Item)));
   function To_Str_C               (Item : Str_16)              return Str_16_C       renames To_Str_16_C;
@@ -264,6 +307,8 @@ package Neo is
   function C                      (Item : in out Str_16_C)     return Ptr_Char_16_C  renames To_Ptr_Char_16_C;
   function C                      (Item : in out Str_8_C)      return Ptr_Char_8_C   renames To_Ptr_Char_8_C;
   function To_Char_8              (Item : Char_16)             return Char_8;
+  function To_Char_8              (Item : Char_32)             return Char_8;
+  function To_Char_16             (Item : Char_32)             return Char_16;
   function To_Char_8_C            (Item : Char_8)              return Char_8_C       is (Char_8_C'Val  (Char_8'Pos    (Item)));
   function To_Char_8              (Item : Char_8_C)            return Char_8         is (Char_8'Val    (Char_8_C'Pos  (Item)));
   function To_Char_16_C           (Item : Char_8_C)            return Char_16_C      is (Char_16_C'Val (Char_8_C'Pos  (item)));
@@ -275,6 +320,8 @@ package Neo is
   function To_Char_8_C            (Item : Char_16)             return Char_8_C       is (To_Char_8_C   (To_Char_8     (Item)));
   function To_Char_16_C           (Item : Char_16)             return Char_16_C      is (Char_16_C'Val (Char_16'Pos   (item)));
   function To_Char_8              (Item : Char_16_C)           return Char_8         is (To_Char_8     (To_Char_16    (Item)));
+  function To_Char_32             (Item : Char_8)              return Char_32        is (Char_32'Val (Char_8'Pos (Item)));
+  function To_Char_32             (Item : Char_16)             return Char_32        is (Char_32'Val (Char_16'Pos (Item)));
 
   -- String constants requiring conversions
   EOL_16        : constant Str     := To_Char_16 (CR) & To_Char_16 (LF);
@@ -286,19 +333,23 @@ package Neo is
   NULL_STR_C    : constant Str_C   := NULL_STR_16_C;
   NULL_PTR      : constant Ptr     := NULL_ADDRESS;
 
+  procedure Free is new Unchecked_Deallocation (Str_16, Ptr_Str_16);
+  procedure Free is new Unchecked_Deallocation (Str_8,  Ptr_Str_8);
+
   -----------------
   -- Information --
   -----------------
 
-  NAME_ID : constant Str := "Neo";
-  VERSION : constant Str := "0.1.0";
-  
+  NAME_ID  : constant Str      := "Neo";
+  VERSION  : constant Str      := "0.1.0";
+  PATH_MAX : constant Positive := 260;
+
   package GNAT_Info is new GNAT.Compiler_Version;
 
   -- We need to get the path separator explicitly because Windows uses backslashes
   function Path_Separator return Char is ((if Index (Current_Directory, "\") = 0 then '/' else '\'));
   function S return Char renames Path_Separator; -- For convience
-  
+
   ---------------
   -- Debugging --
   ---------------
@@ -318,7 +369,7 @@ package Neo is
   procedure Debug_Assert (Val : Int_C);
   procedure Debug_Assert (Val : Int_Unsigned_C);
   procedure Debug_Assert (Val : Int_16_Unsigned_C);
-  
+
   -- Ignore procedures swallow the result of C functions that return useless results
   procedure Ignore (Val : Bool)              is null;
   procedure Ignore (Val : Ptr)               is null;
@@ -326,38 +377,38 @@ package Neo is
   procedure Ignore (Val : Int_C)             is null;
   procedure Ignore (Val : Int_Unsigned_C)    is null;
   procedure Ignore (Val : Int_16_Unsigned_C) is null;
-  
+
   ------------
   -- Status --
   ------------
 
   -- A mutex or task-safe flag, however you want to look at it...
   protected type Safe_Status with Lock_Free is
-      function Occupied return Bool;
       procedure Occupied (Val : Bool);
+      function Occupied return Bool;
     private
       Status : Bool := False;
     end;
-  
+
   -------------
   -- Counter --
   -------------
-  
+
   protected type Safe_Counter with Lock_Free is
       function Get return Int;
       procedure Set (Val : Int);
-      procedure Increment (Amount : Int); 
+      procedure Increment (Amount : Int);
       procedure Increment;
       procedure Decrement (Amount : Int);
       procedure Decrement;
     private
       Count : Int := 0;
     end;
-    
+
   ----------
   -- Safe --
   ----------
-  
+
   generic
     type Safe_T is private;
     Initial : Safe_T;
@@ -368,8 +419,8 @@ package Neo is
         private
           Data : Safe_T := Initial;
         end;
-    end;    
-  
+    end;
+
   generic
     type Safe_T is (<>);
     Initial : Safe_T;
@@ -381,7 +432,7 @@ package Neo is
           Data : Safe_T := Initial;
         end;
     end;
-  
+
   generic
     type Safe_T is digits <>;
     Initial : Safe_T;
@@ -407,15 +458,15 @@ package Neo is
   function Get_Duration   (Timer :        Timer_State) return Duration;
   procedure Start         (Timer : in out Timer_State);
   procedure Stop          (Timer : in out Timer_State);
-  
+
   -----------
   -- Sizes --
   -----------
-  
+
   GB : constant Int_Ptr := 32768 ** 2;
   MB : constant Int_Ptr := 1024  ** 2;
   kB : constant Int_Ptr := 1024;
-  
+
   -----------
   -- Color --
   -----------

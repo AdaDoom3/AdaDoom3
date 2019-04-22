@@ -13,6 +13,8 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
+with Neo.Data.Game; use Neo.Data.Game;
+
 -- Renderer for the global engine state
 package Neo.Engine.Renderer is
 
@@ -33,14 +35,15 @@ package Neo.Engine.Renderer is
   SUPPORTED_DEPTH_FORMATS    : constant Array_Int_Unsigned_C := (VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT);
 
   -- Feature extensions
-  DEVICE_EXTENSIONS   : constant Array_Ptr_Char_8_C := (C (VK_KHR_MAINTENANCE1_NAME),
-                                                        C (VK_KHR_MAINTENANCE2_NAME),
-                                                        C (VK_KHR_BIND_MEMORY2_NAME),
-                                                        C (VK_KHR_IMAGE_FORMAT_LIST_NAME),
-                                                        C (VK_KHR_SWAPCHAIN_EXTENSION_NAME),
-                                                        C (VK_KHR_GET_MEMORY_REQUIREMENTS2_NAME));
+  DEVICE_EXTENSIONS   : constant Array_Ptr_Char_8_C := (--C (VK_KHR_MAINTENANCE1_NAME),
+                                                        --C (VK_KHR_MAINTENANCE2_NAME),
+                                                        --C (VK_KHR_BIND_MEMORY2_NAME),
+                                                        --C (VK_KHR_IMAGE_FORMAT_LIST_NAME),
+                                                        1 => C (VK_KHR_SWAPCHAIN_EXTENSION_NAME)--,
+                                                        );--C (VK_KHR_GET_MEMORY_REQUIREMENTS2_NAME));
   DEBUGING_EXTENSIONS : constant Array_Ptr_Char_8_C := (C (VK_LAYER_LUNARG_API_DUMP_EXTENSION_NAME),
                                                         C (VK_LAYER_LUNARG_CORE_VALIDATION_NAME),
+                                                        C (VK_LAYER_LUNARG_STANDARD_VALIDATION),
                                                         C (VK_LAYER_LUNARG_OBJECT_TRACKER_NAME),
                                                         C (VK_LAYER_LUNARG_PARAMETER_VALIDATION_NAME));
 
@@ -186,7 +189,7 @@ package Neo.Engine.Renderer is
     end;
 
   -- ???
-  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Count_Type);
+  procedure Initialize_Buffer (Buffer : in out Buffer_State; Usage_Bits : Int_Unsigned_C; Data : Ptr; Data_Size : Int_Ptr; Count : Positive);
   function Find_Memory_Type_Index (Memory_Type_Bits : Int_Unsigned_C; Usage : Usage_Kind) return Int_Unsigned_C;
 
   ---------------
@@ -225,9 +228,9 @@ package Neo.Engine.Renderer is
     end record;
   package Vector_Framebuffer is new Neo.Core.Vectors (Framebuffer_State);
 
-  procedure Initialize_Framebuffer;
-  procedure Restart_Framebuffer;
-  procedure Finalize_Framebuffer;
+  procedure Initialize_Framebuffer with Inline;
+  procedure Restart_Framebuffer    with Inline;
+  procedure Finalize_Framebuffer   with Inline;
 
   Framebuffer_Status : Safe_Status;
   Framebuffer        : Vector_Framebuffer.Ptr_Unsafe_Array;
@@ -237,10 +240,11 @@ package Neo.Engine.Renderer is
   -- Shaders --
   -------------
 
+  type Array_Uniforms is array (1..64) of Str_Unbound;
   type Stage_Kind is (Fragment_Stage, Vertex_Stage, Tesselation_Stage, Geometry_Stage);
   type Stage_State (Kind : Stage_Kind := Fragment_Stage) is record
       Program  : aliased Ptr := NULL_PTR;
-      Uniforms : Vector_Str_Unbound.Unsafe.Vector;
+      Uniforms : Array_Uniforms := (others => NULL_STR_UNBOUND);
       case Kind is when Fragment_Stage => -- Fragment stages are the only ones that access samplers... could be too rigid
         Domain : Domain_Kind := Surface_Domain;
       when others => null; end case;
@@ -250,11 +254,10 @@ package Neo.Engine.Renderer is
   type Shader_State is record
       Stages                  :         Vector_Stage.Unsafe.Vector;
       Stages_Info             :         Vector_VkPipelineShaderStageCreateInfo.Unsafe.Vector;
-      Vertex_Inputs           :         Vector_VkPipelineVertexInputStateCreateInfo.Unsafe.Vector;
-      Vertex_Input_Attributes :         Vector_VkVertexInputAttributeDescription.Unsafe.Vector;
-      Pipeline_Stages         : aliased VkPipelineShaderStageCreateInfo := (others => <>);
-      Pipeline_Layout         : aliased Ptr                             := NULL_PTR; -- VkPipelineLayout
-      Descriptor_Set_Layout   : aliased Ptr                             := NULL_PTR; -- VkDescriptorSetLayout
+      Vertex_Binding          :         VkVertexInputBindingDescription;
+      Vertex_Attributes       :         Vector_VkVertexInputAttributeDescription.Unsafe.Vector;
+      Pipeline_Layout         : aliased Ptr := NULL_PTR; -- VkPipelineLayout
+      Descriptor_Set_Layout   : aliased Ptr := NULL_PTR; -- VkDescriptorSetLayout
     end record;
   package Map_Shader is new Neo.Core.Hashed (Shader_State);
 
@@ -373,7 +376,7 @@ package Neo.Engine.Renderer is
       Model_Depth_Hack  : Bool        := False;
       Weapon_Depth_Hack : Bool        := False;
       From_Menu         : Bool        := False;
-      case Is_Animated is when True => Pose : Treed_Joint.Unsafe.Tree; when False => null; end case;
+      --case Is_Animated is when True => Pose : Treed_Joint.Unsafe.Tree; when False => null; end case;
     end record;
   package Vector_Bottom_Level_State        is new Neo.Core.Vectors (Bottom_Level_State);
   package Vector_Cursor_Bottom_Level_State is new Neo.Core.Vectors (Vector_Bottom_Level_State.Cursor);
@@ -408,8 +411,8 @@ package Neo.Engine.Renderer is
   Joint_Buffer : Buffer_State := (Size => JOINT_BUFFER_SIZE, others => <>);
 
   procedure Draw (Data : Bottom_Level_State; Commands : in out Ptr; Surface_Sort : Surface_Sort_Array);
-  procedure Initialize_Drawing;
-  procedure Finalize_Drawing;
+  procedure Initialize_Drawing with Inline;
+  procedure Finalize_Drawing   with Inline;
 
   ---------------------
   -- Implementations --

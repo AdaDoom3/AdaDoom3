@@ -29,5 +29,5 @@ package Neo.Data.Texture is
       Height          : Positive       := 1;
     end record;
 
-  function Load (Path : Str) return Image_State;
+  procedure Load_Image (Path : Str);
 end;

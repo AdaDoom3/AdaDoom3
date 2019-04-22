@@ -14,24 +14,10 @@
 --                                                                                                                                      --
 
 -- Unified texture type definitions
-package Neo.Data.Texture is
 
-  -------------
-  -- Formats --
-  -------------
+with API.OPUS; use API.OPUS;
 
-  type Format_Kind is (Khronos_Format); -- http://web.archive.org/web/20160811201320/https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+-- Xiph.Org Foundation OPUS audio loading
+separate (Neo.Data.Audio) package body OPUS is
 
-  -----------
-  -- Image --
-  -----------
-
-  type Compressed_Image (Kind : Format_Kind; Mipmaps, Length, Faces, Face_Size : Int)
-    is array (1..Mipmaps, 1..Length, 1..Faces, 1..Face_Size) of Byte with Convention => C;
-
-  --------
-  -- IO --
-  --------
-
-  function Load (Path : Str) return Compressed_Image;
 end;
