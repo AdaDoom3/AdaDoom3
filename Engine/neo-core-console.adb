@@ -59,24 +59,34 @@ package body Neo.Core.Console is
     end;
 
   -- Public Safe_IO interface to wrap the protected type
-  procedure Use_Ada_Put                                    is begin Set_Put (Ada_IO.Put'Access);           end;
-  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (U (Val));         end;
-  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);               end;
-  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);                 end;
-  procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                        end;
-  procedure Put         (Item : Char)                      is begin Put (Item & "");                       end;
-  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);                    end;
-  procedure Line        (Item : Char)                      is begin Line (Item & "");                      end;
-  procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));                       end;
-  procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);                      end;
-  procedure Line_Error  (Item : Str)                       is begin Line; Line ("ERROR: "   & Item); Line; end;
-  procedure Line_Warn   (Item : Str)                       is begin Line; Line ("WARNING: " & Item); Line; end;
-  procedure Line_Info   (Item : Str)                       is begin Line; Line ("INFO: "    & Item); Line; end;
+  procedure Use_Ada_Put                                    is begin Set_Put (Ada_IO.Put'Access);     end;
+  procedure Input_Entry (Val  : Str)                       is begin Safe_IO.Input_Entry (U (Val));   end;
+  procedure Line_Size   (Val  : Positive)                  is begin Safe_IO.Line_Size (Val);         end;
+  procedure Set_Put     (Val  : Ptr_Procedure_Put)         is begin Safe_IO.Set_Put (Val);           end;
+  procedure Put         (Item : Str_Unbound)               is begin Put (S (Item));                  end;
+  procedure Put         (Item : Char)                      is begin Put (Item & "");                 end;
+  procedure Put         (Item : Str)                       is begin Safe_IO.Put (Item);              end;
+  procedure Line        (Item : Char)                      is begin Line (Item & "");                end;
+  procedure Line        (Item : Str_Unbound)               is begin Line (S (Item));                 end;
+  procedure Line        (Item : Str := "")                 is begin Put (Item & EOL);                end;
+  procedure Error       (Item : Str)                       is begin Line; Line ("ERROR: "   & Item); end;
+  procedure Warn        (Item : Str)                       is begin Line; Line ("WARNING: " & Item); end;
+  procedure Info        (Item : Str)                       is begin Line; Line ("INFO: "    & Item); end;
   function Extension    (Path : Str) return Str            is (Path (Index (Path, ".") + 1..Path'Last));
   function Log                       return Str_Unbound    is (Safe_IO.Log);
   function Input_Entry               return Str            is (S (Safe_IO.Input_Entry));
   function Lines                     return Int_64_Natural is (Safe_IO.Lines);
   function Line_Size                 return Positive       is (Safe_IO.Line_Size);
+
+  procedure Title (Item : Str) is
+    begin
+      Line;
+      for C of Item loop
+        Put (To_Upper (C) & " ");
+      end loop;
+      Line;
+      Line;
+    end;
 
   --------------------
   -- Internal State --
@@ -131,7 +141,7 @@ package body Neo.Core.Console is
   package body CVar_Internal is
       Duplicate : Exception;
 
-      -- !!! Part of workaround
+      --! Part of workaround
       In_Finalize : Boolean := False;
 
       -- Accessors
@@ -156,7 +166,7 @@ package body Neo.Core.Console is
             if Settable then CVars.Replace (Name, (True, U (Handle_Get), null, null, null));
             else CVars.Delete (Name); end if;
 
-            -- !!! Part of workaround
+            --! Part of workaround
             In_Finalize := True;
             Free (Ptr_Controller);
           end if;
@@ -180,7 +190,7 @@ package body Neo.Core.Console is
                              Settable => Settable));
       end if;
 
-      -- !!! Part of the workaround
+      --! Part of the workaround
       Ptr_Controller := new Control_State;
     end;
 
@@ -230,7 +240,7 @@ package body Neo.Core.Console is
           end loop;
         end;
 
-      -- ???
+      
       function Handle_Get_Val return Str is (Safe_Var_T.Get'Wide_Image);
       package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, To_Str);
     end;
@@ -262,7 +272,7 @@ package body Neo.Core.Console is
           Line (Handle_Get);
         end;
 
-      -- ???
+      
       function Handle_Get_Val return Str is (Safe_Var_T.Get'Wide_Image);
       package Internal is new CVar_Internal (Name, Var_T, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, To_Str);
     end;
@@ -278,9 +288,9 @@ package body Neo.Core.Console is
       Safe_Var_T : Safe_Internal.T;
 
       -- Accessors
-      function Get return Str_Unbound is (Safe_Var_T.Get);
-      function Get return Str         is (S (Safe_Var_T.Get));
-      procedure Set (Val : Str_Unbound) is begin Safe_Var_T.Set (Val); end;
+      function Get return Str_Unbound   is (Safe_Var_T.Get);
+      function Get return Str           is (S (Safe_Var_T.Get));
+      procedure Set (Val : Str_Unbound) is begin Safe_Var_T.Set (Val);     end;
       procedure Set (Val : Str)         is begin Safe_Var_T.Set (U (Val)); end;
 
       -- Commandline interaction
@@ -290,7 +300,7 @@ pragma Warnings (Off); -- warning: call to "Set" may occur before body is seen
       procedure Handle_Set (Val : Str) is begin Set (Val); end;
 pragma Warnings (On);
 
-      -- ???
+      
       function Handle_Get_Val return Str is (S (Safe_Var_T.Get));
       package Internal is new
         CVar_Internal (Name, Str_Unbound, Settable, Set, Get, Handle_Set, Handle_Get, Handle_Get_Val, S);
@@ -375,7 +385,7 @@ pragma Warnings (On);
     Entries   : Vector_Str_Unbound.Unsafe.Vector;
     ENG       : constant Str_Unbound := To_Str_Unbound ("eng" & NULL_STR);
     begin
-      --Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_LOCALE)); -- Str_8 !!!
+      --Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (PATH_LOCALE)); -- Str_8!
       for I of Split (Ada_IO.Get_Line (Data), ",") loop
         Indexes.Insert (I, J);
         Locales.Insert (I, Language);
@@ -431,11 +441,14 @@ pragma Warnings (On);
   -- Configuration --
   -------------------
 
-  -- ???
-  procedure Finalize_Configuration (Path : Str) is
+  Current_Path : Str_Unbound := NULL_STR_UNBOUND;
+  
+  procedure Finalize_Configuration is
     Data : Ada_IO.File_Type;
+    Path : Str := S (Current_Path);
     begin
-      if Exists (To_Str_8 (Path)) then Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (Path)); -- Str_8 !!!
+      if Current_Path = NULL_STR_UNBOUND then Line ("Config finalization without initialization!"); return; end if;
+      if Exists (To_Str_8 (Path)) then Ada_IO.Open (Data, Ada_IO.Out_File, To_Str_8 (Path)); -- Str_8!
       else Ada_IO.Create (Data, Ada_IO.Out_File, To_Str_8 (Path)); end if;
 
       -- Header
@@ -444,7 +457,7 @@ pragma Warnings (On);
       Ada_IO.New_Line (Data);
       Ada_IO.Put_Line (Data, "-- CVars");
 
-      -- CVars NOTE: This fails due to finalization bug !!!
+      -- CVars NOTE: This fails due to finalization bug!
       for I in CVars.Get.Iterate loop
         if Element (I).Settable then
           Ada_IO.Put_Line (Data, S (Key (I)) & " " &
@@ -463,25 +476,26 @@ pragma Warnings (On);
       Ada_IO.Close (Data);
     exception when others => Line ("Configuration save failed!"); end;
 
-  -- ???
+  
   procedure Initialize_Configuration (Path : Str) is
     Data : Ada_IO.File_Type;
     I    : Natural     := 0;
     Text : Str_Unbound := NULL_STR_UNBOUND;
     begin
+      Current_Path := U (Path);
       if not Exists (To_Str_8 (Path)) then
         Line ("No configuration found... using defaults");
         return;
       end if;
 
-      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
+      Ada_IO.Open (Data, Ada_IO.In_File, To_Str_8 (Path)); -- Str_8!
       while not Ada_IO.End_Of_File (Data) loop
         Text := To_Str_Unbound (Ada_IO.Get_Line (Data));
         Trim (Text);
         if Length (Text) > 0 then
           I := Index (Text, "--");
-          if I = 0 then Submit (S (Text));
-          elsif I /= 1 then Submit (S (Text) (1..I - 1)); end if;
+          if    I  = 0 then Submit (S (Text));            Line (S (Text));
+          elsif I /= 1 then Submit (S (Text) (1..I - 1)); Line (S (Text)(1..I - 1)); end if;
         end if;
       end loop;
       Ada_IO.Close (Data);

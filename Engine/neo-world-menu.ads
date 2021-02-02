@@ -13,7 +13,7 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-package Neo.Engine.Menu is
+package Neo.World.Menu is
 
   UI_Elements : Treed_UI_Element.Safe.Tree;
   

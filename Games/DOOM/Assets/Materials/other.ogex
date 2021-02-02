@@ -1,0 +1,52 @@
+Material
+{
+   Name {string {"textures_sfx_gunflare"}}
+   Texture (attrib = "editor") {string {"textures_particles_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_gunflarebeam"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_dropship_dbeam1"}}
+}
+Material
+{
+   Name {string {"textures_decals_filmgrain_black_white"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_filmgrain"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_particles_flare"}}
+}
+Material
+{
+   Name {string {"textures_particles_exp_big_chim"}}
+   Texture (attrib = "editor") {string {"textures_particles_exp_big"}}
+}
+Material
+{
+   Name {string {"textures_particles_exp_small_chim"}}
+   Texture (attrib = "editor") {string {"textures_particles_exp_small"}}
+}
+Material
+{
+   Name {string {"textures_particles_exp_muzzle_chim"}}
+   Texture (attrib = "editor") {string {"textures_particles_exp_muzzle"}}
+}
+Material
+{
+   Name {string {"textures_decals_spooky2"}}
+   Texture (attrib = "editor") {string {"textures_decals_berserk"}}
+}
+Material
+{
+   Name {string {"textures_null"}}
+}
+Material
+{
+   Name {string {"textures_null2"}}
+}

@@ -1,0 +1,757 @@
+Material
+{
+   Name {string {"lights_ambientLight_nofall"}}
+}
+Material
+{
+   Name {string {"lights_meatlight"}}
+}
+Material
+{
+   Name {string {"lights_squareblast"}}
+}
+Material
+{
+   Name {string {"lights_biground1_strobe"}}
+}
+Material
+{
+   Name {string {"lights_bfg_flare"}}
+}
+Material
+{
+   Name {string {"lights_barrelexplode"}}
+}
+Material
+{
+   Name {string {"lights_redglow"}}
+}
+Material
+{
+   Name {string {"lights_roundfire2"}}
+}
+Material
+{
+   Name {string {"lights_dropship"}}
+}
+Material
+{
+   Name {string {"lights_falloff_exp1"}}
+}
+Material
+{
+   Name {string {"lights_falloff_exp2"}}
+}
+Material
+{
+   Name {string {"lights_headlights"}}
+}
+Material
+{
+   Name {string {"lights_cloudscroll"}}
+}
+Material
+{
+   Name {string {"lights_cloudscroll2"}}
+}
+Material
+{
+   Name {string {"lights_cloudscroll3"}}
+}
+Material
+{
+   Name {string {"lights_stormy1"}}
+}
+Material
+{
+   Name {string {"lights_lightgratelight2"}}
+}
+Material
+{
+   Name {string {"lights_lightgratelight"}}
+}
+Material
+{
+   Name {string {"lights_square_strobe_slow"}}
+}
+Material
+{
+   Name {string {"lights_spectrum2Light_round"}}
+}
+Material
+{
+   Name {string {"lights_spectrum2Light"}}
+}
+Material
+{
+   Name {string {"lights_viewWeaponGuiLight"}}
+}
+Material
+{
+   Name {string {"lights_plasmaglow"}}
+}
+Material
+{
+   Name {string {"lights_sentrylight"}}
+}
+Material
+{
+   Name {string {"lights_lanternglow"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate1"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3b"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate4"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate5"}}
+}
+Material
+{
+   Name {string {"lights_squareishlight"}}
+}
+Material
+{
+   Name {string {"lights_biground1"}}
+}
+Material
+{
+   Name {string {"lights_biground1_snd_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_biground1_global"}}
+}
+Material
+{
+   Name {string {"lights_biground1_blamplight_cv"}}
+}
+Material
+{
+   Name {string {"lights_biground1_parmsndflicker"}}
+}
+Material
+{
+   Name {string {"lights_grate8"}}
+}
+Material
+{
+   Name {string {"lights_grate8sqr"}}
+}
+Material
+{
+   Name {string {"lights_grate8sqr_blinky"}}
+}
+Material
+{
+   Name {string {"lights_grate7"}}
+}
+Material
+{
+   Name {string {"lights_grate7_blinky"}}
+}
+Material
+{
+   Name {string {"lights_cavsolarlight"}}
+}
+Material
+{
+   Name {string {"lights_hellgate1_colorme"}}
+}
+Material
+{
+   Name {string {"lights_hellgate1"}}
+}
+Material
+{
+   Name {string {"lights_vivlight"}}
+}
+Material
+{
+   Name {string {"lights_grate6"}}
+}
+Material
+{
+   Name {string {"lights_triangle2"}}
+}
+Material
+{
+   Name {string {"lights_triangle1"}}
+}
+Material
+{
+   Name {string {"lights_rred"}}
+}
+Material
+{
+   Name {string {"lights_pentagram"}}
+   Texture (attrib = "editor") {string {"textures_decals_pentagramfx"}}
+}
+Material
+{
+   Name {string {"lights_strobevent01"}}
+}
+Material
+{
+   Name {string {"lights_impflash"}}
+}
+Material
+{
+   Name {string {"lights_spectrumspawn30"}}
+}
+Material
+{
+   Name {string {"lights_spectrumspawn31"}}
+}
+Material
+{
+   Name {string {"lights_spawnflash"}}
+}
+Material
+{
+   Name {string {"lights_baronflash"}}
+}
+Material
+{
+   Name {string {"lights_defaultPointLight"}}
+}
+Material
+{
+   Name {string {"lights_desertambientlight"}}
+}
+Material
+{
+   Name {string {"lights_desertlight2"}}
+}
+Material
+{
+   Name {string {"lights_desertlight"}}
+}
+Material
+{
+   Name {string {"lights_defaultProjectedLight"}}
+}
+Material
+{
+   Name {string {"lights_ambientLight"}}
+}
+Material
+{
+   Name {string {"lights_ambientLight2"}}
+}
+Material
+{
+   Name {string {"lights_qcfloorvent01x"}}
+}
+Material
+{
+   Name {string {"lights_roundfire"}}
+}
+Material
+{
+   Name {string {"lights_floorpgrate"}}
+}
+Material
+{
+   Name {string {"lights_blamplight2"}}
+}
+Material
+{
+   Name {string {"lights_killtest"}}
+}
+Material
+{
+   Name {string {"lights_floorvent01x_cv"}}
+}
+Material
+{
+   Name {string {"lights_fanlightgrateSC"}}
+}
+Material
+{
+   Name {string {"lights_fanblade3"}}
+}
+Material
+{
+   Name {string {"lights_fanlightgrate"}}
+}
+Material
+{
+   Name {string {"lights_square_blast"}}
+}
+Material
+{
+   Name {string {"lights_square_strobe"}}
+}
+Material
+{
+   Name {string {"lights_square_brokenneon2"}}
+}
+Material
+{
+   Name {string {"lights_square_brokenneon1"}}
+}
+Material
+{
+   Name {string {"lights_square_flicker2"}}
+}
+Material
+{
+   Name {string {"lights_square_flicker"}}
+}
+Material
+{
+   Name {string {"lights_square_flicker3"}}
+}
+Material
+{
+   Name {string {"lights_square_flicker3_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_square_flicker4"}}
+}
+Material
+{
+   Name {string {"lights_round_sin"}}
+}
+Material
+{
+   Name {string {"lights_round_strobe"}}
+}
+Material
+{
+   Name {string {"lights_round_brokenneon2"}}
+}
+Material
+{
+   Name {string {"lights_round_brokenneon1"}}
+}
+Material
+{
+   Name {string {"lights_round_flicker2"}}
+}
+Material
+{
+   Name {string {"lights_round_flicker"}}
+}
+Material
+{
+   Name {string {"lights_blur_cv"}}
+}
+Material
+{
+   Name {string {"lights_blamplight_cv"}}
+}
+Material
+{
+   Name {string {"lights_blamplight_still_cv"}}
+}
+Material
+{
+   Name {string {"lights_xblamplight_cv"}}
+}
+Material
+{
+   Name {string {"lights_duolight02_cv"}}
+}
+Material
+{
+   Name {string {"lights_bspot01_cv"}}
+}
+Material
+{
+   Name {string {"lights_xbspot01_cv"}}
+}
+Material
+{
+   Name {string {"lights_square"}}
+}
+Material
+{
+   Name {string {"lights_rotate"}}
+}
+Material
+{
+   Name {string {"lights_hangar_rotate"}}
+}
+Material
+{
+   Name {string {"lights_bspot01"}}
+}
+Material
+{
+   Name {string {"lights_spot01_dblbright"}}
+}
+Material
+{
+   Name {string {"lights_spot01"}}
+}
+Material
+{
+   Name {string {"lights_spot01_global"}}
+}
+Material
+{
+   Name {string {"lights_duolight02"}}
+}
+Material
+{
+   Name {string {"lights_duolight01"}}
+}
+Material
+{
+   Name {string {"lights_blamplight_tile4"}}
+}
+Material
+{
+   Name {string {"lights_blamplight"}}
+}
+Material
+{
+   Name {string {"lights_blamplighte3"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1a"}}
+}
+Material
+{
+   Name {string {"lights_brucedemo2"}}
+}
+Material
+{
+   Name {string {"lights_floorvent01int"}}
+}
+Material
+{
+   Name {string {"lights_sarge_talk"}}
+}
+Material
+{
+   Name {string {"lights_jethro_spot1"}}
+}
+Material
+{
+   Name {string {"lights_grate4"}}
+}
+Material
+{
+   Name {string {"lights_floorvent01x"}}
+}
+Material
+{
+   Name {string {"lights_twopass"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1sky"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_dblbright"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_cave_group1"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_cave_group2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_cave_group3"}}
+}
+Material
+{
+   Name {string {"lights_xray02"}}
+}
+Material
+{
+   Name {string {"lights_rspot01drk"}}
+}
+Material
+{
+   Name {string {"lights_flashlight2"}}
+}
+Material
+{
+   Name {string {"lights_flashlight5"}}
+}
+Material
+{
+   Name {string {"lights_spot01drk"}}
+}
+Material
+{
+   Name {string {"lights_spot02"}}
+}
+Material
+{
+   Name {string {"lights_redlight01"}}
+}
+Material
+{
+   Name {string {"lights_spotlight04"}}
+}
+Material
+{
+   Name {string {"lights_xfalloff"}}
+}
+Material
+{
+   Name {string {"lights_squarelight"}}
+}
+Material
+{
+   Name {string {"lights_malsrotatedLight"}}
+}
+Material
+{
+   Name {string {"lights_globalFadeLight"}}
+}
+Material
+{
+   Name {string {"lights_globalFadeLight2"}}
+}
+Material
+{
+   Name {string {"lights_duffysquarelight"}}
+}
+Material
+{
+   Name {string {"lights_xianspecial"}}
+}
+Material
+{
+   Name {string {"lights_xianspecial_stages"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate1_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3b_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate4_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate5_flicker"}}
+}
+Material
+{
+   Name {string {"lights_lightgratelight2_snd"}}
+}
+Material
+{
+   Name {string {"lights_triangle1_snd"}}
+}
+Material
+{
+   Name {string {"lights_square_decomlight1"}}
+}
+Material
+{
+   Name {string {"lights_eye_blink_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_squareishlight_snd"}}
+}
+Material
+{
+   Name {string {"lights_squaresihlight_snd"}}
+}
+Material
+{
+   Name {string {"lights_squareishlight_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_biground1_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate1_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3b_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate4_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate5_snd"}}
+}
+Material
+{
+   Name {string {"lights_roundfire_spectrumLight"}}
+}
+Material
+{
+   Name {string {"lights_alarm_strobe"}}
+}
+Material
+{
+   Name {string {"lights_floorvent01ax_cv"}}
+}
+Material
+{
+   Name {string {"lights_fragchamber_fadeLight1"}}
+}
+Material
+{
+   Name {string {"lights_fragchamber_fadeLight2"}}
+}
+Material
+{
+   Name {string {"lights_fragchamber_fadeLight3"}}
+}
+Material
+{
+   Name {string {"lights_mp_d3dm4_globalFadeLight"}}
+}
+Material
+{
+   Name {string {"lights_mp_d3dm4_globalFadeLight2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_sound_off"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_flash"}}
+}
+Material
+{
+   Name {string {"lights_square_trigger_flicker"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight_hold"}}
+}
+Material
+{
+   Name {string {"lights_spot_builduplight_hold"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_off"}}
+}
+Material
+{
+   Name {string {"lights_swinglight_breakable_off_1"}}
+}
+Material
+{
+   Name {string {"lights_sparks_sound"}}
+}
+Material
+{
+   Name {string {"lights_impflyflash"}}
+}
+Material
+{
+   Name {string {"lights_lightgratelight_snd"}}
+}
+Material
+{
+   Name {string {"lights_warmup_squarelight_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3_snd"}}
+}
+Material
+{
+   Name {string {"lights_duolight02_snd_cv"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_noflicker"}}
+}
+Material
+{
+   Name {string {"lights_biground1_snd_noflicker"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group1"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group3"}}
+}
+Material
+{
+   Name {string {"lights_spot01_snd"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_softer"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_softer"}}
+}
+Material
+{
+   Name {string {"lights_blamplight_still_cv_breakable_softer"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_negative"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_mod"}}
+}

@@ -1,26 +1,26 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 -- User facing interactive settings (e.g. console variables and commands)
-package Neo.Engine.Commands is
+package Neo.World.Commands is
 
   ----------
   -- Time --
   ----------
   --
-  -- ???
+  
   --
 
   procedure Command_The_Time (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -33,7 +33,7 @@ package Neo.Engine.Commands is
   -- Kick --
   ----------
   --
-  -- ???
+  
   --
 
   procedure Command_Kick (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -46,7 +46,7 @@ package Neo.Engine.Commands is
   -- Ban --
   ---------
   --
-  -- ???
+  
   --
 
   procedure Command_Ban (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -59,7 +59,7 @@ package Neo.Engine.Commands is
   -- Info --
   ----------
   --
-  -- ???
+  
   --
 
   procedure Command_Info (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -72,7 +72,7 @@ package Neo.Engine.Commands is
   -- Say --
   ---------
   --
-  -- ???
+  
   --
 
   procedure Command_Say (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -85,7 +85,7 @@ package Neo.Engine.Commands is
   -- Bind --
   ----------
   --
-  -- ???
+  
   --
 
   function Save_Binds return Str;
@@ -100,7 +100,7 @@ package Neo.Engine.Commands is
   -- Unbind --
   ------------
   --
-  -- ???
+  
   --
 
   procedure Command_Unbind (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -113,7 +113,7 @@ package Neo.Engine.Commands is
   -- Restart --
   -------------
   --
-  -- ???
+  
   --
 
   procedure Command_Restart_Map (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -126,7 +126,7 @@ package Neo.Engine.Commands is
   -- Map --
   ---------
   --
-  -- ???
+  
   --
 
   procedure Command_Load_Map (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -139,7 +139,7 @@ package Neo.Engine.Commands is
   -- Host --
   ----------
   --
-  -- ???
+  
   --
 
   procedure Command_Host_Map (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -152,7 +152,7 @@ package Neo.Engine.Commands is
   -- Join --
   ----------
   --
-  -- ???
+  
   --
 
   procedure Command_Join_Map (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -165,7 +165,7 @@ package Neo.Engine.Commands is
   -- Servers --
   -------------
   --
-  -- ???
+  
   --
 
   procedure Command_Server_List (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);
@@ -178,7 +178,7 @@ package Neo.Engine.Commands is
   -- Recent --
   ------------
   --
-  -- ???
+  
   --
 
   procedure Command_Recent_Server_List (Args : Array_Str_Unbound); --  := NULL_ARRAY_STR_UNBOUND);

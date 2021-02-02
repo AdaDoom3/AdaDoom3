@@ -1,0 +1,9 @@
+Material
+{
+   Name {string {"textures_mcity_mcitya12_2_break"}}
+   Texture (attrib = "editor") {string {"textures_mcity_mcitya12_2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_sound_off"}}
+}

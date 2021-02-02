@@ -1,0 +1,355 @@
+Material
+{
+   Name {string {"textures_base_door_stedoorframe2_trim"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoorframe2_trim"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoorframe2_trim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoorframe2_trim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoorframe2_trim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_smalldoortexdirty"}}
+   Texture (attrib = "editor") {string {"textures_base_door_smalldoortexdirty"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_smalldoortexdirty_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_smalldoortex_local"}}
+   Texture (attrib = "specular") {string {"textures_base_door_smalldoortexdirty_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_leftframe2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_leftframe2"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_leftframe2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_leftframe2_s"}}
+   Texture (attrib = "normal") {string {"textures_base_door_leftframe2_local"}}
+}
+Material
+{
+   Name {string {"textures_base_door_nobbydoor"}}
+   Texture (attrib = "editor") {string {"textures_base_door_nobbydoor"}}
+   Texture (attrib = "normal") {string {"textures_base_door_nobbydoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_nobbydoor_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_nobbydoor_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stor_door"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stor_door"}}
+   Texture (attrib = "diffuse") {string {"textures_base_wall_squarepanel_d"}}
+   Texture (attrib = "specular") {string {"textures_base_wall_squarepanel_s"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_squarepanel_local"}}
+}
+Material
+{
+   Name {string {"textures_base_door_a_delelev1_d03"}}
+   Texture (attrib = "editor") {string {"textures_base_door_a_delelev1_d03"}}
+   Texture (attrib = "normal") {string {"textures_base_door_a_delelev1_local02"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_a_delelev1_d03"}}
+   Texture (attrib = "specular") {string {"textures_base_door_a_delelev1_s03"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlight_grn"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlight_grn"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlight_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlight_grn"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airwheel"}}
+   Texture (attrib = "editor") {string {"textures_editor_airwheel"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airwheel_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airwheel_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airwheel_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airdoor"}}
+   Texture (attrib = "editor") {string {"textures_base_door_airdoor"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airdoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airdoor_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airdoor_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airdoorfrm"}}
+   Texture (attrib = "editor") {string {"textures_base_door_airdoorfrm"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airdoorfrm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airdoorfrm_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airdoorfrm_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_jumbofrm"}}
+   Texture (attrib = "editor") {string {"textures_editor_jumbofrm"}}
+   Texture (attrib = "normal") {string {"textures_base_door_jumbofrm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_jumbofrm_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_jumbofrm_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_jumbodoorguts"}}
+   Texture (attrib = "editor") {string {"textures_editor_jumbodoorguts"}}
+   Texture (attrib = "normal") {string {"textures_base_door_jumbodoorguts_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_jumbodoorguts_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_jumbodoorguts_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_jumbodoor"}}
+   Texture (attrib = "editor") {string {"textures_base_door_jumbodoor_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_jumbodoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_jumbodoor_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_jumbodoor_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_delelev1"}}
+   Texture (attrib = "editor") {string {"textures_base_door_delelev1_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_delelev1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_delelev1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_delelev1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_delelev2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_delelev2_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_delelev2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_delelev2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_delelev2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoorgutter"}}
+   Texture (attrib = "editor") {string {"textures_base_door_deldoorgutter"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoorgutter_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoorgutter_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoorgutter_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoorgutter2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_deldoorgutter2"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoorgutter_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoorgutter2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoorgutter_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoor1frm"}}
+   Texture (attrib = "editor") {string {"textures_editor_deldoor1frm"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoor1frm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoor1frm_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoor1frm_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoor1"}}
+   Texture (attrib = "editor") {string {"textures_editor_deldoor1"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoor1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoor1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoor1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoor1vert"}}
+   Texture (attrib = "editor") {string {"textures_editor_deldoor1vert"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoor1vert_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoor1vert_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoor1vert_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoor2frm"}}
+   Texture (attrib = "editor") {string {"textures_editor_deldoor2frm"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoor2frm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoor2frm_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoor2frm_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoor2combo"}}
+   Texture (attrib = "editor") {string {"textures_editor_deldoor2combo"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoor2combo_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoor2combo_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoor2combo_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlamp"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlamp"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlight_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlamp"}}
+   Texture (attrib = "specular") {string {"textures_base_door_doorlight_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlamp2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlamp2_add"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlamp2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlamp2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_doorlamp2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_gothatch2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_gothatch2"}}
+   Texture (attrib = "normal") {string {"textures_base_door_gothatch2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_gothatch2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_gothatch2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stedoorpanel1"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoorpanel1"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoorpanel1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoorpanel1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoorpanel1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stedoorgromit"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoorgromit"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoorgromit_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoorgromit_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoorgromit_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stedoorframe2"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoorframe2"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoorframe2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoorframe2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoorframe2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stedoortrim"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoortrim"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoortrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoortrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoortrim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_stegreenswatch"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stegreenswatch_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_flatswatch"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stegreenswatch_d"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlightdel"}}
+   Texture (attrib = "editor") {string {"textures_editor_doorlightdel"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlightdel_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlightdel_d"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlight"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlight_red"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlight_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlight_red"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlightcav"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlightcav"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlightcav_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlightcav_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_doorlightcav_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_doorlight_red_to_green"}}
+   Texture (attrib = "editor") {string {"textures_base_door_doorlight_red"}}
+   Texture (attrib = "normal") {string {"textures_base_door_doorlight_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_doorlight_red"}}
+}
+Material
+{
+   Name {string {"textures_base_door_cpubossdoor"}}
+   Texture (attrib = "editor") {string {"textures_base_door_cpubossdoor"}}
+   Texture (attrib = "normal") {string {"textures_base_door_cpubossdoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_cpubossdoor"}}
+   Texture (attrib = "specular") {string {"textures_base_door_cpubossdoor_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_smdoor1b"}}
+   Texture (attrib = "editor") {string {"textures_base_door_smdoor1b"}}
+   Texture (attrib = "normal") {string {"textures_base_door_smdoor1a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_smdoor1b"}}
+   Texture (attrib = "specular") {string {"textures_base_door_smdoor1b_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_smdoor1a"}}
+   Texture (attrib = "editor") {string {"textures_base_door_smdoor1a"}}
+   Texture (attrib = "normal") {string {"textures_base_door_smdoor1a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_smdoor1a"}}
+   Texture (attrib = "specular") {string {"textures_base_door_smdoor1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airwheel_enpro"}}
+   Texture (attrib = "editor") {string {"textures_base_door_airwheel_enpro"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airwheel_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airwheel_enpro"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airwheel_enpro_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_deldoorgutter2_enpro"}}
+   Texture (attrib = "editor") {string {"textures_base_door_deldoorgutter2_enpro"}}
+   Texture (attrib = "normal") {string {"textures_base_door_deldoorgutter_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_deldoorgutter2_enpro"}}
+   Texture (attrib = "specular") {string {"textures_base_door_deldoorgutter2_enpro_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airdoorfrm_enpro"}}
+   Texture (attrib = "editor") {string {"textures_base_door_airdoorfrm_enpro"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airdoorfrm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airdoorfrm_enpro"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airdoorfrm_enpro_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_airdoor_enpro"}}
+   Texture (attrib = "editor") {string {"textures_base_door_airdoor_enpro"}}
+   Texture (attrib = "normal") {string {"textures_base_door_airdoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_airdoor_enpro"}}
+   Texture (attrib = "specular") {string {"textures_base_door_airdoor_enpro_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_bighangardoors"}}
+   Texture (attrib = "editor") {string {"textures_base_door_bighangardoors"}}
+   Texture (attrib = "normal") {string {"textures_base_door_bighangardoors_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_bighangardoors"}}
+   Texture (attrib = "specular") {string {"textures_base_door_bighangardoors_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_jumbofrm_hangar"}}
+   Texture (attrib = "editor") {string {"textures_base_door_jumbofrm_hangar"}}
+   Texture (attrib = "normal") {string {"textures_base_door_jumbofrm_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_jumbofrm_hangar"}}
+   Texture (attrib = "specular") {string {"textures_base_door_jumbofrm_hangar_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_jumbodoor_hangar"}}
+   Texture (attrib = "editor") {string {"textures_base_door_jumbodoor_hangar"}}
+   Texture (attrib = "normal") {string {"textures_base_door_jumbodoor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_jumbodoor_hangar"}}
+   Texture (attrib = "specular") {string {"textures_base_door_jumbodoor_hangar_s"}}
+}
+Material
+{
+   Name {string {"textures_base_door_smalldoortex"}}
+   Texture (attrib = "editor") {string {"textures_base_door_smalldoortex_d"}}
+   Texture (attrib = "normal") {string {"textures_base_door_smalldoortex_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_smalldoortex_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_smalldoortex_s"}}
+}

@@ -1,0 +1,106 @@
+Material
+{
+   Name {string {"lights_square_decomlight1"}}
+}
+Material
+{
+   Name {string {"lights_eye_blink_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_squareishlight_snd"}}
+}
+Material
+{
+   Name {string {"lights_squareishlight_spectrum"}}
+}
+Material
+{
+   Name {string {"lights_biground1_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate1_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate2_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3b_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate4_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate5_snd"}}
+}
+Material
+{
+   Name {string {"lights_roundfire_spectrumLight"}}
+}
+Material
+{
+   Name {string {"lights_alarm_strobe"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_comptrim2_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_comptrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_comptrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_comptrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_comptrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_02blackb_fin_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_02blackb_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d02blackb_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s02blackb_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilverswatch_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilverswatch"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilverswatch_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilverswatch_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilverswatch_s"}}
+}
+Material
+{
+   Name {string {"textures_decals_ind_logo1a"}}
+   Texture (attrib = "editor") {string {"textures_decals_ind_logo1"}}
+}
+Material
+{
+   Name {string {"lights_floorvent01ax_cv"}}
+}
+Material
+{
+   Name {string {"textures_rock_rockblend"}}
+}
+Material
+{
+   Name {string {"textures_object_windowpane1ss"}}
+   Texture (attrib = "editor") {string {"textures_object_windowpane1"}}
+   Texture (attrib = "normal") {string {"textures_object_windowpane1_local"}}
+   Texture (attrib = "specular") {string {"textures_object_windowpane1_s"}}
+}
+Material
+{
+   Name {string {"textures_object_windowpane2ss"}}
+   Texture (attrib = "editor") {string {"textures_object_windowpane2"}}
+   Texture (attrib = "normal") {string {"textures_object_windowpane2_local"}}
+   Texture (attrib = "specular") {string {"textures_object_windowpane2_s"}}
+}
+Material
+{
+   Name {string {"textures_object_windowpane3ss"}}
+   Texture (attrib = "editor") {string {"textures_object_windowpane3"}}
+   Texture (attrib = "normal") {string {"textures_object_windowpane2_local"}}
+   Texture (attrib = "specular") {string {"textures_object_windowpane2_s"}}
+}

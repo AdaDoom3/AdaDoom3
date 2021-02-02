@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"textures_recyc_floor_recycfloor1_1_fin"}}
+   Texture (attrib = "editor") {string {"textures_recyc_floor_recycfloor1_1_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_recyc_floor_recycfloor1_d1_fin"}}
+   Texture (attrib = "specular") {string {"textures_recyc_floor_recycfloor1_s1_fin"}}
+   Texture (attrib = "normal") {string {"textures_recyc_floor_recycfloor1_local1_fin"}}
+}

@@ -1,0 +1,108 @@
+Material
+{
+   Name {string {"textures_decals_pressurepanel_ed"}}
+   Texture (attrib = "specular") {string {"textures_decals_pressurepanel_s"}}
+   Texture (attrib = "normal") {string {"textures_decals_pressurepanel_local"}}
+}
+Material
+{
+   Name {string {"textures_base_door_cold_door_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_cold_door_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_cold_door_s"}}
+   Texture (attrib = "normal") {string {"textures_base_door_cold_door_local"}}
+}
+Material
+{
+   Name {string {"textures_base_light_bulb_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_light_bulb_d"}}
+   Texture (attrib = "specular") {string {"textures_base_light_bulb_s"}}
+   Texture (attrib = "normal") {string {"textures_base_light_bulb_local"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bglass01_ed"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bglass01_ed"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strip1a_ed"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_strip1a_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_textures_strip1a_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_strip1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_rustrim_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_rustrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_rustrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_rustrim_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3k2_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3k2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3k2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_light_trimlight_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_light_trimlight_d"}}
+   Texture (attrib = "specular") {string {"textures_base_light_trimlight_s"}}
+   Texture (attrib = "normal") {string {"textures_base_light_trimlight_local"}}
+}
+Material
+{
+   Name {string {"textures_base_light_trimlightrim_d"}}
+   Texture (attrib = "diffuse") {string {"textures_base_light_trimlightrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_light_trimlightrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_light_trimlightrim_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_yelhaz2_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_yelhaz2dif"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_yelhaz2dif"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_yelhaz2bmp"}}
+}
+Material
+{
+   Name {string {"textures_base_floor_floorvent02_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_floor_floorvent02_d"}}
+   Texture (attrib = "specular") {string {"textures_morgue_floorvent01_s"}}
+   Texture (attrib = "normal") {string {"textures_morgue_floorvent01_local"}}
+}
+Material
+{
+   Name {string {"textures_decals_sprinklercap_ed"}}
+   Texture (attrib = "specular") {string {"textures_decals_sprinklercap_s"}}
+   Texture (attrib = "normal") {string {"textures_decals_sprinklercap_local"}}
+}
+Material
+{
+   Name {string {"textures_lab_labwall1d_ed"}}
+   Texture (attrib = "normal") {string {"models_seneca_labtex_labwall1d_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_labtex_labwall1d_d"}}
+}
+Material
+{
+   Name {string {"textures_architecture_offtrim01_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_architecture_offtrim01_d"}}
+   Texture (attrib = "normal") {string {"textures_architecture_offtrim01_b"}}
+   Texture (attrib = "specular") {string {"textures_ktest_concretetest_s"}}
+}
+Material
+{
+   Name {string {"textures_seneca_shinymonitor1_ed"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_shinymonitor1_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_textures_shinymonitor1_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_shinymonitor1_s"}}
+}
+Material
+{
+   Name {string {"textures_architecture_testdoor"}}
+   Texture (attrib = "editor") {string {"textures_architecture_testdoor"}}
+   Texture (attrib = "normal") {string {"textures_architecture_timedoorbump_local"}}
+   Texture (attrib = "diffuse") {string {"textures_architecture_offtrim01_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_concretetest_s"}}
+}

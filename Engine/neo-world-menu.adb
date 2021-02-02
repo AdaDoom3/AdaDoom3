@@ -13,4 +13,4 @@
 -- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
 --                                                                                                                                      --
 
-package body Neo.Engine.Menu is
+package body Neo.World.Menu is

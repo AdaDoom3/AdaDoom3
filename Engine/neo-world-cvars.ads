@@ -1,44 +1,37 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
-
-with Neo.Engine.Renderer; use Neo.Engine.Renderer;
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 package Neo.World.CVars is
 
-  -- Rendering
+  ---------------
+  -- Rendering --
+  ---------------
+
+  -- Renderer
   CVAR_R : constant Str := "r_";
-  package Rendering          is new CVar (CVAR_R & "rendering",   "Rendering backend",              Rendering_Kind, FGED2_Rendering);
   package Max_GPU_Memory     is new CVar (CVAR_R & "maxgpumb",    "GPU local memory in MB",         Int_Ptr,        128);
   package Max_Visible_Memory is new CVar (CVAR_R & "maxhostmb",   "CPU visible memory in MB",       Int_Ptr,        64);
   package Max_Upload_Buffer  is new CVar (CVAR_R & "maxuploadmb", "GPU upload buffer size in MB",   Int_Ptr,        64);
   package Sampling           is new CVar (CVAR_R & "sampling",    "Number of antialiasing samples", Sampling_Kind,  No_Sampling);
 
-  -- Doom III specific
-  CVAR_D3 : constant Str := "d3_";
-  package Tesselation is new CVar (CVAR_D3 & "tess",  "Enable tesselation",              Bool, True);
-  package Bloom       is new CVar (CVAR_D3 & "bloom", "Enable bloom",                    Bool, True);
-  package HDR         is new CVar (CVAR_D3 & "hdr",   "Enable high-dynamic range (HDR)", Bool, True);
-  package Blur        is new CVar (CVAR_D3 & "blur",  "Enable blur",                     Bool, True);
-  package Haze        is new CVar (CVAR_D3 & "haze",  "Enable heat-haze",                Bool, True);
-
   -- System
   CVAR_S : constant Str := "s_";
-  package Task_Count is new CVar (CVAR_S & "tasks",     "Number of running tasks",             Positive,       1,               False);
-  package Activated  is new CVar (CVAR_S & "activated", "Query last window activation action", Activated_Kind, Other_Activated, False);
-  package Cursor     is new CVar (CVAR_S & "cursor",    "Cursor style",                        Cursor_Kind,    Inactive_Cursor, False);
-  package In_Menu    is new CVar (CVAR_S & "inmenu",    "Cursor capture",                      Bool,           True,            False);
+  package Task_Count is new CVar (CVAR_S & "tasks",     "Number of running tasks",  Positive,       1,               False);
+  package Activated  is new CVar (CVAR_S & "activated", "Query last window action", Activated_Kind, Other_Activated, False);
+  package Cursor     is new CVar (CVAR_S & "cursor",    "Cursor style",             Cursor_Kind,    Inactive_Cursor, False);
+  package In_Menu    is new CVar (CVAR_S & "inmenu",    "Cursor capture",           Bool,           True,            False);
 
   -- Windowing
   CVAR_W : constant Str := "w_";
@@ -49,4 +42,7 @@ package Neo.World.CVars is
   package Aspect_Wide_Y   is new CVar (CVAR_W & "widey",   "Windowed min wide aspect y",   Positive,  3);
   package Window_Height   is new CVar (CVAR_W & "height",  "Height of game window",        Positive,  600);
   package Window_Width    is new CVar (CVAR_W & "width",   "Width of game window",         Positive,  800);
+
+  -- Physics
+  CVAR_PHYSX : constant Str := "phyx_";
 end;

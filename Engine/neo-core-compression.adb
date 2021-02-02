@@ -109,6 +109,7 @@ package body Neo.Core.Compress is
    -------------------------------
    --  convert_to_stream_array  --
    -------------------------------
+
    function convert_to_stream_array
      (char_data         : Thin.IC.char_array;
       number_characters : Thin.IC.size_t) return STR.Stream_Element_Array
@@ -127,6 +128,7 @@ package body Neo.Core.Compress is
    -----------------------------
    --  convert_to_char_array  --
    -----------------------------
+
    function convert_to_char_array
      (stream_data       : STR.Stream_Element_Array;
       output_array_size : Thin.IC.size_t) return Thin.IC.char_array
@@ -146,6 +148,7 @@ package body Neo.Core.Compress is
    ------------------
    --  Initialize  --
    ------------------
+
    procedure Initialize
      (mechanism     : out Compressor;
       output_stream : not null access STR.Root_Stream_Type'Class;
@@ -170,6 +173,7 @@ package body Neo.Core.Compress is
    ---------------------
    --  Compress_Data  --
    ---------------------
+
    procedure Compress_Data (mechanism : out Compressor;
                             data      : STR.Stream_Element_Array)
    is
@@ -210,6 +214,7 @@ package body Neo.Core.Compress is
    ----------------------------------
    --  Finalize_Compression_Frame  --
    ----------------------------------
+
    procedure Finalize_Compression_Frame (mechanism : Compressor)
    is
       data_out  : aliased Thin.IC.char_array := (1 .. Buffer_Output_Size => Thin.IC.nul);
@@ -231,6 +236,7 @@ package body Neo.Core.Compress is
    ------------------------------------
    --  Recommended_Data_Buffer_Size  --
    ------------------------------------
+
    function Next_Data_Size_Recommendation (mechanism : Compressor) return Positive is
    begin
       return Positive (mechanism.data_size_hint);
@@ -240,6 +246,7 @@ package body Neo.Core.Compress is
    -------------------------------
    --  convert_to_stream_array  --
    -------------------------------
+
    function convert_to_stream_array
      (char_data         : Thin.IC.char_array;
       number_characters : Thin.IC.size_t) return STR.Stream_Element_Array

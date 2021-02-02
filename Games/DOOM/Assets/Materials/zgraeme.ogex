@@ -1,0 +1,228 @@
+Material
+{
+   Name {string {"textures_zaphod_rocketl"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_rocketl"}}
+   Texture (attrib = "diffuse") {string {"textures_zaphod_rocketl"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_f_rocketl"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_f_rocketl"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_bfg"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_bfg"}}
+   Texture (attrib = "diffuse") {string {"textures_zaphod_bfg"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_shotgun"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_shotgun"}}
+   Texture (attrib = "diffuse") {string {"textures_zaphod_shotgun"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_f_shotgun"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_f_shotgun"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_shotgun_laser"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_shotgun_laser"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_f_bfg"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_f_bfg"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_plasma"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_plasma"}}
+   Texture (attrib = "diffuse") {string {"textures_zaphod_plasma"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_plasma_glass"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_plasma_glass"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_plasma_glo"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_plasma_glo"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_f_plasma"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_f_plasma"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_vulcan"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_vulcan"}}
+   Texture (attrib = "diffuse") {string {"textures_zaphod_vulcan"}}
+}
+Material
+{
+   Name {string {"textures_zaphod_f_vulcan"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_f_vulcan"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuff"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff"}}
+}
+Material
+{
+   Name {string {"textures_particles_ember_mid"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff"}}
+}
+Material
+{
+   Name {string {"textures_particles_spike"}}
+   Texture (attrib = "editor") {string {"textures_particles_spike"}}
+}
+Material
+{
+   Name {string {"textures_particles_gember_small"}}
+   Texture (attrib = "editor") {string {"textures_particles_gember_small"}}
+}
+Material
+{
+   Name {string {"textures_particles_ember_small"}}
+   Texture (attrib = "editor") {string {"textures_particles_ember_small"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuffalpha"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuffalpha"}}
+}
+Material
+{
+   Name {string {"textures_particles_muzzleflash"}}
+   Texture (attrib = "editor") {string {"textures_particles_muzzleflash"}}
+}
+Material
+{
+   Name {string {"textures_particles_mgmuzzleflash"}}
+   Texture (attrib = "editor") {string {"textures_particles_machinegun"}}
+}
+Material
+{
+   Name {string {"textures_particles_spawnpuff"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_demonspawnpuff"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasmapuff"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasmapuff"}}
+}
+Material
+{
+   Name {string {"textures_particles_orangespark"}}
+   Texture (attrib = "editor") {string {"textures_particles_orangespark"}}
+}
+Material
+{
+   Name {string {"textures_particles_firestrip"}}
+   Texture (attrib = "editor") {string {"textures_sfx_fire_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_bamstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_bamstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_spawnstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_spawnstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_foopstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_foopstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_popstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_popstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_video"}}
+   Texture (attrib = "editor") {string {"textures_editor_video"}}
+}
+Material
+{
+   Name {string {"textures_particles_pixel"}}
+   Texture (attrib = "editor") {string {"textures_particles_pixel"}}
+}
+Material
+{
+   Name {string {"textures_particles_lightning"}}
+   Texture (attrib = "editor") {string {"textures_zaphod_crackle1"}}
+}
+Material
+{
+   Name {string {"textures_particles_blooddrip"}}
+   Texture (attrib = "editor") {string {"textures_decals_bloodpool01"}}
+}
+Material
+{
+   Name {string {"lights_sparks_sound"}}
+}
+Material
+{
+   Name {string {"textures_decals_ballburn_rev"}}
+   Texture (attrib = "editor") {string {"textures_decals_ballburn01"}}
+}
+Material
+{
+   Name {string {"lights_impflyflash"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodwound"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodcolor"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodstream"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodstream"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodcloud"}}
+   Texture (attrib = "editor") {string {"textures_particles_blooddrop"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodstream2"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodstream2"}}
+}
+Material
+{
+   Name {string {"textures_particles_blooddrop2"}}
+   Texture (attrib = "editor") {string {"textures_particles_blooddrop2"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodfoopstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodfoopstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_teststrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_fireball_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_testvideo"}}
+   Texture (attrib = "editor") {string {"textures_editor_video"}}
+}
+Material
+{
+   Name {string {"textures_particles_firefly"}}
+   Texture (attrib = "editor") {string {"textures_particles_fireplume"}}
+}

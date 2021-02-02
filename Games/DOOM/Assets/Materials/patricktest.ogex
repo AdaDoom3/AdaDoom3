@@ -1,0 +1,1128 @@
+Material
+{
+   Name {string {"textures_object_lightingmonkey"}}
+   Texture (attrib = "editor") {string {"textures_object_lightingmonkey"}}
+   Texture (attrib = "diffuse") {string {"textures_object_lightingmonkey"}}
+}
+Material
+{
+   Name {string {"textures_rock_cliffwall"}}
+   Texture (attrib = "editor") {string {"textures_rock_cliffwall"}}
+   Texture (attrib = "normal") {string {"textures_rock_cliffwall_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_cliffwall_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_hellrock"}}
+   Texture (attrib = "editor") {string {"textures_rock_hellrock"}}
+   Texture (attrib = "normal") {string {"textures_rock_hellrock_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_hellrock_s"}}
+}
+Material
+{
+   Name {string {"textures_particles_p_lightning6"}}
+}
+Material
+{
+   Name {string {"textures_sfx_drip_01"}}
+}
+Material
+{
+   Name {string {"textures_sfx_drip_02"}}
+}
+Material
+{
+   Name {string {"textures_sfx_drip_03"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellcloud_filter"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellcloud_filter"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame7"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame7"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame6"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame6"}}
+}
+Material
+{
+   Name {string {"textures_particles_ring_blue"}}
+   Texture (attrib = "editor") {string {"textures_particles_ring_blue"}}
+}
+Material
+{
+   Name {string {"textures_particles_ring_2"}}
+   Texture (attrib = "editor") {string {"textures_particles_ring_2"}}
+}
+Material
+{
+   Name {string {"textures_particles_crack_02"}}
+   Texture (attrib = "editor") {string {"textures_particles_crack_03"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_teleporter_warpfx_betrugger_sphere"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_teleporter_warpfx_betrugger_fade"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_teleporter_warpfx_betrugger_fluid"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_teleporter_warpfx_betrugger_drops"}}
+}
+Material
+{
+   Name {string {"textures_particles_fredo"}}
+   Texture (attrib = "editor") {string {"textures_particles_fredo"}}
+}
+Material
+{
+   Name {string {"textures_particles_fredo2"}}
+   Texture (attrib = "editor") {string {"textures_particles_fredo2"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuff4"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff4"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuff3"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff3"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuff2"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff2"}}
+}
+Material
+{
+   Name {string {"textures_particles_snowball"}}
+   Texture (attrib = "editor") {string {"textures_particles_snowball"}}
+}
+Material
+{
+   Name {string {"textures_particles_strip_turq"}}
+   Texture (attrib = "editor") {string {"textures_particles_strip_turq"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast5"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast6"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfgblast6"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast4"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfgblast4"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast3"}}
+}
+Material
+{
+   Name {string {"textures_particles_lightball"}}
+   Texture (attrib = "editor") {string {"textures_particles_lightball"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffyboltver3_white"}}
+   Texture (attrib = "editor") {string {"textures_particles_duffyboltver3_white"}}
+}
+Material
+{
+   Name {string {"textures_particles_rock"}}
+   Texture (attrib = "editor") {string {"textures_particles_rock_d"}}
+   Texture (attrib = "normal") {string {"textures_particles_rock_local"}}
+   Texture (attrib = "specular") {string {"textures_particles_rock_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring_power3"}}
+}
+Material
+{
+   Name {string {"textures_particles_billow3_glow"}}
+   Texture (attrib = "editor") {string {"textures_particles_billow3_glow"}}
+}
+Material
+{
+   Name {string {"textures_particles_billow_glow"}}
+   Texture (attrib = "editor") {string {"textures_particles_billow_glow"}}
+}
+Material
+{
+   Name {string {"textures_particles_billow2_glow"}}
+   Texture (attrib = "editor") {string {"textures_particles_billow2_glow"}}
+}
+Material
+{
+   Name {string {"textures_hell_spinalcrap_Hell1"}}
+   Texture (attrib = "editor") {string {"textures_hell_spinalcrap_Hell1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_HellGrowth_hellgrowth"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_HellGrowth_HellGrowth_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_HellGrowth_HellGrowth_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_HellGrowth_HellGrowth_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_HellGrowth_hellgrowthskin"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_HellGrowth_HellGrowthskin_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellarch_hellarch"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellarch_hellarch_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellarch_hellarch_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellarch_hellarch_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellarch2_hellarch2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellarch2_hellarch2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellarch2_a_hellarch2_d07f"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellarch2_hellarch2b_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellcages_Hellcage_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellcages_Hellcage_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellcages_Hellcage_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellcages_Hellcage_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellcages_hellcagetop_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellcages_hellcagetop_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellcages_hellcagetop_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellcages_hellcagetop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellcages_hellcagebot_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellcages_hellcagetop_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellcages_hellcagetop_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellcages_hellcagetop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellcages_HellCagechain_"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellbubbles_hellbubbles"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellbubbles_hellbubbles"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellbubbles_hellbubbles_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellbubbles_hellbubbles_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellskulls_hellskulla_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellskulls_hellskulla_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellskulls_hellskulla_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellskulls_hellskulla_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellskulls_hellskullb_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellskulls_hellskullb_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellskulls_hellskullb_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellskulls_hellskullb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellpillar_hellpillar_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellpillar_hellpillar_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellpillar_hellpillar_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellpillar_hellpillar_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellpillar_2_hellpillar_2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellpillar_2_hellpillar_2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellpillar_2_hellpillar_local_2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellpillar_2_hellpillar_s_2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellarch_HellarchWall_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellarch_HellarchWall_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellalcove_Pole"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellalcove_Pole"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellalcove_Pole_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellalcove_Pole_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellalcove_arch"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellalcove_arch"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellalcove_arch_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellalcove_arch_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellalcove_archsm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellalcove_archsm"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellalcove_archsm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellalcove_archsm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_meathead_meathead"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_meathead_meathead"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_meathead_meathead_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_meathead_meathead_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellbody_hellbody"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellbody_hellbody"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellbody_hellbody_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellbody_hellbody_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellbody_hellbodyrock"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellbody_hellbodyrock"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellbody_hellbodyrock_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellbody_hellbodyrock_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_meathead_body"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_meathead_body"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_meathead_meathead_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_meathead_meathead_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_meathead_horn"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_meathead_horn"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_meathead_horn_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_meathead_horn_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellhorn_hellhorn"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellhorn_hellhorn"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellhorn_hellhorn_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellhorn_hellhorn_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_clouds"}}
+   Texture (attrib = "editor") {string {"textures_hell_clouds"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustube"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustube"}}
+   Texture (attrib = "normal") {string {"textures_hell_anustube_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_anustube"}}
+   Texture (attrib = "specular") {string {"textures_hell_anustube_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescroll"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescrollblend"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_maggotroom_wormsteam"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkles"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkles"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkle"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkle"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wrinkle"}}
+   Texture (attrib = "normal") {string {"textures_hell_wrinkle_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_wrinkle_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkle2"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkle2"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkle3"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkle3"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellanustube2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "specular") {string {"textures_hell_hellanustube2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellanustube2scroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellanustube2scroll"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_Hellbodyb_hellbodyb_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_Hellbodyb_hellbodyb_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_Hellbodyb_hellbodyb_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_Hellbodyb_hellbodyb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellcagea_hellcagea"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellcagea_hellcagea"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellcagea_hellcagea_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellcagea_hellcagea_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellcageb_hellcageb_"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellcageb_hellcageb_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellcageb_hellcageb_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellcageb_hellcageb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_helldoll_helldolla"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_helldoll_helldolla"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_helldoll_helldolla_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_helldoll_helldolla_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_helldoll_mandoll"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_helldoll_mandoll"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_helldoll_mandoll_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_helldoll_mandoll_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_helldoll_crucified"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_helldoll_crucified"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_helldoll_crucified_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_helldoll_crucified_s"}}
+}
+Material
+{
+   Name {string {"textures_object_demonmuseum_tendons"}}
+   Texture (attrib = "editor") {string {"textures_object_demonmuseum_tendons"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodwater"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodwater"}}
+}
+Material
+{
+   Name {string {"textures_particles_fluid_a"}}
+   Texture (attrib = "editor") {string {"textures_particles_fluid_a"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust_a"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust_b"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust_c"}}
+}
+Material
+{
+   Name {string {"textures_particles_lightning1"}}
+   Texture (attrib = "editor") {string {"textures_particles_lightning1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning3"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning4"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning4_color"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning5"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning5_color"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning6"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning7"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning8a"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning9a"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_demonmuseum_b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Deadmaggot_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Deadmaggot_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Deadmaggot_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_demonmuseum_c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Deadimp_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Deadimp_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Deadimp_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_radiogoop_d"}}
+   Texture (attrib = "editor") {string {"textures_sfx_radiogoop_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_radiogoopflow_d"}}
+   Texture (attrib = "editor") {string {"textures_sfx_radiogoopflow_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_radiogoopflow2_d"}}
+   Texture (attrib = "editor") {string {"textures_sfx_radiogoopflow_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_radiogoop_mix"}}
+   Texture (attrib = "editor") {string {"textures_sfx_radiogoop_mix"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_radiogoop_nukerock_"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_radiogoop_nukerock_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_radiogoop_nukerock_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_radiogoop_nukerock_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_radiogoop_nukewall"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_boxa_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_boxa_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_boxa_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_boxa_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_boxb_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_boxb_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_boxb_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_boxb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_cranebase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_cranebase"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_cranebase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_cranebase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_Cranebody_Cranebody"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockbblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockbblend"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockbase"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockbase"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockbase"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockbase_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockbase_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockwall"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockwall"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockwall"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockwall_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockwall_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprocka"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprocka"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprocka"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprocka_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprocka_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockb"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockb"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprockb"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockb_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprockb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_warprockb"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_warprockb"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_warprockb_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_warprockb_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockc_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockc"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprockc_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockc_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprockc_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockd"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockd_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprockd_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockb_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprockd_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavatube"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1movenoshadow"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockd_lava_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockd_lava_blend"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_skullgate3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_skullgate3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_skullgate3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_skullgate3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_skullgate3b"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_skullgate3b_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_skullgate3b"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_skullgate3b_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_worm"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_anustube"}}
+   Texture (attrib = "normal") {string {"textures_hell_anustube_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_anustube_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_tentacles"}}
+   Texture (attrib = "editor") {string {"textures_hell_tentacles"}}
+   Texture (attrib = "normal") {string {"textures_hell_tentacles_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockpores"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockpores_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockpores_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockpores_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockpores_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots2"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots2"}}
+}
+Material
+{
+   Name {string {"textures_hell_treerootsgrey"}}
+   Texture (attrib = "editor") {string {"textures_hell_treerootsgrey"}}
+}
+Material
+{
+   Name {string {"textures_hell_guts"}}
+   Texture (attrib = "editor") {string {"textures_hell_guts"}}
+}
+Material
+{
+   Name {string {"textures_hell_meathead"}}
+   Texture (attrib = "editor") {string {"textures_hell_meathead"}}
+}
+Material
+{
+   Name {string {"textures_hell_growth"}}
+   Texture (attrib = "editor") {string {"textures_hell_growth"}}
+   Texture (attrib = "normal") {string {"textures_hell_growth_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_growth_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_entrance_wormtube"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_entrance_wormtube_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_entrance_wormtube_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_entrance_wormtube_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wormtube_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_wormtube_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wormtube_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_wormtube_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_wormtube_s"}}
+}
+Material
+{
+   Name {string {"textures_decals_splat18"}}
+   Texture (attrib = "editor") {string {"textures_decals_splat18"}}
+}
+Material
+{
+   Name {string {"textures_decals_splat19"}}
+   Texture (attrib = "editor") {string {"textures_decals_splat19"}}
+}
+Material
+{
+   Name {string {"textures_decals_splat20"}}
+   Texture (attrib = "editor") {string {"textures_decals_splat20"}}
+}
+Material
+{
+   Name {string {"textures_hell_veins_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_canyonb"}}
+   Texture (attrib = "editor") {string {"textures_hell_canyonb"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_canyonb"}}
+   Texture (attrib = "normal") {string {"textures_hell_canyonb_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_canyonb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_a"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_wires2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_wires2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wirestreerootsgrey_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_wirestreerootsgrey_blend"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots_blend"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_1_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_1_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_2_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_2_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_3_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_3_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_4"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_4"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_5"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_5"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_6"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_6"}}
+}
+Material
+{
+   Name {string {"textures_hell_burnedfly"}}
+   Texture (attrib = "editor") {string {"textures_hell_burnedfly"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_sand_d"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock_sand_d"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprock_sand_d"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_sand_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprock_sand_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_skyrock3"}}
+   Texture (attrib = "editor") {string {"textures_rock_skyrock3_d"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_skyrock3_d"}}
+   Texture (attrib = "normal") {string {"textures_rock_skyrock3_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_skyrock3_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysand3"}}
+   Texture (attrib = "editor") {string {"textures_rock_skysand3"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_skysand3"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand3_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_skysand3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_stoneroom_fingers"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_stoneroom_fingers"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_stoneroom_fingers_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_stoneroom_fingers_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_stoneroom_dingle"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_stoneroom_dingle"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_stoneroom_dingle_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_stoneroom_dingle_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend2"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteriablend"}}
+}
+Material
+{
+   Name {string {"textures_hell_burnedflyblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteriablendb"}}
+}
+Material
+{
+   Name {string {"textures_hell_blood_stream2_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_blood_stream2_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candlestand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand_s"}}
+}
+Material
+{
+   Name {string {"textures_particles_candlefire"}}
+   Texture (attrib = "editor") {string {"textures_particles_candlefire"}}
+}
+Material
+{
+   Name {string {"textures_decals_candleglow"}}
+   Texture (attrib = "editor") {string {"textures_decals_candlefire"}}
+}
+Material
+{
+   Name {string {"textures_decals_spawn"}}
+   Texture (attrib = "editor") {string {"textures_decals_spawn"}}
+}
+Material
+{
+   Name {string {"textures_decals_spawn2"}}
+   Texture (attrib = "editor") {string {"textures_decals_spawn2"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall_tile"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinklewall_tile"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall_blendb"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinklewall_blend2"}}
+}
+Material
+{
+   Name {string {"textures_hell_smoke"}}
+   Texture (attrib = "editor") {string {"textures_hell_smoke"}}
+}
+Material
+{
+   Name {string {"textures_hell_smokeblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_smokeblend"}}
+}
+Material
+{
+   Name {string {"textures_sfx_purpleglassb"}}
+   Texture (attrib = "editor") {string {"textures_sfx_purpleglass"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend3"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescrollblend3"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend4"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescrollblend4"}}
+}
+Material
+{
+   Name {string {"textures_hell_gizpool"}}
+   Texture (attrib = "editor") {string {"textures_hell_gizpool"}}
+}
+Material
+{
+   Name {string {"textures_hell_gizpool2"}}
+   Texture (attrib = "editor") {string {"textures_hell_gizpool"}}
+}
+Material
+{
+   Name {string {"textures_hell_gizpoolblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_gizpool"}}
+}
+Material
+{
+   Name {string {"textures_hell_firewall"}}
+   Texture (attrib = "editor") {string {"textures_hell_firewall"}}
+}
+Material
+{
+   Name {string {"textures_hell_eyeskin"}}
+   Texture (attrib = "editor") {string {"textures_hell_eyeskin_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_eyeskin_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_eyeskin_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_eyeskin_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_eyeskin2"}}
+   Texture (attrib = "editor") {string {"textures_hell_eyeskin2_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_eyeskin2_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_eyeskin2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_eyeskin2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta5_doora_eyeskin_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta5_doora_eyeskin_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta5_doora_eyeskin_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta5_doora_eyeskin_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_slime"}}
+   Texture (attrib = "editor") {string {"textures_hell_slime"}}
+}
+Material
+{
+   Name {string {"textures_hell_slimefade"}}
+   Texture (attrib = "editor") {string {"textures_hell_slimefade"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta5_doorb_hornskin"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta5_doorb_hornskin_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta5_doorb_hornskin_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta5_doorb_hornskin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta5_output"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta5_output_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta5_output_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta5_output_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_maggot"}}
+   Texture (attrib = "editor") {string {"textures_hell_maggot_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_maggotb"}}
+}
+Material
+{
+   Name {string {"textures_hell_maggot_red"}}
+   Texture (attrib = "editor") {string {"textures_hell_maggot_red_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_maggot_noanim"}}
+   Texture (attrib = "editor") {string {"textures_hell_maggot_noanim_red_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_maggot_group"}}
+   Texture (attrib = "editor") {string {"textures_hell_maggot_group"}}
+}
+Material
+{
+   Name {string {"textures_decals_airlock"}}
+   Texture (attrib = "editor") {string {"textures_decals_airlock"}}
+   Texture (attrib = "diffuse") {string {"textures_decals_airlock"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_zombie"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_zombie_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_zombie_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_zombie_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_Hellknight_spinetex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_Hellknight_headtex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtywater"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirtywater"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtywaterb"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirtywaterb"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta2b_labimp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta2b_labimp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta2b_labimp_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta2b_labimp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_deadimp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_deadimp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_deadimp_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_deadimp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta2b_labimpskin"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta2b_labimpskin_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta2b_labimpskin_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta2b_labimpskin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta2b_labtable"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta2b_labtable_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta2b_labtable_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta2b_labtable_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair3_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair3_s"}}
+}

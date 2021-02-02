@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"default_base_color"}}
+   Texture (attrib = "editor") {string {"textures_common_nodraw"}}
+   Texture (attrib = "diffuse") {string {"textures_common_nodraw"}}
+   Texture (attrib = "specular") {string {"textures_common_nodraw"}}
+   Texture (attrib = "normal") {string {"textures_common_nodraw"}}
+}

@@ -1,0 +1,136 @@
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall21b"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall21b"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall21_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall21b"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall21b_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall18a"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall18a"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall18_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall18a"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall18a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall17a"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall17a"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall17_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall17a"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall17a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall16a"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall16a"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall16_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall16a"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall16a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall14g4"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall14g4"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall14g2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall14g4"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall14g_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13g4"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13g4"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13g_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13g4"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13g4_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13f3"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13f3"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13f_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13f3"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13f3_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13e"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13e"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13e_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13e"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13e_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13d"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13d"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13d_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13d"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13d_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13c"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13c"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13c_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13c"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13c_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13b"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13b"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13b_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13b"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13b_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall13a"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall13a"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall13a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall13a"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall13a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_lfwall12a2"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_lfwall12a2"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall12a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_lfwall12a2"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_lfwall12a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_enwall22b"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_enwall22b"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_snpanel18_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_enwall22b"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_enwall22a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_enwall21a"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_enwall21a"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_snpanel17_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_enwall21a"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_enwall21_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_enwall20d"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_enwall20d"}}
+   Texture (attrib = "normal") {string {"textures_enpro_enwall20_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_enwall20d"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_enwall20a_s"}}
+}
+Material
+{
+   Name {string {"textures_alphalabs_a_enwall13c"}}
+   Texture (attrib = "editor") {string {"textures_alphalabs_a_enwall13c"}}
+   Texture (attrib = "normal") {string {"textures_enpro_enwall13_local"}}
+   Texture (attrib = "diffuse") {string {"textures_alphalabs_a_enwall13c"}}
+   Texture (attrib = "specular") {string {"textures_alphalabs_a_enwall13_s"}}
+}

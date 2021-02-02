@@ -1,0 +1,33 @@
+Material
+{
+   Name {string {"lights_wlevel"}}
+}
+Material
+{
+   Name {string {"textures_lab_duffyblah"}}
+   Texture (attrib = "editor") {string {"textures_lab_medtile01_d"}}
+   Texture (attrib = "normal") {string {"textures_lab_medtile01_b"}}
+   Texture (attrib = "diffuse") {string {"textures_lab_medtile01_d"}}
+   Texture (attrib = "specular") {string {"textures_lab_medtile01_s"}}
+}
+Material
+{
+   Name {string {"textures_base_wall_blupaintedmetalcomp"}}
+   Texture (attrib = "editor") {string {"textures_base_wall_blupaintedmetalcomp"}}
+}
+Material
+{
+   Name {string {"textures_base_floor_bigroundfloor"}}
+   Texture (attrib = "editor") {string {"textures_base_floor_roundfloor1big"}}
+   Texture (attrib = "normal") {string {"textures_base_floor_roundfloor1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_floor_roundfloor1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_floor_roundfloor1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_floor_smallroundfloor"}}
+   Texture (attrib = "editor") {string {"textures_base_floor_roundfloor1small"}}
+   Texture (attrib = "normal") {string {"textures_base_floor_roundfloor1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_floor_roundfloor1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_floor_roundfloor1_s"}}
+}

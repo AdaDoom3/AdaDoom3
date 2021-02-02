@@ -1,0 +1,14 @@
+Material
+{
+   Name {string {"models_characters_male_npc_soldier_soldier_torso"}}
+   Texture (attrib = "diffuse") {string {"models_characters_male_npc_soldier_soldier"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_soldier_soldier_local"}}
+   Texture (attrib = "specular") {string {"models_characters_male_npc_soldier_soldier_s"}}
+}
+Material
+{
+   Name {string {"models_characters_player_body_torso"}}
+   Texture (attrib = "diffuse") {string {"models_characters_player_body"}}
+   Texture (attrib = "normal") {string {"models_characters_player_body_local"}}
+   Texture (attrib = "specular") {string {"models_characters_player_body_s"}}
+}

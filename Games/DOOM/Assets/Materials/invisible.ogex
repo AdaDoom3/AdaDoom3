@@ -1,0 +1,210 @@
+Material
+{
+   Name {string {"textures_common_pda_gui"}}
+   Texture (attrib = "editor") {string {"textures_editor_entityGui"}}
+}
+Material
+{
+   Name {string {"textures_common_entityGui"}}
+   Texture (attrib = "editor") {string {"textures_editor_entityGui"}}
+}
+Material
+{
+   Name {string {"textures_common_entityGui2"}}
+   Texture (attrib = "editor") {string {"textures_editor_entityGui2"}}
+}
+Material
+{
+   Name {string {"textures_common_entityGui3"}}
+   Texture (attrib = "editor") {string {"textures_editor_entityGui3"}}
+}
+Material
+{
+   Name {string {"textures_editor_visportal"}}
+   Texture (attrib = "editor") {string {"textures_editor_vis_p"}}
+}
+Material
+{
+   Name {string {"textures_editor_aassolid"}}
+   Texture (attrib = "editor") {string {"textures_editor_aassolid"}}
+}
+Material
+{
+   Name {string {"textures_editor_aasobstacle"}}
+   Texture (attrib = "editor") {string {"textures_editor_aasobstacle"}}
+}
+Material
+{
+   Name {string {"textures_common_caulk"}}
+   Texture (attrib = "editor") {string {"textures_common_caulk"}}
+}
+Material
+{
+   Name {string {"textures_common_nodraw"}}
+   Texture (attrib = "editor") {string {"textures_common_nodraw"}}
+}
+Material
+{
+   Name {string {"textures_common_nodrawsolid"}}
+   Texture (attrib = "editor") {string {"textures_common_nodrawsolid"}}
+}
+Material
+{
+   Name {string {"textures_common_shadow"}}
+   Texture (attrib = "editor") {string {"textures_common_shadow"}}
+}
+Material
+{
+   Name {string {"textures_common_shadow2"}}
+   Texture (attrib = "editor") {string {"textures_common_shadow"}}
+}
+Material
+{
+   Name {string {"textures_common_trigger"}}
+   Texture (attrib = "editor") {string {"textures_common_trigger"}}
+}
+Material
+{
+   Name {string {"textures_common_trigmulti"}}
+   Texture (attrib = "editor") {string {"textures_common_trigmulti"}}
+}
+Material
+{
+   Name {string {"textures_common_trigonce"}}
+   Texture (attrib = "editor") {string {"textures_common_trigonce"}}
+}
+Material
+{
+   Name {string {"textures_common_trigtimer"}}
+   Texture (attrib = "editor") {string {"textures_common_trigtimer"}}
+}
+Material
+{
+   Name {string {"textures_common_trigrelay"}}
+   Texture (attrib = "editor") {string {"textures_common_trigrelay"}}
+}
+Material
+{
+   Name {string {"textures_common_trighurt"}}
+   Texture (attrib = "editor") {string {"textures_common_trighurt"}}
+}
+Material
+{
+   Name {string {"textures_common_trigfade"}}
+   Texture (attrib = "editor") {string {"textures_common_trigfade"}}
+}
+Material
+{
+   Name {string {"textures_common_triggui"}}
+   Texture (attrib = "editor") {string {"textures_common_triggui"}}
+}
+Material
+{
+   Name {string {"textures_common_trigair"}}
+   Texture (attrib = "editor") {string {"textures_common_trigair"}}
+}
+Material
+{
+   Name {string {"textures_common_trigentityname"}}
+   Texture (attrib = "editor") {string {"textures_common_trigentityname"}}
+}
+Material
+{
+   Name {string {"textures_common_trigentityname_once"}}
+   Texture (attrib = "editor") {string {"textures_common_trigentityname_once"}}
+}
+Material
+{
+   Name {string {"textures_common_nodrop"}}
+   Texture (attrib = "editor") {string {"textures_common_nodrop"}}
+}
+Material
+{
+   Name {string {"textures_common_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_trigflashlight"}}
+   Texture (attrib = "editor") {string {"textures_common_trigflashlight"}}
+}
+Material
+{
+   Name {string {"textures_common_clip_plusmovables"}}
+   Texture (attrib = "editor") {string {"textures_common_clipplus"}}
+}
+Material
+{
+   Name {string {"textures_common_full_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_full_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_player_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_player_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_monster_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_monster_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_moveable_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_moveable_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_ik_clip"}}
+   Texture (attrib = "editor") {string {"textures_common_ikclip"}}
+}
+Material
+{
+   Name {string {"textures_common_cushion"}}
+   Texture (attrib = "editor") {string {"textures_common_cushion"}}
+}
+Material
+{
+   Name {string {"textures_common_slick"}}
+   Texture (attrib = "editor") {string {"textures_common_slick"}}
+}
+Material
+{
+   Name {string {"textures_common_noimpact"}}
+   Texture (attrib = "editor") {string {"textures_common_noimpact"}}
+}
+Material
+{
+   Name {string {"textures_common_mirror"}}
+   Texture (attrib = "editor") {string {"textures_common_qer_mirror_editor"}}
+}
+Material
+{
+   Name {string {"textures_common_ladder"}}
+   Texture (attrib = "editor") {string {"textures_common_ladder"}}
+}
+Material
+{
+   Name {string {"textures_common_collision"}}
+   Texture (attrib = "editor") {string {"textures_common_collision"}}
+}
+Material
+{
+   Name {string {"textures_common_speaker"}}
+   Texture (attrib = "editor") {string {"textures_common_speaker"}}
+}
+Material
+{
+   Name {string {"textures_common_particle"}}
+   Texture (attrib = "editor") {string {"textures_common_particle"}}
+}
+Material
+{
+   Name {string {"textures_common_moveableclipmodel"}}
+   Texture (attrib = "editor") {string {"textures_common_clip"}}
+}
+Material
+{
+   Name {string {"textures_common_npc_pda"}}
+   Texture (attrib = "editor") {string {"textures_editor_entityGui"}}
+}

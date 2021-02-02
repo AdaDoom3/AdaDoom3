@@ -1,0 +1,75 @@
+Material
+{
+   Name {string {"lights_squarelight_flash"}}
+}
+Material
+{
+   Name {string {"lights_square_trigger_flicker"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight_hold"}}
+}
+Material
+{
+   Name {string {"lights_spot_builduplight_hold"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight"}}
+}
+Material
+{
+   Name {string {"lights_square_builduplight2"}}
+}
+Material
+{
+   Name {string {"textures_base_light_bulb_breakable"}}
+   Texture (attrib = "editor") {string {"textures_base_light_bulb"}}
+   Texture (attrib = "diffuse") {string {"textures_base_light_bulb_d"}}
+   Texture (attrib = "specular") {string {"textures_base_light_bulb_s"}}
+   Texture (attrib = "normal") {string {"textures_base_light_bulb_local"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_off"}}
+}
+Material
+{
+   Name {string {"lights_swinglight_breakable_off_1"}}
+}
+Material
+{
+   Name {string {"textures_base_light_extended_light"}}
+   Texture (attrib = "editor") {string {"textures_base_light_striplight2_ed"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chrome_mal_pipe"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_asp2spec"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lab_glass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_lab_glass_ed"}}
+   Texture (attrib = "normal") {string {"textures_sfx_lab_glass_bmp"}}
+   Texture (attrib = "specular") {string {"textures_sfx_lab_glass_spec"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lab_glass_reflective"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+   Texture (attrib = "normal") {string {"textures_sfx_lab_glass_bmp"}}
+}
+Material
+{
+   Name {string {"textures_base_light_colored_strip"}}
+   Texture (attrib = "editor") {string {"textures_base_light_reactorlight1"}}
+   Texture (attrib = "diffuse") {string {"textures_base_light_reactorlight1b"}}
+   Texture (attrib = "specular") {string {"textures_base_light_reactorlight1_sb"}}
+   Texture (attrib = "normal") {string {"textures_base_light_reactorlight1_localb"}}
+}

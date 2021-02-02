@@ -1,26 +1,26 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Is_Debugging;
 with System;                     use System;
 with Neo;                        use Neo;
-with Neo.Data.Game;              use Neo.Data.Game;
 with Neo.Core.Strings;           use Neo.Core.Strings;
 with Neo.Core.Console;           use Neo.Core.Console;
 with Neo.Engine;                 use Neo.Engine;
-with Neo.Engine.Renderer;        use Neo.Engine.Renderer;
+with Neo.World;                  use Neo.World;
+with Neo.World.Graphics;         use Neo.World.Graphics;
 with Neo.World.CVars;            use Neo.World.CVars;
 with Neo.World.Impulses;         use Neo.World.Impulses;
 with Ada.Calendar;               use Ada.Calendar;
@@ -28,6 +28,7 @@ with Ada.Calendar.Formatting;    use Ada.Calendar.Formatting;
 with Ada.Command_Line;           use Ada.Command_Line;
 with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
 
+-- Entry point for the executable
 procedure Main is
 
   -- Game task
@@ -56,30 +57,35 @@ procedure Main is
     for I in 1..Argument_Count loop Submit (Replace (To_Str (Argument (I)), ".", " ")); end loop;
 
     -- Dump info
-    Line ("Started by " & OS_Info.Username & " on " & To_Str (Image (Get_Start_Time)));
-    Line ("Game: " & OS_Info.App_Name & WORD_SIZE'Wide_Image & (if Is_Debugging then " w/ debugging" else NULL_STR));
-    Line ("Engine: " & NAME_ID & " " & VERSION);
-    Line ("Compiler: " & "GNAT " & To_Str (GNAT_Info.Version) & " for " & S (OS_Info.Version));
-    Line ("CPU: " & Get_CPU.Vendor'Wide_Image & " w/ (" & Get_Extensions_Image (Get_CPU) & ")");
+    Title ("Info");
+    Line  ("Started by " & OS_Info.Username & " on " & To_Str (Image (Get_Start_Time)));
+    Line  ("Game: " & OS_Info.App_Name & WORD_SIZE'Wide_Image & (if Is_Debugging then " w/ debugging" else NULL_STR));
+    Line  ("Engine: " & NAME_ID & " " & VERSION);
+    Line  ("Compiler: " & "GNAT " & To_Str (GNAT_Info.Version) & " for " & S (OS_Info.Version));
+    Line  ("CPU: " & Get_CPU.Vendor'Wide_Image & " w/ (" & Get_Extensions_Image (Get_CPU) & ")");
 
-    -- Handle debugging
-    if Is_Debugging then -- Linked directly to the "Debug" scenario variable
-      --Use_Ada_Put;
-      null;--Initialize_Console;
-    end if; Initialize_Console;
+    -- Load saved CVARs
+    Title ("Configuration");
+    Initialize_Configuration (S (OS_Info.App_Path) & "config.txt");
+    --Initialize_Localization  (S (OS_Info.App_Path) & "locale.csv");
 
-    -- Initialize
-    Initialize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
-    --Initialize_Localization  (S (OS_Info.App_Path) & PATH_LOCALE);
+    -- Initialize the window and input
+    Title ("Graphics");
     Initialize_Windowing;
     Set_Windowing_Mode;
     Initialize_Drawing;
     Initialize_Input;
-    Menu_Task.Initialize;
 
     -- Set window interaction bindings
+    Enter_Game.Bindings.Append   (Mouse    (Left_Button));
     Fullscreen.Bindings.Append   (Keyboard (F11_Key));
     Exit_To_Menu.Bindings.Append (Keyboard (Escape_Key));
+
+    -- Debugging settings
+    --if Is_Debugging then -- Linked directly to the "Debug" scenario variable
+    --  Use_Ada_Put;
+      Initialize_Console;
+    --end if;
 
     -- Block to catch runtime exceptions and contain the main loop
     declare
@@ -93,6 +99,7 @@ procedure Main is
     Current_Activated : Activated_Kind := Activated.Get;
     begin
       Input_Status.Occupied (True);
+      Menu_Task.Initialize;
       while Update_Windowing and then Menu_Task.Running loop
 
         -- Set cursor
@@ -113,7 +120,7 @@ procedure Main is
         end if;
 
         -- Handle menu entry
-        if Current_Menu /= In_Menu.Get or Game_Entry_Status.Occupied then
+        if Current_Menu /= In_Menu.Get or else Game_Entry_Status.Occupied then
           Game_Entry_Status.Occupied (False);
           if In_Menu.Get then
             Cursor_Status.Occupied (False);
@@ -185,7 +192,6 @@ procedure Main is
                   end if;
                 when others => null; end case;
             when Other_Deactivated | Minimize_Deactivated =>
-
               if not In_Menu.Get and In_Main_Window then Set_Cursor (Saved_Pos); end if;
 
               Input_Status.Occupied (False);
@@ -195,7 +201,8 @@ procedure Main is
 
               if Activated.Get = Other_Deactivated then
                 case Mode.Get is
-                  when Multi_Monitor_Mode => Finalize_Multi_Monitor; Minimize;
+                  when Multi_Monitor_Mode => Finalize_Multi_Monitor;
+                                             Minimize;
                   when Fullscreen_Mode    => Minimize;
                   when others => null; end case;
 
@@ -206,7 +213,7 @@ procedure Main is
 
         -- Restart the framebuffer if our resolution changed suddenly
         if Window_Width.Get /= Current_Width or Window_Height.Get /= Current_Height then
-          --Resize (Window_Width.Get, Window_Height.Get);
+          --  Resize (Window_Width.Get, Window_Height.Get);
           Current_Width  := Window_Width.Get;
           Current_Height := Window_Height.Get;
           Restart_Framebuffer;
@@ -225,16 +232,9 @@ procedure Main is
                                             Message => Localize ("An error has occurred, would you like to view more information?"),
                                             Buttons => Yes_No_Buttons) then Initialize_Console; end if;
     end;
-
-    -- Finalize
-    Finalize_Drawing;
     Menu_Task.Finalize;
+    Finalize_Drawing;
     Finalize_Input;
     Finalize_Windowing;
-    Finalize_Configuration (S (OS_Info.App_Path) & PATH_CONFIG);
+    Finalize_Configuration;
   end;
-
-
-
-
-

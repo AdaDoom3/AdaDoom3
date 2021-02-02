@@ -1,0 +1,15 @@
+-- Neo 0.1.0 config: 2021-02-02 18:23:42
+-- To restore default values simply delete this file.
+
+-- CVars
+w_mode WINDOWED_MODE
+r_sampling NO_SAMPLING
+r_maxgpumb  128
+w_narrowx  16
+w_narrowy  9
+w_widex  4
+r_maxuploadmb  64
+w_widey  3
+r_maxhostmb  64
+w_height  600
+w_width  800

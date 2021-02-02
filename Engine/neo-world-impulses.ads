@@ -16,7 +16,7 @@
 
 with Neo.World.CVars; use Neo.World.CVars;
 
--- ???
+
 package Neo.World.Impulses is
 
   ----------------
@@ -30,7 +30,7 @@ package Neo.World.Impulses is
   -- Exit_To_Menu --
   ------------------
   --
-  -- ???
+  
   --
 
   procedure Callback_Exit_To_Menu (Args : Vector_Impulse_Arg.Unsafe_Array);
@@ -40,7 +40,7 @@ package Neo.World.Impulses is
   -- Fullscreen --
   ----------------
   --
-  -- ???
+  
   --
 
   procedure Callback_Fullscreen (Args : Vector_Impulse_Arg.Unsafe_Array);

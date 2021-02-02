@@ -1,0 +1,55 @@
+Material
+{
+   Name {string {"textures_glass_breakyglass1"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass1"}}
+}
+Material
+{
+   Name {string {"textures_glass_breakyglass1_nvp"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass1"}}
+}
+Material
+{
+   Name {string {"textures_glass_breakyglass2"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass2"}}
+}
+Material
+{
+   Name {string {"textures_glass_breakyglass2_nvp"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass2"}}
+}
+Material
+{
+   Name {string {"textures_glass_breakyglass3"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass3"}}
+}
+Material
+{
+   Name {string {"textures_glass_breakyglass3_nvp"}}
+   Texture (attrib = "editor") {string {"textures_editor_breakyglass3"}}
+}
+Material
+{
+   Name {string {"textures_glass_glass1"}}
+   Texture (attrib = "editor") {string {"textures_glass_glass1"}}
+}
+Material
+{
+   Name {string {"textures_glass_glass1_nvp"}}
+   Texture (attrib = "editor") {string {"textures_glass_glass1"}}
+}
+Material
+{
+   Name {string {"textures_glass_glass2"}}
+   Texture (attrib = "editor") {string {"textures_glass_glass2"}}
+}
+Material
+{
+   Name {string {"textures_glass_glass2_nvp"}}
+   Texture (attrib = "editor") {string {"textures_glass_glass2"}}
+}
+Material
+{
+   Name {string {"textures_glass_outdoor_glass1"}}
+   Texture (attrib = "editor") {string {"textures_glass_glass1"}}
+}

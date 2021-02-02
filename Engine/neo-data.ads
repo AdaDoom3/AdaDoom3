@@ -1,21 +1,20 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
-with Ada.Direct_IO;
 with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
-with Ada.Directories;       use Ada.Directories;
+with Neo.Core.Maps;         use Neo.Core.Maps;
 with Neo.Core.Math;         use Neo.Core.Math;
 with Neo.Core.Arrays;       use Neo.Core.Arrays;
 with Neo.Core.Strings;      use Neo.Core.Strings;
@@ -79,8 +78,8 @@ package Neo.Data is
   --
   -- Data:
   --
-  --   data-type         ::= bool | int8 | int16 | int32 | int64 | unsigned_int8 | unsigned_int16 | unsigned_int32 | unsigned_int64 | half
-  --                           | float | double | string | ref | type | float16 | float32 | float64
+  --   data-type         ::= bool | int8 | int16 | int32 | int64 | unsigned_int8 | unsigned_int16 | unsigned_int32 | unsigned_int64
+  --                           | half | float | double | string | ref | type | float16 | float32 | float64
   --                           | b | i8 | i16 | i32 | i64 | u8 | u16 | u32 | u64 | h | d | s | r | t | f | f16 | f32 | f64
   --   data-list-item    ::= integer-literal | boolean-literal | float-literal | string-literal | reference | data-type
   --   data-list         ::= data-list-item {, data-list-item}
@@ -91,15 +90,13 @@ package Neo.Data is
   --   file              ::= {structure}
   --
 
-  -- During parsing we encounter arrays of things (mostly floating point), so we deploy multithreading for the extra large ones, which, in
-  -- some cases, can reduce parsing time in half. The WORKERS_THRESHOLD controls the length of arrays at which this behavior gets triggered.
+  -- During parsing we encounter arrays of things (mostly floating point), so we deploy multithreading for the extra large ones,
+  -- which, can reduce parsing time in half. The WORKERS_THRESHOLD controls the length of arrays at which this behavior gets
+  -- triggered.
   WORKERS_THRESHOLD : Positive := 7_500;
   WORKER_COUNT      : Positive := 8;
 
-  -- Identifier
-  IDENTIFIER_MAX : constant Positive := 32;
-  function Id (Str : Str_8) return Str_8_Super is (P (Str, IDENTIFIER_MAX));
-  NULL_IDENTIFIER : Str_8_Super (IDENTIFIER_MAX) := Id (NULL_STR_8);
+  package Identifier_Str is new Util_Str_8_Super (32);
 
   type Component_Amount_Kind is (Zero_Or_One, Zero_To_Two, Zero_To_Three, Zero_To_Four, Zero_Or_More, None,
                                  Exactly_One, One_Or_Two,  One_To_Three,  One_To_Four,  One_Or_More,  Max_One);
@@ -252,56 +249,54 @@ package Neo.Data is
       end case;
     end record;
 
-  -- ???
+  -- Represents a property as part of an OpenDDL description
   type Property_State (Kind : Primitive_Kind := String_Kind; Defaulted : Bool := False) is record
-      Identifier : Str_8_Super (IDENTIFIER_MAX);
+      Identifier : Identifier_Str.T;
       case Defaulted is
         when True  => Default            : Primitive_State (Kind, 1);
         when False => Overrides_From_Ref : Bool;
       end case;
     end record;
-  NULL_PROPERTY : constant Property_State := (Bool_Kind, False, (IDENTIFIER_MAX, others => <>), False);
+  NULL_PROPERTY : constant Property_State := (Bool_Kind, False, Identifier_Str.NULL_STR, False);
   type Array_Property is array (1..6) of Property_State;
 
-  -- ???
+  
   type Primitive_Component_State is record
       Allow_Arrays       : Bool;
       Allowed_Primitives : Array_Primitive_Set;
     end record;
 
-  -- ???
+  
   generic
     type Struct_T is (<>);
     Override_Ref : Struct_T;
-    with procedure Parse_Data_Type (Text : Str_8; C : in out Positive; Struct : out Struct_T);
   package Description_Language_Struct_Types is
       type Array_Struct_T            is array (Positive range <>) of Struct_T;
       type Array_Struct_Count        is array (Struct_T) of Natural;
       type Array_Struct_Set          is array (Struct_T) of Bool;
-      type Array_Struct_Hierarchy    is array (Struct_T) of Array_Struct_Set; -- We must go deeper
       type Array_Struct_Property     is array (Struct_T) of Array_Property;
       type Array_Component_Amount    is array (Struct_T) of Component_Amount_Kind;
       type Array_Structure_Component is array (Struct_T) of Array_Component_Amount;
       type Array_Primitive_Component is array (Struct_T) of Primitive_Component_State;
     end;
 
-  -- ???
+  
   generic
     with package Struct_Types is new Description_Language_Struct_Types (<>);
     Top_Level_Structures : Struct_Types.Array_Struct_Set;
-    Hierarchy            : Struct_Types.Array_Struct_Hierarchy;
-    Properties           : Struct_Types.Array_Struct_Property;
-    Structure_Components : Struct_Types.Array_Structure_Component;
     Primitive_Components : Struct_Types.Array_Primitive_Component;
+    Structure_Components : Struct_Types.Array_Structure_Component;
+    Properties           : Struct_Types.Array_Struct_Property := (others => (others => NULL_PROPERTY));
   package Description_Language is
       use Struct_Types;
 
       Component_Mismatch,
+      Bad_Hierarchy,
       Bad_Reference,
       Syntax_Error,
       Unexpected_Primitive_Array,
       Invalid_Data_Type_Literal,
-      Bad_Hierarchy,
+      Invalid_Structure_Literal,
       Invalid_Escape_Character,
       Invalid_Hex_In_Valued_Character,
       Invalid_Character,
@@ -338,11 +333,13 @@ package Neo.Data is
           end case;
         end record;
       procedure Free is new Unchecked_Deallocation (Structure_State, Ptr_Structure_State);
+      procedure Construct_Structure (Item : in out Ptr_Structure_State; Kind : Primitive_Kind; Len : Positive);
 
       -- Reference conversions
       function Ref    is new Unchecked_Conversion (Ptr, Ptr_Structure_State);
-      function To_Ref is new Unchecked_Conversion (Ptr_Structure_State, Ptr);
+      function To_Ptr is new Unchecked_Conversion (Ptr_Structure_State, Ptr);
 
+      -- The actual file result type and related IO
       type File_State is new Controlled with record
           Name             : Ptr_Str_16;
           Counts           : Array_Struct_Count;
@@ -351,20 +348,23 @@ package Neo.Data is
           Globals          : Hashed_Ptr_Structure_State.Unsafe.Map;
         end record;
       procedure Finalize (File : in out File_State);
-
-      -- IO
       procedure Load (Path : Str; File : out File_State);
-      procedure Dump (Path : Str; File :     File_State); -- Debugging
 
       -- Getters
-      function Get (Structure : Ptr_Structure_State; Kind : Struct_T) return Ptr_Structure_State;
+      function Get (Possible_Matches : Array_Ptr_Structure_State;                 Prop, Val : Str_32) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Class      : Struct_T;       Prop, Val : Str_32) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Prop, Val : Str_32) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Class      : Struct_T;       Prop, Val : Str_32; Kind : Primitive_Kind) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Prop, Val : Str_32; Kind : Primitive_Kind) return Ptr_Structure_State;
+
       function Get (Structure : Ptr_Structure_State; Primitive : Primitive_Kind) return Ptr_Structure_State;
-      function Get (Structure : Ptr_Structure_State; Kind : Struct_T) return Array_Ptr_Structure_State;
-      function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T) return Array_Ptr_Structure_State;
-      function Get (Structure : Ptr_Structure_State; Class : Struct_T; Primitive : Primitive_Kind) return Ptr_Structure_State;
-      function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T) return Ptr_Structure_State;
-      function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T; Primitive : Primitive_Kind) return Ptr_Structure_State;
-    end;
+      function Get (Structure : Ptr_Structure_State; Kind      : Struct_T)       return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Kind      : Struct_T)       return Array_Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Path      : Array_Struct_T) return Array_Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Path      : Array_Struct_T) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Path      : Array_Struct_T; Primitive : Primitive_Kind) return Ptr_Structure_State;
+      function Get (Structure : Ptr_Structure_State; Class     : Struct_T;       Primitive : Primitive_Kind) return Ptr_Structure_State;
+  end;
 end;
 
 

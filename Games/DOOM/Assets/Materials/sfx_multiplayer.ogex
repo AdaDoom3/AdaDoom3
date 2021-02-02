@@ -1,0 +1,20 @@
+Material
+{
+   Name {string {"textures_sfx_mp_d3dm1_glass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_blueglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mp_d3dm3_glass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mp_d3dm3_glass_small"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mp_d3dm5_glass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_blueglass"}}
+}

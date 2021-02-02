@@ -1,0 +1,11 @@
+Material
+{
+   Name {string {"models_weapons_doublebarrel_doublebarrel"}}
+   Texture (attrib = "normal") {string {"models_weapons_doublebarrel_doublebarrel_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_doublebarrel_doublebarrel_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_doublebarrel_doublebarrel_invis"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_doublebarrel_doublebarrel"}}
+}

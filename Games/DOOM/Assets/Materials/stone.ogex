@@ -1,0 +1,16 @@
+Material
+{
+   Name {string {"textures_stone_sand01"}}
+   Texture (attrib = "editor") {string {"textures_stone_sand01_d"}}
+   Texture (attrib = "diffuse") {string {"textures_stone_sand01_d"}}
+   Texture (attrib = "specular") {string {"textures_stone_sand01_s"}}
+   Texture (attrib = "normal") {string {"textures_stone_sand01"}}
+}
+Material
+{
+   Name {string {"textures_stone_sand02"}}
+   Texture (attrib = "editor") {string {"textures_stone_sand01_d"}}
+   Texture (attrib = "diffuse") {string {"textures_stone_sand01_d"}}
+   Texture (attrib = "specular") {string {"textures_stone_sand01_s"}}
+   Texture (attrib = "normal") {string {"textures_stone_sand02"}}
+}

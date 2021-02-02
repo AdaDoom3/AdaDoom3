@@ -1,0 +1,1235 @@
+Material
+{
+   Name {string {"models_monsters_cyberdemon_cyberdemon"}}
+   Texture (attrib = "normal") {string {"models_monsters_cyberdemon_cyberdemon_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_cyberdemon_cyberdemon_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_imp_imp"}}
+   Texture (attrib = "normal") {string {"models_monsters_imp_imp_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_imp_imp_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_imp_imp_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_wraith_wraith"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_wraith_wraith"}}
+   Texture (attrib = "normal") {string {"models_monsters_wraith_wraith_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_wraith_wraith_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_ticks_tick"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_ticks_tick_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_ticks_tick_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_ticks_tick_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_ticks_tleg"}}
+}
+Material
+{
+   Name {string {"models_monsters_maledict_mtongue"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_maledict_mtongue"}}
+   Texture (attrib = "normal") {string {"models_monsters_maledict_mtongue_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maledict_mtongue_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maledict_maledict"}}
+   Texture (attrib = "normal") {string {"models_monsters_maledict_maledict_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maledict_maledict_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maledict_bmaledict"}}
+   Texture (attrib = "normal") {string {"models_monsters_maledict_maledict_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maledict_bmaledict_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_sawyer_shair1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_corpses_adrian"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_corpses_a_morgue_d09_fin"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_corpses_morgue_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_corpses_a_morgue_s01_fin"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_morgue_morgue"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_morgue_morgue_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_morgue_morgue_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_morgue_morgue_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_sawyer_sawyer"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_sawyer_sawyer_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_sawyer_sawyer_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_treads"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_treads_slow"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_treads_stopped"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_gear3"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_gear2"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_gear1"}}
+}
+Material
+{
+   Name {string {"models_monsters_sabaoth_sabaoth"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_sabaoth_sabaoth_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_sabaoth_sabaoth_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_sabaoth_sabaoth_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_vagary_eyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_gui"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_bhead"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_bhead_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_bhead_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_pt_bruiser_pt_bhead"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_pt_bruiser_pt_bhead_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_pt_bruiser_pt_bhead_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_bruiser3"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_bruiser_bruiser3_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_bruiser3_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_bruiser3_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_pt_bruiser_pt_bruiser3"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_bruiser_pt_bruiser_pt_bruiser3_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_pt_bruiser_pt_bruiser3_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_pt_bruiser_pt_bruiser3_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_vagary_vagary"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_vagary_vagary"}}
+   Texture (attrib = "normal") {string {"models_monsters_vagary_vagary_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_vagary_vagary_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_vagary_sac"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_hip_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_butt_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_pelvis_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_trap_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_head_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_wrist_flame"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_berniefx"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_jerky1"}}
+   Texture (attrib = "editor") {string {"models_monsters_zombie_bernie_jerky1"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_bernie_jerky1_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_bernie_bernie"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_bernie_bernie_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_bernie_bernie_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_bernie_bernie_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_wraith_wing"}}
+}
+Material
+{
+   Name {string {"models_monsters_wraith_weyes"}}
+}
+Material
+{
+   Name {string {"models_gibs_pork"}}
+   Texture (attrib = "normal") {string {"models_gibs_pork_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_pork_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_skeleton_skeleton01head"}}
+   Texture (attrib = "specular") {string {"models_monsters_skeleton_skeleton01_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_skeleton_skeleton01_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_skeleton_skeleton01"}}
+   Texture (attrib = "specular") {string {"models_monsters_skeleton_skeleton01_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_skeleton_skeleton01_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_skeleton_skragdoll"}}
+   Texture (attrib = "specular") {string {"models_monsters_skeleton_skeleton01_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_skeleton_skeleton01_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_skeleton_skeleton02_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_skeleton_skeleton02_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_skeleton_skeleton01_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_lost_emit1"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_lostfx"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_dzsechead2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_dzsechead2"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsechead2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_dzsechead2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_bolt1"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_bolt1"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_particle1"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_particle1"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_spike"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_spike"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_ring1"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_ring1"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_spawn_burn"}}
+   Texture (attrib = "editor") {string {"models_monsters_spawn_spawn_burn"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_crack"}}
+   Texture (attrib = "editor") {string {"models_m"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_redspawn2"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_redspawn1"}}
+}
+Material
+{
+   Name {string {"models_monsters_gseeker_gseeker"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_gseeker_gseeker"}}
+   Texture (attrib = "normal") {string {"models_monsters_gseeker_gseeker_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_gseeker_gseeker_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_guardian_tongue"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_guardian_tongue"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_tongue_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_tongue_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_guardian_guardianfx"}}
+}
+Material
+{
+   Name {string {"models_monsters_guardian_guardian"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_guardian_guardian"}}
+   Texture (attrib = "normal") {string {"models_monsters_guardian_guardian_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_guardian_guardian_s"}}
+}
+Material
+{
+   Name {string {"models_items_powerups_skull"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_id_badge"}}
+   Texture (attrib = "editor") {string {"models_monsters_zsecurity_id_badge"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_id_badge_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_id_badge_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_fatty_fatty"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_fatty_fatty_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_fatty_fatty_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_fatty_fatty_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_fatty_fattydamage"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_fatty_fatty_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_fatty_fatty_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_fatty_fatty_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_h_bruiser"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_h_bruiser_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_bruiser_h_bruiser"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_h_bruiser_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_bruiser"}}
+   Texture (attrib = "normal") {string {"models_monsters_bruiser_bruiser_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_bruiser_bruiser_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_bruiser_bruiser_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_revenant_revenant"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_revenant_revenant"}}
+   Texture (attrib = "normal") {string {"models_monsters_revenant_revenant_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_revenant_revenant_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_revenant_revenant2"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_lost"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_lost_lost"}}
+   Texture (attrib = "normal") {string {"models_monsters_lost_lost_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_lost_lost_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_mancubus_mancubus"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_mancubus_mancubus"}}
+   Texture (attrib = "normal") {string {"models_monsters_mancubus_mancubus_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_mancubus_mancubus_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_mancubus_mancubus_metal"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_mancubus_mancubus"}}
+   Texture (attrib = "normal") {string {"models_monsters_mancubus_mancubus_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_mancubus_mancubus_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_sentry_sentry"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_sentry_sentry_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_sentry_sentry_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_sentry_sentry_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_magspine"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_magspine_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_magspine_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_magtongue"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_maggot_magtongue"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_magtongue_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_magtongue_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_mageyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_maggot3"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_maggot_maggot3_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot3_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_maggot3_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_vulgar_vulgar_eyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_vulgar_vulgar"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_vulgar_vulgar"}}
+   Texture (attrib = "normal") {string {"models_monsters_vulgar_vulgar_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_vulgar_vulgar_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_vulgar_vtail"}}
+   Texture (attrib = "normal") {string {"models_monsters_vulgar_vtail_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_vulgar_vtail_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsheild_glass"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsheild_glass"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsheild"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsheild_s"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsheild_local"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsecurity"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsecurity"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsecurity_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsecurity_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechead3"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsechead3"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsechead3_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_dzsechead3"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechelm"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsechelm"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsechelm_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsechelm_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechead"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsechead"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsechead_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsechead_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechead2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsechead2"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsechead2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsechead2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechead4"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsechead4"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsechead4_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_archvile_archvilehand2"}}
+}
+Material
+{
+   Name {string {"models_monsters_archvile_archvile2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_archvile_archvile2"}}
+   Texture (attrib = "normal") {string {"models_monsters_archvile_archvile2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_archvile_archvile2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_tentacle_dp_tentacle"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_tentacle_dp_tentacle"}}
+   Texture (attrib = "normal") {string {"models_monsters_tentacle_dp_tentacle_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_tentacle_dp_tentacle_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_commando_teeth"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_commando_teeth_b"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_commando_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_commando_com1_eye"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_commando_com1_d"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_commando_com1_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_commando_com1_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_commando_com1_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_pinky_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_pinky_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_pinky_pinky_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_pinky_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_pinky"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_pinky_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_pinky_pinky_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_pinky_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_pinkyns"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_pinky_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_pinky_pinky_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_pinky_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_pinky_metal"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_pinky_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_pinky_pinky_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_pinky_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_film"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_film_b"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_film_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_cacodemon_cacodemon"}}
+   Texture (attrib = "specular") {string {"models_monsters_cacodemon_cacodemon_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_cacodemon_cacodemon_mouth"}}
+}
+Material
+{
+   Name {string {"models_monsters_cacodemon_cacoeye"}}
+}
+Material
+{
+   Name {string {"models_monsters_cacodemon_cacobrain"}}
+}
+Material
+{
+   Name {string {"models_monsters_cherub_teeth"}}
+}
+Material
+{
+   Name {string {"models_monsters_cherub_wing"}}
+}
+Material
+{
+   Name {string {"models_monsters_cherub_wingfx"}}
+}
+Material
+{
+   Name {string {"models_monsters_spectre_dis"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_jumpsuit_jumpsuit_local"}}
+   Texture (attrib = "specular") {string {"models_characters_male_npc_jumpsuit_jumpsuit_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_spectre_dis2"}}
+}
+Material
+{
+   Name {string {"models_monsters_spectre_spectre"}}
+   Texture (attrib = "normal") {string {"models_monsters_spectre_spectre_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_spectre_spectre_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie02_zombie02"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie02_zombie02"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie02_zombie02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie02_zhead02"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie02_zhead02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie02_zhead02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie02_zhead02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_trite_web1"}}
+   Texture (attrib = "editor") {string {"models_monsters_trite_web1"}}
+}
+Material
+{
+   Name {string {"models_monsters_trite_strand"}}
+   Texture (attrib = "editor") {string {"models_monsters_trite_strand"}}
+}
+Material
+{
+   Name {string {"models_monsters_trite_trite"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_trite_trite"}}
+   Texture (attrib = "normal") {string {"models_monsters_trite_trite_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_trite_trite_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zfem_zfhair02"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zfem_zfhair02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zfem_zfhair01"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zfem_zfhair01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zfem_zfem01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zfem_zfem01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zfem_zfem01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zfem_zfem01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_archvile_archvile_eyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_archvile_archvile"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_archvile_archvile"}}
+   Texture (attrib = "normal") {string {"models_monsters_archvile_archvile_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_archvile_archvile_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_archvile_archtail"}}
+   Texture (attrib = "normal") {string {"models_monsters_archvile_archtail_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_archvile_archtail_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_maggot2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_maggot_maggot2"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_maggot2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_spawn2"}}
+}
+Material
+{
+   Name {string {"models_monsters_spawn_spawn1"}}
+}
+Material
+{
+   Name {string {"models_gibs_gibmaster"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_gibmaster"}}
+   Texture (attrib = "normal") {string {"models_gibs_gibmaster_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_gibmaster_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_ghostskull_bugger"}}
+}
+Material
+{
+   Name {string {"models_monsters_ghostskull_ghostskull3emit"}}
+}
+Material
+{
+   Name {string {"models_monsters_ghostskull_ghostskull3"}}
+   Texture (attrib = "normal") {string {"models_monsters_ghostskull_ghostskull3_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_ghostskull_ghostskull3"}}
+}
+Material
+{
+   Name {string {"models_monsters_ghostskull_ghostskull"}}
+   Texture (attrib = "normal") {string {"models_monsters_ghostskull_ghostskull_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_ghostskull_ghostskull"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_tongue"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_hellknight_tongue"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_tongue_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_tongue_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_gob2"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_gob2_h"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_gob2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_gob"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_gob_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_bighellknight"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_hellknight_bighellknight"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_bighellknight_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_bighellknight_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_hellknight"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_hellknight_hellknight"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_hellknight_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_hellknight_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_greenfireball"}}
+   Texture (attrib = "editor") {string {"models_monsters_bruiser_greenfireball"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechand_left"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zhand"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zhand_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zhand_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsechand_right"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zhand"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zhand_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zhand_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsecfist_left"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsecurity"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsecurity_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsecurity_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsecfist_right"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zsecurity_zsecurity"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsecurity_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsecurity_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_marsec"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsgogs"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsgogs_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsgogs_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsgogs2damage"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsgogs2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsgogs2damage_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsgogs2bloody"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsgogs2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsgogs2bloody_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zsecurity_zsgogs2"}}
+   Texture (attrib = "normal") {string {"models_monsters_zsecurity_zsgogs2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zsecurity_zsgogs2_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_meyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_maggot_ken"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_maggot_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_maggot"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_maggot_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_maggot_death"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_maggot_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_revenant_reye"}}
+}
+Material
+{
+   Name {string {"models_monsters_revenant_leye"}}
+}
+Material
+{
+   Name {string {"models_gibs_sweetmeat"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_sweetmeat"}}
+   Texture (attrib = "normal") {string {"models_gibs_sweetmeat_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_sweetmeat_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_heart"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_heart"}}
+   Texture (attrib = "normal") {string {"models_gibs_heart_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_heart_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_spine"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_spine"}}
+   Texture (attrib = "normal") {string {"models_gibs_spine_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_spine_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_mancubus_mpipe_fx"}}
+}
+Material
+{
+   Name {string {"models_monsters_mancubus_mpipe"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zback01"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zback01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zback01b"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zback01b_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_eyes_brown"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_eyes_dead"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_eyes_blue"}}
+}
+Material
+{
+   Name {string {"models_gibs_brain"}}
+   Texture (attrib = "normal") {string {"models_gibs_brain_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_brain_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zarms04"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms04"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms04_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms04_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zrarms04"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms04"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms04_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms04_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlarms04"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms04"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms04_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms04_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zarms03"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms03"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms03_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms03_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zrarms03"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms03"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms03_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms03_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlarms03"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms03"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms03_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms03_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zarms02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zrarms02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlarms02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zarms01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zarms01b"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms01b"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zrarms01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlarms01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zarms01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zarms01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zarms01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_ztorso03"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_ztorso03"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_ztorso03_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_ztorso03_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_ztorso02"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_ztorso02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_ztorso02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_ztorso02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_ztorso01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_ztorso01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_ztorso01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_ztorso01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_ztorso01b"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_ztorso01b"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_ztorso01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_ztorso01b_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zhead03"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zhead03"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zhead03_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zhead03_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zhead02"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zhead02"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zhead02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zhead02_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zhead02b"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zhead02b"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zhead02_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zhead02b_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlegs01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zlegs01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zlegs01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zlegs01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zlegs01b"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zlegs01b"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zlegs01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zlegs01b_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zjaw01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zjaw01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zjaw01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01_zhead01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_zhead01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_zhead01_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_zhead01_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_meat_strand"}}
+   Texture (attrib = "editor") {string {"models_gibs_meat_strand"}}
+   Texture (attrib = "normal") {string {"models_gibs_meat_strand_h"}}
+   Texture (attrib = "specular") {string {"models_gibs_meat_strand_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_sentry_adriansentry"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_sentry_adriansentry_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_sentry_sentry_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_sentry_adriansentry_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_sentry_spiston_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_sentry_spiston_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_sentry_sflap_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_sentry_sflap_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_fatty_bloodyfatty"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_fatty_bloodyfatty_d"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_fatty_fatty_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_fatty_bloodyfatty_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_skull"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_lost_skull"}}
+   Texture (attrib = "normal") {string {"models_monsters_lost_skull_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_lost_skull_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_lost_fx"}}
+}
+Material
+{
+   Name {string {"models_monsters_lost_lost_teeth"}}
+   Texture (attrib = "normal") {string {"models_monsters_lost_lost_teeth_b"}}
+   Texture (attrib = "specular") {string {"models_monsters_lost_lost_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_pinky_teeth"}}
+   Texture (attrib = "normal") {string {"models_monsters_pinky_teeth_b"}}
+   Texture (attrib = "specular") {string {"models_monsters_pinky_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jarmor"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_armor_armorhi_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_jethro_jarmor"}}
+   Texture (attrib = "specular") {string {"models_characters_sarge2_armor_armor_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jethro"}}
+   Texture (attrib = "normal") {string {"models_monsters_jethro_jethro_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_jethro_jethro"}}
+   Texture (attrib = "specular") {string {"models_monsters_jethro_jethro_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jethrohair"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jethrohair2"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jethroa"}}
+   Texture (attrib = "normal") {string {"models_monsters_jethro_jethro_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_jethro_grey"}}
+   Texture (attrib = "specular") {string {"models_monsters_jethro_grey2"}}
+}
+Material
+{
+   Name {string {"models_monsters_jethro_jethrob"}}
+   Texture (attrib = "normal") {string {"models_monsters_jethro_jethro2_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_jethro_grey"}}
+   Texture (attrib = "specular") {string {"models_monsters_jethro_grey2"}}
+}
+Material
+{
+   Name {string {"models_monsters_bruiser_eyes"}}
+}
+Material
+{
+   Name {string {"models_monsters_adrian_amumble"}}
+   Texture (attrib = "normal") {string {"models_monsters_adrian_amumble_hm"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_adrian_amumble"}}
+   Texture (attrib = "specular") {string {"models_monsters_adrian_amumble_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_adrian_ahmumble"}}
+   Texture (attrib = "normal") {string {"models_monsters_adrian_ahmumble_hm"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_adrian_ahmumble"}}
+   Texture (attrib = "specular") {string {"models_monsters_adrian_ahmumble_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_adrian_atag"}}
+}
+Material
+{
+   Name {string {"models_monsters_mumble_tag"}}
+}
+Material
+{
+   Name {string {"models_monsters_mumble_mumble"}}
+   Texture (attrib = "normal") {string {"models_monsters_mumble_mumble_hm"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_mumble_mumble"}}
+   Texture (attrib = "specular") {string {"models_monsters_mumble_mumble_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_mumble_hmumble"}}
+   Texture (attrib = "normal") {string {"models_monsters_mumble_hmumble_hm"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_mumble_hmumble"}}
+   Texture (attrib = "specular") {string {"models_monsters_mumble_hmumble_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zhead01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zhead01_b"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zhead01_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zhead01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_zombie01"}}
+   Texture (attrib = "normal") {string {"models_monsters_zombie_zombie01_add"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_zombie01_d"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_zombie01_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_boney_adrianboney01"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_boney_a_boney_dhell01b"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_boney_a_boney_shell01"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_boney_adrianboney02"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_boney_a_boney_dhell02"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_boney_a_boney_shell02"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_a_hk_cutter"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_hellknight_a_hellknight_04a"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_hellknight_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_a_hellknight_s04a"}}
+}
+Material
+{
+   Name {string {"models_monsters_hellknight_a_hk_branded"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_hellknight_a_hk_branded_02b"}}
+   Texture (attrib = "normal") {string {"models_monsters_hellknight_hellknight_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_hellknight_a_hk_branded_s02b"}}
+}
+Material
+{
+   Name {string {"models_monsters_imp_a_hellimp"}}
+   Texture (attrib = "normal") {string {"models_monsters_imp_imp_local"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_imp_a_imp_d08a"}}
+   Texture (attrib = "specular") {string {"models_monsters_imp_a_imp_s08a"}}
+}
+Material
+{
+   Name {string {"models_monsters_maggot_a_hellmaggot"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_maggot_a_maggot3_d02"}}
+   Texture (attrib = "normal") {string {"models_monsters_maggot_maggot3_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_maggot_a_maggot3_s02"}}
+}

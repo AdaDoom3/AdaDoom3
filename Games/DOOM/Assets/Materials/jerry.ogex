@@ -1,0 +1,32 @@
+Material
+{
+   Name {string {"lights_newalphagrate1_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate2_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3b_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate4_flicker"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate5_flicker"}}
+}
+Material
+{
+   Name {string {"lights_lightgratelight2_snd"}}
+}
+Material
+{
+   Name {string {"lights_triangle1_snd"}}
+}

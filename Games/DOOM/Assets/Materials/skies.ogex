@@ -1,0 +1,30 @@
+Material
+{
+   Name {string {"textures_skies_hellsky2"}}
+   Texture (attrib = "editor") {string {"env_hellsky2_forward"}}
+}
+Material
+{
+   Name {string {"textures_skies_hellsky4"}}
+   Texture (attrib = "editor") {string {"env_hellsky4_forward"}}
+}
+Material
+{
+   Name {string {"textures_skies_colortest"}}
+   Texture (attrib = "editor") {string {"env_cloudy_up"}}
+}
+Material
+{
+   Name {string {"textures_skies_desertlightning"}}
+   Texture (attrib = "editor") {string {"env_desert_up"}}
+}
+Material
+{
+   Name {string {"textures_skies_desert"}}
+   Texture (attrib = "editor") {string {"env_desert_up"}}
+}
+Material
+{
+   Name {string {"textures_skies_commoutside"}}
+   Texture (attrib = "editor") {string {"env_cloudy_up"}}
+}

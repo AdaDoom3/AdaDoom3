@@ -1,28 +1,25 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
-with GNAT.Sockets;         use GNAT.Sockets;
-with Neo.API.Vulkan;       use Neo.API.Vulkan;
-with Neo.Data;             use Neo.Data;
-with Neo.Core;             use Neo.Core;
-with Neo.Core.Math;        use Neo.Core.Math;
-with Neo.Core.Console;     use Neo.Core.Console;
---with Neo.Core.Compression; use Neo.Core.Compression;
-with Neo.Core.Strings;     use Neo.Core.Strings;
-with Neo.Core.Arrays;      use Neo.Core.Arrays;
-with Neo.Core.Maps;        use Neo.Core.Maps;
+with Neo.API.Vulkan;   use Neo.API.Vulkan;
+with Neo.Core;         use Neo.Core;
+with Neo.Core.Math;    use Neo.Core.Math;
+with Neo.Core.Console; use Neo.Core.Console;
+with Neo.Core.Strings; use Neo.Core.Strings;
+with Neo.Core.Arrays;  use Neo.Core.Arrays;
+with Neo.Core.Maps;    use Neo.Core.Maps;
 with Neo.Core.Hashed;
 with Neo.Core.Ordered;
 with Neo.Core.Vectors;
@@ -34,21 +31,22 @@ package Neo.Engine is
   -- Information --
   -----------------
 
-  -- Asset and configuration paths
-  PATH_LOGS            : constant Str := "Logs"        & S;
-  PATH_ASSETS          : constant Str := "Assets"      & S;
-  PATH_DEFINITIONS     : constant Str := "Definitions" & S;
-  PATH_LOCALE          : constant Str := PATH_ASSETS & "locale.csv";
-  PATH_CONFIG          : constant Str := PATH_ASSETS & "config.txt";
-  PATH_ICON            : constant Str := PATH_ASSETS & "icon";
-  PATH_CURSOR_ACTIVE   : constant Str := PATH_ASSETS & "cursor_active";
-  PATH_CURSOR_INACTIVE : constant Str := PATH_ASSETS & "cursor_inactive";
-  PATH_CAMERAS         : constant Str := PATH_ASSETS & "Cameras"  & S;
-  PATH_MAPS            : constant Str := PATH_ASSETS & "Maps"     & S;
-  PATH_MODELS          : constant Str := PATH_ASSETS & "Models"   & S;
-  PATH_SHADERS         : constant Str := PATH_ASSETS & "Shaders"  & S;
-  PATH_SOUNDS          : constant Str := PATH_ASSETS & "Sounds"   & S;
-  PATH_TEXTURES        : constant Str := PATH_ASSETS & "Textures" & S;
+  -- Base paths
+  PATH_LOGS      : constant Str := "Logs"     & S;
+  PATH_RESOURCES : constant Str := "Resource" & S;
+  PATH_ASSETS    : constant Str := "Assets"   & S;
+
+  -- Resources
+  PATH_ICON            : constant Str := PATH_RESOURCES & "icon";
+  PATH_CURSOR_ACTIVE   : constant Str := PATH_RESOURCES & "cursor_active";
+  PATH_CURSOR_INACTIVE : constant Str := PATH_RESOURCES & "cursor_inactive";
+
+  -- Assets
+  PATH_MATERIALS : constant Str := PATH_ASSETS & "Materials" & S;
+  PATH_MODELS    : constant Str := PATH_ASSETS & "Models"    & S;
+  PATH_MAPS      : constant Str := PATH_ASSETS & "Maps"      & S;
+  PATH_SHADERS   : constant Str := PATH_ASSETS & "Shaders"   & S;
+  PATH_TEXTURES  : constant Str := PATH_ASSETS & "Textures"  & S;
 
   type OS_Info_State is record
       Size_Memory : Int_64_Unsigned := 0; -- In bytes
@@ -59,6 +57,16 @@ package Neo.Engine is
       Bit_Size    : Positive        := 1;
     end record;
   function OS_Info return OS_Info_State;
+
+  ------------
+  -- Vulkan --
+  ------------
+
+  procedure Initialize_Vulkan_Library;
+  procedure Finalize_Vulkan_Library;
+  function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
+  function Get_Vulkan_Subprogram (Name     : Str) return Ptr;
+  function Get_Vulkan_Extension  return Ptr_Char_8_C;
 
   ---------------
   -- Clipboard --
@@ -90,16 +98,6 @@ package Neo.Engine is
         end;
     end;
 
-  ------------
-  -- Vulkan --
-  ------------
-
-  procedure Initialize_Vulkan_Library;
-  procedure Finalize_Vulkan_Library;
-  function Create_Vulkan_Surface (Instance : Ptr) return Ptr;
-  function Get_Vulkan_Subprogram (Name     : Str) return Ptr;
-  function Get_Vulkan_Extension  return Ptr_Char_8_C;
-
   --------------------
   -- Error Handling --
   --------------------
@@ -109,7 +107,7 @@ package Neo.Engine is
   CONSOLE_FOREGROUND_COLOR : constant Color_State := COLOR_CRIMSON;
 
   -- URL to go to when "sending" a log
-  CONSOLE_ERROR_REPORTING_URL : constant Str := "www.google.com";
+  CONSOLE_ERROR_REPORTING_URL : constant Str := "www.duck.com";
 
   type Icon_Kind    is (No_Icon, Error_Icon, Warning_Icon, Information_Icon);
   type Buttons_Kind is (Okay_Button, Yes_No_Buttons, Okay_Cancel_Buttons, Retry_Cancel_Buttons);
@@ -122,7 +120,7 @@ package Neo.Engine is
   procedure Finalize_Console;
   function Running_Console return Bool;
 
-  -- ???
+  
   procedure Save_Log;
   procedure Send_Log;
 
@@ -258,7 +256,7 @@ package Neo.Engine is
           Text     : Str_Unbound   := NULL_STR_UNBOUND;
           Keys     : Key_Array     := (others => (others => <>));
         when Gamepad_Device =>
-          Triggers : Trigger_Array := (others => <>);
+          Triggers : Trigger_Array := (others => 0.0);
           Gamepad  : Gamepad_Array := (others => (others => <>));
           Sticks   : Stick_Array   := (others => (others => <>));
         when Mouse_Device =>
@@ -301,7 +299,7 @@ package Neo.Engine is
   -- Impulse --
   -------------
   --
-  -- An "impulse" is how an interaction between... more info !!!
+  -- An "impulse" is how an interaction between... more info!
   --
   -- Ex:
   --   procedure Callback_Shoot (Args : Impulse_Arg_Array) is
@@ -321,11 +319,11 @@ package Neo.Engine is
       Player : Positive;
       Combo  : Natural := NO_COMBO;
       case Kind is
-        when Mouse_Impulse   => Mouse   : Mouse_Kind   := Mouse_Kind'First;
-        when Key_Impulse     => Key     : Key_Kind     := Key_Kind'First;
-        when Stick_Impulse   => Stick   : Stick_Kind   := Stick_Kind'First;
-        when Gamepad_Impulse => Gamepad : Gamepad_Kind := Gamepad_Kind'First;
-        when Trigger_Impulse => Trigger : Trigger_Kind := Trigger_Kind'First;
+        when Mouse_Impulse   => Mouse   : Mouse_Kind;
+        when Key_Impulse     => Key     : Key_Kind;
+        when Stick_Impulse   => Stick   : Stick_Kind;
+        when Gamepad_Impulse => Gamepad : Gamepad_Kind;
+        when Trigger_Impulse => Trigger : Trigger_Kind;
       when others => null; end case;
     end record;
 
@@ -359,11 +357,23 @@ package Neo.Engine is
     Name : Str;
     with procedure Callback (Args : Vector_Impulse_Arg.Unsafe_Array);
     Settable : Bool := False;
+    Rapid    : Bool := False; -- Trigger continuious callbacks on pressed state instead of just deltas
   package Impulse is
       Bindings : aliased Vector_Binding.Safe_Vector;
       procedure Enable;
       procedure Disable;
     end;
+
+  -- Internal state for storing registered impulses
+  type Impulse_State is record
+      Callback : not null access procedure (Args : Vector_Impulse_Arg.Unsafe_Array);
+      Bindings : not null access Vector_Binding.Safe_Vector;
+      Name     : Str_Unbound;
+      Enabled  : Bool := True;
+      Rapid    : Bool := True;
+    end record;
+  package Hashed_Impulse is new Neo.Core.Hashed (Impulse_State);
+  Impulses : Hashed_Impulse.Safe_Map;
 
   ---------
   -- CPU --

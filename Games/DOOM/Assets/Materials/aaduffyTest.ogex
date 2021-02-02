@@ -1,0 +1,361 @@
+Material
+{
+   Name {string {"textures_sfx_refract"}}
+   Texture (attrib = "editor") {string {"textures_sfx_refract"}}
+}
+Material
+{
+   Name {string {"textures_common_npc_pda"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffybolt3"}}
+   Texture (attrib = "editor") {string {"textures_particles_duffybolt3"}}
+}
+Material
+{
+   Name {string {"textures_particles_blood2"}}
+   Texture (attrib = "editor") {string {"textures_particles_blood2"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodstream4"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodspray2"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgball"}}
+   Texture (attrib = "editor") {string {"textures_particles_bfgball"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffybolt_white"}}
+   Texture (attrib = "editor") {string {"textures_particles_duffybolt2_white"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffyboltvert_white"}}
+   Texture (attrib = "editor") {string {"textures_particles_duffyboltvert_white"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffyboltball"}}
+   Texture (attrib = "editor") {string {"textures_particles_duffyboltball"}}
+}
+Material
+{
+   Name {string {"guis_assets_glassy"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_glasscountertop"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_glasscountertop_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_glasscountertop_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_glasscountertop_s"}}
+}
+Material
+{
+   Name {string {"ui_assets_map"}}
+}
+Material
+{
+   Name {string {"guisurfs_pattest"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_videopanel_1"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_wallpanel_1"}}
+   Texture (attrib = "editor") {string {"_editorimage"}}
+}
+Material
+{
+   Name {string {"guisurfs_moongui_1"}}
+   Texture (attrib = "editor") {string {"_editorimage"}}
+}
+Material
+{
+   Name {string {"ui_assets_guisurfs_computerBackground"}}
+}
+Material
+{
+   Name {string {"ui_assets_guisurfs_computerBlueBackground"}}
+}
+Material
+{
+   Name {string {"ui_assets_guisurfs_moonvid"}}
+}
+Material
+{
+   Name {string {"ui_assets_guisurfs_video"}}
+}
+Material
+{
+   Name {string {"guisurfs_testgui"}}
+   Texture (attrib = "editor") {string {"_editorimage"}}
+}
+Material
+{
+   Name {string {"ui_assets_3_cursor3"}}
+}
+Material
+{
+   Name {string {"ui_assets_copyright"}}
+}
+Material
+{
+   Name {string {"ui_assets_playbutton"}}
+}
+Material
+{
+   Name {string {"ui_assets_playbuttonblur"}}
+}
+Material
+{
+   Name {string {"ui_assets_setupbutton"}}
+}
+Material
+{
+   Name {string {"ui_assets_setupbuttonblur"}}
+}
+Material
+{
+   Name {string {"ui_assets_editorbutton"}}
+}
+Material
+{
+   Name {string {"ui_assets_editorbuttonblur"}}
+}
+Material
+{
+   Name {string {"ui_assets_quitbutton"}}
+}
+Material
+{
+   Name {string {"ui_assets_quitbuttonblur"}}
+}
+Material
+{
+   Name {string {"ui_assets_uiBackground"}}
+}
+Material
+{
+   Name {string {"textures_decals_wallsplat1"}}
+   Texture (attrib = "editor") {string {"textures_decals_duffysplat"}}
+}
+Material
+{
+   Name {string {"textures_decals_wallsplat2"}}
+   Texture (attrib = "editor") {string {"textures_decals_duffysplat"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodparticle"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodpuff"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodpuff"}}
+}
+Material
+{
+   Name {string {"textures_decals_duffysplat"}}
+   Texture (attrib = "editor") {string {"textures_decals_duffysplat"}}
+}
+Material
+{
+   Name {string {"textures_decals_duffysplat2"}}
+   Texture (attrib = "editor") {string {"textures_decals_duffysplat2"}}
+}
+Material
+{
+   Name {string {"textures_decals_dsplat2"}}
+   Texture (attrib = "editor") {string {"textures_decals_dsplat2"}}
+}
+Material
+{
+   Name {string {"textures_decals_dsplat5"}}
+   Texture (attrib = "editor") {string {"textures_decals_dsplat5"}}
+}
+Material
+{
+   Name {string {"textures_decals_dsplat7"}}
+   Texture (attrib = "editor") {string {"textures_decals_dsplat7"}}
+}
+Material
+{
+   Name {string {"textures_decals_dsplat11"}}
+   Texture (attrib = "editor") {string {"textures_decals_dsplat11"}}
+}
+Material
+{
+   Name {string {"textures_sfx_firetrail"}}
+   Texture (attrib = "editor") {string {"textures_particles_firepuff"}}
+}
+Material
+{
+   Name {string {"textures_sfx_fireplume"}}
+   Texture (attrib = "editor") {string {"textures_particles_fireplume"}}
+}
+Material
+{
+   Name {string {"guis_testColored"}}
+}
+Material
+{
+   Name {string {"textures_particles_teleportsparks"}}
+   Texture (attrib = "editor") {string {"textures_particles_spawn1"}}
+}
+Material
+{
+   Name {string {"textures_particles_teleportsparks2"}}
+   Texture (attrib = "editor") {string {"textures_particles_spawn2"}}
+}
+Material
+{
+   Name {string {"textures_particles_sparkstrip"}}
+   Texture (attrib = "editor") {string {"textures_particles_sparkstrip"}}
+}
+Material
+{
+   Name {string {"textures_particles_bluesparks"}}
+   Texture (attrib = "editor") {string {"textures_particles_spark"}}
+}
+Material
+{
+   Name {string {"textures_decals_duffysplatgun"}}
+   Texture (attrib = "editor") {string {"textures_decals_duffysplat"}}
+}
+Material
+{
+   Name {string {"textures_particles_redteleportsparks"}}
+   Texture (attrib = "editor") {string {"textures_particles_redspawn"}}
+}
+Material
+{
+   Name {string {"textures_particles_redteleportsmoke"}}
+   Texture (attrib = "editor") {string {"textures_particles_hellsmoke"}}
+}
+Material
+{
+   Name {string {"textures_particles_debris"}}
+   Texture (attrib = "editor") {string {"textures_sfx_debris"}}
+}
+Material
+{
+   Name {string {"textures_particles_debrislight"}}
+   Texture (attrib = "editor") {string {"textures_sfx_debrislight"}}
+}
+Material
+{
+   Name {string {"textures_cameraImg1"}}
+   Texture (attrib = "editor") {string {"textures_editor_cameragui"}}
+}
+Material
+{
+   Name {string {"textures_cameraImg2"}}
+   Texture (attrib = "editor") {string {"textures_editor_cameragui"}}
+}
+Material
+{
+   Name {string {"textures_cameraView1"}}
+   Texture (attrib = "editor") {string {"textures_editor_camera"}}
+}
+Material
+{
+   Name {string {"textures_cameraView2"}}
+   Texture (attrib = "editor") {string {"textures_editor_camera"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap1"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap2"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap3"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap4"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap5"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap6"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap7"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap8"}}
+   Texture (attrib = "editor") {string {"guisurfs_guisurface"}}
+}
+Material
+{
+   Name {string {"guisurfs_guipreview"}}
+   Texture (attrib = "editor") {string {"textures_editor_gui"}}
+}
+Material
+{
+   Name {string {"textures_skies_duffyblah_sky"}}
+   Texture (attrib = "editor") {string {"textures_skies_qc_sky"}}
+}
+Material
+{
+   Name {string {"textures_objective1"}}
+}
+Material
+{
+   Name {string {"textures_objective2"}}
+}
+Material
+{
+   Name {string {"textures_objective3"}}
+}
+Material
+{
+   Name {string {"textures_objective4"}}
+}
+Material
+{
+   Name {string {"textures_objective5"}}
+}
+Material
+{
+   Name {string {"textures_objectivecomplete1"}}
+}
+Material
+{
+   Name {string {"textures_objectivecomplete2"}}
+}
+Material
+{
+   Name {string {"textures_objectivecomplete3"}}
+}
+Material
+{
+   Name {string {"textures_objectivecomplete4"}}
+}
+Material
+{
+   Name {string {"textures_objectivecomplete5"}}
+}

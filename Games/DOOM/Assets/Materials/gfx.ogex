@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"textures_REGION"}}
+}
+Material
+{
+   Name {string {"textures_bigchars"}}
+}

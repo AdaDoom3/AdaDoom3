@@ -1,0 +1,60 @@
+Material
+{
+   Name {string {"models_characters_marine_vmarine_default"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_marine_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_marine_marine_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vhelmet_d3_default"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_head_d3_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_helmet_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vmarine_red1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_marine_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_marine_marine_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vhelmet_d3_red1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_head_d3_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_helmet_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vmarine_blue1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_marine_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_marine_marine_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vhelmet_d3_blue1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_head_d3_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_helmet_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vmarine_yellow1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_marine_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_marine_marine_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vhelmet_d3_yellow1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_head_d3_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_helmet_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vmarine_green1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_marine_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_male_npc_marine_marine_local"}}
+}
+Material
+{
+   Name {string {"models_characters_marine_vhelmet_d3_green1"}}
+   Texture (attrib = "diffuse") {string {"models_characters_menu_mplayer_head_d3_color0"}}
+   Texture (attrib = "normal") {string {"models_characters_sarge2_helmet_local"}}
+}

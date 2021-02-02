@@ -1,0 +1,672 @@
+Material
+{
+   Name {string {"models_weapons_berserk_fist"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_berserk_fist"}}
+   Texture (attrib = "normal") {string {"models_weapons_berserk_fist_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_berserk_fist_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_berserk_fist_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_berserk_fist_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_hands_hand"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_hands_hand_df"}}
+   Texture (attrib = "normal") {string {"models_weapons_hands_hand_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_hands_hand_sp"}}
+}
+Material
+{
+   Name {string {"models_weapons_hands_hand_invis"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_hands_hand_df"}}
+   Texture (attrib = "normal") {string {"models_weapons_hands_hand_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_hands_hand_sp"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_pistol"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_pistol_pistol"}}
+   Texture (attrib = "normal") {string {"models_weapons_pistol_pistol_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_pistol_pistol_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_pistol_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_pistol_pistol_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_pistol_clip"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_pistol_pistol"}}
+   Texture (attrib = "normal") {string {"models_weapons_pistol_pistol_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_pistol_pistol_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_pistol_mflash"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_pistol_mflash2"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_w_pistol"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_pistol_w_pistol"}}
+   Texture (attrib = "normal") {string {"models_weapons_pistol_w_pistol_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_pistol_w_pistol_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_pistol_w_pistol_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_pistol_w_pistol_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_gui"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgui"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shotgun_shotgui"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_shotgui_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shotgun_shotgui_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shotgun_shotgun"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_shotgun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shotgun_shotgun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun2"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shotgun_shotgun2"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_shotgun2_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shotgun_shotgun2_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun2_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_shotgun2_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun_mflash"}}
+   Texture (attrib = "editor") {string {"models_weapons_shotgun_shotgun_mflash"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun_mflashb"}}
+   Texture (attrib = "editor") {string {"models_weapons_shotgun_shotgun_mflashb"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_shotgun_mflash2"}}
+   Texture (attrib = "editor") {string {"models_weapons_shotgun_shotgun_mflash2"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_w_shotgun2"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shotgun_w_shotgun2"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_w_shotgun2_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shotgun_w_shotgun2_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shotgun_w_shotgun2_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_shotgun_w_shotgun2_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_machinegun_machinegun"}}
+   Texture (attrib = "normal") {string {"models_weapons_machinegun_machinegun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_machinegun_machinegun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_machinegun_machinegun_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun_mflash"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun_mflashb"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun_mflash2"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_machinegun_mflash2b"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_m_gui"}}
+   Texture (attrib = "editor") {string {"models_weapons_machinegun_m_gui"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_w_machinegun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_machinegun_w_machinegun"}}
+   Texture (attrib = "normal") {string {"models_weapons_machinegun_w_machinegun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_machinegun_w_machinegun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_machinegun_w_machinegun_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_machinegun_w_machinegun_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_chaingun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chaingun_chaingun"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_chaingun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_chaingun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_chaingun_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_chaingun_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_band"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_band_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_band_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_barrel"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chaingun_barrel"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_barrel_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_barrel_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_barrel_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_cbar"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chaingun_cbar"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_cbar_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_cbar_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_cbar_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_cbar_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_chaingun_mflash"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_chaingun_mflash2"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_w_chaingun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chaingun_w_chaingun"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_w_chaingun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_w_chaingun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chaingun_w_chaingun_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_chaingun_w_chaingun_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_grenades_grenades3"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_grenades_grenades3"}}
+   Texture (attrib = "normal") {string {"models_weapons_grenades_grenades3_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_grenades_grenades3_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_grenades_grenades3_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_grenades_grenades3_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_grenades_grenades3fx"}}
+}
+Material
+{
+   Name {string {"models_weapons_grenades_grenades3fx_invis"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun"}}
+   Texture (attrib = "normal") {string {"models_weapons_plasmagun_plasmagun_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_plasmagun_plasmagun_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_plasmagun_plasmagun_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_mflash"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_mflash2"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p1"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p2"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasmaflame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p3"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasmaflame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p1x"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p2x"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasmaflame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_p3x"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasmaflame_strip"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_pl_can2"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_plasmagun_pl_can2_d"}}
+   Texture (attrib = "specular") {string {"models_weapons_plasmagun_pl_can2_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_gui"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_ventglow"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_world"}}
+   Texture (attrib = "normal") {string {"models_weapons_plasmagun_plasmagun_world_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_plasmagun_plasmagun_world_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_plasmagun_plasmagun_world_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_plasmagun_plasmagun_world_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rocketlauncher"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rocketlauncher_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_rocketlauncher_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rocketlauncher_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher_fx"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher_fx2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_boomboom"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_boomboom2"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_gboomboom"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher_mflash"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketlauncher_mflashb"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocket"}}
+   Texture (attrib = "editor") {string {"models_weapons_rocketlauncher_rocket"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rocket"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rocket_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rocketfin"}}
+   Texture (attrib = "editor") {string {"models_weapons_rocketlauncher_rocketfin"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rocketfin_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rshell1"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rshell1"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rshell1_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_rshell1_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rshell2"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rshell1"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rshell1_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_rshell1_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rshell3"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rshell1"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rshell1_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_rshell1_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_rshell4"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_rshell1"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_rshell1_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_rshell1_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_w_rocketlauncher"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_rocketlauncher_w_rocketlauncher"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_w_rocketlauncher_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_rocketlauncher_w_rocketlauncher_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_w_rocketlauncher_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_rocketlauncher_w_rocketlauncher_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_zoom"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_cyberzoom"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg"}}
+   Texture (attrib = "normal") {string {"models_weapons_bfg_bfg_local"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_bfg_bfg"}}
+   Texture (attrib = "specular") {string {"models_weapons_bfg_bfg_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_bfg_bfg_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg_screen"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast1"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast2"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfgblast2"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast3"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast4"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfgblast4"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast5"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfgblast6"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfgblast6"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg_flare1"}}
+   Texture (attrib = "editor") {string {"models_weapons_bfg_bfg_flare1"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg_world"}}
+   Texture (attrib = "normal") {string {"models_weapons_bfg_bfg_world_local"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_bfg_bfg_world"}}
+   Texture (attrib = "specular") {string {"models_weapons_bfg_bfg_world_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_bfg_world_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_bfg_bfg_world_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_bfg_boomboom"}}
+   Texture (attrib = "editor") {string {"textures_particles_rocketlauncher_mflash_strip2"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chainsaw"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chainsaw_chainsaw"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_chainsaw_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chainsaw_chainsaw_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chainsaw_invis"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chainsaw_chainsaw"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_chainsaw_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain_invis"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain_fast"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain_fast_invis"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain_stop"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_chain_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chainsaw_chain_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_chain_stop_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_chain_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_w_chainsaw"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chainsaw_w_chainsaw"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_w_chainsaw_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_chainsaw_w_chainsaw_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_chainsaw_w_chainsaw_invis"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chainsaw_w_chainsaw"}}
+   Texture (attrib = "normal") {string {"models_weapons_chainsaw_w_chainsaw_local"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulbits"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulbox2"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_soulcube3_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulcube3_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulcube3_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_evilhaze"}}
+   Texture (attrib = "editor") {string {"models_weapons_soulcube_evilhaze"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3fx"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3fx2"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3fx3"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3fx4"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulcube3fx5"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulknife"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_soulknife_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknife_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknife_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulknife2"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_soulknife_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknife_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknife_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulknife3"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_soulknife_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknife_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknife_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulknife4"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_soulknife_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknife_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknife_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulknifetex"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknifetex_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknifetex_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulring"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulring2"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_soulring3"}}
+}
+Material
+{
+   Name {string {"models_weapons_soulcube_w_soulcube3"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_soulcube_w_soulcube3_d"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_w_soulcube3_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_w_soulcube3_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_mflash_f_shotgun1"}}
+}
+Material
+{
+   Name {string {"models_weapons_mflash_f_machinegun"}}
+}
+Material
+{
+   Name {string {"models_weapons_mflash_f_pistol1"}}
+}
+Material
+{
+   Name {string {"models_weapons_shell1_mshell"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shell1_mshell"}}
+   Texture (attrib = "normal") {string {"models_weapons_shell1_mshell_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shell1_mshell_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shell1_sshell"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_shell1_sshell"}}
+   Texture (attrib = "normal") {string {"models_weapons_shell1_sshell_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_shell1_sshell_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_shell1_sshell_invis"}}
+   Texture (attrib = "normal") {string {"models_weapons_shell1_sshell_local"}}
+}

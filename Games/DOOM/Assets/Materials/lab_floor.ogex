@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"textures_lab_medtile01"}}
+   Texture (attrib = "editor") {string {"textures_lab_medtile01"}}
+   Texture (attrib = "normal") {string {"textures_lab_medtile01_b"}}
+   Texture (attrib = "diffuse") {string {"textures_lab_medtile01_d"}}
+   Texture (attrib = "specular") {string {"textures_lab_medtile01_s"}}
+}

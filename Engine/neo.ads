@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with GNAT.Compiler_Version;
 with GNAT.Traceback.Symbolic;            use GNAT.Traceback.Symbolic;
@@ -100,6 +100,8 @@ package Neo is
   -- Integers
   type Int_Ptr              is mod MEMORY_SIZE;
   type Int_8_Percent        is range 1..100; for Int_8_Percent'Size use 8;
+  type Int_2_Unsigned       is mod 2 ** 2;
+  type Int_4_Unsigned       is mod 2 ** 4;
   subtype Int_8_Unsigned    is Unsigned_8;
   subtype Int_8_Unsigned_C  is Interfaces.C.Unsigned_Char;
   subtype Int_8_Signed      is Short_Short_Integer;
@@ -174,6 +176,8 @@ package Neo is
   subtype Bool               is Boolean;
   subtype Char               is Char_16;
   subtype Stream             is Stream_Element;
+  subtype Nibble             is Int_2_Unsigned;
+  subtype Half_Byte          is Int_4_Unsigned;
   subtype Byte               is Int_8_Unsigned;
   subtype Int                is Int_32_Signed;
   subtype Int_C              is Int_32_Signed_C;
@@ -215,7 +219,7 @@ package Neo is
   function To_Int_16_Unsigned       is new Unchecked_Conversion (Char_16_C,             Int_16_Unsigned);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Int_16_Unsigned_C, Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Const_Char_16_C,   Int_Ptr);
-  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Char_8_C,    Int_Ptr);
+  function To_Int_Ptr               is new Unchecked_Conversion (Ptr_Char_8_C,          Int_Ptr);
   function To_Int_Ptr               is new Unchecked_Conversion (Ptr,                   Int_Ptr);
   function To_Real_32               is new Unchecked_Conversion (Real_32,               Int_Unsigned);
 
@@ -248,6 +252,7 @@ package Neo is
   function To_Str_8               (Item : Str_16)              return Str_8          is (To_String (Item, CHAR_REPLACEMENT));
   function To_Str_8               (Item : Ptr_Char_8_C)        return Str_8;
   function To_Str_8               (Item : Str_8_Super)         return Str_8          renames Super_To_String;
+  function To_Str_16              (Item : Str_16_Super)        return Str_16         renames Super_To_String;
   function To_Str_8               (Item : Str_8_Unbound)       return Str_8          renames To_String;
   function To_Str_8_Unbound       (Item : Str_8)               return Str_8_Unbound  renames To_Unbounded_String;
   function To_Str_8_Super         (Item : Str_8; L : Natural)  return Str_8_Super    is (To_Super_String (Item, L));
@@ -284,6 +289,7 @@ package Neo is
   function To_Str_16_Unbound      (Item : Char_16)             return Str_16_Unbound is (To_Str_16_Unbound ("" & Item));
   function To_Str_16_Unbound      (Item : Str_8_C)             return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
   function To_Str_16_Unbound      (Item : Str_8_Super)         return Str_16_Unbound is (To_Str_16_Unbound (Super_To_String (Item)));
+  function To_Str_16_Unbound      (Item : Str_32_Unbound)      return Str_16_Unbound is (To_Str_16_Unbound (To_Str_16 (Item)));
   function To_Str_Unbound         (Item : Str_8_C)             return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_Unbound         (Item : Str_8)               return Str_16_Unbound renames To_Str_16_Unbound;
   function To_Str_Unbound         (Item : Char_16)             return Str_16_Unbound renames To_Str_16_Unbound;
@@ -300,8 +306,8 @@ package Neo is
   function To_Str                 (Item : Ptr_Char_8_C)        return Str_16         renames To_Str_16;
   function To_Str                 (Item : Char_8)              return Str_16         renames To_Str_16;
   function To_Str                 (Item : Str_16_Unbound)      return Str_16         renames To_Str_16;
-  function S                      (Item : Str_16_C)            return Str_16         renames To_Str_16;
-  function S                      (Item : Str_16_Unbound)      return Str_16         renames To_Str_16;
+  function SC                     (Item : Str_16_C)            return Str_16         renames To_Str_16;
+  function S                      (Item : Str_16_Unbound)      return Str_16         renames To_Str_16; -- This function should be named "S"
   function To_Ptr_Char_8_C        (Item : in out Str_8_C)      return Ptr_Char_8_C   is (Item (Item'First)'Unchecked_Access);
   function To_Ptr_Char_16_C       (Item : in out Str_16_C)     return Ptr_Char_16_C  is (Item (Item'First)'Unchecked_Access);
   function C                      (Item : in out Str_16_C)     return Ptr_Char_16_C  renames To_Ptr_Char_16_C;
@@ -362,7 +368,7 @@ package Neo is
   procedure Assert (Val : Int_Unsigned_C);
   procedure Assert (Val : Int_16_Unsigned_C);
 
-  -- ???
+
   procedure Debug_Assert (Val : Bool);
   procedure Debug_Assert (Val : Ptr);
   procedure Debug_Assert (Val : Int_Ptr);

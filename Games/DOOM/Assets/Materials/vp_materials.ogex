@@ -1,0 +1,80 @@
+Material
+{
+   Name {string {"textures_sfx_vpstatic"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring3"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpsphere"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpsphereb"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vptelesphere"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpfan"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppinch_bfgbolt"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppinch"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1ghost"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp3"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1particle"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1particle2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpfridge1glass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppuzzglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpalphaglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1band"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp2"}}
+}

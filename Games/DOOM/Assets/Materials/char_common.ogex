@@ -1,0 +1,273 @@
+Material
+{
+   Name {string {"models_characters_common_rightpoppy"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftpoppy"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightzsarge"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftzsarge"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethdeadb"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethdead"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead01"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead02"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead03"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead04"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead05"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethpoppy"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethhead06"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethplayer"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethbet"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethswann"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethsarge"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethsecurity"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_teethcampbell"}}
+   Texture (attrib = "normal") {string {"models_characters_common_teeth_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_teeth_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightcampbell"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftcampbell"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightsecurity"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftsecurity"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightplayer"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftplayer"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightsarge"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftsarge"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightbet"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftbet"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightmaledict"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftmaledict"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightswann"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftswann"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead01"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead01"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead02"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead02"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead03"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead03"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead04"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead04"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead05"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead05"}}
+}
+Material
+{
+   Name {string {"models_characters_common_righthead06"}}
+}
+Material
+{
+   Name {string {"models_characters_common_lefthead06"}}
+}
+Material
+{
+   Name {string {"models_characters_common_tongue"}}
+   Texture (attrib = "diffuse") {string {"models_characters_common_tongue"}}
+   Texture (attrib = "normal") {string {"models_characters_common_tongue_local"}}
+   Texture (attrib = "specular") {string {"models_characters_common_tongue_s"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightdead3"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftdead3"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightdead2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftdead2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightgreen"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftgreen"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightbrown2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftbrown2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightbrown"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftbrown"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightblue2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftblue2"}}
+}
+Material
+{
+   Name {string {"models_characters_common_rightblue"}}
+}
+Material
+{
+   Name {string {"models_characters_common_leftblue"}}
+}

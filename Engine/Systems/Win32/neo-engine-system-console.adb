@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 -- A task-isolated GUI console application for debugging
 separate (Neo.Engine.System) package body Console is
@@ -31,7 +31,7 @@ separate (Neo.Engine.System) package body Console is
   ERROR_REPORTING_URL : constant Str   := "http://www.google.com";
   LABEL_INPUT_ENTRY   : constant Str   := "Input";
   LABEL_OUTPUT        : constant Str   := "Output";
-  FONT_CONSOLE        : aliased  Str_C := To_Str_C ("Consolas");
+  FONT_CONSOLE        : aliased  Str_C := To_Str_C ("Lucida Console");
   NAME_BUTTON         : aliased  Str_C := To_Str_C ("Button");
   NAME_GROUP          : aliased  Str_C := To_Str_C ("Group");
   NAME_EDIT           : aliased  Str_C := To_Str_C ("Edit");
@@ -42,7 +42,7 @@ separate (Neo.Engine.System) package body Console is
   FONT_GROUP_BOX_SIZE   : constant Real  := 1.2;
   IDENTIFIER_START      : constant Int_C := 666;
   SCROLL_FACTOR         : constant Int_C := 500;
-  FONT_CONSOLE_SIZE     : constant Int_C := -11;
+  FONT_CONSOLE_SIZE     : constant Int_C := 14;
   NUMBER_OF_OUTPUT_ROWS : constant Int_C := 25;
   BUTTON_HEIGHT_DLU     : constant Int_C := 14;
   BUTTON_WIDTH_DLU      : constant Int_C := 50;
@@ -56,7 +56,7 @@ separate (Neo.Engine.System) package body Console is
   Class         : aliased WNDCLASSEX        := (others => <>);
   Metrics       : aliased NONCLIENTMETRICS  := (others => <>);
   Rectangle     : aliased RECT              := (others => <>);
-  Input_Buffer  : aliased Str_C (1..500000) := (others => NULL_CHAR_C); -- Buffer size is arbitrary !!!
+  Input_Buffer  : aliased Str_C (1..500000) := (others => NULL_CHAR_C); -- Buffer size is arbitrary!
 
   -- Console output tracking
   Cutoff,
@@ -95,9 +95,17 @@ separate (Neo.Engine.System) package body Console is
   Was_At_Bottom, Is_At_Bottom,
   Do_Skip_Message : Bool := False;
 
+  function S (Item : Str_16_C)            return Str_16         renames To_Str_16;
+
   -- Message procedures for convience
-  procedure Set_Text (Handle : Ptr; Text : Str) is begin Assert (SendMessageW (Handle, WM_SETTEXT, 0, To_Int_Ptr (To_Str_C (Text)'Address))); end;
-  procedure Set_Font (Handle : Ptr; Font : Ptr) is begin Ignore (SendMessageW (Handle, WM_SETFONT, To_Int_Ptr (Font), 1)); end;
+  procedure Set_Text (Handle : Ptr; Text : Str) is begin Assert (SendMessageW (Handle,
+                                                                               WM_SETTEXT,
+                                                                               0,
+                                                                               To_Int_Ptr (To_Str_C (Text)'Address))); end;
+  procedure Set_Font (Handle : Ptr; Font : Ptr) is begin Ignore (SendMessageW (Handle,
+                                                                               WM_SETFONT,
+                                                                               To_Int_Ptr (Font),
+                                                                               1)); end;
 
   -- Return true if the output text window's scrollbar is at the bottom
   function Scrollbar_At_Bottom return Bool is
@@ -114,7 +122,7 @@ separate (Neo.Engine.System) package body Console is
     begin
       Assert (SystemParametersInfoW (SPI_GETNONCLIENTMETRICS, Metrics.cbSize, Metrics'Address, 0));
       Font_Buttons := CreateFontIndirectW (Metrics.lfMessageFont'Unchecked_Access); Assert (Font_Buttons);
-      Font_Text_Box := CreateFontW (nHeight            => FONT_CONSOLE_SIZE,
+      Font_Text_Box := CreateFontW (nHeight            => -FONT_CONSOLE_SIZE,
                                     nWidth             => 0,
                                     nEscapement        => 0,
                                     nOrientation       => 0,
@@ -158,14 +166,19 @@ separate (Neo.Engine.System) package body Console is
       Console_Height    := (MARGIN * DBU_Height) * 4 + (Border_Height + Margin_Group + Margin_Group_Top) * 2
                            + Output_Box_Height + Input_Box_Height + BUTTON_HEIGHT + GetSystemMetrics (SM_CYSIZE);
       if Buttons'Length > 0 then
-        Minimum_Width := (Buttons'Length - 1) * MARGIN_BUTTON * DBU_Width + MARGIN * 2 * DBU_Width + BUTTON_WIDTH * Buttons'Length + Border_Width * 2;
+        Minimum_Width := (Buttons'Length - 1) * MARGIN_BUTTON * DBU_Width + MARGIN * 2 * DBU_Width
+                          + BUTTON_WIDTH * Buttons'Length + Border_Width * 2;
         if Console_Width < Minimum_Width then
           Output_Box_Width := Output_Box_Width + Minimum_Width - Console_Width;
           Console_Width := Minimum_Width;
         end if;
       end if;
-      if Current_Height < Console_Height or (Was_At_Minimum_Height and Current_Height > Console_Height) then Current_Height := Console_Height; end if;
-      if Current_Width  < Console_Width  or (Was_At_Minimum_Width  and Current_Width  > Console_Width)  then Current_Width  := Console_Width;  end if;
+      if Current_Height < Console_Height or (Was_At_Minimum_Height and Current_Height > Console_Height) then
+        Current_Height := Console_Height;
+      end if;
+      if Current_Width  < Console_Width or (Was_At_Minimum_Width and Current_Width > Console_Width) then
+        Current_Width  := Console_Width;
+      end if;
       Output_Box_Width      := Current_Width  - (Console_Width  - Output_Box_Width);
       Output_Box_Height     := Current_Height - (Console_Height - Output_Box_Height);
       Was_At_Minimum_Height := Current_Height < Console_Height + Border_Height;
@@ -247,7 +260,8 @@ separate (Neo.Engine.System) package body Console is
     begin
       case uMsg is
         when WM_DESTROY    => PostQuitMessage (0); Close_Console := True; return 0;
-        when WM_CREATE     => Edit_Background := CreateSolidBrush (To_Windows_Color (CONSOLE_BACKGROUND_COLOR)); Assert (Edit_Background);
+        when WM_CREATE     => Edit_Background := CreateSolidBrush (To_Windows_Color (CONSOLE_BACKGROUND_COLOR));
+                              Assert (Edit_Background);
         when WM_SYSCOMMAND => if wParam = Int_Ptr (SC_KEYMENU) or wParam = Int_Ptr (SC_SCREENSAVE) then return 1; end if;
 
         -- Set colors
@@ -362,7 +376,7 @@ separate (Neo.Engine.System) package body Console is
       Assert (Context);
 
       -- Load the icon
-      Icon := LoadImageW (hinst     => GetModuleHandleW (null), -- Loads the icon nicely for the Aero theme, but not on the "classic" theme
+      Icon := LoadImageW (hinst     => GetModuleHandleW (null), -- Loads the icon nicely - except on the "classic" theme
                           lpszName  => C (WIN32_PATH_ICON),
                           uType     => IMAGE_ICON,
                           cxDesired => 0,
@@ -396,7 +410,8 @@ separate (Neo.Engine.System) package body Console is
                                          hInstance    => GetModuleHandleW (null),
                                          lpParam      => NULL_PTR,
                                          dwExStyle    => 0,
-                                         dwStyle      => WS_MINIMIZE or WS_SIZEBOX or WS_SYSMENU or WS_BORDER or WS_MAXIMIZEBOX or WS_MINIMIZEBOX);
+                                         dwStyle      => WS_MINIMIZE or WS_SIZEBOX or WS_SYSMENU or WS_BORDER or WS_MAXIMIZEBOX
+                                                           or WS_MINIMIZEBOX);
       Assert (Console_Window);
 
       -- Create the output box border
@@ -428,7 +443,8 @@ separate (Neo.Engine.System) package body Console is
                                      hInstance    => GetModuleHandleW (null),
                                      lpParam      => NULL_PTR,
                                      dwExStyle    => 0,
-                                     dwStyle      => WS_VSCROLL or WS_VISIBLE or WS_BORDER or ES_MULTILINE or ES_READONLY or WS_CHILD);
+                                     dwStyle      => WS_VSCROLL or WS_VISIBLE or WS_BORDER or ES_MULTILINE or ES_READONLY
+                                                       or WS_CHILD);
       Assert (Output_Box);
       Set_Font (Output_Box, Font_Text_Box);
 
@@ -511,7 +527,10 @@ separate (Neo.Engine.System) package body Console is
                                          lParam => 0,
 
                                          -- Figure out the direction of the scroll
-                                         wParam => (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Message.wParam)
+                                         wParam => (if To_Int_16_Signed
+                                                         (Int_16_Unsigned
+                                                           (Shift_Right
+                                                             (Int_64_Unsigned (Message.wParam)
                                                     and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0 then 1 else 0)));
                 end loop;
               end if;
@@ -590,7 +609,7 @@ separate (Neo.Engine.System) package body Console is
           End_Selection   := End_Selection   - Int_C (Cutoff);
 
           -- Trim the log output if our buffer overflows
-          if Length (Current_Log) > Input_Buffer'Length then -- This needs cleanup !!!
+          if Length (Current_Log) > Input_Buffer'Length then -- This needs cleanup!
             Cutoff       := Int_64_Natural (Index (Current_Log, To_Str (ASCII.CR), Input_Buffer'Length) + 1);
             Cutoff_Lines := Int_64_Natural (Count (Head (Current_Log, Natural (Cutoff)), To_Str (ASCII.CR)));
             Current_Log  := Tail (Current_Log, Length (Current_Log) - Natural (Cutoff));
@@ -598,7 +617,8 @@ separate (Neo.Engine.System) package body Console is
 
           -- Set output text and user selection
           Set_Text (Output_Box, S (Current_Log));
-          Ignore (SendMessageW (Output_Box, EM_SETSEL, Int_Ptr (Start_Selection) + Int_Ptr (Cutoff), Int_Ptr (End_Selection) + Int_Ptr (Cutoff)));
+          Ignore (SendMessageW (Output_Box, EM_SETSEL, Int_Ptr (Start_Selection) + Int_Ptr (Cutoff), Int_Ptr (End_Selection)
+                                                                                                       + Int_Ptr (Cutoff)));
 
           -- If the scroll bar was at the bottom, make sure it stays there
           if Is_At_Bottom then

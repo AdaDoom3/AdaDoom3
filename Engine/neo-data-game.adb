@@ -1,34 +1,51 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 -- Isolate parsers for different model formats into separate packages and consolidate them here
 package body Neo.Data.Game is
 
+  use Neo.Data.Identifier_Str;
+
+  ---------------
+  -- Utilities --
+  ---------------
+
+  function To_Transform_4D (Val : Array_x2_Real_32; I : Positive := 1) return Transform_4D is
+    (Real_32 (Val (I, 1)), Real_32 (Val (I, 5)), Real_32 (Val (I,  9)), Real_32 (Val (I, 13)),
+     Real_32 (Val (I, 2)), Real_32 (Val (I, 6)), Real_32 (Val (I, 10)), Real_32 (Val (I, 14)),
+     Real_32 (Val (I, 3)), Real_32 (Val (I, 7)), Real_32 (Val (I, 11)), Real_32 (Val (I, 15)));
+
+  function To_Vector_3D (Val : Array_x2_Real_32; I : Positive := 1) return Vector_3D is
+    (Real_32 (Val (I, 1)), Real_32 (Val (I, 2)), Real_32 (Val (I,  3)));
+
+  function To_Vector_2D (Val : Array_x2_Real_32; I : Positive := 1) return Vector_2D is
+    (Real_32 (Val (I, 1)), Real_32 (Val (I, 2)));
+
+  function To_Point_3D (Val : Array_x2_Real_32; I, J : Positive := 1) return Point_3D is
+    (Real_32 (Val (I, J)), Real_32 (Val (I, J + 1)), Real_32 (Val (I, J + 2)));
+
+  function To_Point_2D (Val : Array_x2_Real_32; I, J : Positive := 1) return Point_2D is
+    (Real_32 (Val (I, J)), Real_32 (Val (I, J + 1)));
+
   ----------------------------
   -- Engine_Exchange_Format --
   ----------------------------
-  --
   -- https://web.archive.org/web/20180903014314/http://opengex.org/OpenGEX.2.0.pdf
-  --
-  -- Additional structures and fields:
-  --
-  --   ...
-  --
 
   -- Enumerate all possible structures, its wrapped in its own package due to naming conflicts with "Time" and "Name"
-  package OpenGEX is type Structure_Kind is (BoneNode,     CameraNode,     GeometryNode,   LightNode,    Node, -- Should all start with uppercase
+  package OpenGEX is type Structure_Kind is (BoneNode,     CameraNode,     GeometryNode,   LightNode,    Node,
                                              Animation,    Transform,      Translation,    Rotation,     Scale,
                                              CameraObject, GeometryObject, LightObject,    ObjectRef,    MaterialRef,
                                              Bone,         BoneCountArray, BoneIndexArray, BoneRefArray, BoneWeightArray,
@@ -39,145 +56,8 @@ package body Neo.Data.Game is
   subtype Node_Kind     is OpenGEX.Structure_Kind range BoneNode  .. Node;
   subtype Movement_Kind is OpenGEX.Structure_Kind range Animation .. Scale;
 
-  -- Could have used the Value attribute, but that is a linear search and we want the SPEEEEED
-  procedure Parse_Struct_Types (Text : Str_8; C : in out Positive; Struct : out OpenGEX.Structure_Kind) with Inline is
-    procedure Assert_Rest (Match : Str_8) with Inline is
-      begin
-        C := C + 1;
-        if Text (C..C + Match'Length - 1) /= Match then raise Program_Error; end if;
-        C := C + Match'Length;
-      end;
-    begin
-      case Text (C) is
-        when 'B' =>
-          Assert_Rest ("one");
-          case Text (C) is
-            when 'N' => Assert_Rest ("ode");        Struct := BoneNode;
-            when 'C' => Assert_Rest ("ountArray");  Struct := BoneCountArray;
-            when 'I' => Assert_Rest ("ndexArray");  Struct := BoneIndexArray;
-            when 'R' => Assert_Rest ("efArray");    Struct := BoneRefArray;
-            when 'W' => Assert_Rest ("eightArray"); Struct := BoneWeightArray;
-            when others => raise Program_Error;
-          end case;
-        when 'C' =>
-          C := C + 1;
-          case Text (C) is
-            when 'l' => Assert_Rest ("ip");  Struct := Clip;
-            when 'o' => Assert_Rest ("lor"); Struct := Color;
-            when 'a' =>
-              Assert_Rest ("mera");
-              case Text (C) is
-                when 'N' => Assert_Rest ("ode");   Struct := CameraNode;
-                when 'O' => Assert_Rest ("bject"); Struct := CameraObject;
-                when others => raise Program_Error;
-              end case;
-            when others => raise Program_Error;
-          end case;
-        when 'G' =>
-          Assert_Rest ("eometry");
-          case Text (C) is
-            when 'N' => Assert_Rest ("ode");   Struct := GeometryNode;
-            when 'O' => Assert_Rest ("bject"); Struct := GeometryObject;
-            when others => raise Program_Error;
-          end case;
-        when 'L' =>
-          Assert_Rest ("ight");
-          case Text (C) is
-            when 'N' => Assert_Rest ("ode");   Struct := LightNode;
-            when 'O' => Assert_Rest ("bject"); Struct := LightObject;
-            when others => raise Program_Error;
-          end case;
-        when 'N' =>
-          C := C + 1;
-          case Text (C) is
-            when 'o' => Assert_Rest ("de"); Struct := Node;
-            when 'a' => Assert_Rest ("me"); Struct := OpenGEX.Name;
-            when others => raise Program_Error;
-          end case;
-        when 'A' =>
-          C := C + 1;
-          case Text (C) is
-            when 'n' => Assert_Rest ("imation"); Struct := Animation;
-            when 't' => Assert_Rest ("ten");     Struct := Atten;
-            when others => raise Program_Error;
-          end case;
-        when 'T' =>
-          C := C + 1;
-          case Text (C) is
-            when 'e' => Assert_Rest ("xture"); Struct := Texture;
-            when 'i' => Assert_Rest ("me");    Struct := OpenGEX.Time;
-            when 'r' =>
-              Assert_Rest ("a");
-              case Text (C) is
-                when 'c' => Assert_Rest ("k"); Struct := Track;
-                when 'n' =>
-                  Assert_Rest ("s");
-                  case Text (C) is
-                    when 'f' => Assert_Rest ("orm");   Struct := Transform;
-                    when 'l' => Assert_Rest ("ation"); Struct := Translation;
-                    when others => raise Program_Error;
-                  end case;
-                when others => raise Program_Error;
-              end case;
-            when others => raise Program_Error;
-          end case;
-        when 'R' => Assert_Rest ("otation"); Struct := Rotation;
-        when 'S' =>
-          C := C + 1;
-          case Text (C) is
-            when 'c' => Assert_Rest ("Scale"); Struct := Scale;
-            when 'k' =>
-              C := C + 1;
-              case Text (C) is
-                when 'e' => Assert_Rest ("leton"); Struct := Skeleton;
-                when 'i' => Assert_Rest ("n");     Struct := Skin;
-                when others => raise Program_Error;
-              end case;
-            when others => raise Program_Error;
-          end case;
-        when 'M' =>
-          C := C + 1;
-          case Text (C) is
-            when 'e' =>
-              C := C + 1;
-              case Text (C) is
-                when 't' => Assert_Rest ("ric"); Struct := Metric;
-                when 's' => Assert_Rest ("h");   Struct := Mesh;
-                when others => raise Program_Error;
-              end case;
-            when 'a' =>
-              Assert_Rest ("terial");
-              case Text (C) is
-                when 'R' => Assert_Rest ("ef"); Struct := MaterialRef;
-                when others =>                  Struct := Material;
-              end case;
-            when 'o' =>
-              Assert_Rest ("rph");
-              case Text (C) is
-                when 'W'    => Assert_Rest ("eight"); Struct := MorphWeight;
-                when others =>                        Struct := Morph;
-              end case;
-            when others => raise Program_Error;
-          end case;
-        when 'O' => Assert_Rest ("bjectRef");  Struct := ObjectRef;
-        when 'E' => Assert_Rest ("xtension");  Struct := Extension;
-        when 'I' => Assert_Rest ("ndexArray"); Struct := IndexArray;
-        when 'K' => Assert_Rest ("ey");        Struct := Key;
-        when 'P' => Assert_Rest ("aram");      Struct := Param;
-        when 'V' =>
-          C := C + 1;
-          case Text (C) is
-            when 'a' => Assert_Rest ("lue");       Struct := Value;
-            when 'e' => Assert_Rest ("rtexArray"); Struct := VertexArray;
-            when others => raise Program_Error;
-          end case;
-        when others => raise Program_Error;
-      end case;
-    end;
-
-  -- Do the actual instantiation
-  package Struct_Types is new Description_Language_Struct_Types (OpenGEX.Structure_Kind, ObjectRef, Parse_Struct_Types);
-  package Engine_Exchange_Format is new Description_Language (Struct_Types,
+  package OpenGEX_Struct_Types is new Description_Language_Struct_Types (OpenGEX.Structure_Kind, ObjectRef); use OpenGEX_Struct_Types;
+  package Engine_Exchange_Format is new Description_Language (OpenGEX_Struct_Types,
 
   -------------------------
   Top_Level_Structures => (
@@ -191,55 +71,13 @@ package body Neo.Data.Game is
   Metric         |
 
   -- Either top-level or sub-level
-  BoneNode     |
-  CameraNode   |
-  CameraObject |
   Extension    |
-  GeometryNode |
-  LightNode    |
-  Node         => True, others => False),
+  Node_Kind    |
+  CameraObject => True, others => False),
 
-  --------------
-  Hierarchy => (
-  --------------
-
-  Track           => (Animation                                            => True, others => False),
-  BoneRefArray    => (Skeleton                                             => True, others => False),
-  BoneCountArray  => (Skin                                                 => True, others => False),
-  BoneIndexArray  => (Skin                                                 => True, others => False),
-  BoneWeightArray => (Skin                                                 => True, others => False),
-  Skeleton        => (Skin                                                 => True, others => False),
-  IndexArray      => (Mesh                                                 => True, others => False),
-  Skin            => (Mesh                                                 => True, others => False),
-  VertexArray     => (Mesh                                                 => True, others => False),
-  Value           => (Track                                                => True, others => False),
-  OpenGEX.Time    => (Track                                                => True, others => False),
-  Key             => (OpenGEX.Time | Value                                 => True, others => False),
-  Atten           => (LightObject                                          => True, others => False),
-  Texture         => (LightObject | Material                               => True, others => False),
-  Color           => (LightObject | Material                               => True, others => False),
-  Param           => (LightObject | Material | CameraObject | Atten | Clip => True, others => False),
-  MaterialRef     => (GeometryNode                                         => True, others => False),
-  ObjectRef       => (GeometryNode | CameraNode | LightNode                => True, others => False),
-  Mesh            => (GeometryObject                                       => True, others => False),
-  Morph           => (GeometryObject                                       => True, others => False),
-  MorphWeight     => (GeometryObject                                       => True, others => False),
-  CameraNode      => (Node_Kind                                            => True, others => False),
-  BoneNode        => (Node_Kind                                            => True, others => False),
-  GeometryNode    => (Node_Kind                                            => True, others => False),
-  Node            => (Node_Kind                                            => True, others => False),
-  LightNode       => (Node_Kind                                            => True, others => False),
-  Animation       => (Node_Kind | Texture                                  => True, others => False),
-  Rotation        => (Node_Kind | Texture                                  => True, others => False),
-  Scale           => (Node_Kind | Texture                                  => True, others => False),
-  Translation     => (Node_Kind | Texture                                  => True, others => False),
-  Transform       => (Node_Kind | Texture | Skin | Skeleton                => True, others => False),
-  OpenGEX.Name    => (Node_Kind | Morph   | Clip | Material                => True, others => False),
-  Extension       =>                                                               (others => False), others => (others => False)),
-
-  -------------------------
+  ----------------------
   Primitive_Components => (
-  -------------------------
+  ----------------------
 
   BoneRefArray    => (Allow_Arrays => True,  Allowed_Primitives => (Ref_Kind                                                            => True, others => False)),
   BoneCountArray  => (Allow_Arrays => True,  Allowed_Primitives => (Any_Unsigned_Int_Kind                                               => True, others => False)),
@@ -263,9 +101,9 @@ package body Neo.Data.Game is
   VertexArray     => (Allow_Arrays => True,  Allowed_Primitives => (Any_Float_Kind    | Any_Float_x2_Kind |
                                                                     Any_Float_x3_Kind | Any_Float_x4_Kind                               => True, others => False)), others => (False, (others => False))),
 
-  -------------------------
+  ----------------------
   Structure_Components => (
-  -------------------------
+  ----------------------
 
   Morph           => (OpenGEX.Name => Max_One,                                                                                                  others => None),
   BoneNode        => (OpenGEX.Name => Max_One, Node_Kind | Movement_Kind                             => Zero_Or_More,                           others => None),
@@ -280,312 +118,617 @@ package body Neo.Data.Game is
   Atten           => (Param => Zero_Or_More,                                                                                                    others => None),
   OpenGEX.Time    => (Key   => One_To_Three,                                                                                                    others => None),
   Value           => (Key   => One_To_Four,                                                                                                     others => None),
+  Track           => (OpenGEX.Time | Value     => Exactly_One,                                                                                  others => None),
+  Skeleton        => (Transform | BoneRefArray => Exactly_One,                                                                                  others => None),
   Skin            => (Transform     => Zero_Or_One, Skeleton | BoneCountArray | BoneIndexArray | BoneWeightArray => Exactly_One,                others => None),
   Extension       => (Extension     => Zero_Or_More,                                                                                            others => None),
   Texture         => (Movement_Kind => Zero_Or_More,                                                                                            others => None),
   Animation       => (Track         => One_Or_More,                                                                                             others => None),
   GeometryObject  => (Mesh          => One_Or_More, Morph      => Zero_Or_More,                                                                 others => None),
-  Mesh            => (VertexArray   => One_Or_More, IndexArray => Zero_Or_More, Skin => Max_One,                                                others => None),
-  Skeleton        => (Transform | BoneRefArray => Exactly_One,                                                                                  others => None),
-  Track           => (OpenGEX.Time | Value     => Exactly_One,                                                                                  others => None), others => (others => None)),
+  Mesh            => (VertexArray   => One_Or_More, IndexArray => Zero_Or_More, Skin => Max_One,                                                others => None), others => (others => None)),
 
-  ---------------
+  -------------
   Properties => (
-  ---------------
+  -------------
 
-  Animation      => ((Identifier => Id ("clip"),        Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
-                     (Identifier => Id ("begin"),       Kind => Float32_Kind,        Defaulted => False,  Overrides_From_Ref => False),
-                     (Identifier => Id ("end"),         Kind => Float32_Kind,        Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  Atten          => ((Identifier => Id ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("distance")))),
-                     (Identifier => Id ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
-  Clip           => ((Identifier => Id ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
-  Color          => ((Identifier => Id ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  Extension      => ((Identifier => Id ("applic"),      Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => NULL_STR_32_UNBOUND))),
-                     (Identifier => Id ("type"),        Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  GeometryNode   => ((Identifier => Id ("visible"),     Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),
-                     (Identifier => Id ("shadow"),      Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),
-                     (Identifier => Id ("motion blur"), Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),                                             others => NULL_PROPERTY),
-  GeometryObject => ((Identifier => Id ("visible"),     Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),
-                     (Identifier => Id ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),
-                     (Identifier => Id ("motion blur"), Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
-  IndexArray     => ((Identifier => Id ("material"),    Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
-                     (Identifier => Id ("restart"),     Kind => Unsigned_Int64_Kind, Defaulted => False,  Overrides_From_Ref => False),
-                     (Identifier => Id ("front"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("ccw")))),       others => NULL_PROPERTY),
-  Key            => ((Identifier => Id ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("value")))),     others => NULL_PROPERTY),
-  LightNode      => ((Identifier => Id ("shadow"),      Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),                                             others => NULL_PROPERTY),
-  LightObject    => ((Identifier => Id ("type"),        Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
-                     (Identifier => Id ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
-  Material       => ((Identifier => Id ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
-  MaterialRef    => ((Identifier => Id ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
-  Mesh           => ((Identifier => Id ("lod"),         Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
-                     (Identifier => Id ("primitive"),   Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("triangles")))), others => NULL_PROPERTY),
-  Metric         => ((Identifier => Id ("key"),         Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  Morph          => ((Identifier => Id ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
-                     (Identifier => Id ("base"),        Kind => Unsigned_Int32_Kind, Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  MorphWeight    => ((Identifier => Id ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
-  Param          => ((Identifier => Id ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  Rotation       => ((Identifier => Id ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("axis")))),
-                     (Identifier => Id ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
-  Scale          => ((Identifier => Id ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("xyz")))),
-                     (Identifier => Id ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
-  Texture        => ((Identifier => Id ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
-                     (Identifier => Id ("texcoord"),    Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
-  OpenGEX.Time   => ((Identifier => Id ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
-  Track          => ((Identifier => Id ("target"),      Kind => Ref_Kind,            Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
-  Transform      => ((Identifier => Id ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
-  Translation    => ((Identifier => Id ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("xyz")))),
-                     (Identifier => Id ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
-  Value          => ((Identifier => Id ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
-  VertexArray    => ((Identifier => Id ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
-                     (Identifier => Id ("morph"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY), others => (others => NULL_PROPERTY)));
+  Animation      => ((Identifier => S ("clip"),        Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
+                     (Identifier => S ("begin"),       Kind => Float32_Kind,        Defaulted => False,  Overrides_From_Ref => False),
+                     (Identifier => S ("end"),         Kind => Float32_Kind,        Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  Atten          => ((Identifier => S ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("distance")))),
+                     (Identifier => S ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
+  Clip           => ((Identifier => S ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
+  Color          => ((Identifier => S ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  Extension      => ((Identifier => S ("applic"),      Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => NULL_STR_32_UNBOUND))),
+                     (Identifier => S ("type"),        Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  GeometryNode   => ((Identifier => S ("visible"),     Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),
+                     (Identifier => S ("shadow"),      Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),
+                     (Identifier => S ("motion blur"), Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),                                             others => NULL_PROPERTY),
+  GeometryObject => ((Identifier => S ("visible"),     Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),
+                     (Identifier => S ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),
+                     (Identifier => S ("motion blur"), Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
+  IndexArray     => ((Identifier => S ("material"),    Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
+                     (Identifier => S ("restart"),     Kind => Unsigned_Int64_Kind, Defaulted => False,  Overrides_From_Ref => False),
+                     (Identifier => S ("front"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("ccw")))),       others => NULL_PROPERTY),
+  Key            => ((Identifier => S ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("value")))),     others => NULL_PROPERTY),
+  LightNode      => ((Identifier => S ("shadow"),      Kind => Bool_Kind,           Defaulted => False,  Overrides_From_Ref => True),                                             others => NULL_PROPERTY),
+  LightObject    => ((Identifier => S ("type"),        Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
+                     (Identifier => S ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
+  Material       => ((Identifier => S ("shadow"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => True))),            others => NULL_PROPERTY),
+  MaterialRef    => ((Identifier => S ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
+  Mesh           => ((Identifier => S ("lod"),         Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
+                     (Identifier => S ("primitive"),   Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("triangles")))), others => NULL_PROPERTY),
+  Metric         => ((Identifier => S ("key"),         Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  Morph          => ((Identifier => S ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),
+                     (Identifier => S ("base"),        Kind => Unsigned_Int32_Kind, Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  MorphWeight    => ((Identifier => S ("index"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
+  Param          => ((Identifier => S ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  Rotation       => ((Identifier => S ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("axis")))),
+                     (Identifier => S ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
+  Scale          => ((Identifier => S ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("xyz")))),
+                     (Identifier => S ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
+  Texture        => ((Identifier => S ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
+                     (Identifier => S ("texcoord"),    Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY),
+  OpenGEX.Time   => ((Identifier => S ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
+  Track          => ((Identifier => S ("target"),      Kind => Ref_Kind,            Defaulted => False,  Overrides_From_Ref => False),                                            others => NULL_PROPERTY),
+  Transform      => ((Identifier => S ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
+  Translation    => ((Identifier => S ("kind"),        Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("xyz")))),
+                     (Identifier => S ("object"),      Kind => Bool_Kind,           Defaulted => True,   Default            => (Bool_Kind,           1, (1 => False))),           others => NULL_PROPERTY),
+  Value          => ((Identifier => S ("curve"),       Kind => String_Kind,         Defaulted => True,   Default            => (String_Kind,         1, (1 => W ("linear")))),    others => NULL_PROPERTY),
+  VertexArray    => ((Identifier => S ("attrib"),      Kind => String_Kind,         Defaulted => False,  Overrides_From_Ref => False),
+                     (Identifier => S ("morph"),       Kind => Unsigned_Int32_Kind, Defaulted => True,   Default            => (Unsigned_Int32_Kind, 1, (1 => 0))),               others => NULL_PROPERTY), others => (others => NULL_PROPERTY)));
 
-  use Struct_Types;
-  use Engine_Exchange_Format;
   use Engine_Exchange_Format.Hashed_Ptr_Structure_State;
 
-  -------------
-  -- Getters --
-  -------------
+  ---------------
+  -- Load_Mesh --
+  ---------------
 
-  function Get (Possible_Matches : Array_Ptr_Structure_State; Attrib : Str_32) return Ptr_Structure_State is
-    Result : Ptr_Structure_State  := null;
-    begin
-      for Possible_Match of Possible_Matches loop
-        if Possible_Match.Properties /= null and then Possible_Match.Properties.Contains (U ("attrib"))
-          and then Possible_Match.Properties.Element (U ("attrib")).Primitive.String_Val (1) = To_Str_32_Unbound (Attrib)
-        then
-          if Result /= null then raise Program_Error; end if;
-          Result := Possible_Match;
-        end if;
-      end loop;
-      return Result;
-    end;
-  function Get (Structure : Ptr_Structure_State; Class : OpenGEX.Structure_Kind; Attrib : Str_32) return Ptr_Structure_State is
-    (Get (Get (Structure, Class), Attrib));
-  function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Attrib : Str_32) return Ptr_Structure_State is
-    (Get (Get (Structure, Class_Path), Attrib));
-  function Get (Structure : Ptr_Structure_State; Class : OpenGEX.Structure_Kind; Attrib : Str_32; Kind : Primitive_Kind) return Ptr_Structure_State is
-    (Get (Get (Get (Structure, Class), Attrib), Kind));
-  function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Attrib : Str_32; Kind : Primitive_Kind) return Ptr_Structure_State is
-    (Get (Get (Get (Structure, Class_Path), Attrib), Kind));
-
-  -----------------
-  -- Conversions --
-  -----------------
-
-  function To_Geometry_Name (Val : Str_32_Unbound) return Geometry_Name is
-    (To_Super_String (To_Str_8 (Val), MAX_GEOMETRY_NAME));
-  function To_Geometry_Name (Val : Str) return Geometry_Name is
-    (To_Super_String (To_Str_8 (Val), MAX_GEOMETRY_NAME));
-
-  function To_Transform_4D (Val : Array_x2_Real_32; I : Positive := 1) return Transform_4D is
-    (Real_32 (Val (I, 1)), Real_32 (Val (I, 5)), Real_32 (Val (I,  9)), Real_32 (Val (I, 13)),
-     Real_32 (Val (I, 2)), Real_32 (Val (I, 6)), Real_32 (Val (I, 10)), Real_32 (Val (I, 14)),
-     Real_32 (Val (I, 3)), Real_32 (Val (I, 7)), Real_32 (Val (I, 11)), Real_32 (Val (I, 15)));
-
-  function To_Vector_3D (Val : Array_x2_Real_32; I : Positive := 1) return Vector_3D is
-    (Real_32 (Val (I, 1)), Real_32 (Val (I, 2)), Real_32 (Val (I,  3)));
-
-  function To_Vector_2D (Val : Array_x2_Real_32; I : Positive := 1) return Vector_2D is
-    (Real_32 (Val (I, 1)), Real_32 (Val (I, 2)));
-
-  ----------------
-  -- Load_Model --
-  ----------------
-
-  procedure Load_Model (Path : Str) is
-    Start      : Ada.Calendar.Time := Clock;
-    File       : Engine_Exchange_Format.File_State;
-    Result     : Ptr_Mesh_State := null;
-    Built_Pose : Bool := False;
-    Current_Mesh : Positive := 1;
-    Current       : Ptr_Structure_State;
-
-    -- ???
-    procedure Load_Structure (Structure : Ptr_Structure_State) is
-      begin
-        case Structure.Class is
-
-          -- ???
-          when GeometryObject =>
-
-            -- Sanity checks
-            if Result.Skeleton = null then return; end if; -- raise Program_Error; end if;
-
-            -- Load mesh
-            declare
-
-            Bone_Mappings : Array_Bone_Index (1..Result.Skeleton.Bone_Count) := (others => BAD_CHILD);
-            Mesh          : Ptr_Geometry_Object_State                 := new Geometry_Object_State'
-              (Vertex_Count         => Get (Structure, (OpenGEX.Mesh, VertexArray), "position", Float32_x3_Kind).Len,
-               Index_Count          => Get (Structure, (OpenGEX.Mesh, IndexArray), Unsigned_Int32_x3_Kind).Len,
-               Bone_Influence_Count => Bone_Index (Get (Structure, (OpenGEX.Mesh, Skin, BoneCountArray),  Unsigned_Int16_Kind).Len),
-               Bone_Weight_Count    => Bone_Index (Get (Structure, (OpenGEX.Mesh, Skin, BoneWeightArray), Float32_Kind).Len), others => <>);
-
-            begin
-              Mesh.Skeleton := Result.Skeleton;
-
-              -- Build the mapping
-              Current := Get (Structure, (OpenGEX.Mesh, Skin, OpenGEX.Skeleton, BoneRefArray), Ref_Kind);
-              for I in Current.Primitive.Ref_Val'Range loop
-                for J in Result.Skeleton.Bones'Range loop
-                  if Get (Ref (Current.Primitive.Ref_Val (I)), OpenGEX.Name, String_Kind).Primitive.String_Val (1)
-                    = To_Str_32_Unbound (Super_To_String (Result.Skeleton.Bones (J).Name))
-                  then
-                    if Bone_Mappings (Bone_Index (I)) /= BAD_CHILD then raise Program_Error; end if; -- Duplicate bone
-                    Bone_Mappings (Bone_Index (I)) := J;
-                  end if;
-                end loop;
-              end loop;
-
-              -- Verify all bones have been mapped
-              for Bone_Mapping of Bone_Mappings loop
-                if Bone_Mapping = BAD_CHILD then raise Program_Error; end if;
-              end loop;
-
-              -- Build the skeleton pose assuming they are all the same
-              if not Built_Pose then
-                Current := Get (Structure, (OpenGEX.Mesh, Skin, OpenGEX.Skeleton, Transform), Float32_x16_Kind);
-                for I in Result.Skeleton.Pose'Range loop
-                  Result.Skeleton.Pose (I) := To_Transform_4D (Current.Primitive.Float32_x16_Val, Int (I));
-                end loop;
-                Built_Pose := True;
-              end if;
-
-              -- Load 3D data
-              Current := Get (Structure, (OpenGEX.Mesh, VertexArray), "position", Float32_x3_Kind);
-              for I in Mesh.Verticies'Range loop Mesh.Verticies (I).Position  := To_Vector_3D (Current.Primitive.Float32_x3_Val, I); end loop;
-              Current := Get (Structure, (OpenGEX.Mesh, VertexArray), "normal",   Float32_x3_Kind);
-              for I in Mesh.Verticies'Range loop Mesh.Verticies (I).Normal    := To_Vector_3D (Current.Primitive.Float32_x3_Val, I); end loop;
-              Current := Get (Structure, (OpenGEX.Mesh, VertexArray), "texcoord", Float32_x2_Kind);
-              for I in Mesh.Verticies'Range loop Mesh.Verticies (I).Texturing := To_Vector_2D (Current.Primitive.Float32_x2_Val, I); end loop;
-              Current := Get (Structure, (OpenGEX.Mesh, IndexArray), Unsigned_Int32_x3_Kind);
-              Mesh.Indicies := Current.Primitive.Unsigned_Int32_x3_Val;
-
-              -- Load bone stuff
-              Current := Get (Structure, (OpenGEX.Mesh, Skin, BoneCountArray),  Unsigned_Int16_Kind);
-              for I in Mesh.Bone_Influences'Range loop Mesh.Bone_Influences (I) := Bone_Index (Current.Primitive.Unsigned_Int16_Val (Int (I))); end loop;
-              Current := Get (Structure, (OpenGEX.Mesh, Skin, BoneIndexArray),  Unsigned_Int16_Kind);
-              for I in Mesh.Bone_Indicies'Range   loop Mesh.Bone_Indicies (I)   := Bone_Mappings (Bone_Index (Current.Primitive.Unsigned_Int16_Val (Int (I))) + 1); end loop;
-              Current := Get (Structure, (OpenGEX.Mesh, Skin, BoneWeightArray), Float32_Kind);
-              for I in Mesh.Bone_Weights'Range    loop Mesh.Bone_Weights (I)    := Current.Primitive.Float32_Val  (Int (I)); end loop;
-
-              -- Slap in the globals
-              Result.Geometries (Current_Mesh) := Mesh;
-              Current_Mesh := Current_Mesh + 1;
-            end;
-
-          -- ???
-          when Node =>
-
-            -- We have found the true skeleton - we assume it has animations associated with it and they are all in this file!
-            if Structure.Counts (BoneNode) = 1 then
-
-              -- Sanity checks
-              if Result.Skeleton /= null then raise Program_Error with "More than 1 skeleton in file!"; end if;
-
-              -- Load skeleton
-              declare
-              Max_Children     : Bone_Index := 1;
-              Bone_Count       : Bone_Index := 0;
-              Animation_Frames : Positive   := 1;
-              Root_Bone        : Ptr_Structure_State := Get (Structure, BoneNode);
-
-              -- ???
-              procedure Obtain_Descriminants (Bone : Ptr_Structure_State) is
-                begin
-                  if Bone_Index (Bone.Counts (BoneNode)) > Max_Children then
-                    Max_Children := Bone_Index (Bone.Counts (BoneNode));
-                  end if;
-                  Bone_Count := Bone_Count + 1;
-                  if Bone.Named_Children /= null then
-                    for I of Bone.Named_Children.all loop
-                      if I.Class = BoneNode then Obtain_Descriminants (I); end if;
-                    end loop;
-                  end if;
-                end;
-
-              -- ???
-              procedure Load_Bone (Bone : Ptr_Structure_State; Parent : Bone_Index) is
-                Current     : Bone_Index                := Bone_Count;
-                Child_Count : Bone_Index                := 1;
-                Children    : Array_Ptr_Structure_State := Get (Bone, BoneNode);
-                Field       : Ptr_Structure_State;
-                begin
-
-                  -- Setup current bone
-                  Result.Skeleton.Bones (Current).Name      := To_Geometry_Name (Get (Bone, OpenGEX.Name, String_Kind).Primitive.String_Val (1));
-                  Result.Skeleton.Bones (Current).Transform := To_Transform_4D  (Get (Bone, Transform,    Float32_x16_Kind).Primitive.Float32_x16_Val, 1);
-                  Result.Skeleton.Bones (Current).Parent    := Parent;
-
-                  -- Animation values
-                  Field := Get (Bone, (Animation, Track, Value, Key), Float32_x16_Kind);
-                  for I in 1..Field.Len loop
-                    Result.Skeleton.Animation_Values (Current, I) := To_Transform_4D (Field.Primitive.Float32_x16_Val, I);
-                  end loop;
-
-                  -- Animation times
-                  Field := Get (Bone, (Animation, Track, OpenGEX.Time, Key), Float32_Kind);
-                  for I in 1..Field.Len loop
-                    Result.Skeleton.Animation_Times (Current, I) := Field.Primitive.Float32_Val (I);
-                  end loop;
-
-                  -- Children
-                  for I of Children loop
-                    Bone_Count := Bone_Count + 1;
-                    Result.Skeleton.Bone_Children (Current, Child_Count) := Bone_Count;
-                    Child_Count := Child_Count + 1;
-                    Load_Bone (I, Current);
-                  end loop;
-                end;
-
-              -- Start of processing for BoneNode
-              begin
-
-                -- Obtain the max children and bone count, then construct the skeleton
-                Obtain_Descriminants (Root_Bone);
-                Result.Skeleton := new Skeleton_State'(Bone_Count, Max_Children, 1,
-                                                        Get (Root_Bone, (Animation, Track, OpenGEX.Time, Key), Float32_Kind).Len, others => <>);
-
-                -- Load the skeleton by recursivly looking for children
-                Bone_Count := 1; -- Repurposed
-                Result.Skeleton.Bone_Children := (others => (others => BAD_CHILD));
-                Load_Bone (Root_Bone, BAD_CHILD);
-
-                -- Set the animations, right now the plugin doesn't support multiple animations per skeleton
-                Result.Skeleton.Animation_Names (1) := To_Geometry_Name ("main");
-                Result.Skeleton.Animations (1)      := 1;
-              end;
-            end if;
-          when Material => null;
-        when others => null; end case;
-      end;
-
-    -- Start of Load
+  procedure Load_Mesh (Path : Str; Result : in out Ptr_Mesh_State) is
+    use OpenGEX_Struct_Types;
+    use Engine_Exchange_Format;
+    File            : Engine_Exchange_Format.File_State;
+    Current, GeoObj : Ptr_Structure_State;
+    Current_Mesh    : Positive := 1;
+    Current_Segment : Positive := 1;
+    Segment_Count   : Natural := 0;
+    Vertex_Count    : Natural := 0;
+    Index_Count     : Natural := 0;
+    Last_Vertex     : Natural := 0;
+    Last_Index      : Natural := 1;
+    Start           : Ada.Calendar.Time := Clock;
     begin
 
       -- Bulk of the IO
-      Engine_Exchange_Format.Load (S (OS_Info.App_Path) & PATH_MODELS & Path & ".ogex", File);
+      Engine_Exchange_Format.Load (Path & ".ogex", File);
 
-      -- Prepare result
-      Result := new Mesh_State'(File.Counts (GeometryObject), others => <>);
-      Result.Name := To_Geometry_Name ("main");
+      -- Count verticies and indicies
+      for Structure of File.Structures loop
+        if Structure.Class = GeometryObject then
+          for Child of Structure.Children.all loop
+            if Child.Class = OpenGEX.Mesh then
+              Vertex_Count := Vertex_Count + Get (Child, VertexArray, "attrib", "position", Float32_x3_Kind).Len;
+              for Index_Array of Get (Child, IndexArray) loop
+                Segment_Count := Segment_Count + 1;
+                Index_Count   := Index_Count   + Index_Array.Children.Element (1).Primitive.Len;
+              end loop;
+            end if;
+          end loop;
+        end if;
+      end loop;
+
+      -- Create the mesh
+      Result      := new Mesh_State'(Vertex_Count, Index_Count, Segment_Count, 0, 0, others => <>);
+      Result.Name := Geometry_Name_Str.S (To_Str_16 (Base_Name (To_Str_8 (Path))));
 
       -- Load structures
-      for I of File.Named_Structures loop Load_Structure (I); end loop;
-      for I of File.Structures       loop Load_Structure (I); end loop;
+      for Structure of File.Structures loop
+        case Structure.Class is
 
-      -- Inform the console about the loading of the assets
-      Meshes.Insert (U (Path), Result);
-      Line ("Loaded " & Path & " in" & Duration'Wide_Image (Clock - Start));
+          -- 3D data
+          when GeometryNode =>
+            GeoObj := Ref (Get (Structure, ObjectRef, Ref_Kind).Primitive.Ref_Val (1));
+            for Child of Get (GeoObj, OpenGEX.Mesh) loop
+
+              -- Verticies
+              Current := Get (GeoObj, (OpenGEX.Mesh, VertexArray), "attrib", "position", Float32_x3_Kind);
+              for I in Result.Vertices'Range loop
+                Result.Vertices (I).Position := To_Point_3D (Current.Primitive.Float32_x3_Val, I);
+              end loop;
+              Current := Get (GeoObj, (OpenGEX.Mesh, VertexArray), "attrib", "normal", Float32_x3_Kind);
+              for I in Result.Vertices'Range loop
+                Result.Vertices (I).Normal := To_Point_3D (Current.Primitive.Float32_x3_Val, I);
+              end loop;
+              Current := Get (GeoObj, (OpenGEX.Mesh, VertexArray), "attrib", "texcoord", Float32_x2_Kind);
+              for I in Result.Vertices'Range loop
+                Result.Vertices (I).Texture_Coordinate := To_Point_2D (Current.Primitive.Float32_x2_Val, I);
+              end loop;
+
+              -- Segments
+              for Grand_Child of Get (Child, IndexArray) loop
+                Current := Grand_Child.Children.Element (1);
+                declare
+                Mesh_Indicies : Array_x2_Int_32_Unsigned (1..Current.Primitive.Len, 1..3);
+                for Mesh_Indicies'Address use Result.Indices (Last_Index, 1)'Address;
+
+
+                Material_Index : Int_32_Unsigned := Grand_Child.Properties.Element
+                                                      (U ("material")).Primitive.Unsigned_Int32_Val (1);
+                A : Ptr_Structure_State;
+                begin
+                  Mesh_Indicies := Current.Primitive.Unsigned_Int32_x3_Val;
+
+                  -- Get the material something
+                  for Possible_Match of Get (Structure, MaterialRef) loop
+                    if Possible_Match.Properties /= null and then Possible_Match.Properties.Contains (U ("index"))
+                      and then Possible_Match.Properties.Element (U ("index")).Primitive.Unsigned_Int32_Val (1) = Material_Index
+                    then
+                      A := Ref (Possible_Match.Children.Element (1).Primitive.Ref_Val (1));
+                      exit;
+                    end if;
+                  end loop;
+
+                  -- Material
+                  Result.Segments (Current_Segment) := (Index    => Last_Index + 1,
+                                                        Count    => Current.Primitive.Len,
+                                                        Name     => Geometry_Name_Str.S (To_Str (GeoObj.Name.all)
+                                                                      & Current_Mesh'Wide_Image),
+                                                        Material => S
+                                                                      (Replace
+                                                                         (To_Str_16
+                                                                            (Get (Class     => OpenGEX.Name,
+                                                                                  Primitive => String_Kind,
+                                                                                  Structure => A).Primitive.String_Val (1)),
+                                                                          "/", "_")));
+                  Last_Index      := Last_Index + Current.Primitive.Len;
+                  Current_Segment := Current_Segment + 1;
+                end;
+              end loop;
+            end loop;
+        when others => null; end case;
+      end loop;
+
+      -- Dump timing
+      Line ("Loaded " & To_Str_16 (Base_Name (To_Str_8 (Path))) & " in" & Duration'Wide_Image (Clock - Start) & "s");
+      Engine_Exchange_Format.Finalize (File);
     end;
 
-  ----------
-  -- Free --
-  ----------
+  --------------------
+  -- Load_Materials --
+  --------------------
 
-  procedure Free (Path : Str) is
+  procedure Load_Materials (Path : Str; Result : in out Hashed_Material.Unsafe.Map) is
+    use OpenGEX_Struct_Types;
+    use Engine_Exchange_Format;
+    Material : Material_State;
+    File     : Engine_Exchange_Format.File_State;
+    Struct   : Ptr_Structure_State;
+    Start    : Ada.Calendar.Time := Clock;
     begin
-      null;
+
+      -- Bulk of the IO
+      Engine_Exchange_Format.Load (Path, File);
+
+      -- Load structures
+      for I of File.Structures loop
+        if I.Class = OpenGEX.Material then
+          Struct := Get (I, Texture, "attrib", "normal", String_Kind);
+          if Struct /= null then
+            Material.Normal := S (To_Str_16 (Struct.Primitive.String_Val (1)));
+          end if;
+          Struct := Get (I, Texture, "attrib", "specular", String_Kind);
+          if Struct /= null then
+            Material.Specular := S (To_Str_16 (Get (I, Texture, "attrib", "specular", String_Kind).Primitive.String_Val (1)));
+          end if;
+          Struct := Get (I, Texture, "attrib", "diffuse", String_Kind);
+          if Struct /= null then
+            Material.Base_Color := S (To_Str_16 (Get (I, Texture, "attrib", "diffuse",  String_Kind).Primitive.String_Val (1)));
+          else
+            Struct := Get (I, Texture, "attrib", "editor", String_Kind);
+            if Struct /= null then
+              Material.Base_Color := S (To_Str_16 (Get (I, Texture, "attrib", "editor",  String_Kind).Primitive.String_Val (1)));
+            end if;
+          end if;
+          Struct := Get (I, OpenGEX.Name, String_Kind);
+          if Struct /= null then
+            Material.Name := S (To_Str_16 (Get (I, OpenGEX.Name, String_Kind).Primitive.String_Val (1)));
+          end if;
+          if not Result.Contains (U (To_Lower (To_Str_16 (Get (I, OpenGEX.Name, String_Kind).Primitive.String_Val (1))))) then
+            Result.Insert (U (To_Lower (To_Str_16 (Get (I, OpenGEX.Name, String_Kind).Primitive.String_Val (1)))), Material);
+          else
+            null;
+            --  Line ("Duplicate material definition for " & To_Str_16 (Get (I, OpenGEX.Name, String_Kind).Primitive.String_Val (1)));
+          end if;
+        end if;
+      end loop;
+      Line ("Loaded " & To_Str_16 (Base_Name (To_Str_8 (Path))) & " in" & Duration'Wide_Image (Clock - Start) & "s");
+      Engine_Exchange_Format.Finalize (File);
     end;
+
+  -------------------
+  -- Id_Map_Format --
+  -------------------
+  --
+  -- Entity $entity12
+  -- {
+  --   Class {string {"light"}}
+  --   Name {string {"light_5538"}}
+  --   Origin {float[3] {{-832, 560, 104}}}
+  --   // Uknown attribute: "noshadows" "0"
+  --   LightRadius {float[3] {{46, 22, 71}}}
+  --   LightCenter {float[3] {{68, 78, 44}}}
+  -- }
+  -- ...
+  -- GeometryObject $light_5487 // 2
+  -- {
+  --    Mesh
+  --    {
+  --       MaterialName {string {"textures_mcity_mcitya12_2_break"}}
+  --       VertexArray
+  --       {
+  --          float[8] // x y z u v nx ny nz
+  --          {
+  --             {-8, 21, 21, 0, 0, 0, 0.4705882668, -0.8823529482}, {8, -24, -3, -1, 1, 0, 0.4705882668, -0.8823529482},
+  --             {-8, -24, -3, -1, 0, 0, 0.4705882668, -0.8823529482}
+  --          }
+  --       }
+  --       IndexArray
+  --       {
+  --          unsigned_int32
+  --          {
+  --             0, 1, 2, 0, 3, 1
+  --          }
+  --       }
+  --    }
+  --    ...
+  -- }
+  -- ...
+  -- PortalArray
+  -- {
+  --    Portal $portal0
+  --    {
+  --       unsigned_int[3] {{4, 2, 1}}
+  --       VertexArray
+  --       {
+  --          float[3] {{1412, 604, 56}, {1412, 740, 56}, {1412, 740, 196}, {1412, 604, 196}}
+  --       }
+  --    }
+  --    ...
+  -- }
+  -- NodeArray // 6580
+  -- {
+  --    Node $node0
+  --    {
+  --       Plane {float[4] {{1, 0, 0, -1024}}}
+  --       ChildAreas {int32[2] {{1, 677}}}
+  --    }
+  --    ...
+  -- }
+  -- ShadowObject $_prelight_light_5520
+  -- {
+  --    VertexCount {int32 {492}}
+  --    NoCaps {int32 {312}}
+  --    NoFrontCaps {int32 {528}}
+  --    IndexCount {int32 {744}}
+  --    PlaneBits {unsigned_int32 {63}}
+  --    VertexArray
+  --    {
+  --       float[3]
+  --       {
+  --          {1800, 362, 34}, {1800, 362, 34}, {1800, 362, 20}, {1800, 362, 20}, {1794.7169189453, 362, 33.0754737854},
+  --          {1800, 360.1738891602, 20}, {1800, 362, 34}, {1800, 362, 34}, {1800, 362, 20}, {1800, 362, 20},
+  --          {1794.3433837891, 362, 34}, {1800, 360.0234985352, 20}, {1800, 362, 34}, {1800, 362, 34}, {1794.7169189453, 362},
+  --          {1800, 360.1738891602, 20}, {1800, 348, 34}, {1800, 348, 34}, {1800, 348, 34}, {1800, 348, 34},
+  --       }
+  --    }
+  --    IndexArray
+  --    {
+  --       unsigned_int32 {
+  --          0, 2, 3, 0, 3, 1, 16, 0, 17, 0, 1, 17, 26, 28, 29, 26, 29, 27
+  --       }
+  --    }
+  -- }
+  -- ...
+  --
+
+  package IdMap is type Structure_Kind is (GeometryObject, Mesh,        MaterialName, VertexArray,  IndexArray,  PortalArray,
+                                           Portal,         NodeArray,   Node,         ShadowObject, VertexCount, NoCaps,
+                                           NoFrontCaps,    IndexCount,  PlaneBits,    Entity,       Class,       Name,
+                                           Origin,         LightCenter, LightRadius,  LastCamPos,   LastCamAng,  ObjectRef,
+                                           Plane,          ChildAreas); end; use IdMap;
+  subtype Entity_Key_Value_Kind is IdMap.Structure_Kind range Class..LastCamAng;
+
+  package IdMap_Struct_Types is new Description_Language_Struct_Types (IdMap.Structure_Kind, ObjectRef);
+  package Id_Map_Format      is new Description_Language (IdMap_Struct_Types,
+
+  -------------------------
+  Top_Level_Structures => (
+  -------------------------
+
+  IdMap.Entity   |
+  ShadowObject   |
+  GeometryObject |
+  PortalArray    |
+  NodeArray      => True, others => False),
+
+  -------------------------
+  Primitive_Components => (
+  -------------------------
+
+  Portal       => (Allow_Arrays => False, Allowed_Primitives => (Unsigned_Int32_x3_Kind            => True, others => False)),
+  MaterialName => (Allow_Arrays => False, Allowed_Primitives => (String_Kind                       => True, others => False)),
+  Class        => (Allow_Arrays => False, Allowed_Primitives => (String_Kind                       => True, others => False)),
+  LastCamPos   => (Allow_Arrays => False, Allowed_Primitives => (Float32_x3_Kind                   => True, others => False)),
+  LastCamAng   => (Allow_Arrays => False, Allowed_Primitives => (Float32_x3_Kind                   => True, others => False)),
+  IdMap.Name   => (Allow_Arrays => False, Allowed_Primitives => (String_Kind                       => True, others => False)),
+  IdMap.Origin => (Allow_Arrays => False, Allowed_Primitives => (Float32_x3_Kind                   => True, others => False)),
+  LightCenter  => (Allow_Arrays => False, Allowed_Primitives => (Float32_x3_Kind                   => True, others => False)),
+  LightRadius  => (Allow_Arrays => False, Allowed_Primitives => (Float32_x3_Kind                   => True, others => False)),
+  VertexArray  => (Allow_Arrays => True,  Allowed_Primitives => (Float32_x3_Kind | Float32_x8_Kind => True, others => False)),
+  IndexArray   => (Allow_Arrays => True,  Allowed_Primitives => (Unsigned_Int32_Kind               => True, others => False)),
+  Plane        => (Allow_Arrays => False, Allowed_Primitives => (Float32_x4_Kind                   => True, others => False)),
+  ChildAreas   => (Allow_Arrays => False, Allowed_Primitives => (Int32_x2_Kind                     => True, others => False)),
+  VertexCount  => (Allow_Arrays => False, Allowed_Primitives => (Int32_Kind                        => True, others => False)),
+  NoCaps       => (Allow_Arrays => False, Allowed_Primitives => (Int32_Kind                        => True, others => False)),
+  NoFrontCaps  => (Allow_Arrays => False, Allowed_Primitives => (Int32_Kind                        => True, others => False)),
+  IndexCount   => (Allow_Arrays => False, Allowed_Primitives => (Int32_Kind                        => True, others => False)),
+  PlaneBits    => (Allow_Arrays => False, Allowed_Primitives => (Unsigned_Int32_Kind               => True, others => False)),
+    others => (False, (others => False))),
+
+  -------------------------
+  Structure_Components => (
+  -------------------------
+
+  NodeArray      => (Node                                    => Zero_Or_More, others => None),
+  PortalArray    => (Portal                                  => Zero_Or_More, others => None),
+  GeometryObject => (Mesh                                    => Zero_Or_More, others => None),
+  IdMap.Entity   => (Entity_Key_Value_Kind                   => Zero_Or_More, others => None),
+  Node           => (Plane | ChildAreas                      => Exactly_One,  others => None),
+  Portal         => (VertexArray                             => Exactly_One,  others => None),
+  Mesh           => (VertexArray | IndexArray | MaterialName => Exactly_One,  others => None),
+  ShadowObject   => (VertexCount | IndexArray | NoFrontCaps | NoCaps | IndexCount | PlaneBits | VertexArray => Exactly_One,
+    others => None), others => (others => None)));
+
+  --------------
+  -- Load_Map --
+  --------------
+
+  procedure Load_Map (Path : Str; Result : in out Ptr_Map_State) is
+    use Id_Map_Format;
+    File             : Id_Map_Format.File_State;
+    Current          : Id_Map_Format.Ptr_Structure_State;
+    Current_Mesh     : Positive := 1;
+    Current_Segment  : Positive := 1;
+    Vertex_Count     : Natural;
+    Index_Count      : Natural;
+    Last_Vertex      : Natural;
+    Last_Index       : Natural;
+    Kind             : Entity_Kind;
+    Entity           : Ptr_Entity_State;
+    Mesh             : Ptr_Mesh_State;
+    Start            : Ada.Calendar.Time := Clock;
+    begin
+
+      -- Bulk of the IO
+      Id_Map_Format.Load (Path & ".idmap", File);
+
+      -- Prepare result
+      Result := new Map_State'(File.Counts (GeometryObject), others => <>);
+
+      -- Load structures
+      for Structure of File.Structures loop
+        case Structure.Class is
+
+          -- Level entities like lights and ammo boxes
+          when IdMap.Entity =>
+
+            -- Attempt to determine the kind
+            Kind := Moveable_Entity;
+
+            -- Add the mesh
+            Construct_Entity (Entity, Kind);
+
+            -- We found the level starting position
+            if Structure.Counts (Class) = 1
+              and then Get (Structure, Class, String_Kind).Primitive.String_Val (1) = "info_player_start"
+            then
+            --    Entity.Transform.WX := ;
+            --    Entity.Transform.WY := ;
+            --    Entity.Transform.WZ := ;
+              Entity.Origin := To_Point_3D (Get (Structure, Origin, Float32_x3_Kind).Primitive.Float32_x3_Val, 1, 1);
+              Set_Translate (Entity.Transform, To_Point_3D (Get (Structure, Origin, Float32_x3_Kind).Primitive.Float32_x3_Val, 1, 1));
+            end if;
+            if Structure.Counts (IdMap.Name) = 1 then
+              Entity.Name := To_Str_16_Unbound (Get (Structure, IdMap.Name, String_Kind).Primitive.String_Val (1));
+            end if;
+            --if Structure.Counts (MeshName) = 1 then
+            --  Entity.Mesh_Name := To_Str_16_Unbound (Get (Structure, MeshName, String_Kind).Primitive.String_Val (1));
+            --end if;
+
+            --  -- Other location attributes
+            --  if Structure.Counts (Angle) = 1 then
+            --    Entity.Transform.XX := ;
+            --    Entity.Transform.XY := ;
+            --    Entity.Transform.XZ := ;
+            --  end if;
+            --
+            --
+            --  if Structure.Counts (Rotation) = 1 then
+            --    Entity.Transform.XX := ;
+            --    Entity.Transform.XY := ;
+            --    Entity.Transform.XZ := ;
+            --    Entity.Transform.YX := ;
+            --    Entity.Transform.YY := ;
+            --    Entity.Transform.YZ := ;
+            --    Entity.Transform.ZX := ;
+            --    Entity.Transform.ZY := ;
+            --    Entity.Transform.ZZ := ;
+            --  end if;
+            --
+            --
+            --  if Structure.Counts (Origin) = 1 then
+            --    Entity.Transform.WX := ;
+            --    Entity.Transform.WY := ;
+            --    Entity.Transform.WZ := ;
+            --  end if;
+            if not Result.Entities.Contains (Entity.Name) then
+              Result.Entities.Insert (Entity.Name, Entity);
+            end if;
+
+          -- Precomputed shadow volumes
+          when ShadowObject =>
+            null;
+
+          -- Map geometry - brush, patches, areas, etc.
+          when GeometryObject =>
+            if Structure.Counts (IdMap.Mesh) > 0 then
+
+              -- Count the Indicies and Verticies
+              Vertex_Count := 0;
+              Index_Count  := 0;
+              for Child of Structure.Children.all loop
+                Index_Count  := Index_Count  + Get (Child, IndexArray,  Unsigned_Int32_Kind).Len / 3;
+                Vertex_Count := Vertex_Count + Get (Child, VertexArray, Float32_x8_Kind).Len;
+              end loop;
+
+              -- Create the mesh
+              Result.Geometry (Current_Mesh) := new Mesh_State'(Vertex_Count         => Vertex_Count,
+                                                                Index_Count          => Index_Count,
+                                                                Segment_Count        => Structure.Counts (IdMap.Mesh),
+                                                                Bone_Influence_Count => 0,
+                                                              Bone_Weight_Count    => 0, others => <>);
+              Mesh := Result.Geometry (Current_Mesh);
+              Current_Mesh := Current_Mesh + 1;
+              Mesh.Name := Geometry_Name_Str.S (To_Str (Structure.Name.all));
+
+              -- Load the meshes
+              Last_Index      := 0;
+              Last_Vertex     := 0;
+              Current_Segment := 1;
+              for Child of Structure.Children.all loop
+
+                -- Mesh segment
+                Mesh.Segments (Current_Segment) := (Name     => Geometry_Name_Str.S (To_Str (Structure.Name.all) & Current_Mesh'Wide_Image),
+                                                    Material => S (To_Str_16 (Get (Child, MaterialName, String_Kind).Primitive.String_Val (1))),
+                                                    Index    => Last_Index + 1,
+                                                    Count    => Get (Child, IndexArray, Unsigned_Int32_Kind).Len / 3);
+                Current_Segment := Current_Segment + 1;
+
+                -- Mesh indicies
+                Current := Get (Child, IndexArray, Unsigned_Int32_Kind);
+                for I in Last_Index + 1..Last_Index + (Current.Primitive.Unsigned_Int32_Val'Last / 3) loop
+                  Mesh.Indices (I, 1) := Current.Primitive.Unsigned_Int32_Val ((I - Last_Index) * 3 - 2) + Int_32_Unsigned (Last_Vertex);
+                  Mesh.Indices (I, 2) := Current.Primitive.Unsigned_Int32_Val ((I - Last_Index) * 3 - 1) + Int_32_Unsigned (Last_Vertex);
+                  Mesh.Indices (I, 3) := Current.Primitive.Unsigned_Int32_Val ((I - Last_Index) * 3)     + Int_32_Unsigned (Last_Vertex);
+                end loop;
+                Last_Index := Last_Index + Current.Primitive.Unsigned_Int32_Val'Length / 3;
+
+                -- Mesh verticies
+                Current := Get (Child, VertexArray, Float32_x8_Kind);
+                for I in Last_Vertex + 1..Last_Vertex + Current.Primitive.Float32_x8_Val'Last loop
+                  Mesh.Vertices (I).Position           := To_Point_3D (Current.Primitive.Float32_x8_Val, I - Last_Vertex, 1);
+                  Mesh.Vertices (I).Texture_Coordinate := To_Point_2D (Current.Primitive.Float32_x8_Val, I - Last_Vertex, 4);
+                  Mesh.Vertices (I).Normal             := To_Point_3D (Current.Primitive.Float32_x8_Val, I - Last_Vertex, 6);
+                end loop;
+                Last_Vertex := Last_Vertex + Current.Primitive.Float32_x8_Val'Length;
+              end loop;
+            end if;
+
+          -- Portals between areas
+          when PortalArray =>
+            null;
+
+          -- Tree of areas
+          when NodeArray =>
+            null;
+        when others => null; end case;
+      end loop;
+
+      -- Dump timing
+      Line ("Loaded " & To_Str_16 (Base_Name (To_Str_8 (Path))) & " in" & Duration'Wide_Image (Clock - Start) & "s");
+      Id_Map_Format.Finalize (File);
+    end;
+
+  ----------------------
+  -- Construct_Entity --
+  ----------------------
+
+  procedure Construct_Entity (Item : in out Ptr_Entity_State; Kind : Entity_Kind)  is
+  begin
+    case Kind is
+      when Character_Entity   => Item := new Entity_State'(Character_Entity,   others => <>);
+      when Camera_Entity      => Item := new Entity_State'(Camera_Entity,      others => <>);
+      when AI_Entity          => Item := new Entity_State'(AI_Entity,          others => <>);
+      when Moveable_Entity    => Item := new Entity_State'(Moveable_Entity,    others => <>);
+      when Item_Entity        => Item := new Entity_State'(Item_Entity,        others => <>);
+      when Hurt_Entity        => Item := new Entity_State'(Hurt_Entity,        others => <>);
+      when Information_Entity => Item := new Entity_State'(Information_Entity, others => <>);
+      when Speaker_Entity     => Item := new Entity_State'(Speaker_Entity,     others => <>);
+      when Activator_Entity   => Item := new Entity_State'(Activator_Entity,   others => <>);
+      when Animated_Entity    => Item := new Entity_State'(Animated_Entity,    others => <>);
+      when Light_Entity       => Item := new Entity_State'(Light_Entity,       others => <>);
+      when Camera_View_Entity => Item := new Entity_State'(Camera_View_Entity, others => <>);
+      when Clip_Model_Entity  => Item := new Entity_State'(Clip_Model_Entity,  others => <>);
+      when Door_Entity        => Item := new Entity_State'(Door_Entity,        others => <>);
+      when Earthquake_Entity  => Item := new Entity_State'(Earthquake_Entity,  others => <>);
+      when Elevator_Entity    => Item := new Entity_State'(Elevator_Entity,    others => <>);
+      when Emitter_Entity     => Item := new Entity_State'(Emitter_Entity,     others => <>);
+      when Explosion_Entity   => Item := new Entity_State'(Explosion_Entity,   others => <>);
+      when Forcefield_Entity  => Item := new Entity_State'(Forcefield_Entity,  others => <>);
+      when Fracture_Entity    => Item := new Entity_State'(Fracture_Entity,    others => <>);
+      when Effects_Entity     => Item := new Entity_State'(Effects_Entity,     others => <>);
+      when Portal_Entity      => Item := new Entity_State'(Portal_Entity,      others => <>);
+      when Remove_Entity      => Item := new Entity_State'(Remove_Entity,      others => <>);
+    end case;
+  end;
 end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

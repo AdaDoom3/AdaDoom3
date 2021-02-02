@@ -1,0 +1,942 @@
+Material
+{
+   Name {string {"textures_base_trim_lftrim3a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_lftrim3a"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_lftrim3a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_lftrim3a"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_lftrim3a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_fitpanel"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_fitpanel"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_fitpanel_d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_fitpanel_local"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_fitpanel_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strim_noshadow"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_strim"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_strim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_strim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_strim"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_strim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_strim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_red1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_red1"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_red1dif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_red1spec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4n_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4n_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex4n_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4ndif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4nspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4n_ed_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4n_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex4n_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4ndif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4nspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4o_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4o_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex4o_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4odif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4ospec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4q_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4q_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4qdif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4qspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4r_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4r_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4rdif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4rspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4s_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4s_ed"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4sdif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4rspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3i_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3i_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3i_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3idif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3ispec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3j_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3j_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3j_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3jdif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3jspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3k2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3k2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3k2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3k2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex3k2_01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_bluetex3k2_01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex3k2_d01"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex3k2_s01"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex3k2_01_red"}}
+   Texture (attrib = "editor") {string {"textures_editor_a_bluetex3k2_01_red"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex3k2_d01_red"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex3k2_s01"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex4j_01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_bluetex4j_01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex4j_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex4j_d01"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex4j_s01"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex3k2_03"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_bluetex3k2_03"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex3k2_d03"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex3k2_s03"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex3k2_04"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_bluetex3k2_04"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex3k2_d04"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex3k2_s04"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_bluetex3k2_07"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_bluetex3k2_07"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_bluetex3k2_d07"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_bluetex3k2_s07"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3k_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3k_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3k_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3kdif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3kspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3l_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3l_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3l_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3ldif"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3lspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_yelhaz1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_yelhaz1"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_yelhaz1dif"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_yelhaz1bmp"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_yelhaz2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_yelhaz2"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_yelhaz2dif"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_yelhaz2bmp"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_talltrim1_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_talltrim1_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_talltrim1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_talltrim1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_talltrim1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_talltrim2_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_talltrim2_ed"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_talltrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_talltrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_talltrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_grate1ashiny"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_grate1a_shiny"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_grate1_local"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_grate1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_grate1a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_grate1a"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_grate1_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_railgate1b"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_railgate1b"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_railgate1_local"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_railgate1b_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_railgate2b"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_railgrate2b"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_railgate2_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sgirder1a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sgirder1a"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_sgirder1_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sgirder2_01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sgirder2_01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sgirder2_local"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sgirder2_s01"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sgirder2cav"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sgirder2_01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sgirder2_local"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sgirder2cav_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sgirder2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sgirder2"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_sgirder2_local"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_sgirder2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strip1a_dark"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_strip1a_dark"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_strip1a_local"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_strip1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strip1a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_strip1a"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_strip1a_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_textures_strip1a_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_strip1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ppipe"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ppipe"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ppipe_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_ppipe_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ppipe_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ridbeam"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ridbeam"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ridbeam_d"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_treadpanel"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_treadpanel"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_treadpanel_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_treadpanel_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_treadpanel_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_treadpanel_d03"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_treadpanel_d03"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_treadpanel_d03"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_treadpanel_s02"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_treadpanel_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_rustrim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_rustrim"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_rustrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_rustrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_rustrim_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_cautionsign01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_cautionsign01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_cautionsign01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_cautionsign01_b"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_cautionsign01_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4r_danger_d"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex4r_danger_d"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex4r_danger_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex4rspec"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ytrim01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ytrim01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ytrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_ytrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ytrim_b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ytrim01a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ytrim01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ytrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_ytrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ytrim_b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_btrim01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_btrim01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_btrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_btrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ytrim_b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_dangertrim01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_dangertrim01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_dangertrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_dangertrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_dangertrim_b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_01_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_01_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d01_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s01_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_02b_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_02b_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d02b_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s02b_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe64_02b_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe64_02b_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe64_d02b_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe64_s02b_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe64_local02b_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_02black_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_02black_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d02black_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s02black_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_02blackb_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_02blackb_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d02blackb_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s02blackb_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_03_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_03_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d03_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s03_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe64_03_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe64_03_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe64_d03_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe64_s03_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe64_b03_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe64_03b_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe64_03b_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe64_d03b_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe64_s03b_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe64_b03b_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_03c_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_03c_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d03c_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s03c_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_05_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_05_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d05_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s05_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe64_05_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe64_05_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe64_d05_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe64_s05_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe64_b05_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_05b_fin"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_05b_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d05b_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s05b_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_hose01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_hose01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_hose01_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_hose01_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_hose01_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_steslashtrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_steslashtrim2"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_steslashtrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_steslashtrim2_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_steslashtrim_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ghoventtrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ghoventtrim2"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ghoventtrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_ghoventtrim2_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ghoventtrim1_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d02b"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d02b"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d02b"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s02b"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b02b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d02bdark"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d02bdark"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d02bdark"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s02b"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b02b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d02c"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d02c"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d02c"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s02c"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b02c"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d02d"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d02d"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d02d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s02d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b02d"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d03b"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d03b"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d03b"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s03b"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b03b"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3yel_d03e"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3yel_d03e"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3yel_d03e"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3yel_s03e"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim3yel_b03e"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim3red_d01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim3red_d01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim3red_d01"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim3red_s01"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim5_d01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim5_d01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim5_d01"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim5_s01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim5_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim5_d03"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim5_d03"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim5_d03"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim5_s03"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim5_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim5_d04"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim5_d04"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim5_d04"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim5_s04"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim5_local02"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim5_d05a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim5_d05a"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim5_d05a"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim5_s05a"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim5_local02"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim5_d05b"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim5_d05b"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim5_d05b"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim5_s05b"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim5_local02"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim7_d01"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim7_d01"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim7_d01"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim7_s01"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim7_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_sfltrim7_d02"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_sfltrim7_d02"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_sfltrim7_d02"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_sfltrim7_s02"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_sfltrim7_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_gotsilvercol1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_gotsilvercol1"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_gotsilvercol1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_gotsilvercol1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_gotsilvercol1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_gotrustcol1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_gotrustcol1_d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_gotsilvercol1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_gotrustcol1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_gotsilvercol1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sfltrim1"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sfltrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim3"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sfltrim3_d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim3_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim3_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim4"}}
+   Texture (attrib = "editor") {string {"textures_editor_sfltrim4"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim4_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim3_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim3_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim5"}}
+   Texture (attrib = "editor") {string {"textures_editor_sfltrim5"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim5_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim5_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim5_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim5a"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sfltrim5_d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim5a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim5_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim5_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim6"}}
+   Texture (attrib = "editor") {string {"textures_editor_sfltrim6"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim6_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim6_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim6_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sfltrim7"}}
+   Texture (attrib = "editor") {string {"textures_editor_sfltrim7"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sfltrim7_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sfltrim7_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sfltrim7_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilverswatch"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilverswatch"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilverswatch_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilverswatch_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilverswatch_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilvertrim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilvertrim"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilvertrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilvertrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilvertrim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilvertrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilvertrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilvertrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilvertrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilvertrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilvertrim3"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilvertrim3"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilvertrim3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilvertrim3_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilvertrim3_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_steslashtrim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_steslashtrim"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_steslashtrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_steslashtrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_steslashtrim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stemettrim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stemettrim"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stemettrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stemettrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stemettrim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_ghoventtrim1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_ghoventtrim1"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_ghoventtrim1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_ghoventtrim1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_ghoventtrim1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stetrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stetrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stetrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stetrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stetrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_comptrim2_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_comptrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_comptrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_comptrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_comptrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_a_reactorpipe_02blackb_fin_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_a_reactorpipe_02blackb_fin"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_a_reactorpipe_d02blackb_fin"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_a_reactorpipe_s02blackb_fin"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_stesilverswatch_ns"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_stesilverswatch"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_stesilverswatch_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_stesilverswatch_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_stesilverswatch_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strip1a_ed"}}
+   Texture (attrib = "editor") {string {"models_seneca_textures_strip1a_s"}}
+   Texture (attrib = "normal") {string {"models_seneca_textures_strip1a_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_textures_strip1a_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_textures_strip1a_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_rustrim_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_rustrim"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_rustrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_rustrim_s"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_rustrim_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex3k2_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_bluetex3k2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex3k2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_bluetex3k2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_bluetex3k2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_yelhaz2_ed"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_yelhaz2dif"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_yelhaz2dif"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_yelhaz2bmp"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_redhaz3"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_redhaz3"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_redhaz3_bmp"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_redhaz3"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactorgirder1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactorgirder1"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactorgirder1_local"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactorgirder1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactorep2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactorep2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactorep2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactorep2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactorep2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactorep"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactorep"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactorep_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactorep_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactorep_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactortrim3"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactortrim3"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactortrim3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactortrim3_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactortrim3_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactortrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactortrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactortrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactortrim_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactortrim_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactorpipe2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactorpipe2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactorpipe2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactorpipe2"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactorpipe2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_reactorpipe"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_reactorpipe"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_reactorpipe_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_reactorpipe_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_reactorpipe_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sp4"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sp4"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sp4_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sp4_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sp4_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sp3"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sp3"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sp3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sp3_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sp3_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sp2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sp2_d"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sp2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sp2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sp2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_sp1"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_sp1"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_sp1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_sp1_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_sp1_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_comptrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_comptrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_comptrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_comptrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_comptrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_tabletop2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_tabletop2"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_tabletop2"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_tabletop2"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_tabletrim2"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_tabletrim2"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_tabletrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_tabletrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_trim_tabletrim2_d"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_tabletop"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_tabletop"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_tabletop"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_tabletrimd"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_tabletrimd"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_tabletrimd_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_tabletrim_d"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_tabletrim"}}
+   Texture (attrib = "editor") {string {"textures_base_trim_tabletrim"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_tabletrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_trim_tabletrim_d"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_bluetex4r_danger_d_burn"}}
+   Texture (attrib = "editor") {string {"textures_editor_bluetex4r_danger_d_burn"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex4q_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_lfwall27alava_local"}}
+}
+Material
+{
+   Name {string {"textures_base_trim_strim_burn"}}
+   Texture (attrib = "editor") {string {"textures_editor_bluetex4r_danger_d_burn"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_bluetex4q_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_lfwall27alava_local"}}
+}

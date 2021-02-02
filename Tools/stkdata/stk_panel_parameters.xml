@@ -1,0 +1,159 @@
+﻿<?xml version="1.0"?>
+<Properties
+    bl-label="SuperTuxKart Scene Properties"
+>
+
+<BoolProp id="precalculate_tangents" name="Pre-calculate tangents in .spm when export" default="false" box="false" doc="Use this only when you need 100% correct normal mapping for the objects in the scene">
+</BoolProp>
+
+<BoolProp id="is_stk_node" name="Is a SuperTuxKart library node" default="false" box="false" doc="Check this if this blender file is a SuperTuxKart library node">
+    <StringProp id="name" name="Code (folder name)" default="myNewNode" doc="Name of the node"/>
+</BoolProp>
+
+<!-- ************ TRACK ************ -->
+<BoolProp id="is_stk_track" name="Is a SuperTuxKart track" default="false" box="false" doc="Check this if this blender file is a SuperTuxKart track">                         
+    <StringProp id="name" name="Name" default="My New Track" doc="Name of the track"/>
+    <StringProp id="code" name="Code (folder name)" default="myNewTrack" doc="The code is an internal identifier, will also be the name of the folder"/>
+    <BoolProp id="is_wip_track" name="Is work-in-progress track" doc="If checked, the track will be categorized as a work-in-progress (beta) track"/>
+    <StringProp id="groups" name="Groups" default="standard" doc="Tabs in track selection screen this track appears under"/>
+    <StringProp id="designer" name="Designer" default="$user" doc="Name of the person that made this track"/>
+    <StringProp id="music" name="Music" default="kart_grand_prix.music" doc="Music played in this track"/>
+    <StringProp id="screenshot" name="Screenshot" default="screenshot.jpg" doc="Name of the file that contains a screenshot of this track"/>
+    <EnumProp id="sky_type" name="Sky Type" default="box" doc="The type of sky">
+        <EnumChoice id="none" label="None" doc="No sky (useful for indoor scenes)"/>
+        <EnumChoice id="box" label="Box">
+            <StringProp id="sky_texture2" name="Sky Texture Top" default="genericskybox_top.jpg"/>
+            <StringProp id="sky_texture3" name="Sky Texture Bottom" default="genericskybox_bottom.jpg"/>
+            <StringProp id="sky_texture4" name="Sky Texture East" default="genericskybox_east.jpg"/>
+            <StringProp id="sky_texture5" name="Sky Texture West" default="genericskybox_west.jpg"/>
+            <StringProp id="sky_texture1" name="Sky Texture North" default="genericskybox_north.jpg"/>
+            <StringProp id="sky_texture6" name="Sky Texture South" default="genericskybox_south.jpg"/>
+        </EnumChoice>
+        <!--
+        <EnumChoice id="dome" label="Dome">
+            <StringProp id="sky_texture" name="Sky Texture" default=""/>
+            <IntProp id="sky_horizontal" name="Horizontal Definition" default="20"/>
+            <IntProp id="sky_vertical" name="Vertical Definition" default="20"/>
+            <FloatProp id="sky_texture_percent" name="Sky Texture Percent" default="1.0" min="0.0" max="1.0"
+                       doc="How much of the height of the texture is used"/>
+            <FloatProp id="sky_sphere_percent" name="Sky Sphere Percent" default="1.3" min="0.0" max="2.0"
+                       doc="1.0 : half-sphere; 2.0 : full sphere"/>
+            <FloatProp id="sky_speed_x" name="Sky Speed X" default="0.0" min="0.0" max="10.0"
+                       doc="Speed at which the sky moves horizontally"/>
+            <FloatProp id="sky_speed_y" name="Sky Speed Y" default="0.0" min="0.0" max="10.0"
+                       doc="Speed at which the sky moves vertically"/>
+        </EnumChoice>
+        -->
+        <EnumChoice id="simple" label="Plain color" doc="A plain-color sky">
+            <ColorProp id="sky_color" name="Sky Color" default="77 104 255" doc="Click here to select the color of the sky"/>
+        </EnumChoice>
+    </EnumProp>
+    <BoolProp id="arena" name="Is a battle Arena" default="false" doc="Whether this scene is a battle arena"/>
+    <BoolProp id="soccer" name="Is a soccer field" default="false" doc="Whether this scene is a soccer field"/>
+    <BoolProp id="ctf" name="Is a CTF map" default="false" doc="Whether this scene is a map for capture the flag"/>
+    <BoolProp id="cutscene" name="Is a cutscene" default="false" box="false" doc="Check this if this blender file is a SuperTuxKart cutscene"/> 
+    
+    <FloatProp id="camera_far" name="Camera Far Clip" default="1000.0" min="0.0" max="5000.0"
+                   doc="Distance from camera at which objects are clipped (no more visible)"/>
+    
+    <BoolProp id="smooth_normals" name="Smooth Normals" default="false" doc="Whether to interpolate the normals (gives smoother driving but requires that floors and walls be split)"/>
+    
+    <PropGroup id="propgroup_driving" name="Driving/laps">
+        <BoolProp id="reverse" name="Can be driven in reverse" default="false" doc="Whether this track can be driven in reverse mode"/>
+        <IntProp id="default_num_laps" name="Number of laps" default="3"/>
+    </PropGroup>
+    
+    <PropGroup id="propgroup_kartstart" name="Start line positions">
+        <IntProp id="start_karts_per_row" name="Karts per row on start" default="3" doc="How many karts are being placed in one row. The more karts, the wider the track must be (since each kart in a row will have a distance of start-sidewards-distance)."/>
+        <FloatProp id="start_forwards_distance" name="Start Forwards Distance" default="1.5" doc="How far a kart is in front of the next kart at start."/>
+        <FloatProp id="start_sidewards_distance" name="Start Sidewards Distance" default="1.8" doc="How much distance to the right/left of each kart in one row"/>
+        <FloatProp id="start_upwards_distance" name="Start upwards distance" default="1.1" doc="Sometimes drivelines are too low and will be under the actual mesh. This is a simple vertical offset added to each start positions to make sure that karts start on top of the track (and not under it). Generally the drivelines should be fixed, but this allows a quick solution for existing tracks."/>
+    </PropGroup>
+    
+    <PropGroup id="weather" name="Weather">
+        <EnumProp id="weather_type" name="Weather type" default="none" doc="The weather effect to use in this track">
+            <EnumChoice id="none" label="None" doc="The weather effect to use in this track"/>
+            <EnumChoice id="rain" label="Rain" doc="The weather effect to use in this track"/>
+            <EnumChoice id="snow" label="Snow" doc="The weather effect to use in this track"/>
+        </EnumProp>
+        <BoolProp id="weather_lightning" name="Lightning" default="false" doc="The weather effect to use in this track"/>
+        <StringProp id="weather_sound" name="Weather sound" default=""/>
+    </PropGroup>
+    <!--
+    <BoolProp id="clouds" name="Cloud shadows (STK 0.8.2)" default="false" doc="Whether to add simulated cloud shadows on the ground">
+    </BoolProp>
+    -->
+
+    <PropGroup id="propgroup_postpro" name="Graphical effects">
+        <BoolProp id="ambientmap" name="Ambient light map" default="false" doc="(Spherical harmonics lighting) Cube map used to provide less flat ambient lighting">
+            <StringProp id="ambientmap_texture2" name="Ambient map, Top" default=""/>
+            <StringProp id="ambientmap_texture3" name="Ambient map, Bottom" default=""/>
+            <StringProp id="ambientmap_texture4" name="Ambient map, East" default=""/>
+            <StringProp id="ambientmap_texture5" name="Ambient map, West" default=""/>
+            <StringProp id="ambientmap_texture1" name="Ambient map, North" default=""/>
+            <StringProp id="ambientmap_texture6" name="Ambient map, South" default=""/>
+        </BoolProp>
+        <!--
+        <BoolProp id="bloom" name="Bloom (STK 0.8.2)" default="true" doc="Whether this track uses bloom">
+            <FloatProp id="bloom_threshold" name="Bloom threshold" doc="Brightness at which bloom starts being applied" default="0.75" min="0.0" max="1.0"/>
+        </BoolProp>
+        -->
+        <!--
+        <BoolProp id="sunlensflare" name="Sun lens flare (STK 0.8.2)" default="false" doc="Show lens flare when looking at the sun. Lens flare underscore and maximise the emotional and psychological impact of a scene"/>
+        -->
+        <!--
+        <BoolProp id="colorlevel" name="Color correction (STK 0.8.2)" default="false" doc="Color correction can enhance the scene by tweaking the rendered output">
+            <FloatProp id="colorlevel_inblack" name="Input black" doc="The black input level" default="0.0" min="0.0" max="255.0"/>
+            <FloatProp id="colorlevel_ingamma" name="Input gamma" doc="The gamma level" default="1.0" min="0.0" max="10.0"/>
+            <FloatProp id="colorlevel_inwhite" name="Input white" doc="The white input level" default="255.0" min="0.0" max="255.0"/>
+
+            <FloatProp id="colorlevel_outblack" name="Output black" doc="The black output level" default="0.0" min="0.0" max="255.0"/>
+            <FloatProp id="colorlevel_outwhite" name="Output white" doc="The white output level" default="255.0" min="0.0" max="255.0"/>
+        </BoolProp>
+        -->
+        <BoolProp id="shadows" name="Dynamic shadows" default="true" doc="Whether to enable dynamic shadows"/>
+        <EnumProp id="duringday" name="Track time" default="day" doc="Useful to turn on/off some lighting effect">
+            <EnumChoice id="day" label="Day" />
+            <EnumChoice id="night" label="Night" />
+        </EnumProp>
+
+        <BoolProp id="fog" name="Fog" default="false" doc="Whether to enable fog in the track">
+            <ColorProp id="fog_color" name="Fog Color" default="0 0 0" doc="Click here to pick the color of the fog"/>
+            <FloatProp id="fog_start" name="Fog Start" default="50.0" min="0.0" max="1000.0"
+                       doc="Distance from camera at which fog starts dimming objects"/>
+            <FloatProp id="fog_end" name="Fog End" default="300.0" min="0.0" max="1000.0"
+                       doc="Distance from camera at which fog is so dense you can't see a thing"/>
+
+            <FloatProp id="fog_max" name="Fog Max" default="1.0" min="0.0" max="1.0"
+                       doc="Fog maximum density"/>
+        </BoolProp>
+    </PropGroup>
+</BoolProp>
+
+<!-- ************ KART ************ -->
+<BoolProp id="is_stk_kart" name="Is a SuperTuxKart kart" default="false" box="false" doc="Check this if this blender file is a SuperTuxKart kart">  
+    <StringProp id="name" name="Name" default="My New Kart" doc="Name of the kart"/>
+    <StringProp id="group" name="Group" default="standard" doc="Tabs in kart selection screen this kart appears under"/>
+    <StringProp id="icon" name="Icon" default="icon.png"
+                doc="Filename of the icon to display in the kart selection screen"/>
+    <StringProp id="minimap_icon" name="Minimap Icon" default="icon.png" doc="Filename of the icon to display on the in-game minimap"/>
+    <StringProp id="shadow" name="Shadow" default="genericshadow.png" doc="Filename of the file containing the shadow of this kart"/>
+    <ColorProp id="color" name="Color" default="255 255 255" doc="Color used to highlight the kart's icon in the interface"/>
+    <FloatProp id="center_shift" name="Gravity Center Shift" default="0.0" doc="Can be used to lower the gravity center of the kart if it topples over too easily"/>
+    <EnumProp id="engine_sfx" name="Engine sound" default="large">
+        <EnumChoice id="large" label="Large"/>
+        <EnumChoice id="small" label="Small"/>
+    </EnumProp>  
+
+    <EnumProp id="karttype" name="Type" default="medium" doc="SuperTuxKart Kart Type">
+        <EnumChoice id="light" label="Light" />
+        <EnumChoice id="medium" label="Medium" />
+        <EnumChoice id="heavy" label="Heavy" />
+    </EnumProp>
+    
+    <StringProp id="kartLean" name="Lean max (advanced)" default="" doc="Customize lean, for instance *0-10"/>
+    <StringProp id="exhaust_xml" name="Exhaust particle file" default="kart_exhaust.xml" doc="Determine the emitting exhaust particle, empty to disable"/>
+</BoolProp>
+
+
+</Properties>

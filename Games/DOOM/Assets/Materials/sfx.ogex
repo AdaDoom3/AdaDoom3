@@ -1,0 +1,543 @@
+Material
+{
+   Name {string {"textures_sfx_puzzglass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_puzzglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_fridgeglass1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_fridgeglass1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mc_medglass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_mc_medglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bioscanbeam"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bioscanbeam"}}
+}
+Material
+{
+   Name {string {"textures_sfx_hangar_redflare"}}
+   Texture (attrib = "editor") {string {"textures_editor_hangar_redflare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_hangar_redflareblink"}}
+   Texture (attrib = "editor") {string {"textures_editor_hangar_redflareblink"}}
+}
+Material
+{
+   Name {string {"textures_sfx_keycircuit"}}
+   Texture (attrib = "editor") {string {"textures_sfx_keycircuit"}}
+}
+Material
+{
+   Name {string {"textures_sfx_act1glass3"}}
+   Texture (attrib = "editor") {string {"textures_glass_tram_add"}}
+}
+Material
+{
+   Name {string {"textures_sfx_blueglass"}}
+   Texture (attrib = "editor") {string {"textures_editor_buttugly_glass"}}
+   Texture (attrib = "diffuse") {string {"textures_glass_daddyitburns"}}
+   Texture (attrib = "specular") {string {"textures_glass_daddyitburns"}}
+}
+Material
+{
+   Name {string {"textures_sfx_blueshard"}}
+   Texture (attrib = "editor") {string {"textures_sfx_blueglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_amberglass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_amberglass"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_amberglass"}}
+   Texture (attrib = "specular") {string {"textures_sfx_amberglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_ambershard"}}
+   Texture (attrib = "editor") {string {"textures_sfx_amberglass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bubble"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bubble"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bevglass01"}}
+   Texture (attrib = "normal") {string {"textures_sfx_bevglass01_local"}}
+   Texture (attrib = "specular") {string {"textures_sfx_bevglass01_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_monitor_glass2"}}
+   Texture (attrib = "editor") {string {"textures_editor_monitor_glass2"}}
+   Texture (attrib = "normal") {string {"textures_sfx_monitor_glass_local"}}
+   Texture (attrib = "specular") {string {"textures_sfx_monitor_glass_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_8"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_2"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_1"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flareSizeable"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_cv"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_toggle"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_toggle2"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_cv2"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare2"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare3"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare4"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare5"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_shatterglass01"}}
+   Texture (attrib = "editor") {string {"textures_editor_shatterglass01"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_shatterglass01_d"}}
+   Texture (attrib = "specular") {string {"textures_sfx_shatterglass01_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_techglass1"}}
+   Texture (attrib = "editor") {string {"textures_editor_buttugly_glass"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chiglass1blue"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chiglass1blue_sort_close"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chiglass1bluex"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chiglass1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_act1glass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chiglass1blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_act1glass2"}}
+   Texture (attrib = "editor") {string {"textures_sfx_act1glass"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_act1glass_d"}}
+   Texture (attrib = "specular") {string {"textures_sfx_act1glass_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bglass01a"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bglass01"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_bglass01_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bglass01"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bglass01"}}
+}
+Material
+{
+   Name {string {"textures_sfx_black"}}
+   Texture (attrib = "editor") {string {"textures_sfx_black"}}
+}
+Material
+{
+   Name {string {"textures_sfx_white"}}
+   Texture (attrib = "editor") {string {"textures_sfx_white"}}
+}
+Material
+{
+   Name {string {"textures_sfx_beam_red"}}
+   Texture (attrib = "editor") {string {"textures_sfx_beam_red"}}
+}
+Material
+{
+   Name {string {"textures_sfx_beam_blue"}}
+   Texture (attrib = "editor") {string {"textures_sfx_beam_blue"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mac_reflective"}}
+   Texture (attrib = "editor") {string {"textures_editor_mac_reflective"}}
+}
+Material
+{
+   Name {string {"textures_sfx_shotgunpuff"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_muzzleflash"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_global"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flare_global1"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_refract"}}
+   Texture (attrib = "editor") {string {"textures_particles_smokepuff"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bglass01_ed"}}
+   Texture (attrib = "editor") {string {"textures_sfx_bglass01"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring_power3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning4_color"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning5_color"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning7"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning8a"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lightning9a"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_radiogoop_d"}}
+   Texture (attrib = "editor") {string {"textures_sfx_radiogoop_d"}}
+}
+Material
+{
+   Name {string {"textures_sfx_seneca_vptest"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning2b"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning2a"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning1b"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning1a"}}
+}
+Material
+{
+   Name {string {"textures_sfx_s_lightning1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_enprotubeglass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_enprotubeglass"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_enprotubeglass"}}
+   Texture (attrib = "specular") {string {"textures_sfx_enprotubeglass_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_act1glass3_dirt"}}
+   Texture (attrib = "editor") {string {"textures_sfx_act1glass3a"}}
+}
+Material
+{
+   Name {string {"textures_sfx_watersplash2"}}
+   Texture (attrib = "editor") {string {"textures_editor_watersplash2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_waterbump"}}
+   Texture (attrib = "editor") {string {"textures_decals_bloodpool01_jim"}}
+}
+Material
+{
+   Name {string {"textures_sfx_dm_spectrum"}}
+   Texture (attrib = "editor") {string {"textures_sfx_dm_spectrum"}}
+}
+Material
+{
+   Name {string {"textures_sfx_clearreflect"}}
+   Texture (attrib = "editor") {string {"textures_common_qer_mirror"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web4"}}
+   Texture (attrib = "editor") {string {"textures_sfx_web4"}}
+   Texture (attrib = "normal") {string {"textures_sfx_web4"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_web4"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web3a"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web3"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web2"}}
+   Texture (attrib = "editor") {string {"textures_sfx_web2"}}
+   Texture (attrib = "normal") {string {"textures_sfx_web2"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_web2"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web1nonsolid"}}
+   Texture (attrib = "editor") {string {"textures_sfx_web1"}}
+   Texture (attrib = "normal") {string {"textures_sfx_web1"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_web1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_web1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_web1"}}
+   Texture (attrib = "normal") {string {"textures_sfx_web1"}}
+   Texture (attrib = "diffuse") {string {"textures_sfx_web1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_xrayblend"}}
+   Texture (attrib = "editor") {string {"textures_sfx_xrayblend"}}
+}
+Material
+{
+   Name {string {"textures_sfx_mac_glow"}}
+   Texture (attrib = "editor") {string {"textures_sfx_mac_glow"}}
+}
+Material
+{
+   Name {string {"textures_sfx_outsidedustpass1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_outsidedustpass1"}}
+}
+Material
+{
+   Name {string {"textures_sfx_redskyglass"}}
+   Texture (attrib = "editor") {string {"env_desert2_nx"}}
+}
+Material
+{
+   Name {string {"textures_sfx_defaultflare"}}
+   Texture (attrib = "editor") {string {"textures_sfx_defaultflare"}}
+}
+Material
+{
+   Name {string {"textures_sfx_flamesparks"}}
+}
+Material
+{
+   Name {string {"textures_sfx_bluefog"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chrome_mal_pipe"}}
+   Texture (attrib = "editor") {string {"env_mal_pipe_px"}}
+   Texture (attrib = "specular") {string {"_white"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring1"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpring3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpsphere"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vptelesphere"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppinch_bfgbolt"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppinch"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1ghost"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1particle"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1particle2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpfridge1glass"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vppuzzglass"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vpalphaglass"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp1band"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_vp2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_plasmapuff"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lag"}}
+   Texture (attrib = "editor") {string {"textures_sfx_lag"}}
+}
+Material
+{
+   Name {string {"textures_sfx_lagsprite"}}
+   Texture (attrib = "editor") {string {"textures_sfx_lag"}}
+}
+Material
+{
+   Name {string {"textures_sfx_chatsprite"}}
+   Texture (attrib = "editor") {string {"textures_sfx_chat"}}
+}

@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 package body Neo.Core.Math is
 
@@ -208,7 +208,7 @@ package body Neo.Core.Math is
               YX, V.Y * A.Y + 1.0, ZY,
               ZX, ZY, V.Z * A.Z + 1.0);
     end;
-  function Reflect (F : Plane_4D) return Transform_4D is -- !!!
+  function Reflect (F : Plane_4D) return Transform_4D is --!
     V  : constant Vector_3D := Normal (F) * (-2.0);
     YX : constant Real_32   := V.X * F.Y;
     ZX : constant Real_32   := V.X * F.Z;
@@ -271,4 +271,51 @@ package body Neo.Core.Math is
                                Cross (Get_Transform_4D_Z (H), Get_Transform_4D_X (H)),
                                Cross (Get_Transform_4D_X (H), Get_Transform_4D_Y (H))) * L.Moment + Cross (T, V));
     end;
+    
+  -----------
+  -- Scene --
+  -----------
+  
+  function Perspective (FOV_Y, Aspect, Z_Near, Z_Far : Real_32) return Matrix_4D is
+    Half_FOV_Y : constant Real_32 := Tan (FOV_Y / 2.0);
+    begin
+      return (XX => 1.0 / (Aspect * Half_FOV_Y), 
+              YY => 1.0 / Half_FOV_Y,
+              ZZ => - (Z_Far + Z_Near) / (Z_Far - Z_Near),
+              ZW => -1.0,
+              WZ => - (2.0 * Z_Far * Z_Near) / (Z_Far - Z_Near), others => 0.0);
+    end;
+  
+  function Look_At (Eye, Center, Up : Vector_3D) return Matrix_4D is
+    Z_Axis : constant Vector_3D := -Normal (Eye - Center);      -- Camera direction
+    X_Axis : constant Vector_3D := Normal (Cross (Z_Axis, Up)); -- Positive right axis vector
+    Y_Axis : constant Vector_3D := Cross (X_Axis, Z_Axis);      -- Camera up vector
+    begin
+      return (X_Axis.X, Y_Axis.X, Z_Axis.X, 0.0,
+              X_Axis.Y, Y_Axis.Y, Z_Axis.Y, 0.0,
+              X_Axis.Z, Y_Axis.Z, Z_Axis.Z, 0.0,
+              -Dot (X_Axis, Eye), -Dot (Y_Axis, Eye), -Dot (Z_Axis, Eye), 1.0);
+    end;
 end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

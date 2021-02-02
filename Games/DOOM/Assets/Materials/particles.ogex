@@ -1,0 +1,537 @@
+Material
+{
+   Name {string {"models_particles_shrapnel_shrapnel"}}
+}
+Material
+{
+   Name {string {"textures_particles_bug_goo4"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bug_goo3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_murkycloud"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bioscansmoke"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_wraithwarp1"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_preamble"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballblast"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasmablast"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasmablast2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_boomboom4"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_boomboom3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_boomboom"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_boomboom2_sort10"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_boomboom2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffyboltfade"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffybolt"}}
+   Texture (attrib = "editor") {string {"textures_particles_bfgboltarc"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc2"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc3"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc4"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc5"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc6"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc7"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacarc8"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsacglo"}}
+}
+Material
+{
+   Name {string {"textures_particles_bfgballsac"}}
+}
+Material
+{
+   Name {string {"textures_particles_hellmaggot"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_hellmaggotsolid"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_soul4"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_soul3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_soul"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dim_disk"}}
+   Texture (attrib = "editor") {string {"textures_particles_dim_disk"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust2bits"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray4"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray1"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_fbeam"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_fbeam2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfiresmall2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfiresmall"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfirebig2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfirebig2_sort10"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfirebig_grey"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_pfirebig"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"models_particles_tracer_tracer1"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dust_sort10"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_tracer"}}
+   Texture (attrib = "editor") {string {"textures_particles_tracer"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame1"}}
+   Texture (attrib = "editor") {string {"textures_editor_flame_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame3"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_burst"}}
+   Texture (attrib = "editor") {string {"textures_particles_burst_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasma_impact1"}}
+   Texture (attrib = "editor") {string {"textures_editor_plasmaflame_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_lostflame1"}}
+   Texture (attrib = "editor") {string {"textures_editor_flame_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_lostflame1b"}}
+   Texture (attrib = "editor") {string {"textures_editor_flame_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_lostflame3"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_lostflame3b"}}
+   Texture (attrib = "editor") {string {"textures_particles_flame3_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_teststrip32"}}
+   Texture (attrib = "editor") {string {"textures_editor_flame_strip"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame3_strip"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_flame_strip"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasmaflame_strip"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_spark4"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_spark3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasma2"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasma2"}}
+}
+Material
+{
+   Name {string {"textures_particles_plasma"}}
+   Texture (attrib = "editor") {string {"textures_particles_plasma"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffybolt_white"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodspray"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_droppuddle"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_drop2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_drop3"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_s_lightning2_whi"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_s_lightning_whi"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrelpoof_sort"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_p_lightning6"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_snowball"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_lightball"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_duffyboltver3_white"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_billow3_glow"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_billow_glow"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_candlefire"}}
+   Texture (attrib = "editor") {string {"textures_particles_candlefire"}}
+}
+Material
+{
+   Name {string {"textures_particles_sparks_multi"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_hellhole_fire"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_caco_shot2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_spark_colorme"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dot"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_s_lightning2"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_s_lightning_masked"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_s_lightning"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_rocketbacklit"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrelpoof"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrelexpbase1"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrelexpsmall"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_round001"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dustcloud_opaque"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_dustcloud"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_blacksmokepuff"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_blacksmokepuff_sort10"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_blacksmokepuff_far"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_soulknifetex"}}
+   Texture (attrib = "editor") {string {"textures_editor_soulknifetex"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulknifetex_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulknifetex_s"}}
+}
+Material
+{
+   Name {string {"textures_particles_soulring"}}
+   Texture (attrib = "editor") {string {"textures_editor_soulring"}}
+   Texture (attrib = "normal") {string {"models_weapons_soulcube_soulring_local"}}
+   Texture (attrib = "specular") {string {"models_weapons_soulcube_soulring_s"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuff"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_ember_mid"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_ember_small"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_smokepuffalpha"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_firestrip"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodcloud"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}
+Material
+{
+   Name {string {"textures_particles_testvideo"}}
+   Texture (attrib = "editor") {string {"textures_editor_dontuse"}}
+}

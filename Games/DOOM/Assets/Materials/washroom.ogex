@@ -1,0 +1,185 @@
+Material
+{
+   Name {string {"textures_washroom_rffloorgrate01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rffloorgrate01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rffloorgrate01_s"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rffloorgrate01_local"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rftrim01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rftrim01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rftrim01_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rftrim01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rftrim01_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfwallpanel04"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfwallpanel04"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfwallpanel04_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfwallpanel04"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfwallpanel04_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfwallpanel03"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfwallpanel03"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfwallpanel03_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfwallpanel03"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfwallpanel03_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfwallpanel02"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfwallpanel02"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfwallpanel02_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfwallpanel02"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfwallpanel02_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfthinbeam01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfthinbeam01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfthinbeam01_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfthinbeam01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfthinbeam01_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfcorner01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfcorner01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfcorner01_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfcorner01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfcorner01_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfcorner01ns"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfcorner01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfcorner01_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfcorner01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfcorner01_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfwallpanel01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfwallpanel01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_rfwallpanel01_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_rfwallpanel01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_rfwallpanel01_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_rfceilingtile01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_rfceilingtile01"}}
+}
+Material
+{
+   Name {string {"textures_washroom_water01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_water01"}}
+}
+Material
+{
+   Name {string {"textures_washroom_glass01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_glass01"}}
+}
+Material
+{
+   Name {string {"textures_washroom_bpipe2"}}
+   Texture (attrib = "editor") {string {"textures_washroom_bpipe2"}}
+   Texture (attrib = "normal") {string {"textures_washroom_bpipe2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_bpipe2_d"}}
+   Texture (attrib = "specular") {string {"textures_washroom_bpipe2_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_bpipe"}}
+   Texture (attrib = "editor") {string {"textures_washroom_bpipe"}}
+   Texture (attrib = "normal") {string {"textures_washroom_bpipe_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_bpipe_d"}}
+   Texture (attrib = "specular") {string {"textures_washroom_bpipe_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_bvent01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_bvent01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_bvent_s"}}
+   Texture (attrib = "normal") {string {"textures_washroom_bvent_local"}}
+}
+Material
+{
+   Name {string {"textures_washroom_nosmoking01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_nosmoking01"}}
+   Texture (attrib = "specular") {string {"textures_washroom_nosmoking_s"}}
+   Texture (attrib = "normal") {string {"textures_washroom_nosmoking_b"}}
+}
+Material
+{
+   Name {string {"textures_washroom_blight_fx"}}
+   Texture (attrib = "editor") {string {"textures_washroom_blight_fx_ed"}}
+}
+Material
+{
+   Name {string {"textures_washroom_blight"}}
+   Texture (attrib = "editor") {string {"textures_washroom_blight"}}
+}
+Material
+{
+   Name {string {"textures_washroom_mirror"}}
+   Texture (attrib = "editor") {string {"textures_washroom_mirror"}}
+}
+Material
+{
+   Name {string {"textures_washroom_plaingreen"}}
+   Texture (attrib = "editor") {string {"textures_washroom_plaingreen"}}
+}
+Material
+{
+   Name {string {"textures_washroom_lightburn01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_lightburn01"}}
+}
+Material
+{
+   Name {string {"textures_washroom_sign2"}}
+   Texture (attrib = "editor") {string {"textures_washroom_sign2"}}
+   Texture (attrib = "specular") {string {"textures_washroom_sign2_s"}}
+   Texture (attrib = "normal") {string {"textures_washroom_sign2_b"}}
+}
+Material
+{
+   Name {string {"textures_washroom_btiletrim"}}
+   Texture (attrib = "editor") {string {"textures_washroom_btiletrim"}}
+   Texture (attrib = "normal") {string {"textures_washroom_btiletrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_btiletrim_d"}}
+   Texture (attrib = "specular") {string {"textures_washroom_btiletrim_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_blackbtile01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_blackbtile01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_btile_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_blackbtile_d"}}
+}
+Material
+{
+   Name {string {"textures_washroom_greenbtile01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_greenbtile01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_btile_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_greenbtile_d"}}
+}
+Material
+{
+   Name {string {"textures_washroom_btile01"}}
+   Texture (attrib = "editor") {string {"textures_washroom_btile01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_btile_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_btile_d"}}
+}
+Material
+{
+   Name {string {"textures_washroom_redge"}}
+   Texture (attrib = "editor") {string {"textures_washroom_redge"}}
+   Texture (attrib = "normal") {string {"textures_washroom_redge_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_redge_d"}}
+   Texture (attrib = "specular") {string {"textures_washroom_redge_s"}}
+}

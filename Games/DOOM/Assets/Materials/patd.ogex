@@ -1,0 +1,28 @@
+Material
+{
+   Name {string {"guis_assets_marscity_fullpath"}}
+}
+Material
+{
+   Name {string {"guis_assets_marscity_fullline"}}
+}
+Material
+{
+   Name {string {"guis_assets_hud_icons_scube2w"}}
+}
+Material
+{
+   Name {string {"guis_assets_hud_icons_scube2w2"}}
+}
+Material
+{
+   Name {string {"guis_assets_end_circ"}}
+}
+Material
+{
+   Name {string {"guis_assets_marscity_target"}}
+}
+Material
+{
+   Name {string {"guis_assets_marscity_textblur"}}
+}

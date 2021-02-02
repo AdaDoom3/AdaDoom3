@@ -1,0 +1,64 @@
+Material
+{
+   Name {string {"lights_lightgratelight_snd"}}
+}
+Material
+{
+   Name {string {"lights_warmup_squarelight_snd"}}
+}
+Material
+{
+   Name {string {"lights_newalphagrate3_snd"}}
+}
+Material
+{
+   Name {string {"lights_duolight02_snd_cv"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_noflicker"}}
+}
+Material
+{
+   Name {string {"lights_biground1_snd_noflicker"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group1"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group2"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_cave_group3"}}
+}
+Material
+{
+   Name {string {"lights_spot01_snd"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_softer"}}
+}
+Material
+{
+   Name {string {"lights_squarelight_breakable_softer"}}
+}
+Material
+{
+   Name {string {"lights_blamplight_still_cv_breakable_softer"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_negative"}}
+}
+Material
+{
+   Name {string {"lights_squarelight1_snd_mod"}}
+}

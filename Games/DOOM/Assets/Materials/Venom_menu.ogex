@@ -1,0 +1,6 @@
+Material
+{
+   Name {string {"models_wipes_marsHD"}}
+   Texture (attrib = "diffuse") {string {"models_wipes_marsHD_d"}}
+   Texture (attrib = "normal") {string {"models_wipes_marsHD_local"}}
+}

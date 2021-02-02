@@ -1,0 +1,5 @@
+Material
+{
+   Name {string {"textures_sfx_portal_sky"}}
+   Texture (attrib = "editor") {string {"textures_editor_portal_sky"}}
+}

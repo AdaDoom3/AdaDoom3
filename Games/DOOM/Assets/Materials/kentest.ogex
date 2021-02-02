@@ -1,0 +1,204 @@
+Material
+{
+   Name {string {"textures_decals_bluestatica2x"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_bloodyfilm1"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_oldfilm1"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_greystatica2x"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_greystatica"}}
+   Texture (attrib = "editor") {string {"textures_decals_greystatica"}}
+}
+Material
+{
+   Name {string {"textures_decals_statica"}}
+   Texture (attrib = "editor") {string {"textures_decals_statica"}}
+}
+Material
+{
+   Name {string {"textures_decals_statica2x"}}
+   Texture (attrib = "editor") {string {"textures_decals_statica"}}
+}
+Material
+{
+   Name {string {"textures_decals_staticablend"}}
+   Texture (attrib = "editor") {string {"textures_decals_statica"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrelpoof_sort"}}
+   Texture (attrib = "editor") {string {"textures_particles_barrelpoof"}}
+}
+Material
+{
+   Name {string {"textures_decals_fly"}}
+   Texture (attrib = "editor") {string {"textures_decals_fly"}}
+   Texture (attrib = "normal") {string {"textures_decals_fly_local"}}
+   Texture (attrib = "specular") {string {"textures_decals_fly_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_yellow_test"}}
+   Texture (attrib = "editor") {string {"textures_ktest_yellow_test"}}
+   Texture (attrib = "normal") {string {"textures_ktest_yellow_test_local"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_yellow_test"}}
+   Texture (attrib = "specular") {string {"textures_ktest_yellow_test_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_gseeker_gwhizz"}}
+}
+Material
+{
+   Name {string {"models_monsters_cherub_cherub2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_cherub_cherub"}}
+   Texture (attrib = "normal") {string {"models_monsters_cherub_cherub_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_cherub_cherub_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_cherub_cherub"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_cherub_cherub"}}
+   Texture (attrib = "normal") {string {"models_monsters_cherub_cherub_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_cherub_cherub_s"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_zoom"}}
+}
+Material
+{
+   Name {string {"models_weapons_rocketlauncher_cyberzoom"}}
+}
+Material
+{
+   Name {string {"models_monsters_trite_newtrite2"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_trite_newtrite"}}
+   Texture (attrib = "normal") {string {"models_monsters_trite_newtrite2_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_trite_newtrite_s"}}
+}
+Material
+{
+   Name {string {"models_monsters_trite_newtrite"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_trite_newtrite"}}
+   Texture (attrib = "normal") {string {"models_monsters_trite_newtrite_local"}}
+   Texture (attrib = "specular") {string {"models_monsters_trite_newtrite_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_roqtest"}}
+   Texture (attrib = "editor") {string {"textures_editor_video"}}
+}
+Material
+{
+   Name {string {"models_monsters_zombie_boney_boney"}}
+   Texture (attrib = "diffuse") {string {"models_monsters_zombie_boney_boney"}}
+   Texture (attrib = "specular") {string {"models_monsters_zombie_boney_boney_s"}}
+}
+Material
+{
+   Name {string {"textures_decals_spooky"}}
+   Texture (attrib = "editor") {string {"textures_decals_berserk"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrel_flame"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrel_explosion1"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrel_explosion2"}}
+}
+Material
+{
+   Name {string {"textures_particles_barrel_explosion3"}}
+}
+Material
+{
+   Name {string {"textures_particles_sonic2"}}
+   Texture (attrib = "editor") {string {"textures_particles_sonic"}}
+}
+Material
+{
+   Name {string {"textures_particles_sonic"}}
+   Texture (attrib = "editor") {string {"textures_particles_sonic"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_webs_websquare"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_webs_websquare"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_webs_websquare"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_webs_corner"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_webs_corner"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_webs_corner"}}
+}
+Material
+{
+   Name {string {"textures_particles_bloodstream3"}}
+   Texture (attrib = "editor") {string {"textures_particles_bloodstream3"}}
+}
+Material
+{
+   Name {string {"textures_particles_blooddrop3"}}
+   Texture (attrib = "editor") {string {"textures_particles_blooddrop2"}}
+}
+Material
+{
+   Name {string {"models_particles_shrapnel_shrapnel"}}
+}
+Material
+{
+   Name {string {"textures_particles_spawnarc4"}}
+   Texture (attrib = "editor") {string {"textures_particles_spawnarc4"}}
+}
+Material
+{
+   Name {string {"textures_particles_spawnarc3"}}
+   Texture (attrib = "editor") {string {"textures_particles_spawnarc3"}}
+}
+Material
+{
+   Name {string {"models_wipes_hst_mars"}}
+   Texture (attrib = "diffuse") {string {"models_wipes_hst_mars"}}
+   Texture (attrib = "normal") {string {"models_wipes_hst_mars_h"}}
+}
+Material
+{
+   Name {string {"models_wipes_dust"}}
+}
+Material
+{
+   Name {string {"models_wipes_wipe01"}}
+   Texture (attrib = "diffuse") {string {"models_wipes_wipe01"}}
+   Texture (attrib = "specular") {string {"models_wipes_wipe01_s"}}
+}
+Material
+{
+   Name {string {"textures_sfx_shatterglass01_fx1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_shatterglass01_fx1"}}
+}
+Material
+{
+   Name {string {"textures_dynamic_camera1"}}
+   Texture (attrib = "editor") {string {"textures_sfx_black_2"}}
+}

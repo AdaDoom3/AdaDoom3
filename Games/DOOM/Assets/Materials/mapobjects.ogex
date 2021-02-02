@@ -1,0 +1,3836 @@
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockbrace"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockbrace_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockbrace_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockbrace_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockdoor"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockdoor_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockdoor_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockdoorgui"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockdoorgui_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockdoorgui_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockdoorgui_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockhall"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockhall_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockhall_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockhall_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockhallgui"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockhallgui_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockhallgui_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockhallgui_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockhood"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockhood_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockhood_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockhood_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_airlockvertlock"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_airlockvertlock_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_airlockvertlock_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_airlockvertlock_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_airlock_midpatch"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_airlock_midpatch_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_airlock_midpatch_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_airlock_midpatch_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_airlock_midpatch_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_arcade_machine_arcade_decal1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_arcade_machine_arcade_decal1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_arcade_machine_arcade_decal2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_arcade_machine_arcade_decal2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_arcade_machine_arcade_logo"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_arcade_machine_arcade_logo"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_arcade_machine_arcade_machine"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_arcade_machine_arcade_machine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_arcade_machine_arcade_machine"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_arcade_machine_arcade_machine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_alphalabs3_vagary_vagary_mummy"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_alphalabs3_vagary_vagary_mummy_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_alphalabs3_vagary_vagary_mummy"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_alphalabs3_vagary_vagary_mummy_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_alphalabs3_vagary_vagary_spout"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_alphalabs3_vagary_vagary_spout_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_alphalabs3_vagary_vagary_spout_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair2_nodecal"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair3_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_chair5"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_chair5_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair5"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair5_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_chairs_normchair"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_normchair_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_normchair_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_normchair_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_misc_emerlight"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_misc_emerlight_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_misc_emerlight_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_misc_emerlight_light"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_misc_emerlight_light_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_misc_emerlight_light_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_misc_emerlight_light_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_base_misc_fireext"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_misc_fireext_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_misc_fireext_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_misc_fireext_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_boxes_metalbox1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_boxes_metalbox1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_boxes_metalbox1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_boxes_metalbox1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_bubbler2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_bubbler2_bubbler2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_bubbler2_bubbler2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_bubbler2_bubbler2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_camera_camera01"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_camera_camera01_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_camera_camera01"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_camera_camera01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_camera_camlight"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cannister_cannister"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cannister_cannister_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cannister_cannister"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cannister_cannister_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_crane_craneback"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_crane_craneback_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_crane_craneback_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_crane_craneback_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_crane_cranecab"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_crane_cranecab_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_crane_cranecab_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_crane_cranecab_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_crane_craneguard"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_crane_craneguard_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_crane_craneguard_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_crane_craneguard_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_crane_cranemast"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_crane_cranemast_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_crane_cranemast_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_crane_cranemast_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_digtools_digtools"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_digtools_digtools_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_digtools_digtools_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_digtools_digtools_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_caves_jackhammer_jackhammer"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_caves_jackhammer_jackhammer_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_caves_jackhammer_jackhammer_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_caves_jackhammer_jackhammer_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_chairs_kitchenchair_kitchenchair"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_chairs_kitchenchair_kitchenchair"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_chairs_kitchenchair_kitchenchair_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_callstation_callstationbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_callstation_callstationbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_callstation_callstationbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_callstation_callstationbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_callstation_callstationrails"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_callstation_callstationrails_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_callstation_callstationrails_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_callstation_callstationrails_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_elevguistand_elevguistand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_elevguistand_elevguistand_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_elevguistand_elevguistand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_elevguistand_elevguistand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_joint_joint"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_joint_joint_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_joint_joint_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_joint_joint_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_modconsole6cart"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_com_modconsole6cart_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_modconsole6cart_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_modconsole6cart_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_modconsole6cart_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_platguistand_platguistand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_platguistand_platguistand_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_platguistand_platguistand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_platguistand_platguistand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailbody"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailbody_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailbody_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailbody_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailclawfinger"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailclawfinger_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailclawfinger_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailclawfinger_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailclawhand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailclawhand_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailclawhand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailclawhand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailguts"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailguts_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailguts_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailguts_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailshell1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailshell1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailshell1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailshell1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailshell2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailshell2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailshell2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailshell2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_com_snail_snailshell3"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_com_snail_snailshell3_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_com_snail_snailshell3_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_com_snail_snailshell3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_commoutside_commo_hellhead"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_commoutside_commo_hellhead_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_commoutside_commo_hellhead_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_corpses_hangingman03"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_corpses_hangingman03_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_corpses_hangingman03_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_corpses_hm02"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_corpses_hm02_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_corpses_hm02"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_corpses_hm02_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_a_xrayboard1_yel01_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_xrayboard1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_a_xrayboard1_yel01_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_a_xrayboard1_yel01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_boxmonitor1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_boxmonitor1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_boxmonitor1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_boxmonitor1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_ccfloortex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_ccfloortex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_ccfloortex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_ccfloortex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_comcenter"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_comcenter_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_comcenter"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_comcenter_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_comcenter1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_comrack"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_comrack_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_comrack_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_comrack_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_comrack2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_comrack2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_comrack2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_comrack2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpuarch1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpuarch1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpuarch1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpuarch1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpudesk1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpudesk1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpudesk1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpudesk1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpudesk1a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpudesk1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpudesk1a"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpudesk1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpudesk2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpudesk2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpudesk2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpudesk2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpudesk2_white"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpudesk2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpudesk2_white"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpudesk2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpudisc"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpudisc_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpudisc"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpudisc_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpufloorinsert"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpufloorinsert_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpufloorinsert_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpufloorinsert_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpuhex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpuhex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpuhex_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpuhex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpumaze1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpumaze1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpumaze1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpumaze1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpuoverdoor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpuoverdoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpuoverdoor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpuoverdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpupole2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpupole2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpupole2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpupole2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_cpupole2a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_cpupole2a_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_cpupole2a_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_cpupole2a_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_heater"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_heater_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_heater"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_heater_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_heater2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_heater2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_heater2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_heater2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_pullhandle"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_pullhandle_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_pullhandle"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_pullhandle_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_doorframe"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_sab_doorframe_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_sab_doorframe"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_sab_doorframe_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_floor1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_sab_floor1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_sab_floor1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_sab_floor1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_floor2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_hex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_sab_hex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_sab_hex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_sab_hex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_shield1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_sab_shield1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_sab_shield1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_sab_shield1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_shield2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_sab_shield2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_sab_shield2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_sab_shield2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_sab_shield2_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_serverplate"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_serverplate_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_serverplate"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_serverplate_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_smallguimonitor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_smallguimonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_smallguimonitor"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_smallguimonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_cpu_xrayboard1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_cpu_xrayboard1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_cpu_xrayboard1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_cpu_xrayboard1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_crane_clawbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_crane_clawbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_crane_clawbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_crane_clawbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_crane_clawcable"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_crane_clawcable_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_crane_clawcable_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_crane_clawcable_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_crane_clawfinger"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_crane_clawfinger_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_crane_clawfinger_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_crane_clawfinger_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram2a"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram3"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram5"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram6_1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram6_2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram6_3"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram6_4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram6_5"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram7_1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram7_2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram7_3"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram7_4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram7_5"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram8"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram9"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_hologram_hologram9sprite"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_maincontrol_datalinker"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta1_maincontrol_datalinker_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_delta1_maincontrol_datalinker"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta1_maincontrol_datalinker_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_maincontrol_maincontrol"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta1_maincontrol_maincontrol_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_delta1_maincontrol_maincontrol"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta1_maincontrol_maincontrol_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_maincontrol_maincontrol_lights"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_maincontrol_maincontrol_lights1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta1_maincontrol_maincontrol_lights2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta2_demonpork_monkeyskull"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta2_demonpork_monkeyskull_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_delta2_demonpork_monkeyskull"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta2_demonpork_monkeyskull_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta2_demonpork_puddle"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta2_demonpork_puddle_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta2_demonpork_puddle_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta2_puzzcage_puzzcage"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta2_puzzcage_puzzcage_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_delta2_puzzcage_puzzcage_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta2_puzzcage_puzzcage_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_ceilingtanks_ceilingtanks"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_delta3_ceilingtanks_ceilingtanks_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_delta3_ceilingtanks_ceilingtanks"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_delta3_ceilingtanks_ceilingtanks_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_delta3_teleporter_warpfx_betrugger_sphere"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_cranebase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_cranebase"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_cranebase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_cranebase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltacrane_cranebody_cranebody"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltacrane_Cranebody_Cranebody_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltadecon_deltadecon"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltadecon_deltadecon_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltadecon_deltadecon_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltadecon_deltadecon_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_deltakiosk_deltakiosk"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_deltakiosk_deltakiosk_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_deltakiosk_deltakiosk_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_deltakiosk_deltakiosk_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_deltakiosk_deltakiosk_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_deadimp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_deadimp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_deadimp_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_deadimp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_demonmuseum_c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Deadimp_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Deadimp_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Deadimp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_hellknight_headtex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Hellknight_headtex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_Hellknight_spinetex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_Hellknight_spinetex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_demonmuseum_zombie"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_demonmuseum_zombie_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_demonmuseum_zombie_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_demonmuseum_zombie_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_a_smalldoor_02"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_a_smalldoor_02"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_a_smalldoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_a_smalldoor_d02"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_a_smalldoor_s02"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_a_smalldoor_04"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_a_smalldoor_04"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_a_smalldoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_a_smalldoor_d04"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_a_smalldoor_s04"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_accesshatch_accesshatch"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_accesshatch_accesshatch_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_accesshatch_accesshatch_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_accesshatch_accesshatch_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_accesshatch_accesshatch_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_accesshatch_accesshatchdoor"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_accesshatch_accesshatchdoor_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_accesshatch_accesshatchdoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_accesshatch_accesshatchdoor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_accesshatch_accesshatchdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_doorlocklight"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_doorlocklight_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_doorlocklight"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_doorlocklightg"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_doormonitor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_doormonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_doormonitor"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_doormonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_doormonitor2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_doormonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_doormonitor2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_doormonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_doormonitorarrow"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_doormonitorarrow_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_enprodoor1_enprodoor1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_enprodoor1_enprodoor1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_enprodoor1_enprodoor1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_enprodoor1_enprodoor1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_enprodoor2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_enprodoor2_enprodoor2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_enprodoor2_enprodoor2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_enprodoor2_enprodoor2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_hazdoor2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor2_hazdoor2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_hazdoor2_hazdoor2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor2_hazdoor2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoorframeglow"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoorframetex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoorframetex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoorframetex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoorframetex_s_hangar"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoorframetex_hangar"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoorframetex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoorframetex_hangar"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoorframetex_s_hangar"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoorframetex_white"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoorframetex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoorframetex_white"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoorframetex_s_hangar"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoortex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoortex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoortex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoortex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoor2tex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoor2tex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoor2tex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoor2tex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_mcitydoor2tex_hangar"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_mcitydoor2tex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_mcitydoor2tex_hangar"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_mcitydoor2tex_s_hangar"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1dn_org01_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1dn_org01_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1frm_d02"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1frm_d02"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1frm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1frm_s02"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1up_org01_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_a_cavedoor1up_org01_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_cavedoor1up_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_cavedoor1up_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_cavedoor1dn_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_cavedoor1frm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_cavedoor1frm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_cavedoor1frm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_cavedoor1frm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor1_cavedoor1up"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor1_cavedoor1up_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor1_cavedoor1up_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor1_cavedoor1up_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor2_a_cavedoor2_org01_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor2_a_cavedoor2_org01_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor2_cavedoor2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor2_a_cavedoor2_org01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cavedoor2_cavedoor2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cavedoor2_cavedoor2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cavedoor2_cavedoor2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cavedoor2_cavedoor2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cpudoor2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cpudoor2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cpudoor2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cpudoor2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cpudoor2light"}}
+   Texture (attrib = "editor") {string {"textures_editor_flare"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cpudoor2light2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cpudoor2pipes"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cpudoor2pipes_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cpudoor2pipes_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cpudoor2pipes_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_cpudoor2r"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_cpudoor2r_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_cpudoor2r_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_cpudoor2r_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_hazdoor1_hazdoor1frm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_hazdoor1_hazdoor1frm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor1_hazdoor1frm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor1_hazdoor1frm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_recycledoor2_recycdoor2lf"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_recycledoor2_recycdoor2lf_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor1_hazdoor1lf_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_recycledoor2_recycdoor2rt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_recycledoor2_recycdoor2rt_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_hazdoor1_hazdoor1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_recycledoor2_recycledoor2frm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_recycledoor2_recycledoor2frm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_recycledoor2_recycledoor2frm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_recycledoor2_recycledoor2frm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_smalldoor"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_smalldoor_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_smalldoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_smalldoor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_smalldoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_smalldoor_light"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_smalldoor_light_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_smalldoor_sign"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_smalldoor_sign_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_smalldoorblue_light"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_smalldoorblue_light_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_smalldoorblue_sign"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_smalldoorblue_sign_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_sotechdr1frame"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_sotechdr1frame_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_sotechdr1frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_sotechdr1lft"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_sotechdr1lft_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1lft_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_sotechdr1lft_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_sotechdr1rt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_sotechdr1rt_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_sotechdr1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_sotechdr2frame"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_sotechdr2frame_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_sotechdr2frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1frame"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1frame_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1frame_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1frame_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1frame_cop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1frame_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1frame_mcu"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1frame_mcu_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1frame_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1frame_red"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1frame_red_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1lft"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1lft_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1lft_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1lft_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1lft_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1lft_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1lft_cop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1lft_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1rt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1rt_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1rt_blu"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1rt_blu_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1rt_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1rt_cop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1rt_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1rt_mcu"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1rt_mcu_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1rt_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor1_techdr1rt_red"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor1_techdr1rt_red_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor1_techdr1rt_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor1_techdr1rt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2frame"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2frame_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2frame_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2frame_cop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2frame_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2frame_grease"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2frame_grease_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2frame_grease_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2frame_mcu"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2frame_mcu_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2frame_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2frame_red"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2frame_red_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2frame_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2frame_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2lft"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2cb_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2cb_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2cb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2lft_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2cb_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2cb_cop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2cb_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2lft_mcu"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2cb_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2lft_mcu_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2cb_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2lft_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2cb_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2cb_red_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2cb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_doors_techdoor2_techdr2lft_reddirt"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_techdoor2_techdr2cb_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_doors_techdoor2_techdr2cb_reddirt_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_doors_techdoor2_techdr2cb_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dbeam1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_dropship_dbeam1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dbeam2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_dropship_dbeam1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropship"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_dropship_dropship_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_dropship_dropship"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_dropship_dropship_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropship_sticker"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_dropship_dropship_sticker"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropship_stickerns"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_dropship_dropship_sticker"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropshipfx"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropshipglass"}}
+   Texture (attrib = "editor") {string {"textures_sfx_paneglass1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_dropship_dropship_glass"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_dropship_dropship_glass"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropshipglassns"}}
+   Texture (attrib = "editor") {string {"textures_sfx_paneglass1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_dropship_dropship_glass"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_dropship_dropshipns"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_dropship_dropship_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_dropship_dropship"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_dropship_dropship_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_elevators_elevator"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_elevators_elevator_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_elevators_elevator"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_elevators_elevator_s2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_elevators_elevator_cop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_elevators_elevator_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_elevators_elevator_cop"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_elevators_elevator_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_elevators_elevator_cop3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_elevators_elevator_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_elevators_elevator_cop3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_elevators_elevator_cop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_elevators_elevator_green"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_elevators_elevator_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_elevators_elevator_green"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_elevators_elevator_green_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder2a"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder2a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder2a_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder2a"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder2a_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder3"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder4"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder4"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder4_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder4"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder_arm"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder_arm"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder_arm_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder_arm"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder_arm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder_fire"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder2_add"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_cylinder_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_cylinder"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_cylinder_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_cylinder2_fire"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_cylinder2_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_laser"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_laser"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_laser_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_laser"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_laser_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_dm_sat"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_dm_sat_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_dm_sat_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_dm_sat"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_dm_sat_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enproplasmatube"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_enproplasmatube"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_enproplasmatube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_enproplasmatube"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_enproplasmatube_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enproplasmatubeburner"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_enproplasmatubeburner_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enproplasmatubeglass"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_enproplasmatubeglass"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_enproplasmatubeglass"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_enproplasmatubeglass"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enporplasmatubelight"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enprotube_ejector1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_enprotube_ejector1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_enprotube_ejector1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_enprotube_ejector1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_enprotube_ejector1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_enpro_enprotube_ejector2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_enpro_enprotube_ejector2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_enpro_enprotube_ejector2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_enpro_enprotube_ejector2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_enpro_enprotube_ejector2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filecabinet1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_filecabinet1_filecabinet1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_filecabinet1_filecabinet1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_filecabinet1_filecabinet1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_a_storagecloset_d"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_a_storagecloset_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_a_storagecloset_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_a_storagecloset_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_a_storagecloset_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_binder1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_binder1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_binder1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_burgereat"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_burgereat_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_burgereat_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_burgereat_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_cola1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_cola1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_cola1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_cola1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_cola2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_cola2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_cola1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_cola1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_cone3"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_cone3_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_cone3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_cone1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_cone3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_foamcup"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_foamcup"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_foamcup_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_ktable"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_ktable_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_ktable_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_ktable_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_laptop"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_laptop_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_laptop_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_laptop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_lunchbag"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_lunchbag_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_lunchbag_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_lunchbag_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_lunchbag_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_lunchbaggrant"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_lunchbaggrant_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_lunchbaggrant_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_lunchbag_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_lunchbag_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_mkeyboard"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_mkeyboard_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_mkeyboard"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_mkeyboard_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_mkeyboard2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_mkeyboard_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_mkeyboard2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_mkeyboard_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_monitor1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_monitor_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_monitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_monitor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_monitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_monitor_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_monitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_monitor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_monitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_monkeywrench"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_monkeywrench_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_monkeywrench"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_toolchest"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_toolchest_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_toolchest"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_toolchest_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_toolchest_rust"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_toolchest_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_toolchest_rust"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_toolchest_rust_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_pc1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_pc1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_pc1_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_paper1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_paper1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_paper1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_paper2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_paper2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_paper2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_paper3"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_paper3"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_paper3"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_phone"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_phone_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_phone_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_phone_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_snackmachine"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_snackmachine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_snackmachine"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_snackmachine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_snackmachine_logo"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_snackmachine_snacks"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachine"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_sodamachine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_sodamachine"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_sodamachine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachine_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachine_add2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachinesq"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_sodamachine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_sodamachinesq"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_sodamachine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachinesq_add"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_sodamachinesq_add2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_filler_tbox1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox2_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox3"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox3_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox3_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox4"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox4_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox4_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox5"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox5_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox5_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox6"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox6_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox6_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox7"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_tbox7_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_tbox7_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_tbox7_d"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_filler_tbox8"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_filler_superpoopy"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_filler_superpoopy_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_filler_superpoopy"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fridge1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_fridge1_fridge1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_fridge1_fridge1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_fridge1_fridge1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fridge2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_fridge2_fridge2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_fridge2_fridge2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_fridge2_fridge2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fridge2blood"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_fridge2_fridge2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_fridge2_fridge2blood"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_fridge2_fridge2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fridge2grill"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_fridge2_grill_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_fridge2_grill_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fridge2grillblood"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_fridge2_grill_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_fridge2_grill_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_fuel_barrel_exp_barrel"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel_blue"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_fuel_barrel_exp_barrel_blue"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_fuel_barrel_exp_barrel_red"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel_white"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_fuel_barrel_exp_barrel_white"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2a"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2_blue"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2a_blue"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2a_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2_white"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_exp_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_exp_barrel2a_white"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_exp_barrel_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_fuel_barrel_pbarrel"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_fuel_barrel_pbarrel_b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_fuel_barrel_pbarrel"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_fuel_barrel_pbarrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_alphalabcon_alphalabcon"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_alphalabcon_alphalabcon_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_alphalabcon_alphalabcon_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_alphalabcon_alphalabcon_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_flatmonitor_flatmonitor"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_guiobjects_flatmonitor_flatmonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_flatmonitor_flatmonitor_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_flatmonitor_flatmonitor_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_flatmonitor_flatmonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_mc_constand_mc_constand"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_guiobjects_mc_constand_mc_constand_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_mc_constand_mc_constand_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_mc_constand_mc_constand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_mc_constand_mc_constand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1alpha"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1alpha_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_recconpanel1_recconpanel1alpha_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1rust"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1rust_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_guiobjects_techdrpanel1_techdrpanel1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_healthgui_healthgui"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_healthgui_healthgui_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_healthgui_healthgui"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_healthgui_healthgui_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_healthgui_healthguidirty"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_healthgui_healthguidirty"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_healthgui_healthgui_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_healthgui_healthguidirty_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_berserk_blaze"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta2b_labimp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta2b_labimp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta2b_labimp_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta2b_labimp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta2b_labimpskin"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta2b_labimpskin_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta2b_labimpskin_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta2b_labimpskin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta5_doora_eyeskin_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta5_doora_eyeskin_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta5_doora_eyeskin_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta5_doora_eyeskin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_delta5_doorb_hornskin"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_delta5_doorb_hornskin_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_delta5_doorb_hornskin_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_delta5_doorb_hornskin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_evilmeat_evilmeat1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_evilmeat_evilmeat1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_evilmeat_evilmeat1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_evilmeat_evilmeat1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_evilmeat_evilmeat2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_evilmeat_evilmeat2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_evilmeat_evilmeat2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_evilmeat_evilmeat2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_hflame"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_hflame2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_hflame3"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_hflame4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_mancroom_hellarchbum"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hell_mancroom_hellarchbum"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_mancroom_hellarchbum_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_mancroom_hellarchbum"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_mancroom_hellarchbum_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_mancroom_hellarchtop"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hell_mancroom_hellarchtop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_mancroom_hellarchtop_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_mancroom_hellarchtop"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_mancroom_hellarchtop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_mancroom_mancskull"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_mancroom_mancskull_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_mancroom_mancskull"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_mancroom_mancskull_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_mancroom_oldskull"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_mancroom_oldskull_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_mancroom_oldskull"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_mancroom_oldskull_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_a"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_a_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_b_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_c_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candle_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candle_d_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_archviletemple_candlestand"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_archviletemple_candlestand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_d"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_Site3_stoneroom_imhorny_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_skulls_skull1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_skulls_skull1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_skulls_skull1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_skulls_skull1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_skulls_skull3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_skulls_skull3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_skulls_skull3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_skulls_skull3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_skulls_skull4"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_skulls_skull4_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_skulls_skull4"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_skulls_skull4_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_tallroom_tooth"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_tallroom_tooth_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_tallroom_tooth"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_tallroom_tooth_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_teleporter_deco_teleporter_deco"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hell_teleporter_deco_teleporter_deco"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_teleporter_deco_teleporter_deco_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_teleporter_deco_teleporter_deco"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_teleporter_deco_teleporter_deco_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_torches_jethroskull"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_torches_jethroskull_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_torches_jethroskull"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_torches_jethroskull_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_torches_torso"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hell_torches_torso_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hell_torches_torso"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hell_torches_torso_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_torches_torso_fx"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hell_torches_torsoflame"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellarch2_hellarch2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellarch2_hellarch2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellarch2_a_hellarch2_d07f"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellarch2_hellarch2b_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_archdeco"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_archdeco"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_archdeco_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_archdeco"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_archdeco_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_hellhole_archtop"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_archtop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_archtop_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_archtop"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_archtop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_hellhole_floor"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_floor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_floor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_floor"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_floor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_hellhole_pillarcap"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_pillarcap"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_pillarcap_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_pillarcap"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_pillarcap_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_hellhole_pillarstrap"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_pillarstrap"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_pillarstrap_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_pillarstrap"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_pillarstrap_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhole_hellhole_sarcoph"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhole_hellhole_sarcoph"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhole_hellhole_sarcoph_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhole_hellhole_sarcoph"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhole_hellhole_sarcoph_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhorn_hellhorn"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_hellhorn_hellhorn"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhorn_hellhorn_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellhorn_hellhorn_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellhorn_hellhorn2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_hellhorn_hellhorn2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellhorn_hellhorn_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_hellskulls_hornskull1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_hellskulls_hornskull1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_hellskulls_hornskull1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_kiosk_infokiosk2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_kiosk_infokiosk2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_kiosk_infokiosk2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_kiosk_infokiosk2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_kiosk_infokiosk2fx"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_alphaarm_alphaarm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_alphaarm_alphaarm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_alphaarm_alphaarm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_alphaarm_alphaarm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_blaptop_blaptop"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_blaptop_blaptop_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_blaptop_blaptop_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_blaptop_blaptop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_bottle1_bottle1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_bottle1_bottle1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_bottle1_bottle1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_bottle1_bottle1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_compcart_compcart"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_compcart_compcart_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_compcart_compcart2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_compcart_compcart2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_compcart_compcartblood"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_compcart_compcart_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_compcart_compcart2blood"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_compcart_compcart2blood_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopearm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopearm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopearm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopearm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopeback"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopeback_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopeback_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopeback_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopebase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopebase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopebase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopebase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopehand1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopehand1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopehand1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopehand1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopehand2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopehand2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopehand2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopehand2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopepivot"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopepivot_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopepivot_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopepivot_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopeshoulder"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopeshoulder_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopeshoulder_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopeshoulder_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cscope_cscopetop"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cscope_cscopetop_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cscope_cscopetop_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cscope_cscopetop_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_cube1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_cube1_cube_hp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_cube1_cube_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_cube1_cube_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_destab_destabarrel"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_destab_destabarrel_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_destab_destabarrel_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_destab_destabarrel_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_destab_destabase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_destab_destabase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_destab_destabase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_destab_destabase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_destab_destabmain"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_destab_destabmain_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_destab_destabmain_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_destab_destabmain_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_destab_epdbell"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_destab_epdbell_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_destab_epdbell_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_destab_epdbell_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_destab_shaftcap"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_destab_shaftcap_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_destab_shaftcap_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_destab_shaftcap_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_diamondbox_diamondbox_sm"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_dirt"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_dirt"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_diamondbox_diamondbox_sm_dirt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_diamondbox_diamondboxtex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_diamondbox_diamondboxtex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_diamondbox_diamondboxtex_green"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_green"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_diamondbox_diamondboxtex_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_red"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_diamondbox_diamondboxtex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_divider_dividertex3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_divider_dividertex3_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_divider_dividertex3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_electromic_electromic"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_electromic_electromic_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_electromic_electromic_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_electromic_electromic_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_gizmo1_gizmo1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_gizmo1_gizmo1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_gizmo1_gizmo1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_gizmo1_gizmo1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_gizmo2_gizmo2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_gizmo2_gizmo2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_gizmo2_gizmo2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_gizmo2_gizmo2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_gizmo3_gizmo3"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_gizmo3_gizmo3_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_gizmo3_gizmo3_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_gizmo3_gizmo3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_hydrocon_hydrocon"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_hydrocon_hydrocon_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_hydrocon_hydrocon_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_hydrocon_hydrocon_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_hydrocon_hydroconplug"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_hydrocon_hydroconplug_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_hydrocon_hydroconplug_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_hydrocon_hydroconplug_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_hydrocon_hydroconring"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_hydrocon_hydroconring_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_hydrocon_hydroconring_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_hydrocon_hydroconring_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_infusion1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_infusion_infusion1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_infusion_infusion1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_infusion_infusion1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_infusion2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_infusion_infusion2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_infusion_infusion2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_infusion_infusion2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_loadingplatform_loadingplatformtex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_loadingplatform_loadingplatformtex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_loadingplatform_loadingplatformtex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_loadingplatform_loadingplatformtex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_mfscomp_mfschamber"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_mfscomp_mfschamber_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_mfscomp_mfschamber_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_mfscomp_mfschamber_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_mfscomp_mfsclamp"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_mfscomp_mfsclamp_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_mfscomp_mfsclamp_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_mfscomp_mfsclamp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_mfscomp_mfscompbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_mfscomp_mfscompbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_mfscomp_mfscompbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_mfscomp_mfscompbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_mfscomp_mfscompcell"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_mfscomp_mfscompcell_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_mfscomp_mfscompcell_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_mfscomp_mfscompcell_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_mfscomp_mfscompmain"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_mfscomp_mfscompmain_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_mfscomp_mfscompmain_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_mfscomp_mfscompmain_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_microscope_microscope"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_microscope_microscope_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_microscope_microscopeblack_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_microscope_microscope_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_newfridge_newfridge"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_newfridge_newfridge_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_newfridge_newfridge"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_newfridge_newfridge_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticbin_plasticbin"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticbin_plasticbin_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticbin_plasticbin_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticbin_plasticbin_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticbinmini_plasticbinmini"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticbinmini_plasticbinmini_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticbinmini_plasticbinmini_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticbinmini_plasticbinmini_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar1_plasticjar1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar1_plasticjar1b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar1_plasticjar1b_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar1_plasticjar1g"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar1_plasticjar1g_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar1_plasticjar1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2b"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2b_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2c_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2o"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2o_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2r"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2r_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_plasticjar2_plasticjar2w"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_plasticjar2_plasticjar2w_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_plasticjar2_plasticjar2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_roboarm1_roboarm1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_roboarm1_roboarm1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_roboarm1_roboarm1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_roboarm1_roboarm1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_sink2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_sink2_sink2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_sink2_sink2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_sink2_sink2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_sink2faucet"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_sink2_sink2faucet_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_sink2_sink2faucet_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_sink2_sink2faucet_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_spigotcan_spigotcan"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_spigotcan_spigotcan_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_spigotcan_spigotcan_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_spigotcan_spigotcan_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lab_tray_tray"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_tray_tray_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_tray_tray_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_tray_tray_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lamps_desklamp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lamps_desklamp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lamps_desklamp"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lamps_desklamp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lights_cagelight_cagelight"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_lights_cagelight_cagelight_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lights_cagelight_cagelight_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lights_cagelight_cagelight_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lights_cagelight_cagelight_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lights_doublegood_doublegood"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lights_doublegood_doublegood_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lights_doublegood_doublegood_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lights_doublegood_doublegood_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lights_emerlight1_emerlight1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lights_emerlight1_emerlight1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lights_emerlight1_emerlight1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lights_emerlight1_emerlight1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lights_klaxon_klaxon"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lights_klaxon_klaxon_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lights_klaxon_klaxon"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lights_klaxon_klaxon_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_lights_klaxon_klaxon_red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lights_klaxon_klaxon_red_bmp"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lights_klaxon_klaxon_red"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_loadtrans_loadtransbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_loadtrans_loadtransbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_loadtrans_loadtransbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_loadtrans_loadtransbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_loadtrans_loadtranscab"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_loadtrans_loadtranscab_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_loadtrans_loadtranscab_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_loadtrans_loadtranscab_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_loadtrans_loadtranscorners"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_loadtrans_loadtranscorners_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_loadtrans_loadtranscorners_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_loadtrans_loadtranscorners_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_loadtrans_loadtranscorners_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_loadtrans_loadtransdoor"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_loadtrans_loadtransdoor_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_loadtrans_loadtransdoor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_loadtrans_loadtransdoor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_loadtrans_loadtransdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_capsule"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_capsule_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_capsule"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_capsule_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_mac_britacase"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_mac_britacase_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_mac_britacase"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_mac_britacase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_mac_britapivot"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_mac_britapivot_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_mac_britapivot"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_mac_britapivot_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_mac_thing"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_mac_thing_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_mac_thing"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_mac_thing_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_machineclaw1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_machineclaw1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_machineclaw1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_machineclaw1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_machineclaw2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_machineclaw2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_machineclaw2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_machineclaw2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_machineclaw5"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_machineclaw5_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_machineclaw5"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_machineclaw5_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_machineroom_railpiece"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_machineroom_railpiece_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_machineroom_railpiece"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_machineroom_railpiece_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_bioscanner_bioscanner"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_bioscanner_bioscanner_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_bioscanner_bioscanner_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_bioscanner_bioscanner_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_bioscanner_bioscannereye"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_bioscanner_bioscannereye_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_bioscanner_bioscannereye_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_bioscanner_bioscannereye_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_deskcomp_deskcomparm1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_deskcomp_deskcomparm1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_deskcomp_deskcomparm1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_deskcomp_deskcomparm1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_deskcomp_deskcompbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_deskcomp_deskcompbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_deskcomp_deskcompbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_deskcomp_deskcompbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_deskcomp_deskcompscreen"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_deskcomp_deskcompscreen_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_deskcomp_deskcompscreen_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_deskcomp_deskcompscreen_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_mc_underarm_underarmarm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_mc_underarm_underarmarm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_mc_underarm_underarmarm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_mc_underarm_underarmarm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_mc_underarm_underarmbase"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_mc_underarm_underarmbase_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_mc_underarm_underarmbase_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_mc_underarm_underarmbase_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_mc_underarm_underarmfingers"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_mc_underarm_underarmfingers_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_mc_underarm_underarmfingers_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_mc_underarm_underarmfingers_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_mcity_mc_underarm_underarmhand"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_mcity_mc_underarm_underarmhand_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_mcity_mc_underarm_underarmhand_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_mcity_mc_underarm_underarmhand_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_a_hangingmonitor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_monitors_a_hangingmonitor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_a_hangingmonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_a_hangingmonitor04"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_monitors_a_hangingmonitor_d04"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_a_hangingmonitor_s04"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_a_hangingmonitorpiece"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitorpiece_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_hangingmonitorpiece_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_a_hangingmonitorpiece04"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitorpiece_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_a_hangingmonitorpiece_s04"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_controlmonitor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_controlmonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_monitors_controlmonitor"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_controlmonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_hangingmonitor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitor_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_monitors_hangingmonitor_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_hangingmonitor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_hangingmonitorpiece"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_monitors_hangingmonitorpiece_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_monitors_hangingmonitorpiece_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_monitors_hangingmonitorscreen"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_morgue_mlight"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_morgue_mlight_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_morgue_mlight"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_morgue_mlight_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_normchair"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_base_chairs_normchair_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_normchair_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_normchair_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_pentagram_pentagram"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_pentagram_pentagram_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_pentagram_pentagram"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_pentagram_pentagram_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_radiogoop_nukerock_"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_radiogoop_nukerock_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_radiogoop_nukerock_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_radiogoop_nukerock_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_radiogoop_nukerock_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_ecage1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_ecage1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_ecage1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_ecage1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_rec1armhose"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_rec1armhose_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_rec1armhose_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_rec1armhose_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_rec1bpump"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_rec1bpump_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_rec1bpump_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_rec1bpump_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_recyclight"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_recyclight_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_recyclight_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_recyclight_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_goovent_goovent"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_goovent_goovent_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_goovent_goovent_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_goovent_goovent_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_groovetank_groovetank"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_groovetank_groovetank_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_groovetank_groovetank_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_groovetank_groovetank_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_pipetank_pipetank"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_pipetank_pipetank_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_pipetank_pipetank_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_pipetank_pipetank_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_pump_pumparm"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_pump_pumparm_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_pump_pumparm_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_pump_pumparm_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_pump_pumpnozzle"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_pump_pumpnozzle_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_pump_pumpnozzle_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_pump_pumpnozzle_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_pump_pumpspinner"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_pump_pumpspinner_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_pump_pumpspinner_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_pump_pumpspinner_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_pump_pumptumbler"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_pump_pumptumbler_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_pump_pumptumbler_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_pump_pumptumbler_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_spintank_spintank"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_spintank_spintank_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_spintank_spintank_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_spintank_spintank_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_whistletip_whistletip"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_recycle_whistletip_whistletip_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_recycle_whistletip_whistletip_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_recycle_whistletip_whistletip_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_recycle_wst_cnt_ind_logo1"}}
+   Texture (attrib = "diffuse") {string {"textures_decals_ind_logo1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rideodeath_rod_mystbox"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rideodeath_rod_mystbox_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rideodeath_rod_mystbox_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rideodeath_rod_mystbox_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rideodeath_turnstile"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rideodeath_turnstile_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rideodeath_turnstile_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rideodeath_turnstile_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rideodeath_welder_welderbox"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rideodeath_welder_welderbox"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rideodeath_welder_welderbox_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rideodeath_welder_welderbox_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rideodeath_welder_weldercage"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rideodeath_welder_weldercage"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rideodeath_welder_weldercage_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rideodeath_welder_weldercage_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rideodeath_welder_welderfrag"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rideodeath_welder_welderfrag"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rideodeath_welder_welderfrag_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rideodeath_welder_welderfrag_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rover_rover"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rover_rover_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rover_rover"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rover_rover_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rover_rover_md5"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_rover_rover_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rover_rover"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_rover_rover_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rover_rover_env"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rover_rover_headlights"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_rover_rover_numbers"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_rover_rover_numbers"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_scannerbed"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_scannerbed_scannerbed_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_scannerbed_scannerbed_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_scannerbed_scannerbed_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_serverrack1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_serverrack1_serverrack1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_serverrack1_serverrack1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_serverrack1_serverrack1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_serverrack1a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_serverrack1_serverrack1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_serverrack1_serverrack1a_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_serverrack1_serverrack1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_shipping_crates_shipping_crates"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_shipping_crates_shipping_crates_tex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_shipping_crates_shipping_crates"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_shipping_crates_shipping_crates_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_shipping_crates_shipping_crates3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_shipping_crates_shipping_crates3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_shipping_crates_shipping_crates3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_shipping_crates_shipping_crates3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_signs_ceilingsign"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_signs_ceilingsign_ceilingsign_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_signs_ceilingsign_ceilingsign_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_signs_ceilingsign_ceilingsign_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_signs_marquee"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_signs_marquee_marquee_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_signs_marquee_marquee_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_signs_marquee_marquee_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_signs_marqueerust"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_signs_marquee_marqueerust_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_signs_marquee_marquee_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_signs_marquee_marqueerust_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_a_skcube_03"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_a_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_a_skcube_d03"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_a_skcube_s03"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_a_skcube_04"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_a_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_a_skcube_d04"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_a_skcube_s06"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_a_skcube_05"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_a_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_a_skcube_d05"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_a_skcube_s05"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skbeltmachine"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skbeltmachine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skbeltmachine"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skbeltmachine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skbeltmachine_orange"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skbeltmachine_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skbeltmachine_orange"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skbeltmachine_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skceilingdisc1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skceilingdisc1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skceilingdisc1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skceilingdisc1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skceilingdisc1a"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skceilingdisc1a_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skceilingdisc1a_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skceilingdisc1a_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skceilingdisc1red"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skceilingdisc1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skceilingdisc1red_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skceilingdisc1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skceilingdisc1b"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skceilingdisc1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skceilingdisc1b"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skceilingdisc1b_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skceilingdisc1b2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skceilingdisc1a_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skceilingdisc1b2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skceilingdisc1b2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcube"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcube2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubeblue"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d5"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubegreen"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d4"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubered"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubeyellow"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubedirtgreen"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d6"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube_s6"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubedirtgreen2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube2_d7"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube2_s6"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubedirtred"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube_d7"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube_s6"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skcubedirtred2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skcube2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skcube2_d6"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skcube2_s6"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skgenerator"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skgenerator_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skgenerator"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skgenerator_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skgenerator2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_skmachines_skgenerator2_local"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skgenerator2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skgenerator2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skgenerator2"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skpipeblock"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skpipeblock_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skpipeblock_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skpipeblock_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skmachines_skoverhang"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skmachines_skoverhang_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skmachines_skoverhang"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skmachines_skoverhang_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_helltower"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_helltower_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_helltower"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_helltower_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_hound"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_hound_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_hound"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_hound_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_houndfx"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentastic1fx"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_skullgate"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_skullgate_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_skullgate"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_skullgate_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_skullgate_skullgate3"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_skullgate_skullgate3_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_skullgate_skullgate3"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_skullgate_skullgate3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_a_tecpipebraid2soylent"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_steve_temp_a_tecpipebraid2soylent"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellbubbles_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_bonegrate"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_bonegrate_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_steve_temp_bonegrate"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_steve_temp_bonegrate_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_boxvent1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_boxvent1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_steve_temp_boxvent1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_steve_temp_boxvent1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_edoor01"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_edoor01_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_steve_temp_edoor01_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_steve_temp_edoor01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_horn1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_horn1_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_mcityc1bricks1a"}}
+   Texture (attrib = "normal") {string {"textures_mcity_mcityc1_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_bricks1a_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_nozzle01"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_nozzle01_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_steve_temp_nozzle01_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_steve_temp_nozzle01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_tooth2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_tooth2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_steve_temp_tooth2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_steve_temp_tooth2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_tooth2sharprock02"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_steve_temp_tooth2_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_slimetest"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_slime_dblood03"}}
+   Texture (attrib = "specular") {string {"textures_hell_slime_sblood_wall01"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellbubbles_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_sharprock2slimeblood03"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_steve_temp_sharprock2slimeblood03"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellbubbles_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_steve_temp_stetile1grnstone1"}}
+   Texture (attrib = "normal") {string {"textures_hell_stone1_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_gunrack_gunracksides"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_gunrack_gunracksides"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_gunrack_gunracksides_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_gunrack_gunracksides_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_gunrack_gunrackshelf"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_gunrack_gunrackshelf"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_gunrack_gunrackshelf_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_gunrack_gunrackshelf_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_gunrack_gunrackshelfxl"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_gunrack_gunrackshelfxl"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_gunrack_gunrackshelfxl_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_gunrack_gunrackshelfxl_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_storagecab"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_storagecab"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_storagecab_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_storagecab_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_storagecabblood"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_storagecabblood"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_storagecab_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_storagecab_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_storagecabdirt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_storagecabdirt"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_storagecab_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_storagecabdirt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_dirt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_dirt"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_storagecab_wallcabinet_wallcabinetdoor_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_swinglights_juglamp_juglamp"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_swinglights_juglamp_juglamp_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_swinglights_juglamp_juglamp_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_swinglights_juglamp_juglamp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_swinglights_saucerlamp_saucerlamp"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_swinglights_saucerlamp_saucerlamp_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_swinglights_saucerlamp_saucerlamp_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_swinglights_saucerlamp_saucerlamp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_swinglights_swinglighttex1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_swinglights_work_swinglighttex1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_swinglights_work_swinglighttex1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_swinglights_work_swinglighttex1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_swinglights_work_swinglighttex1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_swinglights_swinglighttex2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_swinglights_work_swinglighttex2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_swinglights_work_swinglighttex2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_swinglights_work_swinglighttex2"}}
+   Texture (attrib = "specular") {string {"_white"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_swinglights_swinglighttex2a"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_swinglights_work_swinglighttex2a"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_swinglights_work_swinglighttex2a"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tablecart1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_tablecart1_tablecart1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_tablecart1_tablecart1_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_tablecart1_tablecart1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tablecart1ball"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_tablecart1_tablecart1ball_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tablecart2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_lab_tablecart2_tablecart2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_lab_tablecart2_tablecart2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_lab_tablecart2_tablecart2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tables_bunkbed_bunkbed"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tables_bunkbed_bunkbed_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tables_bunkbed_bunkbed_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tables_bunkbed_bunkbed_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tables_bunkbed_mattress"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tables_bunkbed_mattress_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tables_bunkbed_mattress_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tables_bunkbed_mattress_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tables_conf_table_conf_table_tex"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tables_conf_table_conf_table_tex_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tables_conf_table_conf_table_tex"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tables_conf_table_conf_table_tex_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tables_cot_cot"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tables_cot_cot_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tables_cot_cot_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tables_cot_cot_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tables_udesk_udesk"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tables_udesk_udesk_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tables_udesk_udesk"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tables_udesk_udesk_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporter_telecolon1"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_teleporter_telecolon1"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporter_telecolon2"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_teleporter_telecolon2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporter_telegoo"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporter_teleporter_exit"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_teleporter_teleporter_exit_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_teleporter_teleporter_exit"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_teleporter_teleporter_exit_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporterxl_teleporterxl_top"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_teleporterxl_teleporterxl_top_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_teleporterxl_teleporterxl_top_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_teleporterxl_teleporterxl_top_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_teleporterxl_teleporterxl_top_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_teleporterxl_teleporterxl_bot"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_teleporterxl_teleporterxl_bot_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_teleporterxl_teleporterxl_bot_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_teleporterxl_teleporterxl_bot_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_teleporterxl_teleporterxl_bot_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tram_tramtable"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tram_tramtable_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tram_tramtable_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tram_tramtable_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_tram_tramtablescreen"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_tram_tramtablescreen_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_tram_tramtablescreen_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_tram_tramtablescreen_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_turrets_ceilingturret1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_turrets_ceilingturret1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_turrets_ceilingturret1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_turrets_ceilingturret1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_turrets_ceilingturret1_md5"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_turrets_ceilingturret1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_turrets_ceilingturret1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_turrets_ceilingturret1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_binplug_binplug_c"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_binplug_binplug_c_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_binplug_binplug_c_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_binplug_binplug_c_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_binplug_binplug_o"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_binplug_binplug_o_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_binplug_binplug_o_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_binplug_binplug_o_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_inhaler_inhaler"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_inhaler_inhaler_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_inhaler_inhaler_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_inhaler_inhaler_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_inhaler_inhaler_red"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_inhaler_inhaler_red_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_inhaler_inhaler_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_inhaler_inhaler_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_tecknob1_tecknob1"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_tecknob1_tecknob1_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_tecknob1_tecknob1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_tecknob1_tecknob1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_tecknob1_tecknob1yel"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_tecknob1_tecknob1yel_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_tecknob1_tecknob1_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_tecknob1_tecknob1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_tecknob2_tecknob2"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_tecknob2_tecknob2_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_tecknob2_tecknob2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_tecknob2_tecknob2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_tecknob2_tecknob2dirt"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_tecknob2_tecknob2dirt_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_tecknob2_tecknob2_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_tecknob2_tecknob2dirt_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_tecknob3_tecknob3"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_tecknob3_tecknob3_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_tecknob3_tecknob3_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_tecknob3_tecknob3_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_trapbra_trapbra"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_trapbra_trapbra_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_trapbra_trapbra_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_trapbra_trapbra_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_trihatch_trihatch"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_trihatch_trihatch_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_trihatch_trihatch_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_trihatch_trihatch_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_utility_vent_vent"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_utility_vent_vent_d"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_utility_vent_vent_local"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_utility_vent_vent_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_airtank"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_airtank_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_airtank"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_airtank_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_airtank_grey"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_airtank_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_airtank_grey"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_airtank_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_bsink"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_bsink_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_bsink"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_bsink_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_clamp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_clamp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_clamp"}}
+   Texture (attrib = "specular") {string {"textures_washroom_redge_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_dryer"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_dryer_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_dryer"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_dryer_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_mop1"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_mop1_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_mop1"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_mop1_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_mop2"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_mop2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_mop2"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_mop2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_mopbucket"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_mopbucket_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_mopbucket"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_mopbucket_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_soap"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_soap_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_soap"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_soap_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_toilet"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_toilet_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_toilet"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_toilet_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_tp"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_tp_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_tp"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_tp_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_trashcan01"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_trashcan01_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_trashcan01"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_trashcan01_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_turn"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_turn_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_turn"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_turn_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_twist_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_twist_s"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_twist_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_washroom_urn2_b"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_washroom_urn2_local"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_washroom_urn2_d"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_washroom_urn2_s"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_webs_websquare"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_webs_websquare"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_webs_websquare"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_webs_websquare"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_webs_corner"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_webs_corner"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_webs_corner"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_webs_corner"}}
+}
+Material
+{
+   Name {string {"models_seneca_reactor_reactorspinner"}}
+   Texture (attrib = "normal") {string {"models_seneca_reactor_reactorspinner_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_reactor_reactorspinner_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_reactor_reactorspinner_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_reactor_reactorlaser1"}}
+   Texture (attrib = "editor") {string {"models_seneca_reactor_reactorlaser1_d"}}
+   Texture (attrib = "normal") {string {"models_seneca_reactor_reactorlaser1_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_reactor_reactorlaser1_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_reactor_reactorlaser1_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_reactor_reactortube"}}
+   Texture (attrib = "normal") {string {"models_seneca_reactor_reactortube_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_reactor_reactortube_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_reactor_reactortube_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_reactor_reactortubeglow"}}
+}
+Material
+{
+   Name {string {"models_seneca_xianroom_xianroom1"}}
+   Texture (attrib = "editor") {string {"models_seneca_xianroom_xianroom1_d"}}
+   Texture (attrib = "normal") {string {"models_seneca_xianroom_xianroom1_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_xianroom_xianroom1_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_xianroom_xianroom1_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_xianroom_xbridge1"}}
+   Texture (attrib = "normal") {string {"models_seneca_xianroom_xbridge1_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_xianroom_xbridge1_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_xianroom_xbridge1_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_xianroom_xbridge1_add"}}
+}
+Material
+{
+   Name {string {"models_seneca_xianroom_xbridge2"}}
+   Texture (attrib = "normal") {string {"models_seneca_xianroom_xbridge2_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_xianroom_xbridge2_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_xianroom_xbridge2_s"}}
+}
+Material
+{
+   Name {string {"models_seneca_xianroom_xbridge3"}}
+   Texture (attrib = "normal") {string {"models_seneca_xianroom_xbridge3_local"}}
+   Texture (attrib = "diffuse") {string {"models_seneca_xianroom_xbridge3_d"}}
+   Texture (attrib = "specular") {string {"models_seneca_xianroom_xbridge3_s"}}
+}
+Material
+{
+   Name {string {"models_wipes_hst_mars"}}
+   Texture (attrib = "diffuse") {string {"models_wipes_hst_mars"}}
+   Texture (attrib = "normal") {string {"models_wipes_hst_mars_h"}}
+}
+Material
+{
+   Name {string {"models_wipes_dust"}}
+   Texture (attrib = "editor") {string {"models_wipes_hst_mars"}}
+}
+Material
+{
+   Name {string {"models_gibs_brain"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_brain"}}
+   Texture (attrib = "normal") {string {"models_gibs_brain_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_brain_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_gibmaster"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_gibmaster"}}
+   Texture (attrib = "normal") {string {"models_gibs_gibmaster_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_gibmaster_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_pork"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_pork"}}
+   Texture (attrib = "normal") {string {"models_gibs_pork_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_pork_s"}}
+}
+Material
+{
+   Name {string {"models_gibs_spine"}}
+   Texture (attrib = "diffuse") {string {"models_gibs_spine"}}
+   Texture (attrib = "normal") {string {"models_gibs_spine_local"}}
+   Texture (attrib = "specular") {string {"models_gibs_spine_s"}}
+}

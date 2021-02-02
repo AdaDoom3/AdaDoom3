@@ -1,0 +1,582 @@
+Material
+{
+   Name {string {"textures_caves_a_cavfgirder2_d02"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_cavfgirder2_d02"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_cavfgirder2_d02"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_cavfgirder2_s02"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_cavfgirder1_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_cavfgirder2_d02b"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_cavfgirder2_d02b"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_cavfgirder2_d02b"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_cavfgirder2_s02b"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_cavfgirder1_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_cavfgirder2_d03"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_cavfgirder2_d03"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_cavfgirder2_d03"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_cavfgirder2_s03"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_cavfgirder1_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_cavfgirder2_d03b"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_cavfgirder2_d03b"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_cavfgirder2_d03b"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_cavfgirder2_s03b"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_cavfgirder1_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_cavfgirder2_d04"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_cavfgirder2_d04"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_cavfgirder2_d04"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_cavfgirder2_s04"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_cavfgirder1_local02"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_diamondstairs_d01i"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_diamondstairs_d01i"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_diamondstairs_d01k"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_diamondstairs_s01i"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_diamondstairs_local03"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_diamondstairs_d01l"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_diamondstairs_d01l"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_diamondstairs_d01l"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_diamondstairs_s01l"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_diamondstairs_local03"}}
+}
+Material
+{
+   Name {string {"textures_caves_a_diamondstairs_d01h"}}
+   Texture (attrib = "editor") {string {"textures_caves_a_diamondstairs_d01h"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_a_diamondstairs_d01h"}}
+   Texture (attrib = "specular") {string {"textures_caves_a_diamondstairs_s01h"}}
+   Texture (attrib = "normal") {string {"textures_caves_a_diamondstairs_local03"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavsolarmap"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavsolarmap_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavsolarmap_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavsolarmap_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavsolarmap_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_metalswatch1"}}
+   Texture (attrib = "editor") {string {"textures_caves_metalswatch1_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_metalswatch1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_metalswatch1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_metalswatch1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_metalswatch3"}}
+   Texture (attrib = "editor") {string {"textures_caves_metalswatch3"}}
+   Texture (attrib = "normal") {string {"textures_caves_metalswatch1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_metalswatch3"}}
+   Texture (attrib = "specular") {string {"textures_caves_metalswatch3_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_warshutter1"}}
+   Texture (attrib = "editor") {string {"textures_caves_warshutter1_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_warshutter1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_warshutter1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_warshutter1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_wardoortrim"}}
+   Texture (attrib = "editor") {string {"textures_caves_wardoortrim_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_wardoortrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_wardoortrim_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_wardoortrim_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_wardoortrim2"}}
+   Texture (attrib = "editor") {string {"textures_editor_wardoortrim2"}}
+   Texture (attrib = "normal") {string {"textures_caves_wardoortrim2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_wardoortrim2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_wardoortrim2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavslashtrim"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavslashtrim_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavslashtrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavslashtrim_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavslashtrim_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_temfloortrim1"}}
+   Texture (attrib = "editor") {string {"textures_editor_temfloortrim1"}}
+   Texture (attrib = "normal") {string {"textures_caves_temfloortrim1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_temfloortrim1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_temfloortrim1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_tembrick2"}}
+   Texture (attrib = "editor") {string {"textures_caves_tembrick2_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_tembrick2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_tembrick2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_tembrick2door"}}
+   Texture (attrib = "editor") {string {"textures_editor_tembrick2door"}}
+   Texture (attrib = "normal") {string {"textures_caves_tembrick2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_tembrick2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_tembrick1crum"}}
+   Texture (attrib = "editor") {string {"textures_caves_tembrick1crum"}}
+   Texture (attrib = "normal") {string {"textures_caves_tembrick1crum_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_tembrick1crum_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick1crum_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_temtablet1"}}
+   Texture (attrib = "editor") {string {"textures_caves_temtablet1_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_temtablet1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_temtablet1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick1crum_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_temtablet2"}}
+   Texture (attrib = "editor") {string {"textures_caves_temtablet2_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_temtablet2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_temtablet2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick1crum_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_tembrick2smoo"}}
+   Texture (attrib = "editor") {string {"textures_caves_tembrick2smoo"}}
+   Texture (attrib = "normal") {string {"textures_caves_tembrick1crum_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_tembrick2smoo_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_tembrick2smoo_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavhexrubber1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavhexrubber1_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavhexrubber1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavhexrubber1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavhexrubber1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavhexfloor2"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavhexfloor2_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavhexrubber1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavhexfloor2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavhexfloor2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavfloorflat1yel"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavfloorflat1yel_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavfloorflat1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavfloorflat1yel_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavfloorflat1yel_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavfloorflat1"}}
+   Texture (attrib = "editor") {string {"textures_editor_cavfloorflat1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavfloorflat1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavfloorflat1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavfloorflat1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavtrfloor1dust"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavtrfloor1dust_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavtrfloor1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavtrfloor1dust_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavtrfloor1dust_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavtrfloor2dust"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavtrfloor2dust"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavtrfloor2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavtrfloor2dust_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavtrfloor2dust_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel1sqr"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel1sqr"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel1sqr_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel1sqr_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel1sqr_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel2"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel2"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel3"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel3"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel3_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel3_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel3win"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel3win"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel3win_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel3win_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel3win_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwafpanel1win"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwafpanel1win"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwafpanel1win_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwafpanel1win_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwafpanel1win_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavpanel1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavpanel1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavpanel1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavpanel1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavpanel1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwarcol1"}}
+   Texture (attrib = "editor") {string {"textures_editor_cavwarcol1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwarcol1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwarcol1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwarcol1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwarcol2"}}
+   Texture (attrib = "editor") {string {"textures_editor_cavwarcol2"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwarcol2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwarcol1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwarcol1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwarhaz1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwarhaz1_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwarhaz1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwarhaz1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwarhaz1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwall1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwall1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwall1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwall1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwall1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwall2"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwall2"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwall2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwall2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwall2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwall2_yel"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwall2_yel"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwall2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwall2_yel_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwall2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwall4"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwall4"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwall4_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwall4_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwall4_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavwall4b"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavwall4b_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavwall4_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavwall4b_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavwall4_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac1b"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac1b_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac1b_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac2"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac2"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac3"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac3"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac3_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac3_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac4"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac4_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac4_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac4_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac4_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavvac2_yel"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavvac2_yel"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavvac2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavvac2_yel_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavvac2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavfgirder1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavfgirder1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavfgirder1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavfgirder1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavfgirder1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavfgirder2"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavfgirder2_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavfgirder1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavfgirder2_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavfgirder1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavgrate1"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavgrate1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavgrate1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavgrate1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavgrate1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavgrate1dust"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavgrate1dust_d"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavgrate1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavgrate1dust_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavgrate1dust_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavgrate1dust_trans"}}
+   Texture (attrib = "editor") {string {"textures_caves_cavgrate1dust_trans"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavgrate1_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavgrate1dust_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_cavflpanel1"}}
+   Texture (attrib = "editor") {string {"textures_editor_cavflpanel1"}}
+   Texture (attrib = "normal") {string {"textures_caves_cavflpanel1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_cavflpanel1_d"}}
+   Texture (attrib = "specular") {string {"textures_caves_cavflpanel1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_egg2"}}
+   Texture (attrib = "editor") {string {"textures_editor_s_egg2"}}
+   Texture (attrib = "normal") {string {"textures_caves_s_egg2_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_s_egg2_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_egg"}}
+   Texture (attrib = "editor") {string {"textures_caves_s_egg"}}
+   Texture (attrib = "normal") {string {"textures_caves_s_egg_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_s_egg"}}
+   Texture (attrib = "specular") {string {"textures_caves_s_egg_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_eggleg_shadow"}}
+   Texture (attrib = "editor") {string {"textures_caves_s_eggleg_shadow"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_eggleg"}}
+   Texture (attrib = "editor") {string {"textures_editor_s_eggleg"}}
+   Texture (attrib = "normal") {string {"textures_caves_s_eggleg_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_s_eggleg_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_eggrim"}}
+   Texture (attrib = "editor") {string {"textures_caves_s_eggrim"}}
+   Texture (attrib = "normal") {string {"textures_caves_s_eggrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_s_eggrim"}}
+   Texture (attrib = "specular") {string {"textures_caves_s_eggrim_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricksblenddust"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks4"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "normal") {string {"textures_caves_rubble3_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricksblend2"}}
+   Texture (attrib = "editor") {string {"textures_caves_rubble3"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "normal") {string {"textures_caves_rubble3_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricksblend"}}
+   Texture (attrib = "editor") {string {"textures_caves_rubble3"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "normal") {string {"textures_caves_rubble3_local"}}
+}
+Material
+{
+   Name {string {"textures_caves_rubble3"}}
+   Texture (attrib = "editor") {string {"textures_caves_rubble3"}}
+   Texture (attrib = "normal") {string {"textures_caves_rubble3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_rubble3"}}
+}
+Material
+{
+   Name {string {"textures_caves_rubble"}}
+   Texture (attrib = "editor") {string {"textures_caves_rubble"}}
+   Texture (attrib = "normal") {string {"textures_caves_rubble_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_rubble"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks4"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks4"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks4"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks3"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks3"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks3_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks3"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks2a"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks2a"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks2a"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks2a_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks2"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks2"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks2"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks2a_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks1b"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks1b"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1b_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks1b"}}
+}
+Material
+{
+   Name {string {"textures_caves_s_stairs"}}
+   Texture (attrib = "editor") {string {"textures_caves_s_stairs"}}
+   Texture (attrib = "normal") {string {"textures_caves_s_stairs_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_s_stairs"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks1a"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks1a"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_caves_sbricks1a"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks1"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks1"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks1top"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks1"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks1_s"}}
+}
+Material
+{
+   Name {string {"textures_caves_sbricks1bot"}}
+   Texture (attrib = "editor") {string {"textures_caves_sbricks1"}}
+   Texture (attrib = "normal") {string {"textures_caves_sbricks1_local"}}
+   Texture (attrib = "specular") {string {"textures_caves_sbricks1_s"}}
+}

@@ -1,0 +1,6 @@
+Material
+{
+   Name {string {"models_items_powerups_berserker_collide"}}
+   Texture (attrib = "diffuse") {string {"models_items_powerups_berserker"}}
+   Texture (attrib = "specular") {string {"models_items_powerups_berserker_s"}}
+}

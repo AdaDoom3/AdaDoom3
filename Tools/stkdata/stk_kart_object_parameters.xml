@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<Properties
+    bl-label="-"
+>
+
+    <!-- ******** STK Object Type ******** -->
+    <EnumProp id="type" name="Type" default="none" doc="SuperTuxKart Object Type">
+    
+        <!-- None -->
+        <EnumChoice id="" label="None" doc="Nothing special about this object" />
+        <EnumChoice id="none" label="None" doc="Nothing special about this object" />
+        
+        <EnumChoice id="ignore" label="Ignore" doc="Do not export this object" />
+        <EnumChoice id="wheel" label="Wheel" doc="This object is a kart wheel" />
+        <EnumChoice id="nitro-emitter" label="Nitro Emitter" doc="This object is where nitro particles are emitted" />
+        <EnumChoice id="speed-weighted" label="Speed Weighted" doc="This object's animation is weighted by the kart's speed">
+            <FloatProp id="speed-weighted-strength-factor" name="Strength factor" default="-1.0" doc="How much the kart speed affects the distance from the animation to the static pose (-1.0 to disable)" min="-1.0" max="1.0"/>
+            <FloatProp id="speed-weighted-speed-factor" name="Speed factor" default="-1.0" doc="How much the kart speed affects the animation speed (-1.0 to disable)" min="-1.0" max="1000.0"/>
+            <FloatProp id="speed-weighted-texture-speed-x" name="Texture speed X" default="0.0" doc="Texture speed X direction (0.0 for no animation on the X axis)" min="-1000.0" max="1000.0"/>
+            <FloatProp id="speed-weighted-texture-speed-y" name="Texture speed Y" default="0.0" doc="Texture speed Y direction (0.0 for no animation on the Y axis)" min="-1000.0" max="1000.0"/>
+        </EnumChoice>
+        <EnumChoice id="headlight" label="Headlight" doc="Headlights (visible only during day)">
+            <ColorProp id="headlight_color" name="Headlight Color" default="255 255 255" doc="Click here to select the color of the headlight"/>
+        </EnumChoice>
+        <EnumChoice id="hat" label="Hat positioner" doc="Define the position of hat" />
+    </EnumProp>
+</Properties>

@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Ada.Numerics.Generic_Elementary_Functions;
 with Neo.Core.Vectors;
@@ -92,26 +92,26 @@ package Neo.Core.Math is
   function Dot       (A, B : Vector_4D)              return Real_32   is (A.X * B.X + A.Y * B.Y + A.Z * B.Z + A.W * B.W);
   function Project   (A, B : Vector_4D)              return Vector_4D is (B * (Dot (A, B) / Dot (B, B)));
   function Reject    (A, B : Vector_4D)              return Vector_4D is (A - Project (A, B));
-
+   
   ------------
   -- Matrix --
   ------------
 
   -- Definitions
   type Matrix_2D is record
-      XX, YX,
-      XY, YY : Real_32 := 0.0;
+      XX, XY,
+      YX, YY : Real_32 := 0.0;
     end record;
   type Matrix_3D is record -- Listing 1.3
-      XX, YX, ZX,
-      XY, YY, ZY,
-      XZ, YZ, ZZ : Real_32 := 0.0;
+      XX, XY, XZ,
+      YX, YY, YZ, 
+      ZX, ZY, ZZ : Real_32 := 0.0;
     end record;
   type Matrix_4D is record
-      XX, YX, ZX, WX,
-      XY, YY, ZY, WY,
-      XZ, YZ, ZZ, WZ,
-      XW, YW, ZW, WW : Real_32 := 0.0;
+      XX, XY, XZ, XW,
+      YX, YY, YZ, YW,
+      ZX, ZY, ZZ, ZW,
+      WX, WY, WZ, WW : Real_32 := 0.0;
     end record;
   
   package Vector_Matrix_2D is new Neo.Core.Vectors (Matrix_2D);
@@ -121,6 +121,11 @@ package Neo.Core.Math is
   ZERO_MATRIX_2D : constant Matrix_2D := (others => 0.0);
   ZERO_MATRIX_3D : constant Matrix_3D := (others => 0.0);
   ZERO_MATRIX_4D : constant Matrix_4D := (others => 0.0);
+  
+  IDENTITY_MATRIX_4D : constant Matrix_4D := (1.0, 0.0, 0.0, 0.0,
+                                              0.0, 1.0, 0.0, 0.0,
+                                              0.0, 0.0, 1.0, 0.0,
+                                              0.0, 0.0, 0.0, 1.0);
   
   -- 3D Conversions
   procedure Set_Matrix_3D_X (M : in out Matrix_3D; V : Vector_3D);
@@ -199,8 +204,8 @@ package Neo.Core.Math is
   -- Definition
   type Transform_3D is record
       XX, YX, ZX,
-      XY, YY, ZY : Real_32 := 0.0;
-      -- 0.0, 0.0, 1.0
+      XY, YY, ZY,
+      XZ, YZ, ZZ : Real_32 := 0.0;
     end record;
   type Transform_4D is record -- Listing 2.9
       XX, YX, ZX, WX,
@@ -213,7 +218,7 @@ package Neo.Core.Math is
   package Vector_Transform_4D is new Neo.Core.Vectors (Transform_4D);
   
   ZERO_TRANSFORM_3D : constant Transform_3D := (others => 0.0);
-  ZERO_TRANSFORM_4D : constant Transform_3D := (others => 0.0);
+  ZERO_TRANSFORM_4D : constant Transform_4D := (others => 0.0);
   
   -- Conversions
   procedure Set_Transform_4D_X (H : in out Transform_4D; V : Vector_3D);                    -- Listing 2.9
@@ -375,4 +380,19 @@ package Neo.Core.Math is
 
   -- 0 if p lies in the plane f
   function Distance (P : Point_3D; F : Plane_4D) return Real_32 is (P.X * F.X + P.Y * F.Y + P.Z * F.Z + F.W);
+  
+  -----------
+  -- Scene --
+  -----------
+  
+  function Look_At (Eye, Center, Up : Vector_3D) return Matrix_4D;
+  function Perspective (FOV_Y, Aspect, Z_Near, Z_Far : Real_32) return Matrix_4D; 
 end;
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+Material
+{
+   Name {string {"textures_morgue_mtile_green"}}
+   Texture (attrib = "editor") {string {"textures_morgue_mtile_green"}}
+}
+Material
+{
+   Name {string {"textures_morgue_mgirder"}}
+   Texture (attrib = "editor") {string {"textures_morgue_mgirder"}}
+   Texture (attrib = "specular") {string {"textures_morgue_mgirder_s"}}
+   Texture (attrib = "normal") {string {"textures_morgue_mgirder_local"}}
+}
+Material
+{
+   Name {string {"textures_morgue_mtile"}}
+   Texture (attrib = "editor") {string {"textures_morgue_mtile"}}
+}
+Material
+{
+   Name {string {"textures_morgue_mtrim"}}
+   Texture (attrib = "editor") {string {"textures_morgue_mtrim"}}
+   Texture (attrib = "diffuse") {string {"textures_morgue_mtrim_d"}}
+   Texture (attrib = "specular") {string {"textures_morgue_mtrim_s"}}
+   Texture (attrib = "normal") {string {"textures_morgue_mtrim_local"}}
+}
+Material
+{
+   Name {string {"textures_morgue_floorvent01"}}
+   Texture (attrib = "editor") {string {"textures_morgue_floorvent01"}}
+   Texture (attrib = "diffuse") {string {"textures_morgue_floorvent01_d"}}
+   Texture (attrib = "specular") {string {"textures_morgue_floorvent01_s"}}
+   Texture (attrib = "normal") {string {"textures_morgue_floorvent01_local"}}
+}

@@ -1,0 +1,15 @@
+Material
+{
+   Name {string {"textures_base_wall_skpanel17a_d_trans"}}
+   Texture (attrib = "editor") {string {"textures_base_wall_skpanel17a_d"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_skpanel17_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_wall_skpanel17a_d"}}
+   Texture (attrib = "specular") {string {"textures_base_wall_skpanel17_s"}}
+}
+Material
+{
+   Name {string {"textures_washroom_btile01_trans"}}
+   Texture (attrib = "editor") {string {"textures_washroom_btile01"}}
+   Texture (attrib = "normal") {string {"textures_washroom_btile_local"}}
+   Texture (attrib = "diffuse") {string {"textures_washroom_btile_d"}}
+}

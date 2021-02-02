@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"lights_spectrumLight"}}
+}
+Material
+{
+   Name {string {"lights_tableTest"}}
+}

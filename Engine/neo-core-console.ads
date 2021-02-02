@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Ada.Locales;      use Ada.Locales;
 with Neo.Core.Strings; use Neo.Core.Strings;
@@ -28,7 +28,7 @@ package Neo.Core.Console is
   function Autocomplete (Text : Str) return Array_Str_Unbound;
   
   -- Configuration and localization
-  procedure Finalize_Configuration   (Path : Str);
+  procedure Finalize_Configuration;
   procedure Initialize_Configuration (Path : Str);
   procedure Initialize_Localization  (Path : Str);
   function Localize (Item : Str) return Str; -- An english text string acts as a key to other languages
@@ -46,9 +46,10 @@ package Neo.Core.Console is
   procedure Put         (Item : Char);                  
   procedure Put         (Item : Str);
   procedure Line        (Item : Char);
-  procedure Line_Error  (Item : Str);
-  procedure Line_Warn   (Item : Str);
-  procedure Line_Info   (Item : Str);
+  procedure Title       (Item : Str);
+  procedure Error       (Item : Str);
+  procedure Warn        (Item : Str);
+  procedure Info        (Item : Str);
   procedure Line        (Item : Str := "");
   procedure Line        (Item : Str_Unbound);
   procedure Line_Size   (Val  : Positive);
@@ -61,9 +62,9 @@ package Neo.Core.Console is
   -------------
   --
   -- The command package creates an interface to a procedure with arguments accessable to a user through the command line (Submit
-  -- procedure). The callback for this command takes strings as arguments and may change some internal state (e.g. binding a player's
-  -- controls to actions like jump or crouch). The Save parameter controls how an internal state used by a command will be stored in a
-  -- configuration file.
+  -- procedure). The callback for this command takes strings as arguments and may change some internal state (e.g. binding a
+  -- player's controls to actions like jump or crouch). The Save parameter controls how an internal state used by a command will be
+  -- stored in a configuration file.
   --
   -- Ex.
   --   procedure Callback_Bind (Args : Array_Str_Unbound);
@@ -87,10 +88,10 @@ package Neo.Core.Console is
   -- CVar --
   ----------
   --
-  -- The cvar package or "console variable" is the core of a game engine. It represents a changable setting and could be loaded from a
-  -- configuration file or set via an in-game or external console window. In the Neo engine this package allows communication between
-  -- between tasks (Set and Get) and from a user's input into the console's command line (Submit procedure). It is limited to only
-  -- discrete types (integers and enumerations).
+  -- The cvar package or "console variable" is the core of a game engine. It represents a changable setting that can be loaded
+  -- from a configuration file or set via an in-game or external console window. In the Neo engine this package allows
+  -- communication between between tasks (Set and Get) and from a user's input into the console's command line (Submit procedure).
+  -- It is limited to only discrete types (integers and enumerations).
   --
   -- Ex.
   --   type Graphics_Kind is (Low_Quality, Medium_Quanlity, High_Quality, Ultra_Quality);

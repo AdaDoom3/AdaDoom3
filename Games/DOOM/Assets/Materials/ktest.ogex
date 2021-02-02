@@ -1,0 +1,48 @@
+Material
+{
+   Name {string {"textures_ktest_bluemet"}}
+   Texture (attrib = "editor") {string {"textures_ktest_bluemet_d"}}
+   Texture (attrib = "normal") {string {"textures_ktest_bluemet_b"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_bluemet_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_bluemet_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_concretetest"}}
+   Texture (attrib = "editor") {string {"textures_ktest_concretetest_d"}}
+   Texture (attrib = "normal") {string {"textures_ktest_concretetest_b"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_concretetest_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_concretetest_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_dirtmetal"}}
+   Texture (attrib = "editor") {string {"textures_ktest_dirtmetal_d"}}
+   Texture (attrib = "normal") {string {"textures_ktest_dirtmetal_b"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_dirtmetal_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_dirtmetal_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_enginevent"}}
+   Texture (attrib = "editor") {string {"textures_ktest_enginevent"}}
+   Texture (attrib = "normal") {string {"textures_ktest_enginevent_local"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_enginevent_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_enginevent_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_metalvent"}}
+   Texture (attrib = "editor") {string {"textures_ktest_metalvent_d"}}
+   Texture (attrib = "normal") {string {"textures_ktest_metalvent_b"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_metalvent_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_metalvent_s"}}
+}
+Material
+{
+   Name {string {"textures_ktest_techpuzzle2"}}
+   Texture (attrib = "editor") {string {"textures_ktest_techpuzzle2_d"}}
+   Texture (attrib = "normal") {string {"textures_ktest_techpuzzle_local"}}
+   Texture (attrib = "diffuse") {string {"textures_ktest_techpuzzle2_d"}}
+   Texture (attrib = "specular") {string {"textures_ktest_techpuzzle_s"}}
+}

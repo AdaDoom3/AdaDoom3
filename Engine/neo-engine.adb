@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Neo.World.CVars; use Neo.World.CVars;
 
@@ -372,15 +372,6 @@ pragma Warnings (On);
       return (X => (Main_Window.Left + ((Main_Window.Right  - Main_Window.Left) / 2)),
               Y => (Main_Window.Top  + ((Main_Window.Bottom - Main_Window.Top)  / 2)));
     end;
-
-  -- Internal state for storing registered impules
-  type Impulse_State is record
-      Callback : not null access procedure (Args : Vector_Impulse_Arg.Unsafe_Array);
-      Bindings : not null access Vector_Binding.Safe_Vector;
-      Enabled  : Boolean := True;
-    end record;
-  package Hashed_Impulse is new Neo.Core.Hashed (Impulse_State);
-  Impulses : Hashed_Impulse.Safe_Map;
   
   package body Impulse is
       Duplicate : Exception;
@@ -398,7 +389,9 @@ pragma Warnings (On);
           if Impulses.Has (Name) then raise Duplicate; end if;
           Impulses.Insert (Name, (Callback => Informal_Callback'Unrestricted_Access,
                                   Bindings => Bindings'Unrestricted_Access,
-                                  Enabled  => True));
+                                  Enabled  => True,
+                                  Name     => U (Name),
+                                  Rapid    => Rapid));
         end;
       Control : Control_State;
 
@@ -406,10 +399,10 @@ pragma Warnings (On);
       procedure Enable  is Impulse : Impulse_State := Impulses.Get (Name); begin Impulse.Enabled := True;  Impulses.Replace (Name, Impulse); end;
       procedure Disable is Impulse : Impulse_State := Impulses.Get (Name); begin Impulse.Enabled := False; Impulses.Replace (Name, Impulse); end;
     end;
-
+    
   -- Each player's global state, it is a combination of all devices owned by that player
   type Player_State is record
-      Triggers : Trigger_Array := (others => <>);
+      Triggers : Trigger_Array := (others => 0.0);
       Gamepad  : Gamepad_Array := (others => (others => <>));
       Sticks   : Stick_Array   := (others => (others => <>));
       Keys     : Key_Array     := (others => (others => <>));
@@ -450,14 +443,14 @@ pragma Warnings (On);
   procedure Run_Input is
 
     -- Setters for descriminate unions
-    function Changed (Binding : Binding_State; Player, Old_Player : Player_State) return Bool is
-      ((Binding.Kind = Trigger_Impulse and then Player.Triggers (Binding.Trigger)      /= Old_Player.Triggers (Binding.Trigger))      or
-       (Binding.Kind = Stick_Impulse   and then Player.Sticks   (Binding.Stick)        /= Old_Player.Sticks   (Binding.Stick))        or
-       (Binding.Kind = Gamepad_Impulse and then Player.Gamepad  (Binding.Gamepad).Down /= Old_Player.Gamepad  (Binding.Gamepad).Down) or
-       (Binding.Kind = Mouse_Impulse   and then Player.Mouse    (Binding.Mouse).Down   /= Old_Player.Mouse    (Binding.Mouse).Down)   or
-       (Binding.Kind = Key_Impulse     and then Player.Keys     (Binding.Key).Down     /= Old_Player.Keys     (Binding.Key).Down)     or
-       (Binding.Kind = Cursor_Impulse  and then Player.Cursor                          /= Old_Player.Cursor)                          or
-       (Binding.Kind = Text_Impulse    and then Player.Text                            /= NULL_STR_16_UNBOUND));
+    function Changed (Rapid : Bool; Bind : Binding_State; Player, Old_Player : Player_State) return Bool is
+      ((Bind.Kind = Trigger_Impulse and then (Rapid or else Player.Triggers (Bind.Trigger)      /= Old_Player.Triggers (Bind.Trigger)))      or
+       (Bind.Kind = Stick_Impulse   and then (Rapid or else Player.Sticks   (Bind.Stick)        /= Old_Player.Sticks   (Bind.Stick)))        or
+       (Bind.Kind = Gamepad_Impulse and then (Rapid or else Player.Gamepad  (Bind.Gamepad).Down /= Old_Player.Gamepad  (Bind.Gamepad).Down)) or
+       (Bind.Kind = Mouse_Impulse   and then (Rapid or else Player.Mouse    (Bind.Mouse).Down   /= Old_Player.Mouse    (Bind.Mouse).Down))   or
+       (Bind.Kind = Key_Impulse     and then (Rapid or else Player.Keys     (Bind.Key).Down     /= Old_Player.Keys     (Bind.Key).Down))     or
+       (Bind.Kind = Cursor_Impulse  and then                Player.Cursor                       /= (0, 0))                                   or
+       (Bind.Kind = Text_Impulse    and then                Player.Text                         /= NULL_STR_16_UNBOUND));
 
     function Build_Impulse_Arg (Binding : Binding_State; Player : Player_State) return Impulse_Arg_State is
       ((case Binding.Kind is
@@ -493,9 +486,16 @@ pragma Warnings (On);
     begin
       System.Initialize_Input;
       while System.Update_Input loop
+      
+        -- Clear text and cursor data and store previous snapshot
+        Old_Players := Players.Get;
+        for New_Player of Old_Players loop
+          New_Player.Text   := NULL_STR_16_UNBOUND;
+          New_Player.Cursor := (0, 0);
+        end loop;
+        Players.Set (Old_Players);
 
         -- Loop through all of the devices and rebuild the players for each input frame
-        Old_Players := Players.Get;
         Current_Devices := Devices.Get;
         for Device of Current_Devices loop
           Player := Players.Get (Device.Player);
@@ -515,6 +515,7 @@ pragma Warnings (On);
             -- Combine mice
             when Mouse_Device =>
               Player.Cursor := (Player.Cursor.X + Device.Cursor.X, Player.Cursor.Y + Device.Cursor.Y);
+              Device.Cursor := (0, 0);
               for Button in Mouse_Kind'Range loop
                 if Device.Mouse (Button).Down and
                   (not Player.Mouse (Button).Down or Device.Mouse (Button).Last < Player.Mouse (Button).Last)
@@ -542,13 +543,16 @@ pragma Warnings (On);
 
               -- Range checks need to be made for sticks and triggers
               for Side in Stick_Kind'Range loop
-                Player.Sticks (Side).X := (if Player.Sticks (Side).X + Device.Sticks (Side).X > Real_Percent'Last then Real_Percent'Last
+                Player.Sticks (Side).X := (if Player.Sticks (Side).X + Device.Sticks (Side).X > Real_Percent'Last
+                                           then Real_Percent'Last
                                            else Player.Sticks (Side).X + Device.Sticks (Side).X); 
-                Player.Sticks (Side).Y := (if Player.Sticks (Side).Y + Device.Sticks (Side).Y > Real_Percent'Last then Real_Percent'Last
+                Player.Sticks (Side).Y := (if Player.Sticks (Side).Y + Device.Sticks (Side).Y > Real_Percent'Last
+                                           then Real_Percent'Last
                                            else Player.Sticks (Side).Y + Device.Sticks (Side).Y); 
               end loop;
               for Side in Trigger_Kind'Range loop
-                Player.Triggers (Side) := (if Player.Triggers (Side) + Device.Triggers (Side) > Real_Percent'Last then Real_Percent'Last
+                Player.Triggers (Side) := (if Player.Triggers (Side) + Device.Triggers (Side) > Real_Percent'Last
+                                           then Real_Percent'Last
                                            else Player.Triggers (Side) + Device.Triggers (Side));
               end loop;
           end case;
@@ -559,27 +563,29 @@ pragma Warnings (On);
         -- Trigger the impulses based on each player's state
         if Input_Status.Occupied then
           for Impulse of Impulses.Get loop
-            for Binding of Impulse.Bindings.Get loop
-              if Changed (Binding, Players.Get (Binding.Player), Old_Players.Element (Binding.Player)) then
-                Args.Clear; -- Dont register clicks or cursor movement if the cursor is not In_Main_Window when in Windowed_Mode !!!
-                Args.Append (Build_Impulse_Arg (Binding, Players.Get (Binding.Player)));
+            for Bind of Impulse.Bindings.Get loop
+              if Changed (Impulse.Rapid, Bind, Players.Get (Bind.Player), Old_Players.Element (Bind.Player)) then
+                Args.Clear; -- Dont register clicks or cursor movement if the cursor is not In_Main_Window when in Windowed_Mode!
+                Args.Append (Build_Impulse_Arg (Bind, Players.Get (Bind.Player)));
 
                 -- Handle combinations
-                if Binding.Combo /= NO_COMBO then -- Failed combos get repeated, but its OK for now
-                  for Other_Binding of Impulse.Bindings.Get loop
-                    if Other_Binding.Combo = Binding.Combo then
-                      if not Changed (Binding, Players.Get (Other_Binding.Player), Old_Players.Element (Other_Binding.Player)) then
+                if Bind.Combo /= NO_COMBO then -- Failed combos get repeated, but its OK for now
+                  for Combo_Bind of Impulse.Bindings.Get loop
+                    if Combo_Bind.Combo = Bind.Combo then
+                      if not Changed (Impulse.Rapid, 
+                                      Bind,
+                                      Players.Get (Combo_Bind.Player),
+                                      Old_Players.Element (Combo_Bind.Player))
+                      then
 
 -- A binding in the combo is not active
 goto Combo_Not_Activated;
 
                       end if;
-                      Args.Append (Build_Impulse_Arg (Other_Binding, Players.Get (Other_Binding.Player)));
+                      Args.Append (Build_Impulse_Arg (Combo_Bind, Players.Get (Combo_Bind.Player)));
                     end if;
                   end loop;
                 end if;
-
-                -- Message_Server (Impulse.Name & " " & To_Str (Args));
                 Impulse.Callback (Vector_Impulse_Arg.To_Unsafe_Array (Args));
               end if;
 

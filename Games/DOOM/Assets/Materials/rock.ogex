@@ -1,0 +1,188 @@
+Material
+{
+   Name {string {"textures_rock_sharprock_dark_ns"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprock_dark_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_dirt03"}}
+   Texture (attrib = "editor") {string {"textures_rock_dirt03"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_dirt03"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_dirt03_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_lanrock1"}}
+   Texture (attrib = "editor") {string {"textures_rock_lanrock1_d"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_lanrock1_d"}}
+   Texture (attrib = "normal") {string {"textures_rock_lanrock1_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_lanrock1_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock3"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock3"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprock3"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprock3_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_dirt03_sharprock3"}}
+   Texture (attrib = "editor") {string {"textures_rock_dirt03_sharprock3"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_rock02"}}
+   Texture (attrib = "editor") {string {"textures_rock_rock02"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_rock02_d"}}
+   Texture (attrib = "specular") {string {"textures_rock_rock02_s"}}
+   Texture (attrib = "normal") {string {"textures_rock_rock02_h"}}
+}
+Material
+{
+   Name {string {"textures_rock_rock01"}}
+   Texture (attrib = "editor") {string {"textures_rock_rock01_d"}}
+   Texture (attrib = "normal") {string {"textures_rock_rock01_h"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_rock01_d"}}
+   Texture (attrib = "specular") {string {"textures_rock_rock01_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_dark_lavascroll_ns"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavascroll"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_dark_cracked1"}}
+   Texture (attrib = "editor") {string {"textures_editor_sharprock_dark_cracked1"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_greenrocks2_rockbase"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockbase"}}
+   Texture (attrib = "normal") {string {"textures_hell_greenrocks_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockbase_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_greenrocks2_lavascroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavascroll"}}
+   Texture (attrib = "normal") {string {"textures_hell_greenrocks_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_zbtest"}}
+   Texture (attrib = "editor") {string {"textures_rock_zbtest"}}
+   Texture (attrib = "normal") {string {"textures_rock_zbtest_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_zbtest"}}
+   Texture (attrib = "specular") {string {"textures_rock_zbtest_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprocklava"}}
+   Texture (attrib = "editor") {string {"textures_editor_sharprocklava"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprocklava_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprocklava"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprocklava"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_dark_dirt02noshadow"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_dark_lavascroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavascroll"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprock_dark"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprock_dark_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprock"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_sharprock"}}
+   Texture (attrib = "specular") {string {"textures_rock_sharprock_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysandnew_sharprock_dark"}}
+   Texture (attrib = "editor") {string {"textures_rock_skysandnew_sharprock"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysandnew_sharprock"}}
+   Texture (attrib = "editor") {string {"textures_rock_skysandnew_sharprock"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_sharprockblend"}}
+   Texture (attrib = "editor") {string {"textures_rock_sharprock"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "normal") {string {"textures_rock_sharprock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_sandblend2"}}
+   Texture (attrib = "editor") {string {"textures_rock_sandblend2"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_bmp"}}
+   Texture (attrib = "normal") {string {"textures_rock_rock01_h"}}
+}
+Material
+{
+   Name {string {"textures_rock_newdarkrock"}}
+   Texture (attrib = "editor") {string {"textures_rock_newdarkrock"}}
+   Texture (attrib = "normal") {string {"textures_rock_newdarkrock_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_newdarkrock"}}
+   Texture (attrib = "specular") {string {"textures_rock_newdarkrock_s"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysandnew_newdarkrock"}}
+   Texture (attrib = "editor") {string {"textures_rock_newdarkrock"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "normal") {string {"textures_rock_newdarkrock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_newdarkrockblend"}}
+   Texture (attrib = "editor") {string {"textures_rock_newdarkrockblend"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "normal") {string {"textures_rock_newdarkrock_local"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysandnew"}}
+   Texture (attrib = "editor") {string {"textures_rock_skysandnew"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_skysand2"}}
+}
+Material
+{
+   Name {string {"textures_rock_skysand1"}}
+   Texture (attrib = "editor") {string {"textures_rock_skysand1"}}
+   Texture (attrib = "normal") {string {"textures_rock_skysand1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_rock_skysand1_d"}}
+}

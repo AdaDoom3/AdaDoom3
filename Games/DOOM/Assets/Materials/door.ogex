@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"textures_base_door_light_panel1"}}
+   Texture (attrib = "editor") {string {"textures_base_door_stedoorframe2"}}
+   Texture (attrib = "normal") {string {"textures_base_door_stedoorframe2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_base_door_stedoorframe2_d"}}
+   Texture (attrib = "specular") {string {"textures_base_door_stedoorframe2_s"}}
+}

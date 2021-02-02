@@ -1,0 +1,39 @@
+Material
+{
+   Name {string {"models_mapobjects_buggy_buggy"}}
+   Texture (attrib = "diffuse") {string {"models_mapobjects_base_chairs_chair1_bmp"}}
+   Texture (attrib = "specular") {string {"models_mapobjects_base_chairs_chair1_bmp"}}
+   Texture (attrib = "normal") {string {"models_md5_vehicles_buggy_buggy_local"}}
+}
+Material
+{
+   Name {string {"models_mapobjects_capri_capri_wheel"}}
+   Texture (attrib = "diffuse") {string {"models_md5_vehicles_capri_capri_wheel_d"}}
+   Texture (attrib = "specular") {string {"models_md5_vehicles_capri_capri_wheel_s"}}
+   Texture (attrib = "normal") {string {"models_md5_vehicles_capri_capri_wheel_local"}}
+}
+Material
+{
+   Name {string {"models_md5_vehicles_buggy_buggy"}}
+   Texture (attrib = "diffuse") {string {"models_md5_vehicles_buggy_buggy_d"}}
+   Texture (attrib = "specular") {string {"models_md5_vehicles_buggy_buggy_turret_d"}}
+}
+Material
+{
+   Name {string {"models_md5_vehicles_buggy_gun"}}
+   Texture (attrib = "diffuse") {string {"models_weapons_chaingun_barrel"}}
+   Texture (attrib = "specular") {string {"models_weapons_chaingun_barrel_s"}}
+}
+Material
+{
+   Name {string {"models_md5_vehicles_buggy_turret"}}
+   Texture (attrib = "diffuse") {string {"models_md5_vehicles_buggy_buggy_turret_d"}}
+   Texture (attrib = "specular") {string {"models_md5_vehicles_buggy_buggy_turret_d"}}
+}
+Material
+{
+   Name {string {"models_md5_vehicles_buggy_wheel"}}
+   Texture (attrib = "diffuse") {string {"models_md5_vehicles_buggy_wheel_d"}}
+   Texture (attrib = "specular") {string {"models_md5_vehicles_buggy_wheel_s"}}
+   Texture (attrib = "normal") {string {"models_md5_vehicles_buggy_wheel_local"}}
+}

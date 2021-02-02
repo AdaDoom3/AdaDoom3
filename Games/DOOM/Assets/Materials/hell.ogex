@@ -1,0 +1,953 @@
+Material
+{
+   Name {string {"textures_hell_lavascroll_ns"}}
+   Texture (attrib = "editor") {string {"textures_editor_lava1"}}
+}
+Material
+{
+   Name {string {"textures_hell_qfloor"}}
+   Texture (attrib = "editor") {string {"textures_hell_qfloor_ed"}}
+   Texture (attrib = "normal") {string {"textures_hell_qfloor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_qfloor"}}
+   Texture (attrib = "specular") {string {"textures_hell_qfloor_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_bartrim"}}
+   Texture (attrib = "editor") {string {"textures_editor_bartrim"}}
+   Texture (attrib = "normal") {string {"textures_hell_bartrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_bartrim"}}
+   Texture (attrib = "specular") {string {"textures_hell_bartrim_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_tinnytrim"}}
+   Texture (attrib = "editor") {string {"textures_hell_tinnytrim"}}
+   Texture (attrib = "normal") {string {"textures_hell_tinnytrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_tinnytrim"}}
+   Texture (attrib = "specular") {string {"textures_hell_tinnytrim_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_nuckletrim"}}
+   Texture (attrib = "editor") {string {"textures_hell_nuckletrim"}}
+   Texture (attrib = "normal") {string {"textures_hell_nuckletrim_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_nuckletrim"}}
+   Texture (attrib = "specular") {string {"textures_hell_nuckletrim_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_pillarbase"}}
+   Texture (attrib = "editor") {string {"textures_hell_pillarbase"}}
+   Texture (attrib = "normal") {string {"textures_hell_pillarbase_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_pillarbase"}}
+   Texture (attrib = "specular") {string {"textures_hell_pillarbase_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_vpillar"}}
+   Texture (attrib = "editor") {string {"textures_hell_vpillar"}}
+   Texture (attrib = "normal") {string {"textures_hell_vpillar_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_vpillar"}}
+   Texture (attrib = "specular") {string {"textures_hell_vpillar_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavalanrockblend"}}
+   Texture (attrib = "editor") {string {"textures_editor_lavalanrockblend"}}
+   Texture (attrib = "normal") {string {"textures_rock_lanrock1_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick_single"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick_single"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick_single"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick_single_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick_single_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_bustage"}}
+   Texture (attrib = "editor") {string {"textures_hell_bustage"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_bustage"}}
+   Texture (attrib = "normal") {string {"textures_hell_bustage_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_bustage_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_boney"}}
+   Texture (attrib = "editor") {string {"textures_hell_boney"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_boney"}}
+   Texture (attrib = "normal") {string {"textures_hell_boney_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_boney_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava21hell_hub"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1movenoshadow"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavasharpyblend2"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavasharpyblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtyboneyblend"}}
+   Texture (attrib = "editor") {string {"textures_editor_dirtyboneyblend"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtysharpyblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirt02sharprock02noshadow"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavaboneyblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavaboneyblend"}}
+   Texture (attrib = "normal") {string {"textures_hell_boney_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_boney_hellhub"}}
+   Texture (attrib = "editor") {string {"textures_hell_boney"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhstairs"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhstairs"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hhstairs"}}
+   Texture (attrib = "normal") {string {"textures_hell_hhstairs_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hhstairs_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhconcrete"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhconcrete"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hhconcrete"}}
+   Texture (attrib = "normal") {string {"textures_hell_hhconcrete_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hhconcrete_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhstairs2"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhstairs2"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hhstairs2"}}
+   Texture (attrib = "normal") {string {"textures_hell_hhstairs2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hhstairs2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhrubble"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhrubble"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hhrubble"}}
+   Texture (attrib = "normal") {string {"textures_hell_hhrubble_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hhrubble_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhbannister"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhbannister"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hhbannister"}}
+   Texture (attrib = "normal") {string {"textures_hell_hhbannister_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hhbannister_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_spinalcrap2"}}
+   Texture (attrib = "editor") {string {"textures_hell_spinalcrap2"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_spinalcrap2"}}
+   Texture (attrib = "normal") {string {"textures_hell_spinalcrap2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_spinalcrap2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_spinalcrap2alpha"}}
+   Texture (attrib = "editor") {string {"textures_editor_spinalcrap2alpha"}}
+   Texture (attrib = "normal") {string {"textures_hell_spinalcrap2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_spinalcrap2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellbark"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellbark"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hellbark"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellbark_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_hellbark_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentabase2"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentabase"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_pentabase"}}
+   Texture (attrib = "normal") {string {"textures_hell_pentabase_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_pentabase_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentabase_decal"}}
+   Texture (attrib = "editor") {string {"textures_editor_pentabase_decal"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentabase"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentabase"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_pentabase"}}
+   Texture (attrib = "normal") {string {"textures_hell_pentabase_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_pentabase_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentabloodtastic1"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentabloodtastic1"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentastic1_spectrum"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentastic1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_pentastic1"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentastic2"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentastic1"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentastic1"}}
+   Texture (attrib = "editor") {string {"textures_hell_pentastic1"}}
+}
+Material
+{
+   Name {string {"textures_hell_peekaboo"}}
+   Texture (attrib = "editor") {string {"textures_hell_peekaboo"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_peekaboo"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1sharprock02noshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1sharprock02noshadow"}}
+   Texture (attrib = "normal") {string {"textures_hell_lava1_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1move2sharprock02noshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2noshadow"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1move3sharprock02ns"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1move3sharprock02ns"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1movenoshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1movenoshadow"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirt02sharprock02noshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirt02sharprock02noshadow"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirt02noshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirt02"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_dirt02"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_dirt02_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_sharprock2noshadow"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2noshadow"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_sharprock2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_pentagram2"}}
+   Texture (attrib = "editor") {string {"textures_editor_pentagram2"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_pentagram2"}}
+   Texture (attrib = "normal") {string {"textures_hell_pentagram2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_pentagram2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1"}}
+   Texture (attrib = "editor") {string {"textures_editor_lava1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_lava1"}}
+   Texture (attrib = "normal") {string {"textures_hell_lava1_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lava1move"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1move"}}
+   Texture (attrib = "specular") {string {"textures_hell_lava1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirt02"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirt02"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_dirt02"}}
+   Texture (attrib = "normal") {string {"textures_hell_dirt02_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_dirt02_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_bloodcrackblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_blood_stream1"}}
+   Texture (attrib = "normal") {string {"textures_hell_cracked1_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_blood_stream1"}}
+   Texture (attrib = "editor") {string {"textures_hell_blood_stream1"}}
+}
+Material
+{
+   Name {string {"textures_hell_wood1"}}
+   Texture (attrib = "editor") {string {"textures_hell_wood1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wood1"}}
+   Texture (attrib = "normal") {string {"textures_hell_wood1_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_wood1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_breakage1"}}
+   Texture (attrib = "editor") {string {"textures_hell_breakage1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_breakage1"}}
+   Texture (attrib = "normal") {string {"textures_hell_breakage1_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_breakage1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_stone1nsf"}}
+   Texture (attrib = "editor") {string {"textures_hell_stone1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_stone1"}}
+   Texture (attrib = "normal") {string {"textures_hell_stone1_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_stone1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_stone1"}}
+   Texture (attrib = "editor") {string {"textures_hell_stone1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_stone1"}}
+   Texture (attrib = "normal") {string {"textures_hell_stone1_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_stone1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cracked2lava"}}
+   Texture (attrib = "editor") {string {"textures_hell_cracked2lava"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cracked2lava"}}
+   Texture (attrib = "normal") {string {"textures_hell_cracked2b_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cracked2lava_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cracked1"}}
+   Texture (attrib = "editor") {string {"textures_hell_cracked1"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cracked1"}}
+   Texture (attrib = "normal") {string {"textures_hell_cracked1_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cracked1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_sharprock2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick3"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick3"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick3"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick3b_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick3_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick2"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick2"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick2"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick2b"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick2b"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick2b"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick2b_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick2b_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick2c_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick2c_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick_id"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick_id_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick_id_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick_id_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick_id_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick2c2"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick2c_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick2c_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_cbrick2c3"}}
+   Texture (attrib = "editor") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_cbrick2c"}}
+   Texture (attrib = "normal") {string {"textures_hell_cbrick2c_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_cbrick2c_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_askin_02e"}}
+   Texture (attrib = "editor") {string {"textures_hell_askin_02e"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_askin_d02e"}}
+   Texture (attrib = "normal") {string {"textures_hell_askin_b02d"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol_letters_01"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_letters_31d"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_letters_31d"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol_letters_02"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_letters_32d"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_letters_32d"}}
+}
+Material
+{
+   Name {string {"textures_hell_symbol_spawn_d01a"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_spawn_d01a"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_spawn_d01a"}}
+}
+Material
+{
+   Name {string {"textures_hell_symbol_spawn_d02a"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_spawn_d02a"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_spawn_d02a"}}
+}
+Material
+{
+   Name {string {"textures_hell_symbol_spawn_d03a"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_spawn_d03a"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_spawn_d03a"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol03"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol03"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol03"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol04"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol04"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol04"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol05"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol05"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol05"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum_symbol06"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol06"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol06"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellbones_d07j"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellbones_d07j"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hellbones_d07j"}}
+   Texture (attrib = "specular") {string {"textures_hell_hellbones_s07j"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellbones_d07jbump"}}
+}
+Material
+{
+   Name {string {"textures_hell_a_helldoor_d03d"}}
+   Texture (attrib = "editor") {string {"textures_hell_a_helldoor_d03d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_a_helldoor_d03d"}}
+   Texture (attrib = "normal") {string {"textures_hell_a_helldoor_b01d"}}
+   Texture (attrib = "specular") {string {"textures_hell_a_helldoor_s02d"}}
+}
+Material
+{
+   Name {string {"textures_hell_spinalcrap_Hell1"}}
+   Texture (attrib = "editor") {string {"textures_hell_spinalcrap2"}}
+}
+Material
+{
+   Name {string {"textures_hell_clouds"}}
+   Texture (attrib = "editor") {string {"textures_hell_clouds"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescroll"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescrollblend"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkles"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkles"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinkle2"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinkle2"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellanustube2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "specular") {string {"textures_hell_hellanustube2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellanustube2scroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellanustube2scroll"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockbblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockbblend"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockb_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockwall_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockbase"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockbase"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockbase"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockbase_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockbase_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockwall"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockwall"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockwall"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockwall_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockwall_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockb"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockb"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprockb"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockb_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprockb_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_warprockc_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_warprockc_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_warprockc_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_warprockc_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_warprockc_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavatube"}}
+   Texture (attrib = "editor") {string {"textures_hell_lava1movenoshadow"}}
+   Texture (attrib = "specular") {string {"textures_hell_lava1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots2"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots2"}}
+}
+Material
+{
+   Name {string {"textures_hell_treerootsgrey"}}
+   Texture (attrib = "editor") {string {"textures_hell_treerootsgrey"}}
+}
+Material
+{
+   Name {string {"textures_hell_veins_d"}}
+   Texture (attrib = "editor") {string {"textures_editor_veins"}}
+   Texture (attrib = "normal") {string {"textures_hell_veins_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_veins_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wires2_d"}}
+   Texture (attrib = "normal") {string {"textures_hell_wires2_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_wires2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wirestreerootsgrey_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_wirestreerootsgrey_blend"}}
+   Texture (attrib = "normal") {string {"textures_hell_wires2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_treeroots_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_treeroots"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_3_d"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_3_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_4"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_4"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_5"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_5"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteria_6"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_6"}}
+}
+Material
+{
+   Name {string {"textures_hell_burnedfly"}}
+   Texture (attrib = "editor") {string {"textures_hell_burnedfly"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend2"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_3_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_bacteriablend"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_3_d"}}
+}
+Material
+{
+   Name {string {"textures_hell_burnedflyblend"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_6"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall_tile"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinklewall_tile"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall_blendb"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinklewall_blend2"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend3"}}
+   Texture (attrib = "editor") {string {"textures_hell_bacteria_5"}}
+}
+Material
+{
+   Name {string {"textures_hell_anustubescrollblend4"}}
+   Texture (attrib = "editor") {string {"textures_hell_anustubescroll"}}
+   Texture (attrib = "normal") {string {"textures_base_trim_a_reactorpipe_local_fin"}}
+}
+Material
+{
+   Name {string {"textures_hell_slime"}}
+   Texture (attrib = "editor") {string {"textures_hell_slime"}}
+}
+Material
+{
+   Name {string {"textures_hell_slimefade"}}
+   Texture (attrib = "editor") {string {"textures_hell_slimefade"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtywater"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirtywater"}}
+}
+Material
+{
+   Name {string {"textures_hell_dirtywaterb"}}
+   Texture (attrib = "editor") {string {"textures_hell_dirtywaterb"}}
+}
+Material
+{
+   Name {string {"textures_hell_hellhole_lavascroll_fade"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellhole_lavascroll_fade"}}
+   Texture (attrib = "normal") {string {"textures_hell_greenrocks_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_cracked1_lavascroll"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavascroll"}}
+}
+Material
+{
+   Name {string {"textures_hell_hhconcrete_bustage"}}
+   Texture (attrib = "editor") {string {"textures_hell_hhconcrete_bustage"}}
+   Texture (attrib = "normal") {string {"textures_hell_bustage_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavascroll_lava21hell_hub"}}
+   Texture (attrib = "editor") {string {"textures_hell_lavascroll_lava21hell_hub"}}
+}
+Material
+{
+   Name {string {"textures_hell_greenrocks2"}}
+   Texture (attrib = "editor") {string {"textures_hell_greenrocks"}}
+   Texture (attrib = "normal") {string {"textures_hell_greenrocks_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_greenrocks"}}
+   Texture (attrib = "specular") {string {"textures_hell_greenrocks_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_lavascroll"}}
+   Texture (attrib = "editor") {string {"textures_editor_lava1"}}
+}
+Material
+{
+   Name {string {"textures_hell_rockfloor"}}
+   Texture (attrib = "editor") {string {"textures_hell_rockfloor"}}
+   Texture (attrib = "normal") {string {"textures_hell_rockfloor_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rockfloor"}}
+   Texture (attrib = "specular") {string {"textures_hell_rockfloor_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall_blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_hellanustube2"}}
+   Texture (attrib = "normal") {string {"textures_hell_wrinklewall_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_hellanustube2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_wrinklewall"}}
+   Texture (attrib = "editor") {string {"textures_hell_wrinklewall"}}
+   Texture (attrib = "normal") {string {"textures_hell_wrinklewall_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_wrinklewall"}}
+   Texture (attrib = "specular") {string {"textures_hell_wrinklewall_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_emitfrompoly_hellhole_bouldersmoke"}}
+   Texture (attrib = "editor") {string {"textures_common_particle"}}
+}
+Material
+{
+   Name {string {"textures_hell_emitfrompoly_delta3bridge"}}
+   Texture (attrib = "editor") {string {"textures_common_particle"}}
+}
+Material
+{
+   Name {string {"textures_hell_emitfrompoly_smallersparks"}}
+   Texture (attrib = "editor") {string {"textures_common_particle"}}
+}
+Material
+{
+   Name {string {"textures_hell_emitfrompoly_sparks"}}
+   Texture (attrib = "editor") {string {"textures_common_particle"}}
+}
+Material
+{
+   Name {string {"textures_hell_lfwall27alava"}}
+   Texture (attrib = "editor") {string {"textures_hell_lfwall27alava_d"}}
+   Texture (attrib = "normal") {string {"textures_base_wall_lfwall27a_local"}}
+   Texture (attrib = "normal") {string {"textures_hell_lfwall27alava_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_swiss"}}
+   Texture (attrib = "editor") {string {"textures_editor_swiss"}}
+   Texture (attrib = "normal") {string {"textures_hell_swiss_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_swiss_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_spiderwall"}}
+   Texture (attrib = "editor") {string {"textures_hell_spiderwall"}}
+   Texture (attrib = "normal") {string {"textures_hell_spiderwall_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_spiderwall_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_blackhorn1"}}
+   Texture (attrib = "editor") {string {"textures_hell_blackhorn1"}}
+   Texture (attrib = "normal") {string {"textures_hell_blackhorn1_bmp"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_blackhorn1"}}
+   Texture (attrib = "specular") {string {"textures_hell_blackhorn1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_hornring2"}}
+   Texture (attrib = "editor") {string {"textures_editor_hornring2"}}
+   Texture (attrib = "normal") {string {"textures_hell_hornring2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_scowall"}}
+   Texture (attrib = "editor") {string {"textures_hell_scowall"}}
+   Texture (attrib = "normal") {string {"textures_hell_scowall_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_avawall"}}
+   Texture (attrib = "editor") {string {"textures_hell_avawall"}}
+   Texture (attrib = "normal") {string {"textures_hell_avawall_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_avawall3"}}
+   Texture (attrib = "editor") {string {"textures_hell_avawall3"}}
+   Texture (attrib = "normal") {string {"textures_hell_avawall_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_intest"}}
+   Texture (attrib = "editor") {string {"textures_hell_intest"}}
+   Texture (attrib = "normal") {string {"textures_hell_intest_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_intest_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_ribwall"}}
+   Texture (attrib = "editor") {string {"textures_editor_ribwall"}}
+   Texture (attrib = "normal") {string {"textures_hell_ribwall_local"}}
+   Texture (attrib = "specular") {string {"textures_hell_stitches1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_sharprock2vertexglow"}}
+   Texture (attrib = "editor") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_sharprock2"}}
+   Texture (attrib = "specular") {string {"textures_hell_sharprock2_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_leggoo"}}
+   Texture (attrib = "editor") {string {"textures_editor_leggoo"}}
+}
+Material
+{
+   Name {string {"textures_hell_legs1"}}
+   Texture (attrib = "editor") {string {"textures_editor_legs1"}}
+   Texture (attrib = "normal") {string {"textures_hell_legs1_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_legs2"}}
+   Texture (attrib = "editor") {string {"textures_editor_legs2"}}
+   Texture (attrib = "normal") {string {"textures_hell_legs2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_boards1"}}
+   Texture (attrib = "editor") {string {"textures_hell_boards1"}}
+   Texture (attrib = "normal") {string {"textures_hell_boards1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_boards1"}}
+   Texture (attrib = "specular") {string {"textures_hell_boards1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_metal1"}}
+   Texture (attrib = "editor") {string {"textures_hell_metal1"}}
+   Texture (attrib = "normal") {string {"textures_hell_metal1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_metal1"}}
+   Texture (attrib = "specular") {string {"textures_hell_metal1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_rock1"}}
+   Texture (attrib = "editor") {string {"textures_hell_rock1"}}
+   Texture (attrib = "normal") {string {"textures_hell_rock1_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_rock1"}}
+}
+Material
+{
+   Name {string {"textures_hell_bricks1a"}}
+   Texture (attrib = "editor") {string {"textures_hell_bricks1a"}}
+   Texture (attrib = "normal") {string {"textures_hell_bricks1a_local"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_bricks1a_d"}}
+   Texture (attrib = "specular") {string {"textures_hell_bricks1a_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_bark1b"}}
+   Texture (attrib = "editor") {string {"textures_hell_bark1b"}}
+   Texture (attrib = "normal") {string {"textures_hell_bark1b_bmp"}}
+   Texture (attrib = "diffuse") {string {"textures_hell_bark1b"}}
+}
+Material
+{
+   Name {string {"textures_hell_stitches1_trans"}}
+   Texture (attrib = "editor") {string {"textures_editor_stitches1_trans"}}
+   Texture (attrib = "specular") {string {"textures_hell_stitches1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_stitches1"}}
+   Texture (attrib = "editor") {string {"textures_editor_stitches1"}}
+   Texture (attrib = "specular") {string {"textures_hell_stitches1_s"}}
+}
+Material
+{
+   Name {string {"textures_hell_bloodsharprock2blend"}}
+   Texture (attrib = "editor") {string {"textures_hell_bloodsharprock2blend"}}
+   Texture (attrib = "normal") {string {"textures_hell_sharprock2_local"}}
+}
+Material
+{
+   Name {string {"textures_hell_spectrum2_symbol_letters_02"}}
+   Texture (attrib = "editor") {string {"textures_decals_symbol_letters_32d"}}
+   Texture (attrib = "specular") {string {"textures_decals_symbol_letters_32d"}}
+}

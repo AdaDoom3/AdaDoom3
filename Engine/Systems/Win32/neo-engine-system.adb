@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Neo.API.Windows; use Neo.API.Windows;
 
@@ -79,9 +79,9 @@ separate (Neo.Engine) package body System is
   ------------
   
   -- Misc. color conversion function
-  function To_Windows_Color (Color : Color_State) return Int_Unsigned_C is (Int_Unsigned_C (Shift_Left (Int_Unsigned (Color.Green), 8) or
-                                                                                            Shift_Left (Int_Unsigned (Color.Blue), 16) or
-                                                                                                        Int_Unsigned (Color.Red)));
+  function To_Windows_Color (Color : Color_State) return Int_Unsigned_C is
+    (Int_Unsigned_C (Shift_Left (Int_Unsigned (Color.Green), 8) or
+                     Shift_Left (Int_Unsigned (Color.Blue), 16) or Int_Unsigned (Color.Red)));
                                                                                                         
   -------------
   -- Console --
@@ -103,7 +103,7 @@ separate (Neo.Engine) package body System is
   function Get_Vulkan_Subprogram (Name : Str) return Ptr is (GetProcAddress (Vulkan_DLL, To_Str_8_C (Name)));
 
   -- Fetch surface extension strings
-  function Get_Vulkan_Extension return Ptr_Char_8_C is (C (VK_KHR_WIN32_SURFACE_EXTENSION_NAME));
+  function Get_Vulkan_Extension return Ptr_Char_8_C is (C (VK_KHR_WIN32_SURFACE_EXTENSION));
 
   -- Finalization and initialization (mostly revolve around loading the dll)
   procedure Finalize_Vulkan_Library is begin Assert (FreeLibrary (Vulkan_DLL)); end;
@@ -226,7 +226,7 @@ separate (Neo.Engine) package body System is
         -- Identify the message box by class and window text
         Assert (GetClassNameW (Window, C (Class_Name), Class_Name'Length));
         Ignore (GetWIndowTextW (Window, C (Window_Text), Window_Text'Length) = 0);
-        if nCode = HCBT_ACTIVATE and S (Class_Name) = S (DIALOG_CLASS) and Window_Text = GAME_NAME then
+        if nCode = HCBT_ACTIVATE and SC (Class_Name) = SC (DIALOG_CLASS) and Window_Text = GAME_NAME then
 
           -- Load that icon!
           Icon := LoadImageW (hinst     => NULL_PTR,
@@ -280,8 +280,10 @@ separate (Neo.Engine) package body System is
   Original_Clip : aliased RECT := (others => <>);
 
   -- Conversion functions for rectangles and borders
-  function To_Border (Rectangle : RECT)      return Border_State is ((Int   (Rectangle.top), Int   (Rectangle.bottom), Int   (Rectangle.left), Int   (Rectangle.right)));
-  function To_RECT   (Border : Border_State) return RECT         is ((Int_C (Border.Left),   Int_C (Border.Top),       Int_C (Border.Right),   Int_C (Border.Bottom)));
+  function To_Border (Rectangle : RECT) return Border_State is
+    ((Int   (Rectangle.top), Int   (Rectangle.bottom), Int   (Rectangle.left), Int   (Rectangle.right)));
+  function To_RECT (Border : Border_State) return RECT is
+    ((Int_C (Border.Left),   Int_C (Border.Top),       Int_C (Border.Right),   Int_C (Border.Bottom)));
 
   -- Find out if the API supports windowed mode (e.g. phone)
   function Fullscreen_Only return Bool is (False);
@@ -423,8 +425,9 @@ separate (Neo.Engine) package body System is
         when WM_SYSKEYDOWN => return 0;
 
         -- Pass window action information to the engine
-        when WM_ACTIVATE => Activated.Set (if (wParam and 16#0000_FFFF#) = 0 or (wParam and 16#FFFF_0000#) /= 0 then Other_Deactivated
-                                           elsif (wParam and 16#0000_FFFF#) = WA_CLICKACTIVE then Click_Activated else Other_Activated);
+        when WM_ACTIVATE =>
+          Activated.Set (if (wParam and 16#0000_FFFF#) = 0 or (wParam and 16#FFFF_0000#) /= 0 then Other_Deactivated
+                         elsif (wParam and 16#0000_FFFF#) = WA_CLICKACTIVE then Click_Activated else Other_Activated);
         when WM_SIZE =>
           case wParam is
             when SIZE_MINIMIZED => Activated.Set (Minimize_Deactivated);
@@ -692,8 +695,10 @@ separate (Neo.Engine) package body System is
       Buffer_Size : aliased Int_Unsigned_C  := Device_Name'Length;
       begin
         Assert (GetRawInputDeviceInfoW (Device, RIDI_DEVICENAME, Device_Name (1)'Address, Buffer_Size'Address));
-        return (S (Device_Name));
+        return (SC (Device_Name));
       end;
+      
+    -- Start of Update_Devices
     begin
     
       -- Fetch a complete list of RawInput devices for querying purposes
@@ -710,9 +715,10 @@ separate (Neo.Engine) package body System is
             case List (I).dwType is
               when RIM_TYPEKEYBOARD => Add_Device (To_Int_Ptr (List (I).hDevice), (Keyboard_Device, others => <>));
               when RIM_TYPEMOUSE =>
-                if Index (Get_Device_Name (List (I).hDevice), "ACPI") = 0 then -- Avoid fake devices for laptops
+                --Line (Get_Device_Name (List (I).hDevice));
+                --if Index (Get_Device_Name (List (I).hDevice), "ACPI") = 0 then -- Avoid fake devices for laptops
                   Add_Device (To_Int_Ptr (List (I).hDevice), (Mouse_Device, others => <>));
-                end if;
+                --end if;
             when others => null; end case;
           end if;
         end loop;
@@ -767,9 +773,14 @@ separate (Neo.Engine) package body System is
                                    uiCommand    => GET_DEVICE_HEADER,
                                    pData        => Header'Address,
                                    pcbSize      => Bytes'Unchecked_Access,
-                                   cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWINPUTHEADER'Object_Size / Byte'Object_Size);
+                                   cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size)
+                  = RAWINPUTHEADER'Object_Size / Byte'Object_Size);
+                  
+          -- Verify the id
           Id := To_Int_Ptr (Header.hDevice);
           if not Devices.Has (Id) then return DefWindowProcW (hwnd, uMsg, wParam, lParam); end if;
+          
+          -- Filter and register the input
           case Header.dwType is
 
             -- Its a keyboard...
@@ -780,16 +791,20 @@ separate (Neo.Engine) package body System is
                                          uiCommand    => GET_DEVICE_DATA,
                                          pData        => Keyboard'Address,
                                          pcbSize      => Bytes'Unchecked_Access,
-                                         cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWKEYBOARD'Object_Size / Byte'Object_Size);
+                                         cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size)
+                        = RAWKEYBOARD'Object_Size / Byte'Object_Size);
 
                 -- Inject the mapped VK code
                 if Keyboard.VKey <= VK_MAP'Last and Keyboard.VKey >= VK_MAP'First then
                   Inject_Key (Id   => Id,
                               Down => Keyboard.Message = WM_KEYDOWN or Keyboard.Message = WM_SYSKEYDOWN,
                               Key  => (case VK_MAP (Keyboard.VKey) is
-                                         when Shift_Key => (if Keyboard.MakeCode = KEY_MAKE_CODE_FOR_LEFT  then Left_Shift_Key else Right_Shift_Key),
-                                         when Ctrl_Key  => (if (Keyboard.Flags and KEY_IS_RIGHT_SIDED) = 0 then Left_Ctrl_Key  else Right_Ctrl_Key),
-                                         when Alt_Key   => (if (Keyboard.Flags and KEY_IS_RIGHT_SIDED) = 0 then Left_Alt_Key   else Right_Alt_Key),
+                                         when Shift_Key => (if Keyboard.MakeCode = KEY_MAKE_CODE_FOR_LEFT  then Left_Shift_Key
+                                                                                                           else Right_Shift_Key),
+                                         when Ctrl_Key  => (if (Keyboard.Flags and KEY_IS_RIGHT_SIDED) = 0 then Left_Ctrl_Key 
+                                                                                                           else Right_Ctrl_Key),
+                                         when Alt_Key   => (if (Keyboard.Flags and KEY_IS_RIGHT_SIDED) = 0 then Left_Alt_Key   
+                                                                                                           else Right_Alt_Key),
                                          when others    => VK_MAP (Keyboard.VKey)));
                 end if;
               end;
@@ -802,7 +817,8 @@ separate (Neo.Engine) package body System is
                                          uiCommand    => GET_DEVICE_DATA,
                                          pData        => Mouse'Address,
                                          pcbSize      => Bytes'Unchecked_Access,
-                                         cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size) = RAWMOUSE'Object_Size / Byte'Object_Size);
+                                         cbSizeHeader => RAWINPUTHEADER'Object_Size / Byte'Object_Size)
+                        = RAWMOUSE'Object_Size / Byte'Object_Size);
 
                 -- Handle various buttons
                 if Mouse.lLastX /= 0 or Mouse.lLastY /= 0 then Inject_Cursor (Id, (Int (Mouse.lLastX), Int (Mouse.lLastY))); end if;
@@ -821,9 +837,12 @@ separate (Neo.Engine) package body System is
                 elsif (Mouse.usButtons and RI_MOUSE_VERTICAL_WHEEL) > 0 or (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then
                   Inject_Button (Id     => Id,
                                  Down   => True,
-                                 Button => (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Mouse.usButtons) and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0
-                                            then (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Left_Button  else Wheel_Down_Button)
-                                            else (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Right_Button else Wheel_Up_Button)));
+                                 Button => (if To_Int_16_Signed (Int_16_Unsigned (Shift_Right (Int_64_Unsigned (Mouse.usButtons)
+                                              and 16#0000_0000_FFFF_0000#, 16))) / MOUSE_WHEEL_DELTA < 0
+                                            then (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Left_Button 
+                                                                                                         else Wheel_Down_Button)
+                                            else (if (Mouse.usButtons and RI_MOUSE_HORIZONTAL_WHEEL) > 0 then Wheel_Right_Button
+                                                                                                         else Wheel_Up_Button)));
                 end if;
               end;
           when others => null; end case;
@@ -895,8 +914,10 @@ separate (Neo.Engine) package body System is
       end;
     procedure Unpack_Stick (Player : Int; Stick : Stick_Kind; X, Y : Int_16_Signed_C) is
       begin
-        Inject_Stick (Int_Ptr (Player), Stick, (Real_64 (X) / Real_64 ((if X > 0 then Int_16_Signed_C'Last else Int_16_Signed_C'First)),
-                                                Real_64 (Y) / Real_64 ((if Y > 0 then Int_16_Signed_C'Last else Int_16_Signed_C'First))));
+        Inject_Stick (Int_Ptr (Player),
+                      Stick,
+                      (Real_64 (X) / Real_64 ((if X > 0 then Int_16_Signed_C'Last else Int_16_Signed_C'First)),
+                       Real_64 (Y) / Real_64 ((if Y > 0 then Int_16_Signed_C'Last else Int_16_Signed_C'First))));
       end;
       
     -- Start of Update_Input
@@ -911,7 +932,10 @@ separate (Neo.Engine) package body System is
 
       -- Inject Xbox 360 controller input
       begin for I in Gamepads'Range loop
-        if Devices.Has (Int_Ptr (I)) and then XInputGetState (Int_Unsigned_C (I), State'Address) = 0 and then Gamepads (I) /= State.Gamepad then
+        if Devices.Has (Int_Ptr (I))
+          and then XInputGetState (Int_Unsigned_C (I), State'Address) = 0
+          and then Gamepads (I) /= State.Gamepad
+        then
           Unpack_Button (I, XINPUT_GAMEPAD_A,              A_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_B,              B_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_X,              X_Button);
@@ -927,11 +951,25 @@ separate (Neo.Engine) package body System is
           Unpack_Button (I, XINPUT_GAMEPAD_DPAD_LEFT,      DPad_Left_Button);
           Unpack_Button (I, XINPUT_GAMEPAD_DPAD_RIGHT,     DPad_Right_Button);
 
-          -- Convert ranges
-          if State.Gamepad.sThumbLX /= Gamepads (I).sThumbLX or State.Gamepad.sThumbLY /= Gamepads (I).sThumbLY then Unpack_Stick (I, Left_Stick,  State.Gamepad.sThumbLX, State.Gamepad.sThumbLY); end if;
-          if State.Gamepad.sThumbRX /= Gamepads (I).sThumbRX or State.Gamepad.sThumbRY /= Gamepads (I).sThumbRY then Unpack_Stick (I, Right_Stick, State.Gamepad.sThumbRX, State.Gamepad.sThumbRY); end if;
-          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger  then Inject_Trigger (Int_Ptr (I), Left_Trigger,  Real_64 (State.Gamepad.bLeftTrigger)  / Real_64 (Int_8_Unsigned_C'Last) * 100.0); end if;
-          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then Inject_Trigger (Int_Ptr (I), Right_Trigger, Real_64 (State.Gamepad.bRightTrigger) / Real_64 (Int_8_Unsigned_C'Last) * 100.0); end if;
+          -- Thumbsticks
+          if State.Gamepad.sThumbLX /= Gamepads (I).sThumbLX or State.Gamepad.sThumbLY /= Gamepads (I).sThumbLY then
+            Unpack_Stick (I, Left_Stick,  State.Gamepad.sThumbLX, State.Gamepad.sThumbLY);
+          end if;
+          if State.Gamepad.sThumbRX /= Gamepads (I).sThumbRX or State.Gamepad.sThumbRY /= Gamepads (I).sThumbRY then
+            Unpack_Stick (I, Right_Stick, State.Gamepad.sThumbRX, State.Gamepad.sThumbRY);
+          end if;
+          
+          -- Triggers
+          if State.Gamepad.bLeftTrigger  /= Gamepads (I).bLeftTrigger then
+            Inject_Trigger (Int_Ptr (I),
+                            Left_Trigger,
+                            Real_64 (State.Gamepad.bLeftTrigger) / Real_64 (Int_8_Unsigned_C'Last) * 100.0);
+          end if;
+          if State.Gamepad.bRightTrigger /= Gamepads (I).bRightTrigger then
+            Inject_Trigger (Int_Ptr (I),
+                            Right_Trigger,
+                            Real_64 (State.Gamepad.bRightTrigger) / Real_64 (Int_8_Unsigned_C'Last) * 100.0);
+          end if;
           Gamepads (I) := State.Gamepad;
         end if;
       end loop; exception when others => Line ("Xbox Controller has performed an illegal operation!"); end; -- Random crashes ???

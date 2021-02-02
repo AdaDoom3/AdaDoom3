@@ -1,0 +1,89 @@
+Material
+{
+   Name {string {"textures_cameraImg1"}}
+   Texture (attrib = "editor") {string {"textures_editor_cameragui"}}
+}
+Material
+{
+   Name {string {"textures_cameraView1"}}
+   Texture (attrib = "editor") {string {"textures_editor_camera"}}
+}
+Material
+{
+   Name {string {"particles_flowingblood"}}
+}
+Material
+{
+   Name {string {"guisurfs_guipreview"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap1"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap2"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap3"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap4"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap5"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap6"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap7"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_guiremap8"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"textures_gui_remap1"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"textures_gui_remap2"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"textures_gui_remap3"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"textures_gui_remap4"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"textures_gui_remap5"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}
+Material
+{
+   Name {string {"guisurfs_hazard1"}}
+   Texture (attrib = "editor") {string {"textures_editor_entitygui"}}
+}

@@ -1,0 +1,8 @@
+Material
+{
+   Name {string {"models_mapobjects_doors_recyc_door_doorclamp"}}
+   Texture (attrib = "editor") {string {"models_mapobjects_doors_recyc_door_doorclamp"}}
+   Texture (attrib = "diffuse") {string {"textures_recyc_wall_corrugated05_d"}}
+   Texture (attrib = "specular") {string {"textures_recyc_wall_corrugated05_s"}}
+   Texture (attrib = "normal") {string {"models_mapobjects_doors_recyc_door_doorclamp_local"}}
+}

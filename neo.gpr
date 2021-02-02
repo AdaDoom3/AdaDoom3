@@ -59,7 +59,7 @@ project Neo is
 
   type CPU_Option     is ("x86-64", "PPC");
   type Boolean_Option is ("No", "Yes");
-  type Game_Option    is ("Neotek", "DOOM");
+  type Game_Option    is ("DOOM");
   type System_Option  is ("Win32", "Linux", "Mac", "Android");
 
   --------------
@@ -80,11 +80,11 @@ project Neo is
     when "Win32"                     => null;
     when "Linux" | "Mac" | "Android" => OS_API := "SDL"; -- Linux and Mac get SDL support only
   end case;
-  for Languages   use ("Ada");--, "C");                             -- Support both Ada and OpenGL Shader Language
+  for Languages   use ("Ada"); --, "C");                            -- Support both Ada and OpenGL Shader Language
   for Main        use ("main.adb");                                 -- Main entry point
   for Object_Dir  use "Object";                                     -- Trash folder
   for Exec_Dir    use "Games/" & GAME;                              -- Game distributable 
-  for Source_Dirs use ("Shaders/",                                  -- GLSL shaders
+  for Source_Dirs use ("Engine/Shaders/",                           -- GLSL shaders
                        "Engine/", "Engine/Systems/" & OS_API,       -- Engine and system specific source
                        "Engine/Runtime/",                           -- Runtime sources
                        "Engine/Assembly/" & CPU,                    -- CPU specific source
@@ -133,11 +133,6 @@ project Neo is
   package Binder   is for Default_Switches ("Ada") use Switch_Binder;   end Binder;
   package Builder  is for Default_Switches ("Ada") use Switch_Builder;
                       for Executable ("main.adb")  use GAME;            end Builder;
-  --package Naming   is for Body_Suffix ("C++")      use (".glv", ".glf", ".glt");      -- GLSL code
-  --                        Body_Suffix ("C")        use ".hta";          end Naming;   -- Javascript ActiveX HTA module
-
   package Compiler is for Default_Switches ("Ada") use Switch_Compiler;
   end Compiler;
-  --                    for Driver ("C++") use "Tools\GLSLang\glslangValidator.exe";    -- Trick GPS into verifiying shader code
-  --                    for Driver ("C")   use "";                        end Compiler; -- C is only used for syntax highlighting
 end Neo;

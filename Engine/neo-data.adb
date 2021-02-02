@@ -1,19 +1,18 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
-with System.Memory;
 package body Neo.Data is
 
   ------------
@@ -25,13 +24,13 @@ package body Neo.Data is
     use Vector_Int_8_Unsigned; -- For "&"
 
     -- Setup IO
-    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (Path)))); -- Str_8 !!!
+    subtype Blob is Array_Byte (1..Natural (Ada.Directories.Size (To_Str_8 (Path)))); -- Str_8!
     package Blob_IO is new Ada.Direct_IO (Blob);
     File   : Blob_IO.File_Type;
     Result : Blob := (others => 0);
 
     begin
-      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (Path)); -- Str_8 !!!
+      Blob_IO.Open (File, Blob_IO.In_File, To_Str_8 (Path)); -- Str_8!
       Blob_IO.Read (File, Result);
       Blob_IO.Close (File);
       return (if Blob'Length mod Padding = 0 then Result else Result & (1..Result'Length mod Padding => 0));
@@ -51,15 +50,42 @@ package body Neo.Data is
     -- Get --
     ---------
 
+    function Get (Possible_Matches : Array_Ptr_Structure_State; Prop, Val : Str_32) return Ptr_Structure_State is
+      Result : Ptr_Structure_State  := null;
+      begin
+        for Possible_Match of Possible_Matches loop
+          if Possible_Match.Properties /= null and then Possible_Match.Properties.Contains (U (To_Str_16 (Prop)))
+            and then Possible_Match.Properties.Element (U (To_Str_16 (Prop))).Primitive.String_Val (1) = To_Str_32_Unbound (Val)
+          then
+            if Result /= null then
+              null; --Line ("Possible duplicate of " & To_Str_16 (Attrib));
+              --raise Program_Error; -- Return the last match
+            else
+              Result := Possible_Match;
+            end if;
+          end if;
+        end loop;
+        return Result;
+      end;
+    function Get (Structure : Ptr_Structure_State; Class : Struct_T; Prop, Val : Str_32) return Ptr_Structure_State is
+      (Get (Get (Structure, Class), Prop, Val));
+    function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Prop, Val : Str_32) return Ptr_Structure_State is
+      (Get (Get (Structure, Class_Path), Prop, Val));
+    function Get (Structure : Ptr_Structure_State; Class : Struct_T; Prop, Val : Str_32; Kind : Primitive_Kind)
+      return Ptr_Structure_State is
+      (Get (Get (Get (Structure, Class), Prop, Val), Kind));
+    function Get (Structure : Ptr_Structure_State; Class_Path : Array_Struct_T; Prop, Val : Str_32; Kind : Primitive_Kind)
+      return Ptr_Structure_State is
+      (Get (Get (Get (Structure, Class_Path), Prop, Val), Kind));
+
+    function Get (Structure : Ptr_Structure_State; Class : Struct_T; Primitive : Primitive_Kind) return Ptr_Structure_State is
+      (Get (Get (Structure, Class), Primitive));
+    function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T) return Array_Ptr_Structure_State is
+      (Get (Get (Structure, Path (Path'First..Path'Last - 1)), Path (Path'Last)));
+
     function Get (Structure : Ptr_Structure_State; Kind : Struct_T) return Ptr_Structure_State is
       begin
-        if Structure.Counts (Kind) /= 1 then raise Program_Error; end if;-- with "Too many " & Kind'Wide_Image & " in node!"; end if;
-
-        if Structure.Named_Children /= null then
-          for I of Structure.Named_Children.all loop
-            if I.Kind = Structure_Kind and then I.Class = Kind then return I; end if;
-          end loop;
-        end if;
+        if Structure.Counts (Kind) /= 1 then raise Program_Error; end if;
 
         if Structure.Children /= null then
           for I of Structure.Children.all loop
@@ -71,11 +97,7 @@ package body Neo.Data is
 
     function Get (Structure : Ptr_Structure_State; Primitive : Primitive_Kind) return Ptr_Structure_State is
       begin
-        if Structure.Named_Children /= null then
-          for I of Structure.Named_Children.all loop
-            if I.Kind /= Structure_Kind and then I.Kind = Primitive then return I; end if;
-          end loop;
-        end if;
+        if Structure = null then return null; end if;
         if Structure.Children /= null then
           for I of Structure.Children.all loop
             if I.Kind /= Structure_Kind and then I.Kind = Primitive then return I; end if;
@@ -88,15 +110,6 @@ package body Neo.Data is
       Result  : Array_Ptr_Structure_State (1..Structure.Counts (Kind)) := (others => null);
       Current : Positive := 1;
       begin
-        if Structure.Named_Children /= null then
-          for I of Structure.Named_Children.all loop
-            if I.Kind = Structure_Kind and then I.Class = Kind then
-              Result (Current) := I;
-              Current := Current + 1;
-            end if;
-          end loop;
-        end if;
-
         if Structure.Children /= null then
           for I of Structure.Children.all loop
             if I.Kind = Structure_Kind and then I.Class = Kind then
@@ -105,16 +118,8 @@ package body Neo.Data is
             end if;
           end loop;
         end if;
-
         return Result;
       end;
-
-    function Get (Structure : Ptr_Structure_State; Class : Struct_T; Primitive : Primitive_Kind) return Ptr_Structure_State is
-      begin
-        return Get (Get (Structure, Class), Primitive);
-      end;
-    function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T) return Array_Ptr_Structure_State is
-      (Get (Get (Structure, Path (Path'First..Path'Last - 1)), Path (Path'Last)));
 
     function Get (Structure : Ptr_Structure_State; Path : Array_Struct_T) return Ptr_Structure_State is
       Result : Ptr_Structure_State := Structure;
@@ -153,6 +158,8 @@ package body Neo.Data is
       -- Recursive deletion
       procedure Finalize (Structure : in out Ptr_Structure_State) with Inline is
         begin
+          if Structure = null then return; end if;
+
           if Structure.Name /= null then Free (Structure.Name); end if;
 
           -- Free children if we are looking at a non-primitive
@@ -182,8 +189,108 @@ package body Neo.Data is
         end;
       begin
         Free (File.Name);
-        for I of File.Structures       loop Finalize (I); end loop;
         for I of File.Named_Structures loop Finalize (I); end loop;
+      end;
+
+    -------------------------
+    -- Construct_Structure --
+    -------------------------
+
+    procedure Construct_Structure (Item : in out Ptr_Structure_State; Kind : Primitive_Kind; Len : Positive) is
+      begin
+        case Kind is
+          when Bool_Kind               => Item := new Structure_State'(Bool_Kind,               Len, others => <>);
+          when Bool_x2_Kind            => Item := new Structure_State'(Bool_x2_Kind,            Len, others => <>);
+          when Bool_x3_Kind            => Item := new Structure_State'(Bool_x3_Kind,            Len, others => <>);
+          when Bool_x4_Kind            => Item := new Structure_State'(Bool_x4_Kind,            Len, others => <>);
+          when Bool_x8_Kind            => Item := new Structure_State'(Bool_x8_Kind,            Len, others => <>);
+          when Bool_x16_Kind           => Item := new Structure_State'(Bool_x16_Kind,           Len, others => <>);
+          when String_Kind             => Item := new Structure_State'(String_Kind,             Len, others => <>);
+          when String_x2_Kind          => Item := new Structure_State'(String_x2_Kind,          Len, others => <>);
+          when String_x3_Kind          => Item := new Structure_State'(String_x3_Kind,          Len, others => <>);
+          when String_x4_Kind          => Item := new Structure_State'(String_x4_Kind,          Len, others => <>);
+          when String_x8_Kind          => Item := new Structure_State'(String_x8_Kind,          Len, others => <>);
+          when String_x16_Kind         => Item := new Structure_State'(String_x16_Kind,         Len, others => <>);
+          when Ref_Kind                => Item := new Structure_State'(Ref_Kind,                Len, others => <>);
+          when Ref_x2_Kind             => Item := new Structure_State'(Ref_x2_Kind,             Len, others => <>);
+          when Ref_x3_Kind             => Item := new Structure_State'(Ref_x3_Kind,             Len, others => <>);
+          when Ref_x4_Kind             => Item := new Structure_State'(Ref_x4_Kind,             Len, others => <>);
+          when Ref_x8_Kind             => Item := new Structure_State'(Ref_x8_Kind,             Len, others => <>);
+          when Ref_x16_Kind            => Item := new Structure_State'(Ref_x16_Kind,            Len, others => <>);
+          when Type_Kind               => Item := new Structure_State'(Type_Kind,               Len, others => <>);
+          when Type_x2_Kind            => Item := new Structure_State'(Type_x2_Kind,            Len, others => <>);
+          when Type_x3_Kind            => Item := new Structure_State'(Type_x3_Kind,            Len, others => <>);
+          when Type_x4_Kind            => Item := new Structure_State'(Type_x4_Kind,            Len, others => <>);
+          when Type_x8_Kind            => Item := new Structure_State'(Type_x8_Kind,            Len, others => <>);
+          when Type_x16_Kind           => Item := new Structure_State'(Type_x16_Kind,           Len, others => <>);
+          when Float16_Kind            => Item := new Structure_State'(Float16_Kind,            Len, others => <>);
+          when Float32_Kind            => Item := new Structure_State'(Float32_Kind,            Len, others => <>);
+          when Float64_Kind            => Item := new Structure_State'(Float64_Kind,            Len, others => <>);
+          when Float16_x2_Kind         => Item := new Structure_State'(Float16_x2_Kind,         Len, others => <>);
+          when Float32_x2_Kind         => Item := new Structure_State'(Float32_x2_Kind,         Len, others => <>);
+          when Float64_x2_Kind         => Item := new Structure_State'(Float64_x2_Kind,         Len, others => <>);
+          when Float16_x3_Kind         => Item := new Structure_State'(Float16_x3_Kind,         Len, others => <>);
+          when Float32_x3_Kind         => Item := new Structure_State'(Float32_x3_Kind,         Len, others => <>);
+          when Float64_x3_Kind         => Item := new Structure_State'(Float64_x3_Kind,         Len, others => <>);
+          when Float16_x4_Kind         => Item := new Structure_State'(Float16_x4_Kind,         Len, others => <>);
+          when Float32_x4_Kind         => Item := new Structure_State'(Float32_x4_Kind,         Len, others => <>);
+          when Float64_x4_Kind         => Item := new Structure_State'(Float64_x4_Kind,         Len, others => <>);
+          when Float16_x8_Kind         => Item := new Structure_State'(Float16_x8_Kind,         Len, others => <>);
+          when Float32_x8_Kind         => Item := new Structure_State'(Float32_x8_Kind,         Len, others => <>);
+          when Float64_x8_Kind         => Item := new Structure_State'(Float64_x8_Kind,         Len, others => <>);
+          when Float16_x16_Kind        => Item := new Structure_State'(Float16_x16_Kind,        Len, others => <>);
+          when Float32_x16_Kind        => Item := new Structure_State'(Float32_x16_Kind,        Len, others => <>);
+          when Float64_x16_Kind        => Item := new Structure_State'(Float64_x16_Kind,        Len, others => <>);
+          when Int8_Kind               => Item := new Structure_State'(Int8_Kind,               Len, others => <>);
+          when Int16_Kind              => Item := new Structure_State'(Int16_Kind,              Len, others => <>);
+          when Int32_Kind              => Item := new Structure_State'(Int32_Kind,              Len, others => <>);
+          when Int64_Kind              => Item := new Structure_State'(Int64_Kind,              Len, others => <>);
+          when Int8_x2_Kind            => Item := new Structure_State'(Int8_x2_Kind,            Len, others => <>);
+          when Int16_x2_Kind           => Item := new Structure_State'(Int16_x2_Kind,           Len, others => <>);
+          when Int32_x2_Kind           => Item := new Structure_State'(Int32_x2_Kind,           Len, others => <>);
+          when Int64_x2_Kind           => Item := new Structure_State'(Int64_x2_Kind,           Len, others => <>);
+          when Int8_x3_Kind            => Item := new Structure_State'(Int8_x3_Kind,            Len, others => <>);
+          when Int16_x3_Kind           => Item := new Structure_State'(Int16_x3_Kind,           Len, others => <>);
+          when Int32_x3_Kind           => Item := new Structure_State'(Int32_x3_Kind,           Len, others => <>);
+          when Int64_x3_Kind           => Item := new Structure_State'(Int64_x3_Kind,           Len, others => <>);
+          when Int8_x4_Kind            => Item := new Structure_State'(Int8_x4_Kind,            Len, others => <>);
+          when Int16_x4_Kind           => Item := new Structure_State'(Int16_x4_Kind,           Len, others => <>);
+          when Int32_x4_Kind           => Item := new Structure_State'(Int32_x4_Kind,           Len, others => <>);
+          when Int64_x4_Kind           => Item := new Structure_State'(Int64_x4_Kind,           Len, others => <>);
+          when Int8_x8_Kind            => Item := new Structure_State'(Int8_x8_Kind,            Len, others => <>);
+          when Int16_x8_Kind           => Item := new Structure_State'(Int16_x8_Kind,           Len, others => <>);
+          when Int32_x8_Kind           => Item := new Structure_State'(Int32_x8_Kind,           Len, others => <>);
+          when Int64_x8_Kind           => Item := new Structure_State'(Int64_x8_Kind,           Len, others => <>);
+          when Int8_x16_Kind           => Item := new Structure_State'(Int8_x16_Kind,           Len, others => <>);
+          when Int16_x16_Kind          => Item := new Structure_State'(Int16_x16_Kind,          Len, others => <>);
+          when Int32_x16_Kind          => Item := new Structure_State'(Int32_x16_Kind,          Len, others => <>);
+          when Int64_x16_Kind          => Item := new Structure_State'(Int64_x16_Kind,          Len, others => <>);
+          when Unsigned_Int8_Kind      => Item := new Structure_State'(Unsigned_Int8_Kind,      Len, others => <>);
+          when Unsigned_Int16_Kind     => Item := new Structure_State'(Unsigned_Int16_Kind,     Len, others => <>);
+          when Unsigned_Int32_Kind     => Item := new Structure_State'(Unsigned_Int32_Kind,     Len, others => <>);
+          when Unsigned_Int64_Kind     => Item := new Structure_State'(Unsigned_Int64_Kind,     Len, others => <>);
+          when Unsigned_Int8_x2_Kind   => Item := new Structure_State'(Unsigned_Int8_x2_Kind,   Len, others => <>);
+          when Unsigned_Int16_x2_Kind  => Item := new Structure_State'(Unsigned_Int16_x2_Kind,  Len, others => <>);
+          when Unsigned_Int32_x2_Kind  => Item := new Structure_State'(Unsigned_Int32_x2_Kind,  Len, others => <>);
+          when Unsigned_Int64_x2_Kind  => Item := new Structure_State'(Unsigned_Int64_x2_Kind,  Len, others => <>);
+          when Unsigned_Int8_x3_Kind   => Item := new Structure_State'(Unsigned_Int8_x3_Kind,   Len, others => <>);
+          when Unsigned_Int16_x3_Kind  => Item := new Structure_State'(Unsigned_Int16_x3_Kind,  Len, others => <>);
+          when Unsigned_Int32_x3_Kind  => Item := new Structure_State'(Unsigned_Int32_x3_Kind,  Len, others => <>);
+          when Unsigned_Int64_x3_Kind  => Item := new Structure_State'(Unsigned_Int64_x3_Kind,  Len, others => <>);
+          when Unsigned_Int8_x4_Kind   => Item := new Structure_State'(Unsigned_Int8_x4_Kind,   Len, others => <>);
+          when Unsigned_Int16_x4_Kind  => Item := new Structure_State'(Unsigned_Int16_x4_Kind,  Len, others => <>);
+          when Unsigned_Int32_x4_Kind  => Item := new Structure_State'(Unsigned_Int32_x4_Kind,  Len, others => <>);
+          when Unsigned_Int64_x4_Kind  => Item := new Structure_State'(Unsigned_Int64_x4_Kind,  Len, others => <>);
+          when Unsigned_Int8_x8_Kind   => Item := new Structure_State'(Unsigned_Int8_x8_Kind,   Len, others => <>);
+          when Unsigned_Int16_x8_Kind  => Item := new Structure_State'(Unsigned_Int16_x8_Kind,  Len, others => <>);
+          when Unsigned_Int32_x8_Kind  => Item := new Structure_State'(Unsigned_Int32_x8_Kind,  Len, others => <>);
+          when Unsigned_Int64_x8_Kind  => Item := new Structure_State'(Unsigned_Int64_x8_Kind,  Len, others => <>);
+          when Unsigned_Int8_x16_Kind  => Item := new Structure_State'(Unsigned_Int8_x16_Kind,  Len, others => <>);
+          when Unsigned_Int16_x16_Kind => Item := new Structure_State'(Unsigned_Int16_x16_Kind, Len, others => <>);
+          when Unsigned_Int32_x16_Kind => Item := new Structure_State'(Unsigned_Int32_x16_Kind, Len, others => <>);
+          when Unsigned_Int64_x16_Kind => Item := new Structure_State'(Unsigned_Int64_x16_Kind, Len, others => <>);
+          when Structure_Kind          => Item := new Structure_State'(Structure_Kind,          Len, others => <>);
+        end case;
       end;
 
     ----------
@@ -196,10 +303,11 @@ package body Neo.Data is
       -- Character Lookup Tables --
       -----------------------------
 
-      -- ???
+      -- Rough "catagory" tables for characters to enable quick lookups when removing whitespace or parsing identifiers
       type Character_Kind is (Identifier_Catagory, Whitespace_Catagory, Other_Catagory);
       CATAGORY : array (Char_8'First..Char_8'Val (127)) of Character_Kind :=
-        ('a'..'z' | 'A'..'Z' | '_' | '0'..'9' => Identifier_Catagory, ' ' | HT | LF | CR | VT => Whitespace_Catagory, others => Other_Catagory);
+        ('a'..'z' | 'A'..'Z' | '_' | '0'..'9' => Identifier_Catagory, ' ' | HT | LF | CR | VT => Whitespace_Catagory,
+         others => Other_Catagory);
 
       -- Valued character based value lookups
       type Array_Lookup_Value is array (Char_8'First..Char_8'Val (127)) of Int_64_Unsigned;
@@ -262,6 +370,27 @@ package body Neo.Data is
       -- Skip_Whitespace --
       ---------------------
 
+      procedure Skip_Whitespace_Safe (C : in out Positive; Skip_Single_Line_Comments : Bool := True) with Inline is
+        begin
+          loop
+            while CATAGORY (Text (C)) = Whitespace_Catagory loop
+              if C = Text'Last then return; end if;
+              C := C + 1;
+            end loop;
+            if Text (C) = '/' then
+              if Text (C + 1) = '/' and Skip_Single_Line_Comments then
+                C := C + 2;
+                while Text (C) /= ASCII.LF loop C := C + 1; end loop;
+                C := C + 1;
+              elsif Text (C + 1) = '*' then
+                C := C + 2;
+                while Text (C..C + 1) /= "*/" loop C := C + 1; end loop;
+                C := C + 2;
+              else exit; end if;
+            else exit; end if;
+          end loop;
+        end;
+
       procedure Skip_Whitespace (C : in out Positive; Skip_Single_Line_Comments : Bool := True) with Inline is
         begin
           loop
@@ -304,7 +433,7 @@ package body Neo.Data is
             elsif Text (C) = Val_2 then return Val_2;
             else C := C + 1; end if;
           end loop;
-        end;
+        exception when Constraint_Error => raise Ada.Text_IO.End_Error; end;
 
       procedure Skip_Until (C : in out Positive; Val : Char_8) with Inline is
         begin
@@ -324,7 +453,7 @@ package body Neo.Data is
             elsif Text (C) = Val then return;
             else C := C + 1; end if;
           end loop;
-        end;
+        exception when Constraint_Error => raise Ada.Text_IO.End_Error; end;
 
       ---------------------
       -- Parse_Character --
@@ -423,8 +552,8 @@ package body Neo.Data is
 
       procedure Parse_Bool_Literal (C : in out Positive; Result : out Bool) with Inline is
         begin
-          if    Text (C..C + 4) = "false" then Result := False; C := C + 4;
-          elsif Text (C..C + 3) = "true"  then Result := True;  C := C + 3;
+          if    Text (C..C + 4) = "false" then Result := False; C := C + 5;
+          elsif Text (C..C + 3) = "true"  then Result := True;  C := C + 4;
           else raise Invalid_Float_Literal; end if;
         end;
 
@@ -546,7 +675,7 @@ pragma Warnings (On);
       -- Parse_Float_Literal --
       -------------------------
 
-      -- ???
+      -- General procedure for parsing floating point literals
       generic
         type Real_T is digits <>;
       procedure Parse_Float_Literal (C : in out Positive; Result : out Real_T) with Inline;
@@ -660,13 +789,9 @@ pragma Warnings (On);
       -- Parse_Reference --
       ---------------------
 
-      procedure Parse_Reference
-        (C         : in out Positive;
-         Ref_Ptr   :        Ptr_Ptr;
-         Structure :        Ptr_Structure_State) with Inline
-      is
+      procedure Parse_Reference (C : in out Positive; Ref_Ptr : Ptr_Ptr; Structure : Ptr_Structure_State) with Inline is
         Reference  : Reference_State;
-        Identifier : Str_8_Super (IDENTIFIER_MAX);
+        Identifier : Identifier_Str.T;
         begin
 
           -- Check for null
@@ -693,10 +818,15 @@ pragma Warnings (On);
       -- Parse_Data_Type_Literal --
       -----------------------------
 
-      procedure Parse_Data_Type_Literal (C : in out Positive; Primitive : out Primitive_Kind; Structure : out Struct_T) with Inline is
+      procedure Parse_Data_Type_Literal (C : in out Positive; Primitive : out Primitive_Kind; Structure : out Struct_T)
+        with Inline is
 
-        -- ???
-        procedure Parse_Rest (Rest : Str_8; Kind : Primitive_Kind; Test_Bitsize : Bool := False; Disble_8_Bit : Bool := False) with Inline is
+        -- Temporary used for parsing structure identifiers
+        Struct_Identifier : Identifier_Str.T;
+
+        -- Parse the remaining characters of a primitive identifier based off of several hints
+        procedure Parse_Rest (Rest : Str_8; Kind : Primitive_Kind; Test_Bitsize : Bool := False; Disble_8_Bit : Bool := False)
+          with Inline is
           begin
             C := C + 1;
 
@@ -731,10 +861,10 @@ pragma Warnings (On);
                   when others => raise Program_Error;
                 end case;
                 case Text (C) is
-                  when '2'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 1 * Enum_Traverse_Multiplier); C := C + 1;
-                  when '3'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 2 * Enum_Traverse_Multiplier); C := C + 1;
-                  when '4'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 3 * Enum_Traverse_Multiplier); C := C + 1;
                   when '8'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 4 * Enum_Traverse_Multiplier); C := C + 1;
+                  when '4'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 3 * Enum_Traverse_Multiplier); C := C + 1;
+                  when '3'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 2 * Enum_Traverse_Multiplier); C := C + 1;
+                  when '2'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 1 * Enum_Traverse_Multiplier); C := C + 1;
                   when '1'    => Primitive := Primitive_Kind'Val (Primitive_Kind'Pos (Primitive) + 5 * Enum_Traverse_Multiplier); C := C + 2;
                                  if Text (C - 1) /= '6' then raise Invalid_Data_Type_Literal; end if;
                   when others => raise Invalid_Data_Type_Literal;
@@ -749,115 +879,19 @@ pragma Warnings (On);
           case Text (C) is
             when 'i'    => Parse_Rest ("nt",          Int8_Kind,          Test_Bitsize => True);
             when 'u'    => Parse_Rest ("nsigned_int", Unsigned_Int8_Kind, Test_Bitsize => True);
-            when 'f'    => Parse_Rest ("loat",        Type_x16_Kind,      Test_Bitsize => True, Disble_8_Bit => True); -- Dirty hack here for Kind
+            when 'f'    => Parse_Rest ("loat",        Type_x16_Kind,      Test_Bitsize => True, Disble_8_Bit => True); -- Hack
             when 'b'    => Parse_Rest ("ool",         Bool_Kind);
             when 'h'    => Parse_Rest ("alf",         Float16_Kind);
             when 'd'    => Parse_Rest ("ouble",       Float64_Kind);
             when 's'    => Parse_Rest ("tring",       String_Kind);
             when 'r'    => Parse_Rest ("ef",          Ref_Kind);
             when 't'    => Parse_Rest ("ype",         Type_Kind);
-            when others => Primitive := Structure_Kind; Struct_Types.Parse_Data_Type (Text, C, Structure); -- Structure names should always be uppercase
-          end case;
-        end;
-
-      -------------------------
-      -- Construct_Structure --
-      -------------------------
-
-      procedure Construct_Structure (Item : in out Ptr_Structure_State; Kind : Primitive_Kind; Len : Positive) is
-        begin
-          case Kind is
-            when Bool_Kind               => Item := new Structure_State'(Bool_Kind,               Len, others => <>);
-            when Bool_x2_Kind            => Item := new Structure_State'(Bool_x2_Kind,            Len, others => <>);
-            when Bool_x3_Kind            => Item := new Structure_State'(Bool_x3_Kind,            Len, others => <>);
-            when Bool_x4_Kind            => Item := new Structure_State'(Bool_x4_Kind,            Len, others => <>);
-            when Bool_x8_Kind            => Item := new Structure_State'(Bool_x8_Kind,            Len, others => <>);
-            when Bool_x16_Kind           => Item := new Structure_State'(Bool_x16_Kind,           Len, others => <>);
-            when String_Kind             => Item := new Structure_State'(String_Kind,             Len, others => <>);
-            when String_x2_Kind          => Item := new Structure_State'(String_x2_Kind,          Len, others => <>);
-            when String_x3_Kind          => Item := new Structure_State'(String_x3_Kind,          Len, others => <>);
-            when String_x4_Kind          => Item := new Structure_State'(String_x4_Kind,          Len, others => <>);
-            when String_x8_Kind          => Item := new Structure_State'(String_x8_Kind,          Len, others => <>);
-            when String_x16_Kind         => Item := new Structure_State'(String_x16_Kind,         Len, others => <>);
-            when Ref_Kind                => Item := new Structure_State'(Ref_Kind,                Len, others => <>);
-            when Ref_x2_Kind             => Item := new Structure_State'(Ref_x2_Kind,             Len, others => <>);
-            when Ref_x3_Kind             => Item := new Structure_State'(Ref_x3_Kind,             Len, others => <>);
-            when Ref_x4_Kind             => Item := new Structure_State'(Ref_x4_Kind,             Len, others => <>);
-            when Ref_x8_Kind             => Item := new Structure_State'(Ref_x8_Kind,             Len, others => <>);
-            when Ref_x16_Kind            => Item := new Structure_State'(Ref_x16_Kind,            Len, others => <>);
-            when Type_Kind               => Item := new Structure_State'(Type_Kind,               Len, others => <>);
-            when Type_x2_Kind            => Item := new Structure_State'(Type_x2_Kind,            Len, others => <>);
-            when Type_x3_Kind            => Item := new Structure_State'(Type_x3_Kind,            Len, others => <>);
-            when Type_x4_Kind            => Item := new Structure_State'(Type_x4_Kind,            Len, others => <>);
-            when Type_x8_Kind            => Item := new Structure_State'(Type_x8_Kind,            Len, others => <>);
-            when Type_x16_Kind           => Item := new Structure_State'(Type_x16_Kind,           Len, others => <>);
-            when Float16_Kind            => Item := new Structure_State'(Float16_Kind,            Len, others => <>);
-            when Float32_Kind            => Item := new Structure_State'(Float32_Kind,            Len, others => <>);
-            when Float64_Kind            => Item := new Structure_State'(Float64_Kind,            Len, others => <>);
-            when Float16_x2_Kind         => Item := new Structure_State'(Float16_x2_Kind,         Len, others => <>);
-            when Float32_x2_Kind         => Item := new Structure_State'(Float32_x2_Kind,         Len, others => <>);
-            when Float64_x2_Kind         => Item := new Structure_State'(Float64_x2_Kind,         Len, others => <>);
-            when Float16_x3_Kind         => Item := new Structure_State'(Float16_x3_Kind,         Len, others => <>);
-            when Float32_x3_Kind         => Item := new Structure_State'(Float32_x3_Kind,         Len, others => <>);
-            when Float64_x3_Kind         => Item := new Structure_State'(Float64_x3_Kind,         Len, others => <>);
-            when Float16_x4_Kind         => Item := new Structure_State'(Float16_x4_Kind,         Len, others => <>);
-            when Float32_x4_Kind         => Item := new Structure_State'(Float32_x4_Kind,         Len, others => <>);
-            when Float64_x4_Kind         => Item := new Structure_State'(Float64_x4_Kind,         Len, others => <>);
-            when Float16_x8_Kind         => Item := new Structure_State'(Float16_x8_Kind,         Len, others => <>);
-            when Float32_x8_Kind         => Item := new Structure_State'(Float32_x8_Kind,         Len, others => <>);
-            when Float64_x8_Kind         => Item := new Structure_State'(Float64_x8_Kind,         Len, others => <>);
-            when Float16_x16_Kind        => Item := new Structure_State'(Float16_x16_Kind,        Len, others => <>);
-            when Float32_x16_Kind        => Item := new Structure_State'(Float32_x16_Kind,        Len, others => <>);
-            when Float64_x16_Kind        => Item := new Structure_State'(Float64_x16_Kind,        Len, others => <>);
-            when Int8_Kind               => Item := new Structure_State'(Int8_Kind,               Len, others => <>);
-            when Int16_Kind              => Item := new Structure_State'(Int16_Kind,              Len, others => <>);
-            when Int32_Kind              => Item := new Structure_State'(Int32_Kind,              Len, others => <>);
-            when Int64_Kind              => Item := new Structure_State'(Int64_Kind,              Len, others => <>);
-            when Int8_x2_Kind            => Item := new Structure_State'(Int8_x2_Kind,            Len, others => <>);
-            when Int16_x2_Kind           => Item := new Structure_State'(Int16_x2_Kind,           Len, others => <>);
-            when Int32_x2_Kind           => Item := new Structure_State'(Int32_x2_Kind,           Len, others => <>);
-            when Int64_x2_Kind           => Item := new Structure_State'(Int64_x2_Kind,           Len, others => <>);
-            when Int8_x3_Kind            => Item := new Structure_State'(Int8_x3_Kind,            Len, others => <>);
-            when Int16_x3_Kind           => Item := new Structure_State'(Int16_x3_Kind,           Len, others => <>);
-            when Int32_x3_Kind           => Item := new Structure_State'(Int32_x3_Kind,           Len, others => <>);
-            when Int64_x3_Kind           => Item := new Structure_State'(Int64_x3_Kind,           Len, others => <>);
-            when Int8_x4_Kind            => Item := new Structure_State'(Int8_x4_Kind,            Len, others => <>);
-            when Int16_x4_Kind           => Item := new Structure_State'(Int16_x4_Kind,           Len, others => <>);
-            when Int32_x4_Kind           => Item := new Structure_State'(Int32_x4_Kind,           Len, others => <>);
-            when Int64_x4_Kind           => Item := new Structure_State'(Int64_x4_Kind,           Len, others => <>);
-            when Int8_x8_Kind            => Item := new Structure_State'(Int8_x8_Kind,            Len, others => <>);
-            when Int16_x8_Kind           => Item := new Structure_State'(Int16_x8_Kind,           Len, others => <>);
-            when Int32_x8_Kind           => Item := new Structure_State'(Int32_x8_Kind,           Len, others => <>);
-            when Int64_x8_Kind           => Item := new Structure_State'(Int64_x8_Kind,           Len, others => <>);
-            when Int8_x16_Kind           => Item := new Structure_State'(Int8_x16_Kind,           Len, others => <>);
-            when Int16_x16_Kind          => Item := new Structure_State'(Int16_x16_Kind,          Len, others => <>);
-            when Int32_x16_Kind          => Item := new Structure_State'(Int32_x16_Kind,          Len, others => <>);
-            when Int64_x16_Kind          => Item := new Structure_State'(Int64_x16_Kind,          Len, others => <>);
-            when Unsigned_Int8_Kind      => Item := new Structure_State'(Unsigned_Int8_Kind,      Len, others => <>);
-            when Unsigned_Int16_Kind     => Item := new Structure_State'(Unsigned_Int16_Kind,     Len, others => <>);
-            when Unsigned_Int32_Kind     => Item := new Structure_State'(Unsigned_Int32_Kind,     Len, others => <>);
-            when Unsigned_Int64_Kind     => Item := new Structure_State'(Unsigned_Int64_Kind,     Len, others => <>);
-            when Unsigned_Int8_x2_Kind   => Item := new Structure_State'(Unsigned_Int8_x2_Kind,   Len, others => <>);
-            when Unsigned_Int16_x2_Kind  => Item := new Structure_State'(Unsigned_Int16_x2_Kind,  Len, others => <>);
-            when Unsigned_Int32_x2_Kind  => Item := new Structure_State'(Unsigned_Int32_x2_Kind,  Len, others => <>);
-            when Unsigned_Int64_x2_Kind  => Item := new Structure_State'(Unsigned_Int64_x2_Kind,  Len, others => <>);
-            when Unsigned_Int8_x3_Kind   => Item := new Structure_State'(Unsigned_Int8_x3_Kind,   Len, others => <>);
-            when Unsigned_Int16_x3_Kind  => Item := new Structure_State'(Unsigned_Int16_x3_Kind,  Len, others => <>);
-            when Unsigned_Int32_x3_Kind  => Item := new Structure_State'(Unsigned_Int32_x3_Kind,  Len, others => <>);
-            when Unsigned_Int64_x3_Kind  => Item := new Structure_State'(Unsigned_Int64_x3_Kind,  Len, others => <>);
-            when Unsigned_Int8_x4_Kind   => Item := new Structure_State'(Unsigned_Int8_x4_Kind,   Len, others => <>);
-            when Unsigned_Int16_x4_Kind  => Item := new Structure_State'(Unsigned_Int16_x4_Kind,  Len, others => <>);
-            when Unsigned_Int32_x4_Kind  => Item := new Structure_State'(Unsigned_Int32_x4_Kind,  Len, others => <>);
-            when Unsigned_Int64_x4_Kind  => Item := new Structure_State'(Unsigned_Int64_x4_Kind,  Len, others => <>);
-            when Unsigned_Int8_x8_Kind   => Item := new Structure_State'(Unsigned_Int8_x8_Kind,   Len, others => <>);
-            when Unsigned_Int16_x8_Kind  => Item := new Structure_State'(Unsigned_Int16_x8_Kind,  Len, others => <>);
-            when Unsigned_Int32_x8_Kind  => Item := new Structure_State'(Unsigned_Int32_x8_Kind,  Len, others => <>);
-            when Unsigned_Int64_x8_Kind  => Item := new Structure_State'(Unsigned_Int64_x8_Kind,  Len, others => <>);
-            when Unsigned_Int8_x16_Kind  => Item := new Structure_State'(Unsigned_Int8_x16_Kind,  Len, others => <>);
-            when Unsigned_Int16_x16_Kind => Item := new Structure_State'(Unsigned_Int16_x16_Kind, Len, others => <>);
-            when Unsigned_Int32_x16_Kind => Item := new Structure_State'(Unsigned_Int32_x16_Kind, Len, others => <>);
-            when Unsigned_Int64_x16_Kind => Item := new Structure_State'(Unsigned_Int64_x16_Kind, Len, others => <>);
-            when Structure_Kind          => Item := new Structure_State'(Structure_Kind,          Len, others => <>);
+            when others =>
+              Primitive := Structure_Kind;
+              Parse_Identifier (C, Struct_Identifier);
+              begin
+                Structure := Struct_T'Value (To_Str_8 (Struct_Identifier)); -- 'Value uses hash tables and it could be much better...
+              exception when Constraint_Error => raise Invalid_Structure_Literal with To_Str_8 (Struct_Identifier); end;
           end case;
         end;
 
@@ -975,7 +1009,8 @@ pragma Warnings (On);
           end case;
         end;
 
-      procedure Parse_Data_List (C : in out Positive; Structure : in out Ptr_Structure_State; Start_Index, End_Index : Positive) with Inline is
+      procedure Parse_Data_List (C : in out Positive; Structure : in out Ptr_Structure_State; Start_Index, End_Index : Positive)
+        with Inline is
         begin
 
           -- Handle multi-dimension
@@ -1006,17 +1041,17 @@ pragma Warnings (On);
       procedure Parse_Structure
         (C      : in out Positive;
          Parent :        Ptr_Structure_State) with Inline
-      is
+        is
         Primitive   : Primitive_Kind;
         Struct_Kind : Struct_T;
         Structure   : Ptr_Structure_State;
         Property    : Ptr_Structure_State;
-        Identifier  : Str_8_Super (IDENTIFIER_MAX);
+        Identifier  : Identifier_Str.T;
         Len         : Positive := 1;
 
         -- Workers
         task type Parse_Data_List_Task is
-            entry Run (Start_Index, Work_Amount : Positive; Is_Last : Bool := False);
+            entry Run (Start_Index, Work_Amount : Positive; Is_Last : Bool);
           end;
         task body Parse_Data_List_Task is
           Local_Is_Last     : Bool;
@@ -1026,7 +1061,7 @@ pragma Warnings (On);
           begin
 
             -- Set the locals via a rendevous
-            accept Run (Start_Index, Work_Amount : Positive; Is_Last : Bool := False)
+            accept Run (Start_Index, Work_Amount : Positive; Is_Last : Bool)
             do
               Local_C           := C;
               Local_Start_Index := Start_Index;
@@ -1059,7 +1094,6 @@ pragma Warnings (On);
               -- Skip to the end of the line and then the next valid character
               while Text (C) /= ASCII.LF loop C := C + 1; end loop;
               C := C + 1;
-              Skip_Whitespace (C);
 
             -- No hinting... ugh - count them manually
             else
@@ -1081,6 +1115,7 @@ pragma Warnings (On);
               end;
             end if;
           end if;
+          Skip_Whitespace (C);
 
           -- Create the structure node
           Construct_Structure (Structure, Primitive, Len);
@@ -1090,7 +1125,7 @@ pragma Warnings (On);
             Parse_Name (C, Identifier, Structure.Is_Global);
             Structure.Name := new Str_8'(To_Str_8 (Identifier));
             Skip_Whitespace (C);
-            Identifier := To_Str_8_Super (NULL_STR_8, IDENTIFIER_MAX);
+            Identifier := Identifier_Str.NULL_STR;
           end if;
 
           -- Non-primitive type
@@ -1098,7 +1133,9 @@ pragma Warnings (On);
 
             -- Setup the local map and link the parent
             if Parent = null then
-              if Structure.Name /= null and then not Structure.Is_Global then raise Local_Name_In_Global_Scope with Structure.Name.all; end if;
+              if Structure.Name /= null and then not Structure.Is_Global then
+                raise Local_Name_In_Global_Scope with Structure.Name.all;
+              end if;
               File.Counts (Struct_Kind) := File.Counts (Struct_Kind) + 1;
             else
               Parent.Counts (Struct_Kind) := Parent.Counts (Struct_Kind) + 1;
@@ -1150,7 +1187,7 @@ goto Found_Property;
 
             -- Add defaulted properties
             for Struct_Property of Properties (Struct_Kind) loop
-              if Struct_Property.Identifier /= NULL_IDENTIFIER
+              if Struct_Property.Identifier /= Identifier_Str.NULL_STR
                 and then Struct_Property.Defaulted
                 and then (Structure.Properties = null
                            or else not Structure.Properties.Contains (To_Str_Unbound (Struct_Property.Identifier)))
@@ -1175,19 +1212,40 @@ goto Found_Property;
             -- Verify component counts
             for I in Struct_T'Range loop
               case Structure_Components (Struct_Kind) (I) is
-                when Zero_Or_One   => if Structure.Counts (I) > 1         then raise Component_Mismatch with Struct_Kind'Image & " must have 0 or 1 "       & I'Image; end if;
-                when Zero_To_Two   => if Structure.Counts (I) > 2         then raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 2 "       & I'Image; end if;
-                when Zero_To_Three => if Structure.Counts (I) > 3         then raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 3 "       & I'Image; end if;
-                when Zero_To_Four  => if Structure.Counts (I) > 4         then raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 4 "       & I'Image; end if;
-                when Exactly_One   => if Structure.Counts (I) /= 1        then raise Component_Mismatch with Struct_Kind'Image & " must have exactly one "  & I'Image; end if;
-                when One_Or_Two    => if Structure.Counts (I) not in 1..2 then raise Component_Mismatch with Struct_Kind'Image & " must have 1 or 2 "       & I'Image; end if;
-                when One_To_Three  => if Structure.Counts (I) not in 1..3 then raise Component_Mismatch with Struct_Kind'Image & " must have 1 to 3 "       & I'Image; end if;
-                when One_To_Four   => if Structure.Counts (I) not in 1..4 then raise Component_Mismatch with Struct_Kind'Image & " must have 1 to 4 "       & I'Image; end if;
-                when One_Or_More   => if Structure.Counts (I) = 0         then raise Component_Mismatch with Struct_Kind'Image & " must have at least one " & I'Image; end if;
-                when Max_One       => if Structure.Counts (I) > 1         then raise Component_Mismatch with Struct_Kind'Image & " can have max one "       & I'Image; end if;
-                when None          => if Structure.Counts (I) /= 0        then raise Component_Mismatch with Struct_Kind'Image & " can't have a "           & I'Image; end if;
-                when Zero_Or_More  => null;
-              end case;
+                when Zero_Or_One   => if Structure.Counts (I) > 1 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 0 or 1 " & I'Image;
+                                      end if;
+                when Zero_To_Two   => if Structure.Counts (I) > 2 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 2 " & I'Image;
+                                      end if;
+                when Zero_To_Three => if Structure.Counts (I) > 3 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 3 " & I'Image;
+                                      end if;
+                when Zero_To_Four  => if Structure.Counts (I) > 4 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 0 to 4 " & I'Image;
+                                      end if;
+                when Exactly_One   => if Structure.Counts (I) /= 1 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have exactly one " & I'Image;
+                                      end if;
+                when One_Or_Two    => if Structure.Counts (I) not in 1..2 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 1 or 2 " & I'Image;
+                                      end if;
+                when One_To_Three  => if Structure.Counts (I) not in 1..3 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 1 to 3 " & I'Image;
+                                      end if;
+                when One_To_Four   => if Structure.Counts (I) not in 1..4 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have 1 to 4 " & I'Image;
+                                      end if;
+                when One_Or_More   => if Structure.Counts (I) = 0 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " must have at least one " & I'Image;
+                                      end if;
+                when Max_One       => if Structure.Counts (I) > 1 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " can have max one " & I'Image;
+                                      end if;
+                when None          => if Structure.Counts (I) /= 0 then
+                                        raise Component_Mismatch with Struct_Kind'Image & " can't have a " & I'Image;
+                                      end if;
+              when others => null; end case;
             end loop;
 
           -- Parse primitive type
@@ -1270,27 +1328,23 @@ goto Found_Property;
             end if;
 
             -- An identifier signifies
+            File.Structures.Append (Structure);
             if Structure.Name /= null then
               if not Structure.Is_Global then raise Local_Name_In_Global_Scope; end if;
               File.Globals.Insert          (To_Str_Unbound (Structure.Name.all), Structure);
               File.Named_Structures.Insert (To_Str_Unbound (Structure.Name.all), Structure);
-            else File.Structures.Append (Structure); end if;
+            end if;
 
           -- Add to a substructure
           else
 
-            -- Verify loaded structure is allowed to be a child of the current parent
-            if Primitive = Structure_Kind and then not Hierarchy (Struct_Kind) (Parent.Class) then
-              raise Bad_Hierarchy with Struct_Kind'Image & " cannot be a component of a " & Parent.Class'Image;
-            end if;
-
             -- Unnamed structures get added to the children of the parent
-            if Structure.Name = null then
-              if Parent.Children = null then Parent.Children := new Vector_Ptr_Structure_State.Unsafe.Vector; end if;
-              Parent.Children.Append (Structure);
+            --if Structure.Name = null then
+            if Parent.Children = null then Parent.Children := new Vector_Ptr_Structure_State.Unsafe.Vector; end if;
+            Parent.Children.Append (Structure);
 
             -- Named structures get added to the parent's "Local" table
-            else
+            if Structure.Name /= null then
               if Parent.Named_Children = null then Parent.Named_Children := new Hashed_Ptr_Structure_State.Unsafe.Map; end if;
               Parent.Named_Children.Insert (To_Str_Unbound (Structure.Name.all), Structure);
 
@@ -1321,8 +1375,9 @@ goto Found_Property;
 
         -- Parse the data
         File.Counts := (others => 0);
-        while Text_Index < Text'Length loop
-          Skip_Whitespace (Text_Index);
+        while Text_Index < Text'Last loop
+          Skip_Whitespace_Safe (Text_Index);
+          exit when Text_Index >= Text'Last;
           Parse_Structure (Text_Index, null);
         end loop;
 
@@ -1330,9 +1385,9 @@ goto Found_Property;
         for Reference of References loop
 
           -- Find the first element in the reference chain - its easy if its global
-          if Reference.Starts_With_Global then Reference.Data.all := To_Ref (File.Globals.Element (Reference.Names.Element (1)));
+          if Reference.Starts_With_Global then Reference.Data.all := To_Ptr (File.Globals.Element (Reference.Names.Element (1)));
 
-          -- We have a "local" reference the mean of which is vague in the docs and it could come from any parent really - not just the immediate
+          -- We have a "local" reference the mean of which is vague in the docs and it could come from any parent
           else
             Sibling_Parent := Reference.Structure;
             loop
@@ -1342,8 +1397,10 @@ goto Found_Property;
               Sibling_Parent := Sibling_Parent.Parent;
 
               -- This is the reference we are looking for
-              if Sibling_Parent.Named_Children /= null and then Sibling_Parent.Named_Children.Contains (Reference.Names.Element (1)) then
-                Reference.Data.all := To_Ref (Sibling_Parent.Named_Children.Element (Reference.Names.Element (1)));
+              if Sibling_Parent.Named_Children /= null
+                and then Sibling_Parent.Named_Children.Contains (Reference.Names.Element (1))
+              then
+                Reference.Data.all := To_Ptr (Sibling_Parent.Named_Children.Element (Reference.Names.Element (1)));
                 exit;
               end if;
             end loop;
@@ -1352,7 +1409,7 @@ goto Found_Property;
           -- Go down the chain
           if Reference.Names.Length > 1 then
             for I in 2..Int (Reference.Names.Length) loop
-              Reference.Data.all := To_Ref (Ref (Reference.Data.all).Named_Children.Element (Reference.Names.Element (I)));
+              Reference.Data.all := To_Ptr (Ref (Reference.Data.all).Named_Children.Element (Reference.Names.Element (I)));
             end loop;
           end if;
 
@@ -1363,12 +1420,13 @@ goto Found_Property;
             for Property of Properties (Reference.Structure.Parent.Parent.Class) loop
 
               -- We found an override-from-reference property and the referenced object has it!
-              if Property.Identifier /= NULL_IDENTIFIER
+              if Property.Identifier /= Identifier_Str.NULL_STR
                 and then not Property.Defaulted
                 and then Property.Overrides_From_Ref
                 and then Ref (Reference.Structure.Primitive.Ref_Val (1)).Properties.Contains (To_Str_Unbound (Property.Identifier))
               then
-                Override_Property := Ref (Reference.Structure.Primitive.Ref_Val (1)).Properties.Element (To_Str_Unbound (Property.Identifier));
+                Override_Property := Ref (Reference.Structure.Primitive.Ref_Val (1)).Properties.Element
+                                       (To_Str_Unbound (Property.Identifier));
 
                 -- This override property needs to exist so create the property map if it doesn't exist
                 if Reference.Structure.Parent.Parent.Properties = null then
@@ -1387,198 +1445,6 @@ goto Found_Property;
             end loop;
           end if;
         end loop;
-      end;
-
-    ----------
-    -- Dump --
-    ----------
-
-    -- Crap for debugging - could be deleted
-    procedure Dump (Path : Str; File : File_State) is
-
-      -- IO
-      Data : Ada_IO.File_Type;
-      package FIO is new Ada.Wide_Text_IO.Float_IO (Real_32);
-
-      -- Recursive dumping
-      procedure Put_Structure (Item : Ptr_Structure_State; Level : Positive := 1) is
-
-        -- Comma stuff
-        procedure L (J, Last : Integer) is
-          begin
-            if J /= Last then
-              Ada_IO.Put (Data, ", ");
-            end if;
-          end;
-
-        -- Start of Put_Structure
-        begin
-
-          -- Class or kind
-          if Item.Kind = Structure_Kind then
-            Ada_IO.Put (Data, Item.Class'Wide_Image);
-          else
-            Ada_IO.Put (Data, Item.Kind'Wide_Image);
-          end if;
-
-          -- Length
-          if Item.Len > 1 then
-            Ada_IO.Put (Data, "[" & Item.Len'Wide_Image & "] ");
-          else
-            Ada_IO.Put (Data, " ");
-          end if;
-
-          -- Name
-          if Item.Name /= null then
-            Ada_IO.Put (Data, To_Str (Item.Name.all) & " ");
-          end if;
-
-          Ada_IO.New_Line (Data);
-          Ada_IO.Put_Line (Data, "{");
-
-          -- Recurse into substructures
-          if Item.Kind = Structure_Kind then
-
-            -- Properties
-            if Item.Properties /= null then
-              Ada_IO.Put (Data, "(");
-              for I of Item.Properties.all loop
-                Put_Structure (I);
-              end loop;
-              Ada_IO.Put (Data, ")");
-            end if;
-
-            Ada_IO.New_Line (Data);
-            Ada_IO.Put_Line (Data, "{");
-
-            -- Locals
-            if Item.Children /= null then
-              for I of Item.Children.all loop Put_Structure (I); end loop;
-            end if;
-
-            -- Children
-            if Item.Named_Children /= null then
-              for I of Item.Named_Children.all loop Put_Structure (I); end loop;
-            end if;
-          else
-            Ada_IO.New_Line (Data);
-            Ada_IO.Put_Line (Data, "{");
-            for I in 1..Item.Len loop
-
-              -- Multi-dimensionals have extra curlies
-              if Is_Dimensional_Primitive (Item.Kind) then
-                Ada_IO.Put (Data, "{");
-              end if;
-
-              -- Dump the values
-              case Item.Kind is
-                when Bool_Kind               =>                     Ada_IO.Put (Data, Item.Primitive.Bool_Val               (I)'Wide_Image);
-                when Bool_x2_Kind            => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Bool_x2_Val            (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Bool_x3_Kind            => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Bool_x3_Val            (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Bool_x4_Kind            => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Bool_x4_Val            (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Bool_x8_Kind            => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Bool_x8_Val            (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Bool_x16_Kind           => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Bool_x16_Val           (I, J)'Wide_Image); L (J, 16); end loop;
---                  when String_Kind             =>                     Ada_IO.Put (Data, Item.Primitive.String_Val             (I)'Wide_Image);
---                  when String_x2_Kind          => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.String_x2_Val          (I, J)'Wide_Image); L (J, 2);  end loop;
---                  when String_x3_Kind          => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.String_x3_Val          (I, J)'Wide_Image); L (J, 3);  end loop;
---                  when String_x4_Kind          => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.String_x4_Val          (I, J)'Wide_Image); L (J, 4);  end loop;
---                  when String_x8_Kind          => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.String_x8_Val          (I, J)'Wide_Image); L (J, 8);  end loop;
---                  when String_x16_Kind         => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.String_x16_Val         (I, J)'Wide_Image); L (J, 16); end loop;
---                  when Ref_Kind                =>                     Ada_IO.Put (Data, Item.Primitive.Ref_Val                (I)'Wide_Image'Unchecked_Access,    Structure);
---                  when Ref_x2_Kind             => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Ref_x2_Val             (I, J)'Wide_Image'Unchecked_Access, Structure); L (J, 2);  end loop;
---                  when Ref_x3_Kind             => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Ref_x3_Val             (I, J)'Wide_Image'Unchecked_Access, Structure); L (J, 3);  end loop;
---                  when Ref_x4_Kind             => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Ref_x4_Val             (I, J)'Wide_Image'Unchecked_Access, Structure); L (J, 4);  end loop;
---                  when Ref_x8_Kind             => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Ref_x8_Val             (I, J)'Wide_Image'Unchecked_Access, Structure); L (J, 8);  end loop;
---                  when Ref_x16_Kind            => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Ref_x16_Val            (I, J)'Wide_Image'Unchecked_Access, Structure); L (J, 16); end loop;
---                  when Type_Kind               =>                     Ada_IO.Put (Data, Item.Primitive.Type_Val               (I)'Wide_Image,    Junk);
---                  when Type_x2_Kind            => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Type_x2_Val            (I, J)'Wide_Image, Junk); L (J, 2);  end loop;
---                  when Type_x3_Kind            => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Type_x3_Val            (I, J)'Wide_Image, Junk); L (J, 3);  end loop;
---                  when Type_x4_Kind            => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Type_x4_Val            (I, J)'Wide_Image, Junk); L (J, 4);  end loop;
---                  when Type_x8_Kind            => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Type_x8_Val            (I, J)'Wide_Image, Junk); L (J, 8);  end loop;
---                  when Type_x16_Kind           => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Type_x16_Val           (I, J)'Wide_Image, Junk); L (J, 16); end loop;
-                when Float16_Kind            =>                     Ada_IO.Put (Data, Item.Primitive.Float16_Val            (I)'Wide_Image);
-                when Float32_Kind            =>                     FIO.Put (Data, Item.Primitive.Float32_Val            (I), 9, 16, 9);
-                when Float64_Kind            =>                     Ada_IO.Put (Data, Item.Primitive.Float64_Val            (I)'Wide_Image);
-                when Float16_x2_Kind         => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Float16_x2_Val         (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Float32_x2_Kind         => for J in 1..2  loop FIO.Put (Data, Item.Primitive.Float32_x2_Val         (I, J), 9, 16, 9); L (J, 2);  end loop;
-                when Float64_x2_Kind         => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Float64_x2_Val         (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Float16_x3_Kind         => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Float16_x3_Val         (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Float32_x3_Kind         => for J in 1..3  loop FIO.Put (Data, Item.Primitive.Float32_x3_Val         (I, J), 9, 16, 9); L (J, 3);  end loop;
-                when Float64_x3_Kind         => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Float64_x3_Val         (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Float16_x4_Kind         => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Float16_x4_Val         (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Float32_x4_Kind         => for J in 1..4  loop FIO.Put (Data, Item.Primitive.Float32_x4_Val         (I, J), 9, 16, 9); L (J, 4);  end loop;
-                when Float64_x4_Kind         => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Float64_x4_Val         (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Float16_x8_Kind         => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Float16_x8_Val         (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Float32_x8_Kind         => for J in 1..8  loop FIO.Put (Data, Item.Primitive.Float32_x8_Val         (I, J), 9, 16, 9); L (J, 8);  end loop;
-                when Float64_x8_Kind         => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Float64_x8_Val         (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Float16_x16_Kind        => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Float16_x16_Val        (I, J)'Wide_Image); L (J, 16); end loop;
-                when Float32_x16_Kind        => for J in 1..16 loop FIO.Put (Data, Item.Primitive.Float32_x16_Val        (I, J), 9, 16, 9); L (J, 16); end loop;
-                when Float64_x16_Kind        => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Float64_x16_Val        (I, J)'Wide_Image); L (J, 16); end loop;
-                when Int8_Kind               =>                     Ada_IO.Put (Data, Item.Primitive.Int8_Val               (I)'Wide_Image);
-                when Int16_Kind              =>                     Ada_IO.Put (Data, Item.Primitive.Int16_Val              (I)'Wide_Image);
-                when Int32_Kind              =>                     Ada_IO.Put (Data, Item.Primitive.Int32_Val              (I)'Wide_Image);
-                when Int64_Kind              =>                     Ada_IO.Put (Data, Item.Primitive.Int64_Val              (I)'Wide_Image);
-                when Int8_x2_Kind            => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Int8_x2_Val            (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Int16_x2_Kind           => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Int16_x2_Val           (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Int32_x2_Kind           => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Int32_x2_Val           (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Int64_x2_Kind           => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Int64_x2_Val           (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Int8_x3_Kind            => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Int8_x3_Val            (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Int16_x3_Kind           => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Int16_x3_Val           (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Int32_x3_Kind           => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Int32_x3_Val           (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Int64_x3_Kind           => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Int64_x3_Val           (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Int8_x4_Kind            => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Int8_x4_Val            (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Int16_x4_Kind           => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Int16_x4_Val           (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Int32_x4_Kind           => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Int32_x4_Val           (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Int64_x4_Kind           => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Int64_x4_Val           (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Int8_x8_Kind            => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Int8_x8_Val            (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Int16_x8_Kind           => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Int16_x8_Val           (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Int32_x8_Kind           => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Int32_x8_Val           (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Int64_x8_Kind           => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Int64_x8_Val           (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Int8_x16_Kind           => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Int8_x16_Val           (I, J)'Wide_Image); L (J, 16); end loop;
-                when Int16_x16_Kind          => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Int16_x16_Val          (I, J)'Wide_Image); L (J, 16); end loop;
-                when Int32_x16_Kind          => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Int32_x16_Val          (I, J)'Wide_Image); L (J, 16); end loop;
-                when Int64_x16_Kind          => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Int64_x16_Val          (I, J)'Wide_Image); L (J, 16); end loop;
-                when Unsigned_Int8_Kind      =>                     Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_Val      (I)'Wide_Image);
-                when Unsigned_Int16_Kind     =>                     Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_Val     (I)'Wide_Image);
-                when Unsigned_Int32_Kind     =>                     Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_Val     (I)'Wide_Image);
-                when Unsigned_Int64_Kind     =>                     Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_Val     (I)'Wide_Image);
-                when Unsigned_Int8_x2_Kind   => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_x2_Val   (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Unsigned_Int16_x2_Kind  => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_x2_Val  (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Unsigned_Int32_x2_Kind  => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_x2_Val  (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Unsigned_Int64_x2_Kind  => for J in 1..2  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_x2_Val  (I, J)'Wide_Image); L (J, 2);  end loop;
-                when Unsigned_Int8_x3_Kind   => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_x3_Val   (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Unsigned_Int16_x3_Kind  => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_x3_Val  (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Unsigned_Int32_x3_Kind  => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_x3_Val  (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Unsigned_Int64_x3_Kind  => for J in 1..3  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_x3_Val  (I, J)'Wide_Image); L (J, 3);  end loop;
-                when Unsigned_Int8_x4_Kind   => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_x4_Val   (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Unsigned_Int16_x4_Kind  => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_x4_Val  (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Unsigned_Int32_x4_Kind  => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_x4_Val  (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Unsigned_Int64_x4_Kind  => for J in 1..4  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_x4_Val  (I, J)'Wide_Image); L (J, 4);  end loop;
-                when Unsigned_Int8_x8_Kind   => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_x8_Val   (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Unsigned_Int16_x8_Kind  => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_x8_Val  (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Unsigned_Int32_x8_Kind  => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_x8_Val  (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Unsigned_Int64_x8_Kind  => for J in 1..8  loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_x8_Val  (I, J)'Wide_Image); L (J, 8);  end loop;
-                when Unsigned_Int8_x16_Kind  => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int8_x16_Val  (I, J)'Wide_Image); L (J, 16); end loop;
-                when Unsigned_Int16_x16_Kind => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int16_x16_Val (I, J)'Wide_Image); L (J, 16); end loop;
-                when Unsigned_Int32_x16_Kind => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int32_x16_Val (I, J)'Wide_Image); L (J, 16); end loop;
-                when Unsigned_Int64_x16_Kind => for J in 1..16 loop Ada_IO.Put (Data, Item.Primitive.Unsigned_Int64_x16_Val (I, J)'Wide_Image); L (J, 16); end loop;
-                when others          => null;
-              end case;
-              if Is_Dimensional_Primitive (Item.Kind) then
-                Ada_IO.Put_Line (Data, "}");
-              end if;
-              L (I, Item.Len);
-            end loop;
-          end if;
-          Ada_IO.Put_Line (Data, "}");
-        end;
-
-      -- Start of Dump
-      begin
-        Ada_IO.Create (Data, Ada_IO.Out_File, To_Str_8 (Path));
-        for I of File.Structures       loop Put_Structure (I); end loop;
-        for I of File.Named_Structures loop Put_Structure (I); end loop;
-        Ada_IO.Close (Data);
       end;
   end;
 end;

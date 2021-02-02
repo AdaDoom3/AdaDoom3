@@ -70,7 +70,7 @@ separate (Neo.Engine) package body CPU is
                 else Unknown_Vendor);
       end;
 
-    -- ???
+    
     function Is_Enabled (Function_ID : Int_Unsigned; Register : Register_Kind; Bit : Natural) return Bool is
       Data : array (Register_Kind'Range) of Int_Unsigned :=  (others => 0);
       begin
@@ -86,7 +86,7 @@ separate (Neo.Engine) package body CPU is
         return (Data (Register) and 2**Bit) /= 0;
       end;
 
-    -- ???
+    
     Result : CPU_State (Get_Vendor);
     Data   : aliased Int_Unsigned := 0;
 
@@ -132,7 +132,7 @@ separate (Neo.Engine) package body CPU is
         Result.Has_Advanced_Vector_Extensions_Enabled :=  (Data and 16#0000_0006#) > 0;
       end if;
 
-      -- ???
+      
       return Result;
     end;
 
@@ -149,14 +149,14 @@ separate (Neo.Engine) package body CPU is
     Data_From_x87 : aliased Int_16_Unsigned := 0;
     begin
 
-      -- ???
+      
       if Get_CPU.Has_Advanced_State_Operations then
         Asm (Volatile => True,
              Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
              Template => "stmxcsr (%%eax)");
       end if;
 
-      -- ???
+      
       Asm (Volatile => True,
            Inputs   => Ptr'Asm_Input (TO_EAX, Data_From_x87'Address),
            Template => "fnstsw (%%eax)");
@@ -210,7 +210,7 @@ separate (Neo.Engine) package body CPU is
   -- Settings --
   --------------
 
-  -- ???
+  
   procedure Set_Rounding (Val : Rounding_Kind) is
     Other_Data    : aliased Int_16_Unsigned := 0;
     Data          : aliased Int_Unsigned    := 0;
@@ -246,7 +246,7 @@ separate (Neo.Engine) package body CPU is
                        -------------------------------------
     end;
 
-  -- ???
+  
   procedure Set_Precision (Val : Precision_Kind) is
     Blank_Memory : aliased Int_16_Unsigned := 0;
     begin
@@ -285,7 +285,7 @@ separate (Neo.Engine) package body CPU is
       return Result = 0;
     end;
 
-  -- ???
+  
   procedure Clear_Stack is
     Data : aliased x86_Environment_State := (others => <>);
     begin
@@ -309,7 +309,7 @@ separate (Neo.Engine) package body CPU is
                        ------------------------------------------
     end;
 
-  -- ???
+  
   procedure Put_Stack is
 
     -- Conversion functions to print numbers in different bases
@@ -500,7 +500,7 @@ begin
                        ----------------------------------
     end if;
 
-    -- ???
+    
     declare
     Other_Data     : aliased          Int_16_Unsigned := 0;
     EXCEPTION_MASK : aliased constant Int_Unsigned    := 16#0000_1F00#; -- Do not crash on any error

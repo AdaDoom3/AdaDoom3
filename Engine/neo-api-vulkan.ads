@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Neo.Core.Arrays; use Neo.Core.Arrays;
 with Neo.Core.Vectors;
@@ -109,6 +109,8 @@ package Neo.API.Vulkan is
   -- VkSamplerAddressMode                    Int_Unsigned_C
   -- VkSamplerMipmapMode                     Int_Unsigned_C
   -- VkFenceCreateFlags                      Int_Unsigned_C
+  -- GLenum                                  Int_Unsigned_C
+  -- VkAccelerationStructureNV               Ptr
   -- VkSampler                               Ptr
   -- VkFence                                 Ptr
   -- VkDeviceMemory                          Ptr
@@ -140,10 +142,10 @@ package Neo.API.Vulkan is
   ---------------
 
   -- OS driver library paths
-  VK_WIN32_DLL_NAME : aliased Str_16_C := To_Str_16_C ("vulkan-1.dll"); -- ???
+  VK_WIN32_DLL_NAME : aliased Str_16_C := To_Str_16_C ("vulkan-1.dll"); 
   
   -- http://vulkan-spec-chunked.ahcox.com/ch10s02.html
-  VK_MAX_MEMORY_TYPES : constant Int_Unsigned_C := 32; -- ???
+  VK_MAX_MEMORY_TYPES : constant Int_Unsigned_C := 32; 
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkMappedMemoryRange.html
   VK_WHOLE_SIZE : constant Int_64_Unsigned_C := Int_64_Unsigned_C'Last; -- (~0ULL)
@@ -205,6 +207,11 @@ package Neo.API.Vulkan is
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentStoreOp.html
   VK_ATTACHMENT_STORE_OP_STORE     : constant Int_Unsigned_C := 0; -- VkAttachmentStoreOp 
   VK_ATTACHMENT_STORE_OP_DONT_CARE : constant Int_Unsigned_C := 1; -- VkAttachmentStoreOp 
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDescriptorPoolCreateFlagBits.html
+  VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT : constant Int_Unsigned_C := 16#0000_0001#; -- VkDescriptorPoolCreateFlagBits
+  VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT   : constant Int_Unsigned_C := 16#0000_0002#; -- VkDescriptorPoolCreateFlagBits
+  VK_DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE     : constant Int_Unsigned_C := 16#0000_0004#; -- VkDescriptorPoolCreateFlagBits
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkAttachmentLoadOp.html
   VK_ATTACHMENT_LOAD_OP_LOAD      : constant Int_Unsigned_C := 0; -- VkAttachmentLoadOp
@@ -247,6 +254,16 @@ package Neo.API.Vulkan is
   VK_FRONT_FACE_COUNTER_CLOCKWISE : constant Int_Unsigned_C := 0; -- VkFrontFace
   VK_FRONT_FACE_CLOCKWISE         : constant Int_Unsigned_C := 1; -- VkFrontFace
 
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryTypeNV.html
+  VK_GEOMETRY_TYPE_TRIANGLES_NV : constant Int_Unsigned_C := 0;             -- VkGeometryTypeNV
+  VK_GEOMETRY_TYPE_AABBS_NV     : constant Int_Unsigned_C := 1;             -- VkGeometryTypeNV
+  VK_GEOMETRY_TYPE_MAX_ENUM_NV  : constant Int_Unsigned_C := 16#7FFF_FFFF#; -- VkGeometryTypeNV
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryFlagBitsNV.html
+  VK_GEOMETRY_OPAQUE_BIT_NV                          : Int_Unsigned_C := 16#0000_0001#; -- VkGeometryFlagBitsNV
+  VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV : Int_Unsigned_C := 16#0000_0002#; -- VkGeometryFlagBitsNV
+  VK_GEOMETRY_FLAG_BITS_MAX_ENUM_NV                  : Int_Unsigned_C := 16#7FFF_FFFF#; -- VkGeometryFlagBitsNV
+
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkCommandBufferUsageFlagBits.html
   VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      : constant Int_Unsigned_C := 1; -- VkCommandBufferUsageFlagBits
   VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT : constant Int_Unsigned_C := 2; -- VkCommandBufferUsageFlagBits
@@ -261,6 +278,12 @@ package Neo.API.Vulkan is
   VK_IMAGE_TYPE_1D : constant Int_Unsigned_C := 0; -- VkImageType
   VK_IMAGE_TYPE_2D : constant Int_Unsigned_C := 1; -- VkImageType
   VK_IMAGE_TYPE_3D : constant Int_Unsigned_C := 2; -- VkImageType
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkAccelerationStructureMemoryRequirementsTypeNV.html
+  VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV         : constant Int_Unsigned_C := 0;             -- VkAccelerationStructureMemoryRequirementsTypeNV
+  VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV  : constant Int_Unsigned_C := 1;             -- VkAccelerationStructureMemoryRequirementsTypeNV
+  VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV : constant Int_Unsigned_C := 2;             -- VkAccelerationStructureMemoryRequirementsTypeNV
+  VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_MAX_ENUM_NV       : constant Int_Unsigned_C := 16#7FFF_FFFF#; -- VkAccelerationStructureMemoryRequirementsTypeNV
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSystemAllocationScope.html
   VK_SYSTEM_ALLOCATION_SCOPE_COMMAND  : constant Int_Unsigned_C := 0; -- VkSystemAllocationScope
@@ -282,6 +305,12 @@ package Neo.API.Vulkan is
   VK_QUEUE_TRANSFER_BIT       : constant Int_Unsigned_C := 16#0000_0004#; -- VkQueueFlagBits
   VK_QUEUE_SPARSE_BINDING_BIT : constant Int_Unsigned_C := 16#0000_0008#; -- VkQueueFlagBits
 
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkRayTracingShaderGroupTypeNV.html
+  VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV              : constant Int_Unsigned_C := 0;             -- VkRayTracingShaderGroupTypeNV
+  VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV  : constant Int_Unsigned_C := 1;             -- VkRayTracingShaderGroupTypeNV
+  VK_RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV : constant Int_Unsigned_C := 2;             -- VkRayTracingShaderGroupTypeNV
+  VK_RAY_TRACING_SHADER_GROUP_TYPE_MAX_ENUM_NV             : constant Int_Unsigned_C := 16#7FFF_FFFF#; -- VkRayTracingShaderGroupTypeNV
+  
   -- http://nopper.tv/Vulkan/1.0/VkCompositeAlphaFlagBitsKHR.html
   VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR          : constant Int_Unsigned_C := 1; -- VkCompositeAlphaFlagBitsKHR
   VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  : constant Int_Unsigned_C := 2; -- VkCompositeAlphaFlagBitsKHR
@@ -349,25 +378,28 @@ package Neo.API.Vulkan is
   VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT       : constant Int_Unsigned_C := 10; -- VkDescriptorType
 
   -- http://vulkan-spec-chunked.ahcox.com/apes09.html
-  VK_LAYER_LUNARG_IMAGE_NAME                  : aliased Str_8_C := "VK_LAYER_LUNARG_image"; -- ???
-  VK_LAYER_LUNARG_OBJECT_TRACKER_NAME         : aliased Str_8_C := "VK_LAYER_LUNARG_object_tracker"; -- ???
-  VK_LAYER_LUNARG_PARAMETER_VALIDATION_NAME   : aliased Str_8_C := "VK_LAYER_LUNARG_parameter_validation"; -- ???        
-  VK_LAYER_LUNARG_API_DUMP_EXTENSION_NAME     : aliased Str_8_C := "VK_LAYER_LUNARG_api_dump"; -- ???
-  VK_LAYER_LUNARG_CORE_VALIDATION_NAME        : aliased Str_8_C := "VK_LAYER_LUNARG_core_validation"; -- ???
-  VK_LAYER_LUNARG_DEVICE_LIMITS_NAME          : aliased Str_8_C := "VK_LAYER_LUNARG_device_limits"; -- ???
-  VK_LAYER_LUNARG_SWAPCHAIN_NAME              : aliased Str_8_C := "VK_LAYER_LUNARG_swapchain"; -- ???
-  VK_LAYER_LUNARG_STANDARD_VALIDATION         : aliased Str_8_C := "VK_LAYER_LUNARG_standard_validation"; -- ???
-  VK_EXT_DEBUG_REPORT_EXTENSION_NAME          : aliased Str_8_C := "VK_EXT_debug_report";      -- ??? 
-  VK_KHR_MAINTENANCE2_NAME                    : aliased Str_8_C := "VK_KHR_maintenance2";      -- ???
-  VK_KHR_SWAPCHAIN_EXTENSION_NAME             : aliased Str_8_C := "VK_KHR_swapchain";         -- ???
-  VK_KHR_SURFACE_EXTENSION_NAME               : aliased Str_8_C := "VK_KHR_surface";           -- ???
-  VK_KHR_WIN32_SURFACE_EXTENSION_NAME         : aliased Str_8_C := "VK_KHR_win32_surface";     -- ???
-  VK_KHR_MAINTENANCE1_NAME                    : aliased Str_8_C := "VK_KHR_maintenance1"; -- ???
-  VK_KHR_BIND_MEMORY2_NAME                    : aliased Str_8_C := "VK_KHR_bind_memory2"; -- ???
-  VK_KHR_IMAGE_FORMAT_LIST_NAME               : aliased Str_8_C := "VK_KHR_image_format_list"; -- ???
-  VK_KHR_GET_MEMORY_REQUIREMENTS2_NAME        : aliased Str_8_C := "VK_KHR_get_memory_requirements2"; -- ???
-  VK_KHR_GET_SURFACE_CAPABILITIES2_NAME       : aliased Str_8_C := "VK_KHR_get_surface_capabilities2"; -- ???
-  VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES2_NAME : aliased Str_8_C := "VK_KHR_get_physical_device_properties2"; -- ???
+  VK_LAYER_KHRONOS_VALIDATION            : aliased Str_8_C := "VK_LAYER_KHRONOS_validation";            
+  VK_LAYER_LUNARG_IMAGE                  : aliased Str_8_C := "VK_LAYER_LUNARG_image";                  
+  VK_LAYER_LUNARG_OBJECT_TRACKER         : aliased Str_8_C := "VK_LAYER_LUNARG_object_tracker";         
+  VK_LAYER_LUNARG_PARAMETER_VALIDATION   : aliased Str_8_C := "VK_LAYER_LUNARG_parameter_validation";           
+  VK_LAYER_LUNARG_API_DUMP_EXTENSION     : aliased Str_8_C := "VK_LAYER_LUNARG_api_dump";               
+  VK_LAYER_LUNARG_CORE_VALIDATION        : aliased Str_8_C := "VK_LAYER_LUNARG_core_validation";        
+  VK_LAYER_LUNARG_DEVICE_LIMITS          : aliased Str_8_C := "VK_LAYER_LUNARG_device_limits";          
+  VK_LAYER_LUNARG_SWAPCHAIN              : aliased Str_8_C := "VK_LAYER_LUNARG_swapchain";              
+  VK_LAYER_LUNARG_STANDARD_VALIDATION    : aliased Str_8_C := "VK_LAYER_LUNARG_standard_validation";    
+  VK_EXT_DEBUG_REPORT_EXTENSION          : aliased Str_8_C := "VK_EXT_debug_report";  
+  VK_EXT_DEBUG_UTILS                     : aliased Str_8_C := "VK_EXT_debug_utils";
+  VK_KHR_SWAPCHAIN_EXTENSION             : aliased Str_8_C := "VK_KHR_swapchain";                       
+  VK_KHR_SURFACE_EXTENSION               : aliased Str_8_C := "VK_KHR_surface";                         
+  VK_KHR_WIN32_SURFACE_EXTENSION         : aliased Str_8_C := "VK_KHR_win32_surface";                   
+  VK_KHR_MAINTENANCE3                    : aliased Str_8_C := "VK_KHR_maintenance3";                    
+  VK_KHR_MAINTENANCE2                    : aliased Str_8_C := "VK_KHR_maintenance2";                     
+  VK_KHR_MAINTENANCE1                    : aliased Str_8_C := "VK_KHR_maintenance1";                    
+  VK_KHR_BIND_MEMORY2                    : aliased Str_8_C := "VK_KHR_bind_memory2";                    
+  VK_KHR_IMAGE_FORMAT_LIST               : aliased Str_8_C := "VK_KHR_image_format_list";               
+  VK_KHR_GET_MEMORY_REQUIREMENTS2        : aliased Str_8_C := "VK_KHR_get_memory_requirements2";        
+  VK_KHR_GET_SURFACE_CAPABILITIES2       : aliased Str_8_C := "VK_KHR_get_surface_capabilities2";       
+  VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES2 : aliased Str_8_C := "VK_KHR_get_physical_device_properties2"; 
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkSamplerAddressMode.html
   VK_SAMPLER_ADDRESS_MODE_REPEAT               : constant Int_Unsigned_C := 0; -- VkSamplerAddressMode
@@ -596,272 +628,697 @@ package Neo.API.Vulkan is
   VK_INCOMPLETE                     : constant Int_Unsigned_C := 5;                                  -- VkResult
   VK_SUBOPTIMAL_KHR                 : constant Int_Unsigned_C := 1000001003;                         -- VkResult
   VK_ERROR_OUT_OF_DATE_KHR          : constant Int_Unsigned_C := 3294966292;                         -- VkResult
-  VK_ERROR_SURFACE_LOST_KHR         : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000000); -- VkResult
-  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000000001); -- VkResult
-  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000003001); -- VkResult
-  VK_ERROR_VALIDATION_FAILED_EXT    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000011001); -- VkResult
-  VK_ERROR_INVALID_SHADER_NV        : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1000012000); -- VkResult
-  VK_ERROR_OUT_OF_HOST_MEMORY       : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-1);          -- VkResult
-  VK_ERROR_OUT_OF_DEVICE_MEMORY     : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-2);          -- VkResult
-  VK_ERROR_INITIALIZATION_FAILED    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-3);          -- VkResult
-  VK_ERROR_DEVICE_LOST              : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-4);          -- VkResult
-  VK_ERROR_MEMORY_MAP_FAILED        : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-5);          -- VkResult
-  VK_ERROR_LAYER_NOT_PRESENT        : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-6);          -- VkResult
-  VK_ERROR_EXTENSION_NOT_PRESENT    : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-7);          -- VkResult
-  VK_ERROR_FEATURE_NOT_PRESENT      : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-8);          -- VkResult
-  VK_ERROR_INCOMPATIBLE_DRIVER      : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-9);          -- VkResult
-  VK_ERROR_TOO_MANY_OBJECTS         : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-10);         -- VkResult
-  VK_ERROR_FORMAT_NOT_SUPPORTED     : constant Int_Unsigned_C := To_Int_32_Unsigned_C (-11);         -- VkResult
+  VK_ERROR_OUT_OF_POOL_MEMORY       : constant Int_Unsigned_C := 16#C464_2878#; -- To_Int_32_Unsigned_C (-1000069000); -- VkResult
+  VK_ERROR_SURFACE_LOST_KHR         : constant Int_Unsigned_C := 16#C465_3600#; -- To_Int_32_Unsigned_C (-1000000000); -- VkResult
+  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR : constant Int_Unsigned_C := 16#C465_35FF#; -- To_Int_32_Unsigned_C (-1000000001); -- VkResult
+  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR : constant Int_Unsigned_C := 16#C465_2A47#; -- To_Int_32_Unsigned_C (-1000003001); -- VkResult
+  VK_ERROR_VALIDATION_FAILED_EXT    : constant Int_Unsigned_C := 16#C465_0B07#; -- To_Int_32_Unsigned_C (-1000011001); -- VkResult
+  VK_ERROR_INVALID_SHADER_NV        : constant Int_Unsigned_C := 16#C465_0720#; -- To_Int_32_Unsigned_C (-1000012000); -- VkResult
+  --VK_ERROR_INVALID_EXTERNAL_HANDLE  : constant Int_Unsigned_C := 16#FFFF_FFFF#; -- To_Int_32_Unsigned_C (-1000072003); -- VkResult 
+  --VK_ERROR_FRAGMENTATION_EXT        : constant Int_Unsigned_C := 16#FFFF_FFFF#; -- To_Int_32_Unsigned_C (-1000161000); -- VkResult 
+  --VK_ERROR_NOT_PERMITTED_EXT        : constant Int_Unsigned_C := 16#FFFF_FFFF#; -- To_Int_32_Unsigned_C (-1000174001); -- VkResult 
+  VK_ERROR_OUT_OF_HOST_MEMORY       : constant Int_Unsigned_C := 16#FFFF_FFFF#; -- To_Int_32_Unsigned_C (-1);          -- VkResult
+  VK_ERROR_OUT_OF_DEVICE_MEMORY     : constant Int_Unsigned_C := 16#FFFF_FFFE#; -- To_Int_32_Unsigned_C (-2);          -- VkResult
+  VK_ERROR_INITIALIZATION_FAILED    : constant Int_Unsigned_C := 16#FFFF_FFFD#; -- To_Int_32_Unsigned_C (-3);          -- VkResult
+  VK_ERROR_DEVICE_LOST              : constant Int_Unsigned_C := 16#FFFF_FFFC#; -- To_Int_32_Unsigned_C (-4);          -- VkResult
+  VK_ERROR_MEMORY_MAP_FAILED        : constant Int_Unsigned_C := 16#FFFF_FFFB#; -- To_Int_32_Unsigned_C (-5);          -- VkResult
+  VK_ERROR_LAYER_NOT_PRESENT        : constant Int_Unsigned_C := 16#FFFF_FFFA#; -- To_Int_32_Unsigned_C (-6);          -- VkResult
+  VK_ERROR_EXTENSION_NOT_PRESENT    : constant Int_Unsigned_C := 16#FFFF_FFF9#; -- To_Int_32_Unsigned_C (-7);          -- VkResult
+  VK_ERROR_FEATURE_NOT_PRESENT      : constant Int_Unsigned_C := 16#FFFF_FFF8#; -- To_Int_32_Unsigned_C (-8);          -- VkResult
+  VK_ERROR_INCOMPATIBLE_DRIVER      : constant Int_Unsigned_C := 16#FFFF_FFF7#; -- To_Int_32_Unsigned_C (-9);          -- VkResult
+  VK_ERROR_TOO_MANY_OBJECTS         : constant Int_Unsigned_C := 16#FFFF_FFF6#; -- To_Int_32_Unsigned_C (-10);         -- VkResult
+  VK_ERROR_FORMAT_NOT_SUPPORTED     : constant Int_Unsigned_C := 16#FFFF_FFF5#; -- To_Int_32_Unsigned_C (-11);         -- VkResult
+  --VK_ERROR_FRAGMENTED_POOL          : constant Int_Unsigned_C := 16#FFFF_FFF5#; -- To_Int_32_Unsigned_C (-12);         -- VkResult
 
-  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkStructureType.html
-  VK_STRUCTURE_TYPE_APPLICATION_INFO                          : constant Int_Unsigned_C := 0;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO                      : constant Int_Unsigned_C := 1;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO                  : constant Int_Unsigned_C := 2;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO                        : constant Int_Unsigned_C := 3;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_SUBMIT_INFO                               : constant Int_Unsigned_C := 4;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO                      : constant Int_Unsigned_C := 5;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE                       : constant Int_Unsigned_C := 6;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_BIND_SPARSE_INFO                          : constant Int_Unsigned_C := 7;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_FENCE_CREATE_INFO                         : constant Int_Unsigned_C := 8;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO                     : constant Int_Unsigned_C := 9;          -- VkStructureType 
-  VK_STRUCTURE_TYPE_EVENT_CREATE_INFO                         : constant Int_Unsigned_C := 10;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO                    : constant Int_Unsigned_C := 11;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO                        : constant Int_Unsigned_C := 12;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO                   : constant Int_Unsigned_C := 13;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO                         : constant Int_Unsigned_C := 14;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO                    : constant Int_Unsigned_C := 15;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO                 : constant Int_Unsigned_C := 16;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO                : constant Int_Unsigned_C := 17;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO         : constant Int_Unsigned_C := 18;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO   : constant Int_Unsigned_C := 19;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO : constant Int_Unsigned_C := 20;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO   : constant Int_Unsigned_C := 21;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO       : constant Int_Unsigned_C := 22;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO  : constant Int_Unsigned_C := 23;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO    : constant Int_Unsigned_C := 24;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO  : constant Int_Unsigned_C := 25;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO    : constant Int_Unsigned_C := 26;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO        : constant Int_Unsigned_C := 27;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO             : constant Int_Unsigned_C := 28;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO              : constant Int_Unsigned_C := 29;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO               : constant Int_Unsigned_C := 30;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO                       : constant Int_Unsigned_C := 31;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO         : constant Int_Unsigned_C := 32;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO               : constant Int_Unsigned_C := 33;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO              : constant Int_Unsigned_C := 34;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET                      : constant Int_Unsigned_C := 35;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET                       : constant Int_Unsigned_C := 36;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO                   : constant Int_Unsigned_C := 37;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO                   : constant Int_Unsigned_C := 38;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO                  : constant Int_Unsigned_C := 39;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO              : constant Int_Unsigned_C := 40;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO           : constant Int_Unsigned_C := 41;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO                 : constant Int_Unsigned_C := 42;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO                    : constant Int_Unsigned_C := 43;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER                     : constant Int_Unsigned_C := 44;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER                      : constant Int_Unsigned_C := 45;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_MEMORY_BARRIER                            : constant Int_Unsigned_C := 46;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO               : constant Int_Unsigned_C := 47;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO                 : constant Int_Unsigned_C := 48;         -- VkStructureType 
-  VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR                 : constant Int_Unsigned_C := 1000001000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_PRESENT_INFO_KHR                          : constant Int_Unsigned_C := 1000001001; -- VkStructureType 
-  VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR              : constant Int_Unsigned_C := 1000002000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR           : constant Int_Unsigned_C := 1000002001; -- VkStructureType 
-  VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR                  : constant Int_Unsigned_C := 1000003000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR              : constant Int_Unsigned_C := 1000004000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR               : constant Int_Unsigned_C := 1000005000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR           : constant Int_Unsigned_C := 1000006000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR               : constant Int_Unsigned_C := 1000007000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR           : constant Int_Unsigned_C := 1000008000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR             : constant Int_Unsigned_C := 1000009000; -- VkStructureType 
-  VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT     : constant Int_Unsigned_C := 1000011000; -- VkStructureType
-
+  -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkStructureType.html  
+  VK_STRUCTURE_TYPE_APPLICATION_INFO                                   : constant Int_Unsigned_C := 0;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO                               : constant Int_Unsigned_C := 1;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO                           : constant Int_Unsigned_C := 2;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO                                 : constant Int_Unsigned_C := 3;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_SUBMIT_INFO                                        : constant Int_Unsigned_C := 4;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO                               : constant Int_Unsigned_C := 5;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE                                : constant Int_Unsigned_C := 6;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_BIND_SPARSE_INFO                                   : constant Int_Unsigned_C := 7;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_FENCE_CREATE_INFO                                  : constant Int_Unsigned_C := 8;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO                              : constant Int_Unsigned_C := 9;          -- VkStructureType 
+  VK_STRUCTURE_TYPE_EVENT_CREATE_INFO                                  : constant Int_Unsigned_C := 10;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO                             : constant Int_Unsigned_C := 11;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO                                 : constant Int_Unsigned_C := 12;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO                            : constant Int_Unsigned_C := 13;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO                                  : constant Int_Unsigned_C := 14;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO                             : constant Int_Unsigned_C := 15;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO                          : constant Int_Unsigned_C := 16;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO                         : constant Int_Unsigned_C := 17;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO                  : constant Int_Unsigned_C := 18;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO            : constant Int_Unsigned_C := 19;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO          : constant Int_Unsigned_C := 20;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO            : constant Int_Unsigned_C := 21;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO                : constant Int_Unsigned_C := 22;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO           : constant Int_Unsigned_C := 23;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO             : constant Int_Unsigned_C := 24;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO           : constant Int_Unsigned_C := 25;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO             : constant Int_Unsigned_C := 26;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO                 : constant Int_Unsigned_C := 27;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO                      : constant Int_Unsigned_C := 28;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO                       : constant Int_Unsigned_C := 29;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO                        : constant Int_Unsigned_C := 30;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO                                : constant Int_Unsigned_C := 31;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO                  : constant Int_Unsigned_C := 32;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO                        : constant Int_Unsigned_C := 33;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO                       : constant Int_Unsigned_C := 34;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET                               : constant Int_Unsigned_C := 35;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET                                : constant Int_Unsigned_C := 36;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO                            : constant Int_Unsigned_C := 37;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO                            : constant Int_Unsigned_C := 38;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO                           : constant Int_Unsigned_C := 39;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO                       : constant Int_Unsigned_C := 40;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO                    : constant Int_Unsigned_C := 41;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO                          : constant Int_Unsigned_C := 42;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO                             : constant Int_Unsigned_C := 43;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER                              : constant Int_Unsigned_C := 44;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER                               : constant Int_Unsigned_C := 45;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_MEMORY_BARRIER                                     : constant Int_Unsigned_C := 46;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO                        : constant Int_Unsigned_C := 47;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO                          : constant Int_Unsigned_C := 48;         -- VkStructureType 
+  VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR                          : constant Int_Unsigned_C := 1000001000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_PRESENT_INFO_KHR                                   : constant Int_Unsigned_C := 1000001001; -- VkStructureType 
+  VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR                       : constant Int_Unsigned_C := 1000002000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR                    : constant Int_Unsigned_C := 1000002001; -- VkStructureType 
+  VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR                           : constant Int_Unsigned_C := 1000003000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR                       : constant Int_Unsigned_C := 1000004000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR                        : constant Int_Unsigned_C := 1000005000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR                    : constant Int_Unsigned_C := 1000006000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR                        : constant Int_Unsigned_C := 1000007000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR                    : constant Int_Unsigned_C := 1000008000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR                      : constant Int_Unsigned_C := 1000009000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT              : constant Int_Unsigned_C := 1000011000; -- VkStructureType
+  VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV                                   : constant Int_Unsigned_C := 1000165005; -- VkStructureType   
+  VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV                : constant Int_Unsigned_C := 1000165000; -- VkStructureType 
+  VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV            : constant Int_Unsigned_C := 1000165011; -- VkStructureType      
+  VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV         : constant Int_Unsigned_C := 1000165006; -- VkStructureType    
+  VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV : constant Int_Unsigned_C := 1000165008; -- VkStructureType  
+  VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV                     : constant Int_Unsigned_C := 1000165012; -- VkStructureType      
+  VK_STRUCTURE_TYPE_GEOMETRY_NV                                        : constant Int_Unsigned_C := 1000165003; -- VkStructureType 
+  VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV                              : constant Int_Unsigned_C := 1000165004; -- VkStructureType  
+    
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkFormat.html
-  VK_FORMAT_UNDEFINED                  : constant Int_Unsigned_C := 0;   -- VkFormat
-  VK_FORMAT_R4G4_UNORM_PACK8           : constant Int_Unsigned_C := 1;   -- VkFormat
-  VK_FORMAT_R4G4B4A4_UNORM_PACK16      : constant Int_Unsigned_C := 2;   -- VkFormat
-  VK_FORMAT_B4G4R4A4_UNORM_PACK16      : constant Int_Unsigned_C := 3;   -- VkFormat
-  VK_FORMAT_R5G6B5_UNORM_PACK16        : constant Int_Unsigned_C := 4;   -- VkFormat
-  VK_FORMAT_B5G6R5_UNORM_PACK16        : constant Int_Unsigned_C := 5;   -- VkFormat
-  VK_FORMAT_R5G5B5A1_UNORM_PACK16      : constant Int_Unsigned_C := 6;   -- VkFormat
-  VK_FORMAT_B5G5R5A1_UNORM_PACK16      : constant Int_Unsigned_C := 7;   -- VkFormat
-  VK_FORMAT_A1R5G5B5_UNORM_PACK16      : constant Int_Unsigned_C := 8;   -- VkFormat
-  VK_FORMAT_R8_UNORM                   : constant Int_Unsigned_C := 9;   -- VkFormat
-  VK_FORMAT_R8_SNORM                   : constant Int_Unsigned_C := 10;  -- VkFormat
-  VK_FORMAT_R8_USCALED                 : constant Int_Unsigned_C := 11;  -- VkFormat
-  VK_FORMAT_R8_SSCALED                 : constant Int_Unsigned_C := 12;  -- VkFormat
-  VK_FORMAT_R8_UINT                    : constant Int_Unsigned_C := 13;  -- VkFormat
-  VK_FORMAT_R8_SINT                    : constant Int_Unsigned_C := 14;  -- VkFormat
-  VK_FORMAT_R8_SRGB                    : constant Int_Unsigned_C := 15;  -- VkFormat
-  VK_FORMAT_R8G8_UNORM                 : constant Int_Unsigned_C := 16;  -- VkFormat
-  VK_FORMAT_R8G8_SNORM                 : constant Int_Unsigned_C := 17;  -- VkFormat
-  VK_FORMAT_R8G8_USCALED               : constant Int_Unsigned_C := 18;  -- VkFormat
-  VK_FORMAT_R8G8_SSCALED               : constant Int_Unsigned_C := 19;  -- VkFormat
-  VK_FORMAT_R8G8_UINT                  : constant Int_Unsigned_C := 20;  -- VkFormat
-  VK_FORMAT_R8G8_SINT                  : constant Int_Unsigned_C := 21;  -- VkFormat
-  VK_FORMAT_R8G8_SRGB                  : constant Int_Unsigned_C := 22;  -- VkFormat
-  VK_FORMAT_R8G8B8_UNORM               : constant Int_Unsigned_C := 23;  -- VkFormat
-  VK_FORMAT_R8G8B8_SNORM               : constant Int_Unsigned_C := 24;  -- VkFormat
-  VK_FORMAT_R8G8B8_USCALED             : constant Int_Unsigned_C := 25;  -- VkFormat
-  VK_FORMAT_R8G8B8_SSCALED             : constant Int_Unsigned_C := 26;  -- VkFormat
-  VK_FORMAT_R8G8B8_UINT                : constant Int_Unsigned_C := 27;  -- VkFormat
-  VK_FORMAT_R8G8B8_SINT                : constant Int_Unsigned_C := 28;  -- VkFormat
-  VK_FORMAT_R8G8B8_SRGB                : constant Int_Unsigned_C := 29;  -- VkFormat
-  VK_FORMAT_B8G8R8_UNORM               : constant Int_Unsigned_C := 30;  -- VkFormat
-  VK_FORMAT_B8G8R8_SNORM               : constant Int_Unsigned_C := 31;  -- VkFormat
-  VK_FORMAT_B8G8R8_USCALED             : constant Int_Unsigned_C := 32;  -- VkFormat
-  VK_FORMAT_B8G8R8_SSCALED             : constant Int_Unsigned_C := 33;  -- VkFormat
-  VK_FORMAT_B8G8R8_UINT                : constant Int_Unsigned_C := 34;  -- VkFormat
-  VK_FORMAT_B8G8R8_SINT                : constant Int_Unsigned_C := 35;  -- VkFormat
-  VK_FORMAT_B8G8R8_SRGB                : constant Int_Unsigned_C := 36;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_UNORM             : constant Int_Unsigned_C := 37;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_SNORM             : constant Int_Unsigned_C := 38;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_USCALED           : constant Int_Unsigned_C := 39;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_SSCALED           : constant Int_Unsigned_C := 40;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_UINT              : constant Int_Unsigned_C := 41;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_SINT              : constant Int_Unsigned_C := 42;  -- VkFormat
-  VK_FORMAT_R8G8B8A8_SRGB              : constant Int_Unsigned_C := 43;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_UNORM             : constant Int_Unsigned_C := 44;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_SNORM             : constant Int_Unsigned_C := 45;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_USCALED           : constant Int_Unsigned_C := 46;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_SSCALED           : constant Int_Unsigned_C := 47;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_UINT              : constant Int_Unsigned_C := 48;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_SINT              : constant Int_Unsigned_C := 49;  -- VkFormat
-  VK_FORMAT_B8G8R8A8_SRGB              : constant Int_Unsigned_C := 50;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_UNORM_PACK32      : constant Int_Unsigned_C := 51;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_SNORM_PACK32      : constant Int_Unsigned_C := 52;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_USCALED_PACK32    : constant Int_Unsigned_C := 53;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_SSCALED_PACK32    : constant Int_Unsigned_C := 54;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_UINT_PACK32       : constant Int_Unsigned_C := 55;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_SINT_PACK32       : constant Int_Unsigned_C := 56;  -- VkFormat
-  VK_FORMAT_A8B8G8R8_SRGB_PACK32       : constant Int_Unsigned_C := 57;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_UNORM_PACK32   : constant Int_Unsigned_C := 58;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_SNORM_PACK32   : constant Int_Unsigned_C := 59;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_USCALED_PACK32 : constant Int_Unsigned_C := 60;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_SSCALED_PACK32 : constant Int_Unsigned_C := 61;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_UINT_PACK32    : constant Int_Unsigned_C := 62;  -- VkFormat
-  VK_FORMAT_A2R10G10B10_SINT_PACK32    : constant Int_Unsigned_C := 63;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_UNORM_PACK32   : constant Int_Unsigned_C := 64;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_SNORM_PACK32   : constant Int_Unsigned_C := 65;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_USCALED_PACK32 : constant Int_Unsigned_C := 66;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_SSCALED_PACK32 : constant Int_Unsigned_C := 67;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_UINT_PACK32    : constant Int_Unsigned_C := 68;  -- VkFormat
-  VK_FORMAT_A2B10G10R10_SINT_PACK32    : constant Int_Unsigned_C := 69;  -- VkFormat
-  VK_FORMAT_R16_UNORM                  : constant Int_Unsigned_C := 70;  -- VkFormat
-  VK_FORMAT_R16_SNORM                  : constant Int_Unsigned_C := 71;  -- VkFormat
-  VK_FORMAT_R16_USCALED                : constant Int_Unsigned_C := 72;  -- VkFormat
-  VK_FORMAT_R16_SSCALED                : constant Int_Unsigned_C := 73;  -- VkFormat
-  VK_FORMAT_R16_UINT                   : constant Int_Unsigned_C := 74;  -- VkFormat
-  VK_FORMAT_R16_SINT                   : constant Int_Unsigned_C := 75;  -- VkFormat
-  VK_FORMAT_R16_SFLOAT                 : constant Int_Unsigned_C := 76;  -- VkFormat
-  VK_FORMAT_R16G16_UNORM               : constant Int_Unsigned_C := 77;  -- VkFormat
-  VK_FORMAT_R16G16_SNORM               : constant Int_Unsigned_C := 78;  -- VkFormat
-  VK_FORMAT_R16G16_USCALED             : constant Int_Unsigned_C := 79;  -- VkFormat
-  VK_FORMAT_R16G16_SSCALED             : constant Int_Unsigned_C := 80;  -- VkFormat
-  VK_FORMAT_R16G16_UINT                : constant Int_Unsigned_C := 81;  -- VkFormat
-  VK_FORMAT_R16G16_SINT                : constant Int_Unsigned_C := 82;  -- VkFormat
-  VK_FORMAT_R16G16_SFLOAT              : constant Int_Unsigned_C := 83;  -- VkFormat
-  VK_FORMAT_R16G16B16_UNORM            : constant Int_Unsigned_C := 84;  -- VkFormat
-  VK_FORMAT_R16G16B16_SNORM            : constant Int_Unsigned_C := 85;  -- VkFormat
-  VK_FORMAT_R16G16B16_USCALED          : constant Int_Unsigned_C := 86;  -- VkFormat
-  VK_FORMAT_R16G16B16_SSCALED          : constant Int_Unsigned_C := 87;  -- VkFormat
-  VK_FORMAT_R16G16B16_UINT             : constant Int_Unsigned_C := 88;  -- VkFormat
-  VK_FORMAT_R16G16B16_SINT             : constant Int_Unsigned_C := 89;  -- VkFormat
-  VK_FORMAT_R16G16B16_SFLOAT           : constant Int_Unsigned_C := 90;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_UNORM         : constant Int_Unsigned_C := 91;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_SNORM         : constant Int_Unsigned_C := 92;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_USCALED       : constant Int_Unsigned_C := 93;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_SSCALED       : constant Int_Unsigned_C := 94;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_UINT          : constant Int_Unsigned_C := 95;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_SINT          : constant Int_Unsigned_C := 96;  -- VkFormat
-  VK_FORMAT_R16G16B16A16_SFLOAT        : constant Int_Unsigned_C := 97;  -- VkFormat
-  VK_FORMAT_R32_UINT                   : constant Int_Unsigned_C := 98;  -- VkFormat
-  VK_FORMAT_R32_SINT                   : constant Int_Unsigned_C := 99;  -- VkFormat
-  VK_FORMAT_R32_SFLOAT                 : constant Int_Unsigned_C := 100; -- VkFormat
-  VK_FORMAT_R32G32_UINT                : constant Int_Unsigned_C := 101; -- VkFormat
-  VK_FORMAT_R32G32_SINT                : constant Int_Unsigned_C := 102; -- VkFormat
-  VK_FORMAT_R32G32_SFLOAT              : constant Int_Unsigned_C := 103; -- VkFormat
-  VK_FORMAT_R32G32B32_UINT             : constant Int_Unsigned_C := 104; -- VkFormat
-  VK_FORMAT_R32G32B32_SINT             : constant Int_Unsigned_C := 105; -- VkFormat
-  VK_FORMAT_R32G32B32_SFLOAT           : constant Int_Unsigned_C := 106; -- VkFormat
-  VK_FORMAT_R32G32B32A32_UINT          : constant Int_Unsigned_C := 107; -- VkFormat
-  VK_FORMAT_R32G32B32A32_SINT          : constant Int_Unsigned_C := 108; -- VkFormat
-  VK_FORMAT_R32G32B32A32_SFLOAT        : constant Int_Unsigned_C := 109; -- VkFormat
-  VK_FORMAT_R64_UINT                   : constant Int_Unsigned_C := 110; -- VkFormat
-  VK_FORMAT_R64_SINT                   : constant Int_Unsigned_C := 111; -- VkFormat
-  VK_FORMAT_R64_SFLOAT                 : constant Int_Unsigned_C := 112; -- VkFormat
-  VK_FORMAT_R64G64_UINT                : constant Int_Unsigned_C := 113; -- VkFormat
-  VK_FORMAT_R64G64_SINT                : constant Int_Unsigned_C := 114; -- VkFormat
-  VK_FORMAT_R64G64_SFLOAT              : constant Int_Unsigned_C := 115; -- VkFormat
-  VK_FORMAT_R64G64B64_UINT             : constant Int_Unsigned_C := 116; -- VkFormat
-  VK_FORMAT_R64G64B64_SINT             : constant Int_Unsigned_C := 117; -- VkFormat
-  VK_FORMAT_R64G64B64_SFLOAT           : constant Int_Unsigned_C := 118; -- VkFormat
-  VK_FORMAT_R64G64B64A64_UINT          : constant Int_Unsigned_C := 119; -- VkFormat
-  VK_FORMAT_R64G64B64A64_SINT          : constant Int_Unsigned_C := 120; -- VkFormat
-  VK_FORMAT_R64G64B64A64_SFLOAT        : constant Int_Unsigned_C := 121; -- VkFormat
-  VK_FORMAT_B10G11R11_UFLOAT_PACK32    : constant Int_Unsigned_C := 122; -- VkFormat
-  VK_FORMAT_E5B9G9R9_UFLOAT_PACK32     : constant Int_Unsigned_C := 123; -- VkFormat
-  VK_FORMAT_D16_UNORM                  : constant Int_Unsigned_C := 124; -- VkFormat
-  VK_FORMAT_X8_D24_UNORM_PACK32        : constant Int_Unsigned_C := 125; -- VkFormat
-  VK_FORMAT_D32_SFLOAT                 : constant Int_Unsigned_C := 126; -- VkFormat
-  VK_FORMAT_S8_UINT                    : constant Int_Unsigned_C := 127; -- VkFormat
-  VK_FORMAT_D16_UNORM_S8_UINT          : constant Int_Unsigned_C := 128; -- VkFormat
-  VK_FORMAT_D24_UNORM_S8_UINT          : constant Int_Unsigned_C := 129; -- VkFormat
-  VK_FORMAT_D32_SFLOAT_S8_UINT         : constant Int_Unsigned_C := 130; -- VkFormat
-  VK_FORMAT_BC1_RGB_UNORM_BLOCK        : constant Int_Unsigned_C := 131; -- VkFormat
-  VK_FORMAT_BC1_RGB_SRGB_BLOCK         : constant Int_Unsigned_C := 132; -- VkFormat
-  VK_FORMAT_BC1_RGBA_UNORM_BLOCK       : constant Int_Unsigned_C := 133; -- VkFormat
-  VK_FORMAT_BC1_RGBA_SRGB_BLOCK        : constant Int_Unsigned_C := 134; -- VkFormat
-  VK_FORMAT_BC2_UNORM_BLOCK            : constant Int_Unsigned_C := 135; -- VkFormat
-  VK_FORMAT_BC2_SRGB_BLOCK             : constant Int_Unsigned_C := 136; -- VkFormat
-  VK_FORMAT_BC3_UNORM_BLOCK            : constant Int_Unsigned_C := 137; -- VkFormat
-  VK_FORMAT_BC3_SRGB_BLOCK             : constant Int_Unsigned_C := 138; -- VkFormat
-  VK_FORMAT_BC4_UNORM_BLOCK            : constant Int_Unsigned_C := 139; -- VkFormat
-  VK_FORMAT_BC4_SNORM_BLOCK            : constant Int_Unsigned_C := 140; -- VkFormat
-  VK_FORMAT_BC5_UNORM_BLOCK            : constant Int_Unsigned_C := 141; -- VkFormat
-  VK_FORMAT_BC5_SNORM_BLOCK            : constant Int_Unsigned_C := 142; -- VkFormat
-  VK_FORMAT_BC6H_UFLOAT_BLOCK          : constant Int_Unsigned_C := 143; -- VkFormat
-  VK_FORMAT_BC6H_SFLOAT_BLOCK          : constant Int_Unsigned_C := 144; -- VkFormat
-  VK_FORMAT_BC7_UNORM_BLOCK            : constant Int_Unsigned_C := 145; -- VkFormat
-  VK_FORMAT_BC7_SRGB_BLOCK             : constant Int_Unsigned_C := 146; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK    : constant Int_Unsigned_C := 147; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK     : constant Int_Unsigned_C := 148; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK  : constant Int_Unsigned_C := 149; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK   : constant Int_Unsigned_C := 150; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK  : constant Int_Unsigned_C := 151; -- VkFormat
-  VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK   : constant Int_Unsigned_C := 152; -- VkFormat
-  VK_FORMAT_EAC_R11_UNORM_BLOCK        : constant Int_Unsigned_C := 153; -- VkFormat
-  VK_FORMAT_EAC_R11_SNORM_BLOCK        : constant Int_Unsigned_C := 154; -- VkFormat
-  VK_FORMAT_EAC_R11G11_UNORM_BLOCK     : constant Int_Unsigned_C := 155; -- VkFormat
-  VK_FORMAT_EAC_R11G11_SNORM_BLOCK     : constant Int_Unsigned_C := 156; -- VkFormat
-  VK_FORMAT_ASTC_4x4_UNORM_BLOCK       : constant Int_Unsigned_C := 157; -- VkFormat
-  VK_FORMAT_ASTC_4x4_SRGB_BLOCK        : constant Int_Unsigned_C := 158; -- VkFormat
-  VK_FORMAT_ASTC_5x4_UNORM_BLOCK       : constant Int_Unsigned_C := 159; -- VkFormat
-  VK_FORMAT_ASTC_5x4_SRGB_BLOCK        : constant Int_Unsigned_C := 160; -- VkFormat
-  VK_FORMAT_ASTC_5x5_UNORM_BLOCK       : constant Int_Unsigned_C := 161; -- VkFormat
-  VK_FORMAT_ASTC_5x5_SRGB_BLOCK        : constant Int_Unsigned_C := 162; -- VkFormat
-  VK_FORMAT_ASTC_6x5_UNORM_BLOCK       : constant Int_Unsigned_C := 163; -- VkFormat
-  VK_FORMAT_ASTC_6x5_SRGB_BLOCK        : constant Int_Unsigned_C := 164; -- VkFormat
-  VK_FORMAT_ASTC_6x6_UNORM_BLOCK       : constant Int_Unsigned_C := 165; -- VkFormat
-  VK_FORMAT_ASTC_6x6_SRGB_BLOCK        : constant Int_Unsigned_C := 166; -- VkFormat
-  VK_FORMAT_ASTC_8x5_UNORM_BLOCK       : constant Int_Unsigned_C := 167; -- VkFormat
-  VK_FORMAT_ASTC_8x5_SRGB_BLOCK        : constant Int_Unsigned_C := 168; -- VkFormat
-  VK_FORMAT_ASTC_8x6_UNORM_BLOCK       : constant Int_Unsigned_C := 169; -- VkFormat
-  VK_FORMAT_ASTC_8x6_SRGB_BLOCK        : constant Int_Unsigned_C := 170; -- VkFormat
-  VK_FORMAT_ASTC_8x8_UNORM_BLOCK       : constant Int_Unsigned_C := 171; -- VkFormat
-  VK_FORMAT_ASTC_8x8_SRGB_BLOCK        : constant Int_Unsigned_C := 172; -- VkFormat
-  VK_FORMAT_ASTC_10x5_UNORM_BLOCK      : constant Int_Unsigned_C := 173; -- VkFormat
-  VK_FORMAT_ASTC_10x5_SRGB_BLOCK       : constant Int_Unsigned_C := 174; -- VkFormat
-  VK_FORMAT_ASTC_10x6_UNORM_BLOCK      : constant Int_Unsigned_C := 175; -- VkFormat
-  VK_FORMAT_ASTC_10x6_SRGB_BLOCK       : constant Int_Unsigned_C := 176; -- VkFormat
-  VK_FORMAT_ASTC_10x8_UNORM_BLOCK      : constant Int_Unsigned_C := 177; -- VkFormat
-  VK_FORMAT_ASTC_10x8_SRGB_BLOCK       : constant Int_Unsigned_C := 178; -- VkFormat
-  VK_FORMAT_ASTC_10x10_UNORM_BLOCK     : constant Int_Unsigned_C := 179; -- VkFormat
-  VK_FORMAT_ASTC_10x10_SRGB_BLOCK      : constant Int_Unsigned_C := 180; -- VkFormat
-  VK_FORMAT_ASTC_12x10_UNORM_BLOCK     : constant Int_Unsigned_C := 181; -- VkFormat
-  VK_FORMAT_ASTC_12x10_SRGB_BLOCK      : constant Int_Unsigned_C := 182; -- VkFormat
-  VK_FORMAT_ASTC_12x12_UNORM_BLOCK     : constant Int_Unsigned_C := 183; -- VkFormat
-  VK_FORMAT_ASTC_12x12_SRGB_BLOCK      : constant Int_Unsigned_C := 184; -- VkFormat
+  VK_FORMAT_UNDEFINED                                      : constant Int_Unsigned_C := 0;          -- VkFormat
+  VK_FORMAT_R4G4_UNORM_PACK8                               : constant Int_Unsigned_C := 1;          -- VkFormat
+  VK_FORMAT_R4G4B4A4_UNORM_PACK16                          : constant Int_Unsigned_C := 2;          -- VkFormat
+  VK_FORMAT_B4G4R4A4_UNORM_PACK16                          : constant Int_Unsigned_C := 3;          -- VkFormat
+  VK_FORMAT_R5G6B5_UNORM_PACK16                            : constant Int_Unsigned_C := 4;          -- VkFormat
+  VK_FORMAT_B5G6R5_UNORM_PACK16                            : constant Int_Unsigned_C := 5;          -- VkFormat
+  VK_FORMAT_R5G5B5A1_UNORM_PACK16                          : constant Int_Unsigned_C := 6;          -- VkFormat
+  VK_FORMAT_B5G5R5A1_UNORM_PACK16                          : constant Int_Unsigned_C := 7;          -- VkFormat
+  VK_FORMAT_A1R5G5B5_UNORM_PACK16                          : constant Int_Unsigned_C := 8;          -- VkFormat
+  VK_FORMAT_R8_UNORM                                       : constant Int_Unsigned_C := 9;          -- VkFormat
+  VK_FORMAT_R8_SNORM                                       : constant Int_Unsigned_C := 10;         -- VkFormat
+  VK_FORMAT_R8_USCALED                                     : constant Int_Unsigned_C := 11;         -- VkFormat
+  VK_FORMAT_R8_SSCALED                                     : constant Int_Unsigned_C := 12;         -- VkFormat
+  VK_FORMAT_R8_UINT                                        : constant Int_Unsigned_C := 13;         -- VkFormat
+  VK_FORMAT_R8_SINT                                        : constant Int_Unsigned_C := 14;         -- VkFormat
+  VK_FORMAT_R8_SRGB                                        : constant Int_Unsigned_C := 15;         -- VkFormat
+  VK_FORMAT_R8G8_UNORM                                     : constant Int_Unsigned_C := 16;         -- VkFormat
+  VK_FORMAT_R8G8_SNORM                                     : constant Int_Unsigned_C := 17;         -- VkFormat
+  VK_FORMAT_R8G8_USCALED                                   : constant Int_Unsigned_C := 18;         -- VkFormat
+  VK_FORMAT_R8G8_SSCALED                                   : constant Int_Unsigned_C := 19;         -- VkFormat
+  VK_FORMAT_R8G8_UINT                                      : constant Int_Unsigned_C := 20;         -- VkFormat
+  VK_FORMAT_R8G8_SINT                                      : constant Int_Unsigned_C := 21;         -- VkFormat
+  VK_FORMAT_R8G8_SRGB                                      : constant Int_Unsigned_C := 22;         -- VkFormat
+  VK_FORMAT_R8G8B8_UNORM                                   : constant Int_Unsigned_C := 23;         -- VkFormat
+  VK_FORMAT_R8G8B8_SNORM                                   : constant Int_Unsigned_C := 24;         -- VkFormat
+  VK_FORMAT_R8G8B8_USCALED                                 : constant Int_Unsigned_C := 25;         -- VkFormat
+  VK_FORMAT_R8G8B8_SSCALED                                 : constant Int_Unsigned_C := 26;         -- VkFormat
+  VK_FORMAT_R8G8B8_UINT                                    : constant Int_Unsigned_C := 27;         -- VkFormat
+  VK_FORMAT_R8G8B8_SINT                                    : constant Int_Unsigned_C := 28;         -- VkFormat
+  VK_FORMAT_R8G8B8_SRGB                                    : constant Int_Unsigned_C := 29;         -- VkFormat
+  VK_FORMAT_B8G8R8_UNORM                                   : constant Int_Unsigned_C := 30;         -- VkFormat
+  VK_FORMAT_B8G8R8_SNORM                                   : constant Int_Unsigned_C := 31;         -- VkFormat
+  VK_FORMAT_B8G8R8_USCALED                                 : constant Int_Unsigned_C := 32;         -- VkFormat
+  VK_FORMAT_B8G8R8_SSCALED                                 : constant Int_Unsigned_C := 33;         -- VkFormat
+  VK_FORMAT_B8G8R8_UINT                                    : constant Int_Unsigned_C := 34;         -- VkFormat
+  VK_FORMAT_B8G8R8_SINT                                    : constant Int_Unsigned_C := 35;         -- VkFormat
+  VK_FORMAT_B8G8R8_SRGB                                    : constant Int_Unsigned_C := 36;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_UNORM                                 : constant Int_Unsigned_C := 37;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_SNORM                                 : constant Int_Unsigned_C := 38;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_USCALED                               : constant Int_Unsigned_C := 39;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_SSCALED                               : constant Int_Unsigned_C := 40;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_UINT                                  : constant Int_Unsigned_C := 41;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_SINT                                  : constant Int_Unsigned_C := 42;         -- VkFormat
+  VK_FORMAT_R8G8B8A8_SRGB                                  : constant Int_Unsigned_C := 43;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_UNORM                                 : constant Int_Unsigned_C := 44;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_SNORM                                 : constant Int_Unsigned_C := 45;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_USCALED                               : constant Int_Unsigned_C := 46;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_SSCALED                               : constant Int_Unsigned_C := 47;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_UINT                                  : constant Int_Unsigned_C := 48;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_SINT                                  : constant Int_Unsigned_C := 49;         -- VkFormat
+  VK_FORMAT_B8G8R8A8_SRGB                                  : constant Int_Unsigned_C := 50;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_UNORM_PACK32                          : constant Int_Unsigned_C := 51;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_SNORM_PACK32                          : constant Int_Unsigned_C := 52;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_USCALED_PACK32                        : constant Int_Unsigned_C := 53;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_SSCALED_PACK32                        : constant Int_Unsigned_C := 54;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_UINT_PACK32                           : constant Int_Unsigned_C := 55;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_SINT_PACK32                           : constant Int_Unsigned_C := 56;         -- VkFormat
+  VK_FORMAT_A8B8G8R8_SRGB_PACK32                           : constant Int_Unsigned_C := 57;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_UNORM_PACK32                       : constant Int_Unsigned_C := 58;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_SNORM_PACK32                       : constant Int_Unsigned_C := 59;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_USCALED_PACK32                     : constant Int_Unsigned_C := 60;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_SSCALED_PACK32                     : constant Int_Unsigned_C := 61;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_UINT_PACK32                        : constant Int_Unsigned_C := 62;         -- VkFormat
+  VK_FORMAT_A2R10G10B10_SINT_PACK32                        : constant Int_Unsigned_C := 63;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_UNORM_PACK32                       : constant Int_Unsigned_C := 64;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_SNORM_PACK32                       : constant Int_Unsigned_C := 65;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_USCALED_PACK32                     : constant Int_Unsigned_C := 66;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_SSCALED_PACK32                     : constant Int_Unsigned_C := 67;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_UINT_PACK32                        : constant Int_Unsigned_C := 68;         -- VkFormat
+  VK_FORMAT_A2B10G10R10_SINT_PACK32                        : constant Int_Unsigned_C := 69;         -- VkFormat
+  VK_FORMAT_R16_UNORM                                      : constant Int_Unsigned_C := 70;         -- VkFormat
+  VK_FORMAT_R16_SNORM                                      : constant Int_Unsigned_C := 71;         -- VkFormat
+  VK_FORMAT_R16_USCALED                                    : constant Int_Unsigned_C := 72;         -- VkFormat
+  VK_FORMAT_R16_SSCALED                                    : constant Int_Unsigned_C := 73;         -- VkFormat
+  VK_FORMAT_R16_UINT                                       : constant Int_Unsigned_C := 74;         -- VkFormat
+  VK_FORMAT_R16_SINT                                       : constant Int_Unsigned_C := 75;         -- VkFormat
+  VK_FORMAT_R16_SFLOAT                                     : constant Int_Unsigned_C := 76;         -- VkFormat
+  VK_FORMAT_R16G16_UNORM                                   : constant Int_Unsigned_C := 77;         -- VkFormat
+  VK_FORMAT_R16G16_SNORM                                   : constant Int_Unsigned_C := 78;         -- VkFormat
+  VK_FORMAT_R16G16_USCALED                                 : constant Int_Unsigned_C := 79;         -- VkFormat
+  VK_FORMAT_R16G16_SSCALED                                 : constant Int_Unsigned_C := 80;         -- VkFormat
+  VK_FORMAT_R16G16_UINT                                    : constant Int_Unsigned_C := 81;         -- VkFormat
+  VK_FORMAT_R16G16_SINT                                    : constant Int_Unsigned_C := 82;         -- VkFormat
+  VK_FORMAT_R16G16_SFLOAT                                  : constant Int_Unsigned_C := 83;         -- VkFormat
+  VK_FORMAT_R16G16B16_UNORM                                : constant Int_Unsigned_C := 84;         -- VkFormat
+  VK_FORMAT_R16G16B16_SNORM                                : constant Int_Unsigned_C := 85;         -- VkFormat
+  VK_FORMAT_R16G16B16_USCALED                              : constant Int_Unsigned_C := 86;         -- VkFormat
+  VK_FORMAT_R16G16B16_SSCALED                              : constant Int_Unsigned_C := 87;         -- VkFormat
+  VK_FORMAT_R16G16B16_UINT                                 : constant Int_Unsigned_C := 88;         -- VkFormat
+  VK_FORMAT_R16G16B16_SINT                                 : constant Int_Unsigned_C := 89;         -- VkFormat
+  VK_FORMAT_R16G16B16_SFLOAT                               : constant Int_Unsigned_C := 90;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_UNORM                             : constant Int_Unsigned_C := 91;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_SNORM                             : constant Int_Unsigned_C := 92;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_USCALED                           : constant Int_Unsigned_C := 93;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_SSCALED                           : constant Int_Unsigned_C := 94;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_UINT                              : constant Int_Unsigned_C := 95;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_SINT                              : constant Int_Unsigned_C := 96;         -- VkFormat
+  VK_FORMAT_R16G16B16A16_SFLOAT                            : constant Int_Unsigned_C := 97;         -- VkFormat
+  VK_FORMAT_R32_UINT                                       : constant Int_Unsigned_C := 98;         -- VkFormat
+  VK_FORMAT_R32_SINT                                       : constant Int_Unsigned_C := 99;         -- VkFormat
+  VK_FORMAT_R32_SFLOAT                                     : constant Int_Unsigned_C := 100;        -- VkFormat
+  VK_FORMAT_R32G32_UINT                                    : constant Int_Unsigned_C := 101;        -- VkFormat
+  VK_FORMAT_R32G32_SINT                                    : constant Int_Unsigned_C := 102;        -- VkFormat
+  VK_FORMAT_R32G32_SFLOAT                                  : constant Int_Unsigned_C := 103;        -- VkFormat
+  VK_FORMAT_R32G32B32_UINT                                 : constant Int_Unsigned_C := 104;        -- VkFormat
+  VK_FORMAT_R32G32B32_SINT                                 : constant Int_Unsigned_C := 105;        -- VkFormat
+  VK_FORMAT_R32G32B32_SFLOAT                               : constant Int_Unsigned_C := 106;        -- VkFormat
+  VK_FORMAT_R32G32B32A32_UINT                              : constant Int_Unsigned_C := 107;        -- VkFormat
+  VK_FORMAT_R32G32B32A32_SINT                              : constant Int_Unsigned_C := 108;        -- VkFormat
+  VK_FORMAT_R32G32B32A32_SFLOAT                            : constant Int_Unsigned_C := 109;        -- VkFormat
+  VK_FORMAT_R64_UINT                                       : constant Int_Unsigned_C := 110;        -- VkFormat
+  VK_FORMAT_R64_SINT                                       : constant Int_Unsigned_C := 111;        -- VkFormat
+  VK_FORMAT_R64_SFLOAT                                     : constant Int_Unsigned_C := 112;        -- VkFormat
+  VK_FORMAT_R64G64_UINT                                    : constant Int_Unsigned_C := 113;        -- VkFormat
+  VK_FORMAT_R64G64_SINT                                    : constant Int_Unsigned_C := 114;        -- VkFormat
+  VK_FORMAT_R64G64_SFLOAT                                  : constant Int_Unsigned_C := 115;        -- VkFormat
+  VK_FORMAT_R64G64B64_UINT                                 : constant Int_Unsigned_C := 116;        -- VkFormat
+  VK_FORMAT_R64G64B64_SINT                                 : constant Int_Unsigned_C := 117;        -- VkFormat
+  VK_FORMAT_R64G64B64_SFLOAT                               : constant Int_Unsigned_C := 118;        -- VkFormat
+  VK_FORMAT_R64G64B64A64_UINT                              : constant Int_Unsigned_C := 119;        -- VkFormat
+  VK_FORMAT_R64G64B64A64_SINT                              : constant Int_Unsigned_C := 120;        -- VkFormat
+  VK_FORMAT_R64G64B64A64_SFLOAT                            : constant Int_Unsigned_C := 121;        -- VkFormat
+  VK_FORMAT_B10G11R11_UFLOAT_PACK32                        : constant Int_Unsigned_C := 122;        -- VkFormat
+  VK_FORMAT_E5B9G9R9_UFLOAT_PACK32                         : constant Int_Unsigned_C := 123;        -- VkFormat
+  VK_FORMAT_D16_UNORM                                      : constant Int_Unsigned_C := 124;        -- VkFormat
+  VK_FORMAT_X8_D24_UNORM_PACK32                            : constant Int_Unsigned_C := 125;        -- VkFormat
+  VK_FORMAT_D32_SFLOAT                                     : constant Int_Unsigned_C := 126;        -- VkFormat
+  VK_FORMAT_S8_UINT                                        : constant Int_Unsigned_C := 127;        -- VkFormat
+  VK_FORMAT_D16_UNORM_S8_UINT                              : constant Int_Unsigned_C := 128;        -- VkFormat
+  VK_FORMAT_D24_UNORM_S8_UINT                              : constant Int_Unsigned_C := 129;        -- VkFormat
+  VK_FORMAT_D32_SFLOAT_S8_UINT                             : constant Int_Unsigned_C := 130;        -- VkFormat
+  VK_FORMAT_BC1_RGB_UNORM_BLOCK                            : constant Int_Unsigned_C := 131;        -- VkFormat
+  VK_FORMAT_BC1_RGB_SRGB_BLOCK                             : constant Int_Unsigned_C := 132;        -- VkFormat
+  VK_FORMAT_BC1_RGBA_UNORM_BLOCK                           : constant Int_Unsigned_C := 133;        -- VkFormat
+  VK_FORMAT_BC1_RGBA_SRGB_BLOCK                            : constant Int_Unsigned_C := 134;        -- VkFormat
+  VK_FORMAT_BC2_UNORM_BLOCK                                : constant Int_Unsigned_C := 135;        -- VkFormat
+  VK_FORMAT_BC2_SRGB_BLOCK                                 : constant Int_Unsigned_C := 136;        -- VkFormat
+  VK_FORMAT_BC3_UNORM_BLOCK                                : constant Int_Unsigned_C := 137;        -- VkFormat
+  VK_FORMAT_BC3_SRGB_BLOCK                                 : constant Int_Unsigned_C := 138;        -- VkFormat
+  VK_FORMAT_BC4_UNORM_BLOCK                                : constant Int_Unsigned_C := 139;        -- VkFormat
+  VK_FORMAT_BC4_SNORM_BLOCK                                : constant Int_Unsigned_C := 140;        -- VkFormat
+  VK_FORMAT_BC5_UNORM_BLOCK                                : constant Int_Unsigned_C := 141;        -- VkFormat
+  VK_FORMAT_BC5_SNORM_BLOCK                                : constant Int_Unsigned_C := 142;        -- VkFormat
+  VK_FORMAT_BC6H_UFLOAT_BLOCK                              : constant Int_Unsigned_C := 143;        -- VkFormat
+  VK_FORMAT_BC6H_SFLOAT_BLOCK                              : constant Int_Unsigned_C := 144;        -- VkFormat
+  VK_FORMAT_BC7_UNORM_BLOCK                                : constant Int_Unsigned_C := 145;        -- VkFormat
+  VK_FORMAT_BC7_SRGB_BLOCK                                 : constant Int_Unsigned_C := 146;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK                        : constant Int_Unsigned_C := 147;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK                         : constant Int_Unsigned_C := 148;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK                      : constant Int_Unsigned_C := 149;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK                       : constant Int_Unsigned_C := 150;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK                      : constant Int_Unsigned_C := 151;        -- VkFormat
+  VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK                       : constant Int_Unsigned_C := 152;        -- VkFormat
+  VK_FORMAT_EAC_R11_UNORM_BLOCK                            : constant Int_Unsigned_C := 153;        -- VkFormat
+  VK_FORMAT_EAC_R11_SNORM_BLOCK                            : constant Int_Unsigned_C := 154;        -- VkFormat
+  VK_FORMAT_EAC_R11G11_UNORM_BLOCK                         : constant Int_Unsigned_C := 155;        -- VkFormat
+  VK_FORMAT_EAC_R11G11_SNORM_BLOCK                         : constant Int_Unsigned_C := 156;        -- VkFormat
+  VK_FORMAT_ASTC_4x4_UNORM_BLOCK                           : constant Int_Unsigned_C := 157;        -- VkFormat
+  VK_FORMAT_ASTC_4x4_SRGB_BLOCK                            : constant Int_Unsigned_C := 158;        -- VkFormat
+  VK_FORMAT_ASTC_5x4_UNORM_BLOCK                           : constant Int_Unsigned_C := 159;        -- VkFormat
+  VK_FORMAT_ASTC_5x4_SRGB_BLOCK                            : constant Int_Unsigned_C := 160;        -- VkFormat
+  VK_FORMAT_ASTC_5x5_UNORM_BLOCK                           : constant Int_Unsigned_C := 161;        -- VkFormat
+  VK_FORMAT_ASTC_5x5_SRGB_BLOCK                            : constant Int_Unsigned_C := 162;        -- VkFormat
+  VK_FORMAT_ASTC_6x5_UNORM_BLOCK                           : constant Int_Unsigned_C := 163;        -- VkFormat
+  VK_FORMAT_ASTC_6x5_SRGB_BLOCK                            : constant Int_Unsigned_C := 164;        -- VkFormat
+  VK_FORMAT_ASTC_6x6_UNORM_BLOCK                           : constant Int_Unsigned_C := 165;        -- VkFormat
+  VK_FORMAT_ASTC_6x6_SRGB_BLOCK                            : constant Int_Unsigned_C := 166;        -- VkFormat
+  VK_FORMAT_ASTC_8x5_UNORM_BLOCK                           : constant Int_Unsigned_C := 167;        -- VkFormat
+  VK_FORMAT_ASTC_8x5_SRGB_BLOCK                            : constant Int_Unsigned_C := 168;        -- VkFormat
+  VK_FORMAT_ASTC_8x6_UNORM_BLOCK                           : constant Int_Unsigned_C := 169;        -- VkFormat
+  VK_FORMAT_ASTC_8x6_SRGB_BLOCK                            : constant Int_Unsigned_C := 170;        -- VkFormat
+  VK_FORMAT_ASTC_8x8_UNORM_BLOCK                           : constant Int_Unsigned_C := 171;        -- VkFormat
+  VK_FORMAT_ASTC_8x8_SRGB_BLOCK                            : constant Int_Unsigned_C := 172;        -- VkFormat
+  VK_FORMAT_ASTC_10x5_UNORM_BLOCK                          : constant Int_Unsigned_C := 173;        -- VkFormat
+  VK_FORMAT_ASTC_10x5_SRGB_BLOCK                           : constant Int_Unsigned_C := 174;        -- VkFormat
+  VK_FORMAT_ASTC_10x6_UNORM_BLOCK                          : constant Int_Unsigned_C := 175;        -- VkFormat
+  VK_FORMAT_ASTC_10x6_SRGB_BLOCK                           : constant Int_Unsigned_C := 176;        -- VkFormat
+  VK_FORMAT_ASTC_10x8_UNORM_BLOCK                          : constant Int_Unsigned_C := 177;        -- VkFormat
+  VK_FORMAT_ASTC_10x8_SRGB_BLOCK                           : constant Int_Unsigned_C := 178;        -- VkFormat
+  VK_FORMAT_ASTC_10x10_UNORM_BLOCK                         : constant Int_Unsigned_C := 179;        -- VkFormat
+  VK_FORMAT_ASTC_10x10_SRGB_BLOCK                          : constant Int_Unsigned_C := 180;        -- VkFormat
+  VK_FORMAT_ASTC_12x10_UNORM_BLOCK                         : constant Int_Unsigned_C := 181;        -- VkFormat
+  VK_FORMAT_ASTC_12x10_SRGB_BLOCK                          : constant Int_Unsigned_C := 182;        -- VkFormat
+  VK_FORMAT_ASTC_12x12_UNORM_BLOCK                         : constant Int_Unsigned_C := 183;        -- VkFormat
+  VK_FORMAT_ASTC_12x12_SRGB_BLOCK                          : constant Int_Unsigned_C := 184;        -- VkFormat
+  VK_FORMAT_G8B8G8R8_422_UNORM                             : constant Int_Unsigned_C := 1000156000; -- VkFormat
+  VK_FORMAT_B8G8R8G8_422_UNORM                             : constant Int_Unsigned_C := 1000156001; -- VkFormat
+  VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM                      : constant Int_Unsigned_C := 1000156002; -- VkFormat
+  VK_FORMAT_G8_B8R8_2PLANE_420_UNORM                       : constant Int_Unsigned_C := 1000156003; -- VkFormat
+  VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM                      : constant Int_Unsigned_C := 1000156004; -- VkFormat
+  VK_FORMAT_G8_B8R8_2PLANE_422_UNORM                       : constant Int_Unsigned_C := 1000156005; -- VkFormat
+  VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM                      : constant Int_Unsigned_C := 1000156006; -- VkFormat
+  VK_FORMAT_R10X6_UNORM_PACK16                             : constant Int_Unsigned_C := 1000156007; -- VkFormat
+  VK_FORMAT_R10X6G10X6_UNORM_2PACK16                       : constant Int_Unsigned_C := 1000156008; -- VkFormat
+  VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16             : constant Int_Unsigned_C := 1000156009; -- VkFormat
+  VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16         : constant Int_Unsigned_C := 1000156010; -- VkFormat
+  VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16         : constant Int_Unsigned_C := 1000156011; -- VkFormat
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156012; -- VkFormat
+  VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16      : constant Int_Unsigned_C := 1000156013; -- VkFormat
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156014; -- VkFormat
+  VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16      : constant Int_Unsigned_C := 1000156015; -- VkFormat
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156016; -- VkFormat
+  VK_FORMAT_R12X4_UNORM_PACK16                             : constant Int_Unsigned_C := 1000156017; -- VkFormat
+  VK_FORMAT_R12X4G12X4_UNORM_2PACK16                       : constant Int_Unsigned_C := 1000156018; -- VkFormat
+  VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16             : constant Int_Unsigned_C := 1000156019; -- VkFormat
+  VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16         : constant Int_Unsigned_C := 1000156020; -- VkFormat
+  VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16         : constant Int_Unsigned_C := 1000156021; -- VkFormat
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156022; -- VkFormat
+  VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16      : constant Int_Unsigned_C := 1000156023; -- VkFormat
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156024; -- VkFormat
+  VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16      : constant Int_Unsigned_C := 1000156025; -- VkFormat
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16     : constant Int_Unsigned_C := 1000156026; -- VkFormat
+  VK_FORMAT_G16B16G16R16_422_UNORM                         : constant Int_Unsigned_C := 1000156027; -- VkFormat
+  VK_FORMAT_B16G16R16G16_422_UNORM                         : constant Int_Unsigned_C := 1000156028; -- VkFormat
+  VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM                   : constant Int_Unsigned_C := 1000156029; -- VkFormat
+  VK_FORMAT_G16_B16R16_2PLANE_420_UNORM                    : constant Int_Unsigned_C := 1000156030; -- VkFormat
+  VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM                   : constant Int_Unsigned_C := 1000156031; -- VkFormat
+  VK_FORMAT_G16_B16R16_2PLANE_422_UNORM                    : constant Int_Unsigned_C := 1000156032; -- VkFormat
+  VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM                   : constant Int_Unsigned_C := 1000156033; -- VkFormat
+  VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG                    : constant Int_Unsigned_C := 1000054000; -- VkFormat
+  VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG                    : constant Int_Unsigned_C := 1000054001; -- VkFormat
+  VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG                    : constant Int_Unsigned_C := 1000054002; -- VkFormat
+  VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG                    : constant Int_Unsigned_C := 1000054003; -- VkFormat
+  VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG                     : constant Int_Unsigned_C := 1000054004; -- VkFormat
+  VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG                     : constant Int_Unsigned_C := 1000054005; -- VkFormat
+  VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG                     : constant Int_Unsigned_C := 1000054006; -- VkFormat
+  VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG                     : constant Int_Unsigned_C := 1000054007; -- VkFormat
+  VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066000; -- VkFormat
+  VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066001; -- VkFormat
+  VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066002; -- VkFormat
+  VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066003; -- VkFormat
+  VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066004; -- VkFormat
+  VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066005; -- VkFormat
+  VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066006; -- VkFormat
+  VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT                      : constant Int_Unsigned_C := 1000066007; -- VkFormat
+  VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT                     : constant Int_Unsigned_C := 1000066008; -- VkFormat
+  VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT                     : constant Int_Unsigned_C := 1000066009; -- VkFormat
+  VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT                     : constant Int_Unsigned_C := 1000066010; -- VkFormat
+  VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT                    : constant Int_Unsigned_C := 1000066011; -- VkFormat
+  VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT                    : constant Int_Unsigned_C := 1000066012; -- VkFormat
+  VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT                    : constant Int_Unsigned_C := 1000066013; -- VkFormat
+  VK_FORMAT_G8B8G8R8_422_UNORM_KHR                         : constant Int_Unsigned_C := VK_FORMAT_G8B8G8R8_422_UNORM;
+  VK_FORMAT_B8G8R8G8_422_UNORM_KHR                         : constant Int_Unsigned_C := VK_FORMAT_B8G8R8G8_422_UNORM;
+  VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR                  : constant Int_Unsigned_C := VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM;
+  VK_FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR                   : constant Int_Unsigned_C := VK_FORMAT_G8_B8R8_2PLANE_420_UNORM;
+  VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR                  : constant Int_Unsigned_C := VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM;
+  VK_FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR                   : constant Int_Unsigned_C := VK_FORMAT_G8_B8R8_2PLANE_422_UNORM;
+  VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR                  : constant Int_Unsigned_C := VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM;
+  VK_FORMAT_R10X6_UNORM_PACK16_KHR                         : constant Int_Unsigned_C := VK_FORMAT_R10X6_UNORM_PACK16;
+  VK_FORMAT_R10X6G10X6_UNORM_2PACK16_KHR                   : constant Int_Unsigned_C := VK_FORMAT_R10X6G10X6_UNORM_2PACK16;
+  VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR         : constant Int_Unsigned_C := VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16;
+  VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR     : constant Int_Unsigned_C := VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16;
+  VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR     : constant Int_Unsigned_C := VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16;
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16;
+  VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR  : constant Int_Unsigned_C := VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16;
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16;
+  VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR  : constant Int_Unsigned_C := VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16;
+  VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16;
+  VK_FORMAT_R12X4_UNORM_PACK16_KHR                         : constant Int_Unsigned_C := VK_FORMAT_R12X4_UNORM_PACK16;
+  VK_FORMAT_R12X4G12X4_UNORM_2PACK16_KHR                   : constant Int_Unsigned_C := VK_FORMAT_R12X4G12X4_UNORM_2PACK16;
+  VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR         : constant Int_Unsigned_C := VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16;
+  VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR     : constant Int_Unsigned_C := VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16;
+  VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR     : constant Int_Unsigned_C := VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16;
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16;
+  VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR  : constant Int_Unsigned_C := VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16;
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16;
+  VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR  : constant Int_Unsigned_C := VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16;
+  VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR : constant Int_Unsigned_C := VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16;
+  VK_FORMAT_G16B16G16R16_422_UNORM_KHR                     : constant Int_Unsigned_C := VK_FORMAT_G16B16G16R16_422_UNORM;
+  VK_FORMAT_B16G16R16G16_422_UNORM_KHR                     : constant Int_Unsigned_C := VK_FORMAT_B16G16R16G16_422_UNORM;
+  VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR               : constant Int_Unsigned_C := VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM;
+  VK_FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR                : constant Int_Unsigned_C := VK_FORMAT_G16_B16R16_2PLANE_420_UNORM;
+  VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR               : constant Int_Unsigned_C := VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM;
+  VK_FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR                : constant Int_Unsigned_C := VK_FORMAT_G16_B16R16_2PLANE_422_UNORM;
+  VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR               : constant Int_Unsigned_C := VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM;
+
+  -- https://codedocs.xyz/lowkey42/mirrage/gl__format_8h.html#; -- GLenum -- http://web.archive.org/web/20190815144849/https://www.khronos.org/opengl/wiki/Image_Format
+  GL_INVALID_VALUE                               : constant Int_Unsigned_C := 16#0000_0501#; -- GLenum
+  GL_RED                                         : constant Int_Unsigned_C := 16#0000_1903#; -- GLenum
+  GL_GREEN                                       : constant Int_Unsigned_C := 16#0000_1904#; -- GLenum
+  GL_BLUE                                        : constant Int_Unsigned_C := 16#0000_1905#; -- GLenum
+  GL_ALPHA                                       : constant Int_Unsigned_C := 16#0000_1906#; -- GLenum
+  GL_LUMINANCE                                   : constant Int_Unsigned_C := 16#0000_1909#; -- GLenum
+  GL_SLUMINANCE                                  : constant Int_Unsigned_C := 16#0000_8C46#; -- GLenum
+  GL_LUMINANCE_ALPHA                             : constant Int_Unsigned_C := 16#0000_190A#; -- GLenum
+  GL_SLUMINANCE_ALPHA                            : constant Int_Unsigned_C := 16#0000_8C44#; -- GLenum
+  GL_INTENSITY                                   : constant Int_Unsigned_C := 16#0000_8049#; -- GLenum
+  GL_RG                                          : constant Int_Unsigned_C := 16#0000_8227#; -- GLenum
+  GL_RGB                                         : constant Int_Unsigned_C := 16#0000_1907#; -- GLenum
+  GL_BGR                                         : constant Int_Unsigned_C := 16#0000_80E0#; -- GLenum
+  GL_RGBA                                        : constant Int_Unsigned_C := 16#0000_1908#; -- GLenum
+  GL_BGRA                                        : constant Int_Unsigned_C := 16#0000_80E1#; -- GLenum
+  GL_RED_INTEGER                                 : constant Int_Unsigned_C := 16#0000_8D94#; -- GLenum
+  GL_GREEN_INTEGER                               : constant Int_Unsigned_C := 16#0000_8D95#; -- GLenum
+  GL_BLUE_INTEGER                                : constant Int_Unsigned_C := 16#0000_8D96#; -- GLenum
+  GL_ALPHA_INTEGER                               : constant Int_Unsigned_C := 16#0000_8D97#; -- GLenum
+  GL_LUMINANCE_INTEGER                           : constant Int_Unsigned_C := 16#0000_8D9C#; -- GLenum
+  GL_LUMINANCE_ALPHA_INTEGER                     : constant Int_Unsigned_C := 16#0000_8D9D#; -- GLenum
+  GL_RG_INTEGER                                  : constant Int_Unsigned_C := 16#0000_8228#; -- GLenum
+  GL_RGB_INTEGER                                 : constant Int_Unsigned_C := 16#0000_8D98#; -- GLenum
+  GL_BGR_INTEGER                                 : constant Int_Unsigned_C := 16#0000_8D9A#; -- GLenum
+  GL_RGBA_INTEGER                                : constant Int_Unsigned_C := 16#0000_8D99#; -- GLenum
+  GL_BGRA_INTEGER                                : constant Int_Unsigned_C := 16#0000_8D9B#; -- GLenum
+  GL_COLOR_INDEX                                 : constant Int_Unsigned_C := 16#0000_1900#; -- GLenum
+  GL_STENCIL_INDEX                               : constant Int_Unsigned_C := 16#0000_1901#; -- GLenum
+  GL_DEPTH_COMPONENT                             : constant Int_Unsigned_C := 16#0000_1902#; -- GLenum
+  GL_DEPTH_STENCIL                               : constant Int_Unsigned_C := 16#0000_84F9#; -- GLenum
+  GL_BYTE                                        : constant Int_Unsigned_C := 16#0000_1400#; -- GLenum
+  GL_UNSIGNED_BYTE                               : constant Int_Unsigned_C := 16#0000_1401#; -- GLenum
+  GL_SHORT                                       : constant Int_Unsigned_C := 16#0000_1402#; -- GLenum
+  GL_UNSIGNED_SHORT                              : constant Int_Unsigned_C := 16#0000_1403#; -- GLenum
+  GL_INT                                         : constant Int_Unsigned_C := 16#0000_1404#; -- GLenum
+  GL_UNSIGNED_INT                                : constant Int_Unsigned_C := 16#0000_1405#; -- GLenum
+  GL_INT64                                       : constant Int_Unsigned_C := 16#0000_140E#; -- GLenum
+  GL_UNSIGNED_INT64                              : constant Int_Unsigned_C := 16#0000_140F#; -- GLenum
+  GL_HALF_FLOAT                                  : constant Int_Unsigned_C := 16#0000_140B#; -- GLenum
+  GL_HALF_FLOAT_OES                              : constant Int_Unsigned_C := 16#0000_8D61#; -- GLenum
+  GL_FLOAT                                       : constant Int_Unsigned_C := 16#0000_1406#; -- GLenum
+  GL_DOUBLE                                      : constant Int_Unsigned_C := 16#0000_140A#; -- GLenum
+  GL_UNSIGNED_BYTE_3_3_2                         : constant Int_Unsigned_C := 16#0000_8032#; -- GLenum
+  GL_UNSIGNED_BYTE_2_3_3_REV                     : constant Int_Unsigned_C := 16#0000_8362#; -- GLenum
+  GL_UNSIGNED_SHORT_5_6_5                        : constant Int_Unsigned_C := 16#0000_8363#; -- GLenum
+  GL_UNSIGNED_SHORT_5_6_5_REV                    : constant Int_Unsigned_C := 16#0000_8364#; -- GLenum
+  GL_UNSIGNED_SHORT_4_4_4_4                      : constant Int_Unsigned_C := 16#0000_8033#; -- GLenum
+  GL_UNSIGNED_SHORT_4_4_4_4_REV                  : constant Int_Unsigned_C := 16#0000_8365#; -- GLenum
+  GL_UNSIGNED_SHORT_5_5_5_1                      : constant Int_Unsigned_C := 16#0000_8034#; -- GLenum
+  GL_UNSIGNED_SHORT_1_5_5_5_REV                  : constant Int_Unsigned_C := 16#0000_8366#; -- GLenum
+  GL_UNSIGNED_INT_8_8_8_8                        : constant Int_Unsigned_C := 16#0000_8035#; -- GLenum
+  GL_UNSIGNED_INT_8_8_8_8_REV                    : constant Int_Unsigned_C := 16#0000_8367#; -- GLenum
+  GL_UNSIGNED_INT_10_10_10_2                     : constant Int_Unsigned_C := 16#0000_8036#; -- GLenum
+  GL_UNSIGNED_INT_2_10_10_10_REV                 : constant Int_Unsigned_C := 16#0000_8368#; -- GLenum
+  GL_UNSIGNED_INT_10F_11F_11F_REV                : constant Int_Unsigned_C := 16#0000_8C3B#; -- GLenum
+  GL_UNSIGNED_INT_5_9_9_9_REV                    : constant Int_Unsigned_C := 16#0000_8C3E#; -- GLenum
+  GL_UNSIGNED_INT_24_8                           : constant Int_Unsigned_C := 16#0000_84FA#; -- GLenum
+  GL_FLOAT_32_UNSIGNED_INT_24_8_REV              : constant Int_Unsigned_C := 16#0000_8DAD#; -- GLenum
+  GL_R8                                          : constant Int_Unsigned_C := 16#0000_8229#; -- GLenum
+  GL_RG8                                         : constant Int_Unsigned_C := 16#0000_822B#; -- GLenum
+  GL_RGB8                                        : constant Int_Unsigned_C := 16#0000_8051#; -- GLenum
+  GL_RGBA8                                       : constant Int_Unsigned_C := 16#0000_8058#; -- GLenum
+  GL_R8_SNORM                                    : constant Int_Unsigned_C := 16#0000_8F94#; -- GLenum
+  GL_RG8_SNORM                                   : constant Int_Unsigned_C := 16#0000_8F95#; -- GLenum
+  GL_RGB8_SNORM                                  : constant Int_Unsigned_C := 16#0000_8F96#; -- GLenum
+  GL_RGBA8_SNORM                                 : constant Int_Unsigned_C := 16#0000_8F97#; -- GLenum
+  GL_R8UI                                        : constant Int_Unsigned_C := 16#0000_8232#; -- GLenum
+  GL_RG8UI                                       : constant Int_Unsigned_C := 16#0000_8238#; -- GLenum
+  GL_RGB8UI                                      : constant Int_Unsigned_C := 16#0000_8D7D#; -- GLenum
+  GL_RGBA8UI                                     : constant Int_Unsigned_C := 16#0000_8D7C#; -- GLenum
+  GL_R8I                                         : constant Int_Unsigned_C := 16#0000_8231#; -- GLenum
+  GL_RG8I                                        : constant Int_Unsigned_C := 16#0000_8237#; -- GLenum
+  GL_RGB8I                                       : constant Int_Unsigned_C := 16#0000_8D8F#; -- GLenum
+  GL_RGBA8I                                      : constant Int_Unsigned_C := 16#0000_8D8E#; -- GLenum
+  GL_SR8                                         : constant Int_Unsigned_C := 16#0000_8FBD#; -- GLenum
+  GL_SRG8                                        : constant Int_Unsigned_C := 16#0000_8FBE#; -- GLenum
+  GL_SRGB8                                       : constant Int_Unsigned_C := 16#0000_8C41#; -- GLenum
+  GL_SRGB8_ALPHA8                                : constant Int_Unsigned_C := 16#0000_8C43#; -- GLenum
+  GL_R16                                         : constant Int_Unsigned_C := 16#0000_822A#; -- GLenum
+  GL_RG16                                        : constant Int_Unsigned_C := 16#0000_822C#; -- GLenum
+  GL_RGB16                                       : constant Int_Unsigned_C := 16#0000_8054#; -- GLenum
+  GL_RGBA16                                      : constant Int_Unsigned_C := 16#0000_805B#; -- GLenum
+  GL_R16_SNORM                                   : constant Int_Unsigned_C := 16#0000_8F98#; -- GLenum
+  GL_RG16_SNORM                                  : constant Int_Unsigned_C := 16#0000_8F99#; -- GLenum
+  GL_RGB16_SNORM                                 : constant Int_Unsigned_C := 16#0000_8F9A#; -- GLenum
+  GL_RGBA16_SNORM                                : constant Int_Unsigned_C := 16#0000_8F9B#; -- GLenum
+  GL_R16UI                                       : constant Int_Unsigned_C := 16#0000_8234#; -- GLenum
+  GL_RG16UI                                      : constant Int_Unsigned_C := 16#0000_823A#; -- GLenum
+  GL_RGB16UI                                     : constant Int_Unsigned_C := 16#0000_8D77#; -- GLenum
+  GL_RGBA16UI                                    : constant Int_Unsigned_C := 16#0000_8D76#; -- GLenum
+  GL_R16I                                        : constant Int_Unsigned_C := 16#0000_8233#; -- GLenum
+  GL_RG16I                                       : constant Int_Unsigned_C := 16#0000_8239#; -- GLenum
+  GL_RGB16I                                      : constant Int_Unsigned_C := 16#0000_8D89#; -- GLenum
+  GL_RGBA16I                                     : constant Int_Unsigned_C := 16#0000_8D88#; -- GLenum
+  GL_R16F                                        : constant Int_Unsigned_C := 16#0000_822D#; -- GLenum
+  GL_RG16F                                       : constant Int_Unsigned_C := 16#0000_822F#; -- GLenum
+  GL_RGB16F                                      : constant Int_Unsigned_C := 16#0000_881B#; -- GLenum
+  GL_RGBA16F                                     : constant Int_Unsigned_C := 16#0000_881A#; -- GLenum
+  GL_R32UI                                       : constant Int_Unsigned_C := 16#0000_8236#; -- GLenum
+  GL_RG32UI                                      : constant Int_Unsigned_C := 16#0000_823C#; -- GLenum
+  GL_RGB32UI                                     : constant Int_Unsigned_C := 16#0000_8D71#; -- GLenum
+  GL_RGBA32UI                                    : constant Int_Unsigned_C := 16#0000_8D70#; -- GLenum
+  GL_R32I                                        : constant Int_Unsigned_C := 16#0000_8235#; -- GLenum
+  GL_RG32I                                       : constant Int_Unsigned_C := 16#0000_823B#; -- GLenum
+  GL_RGB32I                                      : constant Int_Unsigned_C := 16#0000_8D83#; -- GLenum
+  GL_RGBA32I                                     : constant Int_Unsigned_C := 16#0000_8D82#; -- GLenum
+  GL_R32F                                        : constant Int_Unsigned_C := 16#0000_822E#; -- GLenum
+  GL_RG32F                                       : constant Int_Unsigned_C := 16#0000_8230#; -- GLenum
+  GL_RGB32F                                      : constant Int_Unsigned_C := 16#0000_8815#; -- GLenum
+  GL_RGBA32F                                     : constant Int_Unsigned_C := 16#0000_8814#; -- GLenum
+  GL_R3_G3_B2                                    : constant Int_Unsigned_C := 16#0000_2A10#; -- GLenum
+  GL_RGB4                                        : constant Int_Unsigned_C := 16#0000_804F#; -- GLenum
+  GL_RGB5                                        : constant Int_Unsigned_C := 16#0000_8050#; -- GLenum
+  GL_RGB565                                      : constant Int_Unsigned_C := 16#0000_8D62#; -- GLenum
+  GL_RGB10                                       : constant Int_Unsigned_C := 16#0000_8052#; -- GLenum
+  GL_RGB12                                       : constant Int_Unsigned_C := 16#0000_8053#; -- GLenum
+  GL_RGBA2                                       : constant Int_Unsigned_C := 16#0000_8055#; -- GLenum
+  GL_RGBA4                                       : constant Int_Unsigned_C := 16#0000_8056#; -- GLenum
+  GL_RGBA12                                      : constant Int_Unsigned_C := 16#0000_805A#; -- GLenum
+  GL_RGB5_A1                                     : constant Int_Unsigned_C := 16#0000_8057#; -- GLenum
+  GL_RGB10_A2                                    : constant Int_Unsigned_C := 16#0000_8059#; -- GLenum
+  GL_RGB10_A2UI                                  : constant Int_Unsigned_C := 16#0000_906F#; -- GLenum
+  GL_R11F_G11F_B10F                              : constant Int_Unsigned_C := 16#0000_8C3A#; -- GLenum
+  GL_RGB9_E5                                     : constant Int_Unsigned_C := 16#0000_8C3D#; -- GLenum
+  GL_ALPHA4                                      : constant Int_Unsigned_C := 16#0000_803B#; -- GLenum
+  GL_ALPHA8                                      : constant Int_Unsigned_C := 16#0000_803C#; -- GLenum
+  GL_ALPHA8_SNORM                                : constant Int_Unsigned_C := 16#0000_9014#; -- GLenum
+  GL_ALPHA8UI_EXT                                : constant Int_Unsigned_C := 16#0000_8D7E#; -- GLenum
+  GL_ALPHA8I_EXT                                 : constant Int_Unsigned_C := 16#0000_8D90#; -- GLenum
+  GL_ALPHA12                                     : constant Int_Unsigned_C := 16#0000_803D#; -- GLenum
+  GL_ALPHA16                                     : constant Int_Unsigned_C := 16#0000_803E#; -- GLenum
+  GL_ALPHA16_SNORM                               : constant Int_Unsigned_C := 16#0000_9018#; -- GLenum
+  GL_ALPHA16UI_EXT                               : constant Int_Unsigned_C := 16#0000_8D78#; -- GLenum
+  GL_ALPHA16I_EXT                                : constant Int_Unsigned_C := 16#0000_8D8A#; -- GLenum
+  GL_ALPHA16F_ARB                                : constant Int_Unsigned_C := 16#0000_881C#; -- GLenum
+  GL_ALPHA32UI_EXT                               : constant Int_Unsigned_C := 16#0000_8D72#; -- GLenum
+  GL_ALPHA32I_EXT                                : constant Int_Unsigned_C := 16#0000_8D84#; -- GLenum
+  GL_ALPHA32F_ARB                                : constant Int_Unsigned_C := 16#0000_8816#; -- GLenum
+  GL_LUMINANCE4                                  : constant Int_Unsigned_C := 16#0000_803F#; -- GLenum
+  GL_LUMINANCE8                                  : constant Int_Unsigned_C := 16#0000_8040#; -- GLenum
+  GL_LUMINANCE8_SNORM                            : constant Int_Unsigned_C := 16#0000_9015#; -- GLenum
+  GL_SLUMINANCE8                                 : constant Int_Unsigned_C := 16#0000_8C47#; -- GLenum
+  GL_LUMINANCE8UI_EXT                            : constant Int_Unsigned_C := 16#0000_8D80#; -- GLenum
+  GL_LUMINANCE8I_EXT                             : constant Int_Unsigned_C := 16#0000_8D92#; -- GLenum
+  GL_LUMINANCE12                                 : constant Int_Unsigned_C := 16#0000_8041#; -- GLenum
+  GL_LUMINANCE16                                 : constant Int_Unsigned_C := 16#0000_8042#; -- GLenum
+  GL_LUMINANCE16_SNORM                           : constant Int_Unsigned_C := 16#0000_9019#; -- GLenum
+  GL_LUMINANCE16UI_EXT                           : constant Int_Unsigned_C := 16#0000_8D7A#; -- GLenum
+  GL_LUMINANCE16I_EXT                            : constant Int_Unsigned_C := 16#0000_8D8C#; -- GLenum
+  GL_LUMINANCE16F_ARB                            : constant Int_Unsigned_C := 16#0000_881E#; -- GLenum
+  GL_LUMINANCE32UI_EXT                           : constant Int_Unsigned_C := 16#0000_8D74#; -- GLenum
+  GL_LUMINANCE32I_EXT                            : constant Int_Unsigned_C := 16#0000_8D86#; -- GLenum
+  GL_LUMINANCE32F_ARB                            : constant Int_Unsigned_C := 16#0000_8818#; -- GLenum
+  GL_LUMINANCE4_ALPHA4                           : constant Int_Unsigned_C := 16#0000_8043#; -- GLenum
+  GL_LUMINANCE6_ALPHA2                           : constant Int_Unsigned_C := 16#0000_8044#; -- GLenum
+  GL_LUMINANCE8_ALPHA8                           : constant Int_Unsigned_C := 16#0000_8045#; -- GLenum
+  GL_LUMINANCE8_ALPHA8_SNORM                     : constant Int_Unsigned_C := 16#0000_9016#; -- GLenum
+  GL_SLUMINANCE8_ALPHA8                          : constant Int_Unsigned_C := 16#0000_8C45#; -- GLenum
+  GL_LUMINANCE_ALPHA8UI_EXT                      : constant Int_Unsigned_C := 16#0000_8D81#; -- GLenum
+  GL_LUMINANCE_ALPHA8I_EXT                       : constant Int_Unsigned_C := 16#0000_8D93#; -- GLenum
+  GL_LUMINANCE12_ALPHA4                          : constant Int_Unsigned_C := 16#0000_8046#; -- GLenum
+  GL_LUMINANCE12_ALPHA12                         : constant Int_Unsigned_C := 16#0000_8047#; -- GLenum
+  GL_LUMINANCE16_ALPHA16                         : constant Int_Unsigned_C := 16#0000_8048#; -- GLenum
+  GL_LUMINANCE16_ALPHA16_SNORM                   : constant Int_Unsigned_C := 16#0000_901A#; -- GLenum
+  GL_LUMINANCE_ALPHA16UI_EXT                     : constant Int_Unsigned_C := 16#0000_8D7B#; -- GLenum
+  GL_LUMINANCE_ALPHA16I_EXT                      : constant Int_Unsigned_C := 16#0000_8D8D#; -- GLenum
+  GL_LUMINANCE_ALPHA16F_ARB                      : constant Int_Unsigned_C := 16#0000_881F#; -- GLenum
+  GL_LUMINANCE_ALPHA32UI_EXT                     : constant Int_Unsigned_C := 16#0000_8D75#; -- GLenum
+  GL_LUMINANCE_ALPHA32I_EXT                      : constant Int_Unsigned_C := 16#0000_8D87#; -- GLenum
+  GL_LUMINANCE_ALPHA32F_ARB                      : constant Int_Unsigned_C := 16#0000_8819#; -- GLenum
+  GL_INTENSITY4                                  : constant Int_Unsigned_C := 16#0000_804A#; -- GLenum
+  GL_INTENSITY8                                  : constant Int_Unsigned_C := 16#0000_804B#; -- GLenum
+  GL_INTENSITY8_SNORM                            : constant Int_Unsigned_C := 16#0000_9017#; -- GLenum
+  GL_INTENSITY8UI_EXT                            : constant Int_Unsigned_C := 16#0000_8D7F#; -- GLenum
+  GL_INTENSITY8I_EXT                             : constant Int_Unsigned_C := 16#0000_8D91#; -- GLenum
+  GL_INTENSITY12                                 : constant Int_Unsigned_C := 16#0000_804C#; -- GLenum
+  GL_INTENSITY16                                 : constant Int_Unsigned_C := 16#0000_804D#; -- GLenum
+  GL_INTENSITY16_SNORM                           : constant Int_Unsigned_C := 16#0000_901B#; -- GLenum
+  GL_INTENSITY16UI_EXT                           : constant Int_Unsigned_C := 16#0000_8D79#; -- GLenum
+  GL_INTENSITY16I_EXT                            : constant Int_Unsigned_C := 16#0000_8D8B#; -- GLenum
+  GL_INTENSITY16F_ARB                            : constant Int_Unsigned_C := 16#0000_881D#; -- GLenum
+  GL_INTENSITY32UI_EXT                           : constant Int_Unsigned_C := 16#0000_8D73#; -- GLenum
+  GL_INTENSITY32I_EXT                            : constant Int_Unsigned_C := 16#0000_8D85#; -- GLenum
+  GL_INTENSITY32F_ARB                            : constant Int_Unsigned_C := 16#0000_8817#; -- GLenum
+  GL_COMPRESSED_RED                              : constant Int_Unsigned_C := 16#0000_8225#; -- GLenum
+  GL_COMPRESSED_ALPHA                            : constant Int_Unsigned_C := 16#0000_84E9#; -- GLenum
+  GL_COMPRESSED_LUMINANCE                        : constant Int_Unsigned_C := 16#0000_84EA#; -- GLenum
+  GL_COMPRESSED_SLUMINANCE                       : constant Int_Unsigned_C := 16#0000_8C4A#; -- GLenum
+  GL_COMPRESSED_LUMINANCE_ALPHA                  : constant Int_Unsigned_C := 16#0000_84EB#; -- GLenum
+  GL_COMPRESSED_SLUMINANCE_ALPHA                 : constant Int_Unsigned_C := 16#0000_8C4B#; -- GLenum
+  GL_COMPRESSED_INTENSITY                        : constant Int_Unsigned_C := 16#0000_84EC#; -- GLenum
+  GL_COMPRESSED_RG                               : constant Int_Unsigned_C := 16#0000_8226#; -- GLenum
+  GL_COMPRESSED_RGB                              : constant Int_Unsigned_C := 16#0000_84ED#; -- GLenum
+  GL_COMPRESSED_RGBA                             : constant Int_Unsigned_C := 16#0000_84EE#; -- GLenum
+  GL_COMPRESSED_SRGB                             : constant Int_Unsigned_C := 16#0000_8C48#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA                       : constant Int_Unsigned_C := 16#0000_8C49#; -- GLenum
+  GL_COMPRESSED_RGB_FXT1_3DFX                    : constant Int_Unsigned_C := 16#0000_86B0#; -- GLenum
+  GL_COMPRESSED_RGBA_FXT1_3DFX                   : constant Int_Unsigned_C := 16#0000_86B1#; -- GLenum
+  GL_COMPRESSED_RGB_S3TC_DXT1_EXT                : constant Int_Unsigned_C := 16#0000_83F0#; -- GLenum
+  GL_COMPRESSED_RGBA_S3TC_DXT1_EXT               : constant Int_Unsigned_C := 16#0000_83F1#; -- GLenum
+  GL_COMPRESSED_RGBA_S3TC_DXT3_EXT               : constant Int_Unsigned_C := 16#0000_83F2#; -- GLenum
+  GL_COMPRESSED_RGBA_S3TC_DXT5_EXT               : constant Int_Unsigned_C := 16#0000_83F3#; -- GLenum
+  GL_COMPRESSED_SRGB_S3TC_DXT1_EXT               : constant Int_Unsigned_C := 16#0000_8C4C#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT         : constant Int_Unsigned_C := 16#0000_8C4D#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT         : constant Int_Unsigned_C := 16#0000_8C4E#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT         : constant Int_Unsigned_C := 16#0000_8C4F#; -- GLenum
+  GL_COMPRESSED_LUMINANCE_LATC1_EXT              : constant Int_Unsigned_C := 16#0000_8C70#; -- GLenum
+  GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT        : constant Int_Unsigned_C := 16#0000_8C72#; -- GLenum
+  GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT       : constant Int_Unsigned_C := 16#0000_8C71#; -- GLenum
+  GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT : constant Int_Unsigned_C := 16#0000_8C73#; -- GLenum
+  GL_COMPRESSED_RED_RGTC1                        : constant Int_Unsigned_C := 16#0000_8DBB#; -- GLenum
+  GL_COMPRESSED_RG_RGTC2                         : constant Int_Unsigned_C := 16#0000_8DBD#; -- GLenum
+  GL_COMPRESSED_SIGNED_RED_RGTC1                 : constant Int_Unsigned_C := 16#0000_8DBC#; -- GLenum
+  GL_COMPRESSED_SIGNED_RG_RGTC2                  : constant Int_Unsigned_C := 16#0000_8DBE#; -- GLenum
+  GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT            : constant Int_Unsigned_C := 16#0000_8E8E#; -- GLenum
+  GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT          : constant Int_Unsigned_C := 16#0000_8E8F#; -- GLenum
+  GL_COMPRESSED_RGBA_BPTC_UNORM                  : constant Int_Unsigned_C := 16#0000_8E8C#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM            : constant Int_Unsigned_C := 16#0000_8E8D#; -- GLenum
+  GL_ETC1_RGB8_OES                               : constant Int_Unsigned_C := 16#0000_8D64#; -- GLenum
+  GL_COMPRESSED_RGB8_ETC2                        : constant Int_Unsigned_C := 16#0000_9274#; -- GLenum
+  GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2    : constant Int_Unsigned_C := 16#0000_9276#; -- GLenum
+  GL_COMPRESSED_RGBA8_ETC2_EAC                   : constant Int_Unsigned_C := 16#0000_9278#; -- GLenum
+  GL_COMPRESSED_SRGB8_ETC2                       : constant Int_Unsigned_C := 16#0000_9275#; -- GLenum
+  GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2   : constant Int_Unsigned_C := 16#0000_9277#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC            : constant Int_Unsigned_C := 16#0000_9279#; -- GLenum
+  GL_COMPRESSED_R11_EAC                          : constant Int_Unsigned_C := 16#0000_9270#; -- GLenum
+  GL_COMPRESSED_RG11_EAC                         : constant Int_Unsigned_C := 16#0000_9272#; -- GLenum
+  GL_COMPRESSED_SIGNED_R11_EAC                   : constant Int_Unsigned_C := 16#0000_9271#; -- GLenum
+  GL_COMPRESSED_SIGNED_RG11_EAC                  : constant Int_Unsigned_C := 16#0000_9273#; -- GLenum
+  GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG             : constant Int_Unsigned_C := 16#0000_8C01#; -- GLenum
+  GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG             : constant Int_Unsigned_C := 16#0000_8C00#; -- GLenum
+  GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG            : constant Int_Unsigned_C := 16#0000_8C03#; -- GLenum
+  GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG            : constant Int_Unsigned_C := 16#0000_8C02#; -- GLenum
+  GL_COMPRESSED_RGBA_PVRTC_2BPPV2_IMG            : constant Int_Unsigned_C := 16#0000_9137#; -- GLenum
+  GL_COMPRESSED_RGBA_PVRTC_4BPPV2_IMG            : constant Int_Unsigned_C := 16#0000_9138#; -- GLenum
+  GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT            : constant Int_Unsigned_C := 16#0000_8A54#; -- GLenum
+  GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT            : constant Int_Unsigned_C := 16#0000_8A55#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT      : constant Int_Unsigned_C := 16#0000_8A56#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT      : constant Int_Unsigned_C := 16#0000_8A57#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV2_IMG      : constant Int_Unsigned_C := 16#0000_93F0#; -- GLenum
+  GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV2_IMG      : constant Int_Unsigned_C := 16#0000_93F1#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_4x4_KHR                : constant Int_Unsigned_C := 16#0000_93B0#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_5x4_KHR                : constant Int_Unsigned_C := 16#0000_93B1#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_5x5_KHR                : constant Int_Unsigned_C := 16#0000_93B2#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_6x5_KHR                : constant Int_Unsigned_C := 16#0000_93B3#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_6x6_KHR                : constant Int_Unsigned_C := 16#0000_93B4#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_8x5_KHR                : constant Int_Unsigned_C := 16#0000_93B5#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_8x6_KHR                : constant Int_Unsigned_C := 16#0000_93B6#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_8x8_KHR                : constant Int_Unsigned_C := 16#0000_93B7#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_10x5_KHR               : constant Int_Unsigned_C := 16#0000_93B8#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_10x6_KHR               : constant Int_Unsigned_C := 16#0000_93B9#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_10x8_KHR               : constant Int_Unsigned_C := 16#0000_93BA#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_10x10_KHR              : constant Int_Unsigned_C := 16#0000_93BB#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_12x10_KHR              : constant Int_Unsigned_C := 16#0000_93BC#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_12x12_KHR              : constant Int_Unsigned_C := 16#0000_93BD#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR        : constant Int_Unsigned_C := 16#0000_93D0#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR        : constant Int_Unsigned_C := 16#0000_93D1#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR        : constant Int_Unsigned_C := 16#0000_93D2#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR        : constant Int_Unsigned_C := 16#0000_93D3#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR        : constant Int_Unsigned_C := 16#0000_93D4#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR        : constant Int_Unsigned_C := 16#0000_93D5#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR        : constant Int_Unsigned_C := 16#0000_93D6#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR        : constant Int_Unsigned_C := 16#0000_93D7#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR       : constant Int_Unsigned_C := 16#0000_93D8#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR       : constant Int_Unsigned_C := 16#0000_93D9#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR       : constant Int_Unsigned_C := 16#0000_93DA#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR      : constant Int_Unsigned_C := 16#0000_93DB#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR      : constant Int_Unsigned_C := 16#0000_93DC#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR      : constant Int_Unsigned_C := 16#0000_93DD#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_3x3x3_OES              : constant Int_Unsigned_C := 16#0000_93C0#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_4x3x3_OES              : constant Int_Unsigned_C := 16#0000_93C1#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_4x4x3_OES              : constant Int_Unsigned_C := 16#0000_93C2#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_4x4x4_OES              : constant Int_Unsigned_C := 16#0000_93C3#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_5x4x4_OES              : constant Int_Unsigned_C := 16#0000_93C4#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_5x5x4_OES              : constant Int_Unsigned_C := 16#0000_93C5#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_5x5x5_OES              : constant Int_Unsigned_C := 16#0000_93C6#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_6x5x5_OES              : constant Int_Unsigned_C := 16#0000_93C7#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_6x6x5_OES              : constant Int_Unsigned_C := 16#0000_93C8#; -- GLenum
+  GL_COMPRESSED_RGBA_ASTC_6x6x6_OES              : constant Int_Unsigned_C := 16#0000_93C9#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES      : constant Int_Unsigned_C := 16#0000_93E0#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES      : constant Int_Unsigned_C := 16#0000_93E1#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES      : constant Int_Unsigned_C := 16#0000_93E2#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES      : constant Int_Unsigned_C := 16#0000_93E3#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES      : constant Int_Unsigned_C := 16#0000_93E4#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES      : constant Int_Unsigned_C := 16#0000_93E5#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES      : constant Int_Unsigned_C := 16#0000_93E6#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES      : constant Int_Unsigned_C := 16#0000_93E7#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES      : constant Int_Unsigned_C := 16#0000_93E8#; -- GLenum
+  GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES      : constant Int_Unsigned_C := 16#0000_93E9#; -- GLenum
+  GL_ATC_RGB_AMD                                 : constant Int_Unsigned_C := 16#0000_8C92#; -- GLenum
+  GL_ATC_RGBA_EXPLICIT_ALPHA_AMD                 : constant Int_Unsigned_C := 16#0000_8C93#; -- GLenum
+  GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD             : constant Int_Unsigned_C := 16#0000_87EE#; -- GLenum
+  GL_PALETTE4_RGB8_OES                           : constant Int_Unsigned_C := 16#0000_8B90#; -- GLenum
+  GL_PALETTE4_RGBA8_OES                          : constant Int_Unsigned_C := 16#0000_8B91#; -- GLenum
+  GL_PALETTE4_R5_G6_B5_OES                       : constant Int_Unsigned_C := 16#0000_8B92#; -- GLenum
+  GL_PALETTE4_RGBA4_OES                          : constant Int_Unsigned_C := 16#0000_8B93#; -- GLenum
+  GL_PALETTE4_RGB5_A1_OES                        : constant Int_Unsigned_C := 16#0000_8B94#; -- GLenum
+  GL_PALETTE8_RGB8_OES                           : constant Int_Unsigned_C := 16#0000_8B95#; -- GLenum
+  GL_PALETTE8_RGBA8_OES                          : constant Int_Unsigned_C := 16#0000_8B96#; -- GLenum
+  GL_PALETTE8_R5_G6_B5_OES                       : constant Int_Unsigned_C := 16#0000_8B97#; -- GLenum
+  GL_PALETTE8_RGBA4_OES                          : constant Int_Unsigned_C := 16#0000_8B98#; -- GLenum
+  GL_PALETTE8_RGB5_A1_OES                        : constant Int_Unsigned_C := 16#0000_8B99#; -- GLenum
+  GL_COLOR_INDEX1_EXT                            : constant Int_Unsigned_C := 16#0000_80E2#; -- GLenum
+  GL_COLOR_INDEX2_EXT                            : constant Int_Unsigned_C := 16#0000_80E3#; -- GLenum
+  GL_COLOR_INDEX4_EXT                            : constant Int_Unsigned_C := 16#0000_80E4#; -- GLenum
+  GL_COLOR_INDEX8_EXT                            : constant Int_Unsigned_C := 16#0000_80E5#; -- GLenum
+  GL_COLOR_INDEX12_EXT                           : constant Int_Unsigned_C := 16#0000_80E6#; -- GLenum
+  GL_COLOR_INDEX16_EXT                           : constant Int_Unsigned_C := 16#0000_80E7#; -- GLenum
+  GL_DEPTH_COMPONENT16                           : constant Int_Unsigned_C := 16#0000_81A5#; -- GLenum
+  GL_DEPTH_COMPONENT24                           : constant Int_Unsigned_C := 16#0000_81A6#; -- GLenum
+  GL_DEPTH_COMPONENT32                           : constant Int_Unsigned_C := 16#0000_81A7#; -- GLenum
+  GL_DEPTH_COMPONENT32F                          : constant Int_Unsigned_C := 16#0000_8CAC#; -- GLenum
+  GL_DEPTH_COMPONENT32F_NV                       : constant Int_Unsigned_C := 16#0000_8DAB#; -- GLenum
+  GL_STENCIL_INDEX1                              : constant Int_Unsigned_C := 16#0000_8D46#; -- GLenum
+  GL_STENCIL_INDEX4                              : constant Int_Unsigned_C := 16#0000_8D47#; -- GLenum
+  GL_STENCIL_INDEX8                              : constant Int_Unsigned_C := 16#0000_8D48#; -- GLenum
+  GL_STENCIL_INDEX16                             : constant Int_Unsigned_C := 16#0000_8D49#; -- GLenum
+  GL_DEPTH24_STENCIL8                            : constant Int_Unsigned_C := 16#0000_88F0#; -- GLenum
+  GL_DEPTH32F_STENCIL8                           : constant Int_Unsigned_C := 16#0000_8CAD#; -- GLenum
+  GL_DEPTH32F_STENCIL8_NV                        : constant Int_Unsigned_C := 16#0000_8DAC#; -- GLenum
   
   ------------
   -- Macros --
@@ -878,7 +1335,9 @@ package Neo.API.Vulkan is
     
   VK_API_VERSION_1_0 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 0, 0);
   VK_API_VERSION_1_1 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 1, 3);
-
+  VK_API_VERSION_1_1_122 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 1, 122);
+  VK_API_VERSION_1_2 : constant Int_Unsigned_C := VK_MAKE_VERSION (1, 2, 0);
+  
   ----------------
   -- Allocation --
   ----------------
@@ -1440,8 +1899,8 @@ package Neo.API.Vulkan is
   type VkSurfaceCapabilitiesKHR;
   type Ptr_VkSurfaceCapabilitiesKHR is access all VkSurfaceCapabilitiesKHR;
   type VkSurfaceCapabilitiesKHR is record
-      minImageCount           : Int_Unsigned_C := 0;              -- uint32_t
-      maxImageCount           : Int_Unsigned_C := 0;              -- uint32_t
+      minImageCount           : aliased Int_Unsigned_C := 0;              -- uint32_t
+      maxImageCount           : aliased Int_Unsigned_C := 0;              -- uint32_t
       currentExtent           : VkExtent2D     := (others => <>); -- VkExtent2D
       minImageExtent          : VkExtent2D     := (others => <>); -- VkExtent2D
       maxImageExtent          : VkExtent2D     := (others => <>); -- VkExtent2D
@@ -1567,9 +2026,9 @@ package Neo.API.Vulkan is
   type VkApplicationInfo is record
       sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_APPLICATION_INFO; -- VkStructureType
       pNext              : Ptr_VkApplicationInfo := null; -- const void*
-      pApplicationName   : Ptr_Char_8_C           := null; -- const char*
+      pApplicationName   : Ptr_Char_8_C          := null; -- const char*
       applicationVersion : Int_Unsigned_C        := 0;    -- uint32_t
-      pEngineName        : Ptr_Char_8_C           := null; -- const char*
+      pEngineName        : Ptr_Char_8_C          := null; -- const char*
       engineVersion      : Int_Unsigned_C        := 0;    -- uint32_t
       apiVersion         : Int_Unsigned_C        := 0;    -- uint32_t
     end record with Convention => C;
@@ -1586,9 +2045,9 @@ package Neo.API.Vulkan is
       flags                   : Int_Unsigned_C           := 0;        -- VkInstanceCreateFlags
       pApplicationInfo        : Ptr_VkApplicationInfo    := null;     -- const VkApplicationInfo*
       enabledLayerCount       : Int_Unsigned_C           := 0;        -- uint32_t
-      ppEnabledLayerNames     : Ptr := NULL_PTR; -- Ptr_Ptr_Char_8_C              := null; -- const char* const* -- HACK !!!
+      ppEnabledLayerNames     : Ptr := NULL_PTR; -- Ptr_Ptr_Char_8_C              := null; -- const char* const* -- HACK!
       enabledExtensionCount   : Int_Unsigned_C           := 0;        -- uint32_t
-      ppEnabledExtensionNames :  Ptr := NULL_PTR; -- Ptr_Ptr_Char_8_C              := null; -- const char* const* -- HACK !!!
+      ppEnabledExtensionNames :  Ptr := NULL_PTR; -- Ptr_Ptr_Char_8_C              := null; -- const char* const* -- HACK!
     end record with Convention => C;
   type Array_VkInstanceCreateInfo is array (Positive range <>) of aliased VkInstanceCreateInfo;
   type Ptr_Array_VkInstanceCreateInfo is access all Array_VkInstanceCreateInfo;
@@ -2133,7 +2592,7 @@ package Neo.API.Vulkan is
   type VkDescriptorPoolSize;
   type Ptr_VkDescriptorPoolSize is access all VkDescriptorPoolSize with Convention => C;
   type VkDescriptorPoolSize is record
-      typ             : Int_Unsigned_C := 0; -- VkDescriptorType !!!
+      typ             : Int_Unsigned_C := 0; -- VkDescriptorType
       descriptorCount : Int_Unsigned_C := 0; -- uint32_t            
     end record with Convention => C;
   type Array_VkDescriptorPoolSize is array (Positive range <>) of aliased VkDescriptorPoolSize;
@@ -2159,7 +2618,7 @@ package Neo.API.Vulkan is
   type VkDescriptorSetLayoutBinding is record
       binding            : Int_Unsigned_C := 0;    -- uint32_t              
       descriptorType     : Int_Unsigned_C := 0;    -- VkDescriptorType      
-      descriptorCount    : Int_Unsigned_C := 0;    -- uint32_t              
+      descriptorCount    : Int_Unsigned_C := 1;    -- uint32_t              
       stageFlags         : Int_Unsigned_C := 0;    -- VkShaderStageFlags    
       pImmutableSamplers : Ptr_Ptr        := null; -- const VkSampler*
     end record with Convention => C;
@@ -2186,7 +2645,7 @@ package Neo.API.Vulkan is
   type VkDescriptorBufferInfo is record
       buffer : Ptr               := NULL_PTR; -- VkBuffer
       offset : Int_64_Unsigned_C := 0;        -- VkDeviceSize
-      rang   : Int_64_Unsigned_C := 0;        -- VkDeviceSize !!!
+      rang   : Int_64_Unsigned_C := 0;        -- VkDeviceSize
     end record with Convention => C;
   type Array_VkDescriptorBufferInfo is array (Positive range <>) of aliased VkDescriptorBufferInfo;
   type Ptr_Array_VkDescriptorBufferInfo is access all Array_VkDescriptorBufferInfo;
@@ -2226,11 +2685,8 @@ package Neo.API.Vulkan is
       dstArrayElement  : Int_Unsigned_C             := 0;        -- uint32_t                         
       descriptorCount  : Int_Unsigned_C             := 0;        -- uint32_t                         
       descriptorType   : Int_Unsigned_C             := 0;        -- VkDescriptorType    
-      
-      -- HACKS AHOY
-      pImageInfo       : Ptr := NULL_PTR; -- Ptr_VkDescriptorImageInfo  := null;     -- const VkDescriptorImageInfo*
-      pBufferInfo      : Ptr := NULL_PTR; -- Ptr_VkDescriptorBufferInfo := null;     -- const VkDescriptorBufferInfo*
-      
+      pImageInfo       : Ptr                        := NULL_PTR; -- const VkDescriptorImageInfo*
+      pBufferInfo      : Ptr                        := NULL_PTR; -- const VkDescriptorBufferInfo*
       pTexelBufferView : Ptr_Ptr                    := null;     -- const VkBufferView* 
     end record with Convention => C;
   package Vector_VkWriteDescriptorSet is new Neo.Core.Vectors (VkWriteDescriptorSet);
@@ -2284,10 +2740,10 @@ package Neo.API.Vulkan is
   type VkComponentMapping;
   type Ptr_VkComponentMapping is access all VkComponentMapping with Convention => C;
   type VkComponentMapping is record
-      r : Int_Unsigned_C := 0; -- VkComponentSwizzle
-      g : Int_Unsigned_C := 0; -- VkComponentSwizzle
-      b : Int_Unsigned_C := 0; -- VkComponentSwizzle
-      a : Int_Unsigned_C := 0; -- VkComponentSwizzle
+      r : Int_Unsigned_C := VK_COMPONENT_SWIZZLE_IDENTITY; -- VkComponentSwizzle
+      g : Int_Unsigned_C := VK_COMPONENT_SWIZZLE_IDENTITY; -- VkComponentSwizzle
+      b : Int_Unsigned_C := VK_COMPONENT_SWIZZLE_IDENTITY; -- VkComponentSwizzle
+      a : Int_Unsigned_C := VK_COMPONENT_SWIZZLE_IDENTITY; -- VkComponentSwizzle
     end record with Convention => C;
   type Array_VkComponentMapping is array (Positive range <>) of aliased VkComponentMapping;
   type Ptr_Array_VkComponentMapping is access all Array_VkComponentMapping;
@@ -2317,8 +2773,156 @@ package Neo.API.Vulkan is
       maxArrayLayers  : Int_Unsigned_C    := 0;              -- uint32_t
       sampleCounts    : Int_Unsigned_C    := 0;              -- VkSampleCountFlags
       maxResourceSize : Int_64_Unsigned_C := 0;              -- VkDeviceSize
+    end record with Convention => C;  
+  type Array_VkImageFormatProperties is array (Positive range <>) of aliased VkImageFormatProperties;
+  type Ptr_Array_VkImageFormatProperties is access all Array_VkImageFormatProperties;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryAABBNV.html
+  type VkGeometryAABBNV;
+  type Ptr_VkGeometryAABBNV is access all VkGeometryAABBNV with Convention => C;
+  type VkGeometryAABBNV is record
+      sType    : Int_Unsigned_C := VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV; -- VkStructureType                                    
+      pNext    : Ptr_VkGeometryAABBNV := null;     -- const void*     
+      aabbData : Ptr                  := NULL_PTR; -- VkBuffer         
+      numAABBs : Int_Unsigned_C       := 0;        -- uint32_t        
+      stride   : Int_Unsigned_C       := 0;        -- uint32_t           
+      offset   : Int_64_Unsigned_C    := 0;        -- VkDeviceSize                                        
     end record with Convention => C;
-      
+  type Array_VkGeometryAABBNV is array (Positive range <>) of aliased VkGeometryAABBNV;
+  type Ptr_Array_VkGeometryAABBNV is access all Array_VkGeometryAABBNV;
+    
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryTrianglesNV.html
+  type VkGeometryTrianglesNV;
+  type Ptr_VkGeometryTrianglesNV is access all VkGeometryAABBNV with Convention => C;
+  type VkGeometryTrianglesNV is record
+      sType           : Int_Unsigned_C := VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV; -- VkStructureType                                    
+      pNext           : Ptr_VkGeometryTrianglesNV := null;     -- const void*     
+      vertexData      : Ptr                       := NULL_PTR; -- VkBuffer           
+      vertexOffset    : Int_64_Unsigned_C         := 0;        -- VkDeviceSize       
+      vertexCount     : Int_Unsigned_C            := 0;        -- uint32_t           
+      vertexStride    : Int_64_Unsigned_C         := 0;        -- VkDeviceSize       
+      vertexFormat    : Int_Unsigned_C            := 0;        -- VkFormat           
+      indexData       : Ptr                       := NULL_PTR; -- VkBuffer           
+      indexOffset     : Int_64_Unsigned_C         := 0;        -- VkDeviceSize       
+      indexCount      : Int_Unsigned_C            := 0;        -- uint32_t           
+      indexType       : Int_Unsigned_C            := 0;        -- VkIndexType        
+      transformData   : Ptr                       := NULL_PTR; -- VkBuffer           
+      transformOffset : Int_64_Unsigned_C         := 0;        -- VkDeviceSize                                           
+    end record with Convention => C;
+  type Array_VkGeometryTrianglesNV is array (Positive range <>) of aliased VkGeometryTrianglesNV;
+  type Ptr_Array_VkGeometryTrianglesNV is access all Array_VkGeometryTrianglesNV;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryDataNV.html
+  type VkGeometryDataNV;
+  type Ptr_VkGeometryDataNV is access all VkGeometryDataNV with Convention => C;
+  type VkGeometryDataNV is record
+      triangles : VkGeometryTrianglesNV := (others => <>); -- VkGeometryTrianglesNV
+      aabbs     : VkGeometryAABBNV      := (others => <>); -- VkGeometryAABBNV                                   
+    end record with Convention => C;
+  type Array_VkGeometryDataNV is array (Positive range <>) of aliased VkGeometryDataNV;
+  type Ptr_Array_VkGeometryDataNV is access all VkGeometryDataNV;
+
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkGeometryNV.html
+  type VkGeometryNV;
+  type Ptr_VkGeometryNV is access all VkGeometryNV with Convention => C;
+  type VkGeometryNV is record
+      sType        : Int_Unsigned_C   := VK_STRUCTURE_TYPE_GEOMETRY_NV; -- VkStructureType                                    
+      pNext        : Ptr_VkGeometryNV := null;           -- const void* 
+      geometryType : Int_Unsigned_C   := 0;              -- VkGeometryTypeNV     
+      geometry     : VkGeometryDataNV := (others => <>); -- VkGeometryDataNV     
+      flags        : Int_Unsigned_C   := 0;              -- VkGeometryFlagsNV                                           
+    end record with Convention => C;
+  type Array_VkGeometryNV is array (Positive range <>) of aliased VkGeometryNV;
+  type Ptr_Array_VkGeometryNV is access all Array_VkGeometryNV;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkAccelerationStructureInfoNV.html
+  type VkAccelerationStructureInfoNV;
+  type Ptr_VkAccelerationStructureInfoNV is access all VkAccelerationStructureInfoNV with Convention => C;
+  type VkAccelerationStructureInfoNV is record
+      sType         : Int_Unsigned_C := VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV; -- VkStructureType                                    
+      pNext         : Ptr_VkAccelerationStructureInfoNV := null; -- const void* 
+      typ           : Int_Unsigned_C                    := 0;    -- VkAccelerationStructureTypeNV          
+      flags         : Int_Unsigned_C                    := 0;    -- VkBuildAccelerationStructureFlagsNV 
+      instanceCount : Int_Unsigned_C                    := 0;    -- uint32_t                               
+      geometryCount : Int_Unsigned_C                    := 0;    -- uint32_t                               
+      pGeometries   : Ptr_VkGeometryNV                  := null; -- const VkGeometryNV*                                           
+    end record with Convention => C;
+  type Array_VkAccelerationStructureInfoNV is array (Positive range <>) of aliased VkAccelerationStructureInfoNV;
+  type Ptr_Array_VkAccelerationStructureInfoNV is access all Array_VkAccelerationStructureInfoNV;
+       
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkAccelerationStructureMemoryRequirementsInfoNV.html
+  type VkAccelerationStructureMemoryRequirementsInfoNV;
+  type Ptr_VkAccelerationStructureMemoryRequirementsInfoNV is access all VkAccelerationStructureMemoryRequirementsInfoNV with Convention => C;
+  type VkAccelerationStructureMemoryRequirementsInfoNV is record
+      sType                 : Int_Unsigned_C := VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV; -- VkStructureType                                    
+      pNext                 : Ptr_VkImageViewCreateInfo := null;     -- const void*                                        
+      typ                   : Int_Unsigned_C            := 0;        -- VkAccelerationStructureMemoryRequirementsTypeNV    
+      accelerationStructure : Ptr                       := NULL_PTR; -- VkAccelerationStructureNV                          
+    end record with Convention => C;
+  type Array_VkAccelerationStructureMemoryRequirementsInfoNV is array (Positive range <>) of aliased VkAccelerationStructureMemoryRequirementsInfoNV;
+  type Ptr_Array_VkAccelerationStructureMemoryRequirementsInfoNV is access all Array_VkAccelerationStructureMemoryRequirementsInfoNV;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkAccelerationStructureCreateInfoNV.html
+  type VkAccelerationStructureCreateInfoNV;
+  type Ptr_VkAccelerationStructureCreateInfoNV is access all VkAccelerationStructureCreateInfoNV with Convention => C;
+  type VkAccelerationStructureCreateInfoNV is record
+      sType         : Int_Unsigned_C := VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV; -- VkStructureType                  
+      pNext         : Ptr_VkAccelerationStructureCreateInfoNV := null;           -- const void*                      
+      compactedSize : Int_64_Unsigned_C                       := 0;              -- VkDeviceSize                     
+      info          : VkAccelerationStructureInfoNV           := (others => <>); -- VkAccelerationStructureInfoNV    
+    end record with Convention => C;
+  type Array_VkAccelerationStructureCreateInfoNV is array (Positive range <>) of aliased VkAccelerationStructureCreateInfoNV;
+  type Ptr_Array_VkAccelerationStructureCreateInfoNV is access all Array_VkAccelerationStructureCreateInfoNV;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkBindAccelerationStructureMemoryInfoNV.html
+  type VkBindAccelerationStructureMemoryInfoNV;
+  type Ptr_VkBindAccelerationStructureMemoryInfoNV is access all VkBindAccelerationStructureMemoryInfoNV with Convention => C;
+  type VkBindAccelerationStructureMemoryInfoNV is record
+      sType                 : Int_Unsigned_C := VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV; -- VkStructureType              
+      pNext                 : Ptr_VkBindAccelerationStructureMemoryInfoNV := null;     -- const void*                  
+      accelerationStructure : Ptr                                         := NULL_PTR; -- VkAccelerationStructureNV    
+      memory                : Int_64_Unsigned_C                           := 0;        -- VkDeviceMemory             
+      memoryOffset          : Int_64_Unsigned_C                           := 0;        -- VkDeviceSize                 
+      deviceIndexCount      : Int_Unsigned_C                              := 0;        -- uint32_t                     
+      pDeviceIndices        : Ptr_Int_Unsigned_C                          := null;     -- const uint32_t*              
+    end record with Convention => C;
+  type Array_VkBindAccelerationStructureMemoryInfoNV is array (Positive range <>) of aliased VkBindAccelerationStructureMemoryInfoNV;
+  type Ptr_Array_VkBindAccelerationStructureMemoryInfoNV is access all Array_VkBindAccelerationStructureMemoryInfoNV;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkRayTracingShaderGroupCreateInfoNV.html
+  type VkRayTracingShaderGroupCreateInfoNV;
+  type Ptr_VkRayTracingShaderGroupCreateInfoNV is access all VkRayTracingShaderGroupCreateInfoNV with Convention => C;
+  type VkRayTracingShaderGroupCreateInfoNV is record
+      sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV; -- VkStructureType                  
+      pNext              : Ptr_VkRayTracingShaderGroupCreateInfoNV := null; -- const void*                      
+      typ                : Int_Unsigned_C                          := 0;    -- VkRayTracingShaderGroupTypeNV    
+      generalShader      : Int_Unsigned_C                          := 0;    -- uint32_t                         
+      closestHitShader   : Int_Unsigned_C                          := 0;    -- uint32_t                         
+      anyHitShader       : Int_Unsigned_C                          := 0;    -- uint32_t                         
+      intersectionShader : Int_Unsigned_C                          := 0;    -- uint32_t                                        
+    end record with Convention => C;
+  type Array_VkRayTracingShaderGroupCreateInfoNV is array (Positive range <>) of aliased VkRayTracingShaderGroupCreateInfoNV;
+  type Ptr_Array_VkRayTracingShaderGroupCreateInfoNV is access all Array_VkRayTracingShaderGroupCreateInfoNV;
+  
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkRayTracingPipelineCreateInfoNV.html
+  type VkRayTracingPipelineCreateInfoNV;
+  type Ptr_VkRayTracingPipelineCreateInfoNV is access all VkRayTracingPipelineCreateInfoNV with Convention => C;
+  type VkRayTracingPipelineCreateInfoNV is record
+      sType              : Int_Unsigned_C := VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV; -- VkStructureType                               
+      pNext              : Ptr_VkRayTracingPipelineCreateInfoNV    := null;     -- const void*                                   
+      flags              : Int_Unsigned_C                          := 0;        -- VkPipelineCreateFlags                         
+      stageCount         : Int_Unsigned_C                          := 0;        -- uint32_t                                      
+      pStages            : Ptr_VkPipelineShaderStageCreateInfo     := null;     -- const VkPipelineShaderStageCreateInfo*        
+      groupCount         : Int_Unsigned_C                          := 0;        -- uint32_t                                      
+      pGroups            : Ptr_VkRayTracingShaderGroupCreateInfoNV := null;     -- const VkRayTracingShaderGroupCreateInfoNV*    
+      maxRecursionDepth  : Int_Unsigned_C                          := 0;        -- uint32_t                                      
+      layout             : Ptr                                     := NULL_PTR; -- VkPipelineLayout                              
+      basePipelineHandle : Ptr                                     := NULL_PTR; -- VkPipeline                                    
+      basePipelineIndex  : Int_C                                   := 0;        -- int32_t                                       
+    end record with Convention => C;
+  type Array_VkRayTracingPipelineCreateInfoNV is array (Positive range <>) of aliased VkRayTracingPipelineCreateInfoNV;
+  type Ptr_Array_VkRayTracingPipelineCreateInfoNV is access all Array_VkRayTracingPipelineCreateInfoNV;
+  
   --------------- 
   -- Functions --
   ---------------
@@ -2326,9 +2930,324 @@ package Neo.API.Vulkan is
   -- Convert booleans
   function To_VkBool32 (Val : Boolean) return Int_Unsigned_C is (if Val then VK_TRUE else VK_FALSE);
   
-  -- Assert VK_SUCCESS
-  procedure vkAssert (Result : Int_Unsigned_C); -- VkResult
+  -- Convert a OpenGL texture format to the equivalent Vulkan one
+  function To_VkFormat (Val : Int_Unsigned_C) return Int_Unsigned_C is
+    (case Val is
+
+       -- 8 bits per component
+       when GL_R8                                          => VK_FORMAT_R8_UNORM,          
+       when GL_RG8                                         => VK_FORMAT_R8G8_UNORM,        
+       when GL_RGB8                                        => VK_FORMAT_R8G8B8_UNORM,   
+       when GL_RGBA8                                       => VK_FORMAT_R8G8B8A8_UNORM, 
+       when GL_R8_SNORM                                    => VK_FORMAT_R8_SNORM,           
+       when GL_RG8_SNORM                                   => VK_FORMAT_R8G8_SNORM,        
+       when GL_RGB8_SNORM                                  => VK_FORMAT_R8G8B8_SNORM,      
+       when GL_RGBA8_SNORM                                 => VK_FORMAT_R8G8B8A8_SNORM,    
+       when GL_R8UI                                        => VK_FORMAT_R8_UINT,              
+       when GL_RG8UI                                       => VK_FORMAT_R8G8_UINT,           
+       when GL_RGB8UI                                      => VK_FORMAT_R8G8B8_UINT,           
+       when GL_RGBA8UI                                     => VK_FORMAT_R8G8B8A8_UINT,                        
+       when GL_R8I                                         => VK_FORMAT_R8_SINT,                       
+       when GL_RG8I                                        => VK_FORMAT_R8G8_SINT,              
+       when GL_RGB8I                                       => VK_FORMAT_R8G8B8_SINT,             
+       when GL_RGBA8I                                      => VK_FORMAT_R8G8B8A8_SINT,        
+       when GL_SR8                                         => VK_FORMAT_R8_SRGB,             
+       when GL_SRG8                                        => VK_FORMAT_R8G8_SRGB,     
+       when GL_SRGB8                                       => VK_FORMAT_R8G8B8_SRGB,       
+       when GL_SRGB8_ALPHA8                                => VK_FORMAT_R8G8B8A8_SRGB,     
+
+       -- 16 bits per component
+       when GL_R16                                         => VK_FORMAT_R16_UNORM,                   
+       when GL_RG16                                        => VK_FORMAT_R16G16_UNORM,         
+       when GL_RGB16                                       => VK_FORMAT_R16G16B16_UNORM,       
+       when GL_RGBA16                                      => VK_FORMAT_R16G16B16A16_UNORM,  
+       when GL_R16_SNORM                                   => VK_FORMAT_R16_SNORM,          
+       when GL_RG16_SNORM                                  => VK_FORMAT_R16G16_SNORM,             
+       when GL_RGB16_SNORM                                 => VK_FORMAT_R16G16B16_SNORM,          
+       when GL_RGBA16_SNORM                                => VK_FORMAT_R16G16B16A16_SNORM,   
+       when GL_R16UI                                       => VK_FORMAT_R16_UINT,                
+       when GL_RG16UI                                      => VK_FORMAT_R16G16_UINT,             
+       when GL_RGB16UI                                     => VK_FORMAT_R16G16B16_UINT,         
+       when GL_RGBA16UI                                    => VK_FORMAT_R16G16B16A16_UINT,              
+       when GL_R16I                                        => VK_FORMAT_R16_SINT,                       
+       when GL_RG16I                                       => VK_FORMAT_R16G16_SINT,                
+       when GL_RGB16I                                      => VK_FORMAT_R16G16B16_SINT,           
+       when GL_RGBA16I                                     => VK_FORMAT_R16G16B16A16_SINT,      
+       when GL_R16F                                        => VK_FORMAT_R16_SFLOAT,                      
+       when GL_RG16F                                       => VK_FORMAT_R16G16_SFLOAT,                   
+       when GL_RGB16F                                      => VK_FORMAT_R16G16B16_SFLOAT,                
+       when GL_RGBA16F                                     => VK_FORMAT_R16G16B16A16_SFLOAT,         
+
+       -- 32 bits per component
+       when GL_R32UI                                       => VK_FORMAT_R32_UINT,                       
+       when GL_RG32UI                                      => VK_FORMAT_R32G32_UINT,                 
+       when GL_RGB32UI                                     => VK_FORMAT_R32G32B32_UINT,           
+       when GL_RGBA32UI                                    => VK_FORMAT_R32G32B32A32_UINT,               
+       when GL_R32I                                        => VK_FORMAT_R32_SINT,                      
+       when GL_RG32I                                       => VK_FORMAT_R32G32_SINT,               
+       when GL_RGB32I                                      => VK_FORMAT_R32G32B32_SINT,        
+       when GL_RGBA32I                                     => VK_FORMAT_R32G32B32A32_SINT,           
+       when GL_R32F                                        => VK_FORMAT_R32_SFLOAT,                 
+       when GL_RG32F                                       => VK_FORMAT_R32G32_SFLOAT,                  
+       when GL_RGB32F                                      => VK_FORMAT_R32G32B32_SFLOAT,                 
+       when GL_RGBA32F                                     => VK_FORMAT_R32G32B32A32_SFLOAT,        
+
+       -- Packed
+       when GL_R3_G3_B2                                    => VK_FORMAT_UNDEFINED,                   
+       when GL_RGB4                                        => VK_FORMAT_UNDEFINED,                         
+       when GL_RGB5                                        => VK_FORMAT_R5G5B5A1_UNORM_PACK16,           
+       when GL_RGB565                                      => VK_FORMAT_R5G6B5_UNORM_PACK16,            
+       when GL_RGB10                                       => VK_FORMAT_A2R10G10B10_UNORM_PACK32,     
+       when GL_RGB12                                       => VK_FORMAT_UNDEFINED,                      
+       when GL_RGBA2                                       => VK_FORMAT_UNDEFINED,                      
+       when GL_RGBA4                                       => VK_FORMAT_R4G4B4A4_UNORM_PACK16,       
+       when GL_RGBA12                                      => VK_FORMAT_UNDEFINED,                       
+       when GL_RGB5_A1                                     => VK_FORMAT_A1R5G5B5_UNORM_PACK16,           
+       when GL_RGB10_A2                                    => VK_FORMAT_A2R10G10B10_UNORM_PACK32,   
+       when GL_RGB10_A2UI                                  => VK_FORMAT_A2R10G10B10_UINT_PACK32,     
+       when GL_R11F_G11F_B10F                              => VK_FORMAT_B10G11R11_UFLOAT_PACK32,  
+       when GL_RGB9_E5                                     => VK_FORMAT_E5B9G9R9_UFLOAT_PACK32,   
+
+       -- S3TC/DXT/BC
+       when GL_COMPRESSED_RGB_S3TC_DXT1_EXT                => VK_FORMAT_BC1_RGB_UNORM_BLOCK,        
+       when GL_COMPRESSED_RGBA_S3TC_DXT1_EXT               => VK_FORMAT_BC1_RGBA_UNORM_BLOCK,            
+       when GL_COMPRESSED_RGBA_S3TC_DXT5_EXT               => VK_FORMAT_BC2_UNORM_BLOCK,              
+       when GL_COMPRESSED_RGBA_S3TC_DXT3_EXT               => VK_FORMAT_BC3_UNORM_BLOCK,            
+       when GL_COMPRESSED_SRGB_S3TC_DXT1_EXT               => VK_FORMAT_BC1_RGB_SRGB_BLOCK,        
+       when GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT         => VK_FORMAT_BC1_RGBA_SRGB_BLOCK,     
+       when GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT         => VK_FORMAT_BC2_SRGB_BLOCK,           
+       when GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT         => VK_FORMAT_BC3_SRGB_BLOCK,          
+       when GL_COMPRESSED_LUMINANCE_LATC1_EXT              => VK_FORMAT_BC4_UNORM_BLOCK,         
+       when GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT        => VK_FORMAT_BC5_UNORM_BLOCK,         
+       when GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT       => VK_FORMAT_BC4_SNORM_BLOCK,             
+       when GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT => VK_FORMAT_BC5_SNORM_BLOCK,             
+       when GL_COMPRESSED_RED_RGTC1                        => VK_FORMAT_BC4_UNORM_BLOCK,            
+       when GL_COMPRESSED_RG_RGTC2                         => VK_FORMAT_BC5_UNORM_BLOCK,            
+       when GL_COMPRESSED_SIGNED_RED_RGTC1                 => VK_FORMAT_BC4_SNORM_BLOCK,         
+       when GL_COMPRESSED_SIGNED_RG_RGTC2                  => VK_FORMAT_BC5_SNORM_BLOCK,          
+       when GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT          => VK_FORMAT_BC6H_UFLOAT_BLOCK,            
+       when GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT            => VK_FORMAT_BC6H_SFLOAT_BLOCK,             
+       when GL_COMPRESSED_RGBA_BPTC_UNORM                  => VK_FORMAT_BC7_UNORM_BLOCK,             
+       when GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM            => VK_FORMAT_BC7_SRGB_BLOCK,            
+
+       -- ETC
+       when GL_ETC1_RGB8_OES                               => VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK,     
+       when GL_COMPRESSED_RGB8_ETC2                        => VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK, 
+       when GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2    => VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK,  
+       when GL_COMPRESSED_RGBA8_ETC2_EAC                   => VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK,  
+       when GL_COMPRESSED_SRGB8_ETC2                       => VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK,       
+       when GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2   => VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK,      
+       when GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC            => VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK,  
+       when GL_COMPRESSED_R11_EAC                          => VK_FORMAT_EAC_R11_UNORM_BLOCK,        
+       when GL_COMPRESSED_RG11_EAC                         => VK_FORMAT_EAC_R11G11_UNORM_BLOCK,      
+       when GL_COMPRESSED_SIGNED_R11_EAC                   => VK_FORMAT_EAC_R11_SNORM_BLOCK,        
+       when GL_COMPRESSED_SIGNED_RG11_EAC                  => VK_FORMAT_EAC_R11G11_SNORM_BLOCK,   
+
+       -- PVRTC
+       when GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG             => VK_FORMAT_UNDEFINED,                     
+       when GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG             => VK_FORMAT_UNDEFINED,                       
+       when GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG            => VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG,                  
+       when GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG            => VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG,                  
+       when GL_COMPRESSED_RGBA_PVRTC_2BPPV2_IMG            => VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG,              
+       when GL_COMPRESSED_RGBA_PVRTC_4BPPV2_IMG            => VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG,               
+       when GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT            => VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG,             
+       when GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT            => VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG,              
+       when GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT      => VK_FORMAT_UNDEFINED,               
+       when GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT      => VK_FORMAT_UNDEFINED,                  
+       when GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV2_IMG      => VK_FORMAT_UNDEFINED,                 
+       when GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV2_IMG      => VK_FORMAT_UNDEFINED,                   
+
+       -- ASTC
+       when GL_COMPRESSED_RGBA_ASTC_4x4_KHR                => VK_FORMAT_ASTC_4x4_UNORM_BLOCK,     
+       when GL_COMPRESSED_RGBA_ASTC_5x4_KHR                => VK_FORMAT_ASTC_5x4_UNORM_BLOCK,            
+       when GL_COMPRESSED_RGBA_ASTC_5x5_KHR                => VK_FORMAT_ASTC_5x5_UNORM_BLOCK,            
+       when GL_COMPRESSED_RGBA_ASTC_6x5_KHR                => VK_FORMAT_ASTC_6x5_UNORM_BLOCK,          
+       when GL_COMPRESSED_RGBA_ASTC_6x6_KHR                => VK_FORMAT_ASTC_6x6_UNORM_BLOCK,           
+       when GL_COMPRESSED_RGBA_ASTC_8x5_KHR                => VK_FORMAT_ASTC_8x5_UNORM_BLOCK,        
+       when GL_COMPRESSED_RGBA_ASTC_8x6_KHR                => VK_FORMAT_ASTC_8x6_UNORM_BLOCK,         
+       when GL_COMPRESSED_RGBA_ASTC_8x8_KHR                => VK_FORMAT_ASTC_8x8_UNORM_BLOCK,      
+       when GL_COMPRESSED_RGBA_ASTC_10x5_KHR               => VK_FORMAT_ASTC_10x5_UNORM_BLOCK,     
+       when GL_COMPRESSED_RGBA_ASTC_10x6_KHR               => VK_FORMAT_ASTC_10x6_UNORM_BLOCK,   
+       when GL_COMPRESSED_RGBA_ASTC_10x8_KHR               => VK_FORMAT_ASTC_10x8_UNORM_BLOCK,    
+       when GL_COMPRESSED_RGBA_ASTC_10x10_KHR              => VK_FORMAT_ASTC_10x10_UNORM_BLOCK,     
+       when GL_COMPRESSED_RGBA_ASTC_12x10_KHR              => VK_FORMAT_ASTC_12x10_UNORM_BLOCK,     
+       when GL_COMPRESSED_RGBA_ASTC_12x12_KHR              => VK_FORMAT_ASTC_12x12_UNORM_BLOCK,   
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR        => VK_FORMAT_ASTC_4x4_SRGB_BLOCK,      
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR        => VK_FORMAT_ASTC_5x4_SRGB_BLOCK,          
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR        => VK_FORMAT_ASTC_5x5_SRGB_BLOCK,         
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR        => VK_FORMAT_ASTC_6x5_SRGB_BLOCK,        
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR        => VK_FORMAT_ASTC_6x6_SRGB_BLOCK,         
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR        => VK_FORMAT_ASTC_8x5_SRGB_BLOCK,        
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR        => VK_FORMAT_ASTC_8x6_SRGB_BLOCK,       
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR        => VK_FORMAT_ASTC_8x8_SRGB_BLOCK,        
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR       => VK_FORMAT_ASTC_10x5_SRGB_BLOCK,      
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR       => VK_FORMAT_ASTC_10x6_SRGB_BLOCK,       
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR       => VK_FORMAT_ASTC_10x8_SRGB_BLOCK,        
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR      => VK_FORMAT_ASTC_10x10_SRGB_BLOCK,     
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR      => VK_FORMAT_ASTC_12x10_SRGB_BLOCK,    
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR      => VK_FORMAT_ASTC_12x12_SRGB_BLOCK,         
+       when GL_COMPRESSED_RGBA_ASTC_3x3x3_OES              => VK_FORMAT_UNDEFINED,                            
+       when GL_COMPRESSED_RGBA_ASTC_4x3x3_OES              => VK_FORMAT_UNDEFINED,                          
+       when GL_COMPRESSED_RGBA_ASTC_4x4x3_OES              => VK_FORMAT_UNDEFINED,                               
+       when GL_COMPRESSED_RGBA_ASTC_4x4x4_OES              => VK_FORMAT_UNDEFINED,                        
+       when GL_COMPRESSED_RGBA_ASTC_5x4x4_OES              => VK_FORMAT_UNDEFINED,                        
+       when GL_COMPRESSED_RGBA_ASTC_5x5x4_OES              => VK_FORMAT_UNDEFINED,                               
+       when GL_COMPRESSED_RGBA_ASTC_5x5x5_OES              => VK_FORMAT_UNDEFINED,                               
+       when GL_COMPRESSED_RGBA_ASTC_6x5x5_OES              => VK_FORMAT_UNDEFINED,                             
+       when GL_COMPRESSED_RGBA_ASTC_6x6x5_OES              => VK_FORMAT_UNDEFINED,                             
+       when GL_COMPRESSED_RGBA_ASTC_6x6x6_OES              => VK_FORMAT_UNDEFINED,                          
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_3x3x3_OES      => VK_FORMAT_UNDEFINED,                     
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x3x3_OES      => VK_FORMAT_UNDEFINED,                    
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x3_OES      => VK_FORMAT_UNDEFINED,                         
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4x4_OES      => VK_FORMAT_UNDEFINED,                         
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4x4_OES      => VK_FORMAT_UNDEFINED,                           
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x4_OES      => VK_FORMAT_UNDEFINED,                          
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5x5_OES      => VK_FORMAT_UNDEFINED,                        
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5x5_OES      => VK_FORMAT_UNDEFINED,                       
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES      => VK_FORMAT_UNDEFINED,                           
+       when GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES      => VK_FORMAT_UNDEFINED,                          
+
+       -- ATC
+       when GL_ATC_RGB_AMD                                 => VK_FORMAT_UNDEFINED,                                        
+       when GL_ATC_RGBA_EXPLICIT_ALPHA_AMD                 => VK_FORMAT_UNDEFINED,                             
+       when GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD             => VK_FORMAT_UNDEFINED,                
+
+       -- Palletized
+       when GL_PALETTE4_RGB8_OES                           => VK_FORMAT_UNDEFINED,                                 
+       when GL_PALETTE4_RGBA8_OES                          => VK_FORMAT_UNDEFINED,                                
+       when GL_PALETTE4_R5_G6_B5_OES                       => VK_FORMAT_UNDEFINED,                                 
+       when GL_PALETTE4_RGBA4_OES                          => VK_FORMAT_UNDEFINED,                                
+       when GL_PALETTE4_RGB5_A1_OES                        => VK_FORMAT_UNDEFINED,                                   
+       when GL_PALETTE8_RGB8_OES                           => VK_FORMAT_UNDEFINED,                                 
+       when GL_PALETTE8_RGBA8_OES                          => VK_FORMAT_UNDEFINED,                                    
+       when GL_PALETTE8_R5_G6_B5_OES                       => VK_FORMAT_UNDEFINED,                                   
+       when GL_PALETTE8_RGBA4_OES                          => VK_FORMAT_UNDEFINED,                                     
+       when GL_PALETTE8_RGB5_A1_OES                        => VK_FORMAT_UNDEFINED,                             
+
+       -- Depth/stencil
+       when GL_DEPTH_COMPONENT16                           => VK_FORMAT_D16_UNORM,
+       when GL_DEPTH_COMPONENT24                           => VK_FORMAT_X8_D24_UNORM_PACK32,
+       when GL_DEPTH_COMPONENT32                           => VK_FORMAT_UNDEFINED,
+       when GL_DEPTH_COMPONENT32F                          => VK_FORMAT_D32_SFLOAT,
+       when GL_DEPTH_COMPONENT32F_NV                       => VK_FORMAT_D32_SFLOAT,
+       when GL_STENCIL_INDEX1                              => VK_FORMAT_UNDEFINED,
+       when GL_STENCIL_INDEX4                              => VK_FORMAT_UNDEFINED,
+       when GL_STENCIL_INDEX8                              => VK_FORMAT_S8_UINT,
+       when GL_STENCIL_INDEX16                             => VK_FORMAT_UNDEFINED,
+       when GL_DEPTH24_STENCIL8                            => VK_FORMAT_D24_UNORM_S8_UINT,
+       when GL_DEPTH32F_STENCIL8                           => VK_FORMAT_D32_SFLOAT_S8_UINT,
+       when GL_DEPTH32F_STENCIL8_NV                        => VK_FORMAT_D32_SFLOAT_S8_UINT,
+
+       -- Anything else is undefined
+       when others => VK_FORMAT_UNDEFINED);
   
+  -- Assert VK_SUCCESS
+  procedure vkAssert (Result : Int_Unsigned_C);
+      
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetAccelerationStructureMemoryRequirementsNV.html
+  type Ptr_vkGetAccelerationStructureMemoryRequirementsNV is access procedure
+    (device              : Ptr;                                             -- VkDevice                                    
+     pInfo               : VkAccelerationStructureMemoryRequirementsInfoNV; -- const VkAccelerationStructureMemoryRequirementsInfoNV*
+     pMemoryRequirements : Ptr_VkAllocationCallbacks)                       -- const VkAllocationCallbacks*
+     with Convention => C;
+  function To_Ptr_vkGetAccelerationStructureMemoryRequirementsNV is new Unchecked_Conversion (Ptr, Ptr_vkGetAccelerationStructureMemoryRequirementsNV);
+  vkGetAccelerationStructureMemoryRequirementsNV : Ptr_vkGetAccelerationStructureMemoryRequirementsNV := null;
+                                 
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCreateAccelerationStructureNV.html
+  type Ptr_vkCreateAccelerationStructureNV is access function (device                 : Ptr;                                     -- VkDevice
+                                                               pCreateInfo            : Ptr_VkAccelerationStructureCreateInfoNV; -- const VkAccelerationStructureCreateInfoNV*
+                                                               pAllocator             : Ptr_VkAllocationCallbacks;               -- const VkAllocationCallbacks* 
+                                                               pAccelerationStructure : Ptr_Ptr)                                 -- VkAccelerationStructureNV* 
+                                                               return Int_Unsigned_C                                             -- VkResult
+                                                               with Convention => C;
+  function To_Ptr_vkCreateAccelerationStructureNV is new Unchecked_Conversion (Ptr, Ptr_vkCreateAccelerationStructureNV);
+  vkCreateAccelerationStructureNV : Ptr_vkCreateAccelerationStructureNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkDestroyAccelerationStructureNV.html
+  type Ptr_vkDestroyAccelerationStructureNV is access procedure (device                : Ptr;                       -- VkDevice
+                                                                 accelerationStructure : Ptr;                       -- VkAccelerationStructureNV
+                                                                 pAllocator            : Ptr_VkAllocationCallbacks) -- const VkAllocationCallbacks*
+                                                                 with Convention => C;
+  function To_Ptr_vkDestroyAccelerationStructureNV is new Unchecked_Conversion (Ptr, Ptr_vkDestroyAccelerationStructureNV);
+  vkDestroyAccelerationStructureNV : Ptr_vkDestroyAccelerationStructureNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkBindAccelerationStructureMemoryNV.html
+  type Ptr_vkBindAccelerationStructureMemoryNV is access function (device        : Ptr;                                         -- VkDevice
+                                                                   bindInfoCount : Int_Unsigned_C;                              -- uint32_t
+                                                                   pBindInfos    : Ptr_VkBindAccelerationStructureMemoryInfoNV) -- const VkBindAccelerationStructureMemoryInfoNV*
+                                                                   return Int_Unsigned_C                                        -- VkResult
+                                                                   with Convention => C;
+  function To_Ptr_vkBindAccelerationStructureMemoryNV is new Unchecked_Conversion (Ptr, Ptr_vkBindAccelerationStructureMemoryNV);
+  vkBindAccelerationStructureMemoryNV : Ptr_vkBindAccelerationStructureMemoryNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetAccelerationStructureHandleNV.html
+  type Ptr_vkGetAccelerationStructureHandleNV is access function (device                : Ptr;        -- VkDevice
+                                                                  accelerationStructure : Ptr;        -- VkAccelerationStructureNV
+                                                                  dataSize              : Int_Size_C; -- size_t
+                                                                  pData                 : Ptr)        -- void*
+                                                                  return Int_Unsigned_C               -- VkResult
+                                                                  with Convention => C;
+  function To_Ptr_vkGetAccelerationStructureHandleNV is new Unchecked_Conversion (Ptr, Ptr_vkGetAccelerationStructureHandleNV);
+  vkGetAccelerationStructureHandleNV : Ptr_vkGetAccelerationStructureHandleNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdBuildAccelerationStructureNV.html
+  type Ptr_vkCmdBuildAccelerationStructureNV is access procedure (commandBuffer  : Ptr;                               -- VkCommandBuffer
+                                                                  pInfo          : Ptr_VkAccelerationStructureInfoNV; -- const VkAccelerationStructureInfoNV*
+                                                                  instanceData   : Ptr;                               -- VkBuffer
+                                                                  instanceOffset : Int_64_Unsigned_C;                 -- VkDeviceSize
+                                                                  update         : Int_Unsigned_C;                    -- VkBool32
+                                                                  dst            : Ptr;                               -- VkAccelerationStructureNV
+                                                                  src            : Ptr;                               -- VkAccelerationStructureNV
+                                                                  scratch        : Ptr;                               -- VkBuffer
+                                                                  scratchOffset  : Int_64_Unsigned_C)                 -- VkDeviceSize
+                                                                  with Convention => C;
+  function To_Ptr_vkCmdBuildAccelerationStructureNV is new Unchecked_Conversion (Ptr, Ptr_vkCmdBuildAccelerationStructureNV);
+  vkCmdBuildAccelerationStructureNV : Ptr_vkCmdBuildAccelerationStructureNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCreateRayTracingPipelinesNV.html
+  type Ptr_vkCreateRayTracingPipelinesNV is access function (device          : Ptr;                                  -- VkDevice
+                                                             pipelineCache   : Ptr;                                  -- VkPipelineCache
+                                                             createInfoCount : Int_Unsigned_C;                       -- uint32_t
+                                                             pCreateInfos    : Ptr_VkRayTracingPipelineCreateInfoNV; -- const VkRayTracingPipelineCreateInfoNV*
+                                                             pAllocator      : Ptr_VkAllocationCallbacks;            -- const VkAllocationCallbacks*
+                                                             pPipelines      : Ptr_Ptr)                              -- VkPipeline*
+                                                             return Int_Unsigned_C                                   -- VkResult
+                                                             with Convention => C;
+  function To_Ptr_vkCreateRayTracingPipelinesNV is new Unchecked_Conversion (Ptr, Ptr_vkCreateRayTracingPipelinesNV);
+  vkCreateRayTracingPipelinesNV : Ptr_vkCreateRayTracingPipelinesNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetRayTracingShaderGroupHandlesNV.html
+  type Ptr_vkGetRayTracingShaderGroupHandlesNV is access function (device     : Ptr;            -- VkDevice
+                                                                   pipeline   : Ptr;            -- VkPipeline
+                                                                   firstGroup : Int_Unsigned_C; -- uint32_t
+                                                                   groupCount : Int_Unsigned_C; -- uint32_t
+                                                                   dataSize   : Int_Size_C;     -- size_t
+                                                                   pData      : Ptr)            -- void*
+                                                                   return Int_Unsigned_C        -- VkResult
+                                                                   with Convention => C;
+  function To_Ptr_vkGetRayTracingShaderGroupHandlesNV is new Unchecked_Conversion (Ptr, Ptr_vkGetRayTracingShaderGroupHandlesNV);
+  vkGetRayTracingShaderGroupHandlesNV : Ptr_vkGetRayTracingShaderGroupHandlesNV := null;
+   
+  -- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdTraceRaysNV.html
+  type Ptr_vkCmdTraceRaysNV is access procedure (commandBuffer                    : Ptr;               -- VkCommandBuffer
+                                                 raygenShaderBindingTableBuffer   : Ptr;               -- VkBuffer
+                                                 raygenShaderBindingOffset        : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 missShaderBindingTableBuffer     : Ptr;               -- VkBuffer
+                                                 missShaderBindingOffset          : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 missShaderBindingStride          : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 hitShaderBindingTableBuffer      : Ptr;               -- VkBuffer
+                                                 hitShaderBindingOffset           : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 hitShaderBindingStride           : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 callableShaderBindingTableBuffer : Ptr;               -- VkBuffer
+                                                 callableShaderBindingOffset      : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 callableShaderBindingStride      : Int_64_Unsigned_C; -- VkDeviceSize
+                                                 width                            : Int_Unsigned_C;    -- uint32_t
+                                                 height                           : Int_Unsigned_C;    -- uint32_t
+                                                 depth                            : Int_Unsigned_C)    -- uint32_t
+                                                 with Convention => C;
+  function To_Ptr_vkCmdTraceRaysNV is new Unchecked_Conversion (Ptr, Ptr_vkCmdTraceRaysNV);
+  vkCmdTraceRaysNV : Ptr_vkCmdTraceRaysNV := null;
+   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkFreeDescriptorSets.html
   type Ptr_vkFreeDescriptorSets is access function (device             : Ptr;            -- VkDevice
                                                     descriptorPool     : Ptr;            -- VkDescriptorPool
@@ -2373,7 +3292,7 @@ package Neo.API.Vulkan is
   type Ptr_vkCreateSampler is access function (device      : Ptr;                       -- VkDevice
                                                pCreateInfo : Ptr_VkSamplerCreateInfo;   -- const VkSamplerCreateInfo* 
                                                pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
-                                               pSampler    : Ptr) -- Ptr_Ptr)           -- VkSampler*
+                                               pSampler    : Ptr) -- Ptr_Ptr)                   -- VkSampler*
                                                return Int_Unsigned_C                    -- VkResult
                                                with Convention => C;
   function To_Ptr_vkCreateSampler is new Unchecked_Conversion (Ptr, Ptr_vkCreateSampler);
@@ -2504,7 +3423,7 @@ package Neo.API.Vulkan is
                                            offset : Int_64_Unsigned_C; -- VkDeviceSize
                                            size   : Int_64_Unsigned_C; -- VkDeviceSize
                                            flags  : Int_Unsigned_C;    -- VkMemoryMapFlags
-                                           ppData : Ptr_Ptr)           -- void**
+                                           ppData : Ptr)               -- void**
                                            return Int_Unsigned_C       -- VkResult
                                            with Convention => C;
   function To_Ptr_vkMapMemory is new Unchecked_Conversion (Ptr, Ptr_vkMapMemory);
@@ -2523,7 +3442,7 @@ package Neo.API.Vulkan is
   type Ptr_vkCreateImageView is access function (device      : Ptr;                       -- VkDevice
                                                  pCreateInfo : Ptr_VkImageViewCreateInfo; -- const VkImageViewCreateInfo*
                                                  pAllocator  : Ptr_VkAllocationCallbacks; -- const VkAllocationCallbacks*
-                                                 pView       : Ptr) -- Ptr_Ptr)           -- VkImageView* 
+                                                 pView       : Ptr) -- Ptr_Ptr)                   -- VkImageView* 
                                                  return Int_Unsigned_C                    -- VkResult
                                                  with Convention => C;
   function To_Ptr_vkCreateImageView is new Unchecked_Conversion (Ptr, Ptr_vkCreateImageView);
@@ -2601,8 +3520,8 @@ package Neo.API.Vulkan is
   vkGetPhysicalDeviceMemoryProperties : Ptr_vkGetPhysicalDeviceMemoryProperties := null;
 
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html
-  type Ptr_vkGetPhysicalDeviceQueueFamilyProperties is access procedure (physicalDevice            : Ptr;                               -- VkPhysicalDevice 
-                                                                         pQueueFamilyPropertyCount : Ptr_Int_Unsigned_C;                -- uint32_t*
+  type Ptr_vkGetPhysicalDeviceQueueFamilyProperties is access procedure (physicalDevice            : Ptr;                         -- VkPhysicalDevice 
+                                                                         pQueueFamilyPropertyCount : Ptr_Int_Unsigned_C;          -- uint32_t*
                                                                          pQueueFamilyProperties    : Ptr_VkQueueFamilyProperties) -- VkQueueFamilyProperties*  
                                                                          with Convention => C;
   function To_Ptr_vkGetPhysicalDeviceQueueFamilyProperties is new Unchecked_Conversion (Ptr, Ptr_vkGetPhysicalDeviceQueueFamilyProperties);
@@ -2900,12 +3819,12 @@ package Neo.API.Vulkan is
   vkCreateFence : Ptr_vkCreateFence := null;
     
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkCmdDraw.html
-  type Ptr_vkCmdDraw is access procedure (commandBuffer     : Ptr; -- VkCommandBuffer
-                                               vertexCount      : Int_Unsigned_C; -- uint32_t
-                                               instanceCount      : Int_Unsigned_C; -- uint32_t
-                                               firstVertex      : Int_Unsigned_C; -- uint32_t
-                                               firstInstance      : Int_Unsigned_C) -- uint32_t
-                                               with Convention => C;
+  type Ptr_vkCmdDraw is access procedure (commandBuffer : Ptr; -- VkCommandBuffer
+                                          vertexCount   : Int_Unsigned_C; -- uint32_t
+                                          instanceCount : Int_Unsigned_C; -- uint32_t
+                                          firstVertex   : Int_Unsigned_C; -- uint32_t
+                                          firstInstance : Int_Unsigned_C) -- uint32_t
+                                          with Convention => C;
   function To_Ptr_vkCmdDraw is new Unchecked_Conversion (Ptr, Ptr_vkCmdDraw);
   vkCmdDraw : Ptr_vkCmdDraw := null;
   
@@ -3118,11 +4037,11 @@ package Neo.API.Vulkan is
   vkGetPhysicalDeviceFormatProperties : Ptr_vkGetPhysicalDeviceFormatProperties := null;
   
   -- https://www.khronos.org/registry/vulkan/specs/1.0/man/html/vkEnumerateDeviceExtensionProperties.html
-  type Ptr_vkEnumerateDeviceExtensionProperties is access function (physicalDevice : Ptr;                             -- VkPhysicalDevice
-                                                                    pLayerName     : Ptr_Str_8_C;                     -- const char*
-                                                                    pPropertyCount : Ptr_Int_Unsigned_C;              -- uint32_t*
+  type Ptr_vkEnumerateDeviceExtensionProperties is access function (physicalDevice : Ptr;                       -- VkPhysicalDevice
+                                                                    pLayerName     : Ptr_Str_8_C;               -- const char*
+                                                                    pPropertyCount : Ptr_Int_Unsigned_C;        -- uint32_t*
                                                                     pProperties    : Ptr_VkExtensionProperties) -- VkExtensionProperties* 
-                                                                    return Int_Unsigned_C                             -- VkResult
+                                                                    return Int_Unsigned_C                       -- VkResult
                                                                     with Convention => C;
   function To_Ptr_vkEnumerateDeviceExtensionProperties is new Unchecked_Conversion (Ptr, Ptr_vkEnumerateDeviceExtensionProperties);
   vkEnumerateDeviceExtensionProperties : Ptr_vkEnumerateDeviceExtensionProperties := null;

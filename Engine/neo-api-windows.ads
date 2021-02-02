@@ -1,17 +1,17 @@
 
---                                                                                                                                      --
---                                                         N E O  E N G I N E                                                           --
---                                                                                                                                      --
---                                                 Copyright (C) 2016 Justin Squirek                                                    --
---                                                                                                                                      --
--- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the --
--- Free Software Foundation, either version 3 of the License, or (at your option) any later version.                                    --
---                                                                                                                                      --
--- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of                --
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                            --
---                                                                                                                                      --
--- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                       --
---                                                                                                                                      --
+--                                                                                                                               --
+--                                                      N E O  E N G I N E                                                       --
+--                                                                                                                               --
+--                                               Copyright (C) 2020 Justin Squirek                                               --
+--                                                                                                                               --
+-- Neo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published --
+-- by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.                      --
+--                                                                                                                               --
+-- Neo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of         --
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.                     --
+--                                                                                                                               --
+-- You should have received a copy of the GNU General Public License along with Neo. If not, see gnu.org/licenses                --
+--                                                                                                                               --
 
 with Unchecked_Conversion;
 
@@ -47,7 +47,7 @@ package Neo.API.Windows is
   -----------
 
   -- https://web.archive.org/web/20150111095828/http://msdn.microsoft.com/en-us/library/930f87yf.aspx
-  MAX_PATH : constant Int_Size_C := 32_768; -- ???
+  MAX_PATH : constant Int_Size_C := 32_768; 
 
   -- https://web.archive.org/web/20160830082310/https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
   GWL_STYLE : constant Int_C := -16; -- 0
@@ -74,7 +74,7 @@ package Neo.API.Windows is
   IDC_APPSTARTING : constant Int_Ptr := 16#7F00#; -- MAKEINTRESOURCE (0)
   
   -- https://web.archive.org/web/20160828015700/https://msdn.microsoft.coSm/en-us/library/windows/desktop/dd144909(v=vs.85).aspx
-  CLR_INVALID : constant Int_Unsigned_C := 16#FFFF_FFFF#; -- ???
+  CLR_INVALID : constant Int_Unsigned_C := 16#FFFF_FFFF#; 
 
   -- https://web.archive.org/web/20151028210132/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729168(v=vs.85).aspx
   CF_UNICODETEXT : constant Int_Unsigned_C := 16#0000_000D#; -- 0
@@ -83,13 +83,13 @@ package Neo.API.Windows is
   GMEM_MOVEABLE : constant Int_Unsigned_C := 16#0000_0002#; -- 0x0000
 
   -- https://web.archive.org/web/20160808212528/https://msdn.microsoft.com/en-us/library/windows/desktop/ff729175(v=vs.85).aspx
-  SPI_GETNONCLIENTMETRICS : constant Int_Unsigned_C := 16#0000_0029#; -- ???
+  SPI_GETNONCLIENTMETRICS : constant Int_Unsigned_C := 16#0000_0029#; 
 
   -- https://web.archive.org/web/20160902020447/https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx
   ERROR_INSUFFICIENT_BUFFER : constant Int_Unsigned_C := 16#0000_007A#; -- 0
 
   -- https://web.archive.org/web/20160625030912/https://msdn.microsoft.com/en-us/library/windows/desktop/bb775951(v=vs.85).aspx
-  BS_GROUPBOX : constant Int_Unsigned_C := 16#0000_0007#; -- ???
+  BS_GROUPBOX : constant Int_Unsigned_C := 16#0000_0007#; 
 
   -- https://web.archive.org/web/20121031105705/http://msdn.microsoft.com/en-us/library/windows/desktop/bb787537(v=vs.85).aspx
   SIF_ALL : constant Int_Unsigned_C := 16#0000_001F#; -- 0x0000
@@ -106,12 +106,12 @@ package Neo.API.Windows is
   HKEY_LOCAL_MACHINE : constant Int_Ptr := 16#8000_0002#; -- 0x00000000
   
   -- https://web.archive.org/web/20161121002327/https://msdn.microsoft.com/en-us/library/windows/desktop/bb787577(v=vs.85).aspx
-  SB_ENDSCROLL : constant Int_Ptr := 16#0000_0007#; -- ???
-  SB_LINEDOWN  : constant Int_Ptr := 16#0000_0001#; -- ???
+  SB_ENDSCROLL : constant Int_Ptr := 16#0000_0007#; 
+  SB_LINEDOWN  : constant Int_Ptr := 16#0000_0001#; 
 
   -- https://web.archive.org/web/20131006214136/http://msdn.microsoft.com/en-us/library/windows/desktop/bb775464(v=vs.85).aspx
-  ES_MULTILINE : constant Int_Unsigned_C := 16#0000_0004#; -- ???
-  ES_READONLY  : constant Int_Unsigned_C := 16#0000_0800#; -- ???
+  ES_MULTILINE : constant Int_Unsigned_C := 16#0000_0004#; 
+  ES_READONLY  : constant Int_Unsigned_C := 16#0000_0800#; 
   
   -- https://web.archive.org/web/20141228152842/http://msdn.microsoft.com/en-us/library/windows/desktop/ms644977(v=vs.85).aspx
   WH_CBT        : constant Int_C := 5; -- 0
@@ -185,11 +185,11 @@ package Neo.API.Windows is
   SM_CYFRAME    : constant Int_C := 33; -- 0
  
   -- https://web.archive.org/web/20160202112019/https://msdn.microsoft.com/en-us/library/windows/desktop/dd183499(v=vs.85).aspx
-  FF_MODERN           : constant Int_Unsigned_C := 16#0000_0030#; -- ???
-  DEFAULT_CHARSET     : constant Int_Unsigned_C := 16#0000_0001#; -- ???
-  DEFAULT_QUALITY     : constant Int_Unsigned_C := 16#0000_0000#; -- ???
-  OUT_DEFAULT_PRECIS  : constant Int_Unsigned_C := 16#0000_0000#; -- ???
-  CLIP_DEFAULT_PRECIS : constant Int_Unsigned_C := 16#0000_0000#; -- ???
+  FF_MODERN           : constant Int_Unsigned_C := 16#0000_0030#; 
+  DEFAULT_CHARSET     : constant Int_Unsigned_C := 16#0000_0001#; 
+  DEFAULT_QUALITY     : constant Int_Unsigned_C := 16#0000_0000#; 
+  OUT_DEFAULT_PRECIS  : constant Int_Unsigned_C := 16#0000_0000#; 
+  CLIP_DEFAULT_PRECIS : constant Int_Unsigned_C := 16#0000_0000#; 
 
   -- https://web.archive.org/web/20140209214910/http://msdn.microsoft.com/en-us/library/windows/desktop/ms632647(v=vs.85).aspx
   WMSZ_BOTTOMRIGHT : constant Int_Ptr := 16#0000_0008#; -- 0
@@ -203,15 +203,15 @@ package Neo.API.Windows is
 
   -- https://web.archive.org/web/20150109064332/http://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
   RIDEV_INPUTSINK                : constant Int_Unsigned_C    := 16#0000_0100#; -- 0x00000000
-  GENERIC_DESKTOP                : constant Int_16_Unsigned_C := 16#0001#;      -- ???
-  USE_RAW_KEYBOARD               : constant Int_16_Unsigned_C := 16#0006#;      -- ???
-  USE_RAW_MOUSE                  : constant Int_16_Unsigned_C := 16#0002#;      -- ???
-  GET_DEVICE_HEADER              : constant Int_Unsigned_C    := 16#1000_0005#; -- ???
-  GET_DEVICE_DATA                : constant Int_Unsigned_C    := 16#1000_0003#; -- ???
-  STOP_READING_TOP_LEVEL_DEVICES : constant Int_Unsigned_C    := 16#0000_0001#; -- ???
-  KEY_MAKE_CODE_FOR_LEFT         : constant Int_16_Unsigned_C := 16#002A#;      -- ???
-  KEY_IS_RIGHT_SIDED             : constant Int_16_Unsigned_C := 16#0002#;      -- ???
-  MOUSE_WHEEL_DELTA              : constant Int_16_Signed     := 120;           -- ???
+  GENERIC_DESKTOP                : constant Int_16_Unsigned_C := 16#0001#;      
+  USE_RAW_KEYBOARD               : constant Int_16_Unsigned_C := 16#0006#;      
+  USE_RAW_MOUSE                  : constant Int_16_Unsigned_C := 16#0002#;      
+  GET_DEVICE_HEADER              : constant Int_Unsigned_C    := 16#1000_0005#; 
+  GET_DEVICE_DATA                : constant Int_Unsigned_C    := 16#1000_0003#; 
+  STOP_READING_TOP_LEVEL_DEVICES : constant Int_Unsigned_C    := 16#0000_0001#; 
+  KEY_MAKE_CODE_FOR_LEFT         : constant Int_16_Unsigned_C := 16#002A#;      
+  KEY_IS_RIGHT_SIDED             : constant Int_16_Unsigned_C := 16#0002#;      
+  MOUSE_WHEEL_DELTA              : constant Int_16_Signed     := 120;           
 
   -- https://web.archive.org/web/20160605071718/https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx
   MB_SYSTEMMODAL     : constant Int_Unsigned_C := 16#0000_1000#; -- 0x00000000L

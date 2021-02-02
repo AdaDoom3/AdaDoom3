@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<Properties
+    bl-label="SuperTuxKart Image Properties"
+>
+    <PropGroup id="propgroup_visual" name="Display">
+        <!-- Shader -->
+        <EnumProp id="shader" name="Shader" default="solid" doc="Select the shader that should be used to render this material">
+            <!-- SP shader -->
+            <EnumChoice id="sp_shader" label="PBR Custom">
+                <StringProp id="shader_name" name="Name of shader"  default=""/>
+                <StringProp id="uv_two_tex" name="Second UV layer texture (if exists)"  default="" doc="If UV map 2 is needed, enter its texture name here"/>
+                <StringProp id="tex_layer_2" name="Texture layer 2"  default="" doc="Texture layer 2 in shader"/>
+                <StringProp id="tex_layer_3" name="Texture layer 3"  default="" doc="Texture layer 3 in shader"/>
+                <StringProp id="tex_layer_4" name="Texture layer 4"  default="" doc="Texture layer 4 in shader"/>
+                <StringProp id="tex_layer_5" name="Texture layer 5"  default="" doc="Texture layer 5 in shader"/>
+                <StringProp id="mask" name="Mask image (optional)" default="" doc="Greyscale image containing the alpha channel (transparency) for this image"/>
+                <!-- Slowdown -->
+                <BoolProp id="colorizable" name="Colorizable (for library objects and karts)" default="false"
+                        doc="Used to determine whether this texture can be colorized by STK (for library objects and karts)">
+                    <FloatProp id="colorization_factor" name="Colorization factor" default="0.0" min="0.0" max="1.0"
+                               doc="Set the minimun resulting saturation of the new color, 0 means using the original saturation from texture"/>
+                    <StringProp id="colorization_mask" name="Colorization mask" default="" doc="Determine which part of texture to be affected by colorization, this will be encoded into the alpha channel of texture, so don't use in transparent shader."/>
+                    <StringProp id="hue_settings" name="Hue settings for colorization" default=""
+                                doc="Define list of hue for colorization, from 0.0 to (or equal) 1 (0.0 means original color), separated by spaces, STK will randomly pick one hue for colorization, no need to define for karts."/>
+                </BoolProp>
+            </EnumChoice>
+            <!-- Generic solid -->
+            <EnumChoice id="solid" label="PBR Solid">
+                <LabelProp id="solid_help" name="PBR Generic solid shader (most of the materials)"/>
+                <StringProp id="gloss_map" name="PBR Data Map"  default="" doc="Use PBR Data maps to store the roughness (red channel) the metalness (green channel) and the emissive (blue channel)"/>
+                <StringProp id="normal_map" name="Normal Map"  default="" doc="Use normal maps for this material (the model must be exported as tangent for this to work)"/>                <!-- Slowdown -->
+                <BoolProp id="colorizable" name="Colorizable (for library objects and karts)" default="false"
+                        doc="Used to determine whether this texture can be colorized by STK (for library objects and karts)">
+                    <FloatProp id="colorization_factor" name="Colorization factor" default="0.0" min="0.0" max="1.0"
+                               doc="Set the minimun resulting saturation of the new color, 0 means using the original saturation from texture"/>
+                    <StringProp id="colorization_mask" name="Colorization mask" default="" doc="Determine which part of texture to be affected by colorization"/>
+                    <StringProp id="hue_settings" name="Hue settings for colorization" default=""
+                                doc="Define list of hue for colorization, from 0.0 to (or equal) 1 (0.0 means original color), separated by spaces, STK will randomly pick one hue for colorization, no need to define for karts."/>
+                </BoolProp>
+            </EnumChoice>
+
+            <!-- Alpha testing -->
+            <EnumChoice id="alphatest" label="PBR Cutout Transparency (alpha test)">
+                <LabelProp id="alphatest_help" name="PBR Generic transparent shader for cutout alpha"/>
+                <StringProp id="gloss_map" name="PBR Data Map"  default="" doc="Use PBR Data maps to store the roughness (red channel) the metalness (green channel) and the emissive (blue channel)"/>
+                <BoolProp id="colorizable" name="Colorizable (for library objects and karts)" default="false"
+                        doc="Used to determine whether this texture can be colorized by STK (for library objects and karts)">
+                    <StringProp id="hue_settings" name="Hue settings for colorization" default=""
+                                doc="Define list of hue for colorization, from 0.0 to (or equal) 1 (0.0 means original color), separated by spaces, STK will randomly pick one hue for colorization, no need to define for karts."/>
+                </BoolProp>
+            </EnumChoice>
+
+            <!-- Alpha blending -->
+            <EnumChoice id="alphablend" label="(NON PBR) Alpha See Through">
+                <LabelProp id="alphablend_help" name="Uses UV layer 0"/>
+                <StringProp id="mask" name="Mask image (optional)" default="" doc="Greyscale image containing the alpha channel (transparency) for this image"/>
+            </EnumChoice>
+
+            <!-- Additive -->
+            <EnumChoice id="additive" label="(NON PBR) Alpha Additive">
+                <LabelProp id="additive_help" name="Uses UV layer 0"/>
+            </EnumChoice>
+
+            <!-- solid unlit -->
+            <EnumChoice id="unlit" label="(NON PBR) Unlit solid">
+                <LabelProp id="unlit_help" name="This material will ignore lights/shadows and always be at full brightness. Uses UV layer 0"/>
+            </EnumChoice>
+
+            <!-- Vegetation -->
+            <EnumChoice id="grass" label="Vegetation" doc="Shader that makes something wave as if under the wind, usually used for vegetation">
+                <LabelProp id="grass_help" name="Use vertex painting and paint in black the vertices that"/>
+                <LabelProp id="grass_help2" name="should remain static. Other parts will wave in the wind."/>
+                <LabelProp id="grass_help3" name="Use tones of grey to make vertices move more softly."/>
+                <FloatProp id="grass_speed" name="Waving speed" default="1.5" min="0.0" max="5.0" doc="Speed modifier for grass"/>
+                <FloatProp id="grass_amplitude" name="Waving amplitude" default="0.25" min="0.0" max="1.0" doc="Amplitude for grass movement"/>
+                <BoolProp id="colorizable" name="Colorizable (for library objects and karts)" default="false"
+                        doc="Used to determine whether this texture can be colorized by STK (for library objects and karts)">
+                    <StringProp id="hue_settings" name="Hue settings for colorization" default=""
+                                doc="Define list of hue for colorization, from 0.0 to (or equal) 1 (0.0 means original color), separated by spaces, STK will randomly pick one hue for colorization, no need to define for karts."/>
+                </BoolProp>
+            </EnumChoice>
+
+            <!-- Splatting -->
+            <EnumChoice id="splatting" label="Splatting" default="false"
+                        doc="Use splatting (multiple textures with smooth transitions)">
+                <StringProp id="splatting_texture_1" name="Red Texture"   default=""/>
+                <StringProp id="splatting_texture_2" name="Green Texture" default=""/>
+                <StringProp id="splatting_texture_3" name="Blue Texture"  default=""/>
+                <StringProp id="splatting_texture_4" name="Black Texture" default=""/>
+            </EnumChoice>
+        </EnumProp>
+
+        <!-- Flip when reverse -->
+        <EnumProp id="mirror_axis" name="Mirror in reversed races" default="none" doc="When the race is played in the opposite direction, indicates whether to flip this texture">
+            <EnumChoice id="none" label="None"/>
+            <EnumChoice id="U" label="U (horizontally)"/>
+            <EnumChoice id="V" label="V (vertically)"/>
+        </EnumProp>
+
+    </PropGroup>
+
+    <PropGroup id="propgroup_interaction" name="Interaction">
+        
+        <!-- Below shallow water -->
+        <BoolProp id="below_surface" name="Below shallow water" default="false"
+                doc="Used for the terrain under shallow water where you can drive"/>
+        
+        <!-- Collision -->
+        <BoolProp id="collision_detect" name="Collision action" default="false"
+                doc="What happens when the kart touches/hits this material in any way">
+            <EnumProp id="collision_reaction" name="Action" default="none" doc="How to react when kart touches this material">
+                <EnumChoice id="none" label="None"/>
+                <EnumChoice id="reset" label="Rescue kart"/>
+                <EnumChoice id="push" label="Push back kart"/>
+            </EnumProp>
+            <StringProp id="collision_particles" name="Particles on hit" default=""/>
+        </BoolProp>  
+        
+        <!-- Slowdown -->
+        <BoolProp id="use_slowdown" name="Enable Slowdow" default="false"
+                doc="Whether to slow down the kart when driving on this material">
+            <FloatProp id="slowdown_time" name="Slowdown Time (seconds)" default="1.0" min="0.0" max="10.0"
+                        doc="Time it takes for speed to drop to its low point when driving here"/>
+            <FloatProp id="max_speed" name="Maximum Speed (fraction)" default="1.0" min="0.0" max="1.0"
+                        doc="Fraction of the maximum speed can be reached when driving here"/>
+        </BoolProp>
+        
+        
+        <!-- Falling effect -->
+        <BoolProp id="falling_effect" name="Falling Effect" default="false"
+                doc="Whether this material is the bottom of a pit (then camera will look down at kart falling when over it)"/>
+        
+        <!-- High tire adhesion -->
+        <BoolProp id="high_adhesion" name="High tires adhesion" default="false"
+                doc="If checked, karts will have good grip on this surface and not slip, even at angles"/>
+
+        <!-- Affect gravity -->
+        <BoolProp id="has_gravity" name="Affect gravity" default="false"
+                doc="If checked, karts will be fall towards this surface like it was the ground, no matter its angle"/>
+        
+        <!-- Ignore -->
+        <BoolProp id="ignore" name="Ignore (ghost material)" default="false"
+                doc="Drive through this texture like it didn't exist (good for smoke, etc.)"/>
+        
+        <!-- Particles -->
+        <BoolProp id="particle" name="Particle effect" default="false"
+                doc="Whether to emit particles (e.g. smoke) when driving on this surface">
+            <StringProp id="particle_base" name="Particles file" default="smoke.xml" doc="Name of the XML file containing the description of particles to use on this terrain"/>
+            <CombinableEnumProp id="particle_condition" name="Use particles when..." default="skid" doc="elect a special graphical effect">
+                <EnumChoice id="skid" label="Skid" doc="Use particle when skidding"/>
+                <EnumChoice id="drive" label="Drive" doc="Use particles during regular driving"/>
+            </CombinableEnumProp>
+        </BoolProp>
+        
+        <!-- SFX -->
+        <BoolProp id="use_sfx" name="Play sound effect" default="false"
+                doc="Whether to play a sound when driving on this surface">
+            <!-- TODO: only enable rolloff if positional is checked -->
+            <StringProp id="sfx_filename" name="Sound File" default="some_file.ogg"/>
+            <FloatProp  id="sfx_min_speed" name="Minimum kart speed" default="5.0" min="0.0"/>
+            <FloatProp  id="sfx_max_speed" name="Maximum kart speed" default="15.0" min="0.0"/>
+            <FloatProp  id="sfx_min_pitch" name="Sound pitch at min speed" default="0.8" min="0.1" max="3.0"
+                        doc="Pitch of the sound when the kart is going slowly (1.0 is no change, &lt; 1.0 is lower pitch, &gt; 1.0 is higher pitch)"/>
+            <FloatProp  id="sfx_max_pitch" name="Sound pitch at max speed" default="1.2" min="0.1" max="3.0"
+                        doc="Pitch of the sound when the kart is going fastly (1.0 is no change, &lt; 1.0 is lower pitch, &gt; 1.0 is higher pitch)"/>
+            <BoolProp   id="sfx_positional" name="Positional sound effect" default="true"
+                        doc="If true, the sound will get dimmer when far from camera, and with panning; if false, it's heard at centered pan and at full volume"/>
+            <FloatProp  id="sfx_rolloff" name="Rolloff rate" default="0.1" min="0.0" max="2.5"
+                        doc="Speed at which the sound fades out as you stand further from the sound emitter"/>
+        </BoolProp>
+        
+        <!-- Reset -->
+        <BoolProp id="reset" name="Reset kart (on drive)" default="false"
+                doc="whether to rescue kart if it ends up [driving] on this surface"/>
+                
+        <!-- Water bottom -->
+        <BoolProp id="water_splash" name="Water bottom" default="false"
+                  doc="whether this material is the bottom (seabed) of a water area (used to create a splash effect)"/>
+                  
+        <!-- Watter surface -->
+        <BoolProp id="surface" name="Water surface" default="false"
+                doc="whether this material is the surface of a water area (used to create a splash effect)"/>
+                
+        <!-- Zipper -->
+        <BoolProp id="zipper" name="Zipper (speed boost)" default="false"
+                  doc="Whether to get a speed boost when driving on this surface">
+            <FloatProp id="zipper_duration"           name="Zipper duration"           default="3.5"  min="0.0" max="10.0"/>
+            <FloatProp id="zipper_max_speed_increase" name="Zipper max speed increase" default="15.0" min="0.0" max="25.0"/>
+            <FloatProp id="zipper_fade_out_time"      name="Zipper fade out time"      default="3.0"  min="0.0" max="10.0"/>
+            <FloatProp id="zipper_speed_gain"         name="Zipper speed gain"         default="4.5"  min="0.0" max="10.0"/>
+            <FloatProp id="zipper_min_speed"          name="Zipper minimum speed"      default="-1.0" min="-1.0" max="99.0"/>
+        </BoolProp>
+        
+    </PropGroup>
+</Properties>

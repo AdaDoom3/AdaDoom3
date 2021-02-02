@@ -38,6 +38,13 @@ package body Ada.Containers.Multiway_Trees is
    pragma Warnings (Off, "variable ""Lock*"" is not referenced");
    --  See comment in Ada.Containers.Helpers
 
+   procedure put_image  (S :
+     in out ada.Strings.Text_Output.sink'class;
+              v  : tree) is
+   begin
+     null;
+   end;
+
    --------------------
    --  Root_Iterator --
    --------------------
