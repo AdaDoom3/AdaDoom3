@@ -455,80 +455,80 @@ separate (Neo.Engine) package body CPU is
 ------------------------
 
 -- Start of Neo.Engine.CPU's executable section
-begin
-
-  -- Temporary to hold returned assembly output
-  declare Data : aliased Int_Unsigned := 0; begin
-
-    -- Ready the CPU
-    if Get_CPU.Has_Advanced_State_Operations then
-
-      -- Enable denormals are zero
-      declare
-      type Array_Save_Area is array (1..512) of Byte with Alignment => 16;
-      Save_Area : aliased Array_Save_Area := (others => 0);
-      begin
-        Asm (Volatile => True,
-             Inputs   => Ptr'Asm_Input (TO_EAX, Save_Area (Save_Area'First)'Address),
-             Outputs  => Int_Unsigned'Asm_Output (FROM_EBX, Data),
-             Template => ----------------------------------
-                         " fxsave (%%eax)           " & E &
-                         " movl   28 (%%eax), %%ebx " & E);
-                         ----------------------------------
-
-        -- Test one of the things
-        if (Data and 16#20#) /= 0 then
-          Asm (Volatile => True,
-               Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
-               Template => ----------------------------------
-                           " stmxcsr (%%eax)          " & E &
-                           " movl    (%%eax), %%ebx   " & E &
-                           " or      $0x40,   %%bx    " & E &
-                           " movl    %%ebx,   (%%eax) " & E &
-                           " ldmxcsr (%%eax)          " & E);
-                           ----------------------------------
-        end if;
-      end;
-      Asm (Volatile => True,
-           Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
-           Template => ----------------------------------
-                       " stmxcsr (%%eax)          " & E &
-                       " movl    (%%eax), %%ebx   " & E &
-                       " or      $0x8000, %%ebx   " & E &
-                       " movl    %%ebx,   (%%eax) " & E &
-                       " ldmxcsr (%%eax)          " & E);
-                       ----------------------------------
-    end if;
-
-    
-    declare
-    Other_Data     : aliased          Int_16_Unsigned := 0;
-    EXCEPTION_MASK : aliased constant Int_Unsigned    := 16#0000_1F00#; -- Do not crash on any error
-    begin
-      if Get_CPU.Has_Advanced_State_Operations then
-        Asm (Volatile => True,
-             Inputs   => (Ptr'Asm_Input (TO_EAX, Data'Address),
-                          Int_Unsigned'Asm_Input (TO_ECX, EXCEPTION_MASK)),
-             Template => --------------------------------------
-                         " stmxcsr (%%eax)              " & E &
-                         " movl    (%%eax),     %%ebx   " & E &
-                         " and     $0xffffe07f, %%ebx   " & E &
-                         " or      %%ecx,       %%ebx   " & E &
-                         " movl    %%ebx,       (%%eax) " & E &
-                         " ldmxcsr (%%eax)              " & E);
-                         --------------------------------------
-      end if;
-      Asm (Volatile => True,
-           Inputs   => (Ptr'Asm_Input (TO_EAX, Other_Data'Address),
-                        Int_Unsigned'Asm_Input (TO_ECX, Shift_Right (EXCEPTION_MASK, 7))),
-           Template => ---------------------------------
-                       " fnstcw (%%eax)          " & E &
-                       " movw   (%%eax), %%bx    " & E &
-                       " and    $0xffc0, %%bx    " & E &
-                       " or     %%cx,    %%bx    " & E &
-                       " movw   %%bx,    (%%eax) " & E &
-                       " fldcw  (%%eax)          " & E);
-                       ---------------------------------
-    end;
-  end;
+--  begin
+--  
+--    -- Temporary to hold returned assembly output
+--    declare Data : aliased Int_Unsigned := 0; begin
+--  
+--      -- Ready the CPU
+--      if Get_CPU.Has_Advanced_State_Operations then
+--  
+--        -- Enable denormals are zero
+--        declare
+--        type Array_Save_Area is array (1..512) of Byte with Alignment => 16;
+--        Save_Area : aliased Array_Save_Area := (others => 0);
+--        begin
+--          Asm (Volatile => True,
+--               Inputs   => Ptr'Asm_Input (TO_EAX, Save_Area (Save_Area'First)'Address),
+--               Outputs  => Int_Unsigned'Asm_Output (FROM_EBX, Data),
+--               Template => ----------------------------------
+--                           " fxsave (%%eax)           " & E &
+--                           " movl   28 (%%eax), %%ebx " & E);
+--                           ----------------------------------
+--  
+--          -- Test one of the things
+--          if (Data and 16#20#) /= 0 then
+--            Asm (Volatile => True,
+--                 Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
+--                 Template => ----------------------------------
+--                             " stmxcsr (%%eax)          " & E &
+--                             " movl    (%%eax), %%ebx   " & E &
+--                             " or      $0x40,   %%bx    " & E &
+--                             " movl    %%ebx,   (%%eax) " & E &
+--                             " ldmxcsr (%%eax)          " & E);
+--                             ----------------------------------
+--          end if;
+--        end;
+--        Asm (Volatile => True,
+--             Inputs   => Ptr'Asm_Input (TO_EAX, Data'Address),
+--             Template => ----------------------------------
+--                         " stmxcsr (%%eax)          " & E &
+--                         " movl    (%%eax), %%ebx   " & E &
+--                         " or      $0x8000, %%ebx   " & E &
+--                         " movl    %%ebx,   (%%eax) " & E &
+--                         " ldmxcsr (%%eax)          " & E);
+--                         ----------------------------------
+--      end if;
+--  
+--  
+--      declare
+--      Other_Data     : aliased          Int_16_Unsigned := 0;
+--      EXCEPTION_MASK : aliased constant Int_Unsigned    := 16#0000_1F00#; -- Do not crash on any error
+--      begin
+--        if Get_CPU.Has_Advanced_State_Operations then
+--          Asm (Volatile => True,
+--               Inputs   => (Ptr'Asm_Input (TO_EAX, Data'Address),
+--                            Int_Unsigned'Asm_Input (TO_ECX, EXCEPTION_MASK)),
+--               Template => --------------------------------------
+--                           " stmxcsr (%%eax)              " & E &
+--                           " movl    (%%eax),     %%ebx   " & E &
+--                           " and     $0xffffe07f, %%ebx   " & E &
+--                           " or      %%ecx,       %%ebx   " & E &
+--                           " movl    %%ebx,       (%%eax) " & E &
+--                           " ldmxcsr (%%eax)              " & E);
+--                           --------------------------------------
+--        end if;
+--        Asm (Volatile => True,
+--             Inputs   => (Ptr'Asm_Input (TO_EAX, Other_Data'Address),
+--                          Int_Unsigned'Asm_Input (TO_ECX, Shift_Right (EXCEPTION_MASK, 7))),
+--             Template => ---------------------------------
+--                         " fnstcw (%%eax)          " & E &
+--                         " movw   (%%eax), %%bx    " & E &
+--                         " and    $0xffc0, %%bx    " & E &
+--                         " or     %%cx,    %%bx    " & E &
+--                         " movw   %%bx,    (%%eax) " & E &
+--                         " fldcw  (%%eax)          " & E);
+--                         ---------------------------------
+--      end;
+--    end;
 end;

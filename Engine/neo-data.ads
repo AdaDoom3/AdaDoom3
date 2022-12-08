@@ -333,7 +333,6 @@ package Neo.Data is
           end case;
         end record;
       procedure Free is new Unchecked_Deallocation (Structure_State, Ptr_Structure_State);
-      procedure Construct_Structure (Item : in out Ptr_Structure_State; Kind : Primitive_Kind; Len : Positive);
 
       -- Reference conversions
       function Ref    is new Unchecked_Conversion (Ptr, Ptr_Structure_State);

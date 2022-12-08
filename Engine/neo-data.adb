@@ -192,107 +192,6 @@ package body Neo.Data is
         for I of File.Named_Structures loop Finalize (I); end loop;
       end;
 
-    -------------------------
-    -- Construct_Structure --
-    -------------------------
-
-    procedure Construct_Structure (Item : in out Ptr_Structure_State; Kind : Primitive_Kind; Len : Positive) is
-      begin
-        case Kind is
-          when Bool_Kind               => Item := new Structure_State'(Bool_Kind,               Len, others => <>);
-          when Bool_x2_Kind            => Item := new Structure_State'(Bool_x2_Kind,            Len, others => <>);
-          when Bool_x3_Kind            => Item := new Structure_State'(Bool_x3_Kind,            Len, others => <>);
-          when Bool_x4_Kind            => Item := new Structure_State'(Bool_x4_Kind,            Len, others => <>);
-          when Bool_x8_Kind            => Item := new Structure_State'(Bool_x8_Kind,            Len, others => <>);
-          when Bool_x16_Kind           => Item := new Structure_State'(Bool_x16_Kind,           Len, others => <>);
-          when String_Kind             => Item := new Structure_State'(String_Kind,             Len, others => <>);
-          when String_x2_Kind          => Item := new Structure_State'(String_x2_Kind,          Len, others => <>);
-          when String_x3_Kind          => Item := new Structure_State'(String_x3_Kind,          Len, others => <>);
-          when String_x4_Kind          => Item := new Structure_State'(String_x4_Kind,          Len, others => <>);
-          when String_x8_Kind          => Item := new Structure_State'(String_x8_Kind,          Len, others => <>);
-          when String_x16_Kind         => Item := new Structure_State'(String_x16_Kind,         Len, others => <>);
-          when Ref_Kind                => Item := new Structure_State'(Ref_Kind,                Len, others => <>);
-          when Ref_x2_Kind             => Item := new Structure_State'(Ref_x2_Kind,             Len, others => <>);
-          when Ref_x3_Kind             => Item := new Structure_State'(Ref_x3_Kind,             Len, others => <>);
-          when Ref_x4_Kind             => Item := new Structure_State'(Ref_x4_Kind,             Len, others => <>);
-          when Ref_x8_Kind             => Item := new Structure_State'(Ref_x8_Kind,             Len, others => <>);
-          when Ref_x16_Kind            => Item := new Structure_State'(Ref_x16_Kind,            Len, others => <>);
-          when Type_Kind               => Item := new Structure_State'(Type_Kind,               Len, others => <>);
-          when Type_x2_Kind            => Item := new Structure_State'(Type_x2_Kind,            Len, others => <>);
-          when Type_x3_Kind            => Item := new Structure_State'(Type_x3_Kind,            Len, others => <>);
-          when Type_x4_Kind            => Item := new Structure_State'(Type_x4_Kind,            Len, others => <>);
-          when Type_x8_Kind            => Item := new Structure_State'(Type_x8_Kind,            Len, others => <>);
-          when Type_x16_Kind           => Item := new Structure_State'(Type_x16_Kind,           Len, others => <>);
-          when Float16_Kind            => Item := new Structure_State'(Float16_Kind,            Len, others => <>);
-          when Float32_Kind            => Item := new Structure_State'(Float32_Kind,            Len, others => <>);
-          when Float64_Kind            => Item := new Structure_State'(Float64_Kind,            Len, others => <>);
-          when Float16_x2_Kind         => Item := new Structure_State'(Float16_x2_Kind,         Len, others => <>);
-          when Float32_x2_Kind         => Item := new Structure_State'(Float32_x2_Kind,         Len, others => <>);
-          when Float64_x2_Kind         => Item := new Structure_State'(Float64_x2_Kind,         Len, others => <>);
-          when Float16_x3_Kind         => Item := new Structure_State'(Float16_x3_Kind,         Len, others => <>);
-          when Float32_x3_Kind         => Item := new Structure_State'(Float32_x3_Kind,         Len, others => <>);
-          when Float64_x3_Kind         => Item := new Structure_State'(Float64_x3_Kind,         Len, others => <>);
-          when Float16_x4_Kind         => Item := new Structure_State'(Float16_x4_Kind,         Len, others => <>);
-          when Float32_x4_Kind         => Item := new Structure_State'(Float32_x4_Kind,         Len, others => <>);
-          when Float64_x4_Kind         => Item := new Structure_State'(Float64_x4_Kind,         Len, others => <>);
-          when Float16_x8_Kind         => Item := new Structure_State'(Float16_x8_Kind,         Len, others => <>);
-          when Float32_x8_Kind         => Item := new Structure_State'(Float32_x8_Kind,         Len, others => <>);
-          when Float64_x8_Kind         => Item := new Structure_State'(Float64_x8_Kind,         Len, others => <>);
-          when Float16_x16_Kind        => Item := new Structure_State'(Float16_x16_Kind,        Len, others => <>);
-          when Float32_x16_Kind        => Item := new Structure_State'(Float32_x16_Kind,        Len, others => <>);
-          when Float64_x16_Kind        => Item := new Structure_State'(Float64_x16_Kind,        Len, others => <>);
-          when Int8_Kind               => Item := new Structure_State'(Int8_Kind,               Len, others => <>);
-          when Int16_Kind              => Item := new Structure_State'(Int16_Kind,              Len, others => <>);
-          when Int32_Kind              => Item := new Structure_State'(Int32_Kind,              Len, others => <>);
-          when Int64_Kind              => Item := new Structure_State'(Int64_Kind,              Len, others => <>);
-          when Int8_x2_Kind            => Item := new Structure_State'(Int8_x2_Kind,            Len, others => <>);
-          when Int16_x2_Kind           => Item := new Structure_State'(Int16_x2_Kind,           Len, others => <>);
-          when Int32_x2_Kind           => Item := new Structure_State'(Int32_x2_Kind,           Len, others => <>);
-          when Int64_x2_Kind           => Item := new Structure_State'(Int64_x2_Kind,           Len, others => <>);
-          when Int8_x3_Kind            => Item := new Structure_State'(Int8_x3_Kind,            Len, others => <>);
-          when Int16_x3_Kind           => Item := new Structure_State'(Int16_x3_Kind,           Len, others => <>);
-          when Int32_x3_Kind           => Item := new Structure_State'(Int32_x3_Kind,           Len, others => <>);
-          when Int64_x3_Kind           => Item := new Structure_State'(Int64_x3_Kind,           Len, others => <>);
-          when Int8_x4_Kind            => Item := new Structure_State'(Int8_x4_Kind,            Len, others => <>);
-          when Int16_x4_Kind           => Item := new Structure_State'(Int16_x4_Kind,           Len, others => <>);
-          when Int32_x4_Kind           => Item := new Structure_State'(Int32_x4_Kind,           Len, others => <>);
-          when Int64_x4_Kind           => Item := new Structure_State'(Int64_x4_Kind,           Len, others => <>);
-          when Int8_x8_Kind            => Item := new Structure_State'(Int8_x8_Kind,            Len, others => <>);
-          when Int16_x8_Kind           => Item := new Structure_State'(Int16_x8_Kind,           Len, others => <>);
-          when Int32_x8_Kind           => Item := new Structure_State'(Int32_x8_Kind,           Len, others => <>);
-          when Int64_x8_Kind           => Item := new Structure_State'(Int64_x8_Kind,           Len, others => <>);
-          when Int8_x16_Kind           => Item := new Structure_State'(Int8_x16_Kind,           Len, others => <>);
-          when Int16_x16_Kind          => Item := new Structure_State'(Int16_x16_Kind,          Len, others => <>);
-          when Int32_x16_Kind          => Item := new Structure_State'(Int32_x16_Kind,          Len, others => <>);
-          when Int64_x16_Kind          => Item := new Structure_State'(Int64_x16_Kind,          Len, others => <>);
-          when Unsigned_Int8_Kind      => Item := new Structure_State'(Unsigned_Int8_Kind,      Len, others => <>);
-          when Unsigned_Int16_Kind     => Item := new Structure_State'(Unsigned_Int16_Kind,     Len, others => <>);
-          when Unsigned_Int32_Kind     => Item := new Structure_State'(Unsigned_Int32_Kind,     Len, others => <>);
-          when Unsigned_Int64_Kind     => Item := new Structure_State'(Unsigned_Int64_Kind,     Len, others => <>);
-          when Unsigned_Int8_x2_Kind   => Item := new Structure_State'(Unsigned_Int8_x2_Kind,   Len, others => <>);
-          when Unsigned_Int16_x2_Kind  => Item := new Structure_State'(Unsigned_Int16_x2_Kind,  Len, others => <>);
-          when Unsigned_Int32_x2_Kind  => Item := new Structure_State'(Unsigned_Int32_x2_Kind,  Len, others => <>);
-          when Unsigned_Int64_x2_Kind  => Item := new Structure_State'(Unsigned_Int64_x2_Kind,  Len, others => <>);
-          when Unsigned_Int8_x3_Kind   => Item := new Structure_State'(Unsigned_Int8_x3_Kind,   Len, others => <>);
-          when Unsigned_Int16_x3_Kind  => Item := new Structure_State'(Unsigned_Int16_x3_Kind,  Len, others => <>);
-          when Unsigned_Int32_x3_Kind  => Item := new Structure_State'(Unsigned_Int32_x3_Kind,  Len, others => <>);
-          when Unsigned_Int64_x3_Kind  => Item := new Structure_State'(Unsigned_Int64_x3_Kind,  Len, others => <>);
-          when Unsigned_Int8_x4_Kind   => Item := new Structure_State'(Unsigned_Int8_x4_Kind,   Len, others => <>);
-          when Unsigned_Int16_x4_Kind  => Item := new Structure_State'(Unsigned_Int16_x4_Kind,  Len, others => <>);
-          when Unsigned_Int32_x4_Kind  => Item := new Structure_State'(Unsigned_Int32_x4_Kind,  Len, others => <>);
-          when Unsigned_Int64_x4_Kind  => Item := new Structure_State'(Unsigned_Int64_x4_Kind,  Len, others => <>);
-          when Unsigned_Int8_x8_Kind   => Item := new Structure_State'(Unsigned_Int8_x8_Kind,   Len, others => <>);
-          when Unsigned_Int16_x8_Kind  => Item := new Structure_State'(Unsigned_Int16_x8_Kind,  Len, others => <>);
-          when Unsigned_Int32_x8_Kind  => Item := new Structure_State'(Unsigned_Int32_x8_Kind,  Len, others => <>);
-          when Unsigned_Int64_x8_Kind  => Item := new Structure_State'(Unsigned_Int64_x8_Kind,  Len, others => <>);
-          when Unsigned_Int8_x16_Kind  => Item := new Structure_State'(Unsigned_Int8_x16_Kind,  Len, others => <>);
-          when Unsigned_Int16_x16_Kind => Item := new Structure_State'(Unsigned_Int16_x16_Kind, Len, others => <>);
-          when Unsigned_Int32_x16_Kind => Item := new Structure_State'(Unsigned_Int32_x16_Kind, Len, others => <>);
-          when Unsigned_Int64_x16_Kind => Item := new Structure_State'(Unsigned_Int64_x16_Kind, Len, others => <>);
-          when Structure_Kind          => Item := new Structure_State'(Structure_Kind,          Len, others => <>);
-        end case;
-      end;
-
     ----------
     -- Load --
     ----------
@@ -1118,7 +1017,7 @@ pragma Warnings (On);
           Skip_Whitespace (C);
 
           -- Create the structure node
-          Construct_Structure (Structure, Primitive, Len);
+          Structure := new Structure_State (Primitive, Len);
 
           -- Optional name
           if Text (C) not in '(' | '{' | '[' then
@@ -1166,7 +1065,7 @@ pragma Warnings (On);
                     if Struct_Property.Identifier = Identifier then
 
                       -- Read the property
-                      Construct_Structure (Property, Struct_Property.Kind, 1);
+                      Property        := new Structure_State (Struct_Property.Kind, 1);
                       Parse_Data_List_Item (C, Property);
                       Property.Parent := Structure;
                       Property.Name   := new Str_8'(To_Str_8 (Identifier));
@@ -1193,7 +1092,7 @@ goto Found_Property;
                            or else not Structure.Properties.Contains (To_Str_Unbound (Struct_Property.Identifier)))
               then
                 if Structure.Properties = null then Structure.Properties := new Hashed_Ptr_Structure_State.Unsafe.Map; end if;
-                Construct_Structure (Property, Struct_Property.Default.Kind, Struct_Property.Default.Len);
+                Property           := new Structure_State (Struct_Property.Default.Kind, Struct_Property.Default.Len);
                 Property.Parent    := Structure;
                 Property.Primitive := Struct_Property.Default;
                 Property.Name      := new Str_8'(To_Str_8 (Struct_Property.Identifier));
@@ -1435,7 +1334,7 @@ goto Found_Property;
 
                 -- If we overrode it already we are fine, if not it inherits from the reference
                 if not Reference.Structure.Parent.Parent.Properties.Contains (To_Str_Unbound (Property.Identifier)) then
-                  Construct_Structure (New_Property, Property.Kind, 1);
+                  New_Property           := new Structure_State (Property.Kind, 1);
                   New_Property.Parent    := Override_Property.Parent;
                   New_Property.Primitive := Override_Property.Primitive;
                   New_Property.Name      := new Str_8'(Override_Property.Name.all);
